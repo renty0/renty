@@ -1,0 +1,35 @@
+<div class="logo-section">
+  <div class="logo-container">
+    <img src="assets/logo.png" [attr.alt]="'notFound.alt' | translate" height="640" width="640" priority />
+  </div>
+  <div class="university-info">
+    <h3>{{ 'notFound.title' | translate }}</h3>
+    <p>{{ 'notFound.subtitle' | translate }}</p>
+  </div>
+</div>
+
+<div class="content-section">
+  <div class="header-section">
+    <h1>{{ 'notFound.pageTitle' | translate }}</h1>
+  </div>
+
+  <div class="content-container">
+    <div class="error-card">
+      <h2>{{ 'notFound.errorTitle' | translate }}</h2>
+      <small>{{ 'notFound.small' | translate }}</small>
+      <p class="error-message">{{ 'notFound.message' | translate }}</p>
+      <button mat-raised-button routerLink="/login" class="return-button">
+        {{ 'notFound.return' | translate }}
+      </button>
+    </div>
+
+    <div class="additional-links">
+      <a routerLink="/help" class="help-link">
+        <span>{{ 'notFound.help' | translate }}</span>
+      </a>
+      <a routerLink="/system-status" class="status-link">
+        <span>{{ 'notFound.status' | translate }}</span>
+      </a>
+    </div>
+  </div>
+</div>

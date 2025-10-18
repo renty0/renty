@@ -1,0 +1,14 @@
+{
+  "notFound": {
+    "alt": "Rently",
+    "title": "Rently",
+    "subtitle": "Manage your website",
+    "pageTitle": "Page Not Found",
+    "errorTitle": "404 - Oops!",
+    "small": "The page you're looking for doesn't exist.",
+    "message": "It looks like you've wandered off the path. Let's get you back to safety!",
+    "return": "Return to Home",
+    "help": "Help",
+    "status": "System Status"
+  }
+}
