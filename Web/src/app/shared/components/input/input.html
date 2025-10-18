@@ -1,0 +1,48 @@
+@if (type === 'select') {
+  <p-floatlabel variant="on">
+    <p-select [dir]="language === 'ar' ? 'rtl' : 'ltr'" [options]="options" [id]="controlName" [formControl]="formControl" [inputId]="controlName" optionLabel="name" optionValue="code" fluid="true" [readonly]="readonly" [class.readonly-cursor]="readonly" [class.readonly]="readonly" [style.height.px]="height"/>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if (type === 'multiselect') {
+  <p-floatlabel variant="on">
+    <p-multiselect [dir]="language === 'ar' ? 'rtl' : 'ltr'"  [options]="options" [id]="controlName" [formControl]="formControl" [inputId]="controlName" optionLabel="name" optionValue="code" fluid="true" [readonly]="readonly" [class.readonly-cursor]="readonly" [class.readonly]="readonly" [style.height.px]="height"/>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if (type === 'date') {
+  <p-floatlabel variant="on">
+    <p-datepicker [dir]="language === 'ar' ? 'rtl' : 'ltr'"  fluid="true" dateFormat="dd/mm/yy" [id]="controlName" [formControl]="formControl" [inputId]="controlName" [readonlyInput]="true" [class.readonly-cursor]="readonly" [inputStyle]="{'height': height + 'px'}" showIcon iconDisplay="input" [minDate]="minDate" [maxDate]="maxDate"/>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if (type === 'number') {
+  <p-floatlabel variant="on" [style.height.px]="height">
+    <p-inputNumber [dir]="language === 'ar' ? 'rtl' : 'ltr'" [min]="0" [id]="controlName" fluid="true" [showButtons]="!readonly" [readonly]="readonly" [class.readonly-cursor]="readonly" [formControl]="formControl"></p-inputNumber>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if(type === 'password'){
+  <p-floatlabel variant="on" [style.height.px]="height">
+    <p-password [dir]="language === 'ar' ? 'rtl' : 'ltr'"  fluid="true" [id]="controlName" [formControl]="formControl" [promptLabel]="errorMessages[0]? ' ': ('register.pass' | translate)" [weakLabel]="errorMessages[0]? ' ': ('register.pass' | translate)" [mediumLabel]="errorMessages[0]? ' ': ('register.pass' | translate)" [strongLabel]=" " [toggleMask]="true" [inputStyle]="{'height': height + 'px'}">
+      <ng-template pTemplate="footer">
+        <div style="color: #7f1d1d;" >{{ errorMessages[0] ? ('⚠'): null }} {{errorMessages[0] | translate}}</div>
+      </ng-template>
+    </p-password>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if(type === 'confirmPassword'){
+  <p-floatlabel variant="on" [style.height.px]="height">
+    <p-password [dir]="language === 'ar' ? 'rtl' : 'ltr'"  fluid="true"[id]="controlName" [formControl]="formControl" [feedback]="false" [inputStyle]="{'height': height + 'px'}"></p-password>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+} @else if(type === 'textarea') {
+  <p-floatlabel variant="on">
+    <textarea [dir]="language === 'ar' ? 'rtl' : 'ltr'" fluid="true" pTextarea [rows]="8" [id]="controlName" [formControl]="formControl" [readonly]="readonly" [class.readonly-cursor]="readonly" [style.height.px]="height" autocomplete="off"></textarea>
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}"> {{ label ? (label | translate) : '' }} </label>
+  </p-floatlabel>
+} @else {
+  <p-floatlabel variant="on" [style.height.px]="height">
+    <input [dir]="language === 'ar' ? 'rtl' : 'ltr'" fluid="true" [class.readonly-cursor]="readonly" pInputText [id]="controlName" [formControl]="formControl" autocomplete="off" />
+    <label [for]="controlName" [ngClass]="{'error-label': hasError}">{{label ? ("labels." + label | translate): ''}}</label>
+  </p-floatlabel>
+}
+<div *ngIf="hasError && (type!== 'password')" class="error">
+  <span>{{errorMessages[0] | translate}}</span>
+</div>

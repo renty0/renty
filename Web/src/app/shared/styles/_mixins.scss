@@ -1,0 +1,66 @@
+@use "variables" as *;
+
+// Media query mixins
+@mixin mobile-xs {
+  @media (max-width: #{$breakpoint-xs}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: #{$breakpoint-sm}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (max-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+// Layout mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin glassmorphism($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Component mixins
+@mixin button-base {
+  border: none;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: $transition-fast;
+  border-radius: $border-radius-lg;
+}
+
+@mixin form-field-base {
+  width: 100%;
+  background: $transparent-white-heavy;
+  border-radius: $border-radius-lg;
+  border: 2px solid transparent;
+  transition: $transition-fast;
+  box-shadow: $shadow-sm;
+}
+
+@mixin text-gradient {
+  background: $text-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

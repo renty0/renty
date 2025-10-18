@@ -1,0 +1,457 @@
+@use "../../styles/index.scss" as *;
+
+:host {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f1419 0%, #1a365d 50%, #2c5aa0 100%);
+  font-family: $font-family-primary;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+        circle at 20% 20%,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 40%,
+        rgba(37, 99, 235, 0.1) 0%,
+        transparent 50%
+      );
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo-section {
+  @include flex-center;
+  flex-direction: column;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  animation: slideInLeft 0.8s ease-out;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+      repeat;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .logo-container {
+    position: relative;
+    z-index: 2;
+
+    img {
+      max-width: 500px;
+      height: auto;
+      border-radius: $border-radius-xxl;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: all $transition-medium;
+      position: relative;
+
+      &:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  .university-info {
+    margin-top: $spacing-xl;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+    position: relative;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-xs;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      font-size: 1rem;
+      opacity: 0.8;
+      font-weight: $font-weight-normal;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.content-section {
+  padding: $spacing-xxl;
+  @include flex-center;
+  flex-direction: column;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  overflow-y: auto;
+  position: relative;
+  animation: slideInRight 0.8s ease-out;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      145deg,
+      transparent 0%,
+      rgba(26, 54, 93, 0.02) 100%
+    );
+    pointer-events: none;
+  }
+
+  .header-section {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    position: relative;
+    z-index: 2;
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: $font-weight-bold;
+      background: linear-gradient(135deg, $primary-color, $accent-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: $spacing-sm;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, $accent-color, $primary-color);
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .content-container {
+    max-width: 450px;
+    margin: 0 auto;
+    width: 100%;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    position: relative;
+    z-index: 2;
+
+    .error-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: $border-radius-xl;
+      padding: $spacing-xl;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all $transition-medium;
+      text-align: center;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.15),
+          0 15px 15px -5px rgba(0, 0, 0, 0.06),
+          0 0 0 1px rgba(255, 255, 255, 0.6);
+      }
+
+      h2 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: $font-weight-bold;
+        color: $text-dark;
+        margin-bottom: $spacing-xs;
+        position: relative;
+
+        &::before {
+          content: "🚫";
+          margin-right: $spacing-xs;
+          font-size: 1.2em;
+        }
+      }
+
+      > small {
+        color: $text-muted;
+        font-size: clamp(0.9rem, 2vw, 1rem);
+        margin-bottom: $spacing-lg;
+        display: block;
+        font-weight: $font-weight-normal;
+      }
+
+      .error-message {
+        color: $text-dark;
+        font-size: 1.1rem;
+        margin-bottom: $spacing-xl;
+        font-weight: $font-weight-normal;
+      }
+
+      .return-button {
+        background: $primary-color;
+        color: $white;
+        padding: 18px 32px;
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        font-weight: $font-weight-bold;
+        border: none;
+        border-radius: $border-radius-lg;
+        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        transition: all $transition-fast;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+          transition: left 0.6s ease;
+        }
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.5),
+            0 6px 10px -2px rgba(0, 0, 0, 0.1);
+
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &:active {
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    .additional-links {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-lg;
+      margin-top: $spacing-lg;
+      padding-top: $spacing-md;
+      border-top: 1px solid rgba(26, 54, 93, 0.1);
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        color: $text-muted;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: $font-weight-medium;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-md;
+        transition: all $transition-fast;
+
+        &:hover {
+          color: $accent-color;
+          background: rgba(37, 99, 235, 0.05);
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+}
+
+@include desktop {
+  :host {
+    flex-direction: row;
+  }
+
+  .logo-section {
+    flex: 0.6;
+
+    .logo-container img {
+      max-width: 320px;
+    }
+  }
+
+  .content-section {
+    flex: 1;
+    padding: $spacing-xxl;
+  }
+}
+
+@include tablet {
+  :host {
+    flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .logo-section {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding: $spacing-xl;
+    min-height: 45vh;
+    flex: none;
+
+    .logo-container img {
+      max-width: 250px;
+    }
+
+    .university-info {
+      margin-top: $spacing-lg;
+
+      h3 {
+        font-size: 1.3rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .content-section {
+    padding: $spacing-xl $spacing-lg;
+    flex: none;
+    min-height: 55vh;
+
+    .content-container {
+      max-width: 100%;
+
+      .error-card {
+        padding: $spacing-lg;
+      }
+
+      .return-button {
+        padding: 16px 28px;
+      }
+    }
+  }
+}
+@include mobile {
+  .logo-section {
+    padding: $spacing-lg;
+    min-height: 40vh;
+
+    .logo-container img {
+      max-width: 200px;
+    }
+
+    .university-info {
+      margin-top: $spacing-md;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .content-section {
+    padding: $spacing-lg $spacing-md;
+
+    .header-section {
+      margin-bottom: $spacing-lg;
+
+      h1 {
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
+      }
+    }
+
+    .content-container {
+      .error-card {
+        padding: $spacing-md;
+
+        .return-button {
+          padding: 14px 24px;
+        }
+      }
+    }
+  }
+}
