@@ -1,0 +1,90 @@
+Table _product_lookup {
+  product_key int
+  product_subcategory_key int
+  product_sku varchar
+  product_name varchar
+  model_name varchar
+  product_description varchar
+  product_color varchar
+  product_style varchar
+  product_cost float
+  product_price float
+  sku_type varchar
+  discount_price float
+}
+
+Table customer_lookup {
+  customer_key int
+  prefix varchar
+  first_name varchar
+  last_name varchar
+  birth_date int
+  marital_status varchar
+  gender varchar
+  email_address varchar
+  annual_income int
+  total_children int
+  education_level varchar
+  occupation varchar
+  home_owner varchar
+  full_name varchar
+  domain_name varchar
+}
+
+Table product_subcateg {
+  product_subcategory_key int
+  subcategory_name varchar
+  product_category_key int
+}
+
+Table product_categori {
+  product_category_key int
+  category_name varchar
+}
+
+Table territory_lookup {
+  sales_territory_key int
+  region varchar
+  country varchar
+  continent varchar
+}
+
+Table returns_data {
+  return_date int
+  territory_key int
+  product_key int
+  return_quantity int
+}
+
+Table sales_data {
+  order_date int
+  stock_date int
+  order_number varchar
+  product_key int
+  customer_key int
+  territory_key int
+  order_line_item int
+  order_quantity int
+}
+
+Table calendar_lookup {
+  date int
+  day_name varchar
+  start_of_week int
+  start_of_month int
+  start_of_quarter int
+  month_name varchar
+  month int
+  start_of_year int
+  year int
+}
+
+Ref: _product_lookup.product_subcategory_key > product_subcateg.product_subcategory_key
+Ref: product_subcateg.product_category_key > product_categori.product_category_key
+Ref: sales_data.product_key > _product_lookup.product_key
+Ref: sales_data.customer_key > customer_lookup.customer_key
+Ref: sales_data.territory_key > territory_lookup.sales_territory_key
+Ref: returns_data.product_key > _product_lookup.product_key
+Ref: returns_data.territory_key > territory_lookup.sales_territory_key
+Ref: sales_data.order_date > calendar_lookup.date
+Ref: returns_data.return_date > calendar_lookup.date
