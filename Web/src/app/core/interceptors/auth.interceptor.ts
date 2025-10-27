@@ -2,8 +2,8 @@ import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpE
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, switchMap, BehaviorSubject, filter, take, Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { AuthService } from '../../features/auth/services/auth';
 // import { AuthClient, RefreshTokenCommand, UserSessionDto } from '../../../../api-client';
 
 let isRefreshing = false;

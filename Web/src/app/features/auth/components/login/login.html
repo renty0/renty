@@ -1,0 +1,43 @@
+<div class="logo-section">
+  <div class="logo-container">
+    <img ngSrc="assets/logo.jpg" alt="University Logo" width="500" height="500" priority />
+  </div>
+  <div class="university-info">
+    <h3>{{ 'login.title' | translate }}</h3>
+    <p>{{ 'login.welcomeMessage' | translate }}</p>
+  </div>
+</div>
+<div class="form-section">
+  <div class="header-section">
+    <h1>{{ 'login.welcomeBack' | translate }}</h1>
+    <p class="subtitle">{{ 'login.signInSubtitle' | translate }}</p>
+  </div>
+  <div class="form-container">
+    <div class="welcome-card">
+      <h2>{{ 'login.login' | translate }}</h2>
+      <small>{{ 'login.loginSubtitle' | translate }}</small>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <app-input [height]="56" [formGroup]="loginForm" controlName="email" label="email" type="email"></app-input>
+        <app-input [height]="56" [formGroup]="loginForm" controlName="password" label="password" type="password"></app-input>
+        <a routerLink="/reset-password" class="forgot-password-link">
+          <small>{{ 'login.forgotPassword' | translate }}</small>
+        </a>
+        <button pButton type="submit" [label]="'buttons.login' | translate" class="login-button" [disabled]="isLoading" [loading]="isLoading"></button>
+      </form>
+    </div>
+    <div class="register-section">
+      <small>
+        {{ 'login.noAccount' | translate }}
+        <a routerLink="/register">{{ 'login.signUp' | translate }}</a>
+      </small>
+    </div>
+    <div class="additional-links">
+      <a routerLink="/support">
+        <i class="pi pi-question-circle"></i> {{ 'login.support' | translate }}
+      </a>
+      <a routerLink="/terms">
+        <i class="pi pi-file"></i> {{ 'login.terms' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

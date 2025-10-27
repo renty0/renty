@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastService } from '../../shared/services/toast.service';
+import { ToastService } from '../../../shared/services/toast.service';
 // import { UserSessionDto } from '../../../../api-client';
 // import { SnackBarService } from '../../shared/services/snackbar/snack-bar.service';
 interface UserSessionDto {}

@@ -6,9 +6,9 @@ import translationsEN from '../../public/i18n/en.json';
 import translationsAR from '../../public/i18n/ar.json';
 import { LocalizationService } from './core/services/localization.service';
 import { ResponsiveService } from './core/services/responsive.service';
-import { AuthService } from './core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { AuthService } from './features/auth/services/auth';
 
 @Component({
   selector: 'app-root',
