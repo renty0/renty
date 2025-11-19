@@ -15,6 +15,20 @@ from .gap_visualizer import (plot_gap_score_bar, plot_supply_vs_demand,
                              plot_gap_dashboard, plot_gap_heatmap,
                              plot_subcategory_gap_heatmap, plot_territory_gap_analysis,
                              plot_gap_by_region_category, plot_top_gaps_summary)
+from .gap_dashboard_builder import prepare_gap_summary, export_gap_summary, get_kpi_metrics
+from .plotly_gap_charts import (
+    create_supply_demand_bar_chart,
+    create_gap_score_bar_chart,
+    create_gap_heatmap,
+    create_category_ranking_chart,
+    create_gap_distribution_pie,
+)
+from .plotly_dashboard import (
+    create_kpi_card,
+    create_dashboard_kpi_section,
+    export_chart_png,
+    export_chart_html,
+)
 
 __all__ = [
     "load_excel_sheets",
@@ -48,4 +62,16 @@ __all__ = [
     "plot_territory_gap_analysis",
     "plot_gap_by_region_category",
     "plot_top_gaps_summary",
+    "prepare_gap_summary",
+    "export_gap_summary",
+    "get_kpi_metrics",
+    "create_supply_demand_bar_chart",
+    "create_gap_score_bar_chart",
+    "create_gap_heatmap",
+    "create_category_ranking_chart",
+    "create_gap_distribution_pie",
+    "create_kpi_card",
+    "create_dashboard_kpi_section",
+    "export_chart_png",
+    "export_chart_html",
 ]

@@ -95,7 +95,6 @@ def compute_territory_demand(sales_data: pd.DataFrame, territory_lookup: pd.Data
     Returns:
         DataFrame with territory-level demand metrics
     """
-    # Simple approach: rename in a new dataframe without deep copy issues
     territory_renamed = territory_lookup.rename(columns={'SalesTerritoryKey': 'TerritoryKey'})
     
     sales_with_territory = sales_data.merge(
@@ -126,7 +125,6 @@ def compute_subcategory_territory_demand(sales_data: pd.DataFrame, territory_loo
     Returns:
         DataFrame with subcategory and territory-level demand metrics
     """
-    # Simple approach: rename in a new dataframe
     territory_renamed = territory_lookup.rename(columns={'SalesTerritoryKey': 'TerritoryKey'})
     
     sales_with_territory = sales_data.merge(
@@ -158,7 +156,6 @@ def merge_supply_demand(supply: pd.DataFrame, demand: pd.DataFrame) -> pd.DataFr
     Returns:
         Merged DataFrame with both supply and demand metrics
     """
-    # Get merge columns (all columns except metrics)
     supply_cols = [col for col in supply.columns if col not in ['UniqueProducts']]
     demand_cols = [col for col in demand.columns if col not in ['UniqueOrders', 'TotalQuantitySold', 'UniqueCustomers']]
     
@@ -166,7 +163,6 @@ def merge_supply_demand(supply: pd.DataFrame, demand: pd.DataFrame) -> pd.DataFr
     
     merged = pd.merge(demand, supply, on=merge_on, how='outer').fillna(0)
     
-    # Convert to integers
     int_columns = ['UniqueProducts', 'UniqueOrders', 'TotalQuantitySold', 'UniqueCustomers']
     for col in int_columns:
         if col in merged.columns:

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import os
+from pathlib import Path
 
 
 def plot_missing_heatmap(df: pd.DataFrame, title: str = "Missing Data Heatmap"):
@@ -27,3 +29,33 @@ def plot_missing_summary(summary_df: pd.DataFrame):
     
     plt.tight_layout()
     return fig, (ax1, ax2)
+
+
+def plot_missing_heatmap_collection(datasets: dict):
+    """Plot missing data heatmaps for all datasets."""
+    for name, df in datasets.items():
+        missing_sum = df.isna().sum().sum()
+        if missing_sum > 0:
+            title = f"{name} ({missing_sum} missing values)"
+            plot_missing_heatmap(df, title)
+            plt.show()
+
+
+def plot_missing_summary_bar(datasets: dict):
+    """Create summary of missing data across all datasets."""
+    summary_data = []
+    for name, df in datasets.items():
+        for col in df.columns:
+            missing_count = df[col].isna().sum()
+            if missing_count > 0:
+                summary_data.append({
+                    'Dataset': name,
+                    'Column': col,
+                    'Missing Count': missing_count,
+                    'Missing %': round((missing_count / len(df)) * 100, 2)
+                })
+    
+    if summary_data:
+        summary_df = pd.DataFrame(summary_data)
+        return summary_df
+    return None
