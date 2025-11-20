@@ -1,0 +1,79 @@
+p-floatlabel {
+  width: 100%;
+}
+
+p-floatlabel label {
+  font-size: 16px !important;
+}
+
+.p-floatlabel:has(input:focus) label,
+.p-floatlabel:has(span:focus) label {
+  font-size: 14px !important;
+}
+
+input,
+p-inputNumber {
+  font-size: 16px !important;
+  height: 100%;
+}
+
+::ng-deep p-inputicon::before {
+  font-size: 16px !important;
+}
+
+::ng-deep .readonly input {
+  cursor: none;
+}
+::ng-deep .readonly button {
+  display: none !important;
+}
+::ng-deep .readonly chevrondownicon {
+  display: none !important;
+}
+
+.error {
+  width: 100%;
+  font-size: 14px;
+  height: 20px;
+  color: #7f1d1d;
+}
+
+p-select.ng-invalid.ng-touched,
+input.ng-invalid.ng-touched,
+::ng-deep p-inputNumber.ng-invalid.ng-touched input,
+::ng-deep p-datepicker.ng-invalid.ng-touched input {
+  border: 1px solid #7f1d1d !important;
+  border-radius: 8px;
+}
+
+::ng-deep p-floatlabel label.error-label {
+  color: #7f1d1d !important;
+}
+
+.p-floatlabel:has(input.p-filled) label,
+.p-floatlabel:has(textarea.p-filled) label,
+.p-floatlabel:has(.p-inputwrapper-filled) label {
+  color: var(--blue-main-color);
+}
+
+::ng-deep .p-select-label {
+  display: flex !important;
+  align-items: center !important;
+}
+
+::ng-deep .p-password-panel .p-password-meter {
+  display: none !important;
+}
+
+::ng-deep .p-password-strength {
+  display: none !important;
+}
+
+::ng-deep .p-password-toggle-mask-icon {
+  cursor: pointer;
+}
+
+::ng-deep .readonly-cursor input,
+::ng-deep .readonly-cursor {
+  pointer-events: none;
+}/*# sourceMappingURL=input.css.map */

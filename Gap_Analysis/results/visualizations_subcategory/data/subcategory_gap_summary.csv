@@ -1,0 +1,38 @@
+parent_category,subcategory,supply,demand,gap_score,gap_status,gap_pct
+Accessories,Bottles and Cages,3,15106,3776.75,Critical Gap,377575.0
+Accessories,Tires and Tubes,11,29772,2481.08,Critical Gap,248008.33
+Clothing,Caps,1,4151,2076.0,Critical Gap,207500.0
+Accessories,Fenders,1,3960,1980.5,Critical Gap,197950.0
+Accessories,Helmets,3,6034,1508.75,Critical Gap,150775.0
+Accessories,Cleaners,1,1706,853.5,Critical Gap,85250.0
+Clothing,Gloves,6,2644,377.86,Critical Gap,37685.71
+Accessories,Hydration Packs,1,695,348.0,Critical Gap,34700.0
+Clothing,Jerseys,8,3113,346.0,Critical Gap,34500.0
+Clothing,Socks,4,1063,212.8,Critical Gap,21180.0
+Bikes,Road Bikes,43,7099,161.36,High Gap,16036.36
+Accessories,Bike Racks,1,302,151.5,High Gap,15050.0
+Bikes,Mountain Bikes,32,4706,142.64,High Gap,14163.64
+Clothing,Vests,3,521,130.5,High Gap,12950.0
+Clothing,Shorts,7,944,118.12,High Gap,11712.5
+Accessories,Bike Stands,1,234,117.5,High Gap,11650.0
+Bikes,Touring Bikes,22,2124,92.39,Moderate Gap,9139.13
+Components,Chains,1,0,0.5,Low Gap,-50.0
+Accessories,Locks,1,0,0.5,Low Gap,-50.0
+Accessories,Panniers,1,0,0.5,Low Gap,-50.0
+Accessories,Pumps,2,0,0.33,Low Gap,-66.67
+Components,Brakes,2,0,0.33,Low Gap,-66.67
+Components,Derailleurs,2,0,0.33,Low Gap,-66.67
+Components,Cranksets,3,0,0.25,Low Gap,-75.0
+Components,Headsets,3,0,0.25,Low Gap,-75.0
+Clothing,Bib-Shorts,3,0,0.25,Low Gap,-75.0
+Components,Forks,3,0,0.25,Low Gap,-75.0
+Accessories,Lights,3,0,0.25,Low Gap,-75.0
+Clothing,Tights,3,0,0.25,Low Gap,-75.0
+Components,Bottom Brackets,3,0,0.25,Low Gap,-75.0
+Components,Pedals,7,0,0.12,Low Gap,-87.5
+Components,Handlebars,8,0,0.11,Low Gap,-88.89
+Components,Saddles,9,0,0.1,Low Gap,-90.0
+Components,Wheels,14,0,0.07,Low Gap,-93.33
+Components,Touring Frames,18,0,0.05,Low Gap,-94.74
+Components,Mountain Frames,28,0,0.03,Low Gap,-96.55
+Components,Road Frames,31,0,0.03,Low Gap,-96.88
