@@ -31,7 +31,7 @@ def create_supply_demand_chart(df: pd.DataFrame) -> go.Figure:
     
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     
-    # Supply on left Y-axis (primary)
+    
     fig.add_trace(
         go.Bar(
             x=df_sorted['category'],
@@ -51,7 +51,7 @@ def create_supply_demand_chart(df: pd.DataFrame) -> go.Figure:
         secondary_y=False
     )
     
-    # Demand on right Y-axis (secondary)
+    
     fig.add_trace(
         go.Bar(
             x=df_sorted['category'],
@@ -108,7 +108,7 @@ def create_supply_demand_chart(df: pd.DataFrame) -> go.Figure:
         ),
     )
     
-    # Left Y-axis (Supply) - Blue scale
+    
     fig.update_yaxes(
         title_text='<b style="color:#3B82F6">Supply (Products)</b>',
         title_font=dict(size=12, family=FONT_FAMILY),
@@ -120,7 +120,7 @@ def create_supply_demand_chart(df: pd.DataFrame) -> go.Figure:
         secondary_y=False
     )
     
-    # Right Y-axis (Demand) - Orange scale
+    
     fig.update_yaxes(
         title_text='<b style="color:#F97316">Demand (Orders)</b>',
         title_font=dict(size=12, family=FONT_FAMILY),
@@ -149,11 +149,11 @@ def create_gap_score_severity_chart(df: pd.DataFrame):
     """
     df = df.copy()
 
-    # Normalize gap score to 0–100 scale (best practice)
+    
     min_g, max_g = df["gap_score"].min(), df["gap_score"].max()
     df["gap_score_norm"] = ((df["gap_score"] - min_g) / (max_g - min_g)) * 100
 
-    # Sorting for clean display
+    
     df = df.sort_values("gap_score_norm", ascending=True)
 
     severity_colors = {
@@ -185,7 +185,7 @@ def create_gap_score_severity_chart(df: pd.DataFrame):
         paper_bgcolor="white",
     )
 
-    # Add ranking labels (#1, #2, #3)
+    
     ranked = df.sort_values("gap_score_norm", ascending=False).head(3)
     for i, row in ranked.iterrows():
         fig.add_annotation(

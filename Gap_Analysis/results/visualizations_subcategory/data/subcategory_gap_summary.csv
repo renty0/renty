@@ -16,19 +16,19 @@ Clothing,Vests,3,521,130.5,High Gap,12950.0
 Clothing,Shorts,7,944,118.12,High Gap,11712.5
 Accessories,Bike Stands,1,234,117.5,High Gap,11650.0
 Bikes,Touring Bikes,22,2124,92.39,Moderate Gap,9139.13
-Accessories,Panniers,1,0,0.5,Low Gap,-50.0
-Accessories,Locks,1,0,0.5,Low Gap,-50.0
 Components,Chains,1,0,0.5,Low Gap,-50.0
+Accessories,Locks,1,0,0.5,Low Gap,-50.0
+Accessories,Panniers,1,0,0.5,Low Gap,-50.0
 Accessories,Pumps,2,0,0.33,Low Gap,-66.67
 Components,Brakes,2,0,0.33,Low Gap,-66.67
 Components,Derailleurs,2,0,0.33,Low Gap,-66.67
-Components,Headsets,3,0,0.25,Low Gap,-75.0
-Components,Bottom Brackets,3,0,0.25,Low Gap,-75.0
-Components,Forks,3,0,0.25,Low Gap,-75.0
 Components,Cranksets,3,0,0.25,Low Gap,-75.0
-Accessories,Lights,3,0,0.25,Low Gap,-75.0
+Components,Headsets,3,0,0.25,Low Gap,-75.0
 Clothing,Bib-Shorts,3,0,0.25,Low Gap,-75.0
+Components,Forks,3,0,0.25,Low Gap,-75.0
+Accessories,Lights,3,0,0.25,Low Gap,-75.0
 Clothing,Tights,3,0,0.25,Low Gap,-75.0
+Components,Bottom Brackets,3,0,0.25,Low Gap,-75.0
 Components,Pedals,7,0,0.12,Low Gap,-87.5
 Components,Handlebars,8,0,0.11,Low Gap,-88.89
 Components,Saddles,9,0,0.1,Low Gap,-90.0

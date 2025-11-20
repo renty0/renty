@@ -55,7 +55,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
         horizontal_spacing=0.10,
     )
     
-    # KPI 1: Average Gap Score (most important - largest)
+   
     fig.add_trace(
         go.Indicator(
             mode='number+delta',
@@ -69,7 +69,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
                 suffix=''
             ),
             delta=dict(
-                reference=200,  # Target threshold
+                reference=200,  
                 increasing=dict(color='red'),
                 decreasing=dict(color='green')
             ),
@@ -78,7 +78,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
         row=1, col=1,
     )
     
-    # KPI 2: Highest Gap Category (with full name, no truncation)
+    
     fig.add_trace(
         go.Indicator(
             mode='number',
@@ -96,7 +96,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
         row=1, col=2,
     )
     
-    # KPI 3: Total Categories (neutral color)
+    
     fig.add_trace(
         go.Indicator(
             mode='number',
@@ -114,7 +114,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
         row=1, col=3,
     )
     
-    # KPI 4: High Gap % with CLEAR ZONES
+   
     fig.add_trace(
         go.Indicator(
             mode='gauge+number+delta',
@@ -130,14 +130,14 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
                 borderwidth=2,
                 bordercolor='gray',
                 steps=[
-                    {'range': [0, 30], 'color': '#D1FAE5', 'name': 'Good'},      # Light green
-                    {'range': [30, 60], 'color': '#FEF3C7', 'name': 'Warning'},  # Light yellow
-                    {'range': [60, 100], 'color': '#FEE2E2', 'name': 'Critical'} # Light red
+                    {'range': [0, 30], 'color': '#D1FAE5', 'name': 'Good'},      
+                    {'range': [30, 60], 'color': '#FEF3C7', 'name': 'Warning'},  
+                    {'range': [60, 100], 'color': '#FEE2E2', 'name': 'Critical'} 
                 ],
                 threshold=dict(
                     line=dict(color='red', width=4),
                     thickness=0.75,
-                    value=50  # Target threshold
+                    value=50  
                 )
             ),
             number=dict(
@@ -158,7 +158,7 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
         plot_bgcolor=PROFESSIONAL_COLORS['bg_white'],
         paper_bgcolor=PROFESSIONAL_COLORS['bg_light'],
         font=dict(family=FONT_FAMILY, size=12, color=PROFESSIONAL_COLORS['text_dark']),
-        height=220,  # Increased for better visibility
+        height=220,  
         margin=dict(l=30, r=30, t=80, b=30),
         title=dict(
             text='<b>Subcategory Gap Analysis - Executive KPI Dashboard</b>',
