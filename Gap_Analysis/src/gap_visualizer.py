@@ -9,7 +9,6 @@ def plot_gap_score_bar(df: pd.DataFrame, output_path: str = None):
     """Create bar chart showing gap scores by category."""
     df = df.copy()
     
-    # Ensure NormalizedGapScore exists
     if 'NormalizedGapScore' not in df.columns:
         min_gap = df['GapScore'].min()
         max_gap = df['GapScore'].max()
@@ -88,7 +87,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     """Create comprehensive dashboard with multiple gap metrics."""
     df = df.copy()
     
-    # Ensure NormalizedGapScore exists
     if 'NormalizedGapScore' not in df.columns:
         min_gap = df['GapScore'].min()
         max_gap = df['GapScore'].max()
@@ -102,7 +100,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     
     colors_palette = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12']
     
-    # 1. Gap Score by Category
     ax1 = fig.add_subplot(gs[0, :])
     colors = plt.cm.RdYlGn_r(df['NormalizedGapScore'])
     ax1.barh(df['CategoryName'], df['GapScore'], color=colors)
@@ -111,7 +108,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     ax1.invert_yaxis()
     ax1.grid(axis='x', alpha=0.3)
     
-    # 2. Supply Distribution
     ax2 = fig.add_subplot(gs[1, 0])
     ax2.bar(df['CategoryName'], df['UniqueProducts'], color=colors_palette[0], alpha=0.7)
     ax2.set_ylabel('Number of Products')
@@ -119,7 +115,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     ax2.tick_params(axis='x', rotation=45)
     ax2.grid(axis='y', alpha=0.3)
     
-    # 3. Demand Distribution
     ax3 = fig.add_subplot(gs[1, 1])
     ax3.bar(df['CategoryName'], df['TotalQuantitySold'], color=colors_palette[1], alpha=0.7)
     ax3.set_ylabel('Total Quantity Sold')
@@ -127,7 +122,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     ax3.tick_params(axis='x', rotation=45)
     ax3.grid(axis='y', alpha=0.3)
     
-    # 4. Gap Level Distribution
     ax4 = fig.add_subplot(gs[2, 0])
     if 'GapLevel' in df.columns:
         gap_counts = df['GapLevel'].value_counts()
@@ -138,7 +132,6 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
         ax4.text(0.5, 0.5, 'Gap Level\nNot Available', ha='center', va='center')
         ax4.axis('off')
     
-    # 5. Key Metrics Summary
     ax5 = fig.add_subplot(gs[2, 1])
     ax5.axis('off')
     
@@ -224,7 +217,6 @@ def plot_territory_gap_analysis(df: pd.DataFrame, output_path: str = None):
     """Create visualization showing gap distribution across territories."""
     fig, axes = plt.subplots(2, 1, figsize=(14, 10))
     
-    # Plot 1: Gap Score by Territory
     territory_gap = df.groupby(['Region', 'Country'])['GapScore'].mean().reset_index()
     territory_gap = territory_gap.sort_values('GapScore', ascending=False)
     
@@ -238,7 +230,6 @@ def plot_territory_gap_analysis(df: pd.DataFrame, output_path: str = None):
     axes[0].invert_yaxis()
     axes[0].grid(axis='x', alpha=0.3, linestyle='--')
     
-    # Plot 2: Gap Score by Category within Top 3 Territories
     top_territories = territory_gap.head(3)
     
     for idx, territory in top_territories.iterrows():
@@ -294,7 +285,6 @@ def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.Dat
     fig = plt.figure(figsize=(16, 10))
     gs = fig.add_gridspec(2, 2, hspace=0.3, wspace=0.3)
     
-    # 1. Top Subcategories by Gap Score
     ax1 = fig.add_subplot(gs[0, 0])
     top_subcat = subcategory_gaps.nlargest(top_n, 'GapScore')
     colors1 = plt.cm.RdYlGn_r(top_subcat['NormalizedGapScore'])
@@ -306,7 +296,6 @@ def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.Dat
     ax1.invert_yaxis()
     ax1.grid(axis='x', alpha=0.3)
     
-    # 2. Top Territories by Average Gap Score
     ax2 = fig.add_subplot(gs[0, 1])
     territory_avg = territory_gaps.groupby(['Region', 'Country'])['GapScore'].mean().reset_index()
     territory_avg = territory_avg.nlargest(top_n, 'GapScore')
@@ -319,7 +308,6 @@ def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.Dat
     ax2.set_title(f'Top {top_n} Territories by Gap Score', fontweight='bold')
     ax2.grid(axis='y', alpha=0.3)
     
-    # 3. Gap Distribution by Category
     ax3 = fig.add_subplot(gs[1, 0])
     category_gaps = subcategory_gaps.groupby('CategoryName')['GapScore'].agg(['mean', 'max', 'min'])
     
@@ -336,7 +324,6 @@ def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.Dat
     ax3.legend()
     ax3.grid(axis='y', alpha=0.3)
     
-    # 4. Key Insights Summary
     ax4 = fig.add_subplot(gs[1, 1])
     ax4.axis('off')
     
