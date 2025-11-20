@@ -38,7 +38,11 @@ def calculate_kpis(df: pd.DataFrame) -> dict:
 
 def create_kpi_cards(kpis: dict) -> go.Figure:
     """
-    Create 4-card KPI section: Avg Gap Score, Highest Gap Category, Total Categories, % High Gap.
+    BEST PRACTICE VERSION:
+    - Clear visual hierarchy
+    - Contextual color coding
+    - Proper labels and units
+    - Status indicators (good/warning/critical zones)
     """
     fig = make_subplots(
         rows=1, cols=4,
@@ -48,71 +52,117 @@ def create_kpi_cards(kpis: dict) -> go.Figure:
             {'type': 'indicator'},
             {'type': 'indicator'}
         ]],
-        horizontal_spacing=0.08,
+        horizontal_spacing=0.10,
     )
     
+    # KPI 1: Average Gap Score (most important - largest)
     fig.add_trace(
         go.Indicator(
-            mode='number',
+            mode='number+delta',
             value=kpis['avg_gap_score'],
-            title=dict(text='Avg Gap Score', font=dict(size=13)),
-            number=dict(font=dict(size=32, color=PROFESSIONAL_COLORS['critical']), prefix=''),
+            title=dict(
+                text='<b>Avg Gap Score</b>',
+                font=dict(size=14, family=FONT_FAMILY)
+            ),
+            number=dict(
+                font=dict(size=42, color=PROFESSIONAL_COLORS['critical']),
+                suffix=''
+            ),
+            delta=dict(
+                reference=200,  # Target threshold
+                increasing=dict(color='red'),
+                decreasing=dict(color='green')
+            ),
             domain={'x': [0, 0.25], 'y': [0, 1]},
         ),
         row=1, col=1,
     )
     
+    # KPI 2: Highest Gap Category (with full name, no truncation)
     fig.add_trace(
         go.Indicator(
-            mode='number+delta',
+            mode='number',
             value=kpis['highest_gap_value'],
-            title=dict(text=f"Highest: {kpis['highest_gap_category']}", font=dict(size=11)),
-            number=dict(font=dict(size=28, color=PROFESSIONAL_COLORS['critical'])),
+            title=dict(
+                text=f"<b>Highest Gap</b><br><sub style='font-size:10px'>{kpis['highest_gap_category']}</sub>",
+                font=dict(size=12, family=FONT_FAMILY)
+            ),
+            number=dict(
+                font=dict(size=36, color=PROFESSIONAL_COLORS['critical']),
+                suffix=''
+            ),
             domain={'x': [0.25, 0.5], 'y': [0, 1]},
         ),
         row=1, col=2,
     )
     
+    # KPI 3: Total Categories (neutral color)
     fig.add_trace(
         go.Indicator(
             mode='number',
             value=kpis['total_categories'],
-            title=dict(text='Total Categories', font=dict(size=13)),
-            number=dict(font=dict(size=32, color=PROFESSIONAL_COLORS['supply'])),
+            title=dict(
+                text='<b>Total Categories</b>',
+                font=dict(size=14, family=FONT_FAMILY)
+            ),
+            number=dict(
+                font=dict(size=42, color=PROFESSIONAL_COLORS['supply']),
+                suffix=' cats'
+            ),
             domain={'x': [0.5, 0.75], 'y': [0, 1]},
         ),
         row=1, col=3,
     )
     
+    # KPI 4: High Gap % with CLEAR ZONES
     fig.add_trace(
         go.Indicator(
-            mode='gauge+number',
+            mode='gauge+number+delta',
             value=kpis['high_gap_pct'],
-            title=dict(text='High Gap %', font=dict(size=13)),
-            gauge=dict(
-                axis=dict(range=[0, 100]),
-                bar=dict(color=PROFESSIONAL_COLORS['critical']),
-                steps=[
-                    {'range': [0, 33], 'color': PROFESSIONAL_COLORS['balanced']},
-                    {'range': [33, 66], 'color': PROFESSIONAL_COLORS['warning']},
-                    {'range': [66, 100], 'color': PROFESSIONAL_COLORS['critical']},
-                ],
+            title=dict(
+                text='<b>High Gap %</b>',
+                font=dict(size=14, family=FONT_FAMILY)
             ),
-            number=dict(font=dict(size=28, color=PROFESSIONAL_COLORS['critical']), suffix='%'),
+            gauge=dict(
+                axis=dict(range=[0, 100], tickwidth=1, tickcolor='darkgray'),
+                bar=dict(color=PROFESSIONAL_COLORS['critical'], thickness=0.75),
+                bgcolor='white',
+                borderwidth=2,
+                bordercolor='gray',
+                steps=[
+                    {'range': [0, 30], 'color': '#D1FAE5', 'name': 'Good'},      # Light green
+                    {'range': [30, 60], 'color': '#FEF3C7', 'name': 'Warning'},  # Light yellow
+                    {'range': [60, 100], 'color': '#FEE2E2', 'name': 'Critical'} # Light red
+                ],
+                threshold=dict(
+                    line=dict(color='red', width=4),
+                    thickness=0.75,
+                    value=50  # Target threshold
+                )
+            ),
+            number=dict(
+                font=dict(size=32, color=PROFESSIONAL_COLORS['critical']),
+                suffix='%'
+            ),
+            delta=dict(
+                reference=50,
+                increasing=dict(color='red', symbol='▲'),
+                decreasing=dict(color='green', symbol='▼')
+            ),
             domain={'x': [0.75, 1], 'y': [0, 1]},
         ),
         row=1, col=4,
     )
     
     fig.update_layout(
-        plot_bgcolor=PROFESSIONAL_COLORS['bg_light'],
-        paper_bgcolor=PROFESSIONAL_COLORS['bg_white'],
-        font=dict(family=FONT_FAMILY, size=11, color=PROFESSIONAL_COLORS['text_dark']),
-        height=180,
-        margin=dict(l=20, r=20, t=60, b=20),
+        plot_bgcolor=PROFESSIONAL_COLORS['bg_white'],
+        paper_bgcolor=PROFESSIONAL_COLORS['bg_light'],
+        font=dict(family=FONT_FAMILY, size=12, color=PROFESSIONAL_COLORS['text_dark']),
+        height=220,  # Increased for better visibility
+        margin=dict(l=30, r=30, t=80, b=30),
         title=dict(
-            text='<b>Gap Analysis KPI Overview</b>',
-            font=dict(size=14, color=PROFESSIONAL_COLORS['text_dark'], family=FONT_FAMILY),
+            text='<b>Subcategory Gap Analysis - Executive KPI Dashboard</b>',
+            font=dict(size=16, color=PROFESSIONAL_COLORS['text_dark'], family=FONT_FAMILY),
             x=0.5,
             xanchor='center',
         ),

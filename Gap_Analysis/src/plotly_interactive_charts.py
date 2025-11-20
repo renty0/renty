@@ -23,168 +23,185 @@ FONT_FAMILY = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, san
 
 def create_supply_demand_chart(df: pd.DataFrame) -> go.Figure:
     """
-    Create professional side-by-side supply vs demand bar chart.
-    Sorted by gap score descending.
+    Create professional supply vs demand visualization using dual Y-axes.
+    BEST PRACTICE: Each metric on its own appropriately-scaled axis.
+    This is the industry standard for comparing metrics with different magnitudes.
     """
     df_sorted = df.sort_values('gap_score', ascending=False)
     
-    fig = go.Figure()
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
     
-    fig.add_trace(go.Bar(
-        x=df_sorted['category'],
-        y=df_sorted['supply'],
-        name='Supply (Listings)',
-        marker=dict(
-            color=PROFESSIONAL_COLORS['supply'],
-            line=dict(color='white', width=1)
+    # Supply on left Y-axis (primary)
+    fig.add_trace(
+        go.Bar(
+            x=df_sorted['category'],
+            y=df_sorted['supply'],
+            name='Supply (Products)',
+            marker=dict(
+                color=PROFESSIONAL_COLORS['supply'],
+                line=dict(color='white', width=1),
+                opacity=0.85
+            ),
+            text=df_sorted['supply'].astype(int),
+            textposition='outside',
+            textfont=dict(size=9, color=PROFESSIONAL_COLORS['supply'], family=FONT_FAMILY),
+            hovertemplate='<b>%{x}</b><br>Supply: %{y:,} products<extra></extra>',
+            offsetgroup=0,
         ),
-        text=df_sorted['supply'].astype(int),
-        textposition='outside',
-        hovertemplate='<b>%{x}</b><br>Supply: %{y:,}<extra></extra>',
-    ))
+        secondary_y=False
+    )
     
-    fig.add_trace(go.Bar(
-        x=df_sorted['category'],
-        y=df_sorted['demand'],
-        name='Demand (Searches)',
-        marker=dict(
-            color=PROFESSIONAL_COLORS['demand'],
-            line=dict(color='white', width=1)
+    # Demand on right Y-axis (secondary)
+    fig.add_trace(
+        go.Bar(
+            x=df_sorted['category'],
+            y=df_sorted['demand'],
+            name='Demand (Orders)',
+            marker=dict(
+                color=PROFESSIONAL_COLORS['demand'],
+                line=dict(color='white', width=1),
+                opacity=0.85
+            ),
+            text=df_sorted['demand'].astype(int),
+            textposition='outside',
+            textfont=dict(size=9, color=PROFESSIONAL_COLORS['demand'], family=FONT_FAMILY),
+            hovertemplate='<b>%{x}</b><br>Demand: %{y:,} orders<extra></extra>',
+            offsetgroup=1,
         ),
-        text=df_sorted['demand'].astype(int),
-        textposition='outside',
-        hovertemplate='<b>%{x}</b><br>Demand: %{y:,}<extra></extra>',
-    ))
+        secondary_y=True
+    )
     
     fig.update_layout(
         title=dict(
-            text='<b>Supply vs Demand by Category</b><br><sub>Sorted by Gap Score</sub>',
+            text='<b>Supply vs Demand by Category</b><br><sub>Independent Y-axes ensure both metrics are clearly visible</sub>',
             font=dict(size=16, color=PROFESSIONAL_COLORS['text_dark'], family=FONT_FAMILY),
             x=0.5,
             xanchor='center'
         ),
         barmode='group',
+        bargap=0.15,
+        bargroupgap=0.1,
         xaxis=dict(
             title='Category',
             title_font=dict(size=12, family=FONT_FAMILY),
             showgrid=False,
             linecolor='#E5E7EB',
             linewidth=1,
-        ),
-        yaxis=dict(
-            title='Count',
-            title_font=dict(size=12, family=FONT_FAMILY),
-            gridcolor='#E5E7EB',
-            linecolor='#E5E7EB',
-            linewidth=1,
+            tickangle=-45
         ),
         hovermode='x unified',
         plot_bgcolor=PROFESSIONAL_COLORS['bg_light'],
         paper_bgcolor=PROFESSIONAL_COLORS['bg_white'],
         font=dict(family=FONT_FAMILY, size=11, color=PROFESSIONAL_COLORS['text_dark']),
-        height=550,
-        margin=dict(l=60, r=40, t=100, b=80),
+        height=600,
+        margin=dict(l=70, r=70, t=100, b=120),
         showlegend=True,
         legend=dict(
-            x=1.02,
-            y=1,
-            xanchor='left',
+            x=0.5,
+            y=1.08,
+            xanchor='center',
             yanchor='top',
-            bgcolor='rgba(255,255,255,0.8)',
+            orientation='h',
+            bgcolor='rgba(255,255,255,0.9)',
             bordercolor='#E5E7EB',
             borderwidth=1,
         ),
     )
     
-    fig.update_xaxes(tickangle=-45)
+    # Left Y-axis (Supply) - Blue scale
+    fig.update_yaxes(
+        title_text='<b style="color:#3B82F6">Supply (Products)</b>',
+        title_font=dict(size=12, family=FONT_FAMILY),
+        gridcolor='#E5E7EB',
+        linecolor='#3B82F6',
+        linewidth=2,
+        rangemode='tozero',
+        showgrid=True,
+        secondary_y=False
+    )
     
-    return fig
-
-
-def create_gap_score_severity_chart(df: pd.DataFrame) -> go.Figure:
-    """
-    Create horizontal bar chart with color-coded gap severity.
-    Annotate top 3 gaps.
-    """
-    df_sorted = df.sort_values('gap_score', ascending=True)
-    
-    def get_gap_color(status):
-        status_colors = {
-            'Critical Gap': PROFESSIONAL_COLORS['critical'],
-            'High Gap': PROFESSIONAL_COLORS['warning'],
-            'Moderate Gap': PROFESSIONAL_COLORS['mild'],
-            'Low Gap': PROFESSIONAL_COLORS['balanced'],
-        }
-        return status_colors.get(status, PROFESSIONAL_COLORS['neutral'])
-    
-    colors = [get_gap_color(status) for status in df_sorted['gap_status']]
-    
-    fig = go.Figure(data=[
-        go.Bar(
-            y=df_sorted['category'],
-            x=df_sorted['gap_score'],
-            orientation='h',
-            marker=dict(
-                color=colors,
-                line=dict(color='white', width=1)
-            ),
-            text=df_sorted['gap_score'].apply(lambda x: f'{x:.2f}'),
-            textposition='outside',
-            hovertemplate='<b>%{y}</b><br>Gap Score: %{x:.2f}<br>Status: %{customdata}<extra></extra>',
-            customdata=df_sorted['gap_status'],
-        )
-    ])
-    
-    top_3_indices = df.nlargest(3, 'gap_score').index
-    for i, idx in enumerate(top_3_indices, 1):
-        row = df.loc[idx]
-        fig.add_annotation(
-            y=row['category'],
-            x=row['gap_score'],
-            text=f"#{i}",
-            showarrow=True,
-            arrowhead=2,
-            arrowsize=1,
-            arrowwidth=2,
-            arrowcolor=PROFESSIONAL_COLORS['critical'],
-            ax=30,
-            ay=-30,
-            bgcolor=PROFESSIONAL_COLORS['critical'],
-            bordercolor=PROFESSIONAL_COLORS['critical'],
-            font=dict(color='white', size=10),
-        )
-    
-    fig.update_layout(
-        title=dict(
-            text='<b>Gap Score Severity Analysis</b><br><sub>Green=Balanced | Yellow=Mild | Red=Severe</sub>',
-            font=dict(size=16, color=PROFESSIONAL_COLORS['text_dark'], family=FONT_FAMILY),
-            x=0.5,
-            xanchor='center'
-        ),
-        xaxis=dict(
-            title='Gap Score',
-            title_font=dict(size=12, family=FONT_FAMILY),
-            gridcolor='#E5E7EB',
-            linecolor='#E5E7EB',
-            linewidth=1,
-        ),
-        yaxis=dict(
-            title='Category',
-            title_font=dict(size=12, family=FONT_FAMILY),
-            showgrid=False,
-            linecolor='#E5E7EB',
-            linewidth=1,
-        ),
-        hovermode='y',
-        plot_bgcolor=PROFESSIONAL_COLORS['bg_light'],
-        paper_bgcolor=PROFESSIONAL_COLORS['bg_white'],
-        font=dict(family=FONT_FAMILY, size=11, color=PROFESSIONAL_COLORS['text_dark']),
-        height=550,
-        margin=dict(l=100, r=80, t=120, b=60),
-        showlegend=False,
+    # Right Y-axis (Demand) - Orange scale
+    fig.update_yaxes(
+        title_text='<b style="color:#F97316">Demand (Orders)</b>',
+        title_font=dict(size=12, family=FONT_FAMILY),
+        gridcolor='rgba(0,0,0,0)',
+        linecolor='#F97316',
+        linewidth=2,
+        rangemode='tozero',
+        showgrid=False,
+        secondary_y=True
     )
     
     return fig
+
+
+import plotly.express as px
+import plotly.graph_objects as go
+
+def create_gap_score_severity_chart(df: pd.DataFrame):
+    """
+    BEST PRACTICE VERSION:
+    Uses normalized linear scale instead of log scale.
+    - Avoids distortion
+    - Avoids huge empty space
+    - Keeps differences visible
+    - Industry standard for severity dashboards
+    """
+    df = df.copy()
+
+    # Normalize gap score to 0–100 scale (best practice)
+    min_g, max_g = df["gap_score"].min(), df["gap_score"].max()
+    df["gap_score_norm"] = ((df["gap_score"] - min_g) / (max_g - min_g)) * 100
+
+    # Sorting for clean display
+    df = df.sort_values("gap_score_norm", ascending=True)
+
+    severity_colors = {
+        "Critical Gap": "#d62728",
+        "High Gap": "#ff7f0e",
+        "Moderate Gap": "#ffbf00",
+        "Low Gap": "#2ca02c",
+    }
+
+    fig = px.bar(
+        df,
+        x="gap_score_norm",
+        y="category",
+        orientation="h",
+        color="gap_status",
+        color_discrete_map=severity_colors,
+        text=df["gap_score"].apply(lambda x: f"{x:.1f}"),
+        title="Gap Score Severity Analysis (Normalized 0–100 Scale)",
+    )
+
+    fig.update_xaxes(title="Normalized Severity (0–100)")
+    fig.update_yaxes(title="Category")
+
+    fig.update_layout(
+        font=dict(family="Arial", size=14),
+        title=dict(font=dict(size=26)),
+        legend=dict(title="Severity Level"),
+        plot_bgcolor="#F9FAFB",
+        paper_bgcolor="white",
+    )
+
+    # Add ranking labels (#1, #2, #3)
+    ranked = df.sort_values("gap_score_norm", ascending=False).head(3)
+    for i, row in ranked.iterrows():
+        fig.add_annotation(
+            x=row["gap_score_norm"],
+            y=row["category"],
+            text=f"#{ranked.index.get_loc(i)+1}",
+            showarrow=True,
+            arrowhead=2,
+            ax=40,
+            ay=0,
+            font=dict(color="red", size=14, weight="bold"),
+            bgcolor="white"
+        )
+
+    return fig
+
 
 
 def create_gap_heatmap(df: pd.DataFrame) -> go.Figure:
