@@ -4,50 +4,17 @@ GAP ANALYSIS INSIGHTS
 
 SUPPLY DEMAND ANALYSIS
 --------------------------------------------------------------------------------
-The analysis reveals Bottles and Cages as the category with the largest supply-demand imbalance.
-With 15106 units in demand but only 3 products available,
-the demand-to-supply ratio is 3776.5:1. This 377575.0% gap 
-requires immediate strategic attention through supply expansion or demand management initiatives.
-
-Best Practice Visualization: The chart uses independent Y-axes (dual-axis chart), which is the 
-industry-standard approach recommended by data visualization experts (Tufte, Few, Cairo) for 
-comparing metrics with different scales. Each metric is shown on its own appropriately-scaled axis, 
-ensuring both are clearly visible without artificial manipulation.
+Bottles and Cages: 15106 demand vs 3 supply (Ratio: 3776.5:1)
 
 SEVERITY ANALYSIS
 --------------------------------------------------------------------------------
-
-SEVERITY ANALYSIS (Scale Used: Logarithmic)
-
-Among 37 categories, 16 exhibit either Critical or High severity levels,
-accounting for 43.2% of the dataset.
-
-HIGHEST SEVERITY CATEGORY: Bottles and Cages
-  • Gap Score: 3776.75
-  • Severity: Critical Gap
-  • Supply: 3
-  • Demand: 15106
-  • Gap Percentage: 377575.0%
-
-SEVERITY DISTRIBUTION:
-  • Critical Gap: 10 (27.0%)
-  • High Gap: 6 (16.2%)
-  • Moderate Gap: 1 (2.7%)
-  • Low Gap: 20 (54.1%)
-NOTE ON VISUALIZATION:
-A log scale is used because the gap score range exceeds a 100× difference.
-Zero gap values are replaced with 0.01 (standard best practice) to enable logarithmic plotting.
-This reveals the relative differences clearly without distortion.
+16/37 critical/high (43.2%). Worst: Bottles and Cages (3776.75)
 
 HEATMAP ANALYSIS
 --------------------------------------------------------------------------------
-The normalized heatmap clearly distinguishes healthy market segments from critical zones.
-Red areas indicate high gaps requiring intervention, while green zones show equilibrium.
-Mountain Frames demonstrates the healthiest balance with a gap score of 0.03.
+Best balanced: Mountain Frames (gap: 0.03)
 
 RANKING ANALYSIS
 --------------------------------------------------------------------------------
-The top 10 under-supplied categories show gap scores ranging from 212.80 to 3776.75.
-Categories with scores below 50 are considered well-balanced, indicating healthy market conditions.
-Strategic focus should prioritize the highest-ranking categories for supply expansion.
+Top 10 gaps: 212.80 to 3776.75
 

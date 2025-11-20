@@ -153,8 +153,8 @@
     "gap_pct": 9139.13
   },
   {
-    "parent_category": "Components",
-    "subcategory": "Chains",
+    "parent_category": "Accessories",
+    "subcategory": "Panniers",
     "supply": 1,
     "demand": 0,
     "gap_score": 0.5,
@@ -171,8 +171,8 @@
     "gap_pct": -50.0
   },
   {
-    "parent_category": "Accessories",
-    "subcategory": "Panniers",
+    "parent_category": "Components",
+    "subcategory": "Chains",
     "supply": 1,
     "demand": 0,
     "gap_score": 0.5,
@@ -208,15 +208,6 @@
   },
   {
     "parent_category": "Components",
-    "subcategory": "Cranksets",
-    "supply": 3,
-    "demand": 0,
-    "gap_score": 0.25,
-    "gap_status": "Low Gap",
-    "gap_pct": -75.0
-  },
-  {
-    "parent_category": "Components",
     "subcategory": "Headsets",
     "supply": 3,
     "demand": 0,
@@ -225,8 +216,8 @@
     "gap_pct": -75.0
   },
   {
-    "parent_category": "Clothing",
-    "subcategory": "Bib-Shorts",
+    "parent_category": "Components",
+    "subcategory": "Bottom Brackets",
     "supply": 3,
     "demand": 0,
     "gap_score": 0.25,
@@ -236,6 +227,15 @@
   {
     "parent_category": "Components",
     "subcategory": "Forks",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "gap_pct": -75.0
+  },
+  {
+    "parent_category": "Components",
+    "subcategory": "Cranksets",
     "supply": 3,
     "demand": 0,
     "gap_score": 0.25,
@@ -253,7 +253,7 @@
   },
   {
     "parent_category": "Clothing",
-    "subcategory": "Tights",
+    "subcategory": "Bib-Shorts",
     "supply": 3,
     "demand": 0,
     "gap_score": 0.25,
@@ -261,8 +261,8 @@
     "gap_pct": -75.0
   },
   {
-    "parent_category": "Components",
-    "subcategory": "Bottom Brackets",
+    "parent_category": "Clothing",
+    "subcategory": "Tights",
     "supply": 3,
     "demand": 0,
     "gap_score": 0.25,

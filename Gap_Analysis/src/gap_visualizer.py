@@ -6,13 +6,7 @@ import os
 
 
 def plot_gap_score_bar(df: pd.DataFrame, output_path: str = None):
-    """
-    Create bar chart showing gap scores by category.
-    
-    Args:
-        df: DataFrame with CategoryName and GapScore columns
-        output_path: Optional path to save the figure
-    """
+    """Create bar chart showing gap scores by category."""
     df = df.copy()
     
     # Ensure NormalizedGapScore exists
@@ -46,19 +40,12 @@ def plot_gap_score_bar(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Chart saved to: {output_path}")
     
     plt.show()
 
 
 def plot_supply_vs_demand(df: pd.DataFrame, output_path: str = None):
-    """
-    Create grouped bar chart comparing supply and demand.
-    
-    Args:
-        df: DataFrame with supply and demand metrics
-        output_path: Optional path to save the figure
-    """
+    """Create grouped bar chart comparing supply and demand."""
     df = df.copy()
     
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -67,7 +54,7 @@ def plot_supply_vs_demand(df: pd.DataFrame, output_path: str = None):
     width = 0.35
     
     supply_bars = ax.bar(x - width/2, df['UniqueProducts'], width, 
-                         label='Supply (Products)', color='#3498db', alpha=0.8)
+                         label='Supply', color='#3498db', alpha=0.8)
     
     demand_max = df['TotalQuantitySold'].max()
     supply_max = df['UniqueProducts'].max()
@@ -93,19 +80,12 @@ def plot_supply_vs_demand(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Chart saved to: {output_path}")
     
     plt.show()
 
 
 def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
-    """
-    Create comprehensive dashboard with multiple gap metrics.
-    
-    Args:
-        df: DataFrame with all gap metrics
-        output_path: Optional path to save the figure
-    """
+    """Create comprehensive dashboard with multiple gap metrics."""
     df = df.copy()
     
     # Ensure NormalizedGapScore exists
@@ -192,19 +172,12 @@ def plot_gap_dashboard(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Dashboard saved to: {output_path}")
     
     plt.show()
 
 
 def plot_gap_heatmap(monthly_df: pd.DataFrame, output_path: str = None):
-    """
-    Create heatmap showing gap scores over time.
-    
-    Args:
-        monthly_df: DataFrame with Month, CategoryName, and GapScore
-        output_path: Optional path to save the figure
-    """
+    """Create heatmap showing gap scores over time."""
     pivot_data = monthly_df.pivot(index='CategoryName', columns='Month', values='GapScore')
     
     fig, ax = plt.subplots(figsize=(14, 6))
@@ -221,19 +194,12 @@ def plot_gap_heatmap(monthly_df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Heatmap saved to: {output_path}")
     
     plt.show()
 
 
 def plot_subcategory_gap_heatmap(df: pd.DataFrame, output_path: str = None):
-    """
-    Create heatmap showing gap scores by category and subcategory.
-    
-    Args:
-        df: DataFrame with CategoryName, SubcategoryName, and GapScore
-        output_path: Optional path to save the figure
-    """
+    """Create heatmap showing gap scores by category and subcategory."""
     pivot_data = df.pivot(index='SubcategoryName', columns='CategoryName', values='GapScore')
     
     fig, ax = plt.subplots(figsize=(12, 10))
@@ -250,19 +216,12 @@ def plot_subcategory_gap_heatmap(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Heatmap saved to: {output_path}")
     
     plt.show()
 
 
 def plot_territory_gap_analysis(df: pd.DataFrame, output_path: str = None):
-    """
-    Create visualization showing gap distribution across territories.
-    
-    Args:
-        df: DataFrame with Region, Country, CategoryName, and GapScore
-        output_path: Optional path to save the figure
-    """
+    """Create visualization showing gap distribution across territories."""
     fig, axes = plt.subplots(2, 1, figsize=(14, 10))
     
     # Plot 1: Gap Score by Territory
@@ -302,19 +261,12 @@ def plot_territory_gap_analysis(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Territory analysis saved to: {output_path}")
     
     plt.show()
 
 
 def plot_gap_by_region_category(df: pd.DataFrame, output_path: str = None):
-    """
-    Create heatmap showing gap scores by region and category.
-    
-    Args:
-        df: DataFrame with Region, CategoryName, and GapScore
-        output_path: Optional path to save the figure
-    """
+    """Create heatmap showing gap scores by region and category."""
     pivot_data = df.pivot_table(index='Region', columns='CategoryName', 
                                  values='GapScore', aggfunc='mean')
     
@@ -332,22 +284,13 @@ def plot_gap_by_region_category(df: pd.DataFrame, output_path: str = None):
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Region-category heatmap saved to: {output_path}")
     
     plt.show()
 
 
 def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.DataFrame, 
                           top_n: int = 10, output_path: str = None):
-    """
-    Create summary visualization of top gaps by subcategory and territory.
-    
-    Args:
-        subcategory_gaps: DataFrame with subcategory gap scores
-        territory_gaps: DataFrame with territory gap scores
-        top_n: Number of top gaps to display
-        output_path: Optional path to save the figure
-    """
+    """Create summary visualization of top gaps."""
     fig = plt.figure(figsize=(16, 10))
     gs = fig.add_gridspec(2, 2, hspace=0.3, wspace=0.3)
     
@@ -432,6 +375,5 @@ def plot_top_gaps_summary(subcategory_gaps: pd.DataFrame, territory_gaps: pd.Dat
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"Summary dashboard saved to: {output_path}")
     
     plt.show()
