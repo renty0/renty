@@ -144,15 +144,6 @@ def create_gap_score_bar_chart(summary_df: pd.DataFrame) -> go.Figure:
 
 
 def create_gap_heatmap(summary_df: pd.DataFrame) -> go.Figure:
-    """
-    Create heatmap showing normalized supply, demand, and gap score.
-    
-    Args:
-        summary_df: Clean gap summary DataFrame
-    
-    Returns:
-        Plotly Figure object
-    """
     df = summary_df.copy()
     
     def normalize_col(col):
@@ -177,49 +168,65 @@ def create_gap_heatmap(summary_df: pd.DataFrame) -> go.Figure:
         z=z,
         x=x,
         y=y,
-        colorscale='RdYlGn_r',
-        text=[[f'{val:.2f}' for val in row] for row in z],
-        texttemplate='%{text}',
-        textfont=dict(size=11, color='#111827'),
+        colorscale=[
+            [0, '#10B981'],
+            [0.5, '#FBBF24'],
+            [1, '#DC2626']
+        ],
+        text=np.round(z, 2),
+        texttemplate='%{text:.2f}',
+        textfont=dict(size=10, family='Inter, sans-serif', color='white'),
         hovertemplate='<b>%{y}</b><br>%{x}<br>Normalized: %{z:.3f}<extra></extra>',
-        colorbar=dict(title='Normalized Value', thickness=15, len=0.7),
+        colorbar=dict(
+            title='<b>Normalized</b>',
+            thickness=15,
+            len=0.7,
+            tickfont=dict(size=10)
+        ),
+        line=dict(color='white', width=2)
     ))
     
     fig.update_layout(
         title=dict(
             text='<b>Gap Analysis Heatmap (Normalized Metrics)</b>',
-            font=dict(size=18, color='#111827'),
+            font=dict(size=15, color=COLORS['text_dark'], family='Inter, sans-serif'),
+            x=0.5,
+            xanchor='center'
         ),
-        xaxis_title='Category',
-        yaxis_title='Metric',
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        font=dict(family='Inter, sans-serif', size=12, color='#374151'),
+        xaxis=dict(
+            title='Category',
+            showgrid=False,
+            linecolor=COLORS['border'],
+            linewidth=1
+        ),
+        yaxis=dict(
+            title='Metric',
+            showgrid=False,
+            linecolor=COLORS['border'],
+            linewidth=1
+        ),
+        plot_bgcolor=COLORS['bg_white'],
+        paper_bgcolor=COLORS['bg_white'],
+        font=dict(family='Inter, sans-serif', size=11, color=COLORS['text_dark']),
         height=400,
+        margin=dict(l=100, r=100, t=100, b=80),
     )
     
     return fig
 
 
 def create_category_ranking_chart(summary_df: pd.DataFrame, top_n: int = 5) -> go.Figure:
-    """
-    Create dual ranking chart: top N high-gap and bottom N low-gap categories.
-    
-    Args:
-        summary_df: Clean gap summary DataFrame
-        top_n: Number of categories to show in each ranking
-    
-    Returns:
-        Plotly Figure object
-    """
     top_gaps = summary_df.nlargest(top_n, 'gap_score')
     bottom_gaps = summary_df.nsmallest(top_n, 'gap_score')
     
     fig = make_subplots(
         rows=1, cols=2,
-        subplot_titles=(f'<b>Top {top_n} Under-Supplied</b>', f'<b>Bottom {top_n} (Balanced)</b>'),
+        subplot_titles=(
+            f'<b>Top {top_n} Under-Supplied</b>',
+            f'<b>Bottom {top_n} (Balanced)</b>'
+        ),
         specs=[[{'type': 'bar'}, {'type': 'bar'}]],
-        horizontal_spacing=0.15,
+        horizontal_spacing=0.18,
     )
     
     fig.add_trace(
@@ -227,9 +234,14 @@ def create_category_ranking_chart(summary_df: pd.DataFrame, top_n: int = 5) -> g
             y=top_gaps['category'],
             x=top_gaps['gap_score'],
             orientation='h',
-            marker=dict(color=COLORS['high_gap']),
-            text=top_gaps['gap_score'].apply(lambda x: f'{x:.1f}'),
+            marker=dict(
+                color=COLORS['critical'],
+                opacity=0.85,
+                line=dict(color='white', width=2)
+            ),
+            text=top_gaps['gap_score'].apply(lambda x: f'{x:.2f}'),
             textposition='outside',
+            textfont=dict(size=10, family='Inter, sans-serif'),
             hovertemplate='<b>%{y}</b><br>Gap: %{x:.2f}<extra></extra>',
             name='High Gap',
         ),
@@ -241,27 +253,62 @@ def create_category_ranking_chart(summary_df: pd.DataFrame, top_n: int = 5) -> g
             y=bottom_gaps['category'],
             x=bottom_gaps['gap_score'],
             orientation='h',
-            marker=dict(color=COLORS['low_gap']),
-            text=bottom_gaps['gap_score'].apply(lambda x: f'{x:.1f}'),
+            marker=dict(
+                color=COLORS['success'],
+                opacity=0.85,
+                line=dict(color='white', width=2)
+            ),
+            text=bottom_gaps['gap_score'].apply(lambda x: f'{x:.2f}'),
             textposition='outside',
+            textfont=dict(size=10, family='Inter, sans-serif'),
             hovertemplate='<b>%{y}</b><br>Gap: %{x:.2f}<extra></extra>',
             name='Low Gap',
         ),
         row=1, col=2,
     )
     
-    fig.update_xaxes(title_text='Gap Score', row=1, col=1, gridcolor='#E5E7EB')
-    fig.update_xaxes(title_text='Gap Score', row=1, col=2, gridcolor='#E5E7EB')
+    fig.update_xaxes(
+        title_text='Gap Score',
+        gridcolor=COLORS['border'],
+        linecolor=COLORS['border'],
+        linewidth=1,
+        row=1, col=1,
+        showgrid=True
+    )
+    fig.update_xaxes(
+        title_text='Gap Score',
+        gridcolor=COLORS['border'],
+        linecolor=COLORS['border'],
+        linewidth=1,
+        row=1, col=2,
+        showgrid=True
+    )
+    
+    fig.update_yaxes(
+        showgrid=False,
+        linecolor=COLORS['border'],
+        linewidth=1,
+        row=1, col=1
+    )
+    fig.update_yaxes(
+        showgrid=False,
+        linecolor=COLORS['border'],
+        linewidth=1,
+        row=1, col=2
+    )
     
     fig.update_layout(
         title=dict(
             text='<b>Category Gap Rankings</b>',
-            font=dict(size=18, color='#111827'),
+            font=dict(size=15, color=COLORS['text_dark'], family='Inter, sans-serif'),
+            x=0.5,
+            xanchor='center'
         ),
-        plot_bgcolor=COLORS['background'],
-        paper_bgcolor='white',
-        font=dict(family='Inter, sans-serif', size=12, color='#374151'),
-        height=450,
+        plot_bgcolor=COLORS['bg_light'],
+        paper_bgcolor=COLORS['bg_white'],
+        font=dict(family='Inter, sans-serif', size=11, color=COLORS['text_dark']),
+        height=500,
+        margin=dict(l=100, r=100, t=100, b=80),
         showlegend=False,
     )
     
@@ -269,36 +316,53 @@ def create_category_ranking_chart(summary_df: pd.DataFrame, top_n: int = 5) -> g
 
 
 def create_gap_distribution_pie(summary_df: pd.DataFrame) -> go.Figure:
-    """
-    Create pie chart showing distribution of gap levels.
-    
-    Args:
-        summary_df: Clean gap summary DataFrame
-    
-    Returns:
-        Plotly Figure object
-    """
     gap_counts = summary_df['gap_status'].value_counts()
-    colors_list = [get_gap_color(status) for status in gap_counts.index]
+    
+    status_colors = {
+        'Critical Gap': COLORS['critical'],
+        'High Gap': COLORS['warning'],
+        'Moderate Gap': '#FBBF24',
+        'Low Gap': COLORS['success'],
+    }
+    
+    colors_list = [status_colors.get(status, COLORS['text_muted']) for status in gap_counts.index]
     
     fig = go.Figure(data=[go.Pie(
         labels=gap_counts.index,
         values=gap_counts.values,
-        marker=dict(colors=colors_list, line=dict(color='white', width=2)),
+        marker=dict(
+            colors=colors_list,
+            line=dict(color=COLORS['bg_white'], width=3)
+        ),
         textposition='inside',
         textinfo='label+percent',
-        hovertemplate='<b>%{label}</b><br>Count: %{value}<br>%{percent}<extra></extra>',
+        textfont=dict(size=12, color='white', family='Inter, sans-serif', weight='bold'),
+        hovertemplate='<b>%{label}</b><br>Count: %{value} categories<br>%{percent}<extra></extra>',
+        pull=[0.05 if colors_list[i] == COLORS['critical'] else 0 for i in range(len(colors_list))]
     )])
     
     fig.update_layout(
         title=dict(
-            text='<b>Distribution of Gap Levels</b>',
-            font=dict(size=16, color='#111827'),
+            text='<b>Distribution of Gap Severity Levels</b>',
+            font=dict(size=15, color=COLORS['text_dark'], family='Inter, sans-serif'),
+            x=0.5,
+            xanchor='center'
         ),
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        font=dict(family='Inter, sans-serif', size=12, color='#374151'),
-        height=400,
+        plot_bgcolor=COLORS['bg_white'],
+        paper_bgcolor=COLORS['bg_white'],
+        font=dict(family='Inter, sans-serif', size=12, color=COLORS['text_dark']),
+        height=500,
+        margin=dict(l=20, r=20, t=100, b=20),
+        legend=dict(
+            orientation='v',
+            yanchor='middle',
+            y=0.5,
+            xanchor='left',
+            x=1.05,
+            bgcolor=f'rgba(255, 255, 255, 0.8)',
+            bordercolor=COLORS['border'],
+            borderwidth=1
+        )
     )
     
     return fig
