@@ -29,6 +29,19 @@ from .plotly_dashboard import (
     export_chart_png,
     export_chart_html,
 )
+from .monitoring_engine import (
+    MonitoringSnapshot,
+    GapChangeAnalyzer,
+    compute_kpis
+)
+from .action_planner import ActionPlanner
+from .monitoring_visualizations import (
+    create_monitoring_kpi_cards,
+    create_gap_trend_chart,
+    create_alert_table,
+    create_change_heatmap,
+    create_supply_demand_balance_chart
+)
 
 __all__ = [
     "load_excel_sheets",
@@ -74,4 +87,13 @@ __all__ = [
     "create_dashboard_kpi_section",
     "export_chart_png",
     "export_chart_html",
+    "MonitoringSnapshot",
+    "GapChangeAnalyzer",
+    "compute_kpis",
+    "ActionPlanner",
+    "create_monitoring_kpi_cards",
+    "create_gap_trend_chart",
+    "create_alert_table",
+    "create_change_heatmap",
+    "create_supply_demand_balance_chart",
 ]
