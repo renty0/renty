@@ -41,7 +41,7 @@ app.UseAuthorization();
 app.UseOpenApi();
 app.UseSwaggerUi(config =>
 {
-    config.DocumentTitle = "Rently API";
+    config.DocumentTitle = "Renty API";
     config.Path = "/swagger";
     config.DocumentPath = "/swagger/{documentName}/swagger.json";
     config.DocExpansion = "list";
@@ -51,7 +51,7 @@ app.UseSwaggerUi(config =>
 app.MapAccountEndpoints();
 
 // Health check
-app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Rently API" }))
+app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))
     .WithTags("Health")
     .ExcludeFromDescription();
 

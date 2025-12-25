@@ -10,6 +10,19 @@ public static class AccountEndpoints
         var group = app.MapGroup("/api/account")
             .WithTags("Account");
 
+        group.MapPost("/register", async (RegisterCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            if (!result.Success)
+            {
+                return Results.BadRequest(result);
+            }
+            return Results.Ok(result);
+        })
+        .WithName("Register")
+        .WithOpenApi()
+        .AllowAnonymous();
+
         group.MapPost("/login", async (LoginCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);

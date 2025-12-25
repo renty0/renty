@@ -14,7 +14,7 @@ E:\Courses\Work\rently_2026\API\Application\obj\Debug\net9.0\Application.dll
 E:\Courses\Work\rently_2026\API\Application\obj\Debug\net9.0\refint\Application.dll
 E:\Courses\Work\rently_2026\API\Application\obj\Debug\net9.0\Application.pdb
 E:\Courses\Work\rently_2026\API\Application\obj\Debug\net9.0\ref\Application.dll
-E:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Application.deps.json
+e:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Application.deps.json
 E:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Application.dll
 E:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Application.pdb
 E:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Domain.dll
@@ -25,8 +25,8 @@ E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.AssemblyInfo.cs
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.csproj.CoreCompileInputs.cache
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.sourcelink.json
-E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Applicat.44B5EDA2.Up2Date
+e:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Applicat.44B5EDA2.Up2Date
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.dll
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\refint\Application.dll
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.pdb
-E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\ref\Application.dll
+e:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\ref\Application.dll

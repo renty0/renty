@@ -41,8 +41,8 @@ public static class DependencyInjection
             config.PostProcess = document =>
             {
                 document.Info.Version = "v1";
-                document.Info.Title = "Rently API";
-                document.Info.Description = "Rently - Rental Marketplace API";
+                document.Info.Title = "Renty API";
+                document.Info.Description = "Renty - Rental Marketplace API";
             };
 
             config.AddSecurity("JWT", new OpenApiSecurityScheme

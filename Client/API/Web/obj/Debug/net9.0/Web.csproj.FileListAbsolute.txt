@@ -175,9 +175,9 @@ E:\Courses\Work\rently_2026\API\Web\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.W
 E:\Courses\Work\rently_2026\API\Web\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 E:\Courses\Work\rently_2026\API\Web\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 E:\Courses\Work\rently_2026\API\Web\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\Web.staticwebassets.endpoints.json
 E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\appsettings.Development.json
 E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\appsettings.json
+E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\Web.staticwebassets.endpoints.json
 E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\Web.exe
 E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\Web.deps.json
 E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\Web.runtimeconfig.json
