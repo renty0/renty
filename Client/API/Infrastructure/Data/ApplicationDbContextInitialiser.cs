@@ -62,7 +62,7 @@ public class ApplicationDbContextInitialiser
             }
         }
 
-        // Create admin user
+        // Create super admin user
         var adminEmail = Environment.GetEnvironmentVariable("SEED_ADMIN_EMAIL") ?? "admin@rently.com";
         var adminPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "Admin@123!";
 
@@ -73,17 +73,20 @@ public class ApplicationDbContextInitialiser
             {
                 UserName = adminEmail,
                 Email = adminEmail,
-                FirstName = "Admin",
-                LastName = "User",
+                FirstName = "Super",
+                LastName = "Admin",
                 EmailConfirmed = true,
-                IsActive = true
+                IsActive = true,
+                IsVerified = true,
+                UserType = Domain.Enums.UserType.Both
             };
 
             var result = await _userManager.CreateAsync(adminUser, adminPassword);
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.SuperAdmin.ToString());
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Admin.ToString());
-                _logger.LogInformation("Admin user created successfully.");
+                _logger.LogInformation("Super Admin user created successfully.");
             }
             else
             {

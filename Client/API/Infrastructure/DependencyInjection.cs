@@ -105,6 +105,7 @@ public static class DependencyInjection
         services.AddScoped<IUser, CurrentUserService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<ICalendarService, CalendarService>();
 
         return services;
     }

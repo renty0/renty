@@ -42,7 +42,11 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.Email!,
             user.FirstName,
             user.LastName,
+            user.FullName,
             user.ProfilePictureUrl,
+            user.UserType.ToString(),
+            user.IsVerified,
+            user.Rating,
             roles
         );
 

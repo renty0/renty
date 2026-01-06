@@ -9,7 +9,12 @@
       "Bash(dotnet add:*)",
       "Bash(dotnet build:*)",
       "Bash(dotnet ef migrations add:*)",
-      "Bash(dotnet run:*)"
+      "Bash(dotnet run:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout /t:*)",
+      "Bash(tasklist:*)",
+      "Bash(wmic process where \"ProcessId=19460\" call terminate)",
+      "Bash(dir:*)"
     ]
   }
 }

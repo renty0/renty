@@ -49,6 +49,16 @@ app.UseSwaggerUi(config =>
 
 // Map endpoints
 app.MapAccountEndpoints();
+app.MapCategoryEndpoints();
+app.MapSubcategoryEndpoints();
+app.MapProductEndpoints();
+app.MapCustomerEndpoints();
+app.MapTerritoryEndpoints();
+app.MapSaleEndpoints();
+app.MapReturnEndpoints();
+app.MapCalendarEndpoints();
+app.MapRentableItemEndpoints();
+app.MapRentRequestEndpoints();
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))

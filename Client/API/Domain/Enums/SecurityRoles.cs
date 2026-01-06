@@ -2,6 +2,8 @@ namespace Domain.Enums;
 
 public enum SecurityRoles
 {
-    Admin = 1,
-    User = 2
+    SuperAdmin = 1,
+    Admin = 2,
+    Owner = 3,
+    Renter = 4
 }

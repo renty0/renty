@@ -19,7 +19,11 @@ public record UserDto(
     string Email,
     string FirstName,
     string LastName,
+    string FullName,
     string? ProfilePictureUrl,
+    string UserType,
+    bool IsVerified,
+    double Rating,
     IList<string> Roles
 );
 
@@ -88,7 +92,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.Email!,
             user.FirstName,
             user.LastName,
+            user.FullName,
             user.ProfilePictureUrl,
+            user.UserType.ToString(),
+            user.IsVerified,
+            user.Rating,
             roles
         );
 

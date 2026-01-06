@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
+using Domain.Enums;
 using FluentValidation;
 using MediatR;
 
@@ -12,7 +13,12 @@ public record RegisterCommand(
     string ConfirmPassword,
     string FirstName,
     string LastName,
-    string? PhoneNumber
+    string? PhoneNumber,
+    UserType UserType = UserType.Renter,
+    string? Address = null,
+    string? City = null,
+    string? Country = null,
+    string? Bio = null
 ) : IRequest<RegisterResponse>;
 
 public record RegisterResponse(
@@ -53,6 +59,25 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .Matches(@"^\+?[1-9]\d{1,14}$")
             .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
             .WithMessage("Invalid phone number format.");
+
+        RuleFor(x => x.UserType)
+            .IsInEnum().WithMessage("Invalid user type.");
+
+        RuleFor(x => x.Address)
+            .MaximumLength(500).When(x => !string.IsNullOrEmpty(x.Address))
+            .WithMessage("Address must not exceed 500 characters.");
+
+        RuleFor(x => x.City)
+            .MaximumLength(100).When(x => !string.IsNullOrEmpty(x.City))
+            .WithMessage("City must not exceed 100 characters.");
+
+        RuleFor(x => x.Country)
+            .MaximumLength(100).When(x => !string.IsNullOrEmpty(x.Country))
+            .WithMessage("Country must not exceed 100 characters.");
+
+        RuleFor(x => x.Bio)
+            .MaximumLength(1000).When(x => !string.IsNullOrEmpty(x.Bio))
+            .WithMessage("Bio must not exceed 1000 characters.");
     }
 }
 
@@ -87,7 +112,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             FirstName = request.FirstName,
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
+            UserType = request.UserType,
+            Address = request.Address,
+            City = request.City,
+            Country = request.Country,
+            Bio = request.Bio,
             IsActive = true,
+            IsVerified = false,
             CreatedAt = DateTimeOffset.UtcNow
         };
 
@@ -97,7 +128,22 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             return new RegisterResponse(false, string.Join(", ", createResult.Errors), null, null);
         }
 
-        await _identityService.AddToRoleAsync(user, "User");
+        // Assign role based on user type
+        var roleName = request.UserType switch
+        {
+            UserType.Owner => "Owner",
+            UserType.Renter => "Renter",
+            UserType.Both => "Owner", // Both gets Owner role (can do everything)
+            _ => "Renter"
+        };
+
+        await _identityService.AddToRoleAsync(user, roleName);
+
+        // If user type is Both, also add Renter role
+        if (request.UserType == UserType.Both)
+        {
+            await _identityService.AddToRoleAsync(user, "Renter");
+        }
 
         var roles = await _identityService.GetUserRolesAsync(user);
         var accessToken = _tokenGenerator.GenerateAccessToken(user, roles);
@@ -114,7 +160,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             user.Email!,
             user.FirstName,
             user.LastName,
+            user.FullName,
             user.ProfilePictureUrl,
+            user.UserType.ToString(),
+            user.IsVerified,
+            user.Rating,
             roles
         );
 

@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities;
@@ -14,10 +15,15 @@ public class ApplicationUser : IdentityUser<long>
     public double Rating { get; set; } = 0;
     public int TotalRatings { get; set; } = 0;
     public bool IsActive { get; set; } = true;
+    public bool IsVerified { get; set; } = false;
+    public UserType UserType { get; set; } = UserType.Renter;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? LastLoginAt { get; set; }
 
     public string FullName => $"{FirstName} {LastName}".Trim();
 
+    // Navigation properties
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public virtual ICollection<RentableItem> OwnedItems { get; set; } = new List<RentableItem>();
+    public virtual ICollection<RentRequest> RentRequestsAsRenter { get; set; } = new List<RentRequest>();
 }
