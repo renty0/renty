@@ -1,5 +1,0 @@
-CategoryName,UniqueOrders,TotalQuantitySold,UniqueCustomers,UniqueProducts,GapScore,NormalizedGapScore,GapLevel,AvgQuantityPerProduct,AvgQuantityPerOrder,CustomerOrderRatio,Rank
-Accessories,16983,57809,14287,29,1927.0,1.0,Critical Gap,1926.97,3.4,0.84,1
-Clothing,6976,12436,6452,35,345.47,0.1793,Critical Gap,345.44,1.78,0.92,2
-Bikes,13929,13929,8793,97,142.14,0.0738,High Gap,142.13,1.0,0.63,3
-Components,0,0,0,132,0.01,0.0,Low Gap,0.0,0.0,0.0,4

@@ -1,0 +1,992 @@
+====================================================================================================
+ACTION PLAN - WEEK 2 (2026-01-09)
+====================================================================================================
+
+Total Categories Monitored: 37
+
+----------------------------------------------------------------------------------------------------
+Category: Bottles and Cages
+Gap Score: 3776.75 | Status: Critical Gap
+Supply: 3 | Demand: 15,106
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Bottles and Cages items
+  2. Offer 3-month listing incentive (10% commission reduction) for Bottles and Cages
+  3. Create Bottles and Cages category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Bottles and Cages
+  5. Feature trending Bottles and Cages items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Bottles and Cages items
+  7. Contact top lenders outside platform to list Bottles and Cages items
+  8. Establish partnerships with Bottles and Cages retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Bottles and Cages expansion
+  2. Allocate marketing budget (15%) toward Bottles and Cages category growth
+  3. Create Bottles and Cages category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Bottles and Cages SEO/search ranking priority
+  2. Increase Bottles and Cages items in recommendation algorithm weight
+  3. Create dedicated Bottles and Cages landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Bottles and Cages listings
+  5. Implement smart search suggestions for Bottles and Cages terms
+  6. Create Bottles and Cages category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Bottles and Cages lenders
+  2. Send personalized emails to inactive lenders about Bottles and Cages opportunity
+  3. Develop Bottles and Cages-specific renter profiles for targeted outreach
+  4. Display 'Popular in Bottles and Cages' social proof on item pages
+  5. Create Bottles and Cages community discussions and forums
+  6. Implement Bottles and Cages item pre-booking feature
+  7. Reward users who first list Bottles and Cages items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Tires and Tubes
+Gap Score: 2481.08 | Status: Critical Gap
+Supply: 11 | Demand: 29,772
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Tires and Tubes items
+  2. Offer 3-month listing incentive (10% commission reduction) for Tires and Tubes
+  3. Create Tires and Tubes category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Tires and Tubes
+  5. Feature trending Tires and Tubes items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Tires and Tubes items
+  7. Contact top lenders outside platform to list Tires and Tubes items
+  8. Establish partnerships with Tires and Tubes retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Tires and Tubes expansion
+  2. Allocate marketing budget (15%) toward Tires and Tubes category growth
+  3. Create Tires and Tubes category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Tires and Tubes SEO/search ranking priority
+  2. Increase Tires and Tubes items in recommendation algorithm weight
+  3. Create dedicated Tires and Tubes landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Tires and Tubes listings
+  5. Implement smart search suggestions for Tires and Tubes terms
+  6. Create Tires and Tubes category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Tires and Tubes lenders
+  2. Send personalized emails to inactive lenders about Tires and Tubes opportunity
+  3. Develop Tires and Tubes-specific renter profiles for targeted outreach
+  4. Display 'Popular in Tires and Tubes' social proof on item pages
+  5. Create Tires and Tubes community discussions and forums
+  6. Implement Tires and Tubes item pre-booking feature
+  7. Reward users who first list Tires and Tubes items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Caps
+Gap Score: 2076.00 | Status: Critical Gap
+Supply: 1 | Demand: 4,151
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Caps items
+  2. Offer 3-month listing incentive (10% commission reduction) for Caps
+  3. Create Caps category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Caps
+  5. Feature trending Caps items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Caps items
+  7. Contact top lenders outside platform to list Caps items
+  8. Establish partnerships with Caps retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Caps expansion
+  2. Allocate marketing budget (15%) toward Caps category growth
+  3. Create Caps category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Caps SEO/search ranking priority
+  2. Increase Caps items in recommendation algorithm weight
+  3. Create dedicated Caps landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Caps listings
+  5. Implement smart search suggestions for Caps terms
+  6. Create Caps category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Caps lenders
+  2. Send personalized emails to inactive lenders about Caps opportunity
+  3. Develop Caps-specific renter profiles for targeted outreach
+  4. Display 'Popular in Caps' social proof on item pages
+  5. Create Caps community discussions and forums
+  6. Implement Caps item pre-booking feature
+  7. Reward users who first list Caps items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Fenders
+Gap Score: 1980.50 | Status: Critical Gap
+Supply: 1 | Demand: 3,960
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Fenders items
+  2. Offer 3-month listing incentive (10% commission reduction) for Fenders
+  3. Create Fenders category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Fenders
+  5. Feature trending Fenders items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Fenders items
+  7. Contact top lenders outside platform to list Fenders items
+  8. Establish partnerships with Fenders retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Fenders expansion
+  2. Allocate marketing budget (15%) toward Fenders category growth
+  3. Create Fenders category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Fenders SEO/search ranking priority
+  2. Increase Fenders items in recommendation algorithm weight
+  3. Create dedicated Fenders landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Fenders listings
+  5. Implement smart search suggestions for Fenders terms
+  6. Create Fenders category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Fenders lenders
+  2. Send personalized emails to inactive lenders about Fenders opportunity
+  3. Develop Fenders-specific renter profiles for targeted outreach
+  4. Display 'Popular in Fenders' social proof on item pages
+  5. Create Fenders community discussions and forums
+  6. Implement Fenders item pre-booking feature
+  7. Reward users who first list Fenders items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Helmets
+Gap Score: 1508.75 | Status: Critical Gap
+Supply: 3 | Demand: 6,034
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Helmets items
+  2. Offer 3-month listing incentive (10% commission reduction) for Helmets
+  3. Create Helmets category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Helmets
+  5. Feature trending Helmets items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Helmets items
+  7. Contact top lenders outside platform to list Helmets items
+  8. Establish partnerships with Helmets retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Helmets expansion
+  2. Allocate marketing budget (15%) toward Helmets category growth
+  3. Create Helmets category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Helmets SEO/search ranking priority
+  2. Increase Helmets items in recommendation algorithm weight
+  3. Create dedicated Helmets landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Helmets listings
+  5. Implement smart search suggestions for Helmets terms
+  6. Create Helmets category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Helmets lenders
+  2. Send personalized emails to inactive lenders about Helmets opportunity
+  3. Develop Helmets-specific renter profiles for targeted outreach
+  4. Display 'Popular in Helmets' social proof on item pages
+  5. Create Helmets community discussions and forums
+  6. Implement Helmets item pre-booking feature
+  7. Reward users who first list Helmets items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Cleaners
+Gap Score: 853.50 | Status: Critical Gap
+Supply: 1 | Demand: 1,706
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Cleaners items
+  2. Offer 3-month listing incentive (10% commission reduction) for Cleaners
+  3. Create Cleaners category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Cleaners
+  5. Feature trending Cleaners items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Cleaners items
+  7. Contact top lenders outside platform to list Cleaners items
+  8. Establish partnerships with Cleaners retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Cleaners expansion
+  2. Allocate marketing budget (15%) toward Cleaners category growth
+  3. Create Cleaners category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Cleaners SEO/search ranking priority
+  2. Increase Cleaners items in recommendation algorithm weight
+  3. Create dedicated Cleaners landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Cleaners listings
+  5. Implement smart search suggestions for Cleaners terms
+  6. Create Cleaners category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Cleaners lenders
+  2. Send personalized emails to inactive lenders about Cleaners opportunity
+  3. Develop Cleaners-specific renter profiles for targeted outreach
+  4. Display 'Popular in Cleaners' social proof on item pages
+  5. Create Cleaners community discussions and forums
+  6. Implement Cleaners item pre-booking feature
+  7. Reward users who first list Cleaners items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Gloves
+Gap Score: 377.86 | Status: Critical Gap
+Supply: 6 | Demand: 2,644
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Gloves items
+  2. Offer 3-month listing incentive (10% commission reduction) for Gloves
+  3. Create Gloves category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Gloves
+  5. Feature trending Gloves items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Gloves items
+  7. Contact top lenders outside platform to list Gloves items
+  8. Establish partnerships with Gloves retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Gloves expansion
+  2. Allocate marketing budget (15%) toward Gloves category growth
+  3. Create Gloves category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Gloves SEO/search ranking priority
+  2. Increase Gloves items in recommendation algorithm weight
+  3. Create dedicated Gloves landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Gloves listings
+  5. Implement smart search suggestions for Gloves terms
+  6. Create Gloves category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Gloves lenders
+  2. Send personalized emails to inactive lenders about Gloves opportunity
+  3. Develop Gloves-specific renter profiles for targeted outreach
+  4. Display 'Popular in Gloves' social proof on item pages
+  5. Create Gloves community discussions and forums
+  6. Implement Gloves item pre-booking feature
+  7. Reward users who first list Gloves items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Hydration Packs
+Gap Score: 348.00 | Status: Critical Gap
+Supply: 1 | Demand: 695
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Hydration Packs items
+  2. Offer 3-month listing incentive (10% commission reduction) for Hydration Packs
+  3. Create Hydration Packs category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Hydration Packs
+  5. Feature trending Hydration Packs items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Hydration Packs items
+  7. Contact top lenders outside platform to list Hydration Packs items
+  8. Establish partnerships with Hydration Packs retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Hydration Packs expansion
+  2. Allocate marketing budget (15%) toward Hydration Packs category growth
+  3. Create Hydration Packs category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Hydration Packs SEO/search ranking priority
+  2. Increase Hydration Packs items in recommendation algorithm weight
+  3. Create dedicated Hydration Packs landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Hydration Packs listings
+  5. Implement smart search suggestions for Hydration Packs terms
+  6. Create Hydration Packs category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Hydration Packs lenders
+  2. Send personalized emails to inactive lenders about Hydration Packs opportunity
+  3. Develop Hydration Packs-specific renter profiles for targeted outreach
+  4. Display 'Popular in Hydration Packs' social proof on item pages
+  5. Create Hydration Packs community discussions and forums
+  6. Implement Hydration Packs item pre-booking feature
+  7. Reward users who first list Hydration Packs items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Jerseys
+Gap Score: 346.00 | Status: Critical Gap
+Supply: 8 | Demand: 3,113
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Jerseys items
+  2. Offer 3-month listing incentive (10% commission reduction) for Jerseys
+  3. Create Jerseys category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Jerseys
+  5. Feature trending Jerseys items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Jerseys items
+  7. Contact top lenders outside platform to list Jerseys items
+  8. Establish partnerships with Jerseys retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Jerseys expansion
+  2. Allocate marketing budget (15%) toward Jerseys category growth
+  3. Create Jerseys category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Jerseys SEO/search ranking priority
+  2. Increase Jerseys items in recommendation algorithm weight
+  3. Create dedicated Jerseys landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Jerseys listings
+  5. Implement smart search suggestions for Jerseys terms
+  6. Create Jerseys category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Jerseys lenders
+  2. Send personalized emails to inactive lenders about Jerseys opportunity
+  3. Develop Jerseys-specific renter profiles for targeted outreach
+  4. Display 'Popular in Jerseys' social proof on item pages
+  5. Create Jerseys community discussions and forums
+  6. Implement Jerseys item pre-booking feature
+  7. Reward users who first list Jerseys items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Socks
+Gap Score: 212.80 | Status: Critical Gap
+Supply: 4 | Demand: 1,063
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Socks items
+  2. Offer 3-month listing incentive (10% commission reduction) for Socks
+  3. Create Socks category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Socks
+  5. Feature trending Socks items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Socks items
+  7. Contact top lenders outside platform to list Socks items
+  8. Establish partnerships with Socks retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Socks expansion
+  2. Allocate marketing budget (15%) toward Socks category growth
+  3. Create Socks category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Socks SEO/search ranking priority
+  2. Increase Socks items in recommendation algorithm weight
+  3. Create dedicated Socks landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Socks listings
+  5. Implement smart search suggestions for Socks terms
+  6. Create Socks category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Socks lenders
+  2. Send personalized emails to inactive lenders about Socks opportunity
+  3. Develop Socks-specific renter profiles for targeted outreach
+  4. Display 'Popular in Socks' social proof on item pages
+  5. Create Socks community discussions and forums
+  6. Implement Socks item pre-booking feature
+  7. Reward users who first list Socks items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Road Bikes
+Gap Score: 161.36 | Status: High Gap
+Supply: 43 | Demand: 7,099
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Road Bikes items
+  2. Offer 3-month listing incentive (10% commission reduction) for Road Bikes
+  3. Create Road Bikes category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Road Bikes
+  5. Feature trending Road Bikes items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Road Bikes items
+  7. Contact top lenders outside platform to list Road Bikes items
+  8. Establish partnerships with Road Bikes retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Road Bikes expansion
+  2. Allocate marketing budget (15%) toward Road Bikes category growth
+  3. Create Road Bikes category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Road Bikes SEO/search ranking priority
+  2. Increase Road Bikes items in recommendation algorithm weight
+  3. Create dedicated Road Bikes landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Road Bikes listings
+  5. Implement smart search suggestions for Road Bikes terms
+  6. Create Road Bikes category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Road Bikes lenders
+  2. Send personalized emails to inactive lenders about Road Bikes opportunity
+  3. Develop Road Bikes-specific renter profiles for targeted outreach
+  4. Display 'Popular in Road Bikes' social proof on item pages
+  5. Create Road Bikes community discussions and forums
+  6. Implement Road Bikes item pre-booking feature
+  7. Reward users who first list Road Bikes items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Bike Racks
+Gap Score: 151.50 | Status: High Gap
+Supply: 1 | Demand: 302
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Bike Racks items
+  2. Offer 3-month listing incentive (10% commission reduction) for Bike Racks
+  3. Create Bike Racks category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Bike Racks
+  5. Feature trending Bike Racks items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Bike Racks items
+  7. Contact top lenders outside platform to list Bike Racks items
+  8. Establish partnerships with Bike Racks retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Bike Racks expansion
+  2. Allocate marketing budget (15%) toward Bike Racks category growth
+  3. Create Bike Racks category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Bike Racks SEO/search ranking priority
+  2. Increase Bike Racks items in recommendation algorithm weight
+  3. Create dedicated Bike Racks landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Bike Racks listings
+  5. Implement smart search suggestions for Bike Racks terms
+  6. Create Bike Racks category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Bike Racks lenders
+  2. Send personalized emails to inactive lenders about Bike Racks opportunity
+  3. Develop Bike Racks-specific renter profiles for targeted outreach
+  4. Display 'Popular in Bike Racks' social proof on item pages
+  5. Create Bike Racks community discussions and forums
+  6. Implement Bike Racks item pre-booking feature
+  7. Reward users who first list Bike Racks items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Mountain Bikes
+Gap Score: 142.64 | Status: High Gap
+Supply: 32 | Demand: 4,706
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Mountain Bikes items
+  2. Offer 3-month listing incentive (10% commission reduction) for Mountain Bikes
+  3. Create Mountain Bikes category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Mountain Bikes
+  5. Feature trending Mountain Bikes items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Mountain Bikes items
+  7. Contact top lenders outside platform to list Mountain Bikes items
+  8. Establish partnerships with Mountain Bikes retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Mountain Bikes expansion
+  2. Allocate marketing budget (15%) toward Mountain Bikes category growth
+  3. Create Mountain Bikes category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Mountain Bikes SEO/search ranking priority
+  2. Increase Mountain Bikes items in recommendation algorithm weight
+  3. Create dedicated Mountain Bikes landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Mountain Bikes listings
+  5. Implement smart search suggestions for Mountain Bikes terms
+  6. Create Mountain Bikes category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Mountain Bikes lenders
+  2. Send personalized emails to inactive lenders about Mountain Bikes opportunity
+  3. Develop Mountain Bikes-specific renter profiles for targeted outreach
+  4. Display 'Popular in Mountain Bikes' social proof on item pages
+  5. Create Mountain Bikes community discussions and forums
+  6. Implement Mountain Bikes item pre-booking feature
+  7. Reward users who first list Mountain Bikes items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Vests
+Gap Score: 130.50 | Status: High Gap
+Supply: 3 | Demand: 521
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Vests items
+  2. Offer 3-month listing incentive (10% commission reduction) for Vests
+  3. Create Vests category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Vests
+  5. Feature trending Vests items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Vests items
+  7. Contact top lenders outside platform to list Vests items
+  8. Establish partnerships with Vests retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Vests expansion
+  2. Allocate marketing budget (15%) toward Vests category growth
+  3. Create Vests category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Vests SEO/search ranking priority
+  2. Increase Vests items in recommendation algorithm weight
+  3. Create dedicated Vests landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Vests listings
+  5. Implement smart search suggestions for Vests terms
+  6. Create Vests category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Vests lenders
+  2. Send personalized emails to inactive lenders about Vests opportunity
+  3. Develop Vests-specific renter profiles for targeted outreach
+  4. Display 'Popular in Vests' social proof on item pages
+  5. Create Vests community discussions and forums
+  6. Implement Vests item pre-booking feature
+  7. Reward users who first list Vests items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Shorts
+Gap Score: 118.12 | Status: High Gap
+Supply: 7 | Demand: 944
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Shorts items
+  2. Offer 3-month listing incentive (10% commission reduction) for Shorts
+  3. Create Shorts category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Shorts
+  5. Feature trending Shorts items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Shorts items
+  7. Contact top lenders outside platform to list Shorts items
+  8. Establish partnerships with Shorts retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Shorts expansion
+  2. Allocate marketing budget (15%) toward Shorts category growth
+  3. Create Shorts category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Shorts SEO/search ranking priority
+  2. Increase Shorts items in recommendation algorithm weight
+  3. Create dedicated Shorts landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Shorts listings
+  5. Implement smart search suggestions for Shorts terms
+  6. Create Shorts category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Shorts lenders
+  2. Send personalized emails to inactive lenders about Shorts opportunity
+  3. Develop Shorts-specific renter profiles for targeted outreach
+  4. Display 'Popular in Shorts' social proof on item pages
+  5. Create Shorts community discussions and forums
+  6. Implement Shorts item pre-booking feature
+  7. Reward users who first list Shorts items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Bike Stands
+Gap Score: 117.50 | Status: High Gap
+Supply: 1 | Demand: 234
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Bike Stands items
+  2. Offer 3-month listing incentive (10% commission reduction) for Bike Stands
+  3. Create Bike Stands category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Bike Stands
+  5. Feature trending Bike Stands items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Bike Stands items
+  7. Contact top lenders outside platform to list Bike Stands items
+  8. Establish partnerships with Bike Stands retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Bike Stands expansion
+  2. Allocate marketing budget (15%) toward Bike Stands category growth
+  3. Create Bike Stands category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Bike Stands SEO/search ranking priority
+  2. Increase Bike Stands items in recommendation algorithm weight
+  3. Create dedicated Bike Stands landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Bike Stands listings
+  5. Implement smart search suggestions for Bike Stands terms
+  6. Create Bike Stands category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Bike Stands lenders
+  2. Send personalized emails to inactive lenders about Bike Stands opportunity
+  3. Develop Bike Stands-specific renter profiles for targeted outreach
+  4. Display 'Popular in Bike Stands' social proof on item pages
+  5. Create Bike Stands community discussions and forums
+  6. Implement Bike Stands item pre-booking feature
+  7. Reward users who first list Bike Stands items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Touring Bikes
+Gap Score: 92.39 | Status: Moderate Gap
+Supply: 22 | Demand: 2,124
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+  1. Launch supply recruitment campaign targeting lenders with Touring Bikes items
+  2. Offer 3-month listing incentive (10% commission reduction) for Touring Bikes
+  3. Create Touring Bikes category highlight page with featured rewards
+  4. Send targeted push notifications to active renters in Touring Bikes
+  5. Feature trending Touring Bikes items in homepage recommendations
+  6. Implement waitlist feature for out-of-stock Touring Bikes items
+  7. Contact top lenders outside platform to list Touring Bikes items
+  8. Establish partnerships with Touring Bikes retailers for consignment
+
+STRATEGIC ACTIONS (Medium-term):
+  1. Develop supplier partnership strategy for Touring Bikes expansion
+  2. Allocate marketing budget (15%) toward Touring Bikes category growth
+  3. Create Touring Bikes category vertical with dedicated team
+
+PLATFORM OPTIMIZATION:
+  1. Boost Touring Bikes SEO/search ranking priority
+  2. Increase Touring Bikes items in recommendation algorithm weight
+  3. Create dedicated Touring Bikes landing page with category-specific messaging
+  4. Add 'High-Demand' badge to all Touring Bikes listings
+  5. Implement smart search suggestions for Touring Bikes terms
+  6. Create Touring Bikes category widget on homepage
+
+USER ENGAGEMENT:
+  1. Create referral rewards program specifically for Touring Bikes lenders
+  2. Send personalized emails to inactive lenders about Touring Bikes opportunity
+  3. Develop Touring Bikes-specific renter profiles for targeted outreach
+  4. Display 'Popular in Touring Bikes' social proof on item pages
+  5. Create Touring Bikes community discussions and forums
+  6. Implement Touring Bikes item pre-booking feature
+  7. Reward users who first list Touring Bikes items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Panniers
+Gap Score: 0.50 | Status: Low Gap
+Supply: 1 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Panniers visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Panniers items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Locks
+Gap Score: 0.50 | Status: Low Gap
+Supply: 1 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Locks visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Locks items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Chains
+Gap Score: 0.50 | Status: Low Gap
+Supply: 1 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Chains visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Chains items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Derailleurs
+Gap Score: 0.33 | Status: Low Gap
+Supply: 2 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Derailleurs visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Derailleurs items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Pumps
+Gap Score: 0.33 | Status: Low Gap
+Supply: 2 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Pumps visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Pumps items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Brakes
+Gap Score: 0.33 | Status: Low Gap
+Supply: 2 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Brakes visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Brakes items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Bottom Brackets
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Bottom Brackets visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Bottom Brackets items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Tights
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Tights visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Tights items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Lights
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Lights visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Lights items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Cranksets
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Cranksets visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Cranksets items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Bib-Shorts
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Bib-Shorts visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Bib-Shorts items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Forks
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Forks visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Forks items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Headsets
+Gap Score: 0.25 | Status: Low Gap
+Supply: 3 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Headsets visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Headsets items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Pedals
+Gap Score: 0.12 | Status: Low Gap
+Supply: 7 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Pedals visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Pedals items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Handlebars
+Gap Score: 0.11 | Status: Low Gap
+Supply: 8 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Handlebars visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Handlebars items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Saddles
+Gap Score: 0.10 | Status: Low Gap
+Supply: 9 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Saddles visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Saddles items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Wheels
+Gap Score: 0.07 | Status: Low Gap
+Supply: 14 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Wheels visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Wheels items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Touring Frames
+Gap Score: 0.05 | Status: Low Gap
+Supply: 18 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Touring Frames visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Touring Frames items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Mountain Frames
+Gap Score: 0.03 | Status: Low Gap
+Supply: 28 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Mountain Frames visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Mountain Frames items with bonus credit
+
+----------------------------------------------------------------------------------------------------
+Category: Road Frames
+Gap Score: 0.03 | Status: Low Gap
+Supply: 31 | Demand: 0
+Gap Change: +0.0%
+
+OPERATIONAL ACTIONS (Immediate):
+
+STRATEGIC ACTIONS (Medium-term):
+
+PLATFORM OPTIMIZATION:
+  1. Reduce Road Frames visibility in recommendations (balanced supply)
+  2. Redirect marketing focus to shortage categories
+
+USER ENGAGEMENT:
+  1. Reward users who first list Road Frames items with bonus credit
+
