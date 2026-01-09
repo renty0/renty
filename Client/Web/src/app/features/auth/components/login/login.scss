@@ -1,0 +1,146 @@
+@use '../../../../shared/styles/variables' as *;
+@use '../../../../shared/styles/mixins' as *;
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 24px;
+  background: linear-gradient(135deg, $gray-50 0%, $gray-200 100%);
+
+  @include tablet {
+    padding: 20px 16px;
+  }
+
+  @include mobile {
+    align-items: flex-start;
+    padding: 16px;
+  }
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  padding: 32px;
+
+  @include tablet {
+    max-width: 380px;
+    padding: 28px 24px;
+  }
+
+  @include mobile {
+    padding: 24px 20px;
+    border-radius: $border-radius-lg;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  @include mobile {
+    margin-bottom: 20px;
+  }
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 16px;
+
+  @include mobile {
+    width: 72px;
+    margin-bottom: 12px;
+  }
+}
+
+.title {
+  font-size: 26px;
+  font-weight: $font-weight-bold;
+  color: $primary-color;
+  margin: 0 0 6px;
+  line-height: 1.2;
+
+  @include mobile {
+    font-size: 22px;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $gray-500;
+  margin: 0;
+  line-height: 1.4;
+
+  @include mobile {
+    font-size: 13px;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include mobile {
+    gap: 12px;
+  }
+}
+
+.forgot-password {
+  align-self: flex-end;
+  font-size: 13px;
+  color: $accent-color;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $primary-color;
+    text-decoration: underline;
+  }
+}
+
+.login-button {
+  margin-top: 8px;
+
+  @include mobile {
+    margin-top: 4px;
+  }
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid $gray-200;
+  font-size: 14px;
+  color: $gray-500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+
+  @include mobile {
+    margin-top: 20px;
+    padding-top: 16px;
+    font-size: 13px;
+  }
+
+  a {
+    color: $accent-color;
+    font-weight: $font-weight-medium;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $primary-color;
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<div class="register-page">
+  <div class="register-container">
+    <div class="header">
+      <img class="logo" src="assets/logo.png" alt="Shield Logo" />
+      <h1 class="title">{{ 'register.welcomeMessage' | translate }}</h1>
+      <p class="login">
+        {{ 'register.haveAccount' | translate }}
+        <a routerLink="/login">{{ 'register.login' | translate }}</a>
+      </p>
+      <div class="account-type-tabs">
+        <button type="button" class="tab" [class.active]="accountType === 'company'" (click)="changeForm('company')">
+          {{ 'common.company' | translate }}
+        </button>
+        <span class="separator">|</span>
+        <button type="button" class="tab" [class.active]="accountType === 'facility'" (click)="changeForm('facility')">
+          {{ 'common.facility' | translate }}
+        </button>
+        <span class="separator">|</span>
+        <button type="button" class="tab" [class.active]="accountType === 'guard'" (click)="changeForm('guard')">
+          {{ 'common.guard' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="form-container">
+      @if (accountType === 'company') {
+        <app-register-company></app-register-company>
+      } @else if (accountType === 'facility') {
+        <app-register-facility></app-register-facility>
+      } @else if (accountType === 'guard') {
+        <app-register-guard></app-register-guard>
+      }
+    </div>
+  </div>
+</div>
