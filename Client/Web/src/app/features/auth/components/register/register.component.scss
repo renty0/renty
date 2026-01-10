@@ -1,118 +1,375 @@
+@use 'sass:color';
 @use '../../../../shared/styles/variables' as *;
 @use '../../../../shared/styles/mixins' as *;
 
 .register-page {
-  min-height: 100%;
-  background: linear-gradient(135deg, $gray-50 0%, $gray-200 100%);
-  padding: 16px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 
   @include mobile {
-    padding: 12px;
+    padding: 20px 12px;
   }
 }
 
 .register-container {
   width: 100%;
-  max-width: 100%;
-  background: $white;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-lg;
-  padding: 20px 24px;
+  max-width: 1600px;
+  background: rgba($white, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 32px;
+  border: 1px solid rgba($white, 0.5);
 
   @include tablet {
-    padding: 16px;
+    padding: 24px;
   }
 }
 
 .header {
   text-align: center;
-  margin-bottom: 12px;
-}
+  margin-bottom: 32px;
 
-.logo {
-  width: 72px;
-  height: auto;
-  margin-bottom: 4px;
-
-  @include mobile {
-    width: 60px;
-  }
-}
-
-.title {
-  font-size: 20px;
-  font-weight: $font-weight-bold;
-  color: $primary-color;
-  margin: 0 0 8px;
-  line-height: 1.2;
-
-  @include mobile {
-    font-size: 18px;
-  }
-}
-
-.account-type-tabs {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-
-  .separator {
-    color: $gray-300;
-    font-size: 12px;
+  .logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
   }
 
-  .tab {
-    background: none;
-    border: none;
-    padding: 4px 8px;
-    font-size: 13px;
-    font-weight: $font-weight-normal;
+  .title {
+    font-size: 28px;
+    font-weight: 800;
+    color: $primary-color;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .login-prompt {
+    font-size: 15px;
     color: $gray-500;
-    cursor: pointer;
-    transition: color $transition-fast;
 
-    @include mobile {
-      font-size: 12px;
-      padding: 4px 6px;
+    a {
+      color: $accent-color;
+      font-weight: 600;
+      text-decoration: none;
+      margin-inline-start: 4px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+
+      &:hover {
+        border-bottom-color: $accent-color;
+      }
+    }
+  }
+}
+
+.steps-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 0 10px;
+
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+
+    .step-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: $white;
+      border: 2px solid $gray-200;
+      color: $gray-400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
     }
 
-    &:hover {
-      color: $primary-color;
+    .step-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: $gray-400;
+      transition: all 0.3s;
+      text-align: center;
+
+      @include mobile {
+        font-size: 11px;
+      }
     }
 
     &.active {
-      color: $accent-color;
-      font-weight: $font-weight-medium;
+      .step-icon-wrapper {
+        background: $accent-color;
+        border-color: $accent-color;
+        color: $white;
+        box-shadow: 0 10px 15px -3px rgba($accent-color, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .step-label {
+        color: $primary-color;
+      }
+    }
+
+    &.completed {
+      .step-icon-wrapper {
+        background: $success;
+        border-color: $success;
+        color: $white;
+      }
+    }
+  }
+
+  .step-connector {
+    flex: 1;
+    height: 3px;
+    background: $gray-200;
+    margin-top: -28px;
+    z-index: 1;
+    transition: all 0.4s;
+
+    &.completed {
+      background: $success;
     }
   }
 }
 
-.form-container {
-  width: 100%;
-  ::ng-deep .mat-horizontal-stepper-header-container {
-    display: none !important;
+.register-stepper {
+  ::ng-deep {
+    .mat-horizontal-stepper-header-container {
+      display: none;
+    }
+
+    .mat-horizontal-content-container {
+      padding: 0 !important;
+    }
   }
 }
 
-.login {
-  font-size: 12px;
-  color: $gray-500;
-  margin: 4px 0 8px;
+.step-header {
+  margin-bottom: 24px;
 
-  a {
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $gray-500;
+  }
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 2;
+
+    @include tablet {
+      grid-column: span 1;
+    }
+  }
+}
+
+.role-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-card {
+  background: $white;
+  border: 2px solid $gray-100;
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+
+  .role-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: $gray-50;
+    color: $gray-600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .role-info {
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 12px;
+      color: $gray-500;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  .role-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: $success;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s;
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+
+  &:hover {
+    border-color: $accent-color;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+
+    .role-icon {
+      background: rgba($accent-color, 0.1);
+      color: $accent-color;
+    }
+  }
+
+  &.selected {
+    border-color: $accent-color;
+    background: rgba($accent-color, 0.02);
+
+    .role-icon {
+      background: $accent-color;
+      color: $white;
+    }
+
+    .role-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 32px 0 24px;
+
+  span {
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: $gray-400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $gray-200;
+  }
+}
+
+.terms-container {
+  margin-top: 24px;
+  padding: 16px;
+  background: $gray-50;
+  border-radius: 12px;
+  border: 1px solid $gray-200;
+
+  .terms-text {
+    font-size: 14px;
+    color: $gray-600;
+  }
+
+  .terms-link {
+    background: none;
+    border: none;
     color: $accent-color;
-    font-weight: $font-weight-medium;
-    text-decoration: none;
-    margin-inline-start: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: 14px;
 
     &:hover {
-      text-decoration: underline;
+      color: color.adjust($accent-color, $lightness: -10%);
     }
   }
+
+  .terms-error {
+    margin-top: 8px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px dotted $gray-300;
 }
 
 ::ng-deep app-footer {

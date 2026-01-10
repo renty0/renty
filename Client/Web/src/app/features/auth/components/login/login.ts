@@ -7,10 +7,10 @@ import { InputComponent } from '../../../../shared/components/input/input';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/services/auth.service';
-import { finalize, catchError } from 'rxjs';
-import { of } from 'rxjs';
+import { finalize } from 'rxjs';
 import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
+import { AccountClient, LoginCommand, ApiException } from '../../../../core/api/api-client';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +22,9 @@ export class LoginComponent {
   private snackbar = inject(ToastService);
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
-  private apiClient = inject(Client);
   private translate = inject(TranslateService);
+  private router = inject(Router);
+  private accountClient = inject(AccountClient);
 
   isLoading = signal(false);
 
@@ -45,63 +45,24 @@ export class LoginComponent {
       password: this.loginForm.value.password!
     });
 
-    this.apiClient.postApiIdentityLogin(loginData).pipe(
+    this.accountClient.login(loginData).pipe(
       finalize(() => this.isLoading.set(false))
     ).subscribe({
       next: (response) => {
-        if (response != undefined) {
+        if (response != undefined && response.success) {
           this.authService.storeLoginResponse(response);
           this.router.navigate(['/']);
-          this.fetchProfileScore();
+        } else if (response != undefined && !response.success) {
+          this.snackbar.showError(response.message || this.translate.instant('login.invalidCredentials'));
         }
       },
-      error: (error: ApiException | unknown) => {
-        if (error instanceof ApiException) {
-          if (error.status === 401) {
-            this.snackbar.showError(
-              this.translate.currentLang === 'ar'
-                ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
-                : 'Invalid email or password'
-            );
-          } else if (error.status === 400) {
-            try {
-              const errorBody = JSON.parse(error.response);
-              if (errorBody?.requiresEmailConfirmation) {
-                const email = errorBody.email || this.loginForm.value.email;
-                this.snackbar.showWarning(
-                  this.translate.currentLang === 'ar'
-                    ? 'البريد الإلكتروني غير مؤكد. يرجى تأكيد بريدك الإلكتروني.'
-                    : 'Email not confirmed. Please confirm your email.'
-                );
-                this.router.navigate(['/confirm-email'], { queryParams: { email } });
-              }
-            } catch {
-            }
-          }
+      error: (error: ApiException | any) => {
+        if (error instanceof ApiException && error.status === 401) {
+          this.snackbar.showError(this.translate.instant('login.invalidCredentials'));
+        } else {
+          this.snackbar.showError(this.translate.instant('login.serverError'));
         }
       }
     });
-  }
-
-  private fetchProfileScore(): void {
-    const userType = this.profileCompletionService.getUserType();
-    if (!userType) return;
-
-    let scoreObservable;
-    if (userType === 'Facility') {
-      scoreObservable = this.profileCompletionService.getFacilityProfileScore();
-    } else if (userType === 'Company') {
-      scoreObservable = this.profileCompletionService.getCompanyProfileScore();
-    } else if (userType === 'Guard') {
-      scoreObservable = this.profileCompletionService.getGuardProfileScore();
-    }
-
-    if (scoreObservable) {
-      scoreObservable.pipe(catchError(() => of(null))).subscribe((res) => {
-        if (res?.data?.percentage !== undefined && res.data.percentage < 100) {
-          this.snackbar.showProfileCompletionRequired();
-        }
-      });
-    }
   }
 }

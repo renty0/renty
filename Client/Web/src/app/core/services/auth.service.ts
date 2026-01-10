@@ -1,81 +1,91 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { ToastService } from '../../shared/services/toast.service';
-// import { UserSessionDto } from '../../../../api-client';
-// import { SnackBarService } from '../../shared/services/snackbar/snack-bar.service';
-interface UserSessionDto {}
+import { LoginResponse, UserDto, AccountClient, RefreshTokenCommand } from '../api/api-client';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private toast = inject(ToastService);
-  private readonly TOKEN_KEY = 'access_token';
-  private readonly USER_DATA_KEY = 'user_data';
-  private readonly REFRESH_TOKEN_EXP_KEY = 'refresh_token_exp';
+  private readonly toast = inject(ToastService);
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
-  private router = inject(Router);
+  private readonly ACCESS_TOKEN_KEY = 'access_token';
+  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
+  private readonly REFRESH_TOKEN_EXP_KEY = 'refresh_token_exp';
+  private readonly USER_DATA_KEY = 'user_data';
+  private readonly ROLES_KEY = 'user_roles';
+
   isLoggedIn: WritableSignal<boolean>;
+  private readonly rolesSignal = signal<string[]>([]);
+  readonly roles = computed(() => this.rolesSignal());
+
+  private isRefreshing = false;
+  private refreshPromise: Promise<any> | null = null;
 
   constructor() {
     this.isLoggedIn = signal(this.hasValidToken());
+    this.loadFromStorage();
   }
 
-  storeLoginResponse(
-    loginResponse: any
-    // loginResponse: UserSessionDto
-  ): void {
-    if (!loginResponse.accessToken || !loginResponse.accessTokenExpDate) return;
-    this.setCookie(this.TOKEN_KEY, loginResponse.accessToken, new Date(loginResponse.accessTokenExpDate));
-    const userData = {
-      userId: loginResponse.userId,
-      firstName: loginResponse.firstName,
-      email: loginResponse.email,
-      imageUrl: loginResponse.imageUrl,
-      adminPermissions: loginResponse.adminPermissions,
-      entityPermissions: loginResponse.entityPermissions
-    };
-    this.setCookie(this.USER_DATA_KEY, JSON.stringify(userData), new Date(loginResponse.accessTokenExpDate));
-    if (!loginResponse.refreshTokenExpDate || !loginResponse.refreshTokenExpDate) return;
-    this.setCookie(this.REFRESH_TOKEN_EXP_KEY, String(loginResponse.refreshTokenExpDate), new Date(loginResponse.refreshTokenExpDate));
+  private loadFromStorage(): void {
+    try {
+      const rolesData = localStorage.getItem(this.ROLES_KEY);
+      if (rolesData) {
+        this.rolesSignal.set(JSON.parse(rolesData));
+      }
+    } catch {
+      this.rolesSignal.set([]);
+    }
+  }
+
+  storeLoginResponse(loginResponse: LoginResponse): void {
+    if (!loginResponse.token) return;
+
+    if (loginResponse.token.accessToken) {
+      localStorage.setItem(this.ACCESS_TOKEN_KEY, loginResponse.token.accessToken);
+    }
+    if (loginResponse.token.refreshToken) {
+      localStorage.setItem(this.REFRESH_TOKEN_KEY, loginResponse.token.refreshToken);
+    }
+    if (loginResponse.token.refreshTokenExpiresAt) {
+      localStorage.setItem(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.token.refreshTokenExpiresAt).toISOString());
+    }
+
+    if (loginResponse.user) {
+      localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(loginResponse.user));
+      const roles = loginResponse.user.roles || [];
+      localStorage.setItem(this.ROLES_KEY, JSON.stringify(roles));
+      this.rolesSignal.set(roles);
+    }
+
     this.isLoggedIn.set(true);
   }
-  private setCookie(name: string, value: string, expires: Date): void {
-    const cookieString = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=Strict; Secure`;
-    document.cookie = cookieString;
-  }
-  private getCookie(name: string): string | null {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) {
-        return decodeURIComponent(c.substring(nameEQ.length, c.length));
-      }
-    }
-    return null;
-  }
-  private deleteCookie(name: string): void {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  }
+
   getToken(): string | null {
-    return this.getCookie(this.TOKEN_KEY);
+    return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
-  // getUserData(): Partial<UserSessionDto> | null {
-  getUserData(): Partial<any> | null {
-    const userData = this.getCookie(this.USER_DATA_KEY);
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+  }
+
+  getUserData(): UserDto | null {
+    const userData = localStorage.getItem(this.USER_DATA_KEY);
     if (!userData) return null;
     try {
-      return JSON.parse(userData);
+      return JSON.parse(userData) as UserDto;
     } catch (error) {
-      this.toast.showError('Error parsing user data from cookie');
+      this.toast.showError('Error parsing user data');
       return null;
     }
   }
-  getRefreshTokenExpDate(): Date | null {
-    const expDate = this.getCookie(this.REFRESH_TOKEN_EXP_KEY);
-    return expDate ? new Date(expDate) : null;
-  }
+
   hasValidToken(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -83,66 +93,118 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp > currentTime;
-    } catch (error) {
-      this.toast.showError('Error parsing token');
+    } catch {
       return false;
     }
   }
+
   hasValidRefreshToken(): boolean {
-    const refreshExpDate = this.getRefreshTokenExpDate();
-    if (!refreshExpDate) return false;
-    return new Date() < refreshExpDate;
+    const expDate = localStorage.getItem(this.REFRESH_TOKEN_EXP_KEY);
+    if (!expDate) return false;
+    return new Date() < new Date(expDate);
   }
+
+  refreshTokens(): Observable<any> {
+    if (!this.hasValidRefreshToken()) {
+      return throwError(() => new Error('No valid refresh token available'));
+    }
+
+    if (this.isRefreshing && this.refreshPromise) {
+      return new Observable(observer => {
+        this.refreshPromise!
+          .then(response => {
+            observer.next(response);
+            observer.complete();
+          })
+          .catch(err => observer.error(err));
+      });
+    }
+
+    this.isRefreshing = true;
+    const refreshToken = this.getRefreshToken() || '';
+
+    this.refreshPromise = new Promise((resolve, reject) => {
+      this.http.post<any>(`${environment.apiUrl}/api/account/refresh-token`, { refreshToken }).pipe(
+        tap((response: any) => {
+          if (response && response.success) {
+            this.storeLoginResponse(response);
+            this.isRefreshing = false;
+            this.refreshPromise = null;
+            resolve(response);
+          } else {
+            this.logout();
+            reject(new Error('Refresh token invalid'));
+          }
+        }),
+        catchError(error => {
+          this.isRefreshing = false;
+          this.refreshPromise = null;
+          this.logout();
+          reject(error);
+          return throwError(() => error);
+        })
+      ).subscribe();
+    });
+
+    return new Observable(observer => {
+      this.refreshPromise!
+        .then(response => {
+          observer.next(response);
+          observer.complete();
+        })
+        .catch(err => observer.error(err));
+    });
+  }
+
   removeAuthData(): void {
-    this.deleteCookie(this.TOKEN_KEY);
-    this.deleteCookie(this.USER_DATA_KEY);
-    this.deleteCookie(this.REFRESH_TOKEN_EXP_KEY);
+    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_EXP_KEY);
+    localStorage.removeItem(this.USER_DATA_KEY);
+    localStorage.removeItem(this.ROLES_KEY);
+    this.rolesSignal.set([]);
     this.isLoggedIn.set(false);
   }
-  getAuthorizationHeader(): string | null {
-    const token = this.getToken();
-    return token ? `Bearer ${token}` : null;
-  }
+
   logout(): void {
+    const refreshToken = this.getRefreshToken() || '';
+    if (refreshToken) {
+      this.http.post(`${environment.apiUrl}/api/account/logout`, { refreshToken }).pipe(
+        catchError(() => throwError(() => new Error('Logout failed')))
+      ).subscribe();
+    }
+
     this.removeAuthData();
     this.router.navigate(['/login']);
   }
+
   isAuthenticated(): boolean {
     return this.isLoggedIn();
   }
+
   getCurrentUserId(): number | null {
-    const userData = this.getUserData();
-    // return userData?.userId || null;
-    return null;
+    return this.getUserData()?.id || null;
   }
+
   getCurrentUserEmail(): string | null {
-    const userData = this.getUserData();
-    // return userData?.email || null;
-    return null;
+    return this.getUserData()?.email || null;
   }
+
   getCurrentUserFirstName(): string | null {
-    const userData = this.getUserData();
-    // return userData?.firstName || null;
-    return null;
+    return this.getUserData()?.firstName || null;
   }
-  hasAdminPermission(permission: number): boolean {
-    const userData = this.getUserData();
-    // return userData?.adminPermissions?.includes(permission) || false;
+
+  hasRole(role: string): boolean {
+    return this.roles().includes(role);
+  }
+
+  isSuperAdmin(): boolean {
+    return this.hasRole('SuperAdmin');
+  }
+
+  // Implementation of permission check (TODO: implement granular permissions when available in API)
+  hasPermission(permission: any): boolean {
+    if (this.isSuperAdmin()) return true;
     return false;
-  }
-  hasEntityPermission(permission: number): boolean {
-    const userData = this.getUserData();
-    // return userData?.entityPermissions?.includes(permission) || false;
-    return false;
-  }
-  getAdminPermissions(): number[] {
-    const userData = this.getUserData();
-    // return userData?.adminPermissions || [];
-    return [];
-  }
-  getEntityPermissions(): number[] {
-    const userData = this.getUserData();
-    // return userData?.entityPermissions || [];
-    return [];
   }
 }

@@ -1,6 +1,7 @@
 using System.Reflection;
 using Application.Common.Interfaces;
 using Domain.Entities;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<RentableItem> RentableItems => Set<RentableItem>();
     public DbSet<RentableItemImage> RentableItemImages => Set<RentableItemImage>();
     public DbSet<RentRequest> RentRequests => Set<RentRequest>();
+    public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

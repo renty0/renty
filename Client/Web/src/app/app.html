@@ -1,11 +1,14 @@
-<!-- @if(!isLoggedIn()) { -->
-<div class="flex flex-row justify-content-between layout-header" style="padding: 0.5rem 1rem; background-color: #fff">
+@if (!isHomePage() && !isLoggedIn()) {
+<div class="flex flex-row justify-content-between layout-header"
+  style="padding: 0.5rem 1rem; background-color: #fff; position: relative; z-index: 10;">
   <div class="flex flex-row align-items-center" style="gap: 0.5rem">
     <span style="font-size: larger">{{ title() }}</span>
   </div>
   <div class="flex flex-row align-items-center" style="gap: 0.5rem">
-    <p-button [icon]="getCurrentLanguageIcon()" [pTooltip]="getCurrentLanguageTooltip()" [outlined]="true" (click)="toggleLanguage()"/>
+    <p-button [icon]="getCurrentLanguageIcon()" [pTooltip]="getCurrentLanguageTooltip()" [outlined]="true"
+      (click)="toggleLanguage()" />
   </div>
 </div>
+}
 <router-outlet />
 <p-toast></p-toast>

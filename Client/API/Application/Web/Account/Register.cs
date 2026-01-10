@@ -85,16 +85,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 {
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
-    private readonly ITokenGenerator _tokenGenerator;
 
     public RegisterCommandHandler(
         IIdentityService identityService,
-        ITokenService tokenService,
-        ITokenGenerator tokenGenerator)
+        ITokenService tokenService)
     {
         _identityService = identityService;
         _tokenService = tokenService;
-        _tokenGenerator = tokenGenerator;
     }
 
     public async Task<RegisterResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -146,14 +143,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
         }
 
         var roles = await _identityService.GetUserRolesAsync(user);
-        var accessToken = _tokenGenerator.GenerateAccessToken(user, roles);
-        var refreshToken = await _tokenService.CreateRefreshTokenAsync(user.Id);
 
-        var tokenData = new TokenData(
-            accessToken,
-            refreshToken.Token,
-            DateTimeOffset.UtcNow.AddMinutes(_tokenGenerator.TokenExpMinutes)
-        );
+        var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
 
         var userDto = new UserDto(
             user.Id,

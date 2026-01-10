@@ -59,6 +59,7 @@ app.MapReturnEndpoints();
 app.MapCalendarEndpoints();
 app.MapRentableItemEndpoints();
 app.MapRentRequestEndpoints();
+app.MapMediaFilesEndpoints();
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))

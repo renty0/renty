@@ -1,4 +1,108 @@
 {
+  "common": {
+    "renter": "Renter",
+    "owner": "Owner",
+    "both": "Both"
+  },
+  "register": {
+    "welcomeMessage": "Join Rently Today",
+    "haveAccount": "Already have an account?",
+    "login": "Login here",
+    "terms": "Terms and Conditions",
+    "acceptOn": "I accept the ",
+    "registerButton": "Create Account",
+    "success": "Registration successful!",
+    "successOwner": "Registration successful as Owner!",
+    "failed": "Registration failed",
+    "roles": {
+      "renterTitle": "Renter",
+      "renterDesc": "Browse and rent high-quality items from owners.",
+      "ownerTitle": "Owner",
+      "ownerDesc": "List your items and start earning extra income.",
+      "memberTitle": "Member",
+      "memberDesc": "Full access to rent items and list your own."
+    }
+  },
+  "login": {
+    "title": "Login to Rently",
+    "welcomeBack": "Welcome Back!",
+    "signInSubtitle": "Sign in to your account",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Register here",
+    "button": "Login",
+    "success": "Login successful!",
+    "invalidCredentials": "Invalid email or password",
+    "unauthorized": "You are not authorized to access this resource",
+    "serverError": "A server error occurred, please try again later"
+  },
+  "info": {
+    "accountInfo": "Account Information",
+    "profileInfo": "Profile Details"
+  },
+  "labels": {
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "city": "City",
+    "country": "Country",
+    "address": "Address",
+    "bio": "Bio",
+    "userType": "User Type",
+    "name": "Name",
+    "description": "Description",
+    "upload_image": "Upload Image"
+  },
+  "buttons": {
+    "login": "Login",
+    "next": "Next",
+    "back": "Back",
+    "search": "Search",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "subscribe": "Subscribe",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "browse": "Browse",
+    "upload": "Upload"
+  },
+  "categories": {
+    "title": "Categories",
+    "details": "Category Details",
+    "search": "Search categories...",
+    "confirmDelete": "Are you sure you want to delete this category?",
+    "columns": {
+      "logo": "Logo",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "actions": {
+      "create": "New Category",
+      "edit": "Edit Category",
+      "delete": "Delete Category"
+    }
+  },
+  "icons": {
+    "next": "arrow_forward",
+    "back": "arrow_back"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "minLength": "Minimum length not met",
+    "maxLength": "Maximum length exceeded",
+    "invalidFormat": "Invalid format",
+    "invalidPhone": "Invalid phone number",
+    "passwordMismatch": "Passwords do not match",
+    "acceptTerms": "You must accept the terms and conditions"
+  },
   "notFound": {
     "alt": "Rently",
     "title": "Rently",
@@ -10,5 +114,96 @@
     "return": "Return to Home",
     "help": "Help",
     "status": "System Status"
+  },
+  "home": {
+    "hero": {
+      "title": "Rent Everything, Enjoy Everywhere",
+      "subtitle": "Join the smartest rental marketplace. From high-tech gear to professional tools, find what you need or list your own.",
+      "searchPlaceholder": "Search for cameras, drones, tools..."
+    },
+    "features": {
+      "badge": "Why Choose Rently",
+      "title": "The Smarter Way to Access Quality",
+      "subtitle": "Rently is more than just a marketplace; it's a community built on trust, quality, and sustainability.",
+      "trust": {
+        "title": "Verified Users",
+        "desc": "Every member is verified through our robust security system to ensure safe transactions."
+      },
+      "value": {
+        "title": "Unmatched Value",
+        "desc": "Access premium products at a fraction of the cost. Pay only for the time you need."
+      },
+      "speed": {
+        "title": "Rapid Delivery",
+        "desc": "Get your items delivered to your doorstep within hours, not days."
+      }
+    },
+    "categories": {
+      "title": "Explore by Category",
+      "subtitle": "Discover a wide range of products curated for your lifestyle.",
+      "electronics": "Electronics",
+      "tools": "Professional Tools",
+      "furniture": "Home Furniture",
+      "cameras": "Photography",
+      "sports": "Sports & Outdoors",
+      "party": "Events & Party"
+    },
+    "calendar": {
+      "badge": "Stay Organized",
+      "title": "Real-time Availability Calendar",
+      "desc": "Check the live status of any item. Our smart calendar prevents double-bookings and ensures product readiness.",
+      "check1": "Live availability tracking",
+      "check2": "Avoid overlapping bookings",
+      "check3": "Automated reminders"
+    },
+    "security": {
+      "title": "Your Peace of Mind is Our Priority",
+      "desc": "Every rental on Rently is covered by our comprehensive insurance policy. We handle the risks so you can focus on the experience.",
+      "badge1": "Trust & Safety",
+      "badge2": "Insurance Coverage"
+    },
+    "steps": {
+      "title": "How Rently Works",
+      "subtitle": "Renting has never been this easy. Three simple steps to get what you need.",
+      "find": {
+        "title": "Find",
+        "desc": "Search for your desired item and check availability."
+      },
+      "book": {
+        "title": "Book",
+        "desc": "Select your dates and book with secure payment."
+      },
+      "enjoy": {
+        "title": "Enjoy",
+        "desc": "Pick up or get it delivered and enjoy your product."
+      }
+    },
+    "app": {
+      "title": "Take Rently On The Go",
+      "desc": "Download our mobile app to manage your rentals, chat with owners, and get real-time notifications anywhere, anytime."
+    },
+    "footer": {
+      "about": "Rently is the leading peer-to-peer rental marketplace, empowering individuals to access and share resources efficiently.",
+      "quickLinks": "Quick Links",
+      "home": "Home",
+      "market": "Marketplace",
+      "join": "Join Us",
+      "cta": {
+        "title": "Join Our Community",
+        "desc": "Subscribe to get latest updates and exclusive offers."
+      },
+      "emailPlaceholder": "Your email address"
+    },
+    "stats": {
+      "items": "Rentable Items",
+      "cities": "Cities Covered",
+      "users": "Active Users",
+      "rating": "User Rating"
+    }
+  },
+  "uploader": {
+    "drag_drop": "Drag and drop your image here",
+    "hint": "Supports JPG, PNG, GIF, WebP (Max 5MB)",
+    "uploading": "Uploading image"
   }
 }

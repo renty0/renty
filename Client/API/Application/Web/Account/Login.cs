@@ -44,16 +44,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
-    private readonly ITokenGenerator _tokenGenerator;
 
     public LoginCommandHandler(
         IIdentityService identityService,
-        ITokenService tokenService,
-        ITokenGenerator tokenGenerator)
+        ITokenService tokenService)
     {
         _identityService = identityService;
         _tokenService = tokenService;
-        _tokenGenerator = tokenGenerator;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -76,16 +73,10 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         }
 
         var roles = await _identityService.GetUserRolesAsync(user);
-        var accessToken = _tokenGenerator.GenerateAccessToken(user, roles);
-        var refreshToken = await _tokenService.CreateRefreshTokenAsync(user.Id);
-
+        
         await _identityService.UpdateLastLoginAsync(user);
 
-        var tokenData = new TokenData(
-            accessToken,
-            refreshToken.Token,
-            DateTimeOffset.UtcNow.AddMinutes(_tokenGenerator.TokenExpMinutes)
-        );
+        var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
 
         var userDto = new UserDto(
             user.Id,

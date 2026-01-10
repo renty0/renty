@@ -354,3 +354,4 @@ E:\Courses\Work\rently_2026\Client\API\Web\obj\Debug\net9.0\refint\Web.dll
 E:\Courses\Work\rently_2026\Client\API\Web\obj\Debug\net9.0\Web.pdb
 E:\Courses\Work\rently_2026\Client\API\Web\obj\Debug\net9.0\Web.genruntimeconfig.cache
 E:\Courses\Work\rently_2026\Client\API\Web\obj\Debug\net9.0\ref\Web.dll
+E:\Courses\Work\rently_2026\Client\API\Web\bin\Debug\net9.0\SixLabors.ImageSharp.dll

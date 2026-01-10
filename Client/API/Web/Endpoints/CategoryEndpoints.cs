@@ -1,5 +1,7 @@
 using Application.Features.Categories;
+using Application.Common.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Endpoints;
 
@@ -11,24 +13,27 @@ public static class CategoryEndpoints
             .WithTags("Categories")
             .RequireAuthorization();
 
-        group.MapGet("/", async (ISender sender) =>
+        group.MapGet("/", async (int? pageNumber, int? pageSize, string? searchTerm, ISender sender) =>
         {
-            var result = await sender.Send(new GetCategoriesQuery());
+            var result = await sender.Send(new GetCategoriesQuery { 
+                PageNumber = pageNumber ?? 1, 
+                PageSize = pageSize ?? 10, 
+                SearchTerm = searchTerm 
+            });
             return Results.Ok(result);
         })
         .WithName("GetCategories")
+        .Produces<PaginatedList<ProductCategoryDto>>(StatusCodes.Status200OK)
         .WithOpenApi();
 
         group.MapGet("/{id:int}", async (int id, ISender sender) =>
         {
             var result = await sender.Send(new GetCategoryByIdQuery(id));
-            if (!result.Success)
-            {
-                return Results.NotFound(result);
-            }
-            return Results.Ok(result);
+            return result is not null ? Results.Ok(result) : Results.NotFound();
         })
         .WithName("GetCategoryById")
+        .Produces<ProductCategoryDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
         .WithOpenApi();
 
         group.MapPost("/", async (CreateCategoryCommand command, ISender sender) =>
@@ -41,6 +46,7 @@ public static class CategoryEndpoints
             return Results.Created($"/api/categories/{result.Category!.Id}", result);
         })
         .WithName("CreateCategory")
+        .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
         .WithOpenApi();
 
         group.MapPut("/{id:int}", async (int id, UpdateCategoryCommand command, ISender sender) =>
@@ -57,6 +63,7 @@ public static class CategoryEndpoints
             return Results.Ok(result);
         })
         .WithName("UpdateCategory")
+        .Produces<UpdateCategoryResponse>(StatusCodes.Status200OK)
         .WithOpenApi();
 
         group.MapDelete("/{id:int}", async (int id, ISender sender) =>

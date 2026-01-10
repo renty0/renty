@@ -1,4 +1,5 @@
 using Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces;
@@ -17,5 +18,6 @@ public interface IApplicationDbContext
     DbSet<RentableItem> RentableItems { get; }
     DbSet<RentableItemImage> RentableItemImages { get; }
     DbSet<RentRequest> RentRequests { get; }
+    DbSet<MediaFile> MediaFiles { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

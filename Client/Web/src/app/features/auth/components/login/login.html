@@ -1,14 +1,14 @@
 <div class="login-page">
   <div class="login-container">
     <div class="header">
-      <img class="logo" src="assets/logo.png" alt="Shield Logo" />
+      <img class="logo" src="assets/logo.png" alt="Rently Logo" />
       <h1 class="title">{{ 'login.welcomeBack' | translate }}</h1>
       <p class="subtitle">{{ 'login.signInSubtitle' | translate }}</p>
     </div>
 
     <form [formGroup]="loginForm" (submit)="onSubmit()" class="login-form">
-      <app-input [formGroup]="loginForm" controlName="email" label="email" type="email"/>
-      <app-input [formGroup]="loginForm" controlName="password" label="password" type="password"/>
+      <app-input [formGroup]="loginForm" controlName="email" label="email" type="email" />
+      <app-input [formGroup]="loginForm" controlName="password" label="password" type="password" />
       <a routerLink="/reset-password" class="forgot-password">{{ 'login.forgotPassword' | translate }}</a>
       <app-loading-button [loading]="isLoading()" type="submit" color="primary" [fullWidth]="true" class="login-button">
         {{ 'buttons.login' | translate }}

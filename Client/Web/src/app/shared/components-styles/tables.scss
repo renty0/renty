@@ -1,0 +1,289 @@
+@use "../../shared/styles" as *;
+.table-card {
+  @include glassmorphism(0.02);
+  border-radius: $border-radius-xl;
+  background-color: #fff;
+  box-shadow: none;
+  overflow: hidden;
+  .mat-mdc-cell {
+    color: $text-muted;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-small;
+    border: none;
+    border-bottom: 1px solid $white-secondary;
+  }
+  .table-container {
+    overflow-x: auto;
+    .data-table {
+      width: 100%;
+      thead {
+        background: linear-gradient(135deg, $gray-100 0%, $gray-50 100%);
+      }
+      .mat-mdc-header-row {
+        height: 0;
+        border-radius: 0 !important;
+      }
+      th {
+        border-radius: 0 !important;
+
+        padding: $font-size-md $font-size-lg;
+        font-weight: $font-weight-medium;
+        color: $gray-700;
+        font-size: $font-size-xs;
+        border-bottom: 2px solid $gray-200;
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: 0.3s ease-in-out;
+        &:hover {
+          background-color: $gray-200;
+          color: $harvard-dark-gray;
+        }
+      }
+      .mat-mdc-header-cell {
+        font-weight: $font-weight-bold;
+        color: $text-dark;
+      }
+      .name-cell {
+        display: flex;
+        flex-direction: column;
+        padding: 4px 0;
+        gap: 4px;
+        .name {
+          font-weight: $font-weight-medium;
+          font-size: $font-size-sm;
+          color: $gray-700;
+        }
+        .category {
+          background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+          color: #1e40af;
+          border: 1px solid #93c5fd;
+          display: inline-block;
+          padding: 6px $spacing-sm;
+          border-radius: $border-radius-xxl;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-medium;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          width: fit-content;
+        }
+      }
+      .date-info {
+        .date {
+          color: $text-dark;
+          font-weight: $font-weight-small;
+        }
+      }
+      .actions-cell {
+        display: flex;
+        gap: $spacing-xs;
+        button {
+          transition: $transition-fast;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+  .loading-container {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-xxl;
+    gap: $spacing-md;
+    p {
+      color: $text-muted;
+      font-size: $font-size-md;
+    }
+  }
+  .no-data {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-xxl;
+    color: $text-muted;
+    mat-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: $spacing-md;
+      opacity: 0.5;
+    }
+    h3 {
+      margin: 0 0 $spacing-sm 0;
+      font-weight: $font-weight-medium;
+    }
+    p {
+      margin: 0;
+      text-align: center;
+    }
+  }
+}
+.actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    padding: 8px !important;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.5s;
+    }
+    &:hover::before {
+      left: 100%;
+    }
+  }
+  .btn-icon {
+    padding: $spacing-xs;
+    border-radius: 50%;
+    min-width: 32px;
+    justify-content: center;
+  }
+  .btn-secondary {
+    background: transparent;
+    mat-icon {
+      color: $gray-600;
+    }
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: $shadow-md;
+      mat-icon {
+        color: $primary-color;
+      }
+    }
+  }
+  .btn-danger {
+    background: transparent;
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+      box-shadow: $shadow-lg;
+    }
+    mat-icon {
+      color: $danger;
+    }
+  }
+}
+.status-active,
+.status-inactive {
+  display: inline-flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: $border-radius-xxl;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  gap: 6px;
+  mat-icon {
+    padding: 5px 0;
+    color: green;
+    font-size: 22px;
+  }
+}
+.status-active {
+  color: $text-success;
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  mat-icon {
+    color: green;
+  }
+}
+.status-inactive {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: $text-danger;
+  mat-icon {
+    color: $text-danger;
+  }
+}
+.sortable-header {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+.data-container {
+  padding: 20px 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  @include tablet {
+    padding: 16px $spacing-md;
+  }
+  @include mobile {
+    padding: 12px $spacing-sm;
+  }
+}
+@include tablet {
+  .data-table {
+    .mat-mdc-cell,
+    .mat-mdc-header-cell {
+      padding: $spacing-sm !important;
+    }
+  }
+}
+@include mobile {
+  .data-table {
+    .mat-mdc-cell,
+    .mat-mdc-header-cell {
+      padding: $spacing-xs !important;
+    }
+    .actions-cell {
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+}
+::ng-deep {
+  .mat-mdc-paginator {
+    background: transparent;
+    border-top: 1px solid rgba($primary-color, 0.1);
+    .mat-mdc-notch-piece {
+      border: none !important;
+    }
+  }
+  .mat-mdc-form-field-outline {
+    color: rgba($primary-color, 0.3);
+  }
+  .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+    color: $primary-color;
+  }
+  .data-table {
+    overflow: hidden;
+    tr.mat-mdc-row {
+      border-bottom: 1px solid $white-secondary;
+      transition: 0.3s ease-in-out;
+      &:hover {
+        background-color: $white-secondary;
+      }
+    }
+    td.mat-cell {
+      color: $white-secondary;
+      font-size: $font-size-xs;
+    }
+    tr.mat-mdc-row:hover {
+      transition: background-color 0.3s ease;
+    }
+    tr.mat-mdc-row:hover td.mat-cell {
+      color: $primary-color;
+    }
+  }
+  .mat-icon {
+    color: $primary-color;
+  }
+}

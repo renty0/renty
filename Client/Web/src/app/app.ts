@@ -1,6 +1,7 @@
 import { ToastModule } from 'primeng/toast';
-import { Component, effect, inject, Renderer2, signal, WritableSignal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, computed, effect, inject, Renderer2, signal, WritableSignal } from '@angular/core';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import translationsEN from '../../public/i18n/en.json';
 import translationsAR from '../../public/i18n/ar.json';
@@ -9,10 +10,12 @@ import { ResponsiveService } from './core/services/responsive.service';
 import { AuthService } from './core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [ RouterOutlet, ToastModule, ButtonModule, TooltipModule ],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, ToastModule, ButtonModule, TooltipModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -22,10 +25,16 @@ export class App {
   private localizationService = inject(LocalizationService);
   private responsiveService = inject(ResponsiveService);
   private authService = inject(AuthService);
-  language: 'ar' | 'en' = this.localizationService.language();
+  private router = inject(Router);
   private renderer = inject(Renderer2);
+
+  language: 'ar' | 'en' = this.localizationService.language();
   isMobile = this.responsiveService.isMobile;
+  isLoggedIn = this.authService.isLoggedIn;
   sidenavOpened: WritableSignal<boolean>;
+
+  currentRoute = signal('');
+  isHomePage = computed(() => this.currentRoute() === '/' || this.currentRoute() === '');
 
   constructor() {
     this.translate.addLangs(['ar', 'en']);
@@ -33,6 +42,13 @@ export class App {
     this.translate.setTranslation('en', translationsEN);
     this.translate.setFallbackLang('en');
     this.sidenavOpened = signal(this.isMobile() === false);
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.currentRoute.set(event.urlAfterRedirects);
+    });
+
     effect(() => {
       const lang = this.localizationService.language();
       this.translate.use(lang);
@@ -40,17 +56,21 @@ export class App {
       this.renderer.setAttribute(document.documentElement, 'dir', direction);
     });
   }
+
   logout() {
     this.authService.logout();
   }
+
   toggleLanguage() {
     const currentLang = this.localizationService.language();
     this.language = currentLang === 'en' ? 'ar' : 'en';
     this.localizationService.setLanguage(this.language);
   }
+
   getCurrentLanguageIcon(): string {
     return this.localizationService.language() === 'ar' ? 'pi pi-globe' : 'pi pi-language';
   }
+
   getCurrentLanguageTooltip(): string {
     return this.localizationService.language() === 'ar' ? 'Switch to English' : 'التبديل إلى العربية';
   }

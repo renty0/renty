@@ -1,0 +1,303 @@
+@use "../../../shared/styles" as *;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.uploader-container {
+  width: 100%;
+  position: relative;
+  border-radius: $border-radius-xl;
+  transition: 0.3s;
+
+  &.error {
+    .drop-zone {
+      border-color: rgba($danger, 0.5);
+      background: rgba($danger, 0.02);
+    }
+  }
+}
+
+.drop-zone {
+  width: 100%;
+  min-height: 220px;
+  border: 2px dashed rgba($primary-color, 0.15);
+  border-radius: $border-radius-xl;
+  background: rgba($white, 0.5);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    border-color: $accent-color;
+    background: rgba($accent-color, 0.02);
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+
+    .icon-circle {
+      background: $accent-color;
+      transform: scale(1.1) rotate(5deg);
+
+      mat-icon {
+        color: $white;
+      }
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba($accent-color, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: $transition-fast;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.state-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md;
+}
+
+.state-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+// Empty State
+.empty-state {
+  gap: $spacing-sm;
+
+  .icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba($primary-color, 0.05);
+    @include flex-center;
+    transition: $transition-fast;
+    margin-bottom: $spacing-xs;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: $primary-color;
+    }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: $text-dark;
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: $gray-500;
+
+    .browse-text {
+      color: $accent-color;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+
+  .hint-text {
+    margin-top: $spacing-xs;
+    font-size: 12px;
+    color: $gray-400;
+    background: $gray-50;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+}
+
+// Uploading State
+.uploading-state {
+  position: relative;
+  z-index: 1;
+
+  .preview-backdrop {
+    position: absolute;
+    inset: -20px;
+    z-index: -1;
+    filter: blur(10px) brightness(0.6);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .upload-info {
+    color: $white;
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    p {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .progress-circle-container {
+    position: relative;
+    @include flex-center;
+
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.35s;
+      stroke-dasharray: 226; // 2 * PI * 36
+    }
+
+    .progress-number {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+}
+
+// Success State
+.success-state {
+  height: 100%;
+
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-md;
+
+    .final-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: $gray-50;
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(#000, 0.7) 0%, transparent 40%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: $spacing-sm;
+      opacity: 0;
+      transition: $transition-fast;
+
+      .btn-remove {
+        align-self: flex-end;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba($danger, 0.9);
+        color: $white;
+        border: none;
+        cursor: pointer;
+        @include flex-center;
+        box-shadow: $shadow-sm;
+        transition: $transition-fast;
+
+        &:hover {
+          background: $danger;
+          transform: scale(1.1);
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .file-info {
+        .name {
+          color: $white;
+          font-size: 13px;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+        }
+      }
+    }
+
+    &:hover .image-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+// Error Wrapper
+.error-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: $spacing-xs;
+  color: $danger;
+  font-size: 13px;
+  font-weight: 500;
+  padding-left: 4px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

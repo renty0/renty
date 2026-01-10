@@ -4,6 +4,9 @@ namespace Application.Common.Models;
 public record ProductCategoryDto(
     int Id,
     string CategoryName,
+    string Description,
+    Guid? LogoId,
+    string? LogoUrl,
     int SubcategoryCount
 );
 

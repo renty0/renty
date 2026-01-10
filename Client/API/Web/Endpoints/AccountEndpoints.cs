@@ -20,6 +20,8 @@ public static class AccountEndpoints
             return Results.Ok(result);
         })
         .WithName("Register")
+        .Produces<RegisterResponse>(StatusCodes.Status200OK)
+        .Produces<RegisterResponse>(StatusCodes.Status400BadRequest)
         .WithOpenApi()
         .AllowAnonymous();
 
@@ -33,6 +35,8 @@ public static class AccountEndpoints
             return Results.Ok(result);
         })
         .WithName("Login")
+        .Produces<LoginResponse>(StatusCodes.Status200OK)
+        .Produces<LoginResponse>(StatusCodes.Status400BadRequest)
         .WithOpenApi()
         .AllowAnonymous();
 
@@ -46,6 +50,8 @@ public static class AccountEndpoints
             return Results.Ok(result);
         })
         .WithName("RefreshToken")
+        .Produces<RefreshTokenResponse>(StatusCodes.Status200OK)
+        .Produces<RefreshTokenResponse>(StatusCodes.Status400BadRequest)
         .WithOpenApi()
         .AllowAnonymous();
 
@@ -55,6 +61,7 @@ public static class AccountEndpoints
             return Results.Ok(result);
         })
         .WithName("Logout")
+        .Produces<LogoutResponse>(StatusCodes.Status200OK)
         .WithOpenApi()
         .RequireAuthorization();
 
@@ -68,6 +75,8 @@ public static class AccountEndpoints
             return Results.Ok(result);
         })
         .WithName("GetCurrentUser")
+        .Produces<GetCurrentUserResponse>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status401Unauthorized)
         .WithOpenApi()
         .RequireAuthorization();
     }

@@ -80,21 +80,13 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
             return new RefreshTokenResponse(false, "User not found or inactive.", null);
         }
 
-        var roles = await _identityService.GetUserRolesAsync(user);
-        var newAccessToken = _tokenGenerator.GenerateAccessToken(user, roles);
-        var newRefreshToken = await _tokenService.CreateRefreshTokenAsync(user.Id);
+        var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
 
         // Revoke the old refresh token
         await _tokenService.RevokeRefreshTokenAsync(
             storedRefreshToken,
             "Replaced by new token",
-            newRefreshToken.Token
-        );
-
-        var tokenData = new TokenData(
-            newAccessToken,
-            newRefreshToken.Token,
-            DateTimeOffset.UtcNow.AddMinutes(_tokenGenerator.TokenExpMinutes)
+            tokenData.RefreshToken
         );
 
         return new RefreshTokenResponse(true, "Token refreshed successfully.", tokenData);

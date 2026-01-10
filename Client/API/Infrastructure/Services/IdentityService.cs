@@ -8,14 +8,11 @@ namespace Infrastructure.Services;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
 
     public IdentityService(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
     }
 
     public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
@@ -30,8 +27,7 @@ public class IdentityService : IIdentityService
 
     public async Task<bool> ValidatePasswordAsync(ApplicationUser user, string password)
     {
-        var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
-        return result.Succeeded;
+        return await _userManager.CheckPasswordAsync(user, password);
     }
 
     public async Task<IList<string>> GetUserRolesAsync(ApplicationUser user)

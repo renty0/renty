@@ -4,6 +4,8 @@ using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using Application.Common.Models;
 
 namespace Infrastructure.Services;
 
@@ -12,15 +14,35 @@ public class TokenService : ITokenService
     private readonly ApplicationDbContext _context;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly JwtSettings _jwtSettings;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public TokenService(
         ApplicationDbContext context,
         ITokenGenerator tokenGenerator,
-        IOptions<JwtSettings> jwtSettings)
+        IOptions<JwtSettings> jwtSettings,
+        UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _tokenGenerator = tokenGenerator;
         _jwtSettings = jwtSettings.Value;
+        _userManager = userManager;
+    }
+
+    public async Task<TokenData> GenerateTokensAsync(long userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) throw new KeyNotFoundException($"User with ID {userId} not found");
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _tokenGenerator.GenerateAccessToken(user, roles);
+        var refreshToken = await CreateRefreshTokenAsync(userId);
+
+        return new TokenData(
+            accessToken,
+            DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.TokenExpMinutes),
+            refreshToken.Token,
+            refreshToken.ExpiresAt
+        );
     }
 
     public async Task<RefreshToken> CreateRefreshTokenAsync(long userId)
