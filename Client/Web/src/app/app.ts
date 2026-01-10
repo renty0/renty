@@ -20,7 +20,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('Rently');
+  protected readonly title = signal('Renty');
   private translate = inject(TranslateService);
   private localizationService = inject(LocalizationService);
   private responsiveService = inject(ResponsiveService);
