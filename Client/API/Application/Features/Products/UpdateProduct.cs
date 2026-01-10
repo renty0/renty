@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,8 @@ public record UpdateProductCommand(
     decimal ProductPrice,
     string? SkuType,
     decimal? DiscountPrice,
-    int SubcategoryId
+    int SubcategoryId,
+    List<ProductImageDto>? Images
 ) : IRequest<UpdateProductResponse>;
 
 public record UpdateProductResponse(
@@ -70,6 +72,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     public async Task<UpdateProductResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var product = await _context.Products
+            .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product == null)
@@ -106,6 +109,42 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         product.DiscountPrice = request.DiscountPrice;
         product.ProductSubcategoryId = request.SubcategoryId;
 
+        // Sync images
+        if (request.Images != null)
+        {
+            // Remove deleted images
+            var imageIdsToKeep = request.Images.Where(i => i.Id > 0).Select(i => i.Id).ToList();
+            var imagesToRemove = product.Images.Where(i => !imageIdsToKeep.Contains(i.Id)).ToList();
+            
+            foreach (var image in imagesToRemove)
+            {
+                product.Images.Remove(image);
+            }
+
+            // Update existing and add new
+            foreach (var imageDto in request.Images)
+            {
+                if (imageDto.Id > 0)
+                {
+                    var existingImage = product.Images.FirstOrDefault(i => i.Id == imageDto.Id);
+                    if (existingImage != null)
+                    {
+                        existingImage.IsPrimary = imageDto.IsPrimary;
+                        existingImage.DisplayOrder = imageDto.DisplayOrder;
+                    }
+                }
+                else
+                {
+                    product.Images.Add(new ProductImage
+                    {
+                        ImageUrl = imageDto.ImageUrl,
+                        IsPrimary = imageDto.IsPrimary,
+                        DisplayOrder = imageDto.DisplayOrder
+                    });
+                }
+            }
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
         var dto = new ProductDto(
@@ -124,7 +163,10 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.ProfitMargin,
             product.ProductSubcategoryId,
             subcategory.SubcategoryName,
-            subcategory.Category.CategoryName
+            subcategory.Category.CategoryName,
+            product.Created,
+            product.LastModified,
+            product.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
         );
 
         return new UpdateProductResponse(true, "Product updated successfully.", dto);

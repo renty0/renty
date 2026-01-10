@@ -1,5 +1,6 @@
 using Application.Features.Products;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Web.Endpoints;
 
@@ -11,7 +12,7 @@ public static class ProductEndpoints
             .WithTags("Products")
             .RequireAuthorization();
 
-        group.MapGet("/", async (
+        group.MapGet("/", async Task<Ok<GetProductsResponse>> (
             int pageNumber,
             int pageSize,
             int? subcategoryId,
@@ -20,6 +21,8 @@ public static class ProductEndpoints
             decimal? minPrice,
             decimal? maxPrice,
             string? color,
+            string? sortBy,
+            string? sortOrder,
             ISender sender) =>
         {
             var result = await sender.Send(new GetProductsQuery(
@@ -30,61 +33,63 @@ public static class ProductEndpoints
                 searchTerm,
                 minPrice,
                 maxPrice,
-                color
+                color,
+                sortBy,
+                sortOrder
             ));
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("GetProducts")
         .WithOpenApi();
 
-        group.MapGet("/{id:long}", async (long id, ISender sender) =>
+        group.MapGet("/{id:long}", async Task<Results<Ok<GetProductByIdResponse>, NotFound>> (long id, ISender sender) =>
         {
             var result = await sender.Send(new GetProductByIdQuery(id));
             if (!result.Success)
             {
-                return Results.NotFound(result);
+                return TypedResults.NotFound();
             }
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("GetProductById")
         .WithOpenApi();
 
-        group.MapPost("/", async (CreateProductCommand command, ISender sender) =>
+        group.MapPost("/", async Task<Results<Created<CreateProductResponse>, BadRequest<CreateProductResponse>>> (CreateProductCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Created($"/api/products/{result.Product!.Id}", result);
+            return TypedResults.Created($"/api/products/{result.Product!.Id}", result);
         })
         .WithName("CreateProduct")
         .WithOpenApi();
 
-        group.MapPut("/{id:long}", async (long id, UpdateProductCommand command, ISender sender) =>
+        group.MapPut("/{id:long}", async Task<Results<Ok<UpdateProductResponse>, BadRequest<UpdateProductResponse>>> (long id, UpdateProductCommand command, ISender sender) =>
         {
             if (id != command.Id)
             {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
+                return TypedResults.BadRequest(new UpdateProductResponse(false, "ID mismatch", null));
             }
             var result = await sender.Send(command);
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("UpdateProduct")
         .WithOpenApi();
 
-        group.MapDelete("/{id:long}", async (long id, ISender sender) =>
+        group.MapDelete("/{id:long}", async Task<Results<Ok<DeleteProductResponse>, BadRequest<DeleteProductResponse>>> (long id, ISender sender) =>
         {
             var result = await sender.Send(new DeleteProductCommand(id));
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("DeleteProduct")
         .WithOpenApi();

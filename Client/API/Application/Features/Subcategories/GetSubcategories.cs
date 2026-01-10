@@ -1,25 +1,34 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Subcategories;
 
-public record GetSubcategoriesQuery(int? CategoryId = null) : IRequest<GetSubcategoriesResponse>;
+public record GetSubcategoriesQuery(
+    int? CategoryId = null, 
+    int PageNumber = 1, 
+    int PageSize = 10, 
+    string? SearchString = null,
+    string? SortBy = null,
+    string? SortOrder = null) : IRequest<GetSubcategoriesResponse>;
 
 public record GetSubcategoriesResponse(
     bool Success,
     string? Message,
-    List<ProductSubcategoryDto> Subcategories
+    PaginatedList<ProductSubcategoryDto> Subcategories
 );
 
 public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuery, GetSubcategoriesResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetSubcategoriesQueryHandler(IApplicationDbContext context)
+    public GetSubcategoriesQueryHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetSubcategoriesResponse> Handle(GetSubcategoriesQuery request, CancellationToken cancellationToken)
@@ -27,6 +36,8 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
         var query = _context.ProductSubcategories
             .Include(s => s.Category)
             .Include(s => s.Products)
+            .Include(s => s.Logo)
+            .AsNoTracking()
             .AsQueryable();
 
         if (request.CategoryId.HasValue)
@@ -34,16 +45,59 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
             query = query.Where(s => s.ProductCategoryId == request.CategoryId.Value);
         }
 
-        var subcategories = await query
-            .Select(s => new ProductSubcategoryDto(
-                s.Id,
-                s.SubcategoryName,
-                s.ProductCategoryId,
-                s.Category.CategoryName,
-                s.Products.Count
-            ))
+        if (!string.IsNullOrWhiteSpace(request.SearchString))
+        {
+            query = query.Where(s => s.SubcategoryName.Contains(request.SearchString) || 
+                                     s.Description.Contains(request.SearchString));
+        }
+
+        // Apply sorting
+        bool isDescending = request.SortOrder?.ToLower() == "desc";
+        switch (request.SortBy?.ToLower())
+        {
+            case "name":
+                query = isDescending ? query.OrderByDescending(s => s.SubcategoryName) : query.OrderBy(s => s.SubcategoryName);
+                break;
+            case "date":
+                query = isDescending ? query.OrderByDescending(s => s.Created) : query.OrderBy(s => s.Created);
+                break;
+            default:
+                query = query.OrderBy(s => s.SubcategoryName);
+                break;
+        }
+
+        var count = await query.CountAsync(cancellationToken);
+        var items = await query
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        return new GetSubcategoriesResponse(true, null, subcategories);
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+
+        var dtos = items.Select(s => {
+            string? logoUrl = null;
+            if (s.Logo != null)
+            {
+                logoUrl = $"{baseUrl.TrimEnd('/')}/{s.Logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+            }
+
+            return new ProductSubcategoryDto(
+                s.Id,
+                s.SubcategoryName,
+                s.Description,
+                s.LogoId,
+                logoUrl,
+                s.ProductCategoryId,
+                s.Category.CategoryName,
+                s.Products.Count,
+                s.Created,
+                s.LastModified
+            );
+        }).ToList();
+
+        var paginatedList = new PaginatedList<ProductSubcategoryDto>(dtos, count, request.PageNumber, request.PageSize);
+
+        return new GetSubcategoriesResponse(true, null, paginatedList);
     }
 }

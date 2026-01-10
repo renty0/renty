@@ -42,6 +42,7 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
+            await ResetSequencesAsync();
             await TrySeedAsync();
         }
         catch (Exception ex)
@@ -93,5 +94,64 @@ public class ApplicationDbContextInitialiser
                 _logger.LogWarning("Failed to create admin user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
+    }
+
+    private async Task ResetSequencesAsync()
+    {
+        _logger.LogInformation("Resetting database sequences (C# implementation)...");
+        try
+        {
+            // 1. Get all potential identity/serial columns
+            var columnsSql = @"
+                SELECT table_name as TableName, column_name as ColumnName 
+                FROM information_schema.columns 
+                WHERE table_schema = 'public' 
+                AND (column_default LIKE 'nextval(%' OR is_identity = 'YES')";
+
+            var columns = await _context.Database.SqlQueryRaw<ColumnInfo>(columnsSql).ToListAsync();
+
+            foreach (var col in columns)
+            {
+                try
+                {
+                    // 2. Get the actual sequence name for the column
+                    var seqNameSql = $"SELECT pg_get_serial_sequence('\"{col.TableName}\"', '{col.ColumnName}') AS \"Value\"";
+                    var seqName = await _context.Database.SqlQueryRaw<string>(seqNameSql).FirstOrDefaultAsync();
+
+                    if (!string.IsNullOrEmpty(seqName))
+                    {
+                        // 3. Get max ID
+                        var maxIdSql = $"SELECT COALESCE(MAX(\"{col.ColumnName}\"), 0) AS \"Value\" FROM \"{col.TableName}\"";
+                        var maxId = await _context.Database.SqlQueryRaw<long>(maxIdSql).FirstOrDefaultAsync();
+
+                        // 4. Reset sequence
+                        var resetSql = $"SELECT setval('{seqName}', {maxId + 1}, false) AS \"Value\"";
+                        await _context.Database.ExecuteSqlRawAsync(resetSql);
+
+                        _logger.LogInformation("Reset sequence {Sequence} for table {Table} to {NextValue}", seqName, col.TableName, maxId + 1);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Could not find sequence for {Table}.{Column}", col.TableName, col.ColumnName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to reset sequence for {Table}.{Column}", col.TableName, col.ColumnName);
+                }
+            }
+
+            _logger.LogInformation("Database sequences reset completed.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while resetting database sequences.");
+        }
+    }
+
+    private class ColumnInfo
+    {
+        public string TableName { get; set; } = string.Empty;
+        public string ColumnName { get; set; } = string.Empty;
     }
 }

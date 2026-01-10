@@ -1,0 +1,117 @@
+<div class="data-container">
+    <app-header-section [title]="'subcategories.title' | translate"
+        [buttonText]="'subcategories.actions.create' | translate" [placeholder]="'subcategories.search' | translate"
+        [icon]="'add'" [showButton]="true" (searchChange)="onSearchChange($event)" (buttonClick)="createSubcategory()">
+        <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"
+            class="view-toggle">
+            <mat-button-toggle value="list" aria-label="List view">
+                <mat-icon>view_list</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="cards" aria-label="Cards view">
+                <mat-icon>grid_view</mat-icon>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </app-header-section>
+
+    @if (isLoading()) {
+    <mat-card class="table-card">
+        <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+    </mat-card>
+    } @else {
+    @if (viewMode() === 'list') {
+    <mat-card class="table-card">
+        <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
+            [matSortActive]="sortBy() || 'name'" [matSortDirection]="sortOrder() || 'asc'">
+            <ng-container matColumnDef="logo">
+                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.logo' | translate }}</th>
+                <td mat-cell *matCellDef="let row">
+                    <img [src]="row.logoUrl || 'assets/images/placeholder.png'" class="category-logo-mini" alt="Logo">
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.name' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.subcategoryName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.category' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.description' | translate }}</th>
+                <td mat-cell *matCellDef="let row">{{ row.description | slice:0:50 }}{{ row.description?.length > 50 ?
+                    '...' : '' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let row">
+                    <div class="actions-cell">
+                        <app-loading-button color="primary" variant="stroked" size="sm"
+                            (clicked)="editSubcategory(row.id)" [title]="'buttons.edit' | translate">
+                            <mat-icon>edit</mat-icon>
+                        </app-loading-button>
+                        <app-loading-button color="warn" variant="stroked" size="sm"
+                            (clicked)="deleteSubcategory(row.id)" [title]="'buttons.delete' | translate">
+                            <mat-icon>delete</mat-icon>
+                        </app-loading-button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+            [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)" aria-label="Select page">
+        </mat-paginator>
+    </mat-card>
+    } @else {
+    <div class="cards-grid">
+        @for (subcategory of dataSource(); track subcategory.id) {
+        <mat-card class="entity-card" (click)="editSubcategory(subcategory.id!)">
+            <div class="card-image">
+                <img [src]="subcategory.logoUrl || 'assets/images/placeholder.png'" alt="Logo">
+                <div class="category-badge">{{ subcategory.categoryName }}</div>
+            </div>
+            <div class="card-content">
+                <h3>{{ subcategory.subcategoryName }}</h3>
+                <p>{{ subcategory.description | slice:0:100 }}</p>
+            </div>
+            <div class="card-actions">
+                <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"
+                    (clicked)="editSubcategory(subcategory.id!)">
+                    <mat-icon>edit</mat-icon>
+                </app-loading-button>
+                <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm"
+                    (clicked)="deleteSubcategory(subcategory.id!)">
+                    <mat-icon>delete</mat-icon>
+                </app-loading-button>
+            </div>
+        </mat-card>
+        }
+    </div>
+    <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" aria-label="Select page">
+    </mat-paginator>
+    }
+    }
+</div>
+
+@if (showDialog()) {
+<div class="dialog-overlay" (click)="closeDialog()">
+    <mat-card class="dialog-card" (click)="$event.stopPropagation()">
+        <mat-card-content>
+            <app-subcategory-editor [id]="selectedSubcategoryId()" (saved)="onSaved($event)"
+                (cancelled)="closeDialog()">
+            </app-subcategory-editor>
+        </mat-card-content>
+    </mat-card>
+</div>
+}

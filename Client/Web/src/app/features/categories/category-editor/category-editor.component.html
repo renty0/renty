@@ -15,20 +15,18 @@
 
             <div class="logo-section">
                 <span class="label">{{ 'categories.columns.logo' | translate }}</span>
-                <div class="uploader-container">
                     <app-image-uploader #logoUploader [uploadPath]="'categories/logos'"
                         [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']">
                     </app-image-uploader>
-                </div>
             </div>
         </div>
 
         <div class="form-actions">
-            <app-loading-button variant="stroked" (clicked)="cancel()" type="button" class="btn-cancel">
+            <app-loading-button variant="stroked" (clicked)="cancel()" type="button" class="btn-cancel" [title]="'buttons.cancel' | translate">
                 {{ 'buttons.cancel' | translate }}
             </app-loading-button>
             <app-loading-button color="primary" type="submit" [loading]="isSaving" [disabled]="form.invalid"
-                class="btn-submit">
+                class="btn-submit" [title]="'buttons.save' | translate">
                 {{ 'buttons.save' | translate }}
             </app-loading-button>
         </div>

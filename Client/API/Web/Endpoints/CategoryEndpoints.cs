@@ -1,6 +1,7 @@
 using Application.Features.Categories;
 using Application.Common.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Endpoints;
@@ -10,70 +11,73 @@ public static class CategoryEndpoints
     public static void MapCategoryEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/categories")
-            .WithTags("Categories")
-            .RequireAuthorization();
+            .WithTags("Categories");
+            //.RequireAuthorization();
 
-        group.MapGet("/", async (int? pageNumber, int? pageSize, string? searchTerm, ISender sender) =>
+        group.MapGet("/", async Task<Ok<PaginatedList<ProductCategoryDto>>> (
+            int? pageNumber, 
+            int? pageSize, 
+            string? searchTerm, 
+            string? sortBy,
+            string? sortOrder,
+            ISender sender) =>
         {
             var result = await sender.Send(new GetCategoriesQuery { 
                 PageNumber = pageNumber ?? 1, 
                 PageSize = pageSize ?? 10, 
-                SearchTerm = searchTerm 
+                SearchTerm = searchTerm,
+                SortBy = sortBy,
+                SortOrder = sortOrder
             });
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("GetCategories")
-        .Produces<PaginatedList<ProductCategoryDto>>(StatusCodes.Status200OK)
         .WithOpenApi();
 
-        group.MapGet("/{id:int}", async (int id, ISender sender) =>
+        group.MapGet("/{id:int}", async Task<Results<Ok<ProductCategoryDto>, NotFound>> (int id, ISender sender) =>
         {
             var result = await sender.Send(new GetCategoryByIdQuery(id));
-            return result is not null ? Results.Ok(result) : Results.NotFound();
+            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
         })
         .WithName("GetCategoryById")
-        .Produces<ProductCategoryDto>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound)
         .WithOpenApi();
 
-        group.MapPost("/", async (CreateCategoryCommand command, ISender sender) =>
+        group.MapPost("/", async Task<Results<Ok<CreateCategoryResponse>, BadRequest<CreateCategoryResponse>>> (CreateCategoryCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Created($"/api/categories/{result.Category!.Id}", result);
+            return TypedResults.Ok(result);
         })
         .WithName("CreateCategory")
-        .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
         .WithOpenApi();
 
-        group.MapPut("/{id:int}", async (int id, UpdateCategoryCommand command, ISender sender) =>
+        group.MapPut("/{id:int}", async Task<Results<Ok<UpdateCategoryResponse>, BadRequest<UpdateCategoryResponse>>> (int id, UpdateCategoryCommand command, ISender sender) =>
         {
             if (id != command.Id)
             {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
+                return TypedResults.BadRequest(new UpdateCategoryResponse(false, "ID mismatch", null));
             }
             var result = await sender.Send(command);
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("UpdateCategory")
-        .Produces<UpdateCategoryResponse>(StatusCodes.Status200OK)
         .WithOpenApi();
 
-        group.MapDelete("/{id:int}", async (int id, ISender sender) =>
+        group.MapDelete("/{id:int}", async Task<Results<Ok<DeleteCategoryResponse>, BadRequest<DeleteCategoryResponse>>> (int id, ISender sender) =>
         {
             var result = await sender.Send(new DeleteCategoryCommand(id));
             if (!result.Success)
             {
-                return Results.BadRequest(result);
+                return TypedResults.BadRequest(result);
             }
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         })
         .WithName("DeleteCategory")
         .WithOpenApi();

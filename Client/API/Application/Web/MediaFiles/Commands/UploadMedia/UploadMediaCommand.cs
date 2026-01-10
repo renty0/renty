@@ -44,17 +44,20 @@ public sealed class UploadMediaCommandHandler : IRequestHandler<UploadMediaComma
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
     private readonly ILogger<UploadMediaCommandHandler> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _uploadsPath;
 
     public UploadMediaCommandHandler(
         IApplicationDbContext context,
         IUser currentUser,
         IOptions<FileUploadSettings> settings,
-        ILogger<UploadMediaCommandHandler> logger)
+        ILogger<UploadMediaCommandHandler> logger,
+        IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
         
         // Get uploads path from configuration
         _uploadsPath = settings.Value.UploadPath;
@@ -138,7 +141,10 @@ public sealed class UploadMediaCommandHandler : IRequestHandler<UploadMediaComma
                 "Uploaded media file {FileName} (ID: {Id}). Type: {FileType}, Size: {Size} bytes",
                 fileName, mediaFile.Id, fileType, originalSize);
 
-            return mediaFile.ToDto();
+            var requestUrl = _httpContextAccessor.HttpContext?.Request;
+            var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
+            return mediaFile.ToDto(baseUrl);
         }
         catch (Exception ex)
         {

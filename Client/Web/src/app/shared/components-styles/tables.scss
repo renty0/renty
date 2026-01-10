@@ -10,7 +10,7 @@
     font-size: $font-size-xs;
     font-weight: $font-weight-small;
     border: none;
-    border-bottom: 1px solid $white-secondary;
+    border-bottom: 1px solid $white;
   }
   .table-container {
     overflow-x: auto;
@@ -37,7 +37,7 @@
         transition: 0.3s ease-in-out;
         &:hover {
           background-color: $gray-200;
-          color: $harvard-dark-gray;
+          color: $gray-900;
         }
       }
       .mat-mdc-header-cell {
@@ -199,7 +199,7 @@
   }
 }
 .status-active {
-  color: $text-success;
+  color: $success;
   background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
   mat-icon {
     color: green;
@@ -207,9 +207,9 @@
 }
 .status-inactive {
   background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  color: $text-danger;
+  color: $danger;
   mat-icon {
-    color: $text-danger;
+    color: $danger;
   }
 }
 .sortable-header {
@@ -219,8 +219,8 @@
   }
 }
 .data-container {
-  padding: 20px 24px;
   max-width: 1600px;
+  padding: 20px 24px;
   margin: 0 auto;
   @include tablet {
     padding: 16px $spacing-md;
@@ -266,14 +266,14 @@
   .data-table {
     overflow: hidden;
     tr.mat-mdc-row {
-      border-bottom: 1px solid $white-secondary;
+      border-bottom: 1px solid $white;
       transition: 0.3s ease-in-out;
       &:hover {
-        background-color: $white-secondary;
+        background-color: $white;
       }
     }
     td.mat-cell {
-      color: $white-secondary;
+      color: $white;
       font-size: $font-size-xs;
     }
     tr.mat-mdc-row:hover {

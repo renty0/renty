@@ -21,8 +21,7 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
   private apiClient = inject(MediaFilesClient);
-  private readonly allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
-  private readonly maxSize = 5 * 1024 * 1024; // 5MB
+
   @ViewChild('fileInput', { static: false })
   fileInputRef!: ElementRef<HTMLInputElement>;
 
@@ -31,7 +30,10 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
   @Input() label!: string;
   @Input() imgUrl: string | null = null;
   @Input() uploadPath: string = '';
+  @Input() folder: string = '';
   @Input() allowedExtensions: string[] = [];
+  @Input() allowedTypes: string[] = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+  @Input() maxSize = 5 * 1024 * 1024; // 5MB
 
   fileId: string | null = null;
   selectedFile: File | null = null;

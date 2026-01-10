@@ -2,6 +2,7 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories;
@@ -33,10 +34,12 @@ public class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCo
 public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, UpdateCategoryResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateCategoryCommandHandler(IApplicationDbContext context)
+    public UpdateCategoryCommandHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UpdateCategoryResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
@@ -65,12 +68,24 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Assuming baseUrl needs to be passed or handled. For now, skipping full URL construction or using helper.
-        // We can just pass the storage path or something, but the DTO expects nullable string usage.
-        // Let's use Logo.StoragePath if available.
-        string? logoUrl = category.Logo?.StoragePath; 
+        string? logoUrl = null;
+        if (category.LogoId.HasValue)
+        {
+            // If the logo was changed, category.Logo might still be the old one.
+            // Let's fetch the actual logo to be sure.
+            var logo = await _context.MediaFiles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == category.LogoId, cancellationToken);
+                
+            if (logo != null)
+            {
+                var requestUrl = _httpContextAccessor.HttpContext?.Request;
+                var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+                logoUrl = $"{baseUrl.TrimEnd('/')}/{logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+            }
+        }
 
-        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, category.Subcategories.Count);
+        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, category.Subcategories.Count, category.Created, category.LastModified);
         return new UpdateCategoryResponse(true, "Category updated successfully.", dto);
     }
 }

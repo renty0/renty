@@ -7,15 +7,29 @@ public record ProductCategoryDto(
     string Description,
     Guid? LogoId,
     string? LogoUrl,
-    int SubcategoryCount
+    int SubcategoryCount,
+    DateTimeOffset Created,
+    DateTimeOffset? LastModified
 );
 
 public record ProductSubcategoryDto(
     int Id,
     string SubcategoryName,
+    string Description,
+    Guid? LogoId,
+    string? LogoUrl,
     int CategoryId,
     string CategoryName,
-    int ProductCount
+    int ProductCount,
+    DateTimeOffset Created,
+    DateTimeOffset? LastModified
+);
+
+public record ProductImageDto(
+    long Id,
+    string ImageUrl,
+    bool IsPrimary,
+    int DisplayOrder
 );
 
 public record ProductDto(
@@ -34,7 +48,10 @@ public record ProductDto(
     decimal ProfitMargin,
     int SubcategoryId,
     string SubcategoryName,
-    string CategoryName
+    string CategoryName,
+    DateTimeOffset Created,
+    DateTimeOffset? LastModified,
+    List<ProductImageDto> Images
 );
 
 public record ProductListDto(
@@ -45,7 +62,10 @@ public record ProductListDto(
     decimal? DiscountPrice,
     string? ProductColor,
     string SubcategoryName,
-    string CategoryName
+    string CategoryName,
+    DateTimeOffset Created,
+    DateTimeOffset? LastModified,
+    string? PrimaryImageUrl
 );
 
 // Calendar DTOs

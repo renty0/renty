@@ -4,6 +4,8 @@
 @use 'primeicons/primeicons.css';
 @use './app/shared/styles/index.scss' as *;
 
+// Alexandria font is now loaded via Google Fonts in index.html
+
 .material-icons {
   font-weight: normal;
   font-style: normal;
@@ -19,88 +21,34 @@
   font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
+
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Alexandria' !important;
 }
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+.p-component,
+.mat-typography {
+  font-family: 'Alexandria', sans-serif !important;
+}
+
 html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 p {
   margin: 0;
 }
-// :root {
-//   .small-button {
-//     @include mat.button-overrides(
-//       (
-//         filled-container-height: 2rem,
-//         filled-horizontal-padding: 0.5rem,
-//         tonal-container-height: 2rem,
-//         tonal-horizontal-padding: 0.5rem,
-//       )
-//     );
-//   }
-//   .mdc-button.full-width-button {
-//     width: 100%;
-//   }
-//   .mdc-button {
-//     width: fit-content;
-//   }
-//   @include mat.sidenav-overrides(
-//     (
-//       container-width: 256px,
-//     )
-//   );
-// }
-// .mat-mdc-snack-bar-container {
-//   background: transparent !important;
-//   box-shadow: none !important;
-//   padding: 0 !important;
-//   margin: 0 !important;
-// }
-// .mdc-snackbar__surface,
-// .mat-mdc-snackbar-surface {
-//   background: transparent !important;
-//   color: inherit !important;
-//   box-shadow: none !important;
-// }
-// .mat-mdc-snack-bar-label {
-//   background: transparent !important;
-//   color: inherit !important;
-// }
-// .success-snackbar-panel .mat-mdc-snack-bar-container,
-// .error-snackbar-panel .mat-mdc-snack-bar-container,
-// .info-snackbar-panel .mat-mdc-snack-bar-container,
-// .warning-snackbar-panel .mat-mdc-snack-bar-container {
-//   background: transparent !important;
-// }
-// .success-snackbar-panel .mdc-snackbar__surface,
-// .error-snackbar-panel .mdc-snackbar__surface,
-// .info-snackbar-panel .mdc-snackbar__surface,
-// .warning-snackbar-panel .mdc-snackbar__surface {
-//   background: transparent !important;
-// }
-// .p-drawer {
-//   border: none !important;
-// }
-// .p-drawer-content {
-//   padding: 0 !important;
-//   overflow-y: auto;
-//   flex-grow: 1;
-// }
-// .p-drawer-header {
-//   display: none !important;
-// }
-// .center-datepicker {
-//   position: fixed !important;
-//   top: 50% !important;
-//   left: 50% !important;
-//   transform: translate(-50%, -50%) !important;
-// }
-// * {
-//   font-family: 'Alexandria';
-// }
+
+* {
+  font-family: 'Alexandria', sans-serif;
+}

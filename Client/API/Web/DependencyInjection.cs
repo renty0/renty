@@ -1,13 +1,16 @@
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using Application.Web.MediaFiles.Commands.UploadMedia;
 using Web.Infrastructure;
 
 namespace Web;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddWebServices(this IServiceCollection services)
+    public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<FileUploadSettings>(configuration.GetSection("FileUploadSettings"));
+
         services.AddHttpContextAccessor();
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();

@@ -44,7 +44,10 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, G
                 p.ProductPrice > 0 ? (p.ProductPrice - p.ProductCost) / p.ProductPrice * 100 : 0,
                 p.ProductSubcategoryId,
                 p.Subcategory.SubcategoryName,
-                p.Subcategory.Category.CategoryName
+                p.Subcategory.Category.CategoryName,
+                p.Created,
+                p.LastModified,
+                p.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

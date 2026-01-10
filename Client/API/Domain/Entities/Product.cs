@@ -21,6 +21,7 @@ public class Product : BaseAuditableEntity
     public ProductSubcategory Subcategory { get; set; } = null!;
     public ICollection<Sale> Sales { get; set; } = new List<Sale>();
     public ICollection<Return> Returns { get; set; } = new List<Return>();
+    public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
     // Computed property for effective price
     public decimal EffectivePrice => DiscountPrice ?? ProductPrice;

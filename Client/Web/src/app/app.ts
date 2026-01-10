@@ -11,13 +11,13 @@ import { AuthService } from './core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ToastModule, ButtonModule, TooltipModule],
+  imports: [CommonModule, RouterOutlet, ToastModule, ButtonModule, TooltipModule, NavbarComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('Rently');

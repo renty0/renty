@@ -32,7 +32,7 @@ export class CategoryEditorComponent implements OnInit {
     public translate = inject(TranslateService);
 
     @Input() id: number | null = null;
-    @Output() saved = new EventEmitter<void>();
+    @Output() saved = new EventEmitter<{ id: number; categoryName: string; description?: string; logoUrl?: string; logoId?: number }>();
     @Output() cancelled = new EventEmitter<void>();
 
     @ViewChild('logoUploader') logoUploader!: ImageUploaderComponent;
@@ -113,9 +113,18 @@ export class CategoryEditorComponent implements OnInit {
 
                 this.apiClient.updateCategory(this.categoryId, command)
                     .pipe(
-                        tap(() => {
-                            this.toast.showSuccess('categories.messages.updateSuccess');
-                            this.saved.emit();
+                        tap((res) => {
+                            this.toast.showSuccess(res.message ? res.message : 'categories.messages.updateSuccess');
+                            // Emit the updated category data
+                            if (res.category) {
+                                this.saved.emit({
+                                    id: res.category.id!,
+                                    categoryName: res.category.categoryName!,
+                                    description: res.category.description,
+                                    logoUrl: res.category.logoUrl,
+                                    logoId: res.category.logoId ? Number(res.category.logoId) : undefined
+                                });
+                            }
                         }),
                         catchError(() => {
                             this.toast.showError('errors.failedToUpdateCategory');
@@ -133,9 +142,17 @@ export class CategoryEditorComponent implements OnInit {
 
                 this.apiClient.createCategory(command)
                     .pipe(
-                        tap(() => {
-                            this.toast.showSuccess('categories.messages.createSuccess');
-                            this.saved.emit();
+                        tap((res) => {
+                            this.toast.showSuccess(res.message ? res.message : 'categories.messages.createSuccess');
+                            if (res.category) {
+                                this.saved.emit({
+                                    id: res.category.id!,
+                                    categoryName: res.category.categoryName!,
+                                    description: res.category.description,
+                                    logoUrl: res.category.logoUrl,
+                                    logoId: res.category.logoId ? Number(res.category.logoId) : undefined
+                                });
+                            }
                         }),
                         catchError(() => {
                             this.toast.showError('errors.failedToCreateCategory');

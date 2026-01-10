@@ -1,11 +1,12 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule, PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,6 +16,7 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
 import { CategoriesClient, ProductCategoryDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { CategoryEditorComponent } from '../category-editor/category-editor.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
     selector: 'app-category-list',
@@ -23,6 +25,7 @@ import { CategoryEditorComponent } from '../category-editor/category-editor.comp
         CommonModule,
         TranslateModule,
         MatTableModule,
+        MatSortModule,
         MatIconModule,
         MatCardModule,
         MatProgressSpinnerModule,
@@ -39,6 +42,7 @@ import { CategoryEditorComponent } from '../category-editor/category-editor.comp
 export class CategoryListComponent implements OnInit {
     private apiClient = inject(CategoriesClient);
     private dialog = inject(MatDialog);
+    private toast = inject(ToastService);
     public translate = inject(TranslateService);
 
     displayedColumns = ['logo', 'name', 'description', 'actions'];
@@ -51,52 +55,78 @@ export class CategoryListComponent implements OnInit {
     selectedCategoryId = signal<number | null>(null);
 
     // Pagination & Filtering state
-    searchTerm: string = '';
-    pageNumber: number = 1;
-    pageSize: number = 10;
-    totalCount: number = 0;
+    searchTerm = signal('');
+    pageNumber = signal(1);
+    pageSize = signal(10);
+    totalCount = signal(0);
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    // Sorting state
+    sortBy = signal<string | null>('date');
+    sortOrder = signal<'asc' | 'desc' | null>('desc');
+
+    constructor() {
+        // Adjust page settings when view mode changes
+        effect(() => {
+            const mode = this.viewMode();
+            untracked(() => {
+                this.pageNumber.set(1);
+                this.pageSize.set(mode === 'cards' ? 12 : 10);
+            });
+        }, { allowSignalWrites: true });
+
+        // Reactive data fetching
+        effect(() => {
+            this.getData();
+        }, { allowSignalWrites: true });
+    }
 
     ngOnInit() {
-        this.getData();
     }
 
     private getData() {
+        const page = this.pageNumber();
+        const size = this.pageSize();
+        const term = this.searchTerm();
+
         this.isLoading.set(true);
         this.apiClient.getCategories(
-            this.pageNumber,
-            this.pageSize,
-            this.searchTerm || undefined
+            page,
+            size,
+            term || undefined,
+            this.sortBy() || undefined,
+            this.sortOrder() || undefined
         )
             .pipe(
                 tap((response) => {
                     this.dataSource.set(response.items || []);
-                    this.totalCount = response.totalCount || 0;
+                    this.totalCount.set(response.totalCount || 0);
                 }),
-                finalize(() => this.isLoading.set(false)),
-                catchError(() => {
+                catchError((err) => {
+                    console.error('Failed to load categories', err);
                     this.dataSource.set([]);
+                    this.toast.showError('errors.failedToLoadCategories');
                     return of(null);
-                })
+                }),
+                finalize(() => this.isLoading.set(false))
             )
             .subscribe();
     }
 
     onSearchChange(event: any): void {
         const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
-        this.searchTerm = value;
-        this.pageNumber = 1;
-        if (this.paginator) {
-            this.paginator.pageIndex = 0;
-        }
-        this.getData();
+        this.searchTerm.set(value);
+        this.pageNumber.set(1);
     }
 
     onPageChange(event: PageEvent): void {
-        this.pageNumber = event.pageIndex + 1;
-        this.pageSize = event.pageSize;
-        this.getData();
+        this.pageNumber.set(event.pageIndex + 1);
+        this.pageSize.set(event.pageSize);
+    }
+
+    onSort(sort: Sort): void {
+        this.sortBy.set(sort.active);
+        this.sortOrder.set(sort.direction ? sort.direction as 'asc' | 'desc' : null);
+        this.pageNumber.set(1);
     }
 
     editCategory(id: number) {
@@ -132,12 +162,14 @@ export class CategoryListComponent implements OnInit {
 
         const confirmed = await dialogRef.afterClosed().toPromise();
         if (confirmed) {
+            this.isLoading.set(true);
             this.apiClient.deleteCategory(id)
                 .pipe(
                     tap(() => {
-                        this.getData(); // Refresh data to update pagination if needed
+                        this.getData();
                     }),
-                    catchError(() => of(null))
+                    catchError(() => of(null)),
+                    finalize(() => this.isLoading.set(false))
                 )
                 .subscribe();
         }

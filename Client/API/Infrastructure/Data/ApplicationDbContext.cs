@@ -26,6 +26,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<RentableItemImage> RentableItemImages => Set<RentableItemImage>();
     public DbSet<RentRequest> RentRequests => Set<RentRequest>();
     public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
+    public DbSet<ProductImage> ProductImages => Set<ProductImage>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -9,11 +9,11 @@
     .container {
         max-width: 1600px;
         margin: 0 auto;
-        padding: 0 $spacing-lg;
+        padding: 0 $spacing-sm;
     }
 
     .bg-light {
-        background-color: #f8fafc;
+        background-color: $secondary-color;
     }
 
     .bg-dark {
@@ -32,84 +32,7 @@
         }
     }
 
-    // Navbar
-    .home-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 20px 0;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-        &.scrolled {
-            padding: 12px 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-
-            .nav-logo {
-                color: $primary-color;
-            }
-
-            .nav-link {
-                color: $gray-700;
-            }
-        }
-
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: $white;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-            transition: color 0.3s;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: $spacing-xl;
-            align-items: center;
-
-            @media (max-width: $breakpoint-md) {
-                display: none;
-            }
-        }
-
-        .nav-link {
-            color: rgba($white, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            position: relative;
-
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -4px;
-                left: 0;
-                width: 0;
-                height: 2px;
-                background: $accent-color;
-                transition: width 0.3s;
-            }
-
-            &:hover {
-                color: $white;
-
-                &::after {
-                    width: 100%;
-                }
-            }
-        }
-    }
+    // Unified navbar is now global
 
     .badge {
         background: rgba($accent-color, 0.1);
@@ -146,15 +69,16 @@
         }
 
         h2 {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 800;
+            padding: 0;
+            margin: 0;
             color: $primary-color;
-            margin-bottom: $spacing-md;
             letter-spacing: -1px;
             line-height: 1.2;
 
             @media (max-width: $breakpoint-md) {
-                font-size: 2rem;
+                font-size: 1rem;
             }
         }
 

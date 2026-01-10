@@ -11,9 +11,11 @@ public record GetProductsQuery(
     int? SubcategoryId = null,
     int? CategoryId = null,
     string? SearchTerm = null,
-    decimal? MinPrice = null,
-    decimal? MaxPrice = null,
-    string? Color = null
+    decimal? minPrice = null,
+    decimal? maxPrice = null,
+    string? color = null,
+    string? sortBy = null,
+    string? sortOrder = null
 ) : IRequest<GetProductsResponse>;
 
 public record GetProductsResponse(
@@ -58,23 +60,40 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             );
         }
 
-        if (request.MinPrice.HasValue)
+        if (request.minPrice.HasValue)
         {
-            query = query.Where(p => p.ProductPrice >= request.MinPrice.Value);
+            query = query.Where(p => p.ProductPrice >= request.minPrice.Value);
         }
 
-        if (request.MaxPrice.HasValue)
+        if (request.maxPrice.HasValue)
         {
-            query = query.Where(p => p.ProductPrice <= request.MaxPrice.Value);
+            query = query.Where(p => p.ProductPrice <= request.maxPrice.Value);
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Color))
+        if (!string.IsNullOrWhiteSpace(request.color))
         {
-            query = query.Where(p => p.ProductColor == request.Color);
+            query = query.Where(p => p.ProductColor == request.color);
+        }
+
+        // Apply sorting
+        if (!string.IsNullOrWhiteSpace(request.sortBy))
+        {
+            var isDescending = request.sortOrder?.ToLower() == "desc";
+            query = request.sortBy.ToLower() switch
+            {
+                "name" => isDescending ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName),
+                "sku" => isDescending ? query.OrderByDescending(p => p.ProductSku) : query.OrderBy(p => p.ProductSku),
+                "price" => isDescending ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice),
+                "date" => isDescending ? query.OrderByDescending(p => p.Created) : query.OrderBy(p => p.Created),
+                _ => query.OrderByDescending(p => p.Created)
+            };
+        }
+        else
+        {
+            query = query.OrderByDescending(p => p.Created);
         }
 
         var projectedQuery = query
-            .OrderByDescending(p => p.Created)
             .Select(p => new ProductListDto(
                 p.Id,
                 p.ProductSku,
@@ -83,7 +102,10 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
                 p.DiscountPrice,
                 p.ProductColor,
                 p.Subcategory.SubcategoryName,
-                p.Subcategory.Category.CategoryName
+                p.Subcategory.Category.CategoryName,
+                p.Created,
+                p.LastModified,
+                p.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
             ));
 
         var products = await PaginatedList<ProductListDto>.CreateAsync(

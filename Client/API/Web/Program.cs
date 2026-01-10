@@ -3,13 +3,14 @@ using Infrastructure;
 using Infrastructure.Data;
 using Web;
 using Web.Endpoints;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddWebServices();
+builder.Services.AddWebServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -36,6 +37,19 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Serve static files from uploads folder
+var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = ""
+});
 
 // Configure Swagger
 app.UseOpenApi();

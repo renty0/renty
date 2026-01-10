@@ -17,7 +17,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [ CommonModule, MultiSelectModule, ReactiveFormsModule, FloatLabelModule, TextareaModule, InputNumber, InputTextModule, SelectModule, IconFieldModule, InputIconModule, PasswordModule, TranslatePipe, DatePicker ],
+  imports: [CommonModule, MultiSelectModule, ReactiveFormsModule, FloatLabelModule, TextareaModule, InputNumber, InputTextModule, SelectModule, IconFieldModule, InputIconModule, PasswordModule, TranslatePipe, DatePicker],
   templateUrl: './input.html',
   styleUrls: ['./input.scss'],
 })
@@ -33,8 +33,10 @@ export class InputComponent {
   @Input() disabled = false;
   @Input() value = '';
   @Input() readonly = false;
+  @Input() required = false;
+  @Input() error = '';
 
- // For Date
+  // For Date
   @Input() minDate?: Date;
   @Input() maxDate?: Date;
 

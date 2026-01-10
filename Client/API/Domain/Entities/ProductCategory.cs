@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Domain.Common;
 
 namespace Domain.Entities;
 
-public class ProductCategory
+public class ProductCategory : IAuditable
 {
     public int Id { get; set; }
     public string CategoryName { get; set; } = string.Empty;
@@ -15,4 +15,10 @@ public class ProductCategory
 
     // Navigation properties
     public ICollection<ProductSubcategory> Subcategories { get; set; } = new List<ProductSubcategory>();
+
+    // Auditing fields
+    public DateTimeOffset Created { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset LastModified { get; set; }
+    public string? LastModifiedBy { get; set; }
 }

@@ -18,6 +18,7 @@ export class HeaderSectionComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
 
   @Input() title: string = '';
+  @Input() subtitle: string = '';
   @Input() placeholder: string = 'Search...';
   @Input() showSearch: boolean = true;
   @Input() showButton: boolean = true;

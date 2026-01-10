@@ -4,6 +4,18 @@
     "owner": "مالك",
     "both": "كلاهما"
   },
+  "nav": {
+    "home": "الرئيسية",
+    "market": "المتجر",
+    "categories": "الفئات",
+    "subcategories": "الفئات الفرعية",
+    "about": "حول",
+    "dashboard": "لوحة التحكم",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "login": "دخول",
+    "register": "إنشاء حساب"
+  },
   "register": {
     "welcomeMessage": "انضم إلى رنتلي اليوم",
     "haveAccount": "لديك حساب بالفعل؟",
@@ -87,6 +99,64 @@
       "create": "فئة جديدة",
       "edit": "تعديل الفئة",
       "delete": "حذف الفئة"
+    }
+  },
+  "products": {
+    "title": "المنتجات",
+    "details": "تفاصيل المنتج",
+    "search": "بحث في المنتجات...",
+    "confirmDelete": "هل أنت متأكد من حذف هذا المنتج؟",
+    "columns": {
+      "image": "صورة",
+      "sku": "المعرف الفريد (SKU)",
+      "name": "الاسم",
+      "price": "السعر",
+      "subcategory": "الفئة الفرعية",
+      "date": "التاريخ",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "create": "منتج جديد",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "editor": {
+      "newTitle": "منتج جديد",
+      "editTitle": "تعديل المنتج",
+      "newSubtitle": "إضافة منتج جديد",
+      "editSubtitle": "تحديث تفاصيل المنتج"
+    },
+    "sections": {
+      "general": "معلومات عامة",
+      "pricing": "التسعير",
+      "details": "التفاصيل",
+      "media": "الوسائط",
+      "organization": "التنظيم"
+    },
+    "fields": {
+      "name": "اسم المنتج",
+      "sku": "المعرف الفريد (SKU)",
+      "price": "سعر البيع",
+      "cost": "تكلفة المنتج",
+      "color": "اللون",
+      "style": "النمط",
+      "description": "وصف المنتج",
+      "subcategory": "الفئة الفرعية",
+      "discount": "سعر الخصم",
+      "modelName": "اسم الموديل",
+      "skuType": "نوع SKU"
+    },
+    "placeholders": {
+      "name": "أدخل اسم المنتج",
+      "sku": "أدخل المعرف الفريد",
+      "description": "أدخل وصف المنتج",
+      "subcategory": "اختر الفئة الفرعية"
+    },
+    "messages": {
+      "createSuccess": "تم إنشاء المنتج بنجاح",
+      "updateSuccess": "تم تحديث المنتج بنجاح",
+      "deleteConfirmation": "هل أنت متأكد من حذف هذا المنتج؟",
+      "deleteSuccess": "تم حذف المنتج بنجاح"
     }
   },
   "icons": {
@@ -205,5 +275,45 @@
     "drag_drop": "اسحب وأفلت الصورة هنا",
     "hint": "يدعم JPG, PNG, GIF, WebP (بحد أقصى 5MB)",
     "uploading": "جاري رفع الصورة"
+  },
+  "subcategories": {
+    "title": "الفئات الفرعية",
+    "search": "بحث في الفئات الفرعية...",
+    "columns": {
+      "logo": "الشعار",
+      "name": "الاسم",
+      "category": "الفئة",
+      "description": "الوصف",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "create": "فئة فرعية جديدة",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "fields": {
+      "logo": "الشعار",
+      "name": "اسم الفئة الفرعية",
+      "category": "الفئة الأب",
+      "description": "الوصف"
+    },
+    "placeholders": {
+      "name": "أدخل اسم الفئة الفرعية",
+      "description": "أدخل الوصف"
+    },
+    "messages": {
+      "createSuccess": "تم إنشاء الفئة الفرعية بنجاح",
+      "updateSuccess": "تم تحديث الفئة الفرعية بنجاح",
+      "deleteConfirmation": "هل أنت متأكد من حذف هذه الفئة الفرعية؟",
+      "deleteSuccess": "تم حذف الفئة الفرعية بنجاح"
+    }
+  },
+  "errors": {
+    "unknownError": "حدث خطأ غير متوقع",
+    "failedToLoadSubcategories": "فشل تحميل الفئات الفرعية",
+    "failedToLoadCategories": "فشل تحميل الفئات",
+    "failedToLoadSubcategory": "فشل تحميل بيانات الفئة الفرعية",
+    "failedToUploadLogo": "فشل رفع صورة الشعار",
+    "unexpectedError": "حدث خطأ غير متوقع"
   }
 }

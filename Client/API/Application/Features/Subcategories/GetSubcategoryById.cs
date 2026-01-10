@@ -3,6 +3,8 @@ using Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Http;
+
 namespace Application.Features.Subcategories;
 
 public record GetSubcategoryByIdQuery(int Id) : IRequest<GetSubcategoryByIdResponse>;
@@ -16,32 +18,49 @@ public record GetSubcategoryByIdResponse(
 public class GetSubcategoryByIdQueryHandler : IRequestHandler<GetSubcategoryByIdQuery, GetSubcategoryByIdResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetSubcategoryByIdQueryHandler(IApplicationDbContext context)
+    public GetSubcategoryByIdQueryHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetSubcategoryByIdResponse> Handle(GetSubcategoryByIdQuery request, CancellationToken cancellationToken)
     {
-        var subcategory = await _context.ProductSubcategories
+        var item = await _context.ProductSubcategories
             .Include(s => s.Category)
             .Include(s => s.Products)
-            .Where(s => s.Id == request.Id)
-            .Select(s => new ProductSubcategoryDto(
-                s.Id,
-                s.SubcategoryName,
-                s.ProductCategoryId,
-                s.Category.CategoryName,
-                s.Products.Count
-            ))
-            .FirstOrDefaultAsync(cancellationToken);
+            .Include(s => s.Logo)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
-        if (subcategory == null)
+        if (item == null)
         {
             return new GetSubcategoryByIdResponse(false, "Subcategory not found.", null);
         }
 
-        return new GetSubcategoryByIdResponse(true, null, subcategory);
+        string? logoUrl = null;
+        if (item.Logo != null)
+        {
+            var requestUrl = _httpContextAccessor.HttpContext?.Request;
+            var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+            logoUrl = $"{baseUrl.TrimEnd('/')}/{item.Logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+        }
+
+        var dto = new ProductSubcategoryDto(
+            item.Id,
+            item.SubcategoryName,
+            item.Description,
+            item.LogoId,
+            logoUrl,
+            item.ProductCategoryId,
+            item.Category.CategoryName,
+            item.Products.Count,
+            item.Created,
+            item.LastModified
+        );
+
+        return new GetSubcategoryByIdResponse(true, null, dto);
     }
 }

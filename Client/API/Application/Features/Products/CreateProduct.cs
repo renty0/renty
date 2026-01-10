@@ -18,7 +18,8 @@ public record CreateProductCommand(
     decimal ProductPrice,
     string? SkuType,
     decimal? DiscountPrice,
-    int SubcategoryId
+    int SubcategoryId,
+    List<string>? ImageUrls
 ) : IRequest<CreateProductResponse>;
 
 public record CreateProductResponse(
@@ -110,6 +111,19 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             ProductSubcategoryId = request.SubcategoryId
         };
 
+        if (request.ImageUrls != null && request.ImageUrls.Any())
+        {
+            for (int i = 0; i < request.ImageUrls.Count; i++)
+            {
+                product.Images.Add(new ProductImage
+                {
+                    ImageUrl = request.ImageUrls[i],
+                    IsPrimary = i == 0,
+                    DisplayOrder = i
+                });
+            }
+        }
+
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -129,7 +143,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             product.ProfitMargin,
             product.ProductSubcategoryId,
             subcategory.SubcategoryName,
-            subcategory.Category.CategoryName
+            subcategory.Category.CategoryName,
+            product.Created,
+            product.LastModified,
+            product.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
         );
 
         return new CreateProductResponse(true, "Product created successfully.", dto);

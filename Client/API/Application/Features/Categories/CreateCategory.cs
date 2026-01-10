@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories;
@@ -31,10 +32,12 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CreateCategoryResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateCategoryCommandHandler(IApplicationDbContext context)
+    public CreateCategoryCommandHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CreateCategoryResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -57,19 +60,22 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         _context.ProductCategories.Add(category);
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Fetch category with logo to get URL if needed, but for create, we might just return what we have (or null URL)
-        // If LogoId is present, we might want to include the Logo entity to get the URL, but simplified for now.
-        // Assuming GetFullUrl extension needs MediaFile entity.
-        // For now, return DTO with simplified logo URL or empty.
-        
         string? logoUrl = null;
         if (request.LogoId.HasValue) 
         {
-            // Ideally we load the logo, but for performance on create we might skip or load it.
-            // Let's keep it simple for now.
+            var logo = await _context.MediaFiles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == request.LogoId, cancellationToken);
+            
+            if (logo != null)
+            {
+                var requestUrl = _httpContextAccessor.HttpContext?.Request;
+                var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+                logoUrl = $"{baseUrl.TrimEnd('/')}/{logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+            }
         }
 
-        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, 0);
+        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, 0, category.Created, category.LastModified);
         return new CreateCategoryResponse(true, "Category created successfully.", dto);
     }
 }

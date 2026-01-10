@@ -1,18 +1,4 @@
 <div class="home-page" (window:scroll)="onWindowScroll()">
-    <!-- Navbar -->
-    <nav class="home-nav" [class.scrolled]="isScrolled()">
-        <div class="container">
-            <a routerLink="/" class="nav-logo">RENTLY</a>
-            <div class="nav-links">
-                <a routerLink="/marketplace" class="nav-link">{{ 'home.footer.market' | translate }}</a>
-                <a routerLink="/about" class="nav-link">{{ 'home.footer.about' | translate }}</a>
-                <a routerLink="/login" class="nav-link">{{ 'login.button' | translate }}</a>
-                <app-loading-button color="accent" size="sm" routerLink="/register">{{ 'register.registerButton' |
-                    translate }}</app-loading-button>
-            </div>
-        </div>
-    </nav>
-
     <!-- Section 1: Hero -->
     <section class="hero-section">
         <div class="hero-bg" style="background-image: url('assets/images/hero_bg.png')"></div>

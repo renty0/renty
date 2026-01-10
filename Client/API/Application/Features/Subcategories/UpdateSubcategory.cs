@@ -4,9 +4,11 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Http;
+
 namespace Application.Features.Subcategories;
 
-public record UpdateSubcategoryCommand(int Id, string SubcategoryName, int CategoryId) : IRequest<UpdateSubcategoryResponse>;
+public record UpdateSubcategoryCommand(int Id, string SubcategoryName, string? Description, int CategoryId, Guid? LogoId) : IRequest<UpdateSubcategoryResponse>;
 
 public record UpdateSubcategoryResponse(
     bool Success,
@@ -25,6 +27,9 @@ public class UpdateSubcategoryCommandValidator : AbstractValidator<UpdateSubcate
             .NotEmpty().WithMessage("Subcategory name is required.")
             .MaximumLength(100).WithMessage("Subcategory name must not exceed 100 characters.");
 
+        RuleFor(x => x.Description)
+            .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
+
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("Invalid category ID.");
     }
@@ -33,10 +38,12 @@ public class UpdateSubcategoryCommandValidator : AbstractValidator<UpdateSubcate
 public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategoryCommand, UpdateSubcategoryResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateSubcategoryCommandHandler(IApplicationDbContext context)
+    public UpdateSubcategoryCommandHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UpdateSubcategoryResponse> Handle(UpdateSubcategoryCommand request, CancellationToken cancellationToken)
@@ -60,16 +67,39 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
         }
 
         subcategory.SubcategoryName = request.SubcategoryName;
+        subcategory.Description = request.Description ?? string.Empty;
         subcategory.ProductCategoryId = request.CategoryId;
+        subcategory.LogoId = request.LogoId;
+        
         await _context.SaveChangesAsync(cancellationToken);
+
+        string? logoUrl = null;
+        if (subcategory.LogoId.HasValue) 
+        {
+            var logo = await _context.MediaFiles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == subcategory.LogoId, cancellationToken);
+            
+            if (logo != null)
+            {
+                var requestUrl = _httpContextAccessor.HttpContext?.Request;
+                var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+                logoUrl = $"{baseUrl.TrimEnd('/')}/{logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+            }
+        }
 
         var category = await _context.ProductCategories.FindAsync(new object[] { request.CategoryId }, cancellationToken);
         var dto = new ProductSubcategoryDto(
             subcategory.Id,
             subcategory.SubcategoryName,
+            subcategory.Description,
+            subcategory.LogoId,
+            logoUrl,
             subcategory.ProductCategoryId,
             category!.CategoryName,
-            subcategory.Products.Count
+            subcategory.Products.Count,
+            subcategory.Created,
+            subcategory.LastModified
         );
 
         return new UpdateSubcategoryResponse(true, "Subcategory updated successfully.", dto);
