@@ -1,0 +1,168 @@
+@use '../../shared/styles/index.scss' as *;
+
+:host {
+    display: block;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: $spacing-lg;
+
+    @include mobile {
+        padding: $spacing-md;
+    }
+}
+
+.profile-card {
+    background: $white;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-md;
+    padding: $spacing-xl;
+    transition: $transition-base;
+    border: 1px solid $gray-200;
+
+    &:hover {
+        box-shadow: $shadow-lg;
+    }
+
+    @include mobile {
+        padding: $spacing-lg;
+    }
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: $spacing-xl;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -#{$spacing-lg};
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: $primary-color;
+        border-radius: $border-radius-full;
+        opacity: 0.2;
+    }
+
+    h2 {
+        font-size: $font-size-xxl;
+        font-weight: $font-weight-bold;
+        color: $gray-900;
+        margin-bottom: $spacing-sm;
+
+        @include text-gradient;
+        background-clip: text;
+    }
+}
+
+.image-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: $spacing-md;
+
+    ::ng-deep .p-image {
+        width: 100%;
+        height: 100%;
+
+        img {
+            border-radius: $border-radius-full;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 4px solid $white;
+            box-shadow: 0 0 0 2px $gray-200;
+            transition: $transition-base;
+        }
+    }
+
+    &:hover {
+        ::ng-deep .p-image img {
+            border-color: $gray-100;
+            box-shadow: 0 0 0 4px $primary-light; // Highlight effect
+        }
+
+        .camera-button {
+            transform: scale(1.1);
+            background: $primary-color;
+        }
+    }
+}
+
+.camera-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 36px;
+    height: 36px;
+    background: $secondary-color;
+    border-radius: $border-radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: $shadow-md;
+    border: 2px solid $white;
+    transition: all $transition-fast;
+    z-index: 10;
+
+    i {
+        color: $white;
+        font-size: 1rem;
+    }
+
+    &:hover {
+        background: $primary-color;
+    }
+}
+
+.uploading-text {
+    font-size: $font-size-sm;
+    color: $gray-500;
+    margin-top: $spacing-xs;
+    font-style: italic;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+
+    @include mobile {
+        grid-template-columns: 1fr;
+        gap: $spacing-md;
+    }
+}
+
+.col-span-full {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $spacing-lg;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $gray-100;
+
+    app-loading-button {
+        min-width: 150px;
+    }
+}
+
+// Dark mode adjustments (if needed, based on variables)
+:host-context(.dark) {
+    .profile-card {
+        background: $gray-800;
+        border-color: $gray-700;
+
+        h2 {
+            color: $white;
+        }
+    }
+}

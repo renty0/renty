@@ -79,5 +79,50 @@ public static class AccountEndpoints
         .Produces(StatusCodes.Status401Unauthorized)
         .WithOpenApi()
         .RequireAuthorization();
+
+        group.MapPut("/profile", async (UpdateUserCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            if (!result.Success)
+            {
+                return Results.BadRequest(result);
+            }
+            return Results.Ok(result);
+        })
+        .WithName("UpdateProfile")
+        .Produces<UpdateUserResponse>(StatusCodes.Status200OK)
+        .Produces<UpdateUserResponse>(StatusCodes.Status400BadRequest)
+        .WithOpenApi()
+        .RequireAuthorization();
+
+        group.MapPost("/send-email-confirmation", async (SendEmailConfirmationCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            if (!result.Succeeded)
+            {
+                return Results.BadRequest(result);
+            }
+            return Results.Ok(result);
+        })
+        .WithName("SendEmailConfirmation")
+        .Produces<Application.Common.Models.Result>(StatusCodes.Status200OK)
+        .Produces<Application.Common.Models.Result>(StatusCodes.Status400BadRequest)
+        .WithOpenApi()
+        .AllowAnonymous(); // Allow anonymous so unverified users can request it
+
+        group.MapPost("/confirm-email", async (ConfirmEmailCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            if (!result.Succeeded)
+            {
+                return Results.BadRequest(result);
+            }
+            return Results.Ok(result);
+        })
+        .WithName("ConfirmEmail")
+        .Produces<Application.Common.Models.Result>(StatusCodes.Status200OK)
+        .Produces<Application.Common.Models.Result>(StatusCodes.Status400BadRequest)
+        .WithOpenApi()
+        .AllowAnonymous();
     }
 }

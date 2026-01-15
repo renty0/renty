@@ -32,9 +32,10 @@ $text-secondary: #4b5563;
 $text-muted: #6b7280;
 $text-light: #FCFAEA;
 $text-dark: #121823;
+
 // Gradients
-$primary-gradient: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
-$accent-gradient: linear-gradient(135deg, $accent-color 0%, $accent-light 100%);
+$primary-gradient: linear-gradient(135deg, $primary-color 50%, $primary-color 100%);
+$text-gradient: linear-gradient(135deg, $primary-color, $secondary-color);
 
 // Spacing
 $spacing-xss: 0.5rem;

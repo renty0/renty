@@ -30,3 +30,6 @@ E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\refint\Application.dll
 E:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\Application.pdb
 e:\Courses\Work\rently_2026\Client\API\Application\obj\Debug\net9.0\ref\Application.dll
+C:\Temp\RentlyBuild\Application.deps.json
+C:\Temp\RentlyBuild\Application.dll
+C:\Temp\RentlyBuild\Application.pdb

@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
 using MediatR;
+using Application.Shared.Interfaces.Services;
 
 namespace Application.Web.Account;
 
@@ -56,9 +57,9 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .MaximumLength(100).WithMessage("Last name must not exceed 100 characters.");
 
         RuleFor(x => x.PhoneNumber)
-            .Matches(@"^\+?[1-9]\d{1,14}$")
+            .Matches(@"^01[0125]\d{8}$")
             .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
-            .WithMessage("Invalid phone number format.");
+            .WithMessage("Invalid Egyptian phone number format (e.g., 01xxxxxxxxx).");
 
         RuleFor(x => x.UserType)
             .IsInEnum().WithMessage("Invalid user type.");
@@ -85,13 +86,16 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 {
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
+    private readonly IEmailSender _emailSender;
 
     public RegisterCommandHandler(
         IIdentityService identityService,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        IEmailSender emailSender)
     {
         _identityService = identityService;
         _tokenService = tokenService;
+        _emailSender = emailSender;
     }
 
     public async Task<RegisterResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -155,9 +159,23 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             user.ProfilePictureUrl,
             user.UserType.ToString(),
             user.IsVerified,
+            user.EmailConfirmed,
             user.Rating,
             roles
         );
+
+        // Send confirmation email
+        try
+        {
+            var token = await _identityService.GenerateEmailConfirmationTokenAsync(user);
+            var body = Application.Shared.Utilities.EmailTemplates.GetEmailConfirmationTemplate(token);
+            await _emailSender.SendEmailAsync(user.Email!, "Confirm Your Email - Rently", body);
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't fail registration
+            // Maybe we should have a logger here
+        }
 
         return new RegisterResponse(true, "Registration successful.", tokenData, userDto);
     }

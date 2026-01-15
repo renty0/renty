@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Application.Shared.Interfaces.Services;
 
 namespace Infrastructure;
 
@@ -109,6 +110,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ICalendarService, CalendarService>();
+        services.AddScoped<IEmailSender, EmailSender>();
 
         return services;
     }

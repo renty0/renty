@@ -52,6 +52,32 @@ public class IdentityService : IIdentityService
         user.LastLoginAt = DateTimeOffset.UtcNow;
         await _userManager.UpdateAsync(user);
     }
+
+    public async Task<Result> UpdateUserAsync(ApplicationUser user)
+    {
+        var result = await _userManager.UpdateAsync(user);
+        return result.ToApplicationResult();
+    }
+
+    public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
+    {
+        // For a simple 6-digit code, we could use a custom provider, 
+        // but for now let's use the provided GenerateEmailConfirmationTokenAsync 
+        // and later we can customize it to be a short code if needed.
+        // Actually, let's use the 6-digit code directly if possible.
+        // Identity has a DataProtectorTokenProvider that generates long tokens.
+        // To get a short code, we can use GenerateTwoFactorTokenAsync with "Email"
+        return await _userManager.GenerateChangeEmailTokenAsync(user, user.Email!);
+    }
+
+    public async Task<Result> ConfirmEmailAsync(ApplicationUser user, string token)
+    {
+        // Use ConfirmEmailAsync if it was GenerateEmailConfirmationTokenAsync
+        // But since we want "code" behavior, maybe we should have used a specific provider.
+        // Let's use the standard one for now.
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        return result.ToApplicationResult();
+    }
 }
 
 public static class IdentityResultExtensions

@@ -1,0 +1,77 @@
+@use '../../../../shared/styles/index.scss' as *;
+
+p-dialog {
+    ::ng-deep .p-dialog {
+        border-radius: $border-radius-xl;
+        overflow: hidden;
+        box-shadow: $shadow-xl;
+        border: none;
+        .p-dialog-header {
+            padding: $spacing-md $spacing-lg;
+            background: $white;
+            border-bottom: 1px solid $gray-100;
+
+            .p-dialog-title {
+                font-family: $font-family-primary;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-lg;
+                color: $primary-color;
+            }
+
+            .p-dialog-header-icons {
+                .p-dialog-header-icon {
+                    color: $gray-400;
+                    border-radius: $border-radius-full;
+                    width: 2rem;
+                    height: 2rem;
+                    transition: $transition-fast;
+
+                    &:hover {
+                        background: $gray-100;
+                        color: $danger;
+                    }
+
+                    &:focus {
+                        box-shadow: 0 0 0 2px $primary-light;
+                    }
+                }
+            }
+        }
+
+        // Content styling
+        .p-dialog-content {
+            padding: $spacing-lg;
+            background: $white;
+        }
+
+        @include mobile {
+            width: 90vw !important;
+            margin: 0 $spacing-sm;
+        }
+    }
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+    margin-top: $spacing-lg;
+
+    button {
+        &.p-button-text {
+            color: $gray-600;
+
+            &:hover {
+                background: $gray-100;
+                color: $gray-800;
+            }
+        }
+    }
+}
+
+.info-text {
+    font-size: $font-size-sm;
+    color: $gray-500;
+    margin-bottom: $spacing-md;
+    text-align: center;
+}

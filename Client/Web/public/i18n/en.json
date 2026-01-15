@@ -324,6 +324,21 @@
     "hint": "Supports JPG, PNG, GIF, WebP (Max 5MB)",
     "uploading": "Uploading image"
   },
+  "profile": {
+    "title": "My Profile",
+    "imageAlt": "Profile Picture",
+    "updatePhoto": "Update Photo",
+    "uploadNewPhoto": "Upload New Photo",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "bio": "Bio",
+    "save": "Save Changes",
+    "uploading": "Uploading..."
+  },
   "errors": {
     "unknownError": "An unexpected error occurred",
     "failedToLoadSubcategories": "Failed to load subcategories",

@@ -276,6 +276,21 @@
     "hint": "يدعم JPG, PNG, GIF, WebP (بحد أقصى 5MB)",
     "uploading": "جاري رفع الصورة"
   },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "imageAlt": "صورة الملف الشخصي",
+    "updatePhoto": "تحديث الصورة",
+    "uploadNewPhoto": "رفع صورة جديدة",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "city": "المدينة",
+    "country": "الدولة",
+    "bio": "نبذة تعريفية",
+    "save": "حفظ التغييرات",
+    "uploading": "جاري الرفع..."
+  },
   "subcategories": {
     "title": "الفئات الفرعية",
     "search": "بحث في الفئات الفرعية...",

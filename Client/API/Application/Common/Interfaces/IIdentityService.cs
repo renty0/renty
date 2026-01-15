@@ -12,4 +12,7 @@ public interface IIdentityService
     Task<Result> CreateUserAsync(ApplicationUser user, string password);
     Task<Result> AddToRoleAsync(ApplicationUser user, string role);
     Task UpdateLastLoginAsync(ApplicationUser user);
+    Task<Result> UpdateUserAsync(ApplicationUser user);
+    Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);
+    Task<Result> ConfirmEmailAsync(ApplicationUser user, string token);
 }

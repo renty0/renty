@@ -38,3 +38,7 @@ E:\Courses\Work\rently_2026\Client\API\Infrastructure\obj\Debug\net9.0\refint\In
 E:\Courses\Work\rently_2026\Client\API\Infrastructure\obj\Debug\net9.0\Infrastructure.pdb
 E:\Courses\Work\rently_2026\Client\API\Infrastructure\obj\Debug\net9.0\Infrastructure.genruntimeconfig.cache
 E:\Courses\Work\rently_2026\Client\API\Infrastructure\obj\Debug\net9.0\ref\Infrastructure.dll
+C:\Temp\RentlyBuild\Infrastructure.deps.json
+C:\Temp\RentlyBuild\Infrastructure.runtimeconfig.json
+C:\Temp\RentlyBuild\Infrastructure.dll
+C:\Temp\RentlyBuild\Infrastructure.pdb

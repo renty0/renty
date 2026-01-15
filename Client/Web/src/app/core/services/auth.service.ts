@@ -67,6 +67,15 @@ export class AuthService {
     this.isLoggedIn.set(true);
   }
 
+  storeUserData(user: UserDto): void {
+    if (user) {
+      localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(user));
+      const roles = user.roles || [];
+      localStorage.setItem(this.ROLES_KEY, JSON.stringify(roles));
+      this.rolesSignal.set(roles);
+    }
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN_KEY);
   }

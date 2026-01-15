@@ -46,8 +46,14 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.ProfilePictureUrl,
             user.UserType.ToString(),
             user.IsVerified,
+            user.EmailConfirmed,
             user.Rating,
-            roles
+
+            roles,
+            user.Address,
+            user.City,
+            user.Country,
+            user.Bio
         );
 
         return new GetCurrentUserResponse(true, null, userDto);

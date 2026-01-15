@@ -1,0 +1,55 @@
+<div class="owner-dashboard">
+  <h1 class="dashboard-title">Owner Dashboard</h1>
+
+  @if (loading()) {
+  <div class="stats-grid">
+    @for (i of [1,2,3,4]; track i) {
+    <p-card>
+      <p-skeleton width="100%" height="80px" />
+    </p-card>
+    }
+  </div>
+  } @else if (dashboardData()) {
+  <div class="stats-grid">
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-dollar stat-icon"></i>
+        <div class="stat-details">
+          <span class="stat-label">Total Earned</span>
+          <span class="stat-value">\${{ dashboardData()!.totalEarnings | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-box stat-icon"></i>
+        <div class="stat-details">
+          <span class="stat-label">My Items</span>
+          <span class="stat-value">{{ dashboardData()!.totalItems || '' }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-check-circle stat-icon"></i>
+        <div class="stat-details">
+          <span class="stat-label">Active Rentals</span>
+          <span class="stat-value">{{ dashboardData()!.activeRentals || '' }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <i class="pi pi-clock stat-icon"></i>
+        <div class="stat-details">
+          <span class="stat-label">Pending Requests</span>
+          <span class="stat-value">{{ dashboardData()!.pendingRequests || '' }}</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  }
+</div>

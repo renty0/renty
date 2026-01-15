@@ -14,18 +14,7 @@ public record LoginResponse(
     UserDto? User
 );
 
-public record UserDto(
-    long Id,
-    string Email,
-    string FirstName,
-    string LastName,
-    string FullName,
-    string? ProfilePictureUrl,
-    string UserType,
-    bool IsVerified,
-    double Rating,
-    IList<string> Roles
-);
+
 
 public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
@@ -87,8 +76,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.ProfilePictureUrl,
             user.UserType.ToString(),
             user.IsVerified,
+            user.EmailConfirmed,
             user.Rating,
-            roles
+
+            roles,
+            user.Address,
+            user.City,
+            user.Country,
+            user.Bio
         );
 
         return new LoginResponse(true, "Login successful.", tokenData, userDto);

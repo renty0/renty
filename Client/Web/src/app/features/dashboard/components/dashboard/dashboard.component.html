@@ -1,0 +1,14 @@
+<div class="dashboard-container">
+  <app-admin-dashboard />
+  @if (isAdmin()) {
+  } @else if (isOwner()) {
+  <app-owner-dashboard />
+  } @else if (isRenter()) {
+  <app-renter-dashboard />
+  } @else {
+  <div class="no-access">
+    <h2>Access Denied</h2>
+    <p>You don't have permission to view this dashboard.</p>
+  </div>
+  }
+</div>

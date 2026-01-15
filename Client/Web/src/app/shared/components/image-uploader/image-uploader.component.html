@@ -84,5 +84,6 @@
   </div>
   }
 
-  <input type="file" [accept]="allowedExtensions.join(',')" (change)="onFileSelected($event)" #fileInput hidden />
+  <input type="file" [accept]="allowedExtensions.length ? allowedExtensions.join(',') : 'image/*'"
+    (change)="onFileSelected($event)" #fileInput hidden />
 </div>
