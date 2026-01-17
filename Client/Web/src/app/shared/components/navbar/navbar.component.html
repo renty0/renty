@@ -1,0 +1,105 @@
+<header class="site-navbar" [class.scrolled]="isScrolled()">
+    <div class="container navbar-content">
+        <!-- Logo -->
+        <a routerLink="/" class="logo" (click)="closeMobileMenu()">
+            <span class="logo-text">RENTY</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            @for (link of navLinks; track link.path) {
+            <a [routerLink]="link.path" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: link.path === '/' }" class="nav-link">
+                {{ link.labelKey | translate }}
+            </a>
+            }
+        </nav>
+
+        <!-- Actions -->
+        <div class="nav-actions">
+            <!-- Language Toggle -->
+            <button class="action-btn lang-btn" (click)="toggleLanguage()" [title]="'common.language' | translate">
+                <mat-icon>language</mat-icon>
+                <span class="lang-code">{{ isArabic ? 'EN' : 'العربية' }}</span>
+            </button>
+
+            <!-- User Actions / Auth -->
+            @if (isLoggedIn()) {
+            <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu">
+                <button mat-menu-item routerLink="/profile">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ 'nav.profile' | translate }}</span>
+                </button>
+                <button mat-menu-item routerLink="/dashboard">
+                    <mat-icon>dashboard</mat-icon>
+                    <span>{{ 'nav.dashboard' | translate }}</span>
+                </button>
+                <hr class="menu-divider">
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon color="warn">logout</mat-icon>
+                    <span class="text-warn">{{ 'nav.logout' | translate }}</span>
+                </button>
+            </mat-menu>
+            } @else {
+            <div class="auth-buttons sm-hidden">
+                <a routerLink="/login" class="nav-link login-link">{{ 'nav.login' | translate }}</a>
+                <app-loading-button color="accent" size="sm" routerLink="/register">
+                    {{ 'nav.register' | translate }}
+                </app-loading-button>
+            </div>
+            }
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" (click)="toggleMobileMenu()">
+                <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    @if (mobileMenuOpen()) {
+    <div class="mobile-drawer animate-fade-in">
+        <div class="container drawer-content">
+            @for (link of navLinks; track link.path) {
+            <a [routerLink]="link.path" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: link.path === '/' }" class="mobile-link"
+                (click)="closeMobileMenu()">
+                <mat-icon>{{ link.icon }}</mat-icon>
+                {{ link.labelKey | translate }}
+            </a>
+            }
+
+            <hr class="drawer-divider">
+
+            <button class="mobile-link" (click)="toggleLanguage(); closeMobileMenu()">
+                <mat-icon>language</mat-icon>
+                {{ isArabic ? 'Switch to English' : 'التبديل للعربية' }}
+            </button>
+
+            @if (isLoggedIn()) {
+            <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
+                <mat-icon>person</mat-icon>
+                {{ 'nav.profile' | translate }}
+            </a>
+            <button class="mobile-link logout-link" (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                {{ 'nav.logout' | translate }}
+            </button>
+            } @else {
+            <div class="mobile-auth-grid">
+                <app-loading-button variant="stroked" color="primary" class="w-full" routerLink="/login"
+                    (clicked)="closeMobileMenu()">
+                    {{ 'nav.login' | translate }}
+                </app-loading-button>
+                <app-loading-button color="accent" class="w-full" routerLink="/register" (clicked)="closeMobileMenu()">
+                    {{ 'nav.register' | translate }}
+                </app-loading-button>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</header>

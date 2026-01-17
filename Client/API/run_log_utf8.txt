@@ -1,0 +1,19 @@
+﻿Using launch settings from Web\Properties\launchSettings.json...
+Building...
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (17ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+fail: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      An error occurred while initialising the database.
+      System.InvalidOperationException: An error was generated for warning 'Microsoft.EntityFrameworkCore.Migrations.PendingModelChangesWarning': The model for context 'ApplicationDbContext' has pending changes. Add a new migration before updating the database. This exception can be suppressed or logged by passing event ID 'RelationalEventId.PendingModelChangesWarning' to the 'ConfigureWarnings' method in 'DbContext.OnConfiguring' or 'AddDbContext'.
+         at Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition`1.Log[TLoggerCategory](IDiagnosticsLogger`1 logger, TParam arg)
+         at Microsoft.EntityFrameworkCore.Diagnostics.RelationalLoggerExtensions.PendingModelChangesWarning(IDiagnosticsLogger`1 diagnostics, Type contextType)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Infrastructure.Data.ApplicationDbContextInitialiser.InitialiseAsync() in E:\Courses\Work\rently_2026\Client\API\Infrastructure\Data\ApplicationDbContextInitialiser.cs:line 32

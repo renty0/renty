@@ -1,0 +1,8 @@
+<button [type]="type" [disabled]="isDisabled" [class]="'btn btn-' + color + ' btn-' + variant" [class.full-width]="fullWidth" [class.btn-sm]="size === 'sm'" [class.loading]="loading" (click)="handleClick()">
+  @if (loading) {
+    <span class="spinner"></span>
+  }
+  <span class="button-text" [class.invisible]="loading">
+    <ng-content></ng-content>
+  </span>
+</button>

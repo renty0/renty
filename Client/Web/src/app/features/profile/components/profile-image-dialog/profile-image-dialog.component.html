@@ -1,0 +1,21 @@
+<p-dialog [(visible)]="visible" [modal]="true" [header]="'profile.updatePhoto' | translate"
+    [style]="{width: '650px', maxWidth: '90vw'}" [draggable]="false" [resizable]="false" [dismissableMask]="true"
+    [closeOnEscape]="true" (onHide)="close()">
+
+    <div class="flex flex-column gap-4">
+        <p class="info-text">{{ 'uploader.drag_drop' | translate }}</p>
+
+        <div class="w-full">
+            <app-image-uploader [formGroup]="form" controlName="imageId" [imgUrl]="currentImageUrl"
+                [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']" [label]="'profile.uploadNewPhoto' | translate">
+            </app-image-uploader>
+        </div>
+
+        <div class="dialog-actions">
+            <p-button [label]="'buttons.cancel' | translate" styleClass="p-button-text" (onClick)="close()">
+            </p-button>
+            <p-button [label]="'buttons.save' | translate" (onClick)="save()">
+            </p-button>
+        </div>
+    </div>
+</p-dialog>

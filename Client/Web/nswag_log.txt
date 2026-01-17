@@ -1,0 +1,38 @@
+NSwag NPM CLI
+Found runtime from config: Net90
+Using runtime: Net90
+NSwag command line tool for .NET Core Net90, toolchain v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))
+Visit http://NSwag.org for more information.
+NSwag bin directory: E:\Courses\Work\rently_2026\Client\Web\node_modules\nswag\bin\binaries\Net90
+
+Executing file 'nswag.json' with variables ''...
+System.Net.Http.HttpRequestException: No connection could be made because the target machine actively refused it. (localhost:5106)
+ ---> System.Net.Sockets.SocketException (10061): No connection could be made because the target machine actively refused it.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.AuthenticationHelper.SendWithAuthAsync(HttpRequestMessage request, Uri authUri, Boolean async, ICredentials credentials, Boolean preAuthenticate, Boolean isProxyAuth, Boolean doRequestAuth, HttpConnectionPool pool, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.DecompressionHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at CallSite.Target(Closure, CallSite, Object)
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   at NJsonSchema.Infrastructure.DynamicApis.HttpGetAsync(String url, CancellationToken cancellationToken)
+   at NSwag.OpenApiDocument.FromUrlAsync(String url, CancellationToken cancellationToken) in /_/src/NSwag.Core/OpenApiDocument.cs:line 235
+   at NSwag.Commands.Generation.FromDocumentCommand.RunAsync() in /_/src/NSwag.Commands/Commands/Generation/FromDocumentCommand.cs:line 61
+   at NSwag.Commands.Generation.FromDocumentCommand.RunAsync(CommandLineProcessor processor, IConsoleHost host) in /_/src/NSwag.Commands/Commands/Generation/FromDocumentCommand.cs:line 52
+   at NSwag.Commands.NSwagDocumentBase.GenerateSwaggerDocumentAsync() in /_/src/NSwag.Commands/NSwagDocumentBase.cs:line 266
+   at NSwag.Commands.NSwagDocument.ExecuteAsync() in /_/src/NSwag.Commands/NSwagDocument.cs:line 63
+   at NSwag.Commands.Document.ExecuteDocumentCommand.ExecuteDocumentAsync(IConsoleHost host, String filePath) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 72
+   at NSwag.Commands.Document.ExecuteDocumentCommand.RunAsync(CommandLineProcessor processor, IConsoleHost host) in /_/src/NSwag.Commands/Commands/Document/ExecuteDocumentCommand.cs:line 29
+   at NConsole.CommandLineProcessor.ProcessSingleAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 184
+   at NConsole.CommandLineProcessor.ProcessAsync(String[] args, Object input) in /_/src/NSwag.Commands/NConsole/CommandLineProcessor.cs:line 120
+   at NSwag.Commands.NSwagCommandProcessor.ProcessAsync(String[] args) in /_/src/NSwag.Commands/NSwagCommandProcessor.cs:line 61

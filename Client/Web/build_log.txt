@@ -1,0 +1,149 @@
+﻿node.exe : 
+[1m[33m[baseline-browser-mapping] The 
+data in this module is over two months 
+old.  To ensure accurate Baseline data, 
+please update: `npm i 
+baseline-browser-mapping@latest 
+-D`[39m[22m
+At 
+C:\Users\PC\AppData\Roaming\npm\ng.ps1:24 
+char:5
++     & "node$exe"  "$basedir/node_modules
+/@angular/cli/bin/ng.js" $arg ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifie 
+   d: ([1m[33m[basel...t -D`[39m[22m  
+  :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeComma 
+   ndError
+ 
+[33mΓ¥»[39m Building...
+[32mΓ£ö[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mmain-UNEUQKKY.js[39m   [2m | [22m[2mmain[22m         [2m | [22m  [36m1.60 MB[39m[2m | [22m              [36m261.19 kB[39m
+[32mstyles-EEZ4TFLN.css[39m[2m | [22m[2mstyles[22m       [2m | [22m[36m360.18 kB[39m[2m | [22m               [36m19.82 kB[39m
+[32mchunk-74AZHEBX.js[39m  [2m | [22m[2m-[22m            [2m | [22m[36m179.29 kB[39m[2m | [22m               [36m51.98 kB[39m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m  [1m[91m2.14 MB[39m[22m[2m | [22m              [1m332.99 kB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mchunk-2IFB36T2.js[39m  [2m | [22m[2mbrowser[22m      [2m | [22m [36m64.08 kB[39m[2m | [22m               [36m17.11 kB[39m
+
+Application bundle generation failed. [8.370 seconds] - 2026-01-10T12:03:39.480Z
+
+[1m[33m[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m 
+[1mbundle initial exceeded maximum 
+budget. Budget 1.00 MB was not met by 
+1.14 MB with a total of 2.14 MB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/shared/components/not-found/not-fo
+und.scss exceeded maximum budget. Budget 
+4.00 kB was not met by 3.60 kB with a 
+total of 7.60 kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/features/subcategories/subcategory
+-list/subcategory-list.component.scss 
+exceeded maximum budget. Budget 4.00 kB 
+was not met by 4.14 kB with a total of 
+8.14 kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/features/products/product-list/pro
+duct-list.component.scss exceeded maximum 
+budget. Budget 4.00 kB was not met by 
+4.07 kB with a total of 8.07 kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/shared/components/header-section/h
+eader-section.component.scss exceeded 
+maximum budget. Budget 4.00 kB was not 
+met by 72 bytes with a total of 4.07 
+kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/features/auth/components/register/
+register.component.scss exceeded maximum 
+budget. Budget 4.00 kB was not met by 
+1.24 kB with a total of 5.24 kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/features/home/components/home/home
+.component.scss exceeded maximum budget. 
+Budget 4.00 kB was not met by 12.19 kB 
+with a total of 16.19 kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/features/categories/category-list/
+category-list.component.scss exceeded 
+maximum budget. Budget 4.00 kB was not 
+met by 3.85 kB with a total of 7.86 
+kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/shared/components/image-uploader/i
+mage-uploader.component.scss exceeded 
+maximum budget. Budget 4.00 kB was not 
+met by 408 bytes with a total of 4.41 
+kB.[0m
+
+
+[33mΓû▓ 
+[43;33m[[43;30mWARNING[43;33m][0m [1m
+src/app/shared/components/navbar/navbar.co
+mponent.scss exceeded maximum budget. 
+Budget 4.00 kB was not met by 824 bytes 
+with a total of 4.82 kB.[0m
+
+[39m[22m
+[1m[31m[31mX 
+[41;31m[[41;97mERROR[41;31m][0m 
+[1mbundle initial exceeded maximum 
+budget. Budget 2.00 MB was not met by 
+141.40 kB with a total of 2.14 MB.[0m
+
+
+[31mX 
+[41;31m[[41;97mERROR[41;31m][0m [1msr
+c/app/features/subcategories/subcategory-l
+ist/subcategory-list.component.scss 
+exceeded maximum budget. Budget 8.00 kB 
+was not met by 138 bytes with a total of 
+8.14 kB.[0m
+
+
+[31mX 
+[41;31m[[41;97mERROR[41;31m][0m [1msr
+c/app/features/products/product-list/produ
+ct-list.component.scss exceeded maximum 
+budget. Budget 8.00 kB was not met by 71 
+bytes with a total of 8.07 kB.[0m
+
+
+[31mX 
+[41;31m[[41;97mERROR[41;31m][0m [1msr
+c/app/features/home/components/home/home.c
+omponent.scss exceeded maximum budget. 
+Budget 8.00 kB was not met by 8.19 kB 
+with a total of 16.19 kB.[0m
+
+[39m[22m
