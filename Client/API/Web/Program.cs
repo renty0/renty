@@ -78,6 +78,7 @@ app.MapMediaFilesEndpoints();
 app.MapDashboardEndpoints();
 app.MapRecommendationEndpoints();
 app.MapAnalyticsEndpoints();
+app.MapGapAnalysisEndpoints();
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))
