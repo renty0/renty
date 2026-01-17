@@ -43,5 +43,25 @@ public static class GapAnalysisEndpoints
             await sender.Send(new GetGapAnalysisTrendsQuery()))
             .WithName("GetGapAnalysisTrends")
             .Produces<List<Application.Common.Models.GapTrendDto>>(StatusCodes.Status200OK);
+
+        group.MapGet("opportunity-loss", async (ISender sender) => 
+            await sender.Send(new GetOpportunityLossQuery()))
+            .WithName("GetOpportunityLoss")
+            .Produces<List<Application.Common.Models.OpportunityLossDto>>(StatusCodes.Status200OK);
+
+        group.MapGet("heatmap", async (ISender sender) => 
+            await sender.Send(new GetGeographicGapHeatmapQuery()))
+            .WithName("GetGeographicGapHeatmap")
+            .Produces<List<Application.Common.Models.GeographicHeatmapDto>>(StatusCodes.Status200OK);
+
+        group.MapGet("dead-stock", async (ISender sender) => 
+            await sender.Send(new GetDeadStockAnalysisQuery()))
+            .WithName("GetDeadStockAnalysis")
+            .Produces<List<Application.Common.Models.DeadStockDto>>(StatusCodes.Status200OK);
+
+        group.MapGet("smart-insights", async (ISender sender) => 
+            await sender.Send(new GetSmartInsightsQuery()))
+            .WithName("GetSmartInsights")
+            .Produces<List<Application.Common.Models.SmartInsightDto>>(StatusCodes.Status200OK);
     }
 }

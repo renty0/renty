@@ -19,7 +19,8 @@ public record UpdateCustomerCommand(
     int? TotalChildren,
     string? EducationLevel,
     string? Occupation,
-    bool? HomeOwner
+    bool? HomeOwner,
+    string? DomainName
 ) : IRequest<UpdateCustomerResponse>;
 
 public record UpdateCustomerResponse(
@@ -80,6 +81,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         customer.EducationLevel = request.EducationLevel;
         customer.Occupation = request.Occupation;
         customer.HomeOwner = request.HomeOwner;
+        customer.DomainName = request.DomainName;
 
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -97,7 +99,8 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
             customer.TotalChildren,
             customer.EducationLevel,
             customer.Occupation,
-            customer.HomeOwner
+            customer.HomeOwner,
+            customer.DomainName
         );
 
         return new UpdateCustomerResponse(true, "Customer updated successfully.", dto);

@@ -16,6 +16,7 @@ public class Customer : BaseAuditableEntity
     public string? EducationLevel { get; set; }
     public string? Occupation { get; set; }
     public bool? HomeOwner { get; set; }
+    public string? DomainName { get; set; }
 
     // Computed property
     public string FullName => string.IsNullOrEmpty(Prefix)

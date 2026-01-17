@@ -253,6 +253,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<string>("DomainName")
+                        .HasColumnType("text");
+
                     b.Property<string>("EducationLevel")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");

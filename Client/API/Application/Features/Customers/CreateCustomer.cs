@@ -18,7 +18,8 @@ public record CreateCustomerCommand(
     int? TotalChildren,
     string? EducationLevel,
     string? Occupation,
-    bool? HomeOwner
+    bool? HomeOwner,
+    string? DomainName
 ) : IRequest<CreateCustomerResponse>;
 
 public record CreateCustomerResponse(
@@ -93,7 +94,8 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             TotalChildren = request.TotalChildren,
             EducationLevel = request.EducationLevel,
             Occupation = request.Occupation,
-            HomeOwner = request.HomeOwner
+            HomeOwner = request.HomeOwner,
+            DomainName = request.DomainName
         };
 
         _context.Customers.Add(customer);
@@ -113,7 +115,8 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             customer.TotalChildren,
             customer.EducationLevel,
             customer.Occupation,
-            customer.HomeOwner
+            customer.HomeOwner,
+            customer.DomainName
         );
 
         return new CreateCustomerResponse(true, "Customer created successfully.", dto);

@@ -1,0 +1,73 @@
+<div class="analytics-dashboard">
+    @if (!loading()) {
+    <div class="charts-row">
+        <p-card header="Revenue & Profit Analysis" class="flex-2">
+            <div class="chart-container">
+                <p-chart type="line" [data]="salesChartData()" [options]="lineOptions" height="350px" />
+            </div>
+        </p-card>
+
+        <p-card header="Financial Efficiency" class="flex-1">
+            @if (inventory()) {
+            <div class="metrics-list">
+                <div class="metric-item">
+                    <span class="value">${{ computedTotalRevenue() | number:'1.0-0' }}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="label">Inventory Turnover</span>
+                    <span class="value">4.2x</span>
+                </div>
+                <div class="metric-item">
+                    <span class="label">Units Sold</span>
+                    <span class="value">{{ inventory()!.totalStock | number }}</span>
+                </div>
+            </div>
+            }
+        </p-card>
+    </div>
+
+    <div class="charts-row mt-4">
+        <p-card header="Gender Distribution" class="flex-1">
+            <div class="chart-container">
+                <p-chart type="pie" [data]="genderChartData()" [options]="pieOptions" height="250px" />
+            </div>
+        </p-card>
+
+        <p-card header="Customer Occupation" class="flex-1">
+            <div class="chart-container">
+                <p-chart type="doughnut" [data]="incomeChartData()" [options]="pieOptions" height="250px" />
+            </div>
+        </p-card>
+
+        <p-card header="Inventory Health" class="flex-1">
+            @if (inventory()) {
+            <div class="health-stats">
+                <div class="stat-circle">
+                    <span class="val">{{ computedUtilization() | number:'1.0-0' }}%</span>
+                    <span class="lab">Top Category Share</span>
+                </div>
+            </div>
+            }
+        </p-card>
+    </div>
+
+    <div class="table-row mt-4">
+        <p-card header="Top Performing Products">
+            <p-table [value]="topProducts()" [rows]="5" [paginator]="true">
+                <ng-template #header>
+                    <tr>
+                        <th>Product</th>
+                        <th>Sold</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-product>
+                    <tr>
+                        <td><strong>{{ product.category }}</strong></td>
+                        <td>{{ product.count | number }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>
+    }
+</div>

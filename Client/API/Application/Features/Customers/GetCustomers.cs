@@ -61,7 +61,8 @@ public class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, GetCu
                     : (c.Prefix + " " + c.FirstName + " " + c.LastName).Trim(),
                 c.EmailAddress,
                 c.Gender,
-                c.Occupation
+                c.Occupation,
+                c.DomainName
             ));
 
         var customers = await PaginatedList<CustomerListDto>.CreateAsync(

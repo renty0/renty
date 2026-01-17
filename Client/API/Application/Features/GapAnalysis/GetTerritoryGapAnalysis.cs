@@ -31,15 +31,28 @@ public class GetTerritoryGapAnalysisQueryHandler : IRequestHandler<GetTerritoryG
                 CategoryId = s.Product.Subcategory.ProductCategoryId,
                 CategoryName = s.Product.Subcategory.Category.CategoryName 
             })
-            .Select(g => new TerritoryGapAnalysisDto(
+            .Select(g => new
+            {
                 g.Key.TerritoryId,
                 g.Key.Region,
                 g.Key.Country,
                 g.Key.CategoryId,
                 g.Key.CategoryName,
-                g.Select(s => s.OrderNumber).Distinct().Count(),
-                g.Sum(s => s.OrderQuantity),
-                g.Select(s => s.CustomerId).Distinct().Count()
+                UniqueOrders = g.Select(s => s.OrderNumber).Distinct().Count(),
+                TotalQuantitySold = g.Sum(s => s.OrderQuantity),
+                UniqueCustomers = g.Select(s => s.CustomerId).Distinct().Count(),
+                UniqueProducts = _context.Products.Count(p => p.Subcategory.ProductCategoryId == g.Key.CategoryId)
+            })
+            .Select(x => new TerritoryGapAnalysisDto(
+                x.TerritoryId,
+                x.Region,
+                x.Country,
+                x.CategoryId,
+                x.CategoryName,
+                x.UniqueOrders,
+                x.TotalQuantitySold,
+                x.UniqueCustomers,
+                x.UniqueProducts > 0 ? (decimal)x.TotalQuantitySold / x.UniqueProducts : (decimal)x.TotalQuantitySold
             ))
             .ToListAsync(cancellationToken);
 

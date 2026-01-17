@@ -32,17 +32,17 @@ public class GetGapAnalysisActionPlanQueryHandler : IRequestHandler<GetGapAnalys
 
         return categoryData.Select(c =>
         {
-            var gapScore = Math.Round((decimal)(c.TotalQuantitySold + 1) / (c.UniqueProducts + 1), 2);
-            var gapLevel = gapScore < 50 ? "Low Gap" :
-                           gapScore < 100 ? "Moderate Gap" :
-                           gapScore < 200 ? "High Gap" : "Critical Gap";
+            var gapScore = Math.Round(c.UniqueProducts > 0 ? (decimal)c.TotalQuantitySold / c.UniqueProducts : (decimal)c.TotalQuantitySold, 2);
+            var gapLevel = gapScore < 1 ? "Low Gap" :
+                           gapScore < 2 ? "Moderate Gap" :
+                           gapScore < 5 ? "High Gap" : "Critical Gap";
 
             var operational = new List<string>();
             var strategic = new List<string>();
             var platform = new List<string>();
             var engagement = new List<string>();
 
-            if (gapScore >= 100)
+            if (gapScore >= 5)
             {
                 operational.Add($"Launch supply recruitment campaign for {c.CategoryName}");
                 strategic.Add($"Allocate 15% more marketing budget to {c.CategoryName}");

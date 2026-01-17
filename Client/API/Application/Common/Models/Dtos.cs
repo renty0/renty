@@ -102,7 +102,8 @@ public record CustomerDto(
     int? TotalChildren,
     string? EducationLevel,
     string? Occupation,
-    bool? HomeOwner
+    bool? HomeOwner,
+    string? DomainName
 );
 
 public record CustomerListDto(
@@ -110,7 +111,8 @@ public record CustomerListDto(
     string FullName,
     string? EmailAddress,
     string? Gender,
-    string? Occupation
+    string? Occupation,
+    string? DomainName
 );
 
 // Sale DTOs
