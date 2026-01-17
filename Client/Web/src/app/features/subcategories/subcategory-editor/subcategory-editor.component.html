@@ -1,0 +1,37 @@
+<div class="editor-wrapper">
+    <div class="loading-overlay" *ngIf="isLoadingCategories() || isLoading() || isSaving()">
+        <div class="spinner"></div>
+    </div>
+
+    <form [formGroup]="form" class="category-form" (ngSubmit)="submit()">
+        <h2>
+            {{ (isEditMode() ? 'subcategories.actions.edit' : 'subcategories.actions.create') | translate }}
+        </h2>
+
+        <app-image-uploader #logoUploader [formGroup]="form" [controlName]="'logoId'"
+            [label]="'subcategories.fields.logo' | translate" [folder]="'subcategories'"></app-image-uploader>
+
+        <div class="form-body">
+            <app-input class="field" [formGroup]="form" [controlName]="'subcategoryName'" [label]="'subcategoryName'"
+                [required]="true">
+            </app-input>
+
+            <app-input class="field" [formGroup]="form" [controlName]="'categoryId'" [label]="'parentCategory'"
+                [type]="'select'" [options]="categoryOptions()" [required]="true">
+            </app-input>
+
+            <app-input class="field" [formGroup]="form" [controlName]="'description'" [label]="'subcategoryDescription'"
+                [type]="'textarea'"></app-input>
+        </div>
+
+        <div class="form-actions">
+            <app-loading-button type="button" variant="stroked" color="accent" (clicked)="cancelled.emit()">
+                {{ 'buttons.cancel' | translate}}
+            </app-loading-button>
+
+            <app-loading-button type="submit" color="primary" [loading]="isSaving()">
+                {{(isEditMode() ? 'buttons.save' : 'buttons.create') | translate}}
+            </app-loading-button>
+        </div>
+    </form>
+</div>

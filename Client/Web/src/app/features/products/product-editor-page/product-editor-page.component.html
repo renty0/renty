@@ -1,0 +1,83 @@
+<div class="page-container">
+    <app-header-section [title]="(isEditMode ? 'products.editor.editTitle' : 'products.editor.newTitle') | translate"
+        [showButton]="false" [showSearch]="false" icon="inventory_2">
+    </app-header-section>
+
+    @if (isLoading) {
+    <div class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    }
+
+    <form [formGroup]="form" class="editor-grid">
+        <div class="column">
+            <div class="card">
+                <h3>{{ 'products.sections.general' | translate }}</h3>
+                <div class="field-group">
+                    <app-input label="products.fields.sku" [formGroup]="form" controlName="productSku" [required]="true"
+                        placeholder="products.placeholders.sku">
+                    </app-input>
+                    <app-input label="products.fields.name" [formGroup]="form" controlName="productName"
+                        [required]="true" placeholder="products.placeholders.name">
+                    </app-input>
+                    <app-input label="products.fields.description" [formGroup]="form" controlName="productDescription"
+                        type="textarea" [height]="120" placeholder="products.placeholders.description">
+                    </app-input>
+                </div>
+            </div>
+            <div class="card">
+                <h3>{{ 'products.sections.pricing' | translate }}</h3>
+                <div class="field-row">
+                    <app-input label="products.fields.price" [formGroup]="form" controlName="productPrice" type="number"
+                        [required]="true">
+                    </app-input>
+                    <app-input label="products.fields.cost" [formGroup]="form" controlName="productCost" type="number"
+                        [required]="true">
+                    </app-input>
+                </div>
+                <div class="field-row">
+                    <app-input label="products.fields.discount" [formGroup]="form" controlName="discountPrice"
+                        type="number">
+                    </app-input>
+                </div>
+            </div>
+            <div class="card">
+                <h3>{{ 'products.sections.details' | translate }}</h3>
+                <div class="field-row">
+                    <app-input label="products.fields.modelName" [formGroup]="form" controlName="modelName">
+                    </app-input>
+                    <app-input label="products.fields.skuType" [formGroup]="form" controlName="skuType">
+                    </app-input>
+                </div>
+                <div class="field-row">
+                    <app-input label="products.fields.color" [formGroup]="form" controlName="productColor">
+                    </app-input>
+                    <app-input label="products.fields.style" [formGroup]="form" controlName="productStyle">
+                    </app-input>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <h3>{{ 'products.sections.media' | translate }}</h3>
+                <app-multi-image-uploader [images]="uploadedImages" (imagesChange)="uploadedImages = $event">
+                </app-multi-image-uploader>
+            </div>
+            <div class="card">
+                <h3>{{ 'products.sections.organization' | translate }}</h3>
+                <app-input label="products.fields.subcategory" [formGroup]="form" controlName="subcategoryId"
+                    type="select" [options]="subcategories()" [required]="true"
+                    placeholder="products.placeholders.subcategory">
+                </app-input>
+            </div>
+        </div>
+    </form>
+    <div class="flex gap-3 justify-content-end pt-3">
+        <app-loading-button variant="stroked" (clicked)="cancel()" type="button">
+            {{ 'buttons.cancel' | translate }}
+        </app-loading-button>
+        <app-loading-button color="primary" (clicked)="onSubmit()" [loading]="isSaving" [disabled]="form.invalid">
+            {{ 'buttons.save' | translate }}
+        </app-loading-button>
+    </div>
+</div>

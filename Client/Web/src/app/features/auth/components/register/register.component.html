@@ -1,0 +1,176 @@
+<div class="register-page">
+  <div class="register-container">
+    <div class="header">
+      <img class="logo" src="assets/logo.png" alt="Renty Logo" />
+      <h1 class="title">{{ 'register.welcomeMessage' | translate }}</h1>
+      <p class="login-prompt">
+        {{ 'register.haveAccount' | translate }}
+        <a routerLink="/login">{{ 'register.login' | translate }}</a>
+      </p>
+    </div>
+
+    <div class="form-container">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Enhanced Steps Indicator -->
+        <div class="steps-indicator">
+          <div class="step-item" [class.active]="stepper.selectedIndex === 0"
+            [class.completed]="stepper.selectedIndex > 0">
+            <div class="step-icon-wrapper">
+              @if (stepper.selectedIndex <= 0) { <mat-icon>person_outline</mat-icon>
+                } @else {
+                <mat-icon>check</mat-icon>
+                }
+            </div>
+            <span class="step-label">{{ 'info.accountInfo' | translate }}</span>
+          </div>
+          <div class="step-connector" [class.completed]="stepper.selectedIndex > 0"></div>
+          <div class="step-item" [class.active]="stepper.selectedIndex === 1"
+            [class.completed]="stepper.selectedIndex > 1">
+            <div class="step-icon-wrapper">
+              @if (stepper.selectedIndex <= 1) { <mat-icon>assignment_ind</mat-icon>
+                } @else {
+                <mat-icon>check</mat-icon>
+                }
+            </div>
+            <span class="step-label">{{ 'info.profileInfo' | translate }}</span>
+          </div>
+          <div class="step-connector" [class.completed]="stepper.selectedIndex > 1"></div>
+          <div class="step-item" [class.active]="stepper.selectedIndex === 2"
+            [class.completed]="stepper.selectedIndex > 2">
+            <div class="step-icon-wrapper">
+              <mat-icon>settings_suggest</mat-icon>
+            </div>
+            <span class="step-label">{{ 'labels.userType' | translate }}</span>
+          </div>
+        </div>
+
+        <mat-stepper linear #stepper class="register-stepper">
+          <!-- Step 1: Account Info -->
+          <mat-step [stepControl]="accountInfoGroup" [editable]="true">
+            <ng-template matStepLabel>{{ 'info.accountInfo' | translate }}</ng-template>
+            <div class="step-content">
+              <div class="step-header">
+                <h2>{{ 'info.accountInfo' | translate }}</h2>
+                <p>Set up your login credentials</p>
+              </div>
+              <div class="inputs-grid">
+                <app-input [formGroup]="accountInfoGroup" controlName="email" label="email" type="email"
+                  class="full-width"></app-input>
+                <app-input [formGroup]="accountInfoGroup" controlName="password" label="password"
+                  type="password"></app-input>
+                <app-input [formGroup]="accountInfoGroup" controlName="confirmPassword" label="confirmPassword"
+                  type="password"></app-input>
+              </div>
+              <div class="step-actions">
+                <span></span>
+                <app-loading-button type="button" color="primary" (clicked)="stepper.next()">
+                  {{ 'buttons.next' | translate }}
+                  <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+                </app-loading-button>
+              </div>
+            </div>
+          </mat-step>
+
+          <!-- Step 2: Profile Info -->
+          <mat-step [stepControl]="profileInfoGroup" [editable]="true">
+            <ng-template matStepLabel>{{ 'info.profileInfo' | translate }}</ng-template>
+            <div class="step-content">
+              <div class="step-header">
+                <h2>{{ 'info.profileInfo' | translate }}</h2>
+                <p>Tell us more about yourself</p>
+              </div>
+              <div class="inputs-grid">
+                <app-input [formGroup]="profileInfoGroup" controlName="firstName" label="firstName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="lastName" label="lastName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="phoneNumber" label="phoneNumber" type="phone"
+                  class="full-width"></app-input>
+              </div>
+              <div class="step-actions">
+                <app-loading-button type="button" variant="stroked" color="primary" (clicked)="stepper.previous()">
+                  <mat-icon>{{ 'icons.back' | translate }}</mat-icon>
+                  {{ 'buttons.back' | translate }}
+                </app-loading-button>
+                <app-loading-button type="button" color="primary" (clicked)="stepper.next()">
+                  {{ 'buttons.next' | translate }}
+                  <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+                </app-loading-button>
+              </div>
+            </div>
+          </mat-step>
+
+          <!-- Step 3: Additional Info -->
+          <mat-step [stepControl]="additionalInfoGroup" [editable]="true">
+            <ng-template matStepLabel>{{ 'labels.userType' | translate }}</ng-template>
+            <div class="step-content">
+              <div class="step-header">
+                <h2>Complete Your Profile</h2>
+                <p>Select your account type and preferences</p>
+              </div>
+
+              <div class="role-selection-grid">
+                @for (option of userTypeOptions; track option.code) {
+                <div class="role-card" [class.selected]="additionalInfoGroup.get('userType')?.value === option.code"
+                  (click)="additionalInfoGroup.get('userType')?.setValue(option.code)">
+                  <div class="role-icon">
+                    <mat-icon>{{ option.icon }}</mat-icon>
+                  </div>
+                  <div class="role-info">
+                    <h3>{{ option.titleKey | translate }}</h3>
+                    <p>{{ option.descKey | translate }}</p>
+                  </div>
+                  <div class="role-check">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+                </div>
+                }
+              </div>
+
+              <div class="divider">
+                <span>Location & About</span>
+              </div>
+
+              <div class="inputs-grid">
+                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="address" label="address"
+                  class="full-width"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="bio" type="textarea"
+                  class="full-width"></app-input>
+              </div>
+
+              <div class="terms-container">
+                <mat-checkbox [formControl]="$any(additionalInfoGroup.controls['acceptTerms'])" color="primary">
+                  <span class="terms-text">
+                    {{ 'register.acceptOn' | translate }}
+                    <button type="button" class="terms-link" (click)="showTerms.set(true)">
+                      {{ 'register.terms' | translate }}
+                    </button>
+                  </span>
+                </mat-checkbox>
+                @if (additionalInfoGroup.get('acceptTerms')?.invalid && formSubmitted()) {
+                <p class="terms-error text-danger">
+                  <mat-icon>error_outline</mat-icon>
+                  {{ 'validation.acceptTerms' | translate }}
+                </p>
+                }
+              </div>
+
+              <div class="step-actions">
+                <app-loading-button type="button" variant="stroked" color="primary" (clicked)="stepper.previous()">
+                  <mat-icon>{{ 'icons.back' | translate }}</mat-icon>
+                  {{ 'buttons.back' | translate }}
+                </app-loading-button>
+                <app-loading-button type="submit" color="accent" [loading]="loading()">
+                  {{ 'register.registerButton' | translate }}
+                  <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+                </app-loading-button>
+              </div>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </form>
+    </div>
+  </div>
+</div>
+
+<app-terms-and-conditions [visible]="showTerms()" (closeDialog)="showTerms.set(false)"></app-terms-and-conditions>

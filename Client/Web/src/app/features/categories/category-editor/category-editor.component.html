@@ -1,0 +1,34 @@
+<div class="editor-wrapper">
+    @if (isLoading) {
+    <div class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="category-form">
+        <div class="form-body">
+            <app-input class="field" label="name" [formGroup]="form" controlName="categoryName">
+            </app-input>
+
+            <app-input class="field" label="description" type="textarea" [formGroup]="form" controlName="description">
+            </app-input>
+
+            <div class="logo-section">
+                <span class="label">{{ 'categories.columns.logo' | translate }}</span>
+                    <app-image-uploader #logoUploader [uploadPath]="'categories/logos'"
+                        [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']">
+                    </app-image-uploader>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <app-loading-button variant="stroked" (clicked)="cancel()" type="button" class="btn-cancel" [title]="'buttons.cancel' | translate">
+                {{ 'buttons.cancel' | translate }}
+            </app-loading-button>
+            <app-loading-button color="primary" type="submit" [loading]="isSaving" [disabled]="form.invalid"
+                class="btn-submit" [title]="'buttons.save' | translate">
+                {{ 'buttons.save' | translate }}
+            </app-loading-button>
+        </div>
+    </form>
+</div>

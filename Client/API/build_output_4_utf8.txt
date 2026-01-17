@@ -1,0 +1,28 @@
+﻿  Determining projects to restore...
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\rently_2026\Client\API\Domain\Domain.csproj]
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\rently_2026\Client\API\Infrastructure\Infrastructure.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+  Domain -> E:\Courses\Work\rently_2026\Client\API\Domain\bin\Debug\net9.0\Domain.dll
+  Application -> E:\Courses\Work\rently_2026\Client\API\Application\bin\Debug\net9.0\Application.dll
+E:\Courses\Work\rently_2026\Client\API\Infrastructure\Data\ApplicationDbContext.cs(27,18): error CS0246: The type or namespace name 'MediaFile' could not be found (are you missing a using directive or an assembly reference?) [E:\Courses\Work\rently_2026\Client\API\Infrastructure\Infrastructure.csproj]
+E:\Courses\Work\rently_2026\Client\API\Infrastructure\Data\ApplicationDbContext.cs(9,96): error CS0738: 'ApplicationDbContext' does not implement interface member 'IApplicationDbContext.MediaFiles'. 'ApplicationDbContext.MediaFiles' cannot implement 'IApplicationDbContext.MediaFiles' because it does not have the matching return type of 'DbSet<MediaFile>'. [E:\Courses\Work\rently_2026\Client\API\Infrastructure\Infrastructure.csproj]
+
+Build FAILED.
+
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\rently_2026\Client\API\Web\Web.csproj]
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\rently_2026\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+E:\Courses\Work\rently_2026\Client\API\Infrastructure\Data\ApplicationDbContext.cs(27,18): error CS0246: The type or namespace name 'MediaFile' could not be found (are you missing a using directive or an assembly reference?) [E:\Courses\Work\rently_2026\Client\API\Infrastructure\Infrastructure.csproj]
+E:\Courses\Work\rently_2026\Client\API\Infrastructure\Data\ApplicationDbContext.cs(9,96): error CS0738: 'ApplicationDbContext' does not implement interface member 'IApplicationDbContext.MediaFiles'. 'ApplicationDbContext.MediaFiles' cannot implement 'IApplicationDbContext.MediaFiles' because it does not have the matching return type of 'DbSet<MediaFile>'. [E:\Courses\Work\rently_2026\Client\API\Infrastructure\Infrastructure.csproj]
+    4 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.65
+
+Workload updates are available. Run `dotnet workload list` for more information.
