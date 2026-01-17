@@ -63,6 +63,7 @@ app.UseSwaggerUi(config =>
 
 // Map endpoints
 app.MapAccountEndpoints();
+app.MapSeedingEndpoints();
 app.MapCategoryEndpoints();
 app.MapSubcategoryEndpoints();
 app.MapProductEndpoints();

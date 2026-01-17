@@ -19,5 +19,6 @@ public interface IApplicationDbContext
     DbSet<RentableItemImage> RentableItemImages { get; }
     DbSet<RentRequest> RentRequests { get; }
     DbSet<MediaFile> MediaFiles { get; }
+    DbSet<ProductImage> ProductImages { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

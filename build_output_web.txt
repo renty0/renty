@@ -1,0 +1,30 @@
+STDOUT:
+  Determining projects to restore...
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\renty\Client\API\Infrastructure\Infrastructure.csproj]
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [E:\Courses\Work\renty\Client\API\Domain\Domain.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+  Domain -> E:\Courses\Work\renty\Client\API\Domain\bin\Debug\net9.0\Domain.dll
+  Application -> E:\Courses\Work\renty\Client\API\Application\bin\Debug\net9.0\Application.dll
+  Infrastructure -> E:\Courses\Work\renty\Client\API\Infrastructure\bin\Debug\net9.0\Infrastructure.dll
+E:\Courses\Work\renty\Client\API\Web\Endpoints\SeedingEndpoints.cs(8,33): error CS0246: The type or namespace name 'EndpointGroupBase' could not be found (are you missing a using directive or an assembly reference?) [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+
+Build FAILED.
+
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.5 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+E:\Courses\Work\renty\Client\API\Web\Endpoints\SeedingEndpoints.cs(8,33): error CS0246: The type or namespace name 'EndpointGroupBase' could not be found (are you missing a using directive or an assembly reference?) [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+    4 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:03.03
+
+Workload updates are available. Run `dotnet workload list` for more information.
+
+STDERR:
