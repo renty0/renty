@@ -31,7 +31,8 @@ public record TerritoryGapAnalysisDto(
     string CategoryName,
     int UniqueOrders,
     int TotalQuantitySold,
-    int UniqueCustomers
+    int UniqueCustomers,
+    decimal GapScore
 );
 
 public record GapAnalysisSummaryDto(
@@ -42,7 +43,8 @@ public record GapAnalysisSummaryDto(
     string MostSevereCategory,
     decimal MostSevereScore,
     int TotalSupply,
-    int TotalDemand
+    int TotalDemand,
+    List<CategoryGapScoreDto> CategoryGaps
 );
 
 public record GapActionPlanDto(
@@ -62,5 +64,51 @@ public record GapTrendDto(
     decimal PreviousGapScore,
     decimal CurrentGapScore,
     decimal GapChangePercentage,
-    string TrendStatus // Improving, Worsening, Stable
+    string Status // Improving, Worsening, Stable
 );
+
+public record GlobalKPIsDto(
+    decimal TotalRevenue,
+    int TotalOrders,
+    int TotalCustomers,
+    int TotalProducts,
+    decimal AverageGapScore,
+    int CriticalGapsCount,
+    decimal OpportunityLossTotal,
+    List<KpiRevenueTrendDto> RevenueTrend,
+    List<CategoryGapAnalysisDto> TopGaps,
+    List<GapLevelCountDto> GapLevelDistribution,
+    List<SmartInsightDto> Insights
+);
+
+public record SmartInsightDto(string Title, string Message, string Severity); // Success, Info, Warning, Danger
+
+public record DeadStockDto(
+    int ProductId,
+    string ProductName,
+    string CategoryName,
+    int SupplyCount,
+    decimal TotalValue,
+    int DaysSinceLastSale,
+    string Recommendation
+);
+
+public record GapLevelCountDto(string Level, int Count);
+
+public record OpportunityLossDto(
+    int CategoryId,
+    string CategoryName,
+    int DemandSupplyGap,
+    decimal AveragePrice,
+    decimal EstimatedOpportunityLoss,
+    string Recommendation
+);
+
+public record GeographicHeatmapDto(
+    string TerritoryName,
+    List<CategoryGapScoreDto> CategoryGaps
+);
+
+public record CategoryGapScoreDto(string CategoryName, decimal GapScore, string GapLevel, int SupplyCount, int DemandCount);
+
+public record KpiRevenueTrendDto(string Month, decimal Revenue);

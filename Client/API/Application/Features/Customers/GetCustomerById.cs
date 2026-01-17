@@ -42,7 +42,8 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
                 c.TotalChildren,
                 c.EducationLevel,
                 c.Occupation,
-                c.HomeOwner
+                c.HomeOwner,
+                c.DomainName
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

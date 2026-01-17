@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Preset } from './mytheme';
-import { API_BASE_URL, AccountClient, CategoriesClient, SubcategoriesClient, ProductsClient, CustomersClient, TerritoriesClient, SalesClient, ReturnsClient, CalendarClient, Rentable_ItemsClient, Rent_RequestsClient, MediaFilesClient, DashboardClient, RecommendationsClient } from './core/api/api-client';
+import { API_BASE_URL, AccountClient, CategoriesClient, SubcategoriesClient, ProductsClient, CustomersClient, TerritoriesClient, SalesClient, ReturnsClient, CalendarClient, Rentable_ItemsClient, Rent_RequestsClient, MediaFilesClient, DashboardClient, RecommendationsClient, KPIsClient, Gap_AnalysisClient, AnalyticsClient } from './core/api/api-client';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -42,5 +42,8 @@ export const appConfig: ApplicationConfig = {
     MediaFilesClient,
     DashboardClient,
     RecommendationsClient,
+    KPIsClient,
+    Gap_AnalysisClient,
+    AnalyticsClient,
   ]
 };

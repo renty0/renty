@@ -41,7 +41,8 @@ export class NavbarComponent implements OnInit {
         { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag' },
         { path: '/categories', labelKey: 'nav.categories', icon: 'category' },
         { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree' },
-        { path: '/products', labelKey: 'nav.products', icon: 'inventory_2' }
+        { path: '/products', labelKey: 'nav.products', icon: 'inventory_2' },
+        { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'inventory_2' }
     ];
 
     @HostListener('window:scroll', [])

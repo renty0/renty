@@ -19,38 +19,53 @@ public class GetProductPerformanceQueryHandler : IRequestHandler<GetProductPerfo
 
     public async Task<ProductPerformanceDto> Handle(GetProductPerformanceQuery request, CancellationToken cancellationToken)
     {
+        // 1. Top Products (Calculated in DB)
         var topProducts = await _context.Sales
-            .GroupBy(s => new { s.ProductId, s.Product!.ProductName })
+            .Select(s => new
+            {
+                s.ProductId,
+                ProductName = s.Product != null ? s.Product.ProductName : "Unknown",
+                // Calculate line total in DB: Quantity * EffectivePrice
+                LineRevenue = s.OrderQuantity * (s.Product != null ? (s.Product.DiscountPrice ?? s.Product.ProductPrice) : 0),
+                s.OrderQuantity
+            })
+            .GroupBy(x => new { x.ProductId, x.ProductName })
             .Select(g => new
             {
-                ProductName = g.Key.ProductName,
-                TotalRevenue = g.Sum(s => s.LineTotal),
-                TotalQuantity = g.Sum(s => s.OrderQuantity)
+                g.Key.ProductName,
+                TotalRevenue = g.Sum(x => x.LineRevenue),
+                TotalQuantity = g.Sum(x => x.OrderQuantity)
             })
-            .OrderByDescending(p => p.TotalRevenue)
+            .OrderByDescending(x => x.TotalRevenue)
             .Take(request.Top)
             .ToListAsync(cancellationToken);
 
-        // Get all sales with product and category info
-        var salesWithCategories = await _context.Sales
-            .Include(s => s.Product)
-                .ThenInclude(p => p.Subcategory)
-                    .ThenInclude(sc => sc.Category)
+        // 2. Category Performance (Calculated in DB)
+        var categoryStats = await _context.Sales
+            .Select(s => new
+            {
+                CategoryName = s.Product != null && s.Product.Subcategory != null && s.Product.Subcategory.Category != null
+                    ? s.Product.Subcategory.Category.CategoryName
+                    : "Unknown",
+                LineRevenue = s.OrderQuantity * (s.Product != null ? (s.Product.DiscountPrice ?? s.Product.ProductPrice) : 0),
+                s.OrderQuantity
+            })
+            .GroupBy(x => x.CategoryName)
+            .Select(g => new
+            {
+                CategoryName = g.Key,
+                Revenue = g.Sum(x => x.LineRevenue),
+                Quantity = g.Sum(x => x.OrderQuantity)
+            })
+            .OrderByDescending(x => x.Revenue)
             .ToListAsync(cancellationToken);
 
-        // Group by category in memory
-        var categoryPerformance = salesWithCategories
-            .GroupBy(s => s.Product?.Subcategory?.Category?.CategoryName ?? "Unknown")
-            .Select(g => new CategoryPerformanceDto(
-                g.Key,
-                g.Sum(s => s.LineTotal),
-                g.Sum(s => s.OrderQuantity)
-            ))
-            .OrderByDescending(c => c.Revenue)
+        var categoryPerformance = categoryStats
+            .Select(c => new CategoryPerformanceDto(c.CategoryName, c.Revenue, c.Quantity))
             .ToList();
 
         return new ProductPerformanceDto(
-            topProducts.Select(p => new CategoryCountDto(p.ProductName ?? "Unknown", (int)p.TotalQuantity)).ToList(),
+            topProducts.Select(p => new CategoryCountDto(p.ProductName, (int)p.TotalQuantity)).ToList(),
             categoryPerformance
         );
     }

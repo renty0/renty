@@ -30,18 +30,26 @@ public class GetGapAnalysisSummaryQueryHandler : IRequestHandler<GetGapAnalysisS
             .ToListAsync(cancellationToken);
 
         var totalCategories = categoryData.Count;
-        if (totalCategories == 0) return new GapAnalysisSummaryDto(0, 0, 0, 0, "", 0, 0, 0);
+        if (totalCategories == 0) return new GapAnalysisSummaryDto(0, 0, 0, 0, "", 0, 0, 0, new List<CategoryGapScoreDto>());
 
         var gapData = categoryData.Select(c => new
         {
             c.CategoryName,
             c.UniqueProducts,
             c.TotalQuantitySold,
-            GapScore = Math.Round((decimal)(c.TotalQuantitySold + 1) / (c.UniqueProducts + 1), 2)
+            GapScore = Math.Round(c.UniqueProducts > 0 ? (decimal)c.TotalQuantitySold / c.UniqueProducts : (decimal)c.TotalQuantitySold, 2)
         }).ToList();
 
-        var criticalGaps = gapData.Where(g => g.GapScore >= 200).ToList();
+        var criticalGaps = gapData.Where(g => g.GapScore >= 5).ToList();
         var mostSevere = gapData.OrderByDescending(g => g.GapScore).FirstOrDefault();
+
+        var categoryGapsList = gapData.Select(g => new CategoryGapScoreDto(
+            g.CategoryName, 
+            g.GapScore, 
+            g.GapScore < 1 ? "Low" : g.GapScore < 2 ? "Moderate" : g.GapScore < 5 ? "High" : "Critical",
+            g.UniqueProducts,
+            g.TotalQuantitySold
+        )).ToList();
 
         return new GapAnalysisSummaryDto(
             totalCategories,
@@ -51,7 +59,8 @@ public class GetGapAnalysisSummaryQueryHandler : IRequestHandler<GetGapAnalysisS
             mostSevere?.CategoryName ?? "",
             mostSevere?.GapScore ?? 0,
             categoryData.Sum(c => c.UniqueProducts),
-            categoryData.Sum(c => c.TotalQuantitySold)
+            categoryData.Sum(c => c.TotalQuantitySold),
+            categoryGapsList
         );
     }
 }

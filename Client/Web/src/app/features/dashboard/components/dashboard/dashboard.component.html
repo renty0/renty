@@ -1,14 +1,37 @@
-<div class="dashboard-container">
-  <app-admin-dashboard />
-  @if (isAdmin()) {
-  } @else if (isOwner()) {
-  <app-owner-dashboard />
-  } @else if (isRenter()) {
-  <app-renter-dashboard />
-  } @else {
-  <div class="no-access">
-    <h2>Access Denied</h2>
-    <p>You don't have permission to view this dashboard.</p>
-  </div>
-  }
+<div class="admin-dashboard">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Intelligence Center</h1>
+        <div class="header-actions">
+            <span class="last-sync">Last updated: {{ 0 | date:'shortTime' }}</span>
+        </div>
+    </div>
+
+    <p-tabs [value]="0">
+        <p-tablist>
+            <p-tab [value]="0">
+                <i class="pi pi-chart-bar mr-2"></i>
+                <span>KPI Overview</span>
+            </p-tab>
+            <p-tab [value]="1">
+                <i class="pi pi-map-marker mr-2"></i>
+                <span>Gap Analysis</span>
+            </p-tab>
+            <p-tab [value]="2">
+                <i class="pi pi-bolt mr-2"></i>
+                <span>Deep Analytics</span>
+            </p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel [value]="0">
+                <app-kpi-dashboard />
+            </p-tabpanel>
+            <p-tabpanel [value]="1">
+                <app-gap-dashboard />
+            </p-tabpanel>
+            <p-tabpanel [value]="2">
+                <app-analytics-dashboard />
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
 </div>

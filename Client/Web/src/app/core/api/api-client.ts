@@ -485,6 +485,66 @@ export class AccountClient {
 }
 
 @Injectable()
+export class SeedingClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    seedFromExcel(request: SeedRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/seeding/from-excel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSeedFromExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSeedFromExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSeedFromExcel(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class CategoriesClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -4052,6 +4112,621 @@ export class RecommendationsClient {
 }
 
 @Injectable()
+export class Gap_AnalysisClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    getCategoryGapAnalysis(): Observable<CategoryGapAnalysisDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/categories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCategoryGapAnalysis(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCategoryGapAnalysis(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CategoryGapAnalysisDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CategoryGapAnalysisDto[]>;
+        }));
+    }
+
+    protected processGetCategoryGapAnalysis(response: HttpResponseBase): Observable<CategoryGapAnalysisDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CategoryGapAnalysisDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getSubcategoryGapAnalysis(): Observable<SubcategoryGapAnalysisDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/subcategories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSubcategoryGapAnalysis(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSubcategoryGapAnalysis(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SubcategoryGapAnalysisDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SubcategoryGapAnalysisDto[]>;
+        }));
+    }
+
+    protected processGetSubcategoryGapAnalysis(response: HttpResponseBase): Observable<SubcategoryGapAnalysisDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SubcategoryGapAnalysisDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getTerritoryGapAnalysis(): Observable<TerritoryGapAnalysisDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/territories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTerritoryGapAnalysis(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTerritoryGapAnalysis(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TerritoryGapAnalysisDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TerritoryGapAnalysisDto[]>;
+        }));
+    }
+
+    protected processGetTerritoryGapAnalysis(response: HttpResponseBase): Observable<TerritoryGapAnalysisDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TerritoryGapAnalysisDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getGapAnalysisSummary(): Observable<GapAnalysisSummaryDto> {
+        let url_ = this.baseUrl + "/api/gap-analysis/summary";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGapAnalysisSummary(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGapAnalysisSummary(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GapAnalysisSummaryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GapAnalysisSummaryDto>;
+        }));
+    }
+
+    protected processGetGapAnalysisSummary(response: HttpResponseBase): Observable<GapAnalysisSummaryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GapAnalysisSummaryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getGapAnalysisActionPlan(): Observable<GapActionPlanDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/actions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGapAnalysisActionPlan(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGapAnalysisActionPlan(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GapActionPlanDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GapActionPlanDto[]>;
+        }));
+    }
+
+    protected processGetGapAnalysisActionPlan(response: HttpResponseBase): Observable<GapActionPlanDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GapActionPlanDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getGapAnalysisTrends(): Observable<GapTrendDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/trends";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGapAnalysisTrends(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGapAnalysisTrends(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GapTrendDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GapTrendDto[]>;
+        }));
+    }
+
+    protected processGetGapAnalysisTrends(response: HttpResponseBase): Observable<GapTrendDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GapTrendDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getOpportunityLoss(): Observable<OpportunityLossDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/opportunity-loss";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOpportunityLoss(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOpportunityLoss(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<OpportunityLossDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<OpportunityLossDto[]>;
+        }));
+    }
+
+    protected processGetOpportunityLoss(response: HttpResponseBase): Observable<OpportunityLossDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OpportunityLossDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getGeographicGapHeatmap(): Observable<GeographicHeatmapDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/heatmap";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGeographicGapHeatmap(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGeographicGapHeatmap(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GeographicHeatmapDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GeographicHeatmapDto[]>;
+        }));
+    }
+
+    protected processGetGeographicGapHeatmap(response: HttpResponseBase): Observable<GeographicHeatmapDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GeographicHeatmapDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getDeadStockAnalysis(): Observable<DeadStockDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/dead-stock";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDeadStockAnalysis(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDeadStockAnalysis(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DeadStockDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DeadStockDto[]>;
+        }));
+    }
+
+    protected processGetDeadStockAnalysis(response: HttpResponseBase): Observable<DeadStockDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DeadStockDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getSmartInsights(): Observable<SmartInsightDto[]> {
+        let url_ = this.baseUrl + "/api/gap-analysis/smart-insights";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSmartInsights(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSmartInsights(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SmartInsightDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SmartInsightDto[]>;
+        }));
+    }
+
+    protected processGetSmartInsights(response: HttpResponseBase): Observable<SmartInsightDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SmartInsightDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class KPIsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    getGlobalKPIs(): Observable<GlobalKPIsDto> {
+        let url_ = this.baseUrl + "/api/kpis";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGlobalKPIs(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGlobalKPIs(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GlobalKPIsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GlobalKPIsDto>;
+        }));
+    }
+
+    protected processGetGlobalKPIs(response: HttpResponseBase): Observable<GlobalKPIsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GlobalKPIsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class AnalyticsClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -5122,6 +5797,42 @@ export class ConfirmEmailCommand implements IConfirmEmailCommand {
 export interface IConfirmEmailCommand {
     email?: string;
     code?: string;
+}
+
+export class SeedRequest implements ISeedRequest {
+    filePath?: string;
+
+    constructor(data?: ISeedRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.filePath = _data["filePath"];
+        }
+    }
+
+    static fromJS(data: any): SeedRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeedRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["filePath"] = this.filePath;
+        return data;
+    }
+}
+
+export interface ISeedRequest {
+    filePath?: string;
 }
 
 export class PaginatedListOfProductCategoryDto implements IPaginatedListOfProductCategoryDto {
@@ -6637,6 +7348,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
     educationLevel?: string | undefined;
     occupation?: string | undefined;
     homeOwner?: boolean | undefined;
+    domainName?: string | undefined;
 
     constructor(data?: ICreateCustomerCommand) {
         if (data) {
@@ -6661,6 +7373,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
             this.educationLevel = _data["educationLevel"];
             this.occupation = _data["occupation"];
             this.homeOwner = _data["homeOwner"];
+            this.domainName = _data["domainName"];
         }
     }
 
@@ -6685,6 +7398,7 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
         data["educationLevel"] = this.educationLevel;
         data["occupation"] = this.occupation;
         data["homeOwner"] = this.homeOwner;
+        data["domainName"] = this.domainName;
         return data;
     }
 }
@@ -6702,6 +7416,7 @@ export interface ICreateCustomerCommand {
     educationLevel?: string | undefined;
     occupation?: string | undefined;
     homeOwner?: boolean | undefined;
+    domainName?: string | undefined;
 }
 
 export class UpdateCustomerCommand implements IUpdateCustomerCommand {
@@ -6718,6 +7433,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
     educationLevel?: string | undefined;
     occupation?: string | undefined;
     homeOwner?: boolean | undefined;
+    domainName?: string | undefined;
 
     constructor(data?: IUpdateCustomerCommand) {
         if (data) {
@@ -6743,6 +7459,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
             this.educationLevel = _data["educationLevel"];
             this.occupation = _data["occupation"];
             this.homeOwner = _data["homeOwner"];
+            this.domainName = _data["domainName"];
         }
     }
 
@@ -6768,6 +7485,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
         data["educationLevel"] = this.educationLevel;
         data["occupation"] = this.occupation;
         data["homeOwner"] = this.homeOwner;
+        data["domainName"] = this.domainName;
         return data;
     }
 }
@@ -6786,6 +7504,7 @@ export interface IUpdateCustomerCommand {
     educationLevel?: string | undefined;
     occupation?: string | undefined;
     homeOwner?: boolean | undefined;
+    domainName?: string | undefined;
 }
 
 export class CreateTerritoryCommand implements ICreateTerritoryCommand {
@@ -8090,6 +8809,858 @@ export interface IRecommendationDto {
     averageRating?: number;
     categoryName?: string | undefined;
     reason?: string | undefined;
+}
+
+export class CategoryGapAnalysisDto implements ICategoryGapAnalysisDto {
+    categoryId?: number;
+    categoryName?: string;
+    uniqueProducts?: number;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+    gapScore?: number;
+    gapLevel?: string;
+
+    constructor(data?: ICategoryGapAnalysisDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.uniqueProducts = _data["uniqueProducts"];
+            this.uniqueOrders = _data["uniqueOrders"];
+            this.totalQuantitySold = _data["totalQuantitySold"];
+            this.uniqueCustomers = _data["uniqueCustomers"];
+            this.gapScore = _data["gapScore"];
+            this.gapLevel = _data["gapLevel"];
+        }
+    }
+
+    static fromJS(data: any): CategoryGapAnalysisDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryGapAnalysisDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["uniqueProducts"] = this.uniqueProducts;
+        data["uniqueOrders"] = this.uniqueOrders;
+        data["totalQuantitySold"] = this.totalQuantitySold;
+        data["uniqueCustomers"] = this.uniqueCustomers;
+        data["gapScore"] = this.gapScore;
+        data["gapLevel"] = this.gapLevel;
+        return data;
+    }
+}
+
+export interface ICategoryGapAnalysisDto {
+    categoryId?: number;
+    categoryName?: string;
+    uniqueProducts?: number;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+    gapScore?: number;
+    gapLevel?: string;
+}
+
+export class SubcategoryGapAnalysisDto implements ISubcategoryGapAnalysisDto {
+    subcategoryId?: number;
+    subcategoryName?: string;
+    categoryName?: string;
+    uniqueProducts?: number;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+    gapScore?: number;
+    gapLevel?: string;
+
+    constructor(data?: ISubcategoryGapAnalysisDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.subcategoryId = _data["subcategoryId"];
+            this.subcategoryName = _data["subcategoryName"];
+            this.categoryName = _data["categoryName"];
+            this.uniqueProducts = _data["uniqueProducts"];
+            this.uniqueOrders = _data["uniqueOrders"];
+            this.totalQuantitySold = _data["totalQuantitySold"];
+            this.uniqueCustomers = _data["uniqueCustomers"];
+            this.gapScore = _data["gapScore"];
+            this.gapLevel = _data["gapLevel"];
+        }
+    }
+
+    static fromJS(data: any): SubcategoryGapAnalysisDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubcategoryGapAnalysisDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["subcategoryId"] = this.subcategoryId;
+        data["subcategoryName"] = this.subcategoryName;
+        data["categoryName"] = this.categoryName;
+        data["uniqueProducts"] = this.uniqueProducts;
+        data["uniqueOrders"] = this.uniqueOrders;
+        data["totalQuantitySold"] = this.totalQuantitySold;
+        data["uniqueCustomers"] = this.uniqueCustomers;
+        data["gapScore"] = this.gapScore;
+        data["gapLevel"] = this.gapLevel;
+        return data;
+    }
+}
+
+export interface ISubcategoryGapAnalysisDto {
+    subcategoryId?: number;
+    subcategoryName?: string;
+    categoryName?: string;
+    uniqueProducts?: number;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+    gapScore?: number;
+    gapLevel?: string;
+}
+
+export class TerritoryGapAnalysisDto implements ITerritoryGapAnalysisDto {
+    territoryId?: number;
+    region?: string;
+    country?: string;
+    categoryId?: number;
+    categoryName?: string;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+
+    constructor(data?: ITerritoryGapAnalysisDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.territoryId = _data["territoryId"];
+            this.region = _data["region"];
+            this.country = _data["country"];
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.uniqueOrders = _data["uniqueOrders"];
+            this.totalQuantitySold = _data["totalQuantitySold"];
+            this.uniqueCustomers = _data["uniqueCustomers"];
+        }
+    }
+
+    static fromJS(data: any): TerritoryGapAnalysisDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TerritoryGapAnalysisDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["territoryId"] = this.territoryId;
+        data["region"] = this.region;
+        data["country"] = this.country;
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["uniqueOrders"] = this.uniqueOrders;
+        data["totalQuantitySold"] = this.totalQuantitySold;
+        data["uniqueCustomers"] = this.uniqueCustomers;
+        return data;
+    }
+}
+
+export interface ITerritoryGapAnalysisDto {
+    territoryId?: number;
+    region?: string;
+    country?: string;
+    categoryId?: number;
+    categoryName?: string;
+    uniqueOrders?: number;
+    totalQuantitySold?: number;
+    uniqueCustomers?: number;
+}
+
+export class GapAnalysisSummaryDto implements IGapAnalysisSummaryDto {
+    totalCategories?: number;
+    criticalGapsCount?: number;
+    criticalGapsPercentage?: number;
+    averageGapScore?: number;
+    mostSevereCategory?: string;
+    mostSevereScore?: number;
+    totalSupply?: number;
+    totalDemand?: number;
+
+    constructor(data?: IGapAnalysisSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCategories = _data["totalCategories"];
+            this.criticalGapsCount = _data["criticalGapsCount"];
+            this.criticalGapsPercentage = _data["criticalGapsPercentage"];
+            this.averageGapScore = _data["averageGapScore"];
+            this.mostSevereCategory = _data["mostSevereCategory"];
+            this.mostSevereScore = _data["mostSevereScore"];
+            this.totalSupply = _data["totalSupply"];
+            this.totalDemand = _data["totalDemand"];
+        }
+    }
+
+    static fromJS(data: any): GapAnalysisSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GapAnalysisSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCategories"] = this.totalCategories;
+        data["criticalGapsCount"] = this.criticalGapsCount;
+        data["criticalGapsPercentage"] = this.criticalGapsPercentage;
+        data["averageGapScore"] = this.averageGapScore;
+        data["mostSevereCategory"] = this.mostSevereCategory;
+        data["mostSevereScore"] = this.mostSevereScore;
+        data["totalSupply"] = this.totalSupply;
+        data["totalDemand"] = this.totalDemand;
+        return data;
+    }
+}
+
+export interface IGapAnalysisSummaryDto {
+    totalCategories?: number;
+    criticalGapsCount?: number;
+    criticalGapsPercentage?: number;
+    averageGapScore?: number;
+    mostSevereCategory?: string;
+    mostSevereScore?: number;
+    totalSupply?: number;
+    totalDemand?: number;
+}
+
+export class GapActionPlanDto implements IGapActionPlanDto {
+    categoryId?: number;
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+    operationalActions?: string[];
+    strategicActions?: string[];
+    platformActions?: string[];
+    userEngagementActions?: string[];
+
+    constructor(data?: IGapActionPlanDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.gapScore = _data["gapScore"];
+            this.gapLevel = _data["gapLevel"];
+            if (Array.isArray(_data["operationalActions"])) {
+                this.operationalActions = [] as any;
+                for (let item of _data["operationalActions"])
+                    this.operationalActions!.push(item);
+            }
+            if (Array.isArray(_data["strategicActions"])) {
+                this.strategicActions = [] as any;
+                for (let item of _data["strategicActions"])
+                    this.strategicActions!.push(item);
+            }
+            if (Array.isArray(_data["platformActions"])) {
+                this.platformActions = [] as any;
+                for (let item of _data["platformActions"])
+                    this.platformActions!.push(item);
+            }
+            if (Array.isArray(_data["userEngagementActions"])) {
+                this.userEngagementActions = [] as any;
+                for (let item of _data["userEngagementActions"])
+                    this.userEngagementActions!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): GapActionPlanDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GapActionPlanDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["gapScore"] = this.gapScore;
+        data["gapLevel"] = this.gapLevel;
+        if (Array.isArray(this.operationalActions)) {
+            data["operationalActions"] = [];
+            for (let item of this.operationalActions)
+                data["operationalActions"].push(item);
+        }
+        if (Array.isArray(this.strategicActions)) {
+            data["strategicActions"] = [];
+            for (let item of this.strategicActions)
+                data["strategicActions"].push(item);
+        }
+        if (Array.isArray(this.platformActions)) {
+            data["platformActions"] = [];
+            for (let item of this.platformActions)
+                data["platformActions"].push(item);
+        }
+        if (Array.isArray(this.userEngagementActions)) {
+            data["userEngagementActions"] = [];
+            for (let item of this.userEngagementActions)
+                data["userEngagementActions"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IGapActionPlanDto {
+    categoryId?: number;
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+    operationalActions?: string[];
+    strategicActions?: string[];
+    platformActions?: string[];
+    userEngagementActions?: string[];
+}
+
+export class GapTrendDto implements IGapTrendDto {
+    categoryId?: number;
+    categoryName?: string;
+    previousGapScore?: number;
+    currentGapScore?: number;
+    gapChangePercentage?: number;
+    status?: string;
+
+    constructor(data?: IGapTrendDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.previousGapScore = _data["previousGapScore"];
+            this.currentGapScore = _data["currentGapScore"];
+            this.gapChangePercentage = _data["gapChangePercentage"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): GapTrendDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GapTrendDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["previousGapScore"] = this.previousGapScore;
+        data["currentGapScore"] = this.currentGapScore;
+        data["gapChangePercentage"] = this.gapChangePercentage;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IGapTrendDto {
+    categoryId?: number;
+    categoryName?: string;
+    previousGapScore?: number;
+    currentGapScore?: number;
+    gapChangePercentage?: number;
+    status?: string;
+}
+
+export class OpportunityLossDto implements IOpportunityLossDto {
+    categoryId?: number;
+    categoryName?: string;
+    demandSupplyGap?: number;
+    averagePrice?: number;
+    estimatedOpportunityLoss?: number;
+    recommendation?: string;
+
+    constructor(data?: IOpportunityLossDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.demandSupplyGap = _data["demandSupplyGap"];
+            this.averagePrice = _data["averagePrice"];
+            this.estimatedOpportunityLoss = _data["estimatedOpportunityLoss"];
+            this.recommendation = _data["recommendation"];
+        }
+    }
+
+    static fromJS(data: any): OpportunityLossDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OpportunityLossDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["demandSupplyGap"] = this.demandSupplyGap;
+        data["averagePrice"] = this.averagePrice;
+        data["estimatedOpportunityLoss"] = this.estimatedOpportunityLoss;
+        data["recommendation"] = this.recommendation;
+        return data;
+    }
+}
+
+export interface IOpportunityLossDto {
+    categoryId?: number;
+    categoryName?: string;
+    demandSupplyGap?: number;
+    averagePrice?: number;
+    estimatedOpportunityLoss?: number;
+    recommendation?: string;
+}
+
+export class GeographicHeatmapDto implements IGeographicHeatmapDto {
+    territoryName?: string;
+    categoryGaps?: CategoryGapScoreDto[];
+
+    constructor(data?: IGeographicHeatmapDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.territoryName = _data["territoryName"];
+            if (Array.isArray(_data["categoryGaps"])) {
+                this.categoryGaps = [] as any;
+                for (let item of _data["categoryGaps"])
+                    this.categoryGaps!.push(CategoryGapScoreDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GeographicHeatmapDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GeographicHeatmapDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["territoryName"] = this.territoryName;
+        if (Array.isArray(this.categoryGaps)) {
+            data["categoryGaps"] = [];
+            for (let item of this.categoryGaps)
+                data["categoryGaps"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IGeographicHeatmapDto {
+    territoryName?: string;
+    categoryGaps?: CategoryGapScoreDto[];
+}
+
+export class CategoryGapScoreDto implements ICategoryGapScoreDto {
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+
+    constructor(data?: ICategoryGapScoreDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryName = _data["categoryName"];
+            this.gapScore = _data["gapScore"];
+            this.gapLevel = _data["gapLevel"];
+        }
+    }
+
+    static fromJS(data: any): CategoryGapScoreDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryGapScoreDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryName"] = this.categoryName;
+        data["gapScore"] = this.gapScore;
+        data["gapLevel"] = this.gapLevel;
+        return data;
+    }
+}
+
+export interface ICategoryGapScoreDto {
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+}
+
+export class DeadStockDto implements IDeadStockDto {
+    productId?: number;
+    productName?: string;
+    categoryName?: string;
+    supplyCount?: number;
+    totalValue?: number;
+    daysSinceLastSale?: number;
+    recommendation?: string;
+
+    constructor(data?: IDeadStockDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.productName = _data["productName"];
+            this.categoryName = _data["categoryName"];
+            this.supplyCount = _data["supplyCount"];
+            this.totalValue = _data["totalValue"];
+            this.daysSinceLastSale = _data["daysSinceLastSale"];
+            this.recommendation = _data["recommendation"];
+        }
+    }
+
+    static fromJS(data: any): DeadStockDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeadStockDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["productName"] = this.productName;
+        data["categoryName"] = this.categoryName;
+        data["supplyCount"] = this.supplyCount;
+        data["totalValue"] = this.totalValue;
+        data["daysSinceLastSale"] = this.daysSinceLastSale;
+        data["recommendation"] = this.recommendation;
+        return data;
+    }
+}
+
+export interface IDeadStockDto {
+    productId?: number;
+    productName?: string;
+    categoryName?: string;
+    supplyCount?: number;
+    totalValue?: number;
+    daysSinceLastSale?: number;
+    recommendation?: string;
+}
+
+export class SmartInsightDto implements ISmartInsightDto {
+    title?: string;
+    message?: string;
+    severity?: string;
+
+    constructor(data?: ISmartInsightDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.message = _data["message"];
+            this.severity = _data["severity"];
+        }
+    }
+
+    static fromJS(data: any): SmartInsightDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SmartInsightDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["message"] = this.message;
+        data["severity"] = this.severity;
+        return data;
+    }
+}
+
+export interface ISmartInsightDto {
+    title?: string;
+    message?: string;
+    severity?: string;
+}
+
+export class GlobalKPIsDto implements IGlobalKPIsDto {
+    totalRevenue?: number;
+    totalOrders?: number;
+    totalCustomers?: number;
+    totalProducts?: number;
+    averageGapScore?: number;
+    criticalGapsCount?: number;
+    opportunityLossTotal?: number;
+    revenueTrend?: KpiRevenueTrendDto[];
+    topGaps?: CategoryGapAnalysisDto[];
+    gapLevelDistribution?: GapLevelCountDto[];
+    insights?: SmartInsightDto[];
+
+    constructor(data?: IGlobalKPIsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalRevenue = _data["totalRevenue"];
+            this.totalOrders = _data["totalOrders"];
+            this.totalCustomers = _data["totalCustomers"];
+            this.totalProducts = _data["totalProducts"];
+            this.averageGapScore = _data["averageGapScore"];
+            this.criticalGapsCount = _data["criticalGapsCount"];
+            this.opportunityLossTotal = _data["opportunityLossTotal"];
+            if (Array.isArray(_data["revenueTrend"])) {
+                this.revenueTrend = [] as any;
+                for (let item of _data["revenueTrend"])
+                    this.revenueTrend!.push(KpiRevenueTrendDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topGaps"])) {
+                this.topGaps = [] as any;
+                for (let item of _data["topGaps"])
+                    this.topGaps!.push(CategoryGapAnalysisDto.fromJS(item));
+            }
+            if (Array.isArray(_data["gapLevelDistribution"])) {
+                this.gapLevelDistribution = [] as any;
+                for (let item of _data["gapLevelDistribution"])
+                    this.gapLevelDistribution!.push(GapLevelCountDto.fromJS(item));
+            }
+            if (Array.isArray(_data["insights"])) {
+                this.insights = [] as any;
+                for (let item of _data["insights"])
+                    this.insights!.push(SmartInsightDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GlobalKPIsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GlobalKPIsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalRevenue"] = this.totalRevenue;
+        data["totalOrders"] = this.totalOrders;
+        data["totalCustomers"] = this.totalCustomers;
+        data["totalProducts"] = this.totalProducts;
+        data["averageGapScore"] = this.averageGapScore;
+        data["criticalGapsCount"] = this.criticalGapsCount;
+        data["opportunityLossTotal"] = this.opportunityLossTotal;
+        if (Array.isArray(this.revenueTrend)) {
+            data["revenueTrend"] = [];
+            for (let item of this.revenueTrend)
+                data["revenueTrend"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.topGaps)) {
+            data["topGaps"] = [];
+            for (let item of this.topGaps)
+                data["topGaps"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.gapLevelDistribution)) {
+            data["gapLevelDistribution"] = [];
+            for (let item of this.gapLevelDistribution)
+                data["gapLevelDistribution"].push(item ? item.toJSON() : undefined as any);
+        }
+        if (Array.isArray(this.insights)) {
+            data["insights"] = [];
+            for (let item of this.insights)
+                data["insights"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IGlobalKPIsDto {
+    totalRevenue?: number;
+    totalOrders?: number;
+    totalCustomers?: number;
+    totalProducts?: number;
+    averageGapScore?: number;
+    criticalGapsCount?: number;
+    opportunityLossTotal?: number;
+    revenueTrend?: KpiRevenueTrendDto[];
+    topGaps?: CategoryGapAnalysisDto[];
+    gapLevelDistribution?: GapLevelCountDto[];
+    insights?: SmartInsightDto[];
+}
+
+export class KpiRevenueTrendDto implements IKpiRevenueTrendDto {
+    month?: string;
+    revenue?: number;
+
+    constructor(data?: IKpiRevenueTrendDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.month = _data["month"];
+            this.revenue = _data["revenue"];
+        }
+    }
+
+    static fromJS(data: any): KpiRevenueTrendDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new KpiRevenueTrendDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["month"] = this.month;
+        data["revenue"] = this.revenue;
+        return data;
+    }
+}
+
+export interface IKpiRevenueTrendDto {
+    month?: string;
+    revenue?: number;
+}
+
+export class GapLevelCountDto implements IGapLevelCountDto {
+    level?: string;
+    count?: number;
+
+    constructor(data?: IGapLevelCountDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.level = _data["level"];
+            this.count = _data["count"];
+        }
+    }
+
+    static fromJS(data: any): GapLevelCountDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GapLevelCountDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["level"] = this.level;
+        data["count"] = this.count;
+        return data;
+    }
+}
+
+export interface IGapLevelCountDto {
+    level?: string;
+    count?: number;
 }
 
 export class SalesTrendDto implements ISalesTrendDto {
