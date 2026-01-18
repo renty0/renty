@@ -63,5 +63,12 @@ public static class GapAnalysisEndpoints
             await sender.Send(new GetSmartInsightsQuery()))
             .WithName("GetSmartInsights")
             .Produces<List<Application.Common.Models.SmartInsightDto>>(StatusCodes.Status200OK);
+        group.MapPost("trigger", async (Application.Common.Interfaces.IGapAnalysisService service) =>
+        {
+            await service.RunAnalysisAsync();
+            return Results.Ok(new { message = "Analysis triggered and results updated." });
+        })
+        .WithName("TriggerGapAnalysis")
+        .Produces(StatusCodes.Status200OK);
     }
 }

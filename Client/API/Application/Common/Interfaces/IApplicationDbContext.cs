@@ -20,5 +20,6 @@ public interface IApplicationDbContext
     DbSet<RentRequest> RentRequests { get; }
     DbSet<MediaFile> MediaFiles { get; }
     DbSet<ProductImage> ProductImages { get; }
+    DbSet<GapAnalysisResult> GapAnalysisResults { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

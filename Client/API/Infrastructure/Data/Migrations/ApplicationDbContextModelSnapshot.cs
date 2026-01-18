@@ -311,6 +311,45 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Customers", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.GapAnalysisResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Demand")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("GapScore")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("GapStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("NormalizedGap")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Supply")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GapAnalysisResults");
+                });
+
             modelBuilder.Entity("Domain.Entities.MediaFile", b =>
                 {
                     b.Property<Guid>("Id")

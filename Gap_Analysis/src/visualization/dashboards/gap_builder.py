@@ -26,7 +26,7 @@ def prepare_gap_summary(gap_df: pd.DataFrame, supply_col: str = 'UniqueProducts'
 def export_gap_summary(summary_df: pd.DataFrame, output_dir: str = None) -> tuple:
     """Export gap summary to CSV and JSON."""
     if output_dir is None:
-        output_dir = Path(__file__).parent.parent.parent / "results" / "data"
+        output_dir = Path(__file__).parent.parent.parent.parent / "results" / "data"
     
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

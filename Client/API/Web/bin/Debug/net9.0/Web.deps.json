@@ -1046,11 +1046,11 @@
           }
         }
       },
-      "SixLabors.ImageSharp/3.1.5": {
+      "SixLabors.ImageSharp/3.1.6": {
         "runtime": {
           "lib/net6.0/SixLabors.ImageSharp.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.1.5.0"
+            "fileVersion": "3.1.6.0"
           }
         }
       },
@@ -1308,7 +1308,7 @@
           "EPPlus": "7.0.0",
           "FluentValidation.DependencyInjectionExtensions": "12.1.1",
           "MediatR": "12.4.1",
-          "SixLabors.ImageSharp": "3.1.5"
+          "SixLabors.ImageSharp": "3.1.6"
         },
         "runtime": {
           "Application.dll": {
@@ -1907,12 +1907,12 @@
       "path": "nswag.generation.aspnetcore/14.6.3",
       "hashPath": "nswag.generation.aspnetcore.14.6.3.nupkg.sha512"
     },
-    "SixLabors.ImageSharp/3.1.5": {
+    "SixLabors.ImageSharp/3.1.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lNtlq7dSI/QEbYey+A0xn48z5w4XHSffF8222cC4F4YwTXfEImuiBavQcWjr49LThT/pRmtWJRcqA/PlL+eJ6g==",
-      "path": "sixlabors.imagesharp/3.1.5",
-      "hashPath": "sixlabors.imagesharp.3.1.5.nupkg.sha512"
+      "sha512": "sha512-dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA==",
+      "path": "sixlabors.imagesharp/3.1.6",
+      "hashPath": "sixlabors.imagesharp.3.1.6.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",

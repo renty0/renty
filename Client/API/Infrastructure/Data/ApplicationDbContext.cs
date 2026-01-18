@@ -27,6 +27,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<RentRequest> RentRequests => Set<RentRequest>();
     public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+    public DbSet<GapAnalysisResult> GapAnalysisResults => Set<GapAnalysisResult>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

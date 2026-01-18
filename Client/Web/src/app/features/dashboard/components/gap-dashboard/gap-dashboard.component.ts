@@ -5,13 +5,14 @@ import { ChartModule } from 'primeng/chart';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 import { Gap_AnalysisClient, GapAnalysisSummaryDto, DeadStockDto, GapActionPlanDto, KPIsClient, GlobalKPIsDto } from '../../../../core/api/api-client';
 import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
     selector: 'app-gap-dashboard',
     standalone: true,
-    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TableModule, TagModule],
+    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TableModule, TagModule, ButtonModule],
     templateUrl: './gap-dashboard.component.html',
     styleUrl: './gap-dashboard.component.scss'
 })
@@ -28,8 +29,27 @@ export class GapDashboardComponent implements OnInit {
     actions = signal<string[]>([]);
     kpiData = signal<GlobalKPIsDto | null>(null);
 
+    isAnalyzing = signal(false);
+
     ngOnInit() {
         this.loadGapData();
+    }
+
+    triggerAnalysis() {
+        this.isAnalyzing.set(true);
+        this.gapClient.triggerGapAnalysis().subscribe({
+            next: () => {
+                this.toast.showSuccess('Analysis triggered successfully');
+                setTimeout(() => {
+                    this.loadGapData();
+                    this.isAnalyzing.set(false);
+                }, 2000);
+            },
+            error: () => {
+                this.toast.showError('Failed to trigger analysis');
+                this.isAnalyzing.set(false);
+            }
+        });
     }
 
     private loadGapData() {
