@@ -4664,6 +4664,50 @@ export class Gap_AnalysisClient {
         }
         return _observableOf(null as any);
     }
+
+    triggerGapAnalysis(): Observable<void> {
+        let url_ = this.baseUrl + "/api/gap-analysis/trigger";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTriggerGapAnalysis(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTriggerGapAnalysis(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTriggerGapAnalysis(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -8952,6 +8996,7 @@ export class TerritoryGapAnalysisDto implements ITerritoryGapAnalysisDto {
     uniqueOrders?: number;
     totalQuantitySold?: number;
     uniqueCustomers?: number;
+    gapScore?: number;
 
     constructor(data?: ITerritoryGapAnalysisDto) {
         if (data) {
@@ -8972,6 +9017,7 @@ export class TerritoryGapAnalysisDto implements ITerritoryGapAnalysisDto {
             this.uniqueOrders = _data["uniqueOrders"];
             this.totalQuantitySold = _data["totalQuantitySold"];
             this.uniqueCustomers = _data["uniqueCustomers"];
+            this.gapScore = _data["gapScore"];
         }
     }
 
@@ -8992,6 +9038,7 @@ export class TerritoryGapAnalysisDto implements ITerritoryGapAnalysisDto {
         data["uniqueOrders"] = this.uniqueOrders;
         data["totalQuantitySold"] = this.totalQuantitySold;
         data["uniqueCustomers"] = this.uniqueCustomers;
+        data["gapScore"] = this.gapScore;
         return data;
     }
 }
@@ -9005,6 +9052,7 @@ export interface ITerritoryGapAnalysisDto {
     uniqueOrders?: number;
     totalQuantitySold?: number;
     uniqueCustomers?: number;
+    gapScore?: number;
 }
 
 export class GapAnalysisSummaryDto implements IGapAnalysisSummaryDto {
@@ -9016,6 +9064,7 @@ export class GapAnalysisSummaryDto implements IGapAnalysisSummaryDto {
     mostSevereScore?: number;
     totalSupply?: number;
     totalDemand?: number;
+    categoryGaps?: CategoryGapScoreDto[];
 
     constructor(data?: IGapAnalysisSummaryDto) {
         if (data) {
@@ -9036,6 +9085,11 @@ export class GapAnalysisSummaryDto implements IGapAnalysisSummaryDto {
             this.mostSevereScore = _data["mostSevereScore"];
             this.totalSupply = _data["totalSupply"];
             this.totalDemand = _data["totalDemand"];
+            if (Array.isArray(_data["categoryGaps"])) {
+                this.categoryGaps = [] as any;
+                for (let item of _data["categoryGaps"])
+                    this.categoryGaps!.push(CategoryGapScoreDto.fromJS(item));
+            }
         }
     }
 
@@ -9056,6 +9110,11 @@ export class GapAnalysisSummaryDto implements IGapAnalysisSummaryDto {
         data["mostSevereScore"] = this.mostSevereScore;
         data["totalSupply"] = this.totalSupply;
         data["totalDemand"] = this.totalDemand;
+        if (Array.isArray(this.categoryGaps)) {
+            data["categoryGaps"] = [];
+            for (let item of this.categoryGaps)
+                data["categoryGaps"].push(item ? item.toJSON() : undefined as any);
+        }
         return data;
     }
 }
@@ -9069,6 +9128,59 @@ export interface IGapAnalysisSummaryDto {
     mostSevereScore?: number;
     totalSupply?: number;
     totalDemand?: number;
+    categoryGaps?: CategoryGapScoreDto[];
+}
+
+export class CategoryGapScoreDto implements ICategoryGapScoreDto {
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+    supplyCount?: number;
+    demandCount?: number;
+
+    constructor(data?: ICategoryGapScoreDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryName = _data["categoryName"];
+            this.gapScore = _data["gapScore"];
+            this.gapLevel = _data["gapLevel"];
+            this.supplyCount = _data["supplyCount"];
+            this.demandCount = _data["demandCount"];
+        }
+    }
+
+    static fromJS(data: any): CategoryGapScoreDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryGapScoreDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryName"] = this.categoryName;
+        data["gapScore"] = this.gapScore;
+        data["gapLevel"] = this.gapLevel;
+        data["supplyCount"] = this.supplyCount;
+        data["demandCount"] = this.demandCount;
+        return data;
+    }
+}
+
+export interface ICategoryGapScoreDto {
+    categoryName?: string;
+    gapScore?: number;
+    gapLevel?: string;
+    supplyCount?: number;
+    demandCount?: number;
 }
 
 export class GapActionPlanDto implements IGapActionPlanDto {
@@ -9325,50 +9437,6 @@ export class GeographicHeatmapDto implements IGeographicHeatmapDto {
 export interface IGeographicHeatmapDto {
     territoryName?: string;
     categoryGaps?: CategoryGapScoreDto[];
-}
-
-export class CategoryGapScoreDto implements ICategoryGapScoreDto {
-    categoryName?: string;
-    gapScore?: number;
-    gapLevel?: string;
-
-    constructor(data?: ICategoryGapScoreDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.categoryName = _data["categoryName"];
-            this.gapScore = _data["gapScore"];
-            this.gapLevel = _data["gapLevel"];
-        }
-    }
-
-    static fromJS(data: any): CategoryGapScoreDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CategoryGapScoreDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
-        data["gapScore"] = this.gapScore;
-        data["gapLevel"] = this.gapLevel;
-        return data;
-    }
-}
-
-export interface ICategoryGapScoreDto {
-    categoryName?: string;
-    gapScore?: number;
-    gapLevel?: string;
 }
 
 export class DeadStockDto implements IDeadStockDto {

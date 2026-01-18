@@ -18,48 +18,51 @@ public class GetGapAnalysisSummaryQueryHandler : IRequestHandler<GetGapAnalysisS
 
     public async Task<GapAnalysisSummaryDto> Handle(GetGapAnalysisSummaryQuery request, CancellationToken cancellationToken)
     {
-        var categoryData = await _context.ProductCategories
-            .Select(c => new
-            {
-                c.CategoryName,
-                UniqueProducts = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
-                TotalQuantitySold = _context.Sales
-                    .Where(s => s.Product.Subcategory.ProductCategoryId == c.Id)
-                    .Sum(s => s.OrderQuantity)
-            })
+        // Get the latest batch
+        var latestBatch = await _context.GapAnalysisResults
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => r.BatchId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (latestBatch == Guid.Empty)
+        {
+            return new GapAnalysisSummaryDto(0, 0, 0, 0, "", 0, 0, 0, new List<CategoryGapScoreDto>());
+        }
+
+        var results = await _context.GapAnalysisResults
+            .Where(r => r.BatchId == latestBatch)
             .ToListAsync(cancellationToken);
 
-        var totalCategories = categoryData.Count;
-        if (totalCategories == 0) return new GapAnalysisSummaryDto(0, 0, 0, 0, "", 0, 0, 0, new List<CategoryGapScoreDto>());
-
-        var gapData = categoryData.Select(c => new
-        {
-            c.CategoryName,
-            c.UniqueProducts,
-            c.TotalQuantitySold,
-            GapScore = Math.Round(c.UniqueProducts > 0 ? (decimal)c.TotalQuantitySold / c.UniqueProducts : (decimal)c.TotalQuantitySold, 2)
-        }).ToList();
-
-        var criticalGaps = gapData.Where(g => g.GapScore >= 5).ToList();
-        var mostSevere = gapData.OrderByDescending(g => g.GapScore).FirstOrDefault();
-
-        var categoryGapsList = gapData.Select(g => new CategoryGapScoreDto(
-            g.CategoryName, 
-            g.GapScore, 
-            g.GapScore < 1 ? "Low" : g.GapScore < 2 ? "Moderate" : g.GapScore < 5 ? "High" : "Critical",
-            g.UniqueProducts,
-            g.TotalQuantitySold
+        var totalCategories = results.Count;
+        var criticalGaps = results.Where(r => r.GapStatus == "Critical Gap" || r.GapStatus == "High Gap").ToList(); // Adjust logic to match python classification if needed
+        // Python: <50 Low, <100 Mod, <200 High, >=200 Critical.
+        // Wait, Python gap score is > 1. Here existing C# logic was using small decimals?
+        // Python script: (Demand+1)/(Supply+1). If Demand=100, Supply=1, Ratio=~50.
+        // Existing C# logic: TotalQuantity / UniqueProducts. Similar ratio.
+        // Python Check: classify_gap_level -> score < 50 Low.
+        
+        // Let's rely on the GapStatus string from Python which is stored in DB.
+        var criticalCount = results.Count(r => r.GapStatus == "Critical Gap" || r.GapStatus == "High Gap");
+        
+        var mostSevere = results.OrderByDescending(r => r.GapScore).FirstOrDefault();
+        
+        var categoryGapsList = results.Select(r => new CategoryGapScoreDto(
+            r.Category,
+            (decimal)r.GapScore,
+            r.GapStatus,
+            r.Supply,
+            r.Demand
         )).ToList();
 
         return new GapAnalysisSummaryDto(
             totalCategories,
-            criticalGaps.Count,
-            totalCategories > 0 ? Math.Round((decimal)criticalGaps.Count / totalCategories * 100, 2) : 0,
-            Math.Round(gapData.Average(g => g.GapScore), 2),
-            mostSevere?.CategoryName ?? "",
-            mostSevere?.GapScore ?? 0,
-            categoryData.Sum(c => c.UniqueProducts),
-            categoryData.Sum(c => c.TotalQuantitySold),
+            criticalCount,
+            totalCategories > 0 ? Math.Round((decimal)criticalCount / totalCategories * 100, 2) : 0,
+            results.Any() ? Math.Round((decimal)results.Average(r => r.GapScore), 2) : 0,
+            mostSevere?.Category ?? "",
+            mostSevere != null ? (decimal)mostSevere.GapScore : 0,
+            results.Sum(r => r.Supply),
+            results.Sum(r => r.Demand),
             categoryGapsList
         );
     }
