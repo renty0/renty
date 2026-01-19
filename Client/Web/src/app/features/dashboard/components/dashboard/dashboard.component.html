@@ -1,8 +1,8 @@
 <div class="admin-dashboard">
     <div class="dashboard-header">
-        <h1 class="dashboard-title">Intelligence Center</h1>
+        <h1 class="dashboard-title">{{ 'dashboard.title' | translate }}</h1>
         <div class="header-actions">
-            <span class="last-sync">Last updated: {{ 0 | date:'shortTime' }}</span>
+            <span class="last-sync">{{ 'dashboard.lastUpdated' | translate }}: {{ 0 | date:'shortTime' }}</span>
         </div>
     </div>
 
@@ -10,15 +10,15 @@
         <p-tablist>
             <p-tab [value]="0">
                 <i class="pi pi-chart-bar mr-2"></i>
-                <span>KPI Overview</span>
+                <span>{{ 'dashboard.tabs.kpi' | translate }}</span>
             </p-tab>
             <p-tab [value]="1">
                 <i class="pi pi-map-marker mr-2"></i>
-                <span>Gap Analysis</span>
+                <span>{{ 'dashboard.tabs.gap' | translate }}</span>
             </p-tab>
             <p-tab [value]="2">
                 <i class="pi pi-bolt mr-2"></i>
-                <span>Deep Analytics</span>
+                <span>{{ 'dashboard.tabs.analytics' | translate }}</span>
             </p-tab>
         </p-tablist>
 

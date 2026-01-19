@@ -4,19 +4,21 @@ import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { AnalyticsClient, SalesTrendDto, CustomerDemographicsDto, InventoryStatsDto, ProductDto } from '../../../../core/api/api-client';
+import { AnalyticsClient, SalesTrendDto, CustomerDemographicsDto, InventoryStatsDto } from '../../../../core/api/api-client';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-analytics-dashboard',
     standalone: true,
-    imports: [CommonModule, CardModule, ChartModule, TableModule, TagModule],
+    imports: [CommonModule, CardModule, ChartModule, TableModule, TagModule, TranslateModule],
     templateUrl: './analytics-dashboard.component.html',
     styleUrl: './analytics-dashboard.component.scss'
 })
 export class AnalyticsDashboardComponent implements OnInit {
     private readonly analyticsClient = inject(AnalyticsClient);
     private readonly toast = inject(ToastService);
+    private readonly translate = inject(TranslateService);
 
     loading = signal(true);
     salesTrends = signal<SalesTrendDto[]>([]);
@@ -41,7 +43,7 @@ export class AnalyticsDashboardComponent implements OnInit {
                 this.salesTrends.set(data || []);
                 this.prepareSalesChart(data || []);
             },
-            error: () => this.toast.showError('Failed to load sales trends')
+            error: () => this.toast.showError(this.translate.instant('dashboard.analytics.errors.loadSalesFailed'))
         });
 
         this.analyticsClient.getCustomerDemographics().subscribe({
@@ -49,7 +51,7 @@ export class AnalyticsDashboardComponent implements OnInit {
                 this.demographics.set(data);
                 this.prepareDemographicsCharts(data);
             },
-            error: () => this.toast.showError('Failed to load demographics')
+            error: () => this.toast.showError(this.translate.instant('dashboard.analytics.errors.loadDemographicsFailed'))
         });
 
         this.analyticsClient.getInventoryStats().subscribe({
@@ -69,12 +71,12 @@ export class AnalyticsDashboardComponent implements OnInit {
                 }
                 this.computedUtilization.set(share);
             },
-            error: () => this.toast.showError('Failed to load inventory stats')
+            error: () => this.toast.showError(this.translate.instant('dashboard.analytics.errors.loadInventoryFailed'))
         });
 
         this.analyticsClient.getProductPerformance(10).subscribe({
             next: (data: any) => this.topProducts.set(data.topProducts || []),
-            error: () => this.toast.showError('Failed to load top products'),
+            error: () => this.toast.showError(this.translate.instant('dashboard.analytics.errors.loadTopProductsFailed')),
             complete: () => this.loading.set(false)
         });
     }
@@ -84,7 +86,7 @@ export class AnalyticsDashboardComponent implements OnInit {
             labels: trends.map(t => t.period),
             datasets: [
                 {
-                    label: 'Revenue',
+                    label: this.translate.instant('dashboard.analytics.revenue'),
                     data: trends.map(t => t.totalRevenue),
                     borderColor: '#42A5F5',
                     fill: false,
@@ -105,7 +107,6 @@ export class AnalyticsDashboardComponent implements OnInit {
             });
         }
 
-        // Using Occupation Breakdown instead of Income as Income is not available in DTO
         if (data.occupationBreakdown) {
             this.incomeChartData.set({
                 labels: data.occupationBreakdown.map(x => x.category),

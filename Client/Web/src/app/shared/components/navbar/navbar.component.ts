@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, HostListener } from '@angular/core';
+import { Component, inject, OnInit, signal, HostListener, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,14 +36,26 @@ export class NavbarComponent implements OnInit {
     isScrolled = signal(false);
     mobileMenuOpen = signal(false);
 
-    navLinks = [
-        { path: '/', labelKey: 'nav.home', icon: 'home' },
-        { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag' },
-        { path: '/categories', labelKey: 'nav.categories', icon: 'category' },
-        { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree' },
-        { path: '/products', labelKey: 'nav.products', icon: 'inventory_2' },
-        { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'inventory_2' }
+    private allNavLinks = [
+        { path: '/', labelKey: 'nav.home', icon: 'home', public: true },
+        { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
+        { path: '/categories', labelKey: 'nav.categories', icon: 'category', adminOnly: true },
+        { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', adminOnly: true },
+        { path: '/products', labelKey: 'nav.products', icon: 'inventory_2', adminOnly: true },
+        { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard', adminOnly: true }
     ];
+
+    filteredNavLinks = computed(() => {
+        const loggedIn = this.isLoggedIn();
+        const isAdmin = this.authService.isAdmin();
+
+        return this.allNavLinks.filter(link => {
+            if (link.public) return true;
+            if (link.adminOnly) return loggedIn && isAdmin;
+            if (link.authRequired) return loggedIn;
+            return true;
+        });
+    });
 
     @HostListener('window:scroll', [])
     onWindowScroll() {

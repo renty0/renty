@@ -1,0 +1,136 @@
+<div class="marketplace-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>{{ 'marketplace.hero_title' | translate }}</h1>
+            <p>{{ 'marketplace.hero_subtitle' | translate }}</p>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <mat-icon>tune</mat-icon>
+                    {{ 'marketplace.filters' | translate }}
+                </h3>
+                @if (searchTerm() || selectedCategoryId()) {
+                <button mat-button color="warn" (click)="onFilterReset()" class="reset-btn">
+                    {{ 'marketplace.clearFilters' | translate }}
+                </button>
+                }
+            </div>
+
+            <!-- Search -->
+            <div class="search-box">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ 'marketplace.search_placeholder' | translate }}</mat-label>
+                    <mat-icon matPrefix>search</mat-icon>
+                    <input matInput [ngModel]="searchTerm()" (input)="searchTerm.set($any($event.target).value)">
+                </mat-form-field>
+            </div>
+
+            <!-- Categories -->
+            <div class="filters-group">
+                <h4>{{ 'marketplace.categories' | translate }}</h4>
+                @if (isLoadingCategories()) {
+                <div class="sidebar-loader">
+                    <mat-spinner diameter="24"></mat-spinner>
+                </div>
+                } @else {
+                <div class="category-list">
+                    <div class="category-item" [class.active]="selectedCategoryId() === undefined"
+                        (click)="selectedCategoryId.set(undefined)">
+                        {{ 'marketplace.all_categories' | translate }}
+                    </div>
+                    @for (cat of categories(); track cat.id) {
+                    <div class="category-item" [class.active]="selectedCategoryId() === cat.id"
+                        (click)="selectedCategoryId.set(cat.id)">
+                        {{ cat.categoryName }}
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Subcategories -->
+            @if (selectedCategoryId() && subcategories().length > 0) {
+            <div class="filters-group sub-group">
+                <h4>{{ 'marketplace.subcategories' | translate }}</h4>
+                <mat-form-field appearance="outline">
+                    <mat-select [ngModel]="selectedSubcategoryId()" (ngModelChange)="selectedSubcategoryId.set($event)">
+                        <mat-option [value]="undefined">{{ 'marketplace.all_subcategories' | translate }}</mat-option>
+                        @for (sub of subcategories(); track sub.id) {
+                        <mat-option [value]="sub.id">{{ sub.subcategoryName }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            }
+        </aside>
+
+        <!-- Product Grid -->
+        <main class="products-section">
+            <header class="section-header">
+                <div class="header-info">
+                    <h2>{{ 'marketplace.products' | translate }}</h2>
+                    <span class="count-badge">
+                        {{ totalCount() }} {{ 'marketplace.results' | translate }}
+                    </span>
+                </div>
+            </header>
+
+            @if (isLoadingProducts()) {
+            <div class="main-loader">
+                <mat-spinner diameter="48"></mat-spinner>
+            </div>
+            } @else if (products().length === 0) {
+            <div class="empty-state">
+                <mat-icon>sentiment_dissatisfied</mat-icon>
+                <h3>{{ 'marketplace.noProductsFound' | translate }}</h3>
+                <button mat-flat-button color="primary" (click)="onFilterReset()">
+                    {{ 'marketplace.view_all_products' | translate }}
+                </button>
+            </div>
+            } @else {
+            <div class="products-grid">
+                @for (product of products(); track product.id) {
+                <div class="product-card" [routerLink]="['/marketplace/product', product.id]">
+                    <div class="card-image">
+                        <img [src]="product.primaryImageUrl || 'assets/images/placeholder.png'"
+                            [alt]="product.productName">
+                        @if (product.discountPrice) {
+                        <div class="sale-badge">SALE</div>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <span class="category-name">{{ product.categoryName }}</span>
+                        <h3 class="product-name">{{ product.productName }}</h3>
+                        <div class="price-footer">
+                            <div class="price-box">
+                                @if (product.discountPrice) {
+                                <span class="original-price">{{ product.productPrice | currency }}</span>
+                                <span class="final-price">{{ product.discountPrice| currency }}</span>
+                                } @else {
+                                <span class="final-price">{{ product.productPrice | currency }}</span>
+                                }
+                            </div>
+                            <button mat-icon-button class="view-btn">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <div class="pagination-container">
+                <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageSizeOptions]="[12, 24, 48, 96]"
+                    (page)="onPageChange($event)">
+                </mat-paginator>
+            </div>
+            }
+        </main>
+    </div>
+</div>

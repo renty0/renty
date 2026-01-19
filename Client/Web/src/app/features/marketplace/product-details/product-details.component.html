@@ -1,0 +1,112 @@
+<div class="product-details-container">
+    @if (isLoading()) {
+    <div class="loading-container">
+        <mat-spinner></mat-spinner>
+    </div>
+    } @else if (product()) {
+    <div class="content-wrapper">
+        <!-- Back Button -->
+        <a mat-button class="back-link" routerLink="/marketplace">
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'product_details.backToMarketplace' | translate }}
+        </a>
+
+        <div class="product-layout">
+            <!-- Left: Image Gallery -->
+            <div class="gallery-section">
+                <div class="main-image">
+                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="product()?.productName">
+                </div>
+                @if (product()?.images?.length) {
+                <div class="thumbnails">
+                    @for (img of product()?.images; track img.id) {
+                    <div class="thumb" [class.active]="selectedImage() === img.imageUrl"
+                        (click)="selectedImage.set(img.imageUrl)">
+                        <img [src]="img.imageUrl" alt="Thumbnail">
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Right: Product Info -->
+            <div class="info-section">
+                <div class="header">
+                    <span class="category-badge">{{ product()?.categoryName }} / {{ product()?.subcategoryName }}</span>
+                    <h1>{{ product()?.productName }}</h1>
+                    <div class="sku">SKU: {{ product()?.productSku }}</div>
+                </div>
+
+                <div class="price-section">
+                    @if (product()?.discountPrice) {
+                    <div class="original-price">{{ product()?.productPrice | currency }}</div>
+                    <div class="current-price sale">{{ product()?.effectivePrice | currency }}</div>
+                    } @else {
+                    <div class="current-price">{{ product()?.productPrice | currency }}</div>
+                    }
+                </div>
+
+                <p class="short-desc">{{ product()?.productDescription }}</p>
+
+                <div class="actions">
+                    <button mat-flat-button color="primary" class="add-to-cart-btn">
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        {{ 'product_details.addToCart' | translate }}
+                    </button>
+                    <button mat-stroked-button color="accent">
+                        {{ 'product_details.rentNow' | translate }}
+                    </button>
+                </div>
+
+                <mat-tab-group class="details-tabs">
+                    <mat-tab [label]="'product_details.description' | translate">
+                        <div class="tab-content">
+                            <p>{{ product()?.productDescription }}</p>
+                        </div>
+                    </mat-tab>
+                    <mat-tab [label]="'product_details.specifications' | translate">
+                        <div class="tab-content specs-list">
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.color' | translate }}</span>
+                                <span class="value">{{ product()?.productColor || '-' }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.model' | translate }}</span>
+                                <span class="value">{{ product()?.modelName || '-' }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.style' | translate }}</span>
+                                <span class="value">{{ product()?.productStyle || '-' }}</span>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+
+    @if (relatedProducts().length > 0) {
+    <div class="related-products">
+        <h2>{{ 'product_details.relatedProducts' | translate }}</h2>
+        <div class="products-row">
+            @for (item of relatedProducts(); track item.id) {
+            <div class="product-card mini" [routerLink]="['/marketplace/product', item.id]">
+                <div class="img-container">
+                    <img [src]="item.primaryImageUrl || 'assets/images/placeholder.png'" [alt]="item.productName">
+                </div>
+                <div class="info">
+                    <h3>{{ item.productName }}</h3>
+                    <div class="price">{{ (item.discountPrice || item.productPrice) | currency }}</div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    } @else {
+    <div class="not-found">
+        <h2>{{ 'product_details.notFound' | translate }}</h2>
+        <button mat-button routerLink="/marketplace">{{ 'product_details.backToMarketplace' | translate }}</button>
+    </div>
+    }
+</div>

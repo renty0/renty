@@ -6,17 +6,20 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { KPIsClient, GlobalKPIsDto } from '../../../../core/api/api-client';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-kpi-dashboard',
     standalone: true,
-    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TagModule],
+    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TagModule, TranslateModule],
     templateUrl: './kpi-dashboard.component.html',
     styleUrl: './kpi-dashboard.component.scss'
 })
 export class KpiDashboardComponent implements OnInit {
     private readonly kpiClient = inject(KPIsClient);
     private readonly toast = inject(ToastService);
+    private readonly translate = inject(TranslateService);
 
     loading = signal(true);
     kpiData = signal<GlobalKPIsDto | null>(null);
@@ -39,7 +42,7 @@ export class KpiDashboardComponent implements OnInit {
                 this.loading.set(false);
             },
             error: (err) => {
-                this.toast.showError('Failed to load KPI data');
+                this.toast.showError(this.translate.instant('dashboard.kpi.errors.failedLoad'));
                 this.loading.set(false);
             }
         });
@@ -52,7 +55,7 @@ export class KpiDashboardComponent implements OnInit {
             labels: data.revenueTrend.map(t => t.month),
             datasets: [
                 {
-                    label: 'Revenue',
+                    label: this.translate.instant('dashboard.kpi.revenue'),
                     data: data.revenueTrend.map(t => t.revenue),
                     borderColor: '#42A5F5',
                     backgroundColor: 'rgba(66, 165, 245, 0.2)',
@@ -67,7 +70,7 @@ export class KpiDashboardComponent implements OnInit {
                 labels: ((data as any).orderTrend || []).map((t: any) => t.period),
                 datasets: [
                     {
-                        label: 'Orders',
+                        label: this.translate.instant('dashboard.kpi.orders'),
                         data: ((data as any).orderTrend || []).map((t: any) => t.value),
                         borderColor: '#66BB6A',
                         backgroundColor: 'rgba(102, 187, 106, 0.2)',
