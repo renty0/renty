@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
 import { NotFound } from './shared/components/not-found/not-found';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 import { AuthRoutes } from './features/auth/routes/auth.routes';
 import { HomeComponent } from './features/home/components/home/home.component';
 import { CategoriesRoutes } from './features/categories/categories.routes';
 import { SubcategoriesRoutes } from './features/subcategories/subcategories.routes';
 import { ProductsRoutes } from './features/products/products.routes';
 import { DashboardRoutes } from './features/dashboard/dashboard.routes';
+import { ProductDetailsComponent } from './features/marketplace/product-details/product-details.component';
+import { MarketplaceComponent } from './features/marketplace/marketplace.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   ...AuthRoutes,
@@ -15,8 +19,18 @@ export const routes: Routes = [
   ...ProductsRoutes,
   ...DashboardRoutes,
   {
+    path: 'marketplace/product/:id',
+    component: ProductDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'marketplace',
+    component: MarketplaceComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'profile',
-    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
+    component: ProfileComponent,
     canActivate: [AuthGuard]
   },
   {

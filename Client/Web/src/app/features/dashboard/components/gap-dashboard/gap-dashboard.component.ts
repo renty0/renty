@@ -6,13 +6,14 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { Gap_AnalysisClient, GapAnalysisSummaryDto, DeadStockDto, GapActionPlanDto, KPIsClient, GlobalKPIsDto } from '../../../../core/api/api-client';
+import { Gap_AnalysisClient, GapAnalysisSummaryDto, DeadStockDto, KPIsClient, GlobalKPIsDto } from '../../../../core/api/api-client';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-gap-dashboard',
     standalone: true,
-    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TableModule, TagModule, ButtonModule],
+    imports: [CommonModule, CardModule, ChartModule, SkeletonModule, TableModule, TagModule, ButtonModule, TranslateModule],
     templateUrl: './gap-dashboard.component.html',
     styleUrl: './gap-dashboard.component.scss'
 })
@@ -20,6 +21,7 @@ export class GapDashboardComponent implements OnInit {
     private readonly gapClient = inject(Gap_AnalysisClient);
     private readonly kpiClient = inject(KPIsClient);
     private readonly toast = inject(ToastService);
+    private readonly translate = inject(TranslateService);
 
     loading = signal(true);
     summary = signal<GapAnalysisSummaryDto | null>(null);
@@ -39,14 +41,14 @@ export class GapDashboardComponent implements OnInit {
         this.isAnalyzing.set(true);
         this.gapClient.triggerGapAnalysis().subscribe({
             next: () => {
-                this.toast.showSuccess('Analysis triggered successfully');
+                this.toast.showSuccess(this.translate.instant('dashboard.gap.messages.analysisSuccess'));
                 setTimeout(() => {
                     this.loadGapData();
                     this.isAnalyzing.set(false);
                 }, 2000);
             },
             error: () => {
-                this.toast.showError('Failed to trigger analysis');
+                this.toast.showError(this.translate.instant('dashboard.gap.messages.analysisFailed'));
                 this.isAnalyzing.set(false);
             }
         });
@@ -55,7 +57,7 @@ export class GapDashboardComponent implements OnInit {
     private loadGapData() {
         this.kpiClient.getGlobalKPIs().subscribe({
             next: (data) => this.kpiData.set(data),
-            error: () => this.toast.showError('Failed to load KPI data')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadKpiFailed'))
         });
 
         this.gapClient.getGapAnalysisSummary().subscribe({
@@ -63,22 +65,22 @@ export class GapDashboardComponent implements OnInit {
                 this.summary.set(data);
                 this.loading.set(false);
             },
-            error: () => this.toast.showError('Failed to load gap summary')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadSummaryFailed'))
         });
 
         this.gapClient.getCategoryGapAnalysis().subscribe({
             next: (data) => this.prepareGapChart(data || []),
-            error: () => this.toast.showError('Failed to load category analysis')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadCategoryFailed'))
         });
 
         this.gapClient.getTerritoryGapAnalysis().subscribe({
             next: (data) => this.prepareHeatmap(data || []),
-            error: () => this.toast.showError('Failed to load territory analysis')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadTerritoryFailed'))
         });
 
         this.gapClient.getDeadStockAnalysis().subscribe({
             next: (data) => this.deadStock.set(data || []),
-            error: () => this.toast.showError('Failed to load dead stock')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadDeadStockFailed'))
         });
 
         this.gapClient.getGapAnalysisActionPlan().subscribe({
@@ -91,7 +93,7 @@ export class GapDashboardComponent implements OnInit {
                 ]);
                 this.actions.set([...new Set(allActions)]);
             },
-            error: () => this.toast.showError('Failed to load actions')
+            error: () => this.toast.showError(this.translate.instant('dashboard.gap.messages.loadActionsFailed'))
         });
     }
 
@@ -100,12 +102,12 @@ export class GapDashboardComponent implements OnInit {
             labels: gaps.map(g => g.categoryName),
             datasets: [
                 {
-                    label: 'Demand (Orders)',
+                    label: this.translate.instant('dashboard.gap.demand'),
                     backgroundColor: '#42A5F5',
                     data: gaps.map(g => g.uniqueOrders ?? g.totalQuantitySold ?? 0)
                 },
                 {
-                    label: 'Supply (Unique Items)',
+                    label: this.translate.instant('dashboard.gap.supply'),
                     backgroundColor: '#66BB6A',
                     data: gaps.map(g => g.uniqueProducts ?? g.supplyCount ?? 0)
                 }
@@ -114,7 +116,6 @@ export class GapDashboardComponent implements OnInit {
     }
 
     private prepareHeatmap(data: any[]) {
-        // Group by region and average the gap score
         const regionalGroups = data.reduce((acc: any, curr: any) => {
             const region = curr.region || 'Unknown';
             if (!acc[region]) {
@@ -128,7 +129,6 @@ export class GapDashboardComponent implements OnInit {
         const regions = Object.keys(regionalGroups);
         let avgGapScores = regions.map(r => regionalGroups[r].sum / regionalGroups[r].count);
 
-        // If data is missing gapScore (as in the provided JSON), use uniqueOrders and normalize it
         if (avgGapScores.every(v => v === 0)) {
             const volumes = regions.map(r => data.filter(d => (d.region || 'Unknown') === r).reduce((s, c) => s + (c.uniqueOrders || 0), 0));
             const maxVol = Math.max(...volumes) || 1;
@@ -138,7 +138,7 @@ export class GapDashboardComponent implements OnInit {
         this.territoryHeatmapData.set({
             labels: regions,
             datasets: [{
-                label: 'Avg Regional Demand Score',
+                label: this.translate.instant('dashboard.gap.regionalDemandScore'),
                 data: avgGapScores,
                 backgroundColor: 'rgba(66, 165, 245, 0.2)',
                 borderColor: '#42A5F5',

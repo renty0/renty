@@ -12,12 +12,12 @@
     <div class="stats-grid">
         <p-card class="stat-card">
             <div class="stat-header">
-                <span class="stat-label">Total Revenue</span>
+                <span class="stat-label">{{ 'dashboard.kpi.totalRevenue' | translate }}</span>
                 <i class="pi pi-dollar stat-icon revenue"></i>
             </div>
             <div class="stat-value">${{ kpiData()!.totalRevenue | number:'1.0-0' }}</div>
             <div class="stat-footer">
-                <span class="trend positive">Target: $100k</span>
+                <span class="trend positive">{{ 'dashboard.kpi.revenueTarget' | translate }}: $100k</span>
             </div>
             <div class="mini-chart">
                 <p-chart type="line" [data]="revenueTrendData()" [options]="chartOptions" height="40px" />
@@ -26,12 +26,12 @@
 
         <p-card class="stat-card">
             <div class="stat-header">
-                <span class="stat-label">Total Orders</span>
+                <span class="stat-label">{{ 'dashboard.kpi.totalOrders' | translate }}</span>
                 <i class="pi pi-shopping-cart stat-icon orders"></i>
             </div>
             <div class="stat-value">{{ kpiData()!.totalOrders | number }}</div>
             <div class="stat-footer">
-                <span class="trend positive">Monthly goal reached</span>
+                <span class="trend positive">{{ 'dashboard.kpi.monthlyGoal' | translate }}</span>
             </div>
             <div class="mini-chart">
                 <p-chart type="line" [data]="orderTrendData()" [options]="chartOptions" height="40px" />
@@ -40,18 +40,20 @@
 
         <p-card class="stat-card">
             <div class="stat-header">
-                <span class="stat-label">Avg Gap Ratio</span>
+                <span class="stat-label">{{ 'dashboard.kpi.avgGapRatio' | translate }}</span>
                 <i class="pi pi-exclamation-triangle stat-icon gap"></i>
             </div>
             <div class="stat-value">{{ kpiData()!.averageGapScore | number:'1.2-2' }}</div>
             <div class="stat-footer">
-                <span class="trend" [class.negative]="kpiData()!.averageGapScore! > 5">Risk Level: {{ kpiData()!.averageGapScore! > 5 ? 'High' : 'Low' }}</span>
+                <span class="trend" [class.negative]="kpiData()!.averageGapScore! > 5">{{ 'dashboard.kpi.riskLevel' |
+                    translate }}: {{ kpiData()!.averageGapScore! > 5 ? ('dashboard.kpi.high' | translate) :
+                    ('dashboard.kpi.low' | translate) }}</span>
             </div>
         </p-card>
 
         <p-card class="stat-card">
             <div class="stat-header">
-                <span class="stat-label">Avg Order Value</span>
+                <span class="stat-label">{{ 'dashboard.kpi.avgOrderValue' | translate }}</span>
                 <i class="pi pi-chart-line stat-icon aov"></i>
             </div>
             <div class="stat-value">${{ averageOrderValue() | number:'1.0-0' }}</div>
@@ -59,7 +61,7 @@
 
         <p-card class="stat-card">
             <div class="stat-header">
-                <span class="stat-label">Active Customers</span>
+                <span class="stat-label">{{ 'dashboard.kpi.activeCustomers' | translate }}</span>
                 <i class="pi pi-users stat-icon users"></i>
             </div>
             <div class="stat-value">{{ kpiData()!.totalCustomers | number }}</div>
@@ -68,7 +70,7 @@
 
     <!-- Smart Insights Section -->
     <div class="insights-section mt-4">
-        <h3 class="section-title"><i class="pi pi-sparkles"></i> Smart Business Insights</h3>
+        <h3 class="section-title"><i class="pi pi-sparkles"></i> {{ 'dashboard.kpi.smartInsights' | translate }}</h3>
         <div class="insights-grid">
             @for (insight of kpiData()!.insights; track insight.title) {
             <div class="insight-card" [class]="insight.severity?.toLowerCase()">

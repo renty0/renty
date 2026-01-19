@@ -12,10 +12,106 @@
     "products": "Products",
     "about": "About",
     "dashboard": "Dashboard",
+    "kpi_overview": "KPI Overview",
+    "gap_analysis": "Gap Analysis",
+    "deep_analytics": "Deep Analytics"
+  },
+  "dashboard": {
+    "title": "Intelligence Center",
+    "lastUpdated": "Last updated",
+    "tabs": {
+      "kpi": "KPI Overview",
+      "gap": "Gap Analysis",
+      "analytics": "Deep Analytics"
+    },
+    "kpi": {
+      "totalRevenue": "Total Revenue",
+      "revenueTarget": "Target",
+      "totalOrders": "Total Orders",
+      "monthlyGoal": "Monthly goal reached",
+      "avgGapRatio": "Avg Gap Ratio",
+      "riskLevel": "Risk Level",
+      "high": "High",
+      "low": "Low",
+      "avgOrderValue": "Avg Order Value",
+      "activeCustomers": "Active Customers",
+      "smartInsights": "Smart Business Insights",
+      "revenue": "Revenue",
+      "orders": "Orders",
+      "errors": {
+        "failedLoad": "Failed to load KPI data"
+      }
+    },
+    "gap": {
+      "title": "Gap Analysis Dashboard",
+      "runAnalysis": "Run Analysis",
+      "opportunityLoss": "Opportunity Loss",
+      "lossDesc": "Revenue lost due to supply shortages",
+      "criticalCategories": "Critical Categories",
+      "avgGapLevel": "Avg Gap Level",
+      "supplyDemandGap": "Supply vs Demand Gap",
+      "regionalMatrix": "Regional Demand Matrix",
+      "recommendations": "Operational Recommendations",
+      "recommendation": "Recommendation",
+      "deadStock": "Dead Stock Inventory",
+      "product": "Product",
+      "idleDays": "Idle (Days)",
+      "value": "Value",
+      "demand": "Demand (Orders)",
+      "supply": "Supply (Unique Items)",
+      "regionalDemandScore": "Avg Regional Demand Score",
+      "messages": {
+        "analysisSuccess": "Analysis triggered successfully",
+        "analysisFailed": "Failed to trigger analysis",
+        "loadKpiFailed": "Failed to load KPI data",
+        "loadSummaryFailed": "Failed to load gap summary",
+        "loadCategoryFailed": "Failed to load category analysis",
+        "loadTerritoryFailed": "Failed to load territory analysis",
+        "loadDeadStockFailed": "Failed to load dead stock",
+        "loadActionsFailed": "Failed to load actions"
+      }
+    },
+    "analytics": {
+      "revenueProfit": "Revenue & Profit Analysis",
+      "financialEfficiency": "Financial Efficiency",
+      "inventoryTurnover": "Inventory Turnover",
+      "unitsSold": "Units Sold",
+      "genderDist": "Gender Distribution",
+      "customerOccupation": "Customer Occupation",
+      "inventoryHealth": "Inventory Health",
+      "topCategoryShare": "Top Category Share",
+      "topProducts": "Top Performing Products",
+      "product": "Product",
+      "sold": "Sold",
+      "revenue": "Revenue",
+      "errors": {
+        "loadSalesFailed": "Failed to load sales trends",
+        "loadDemographicsFailed": "Failed to load demographics",
+        "loadInventoryFailed": "Failed to load inventory stats",
+        "loadTopProductsFailed": "Failed to load top products"
+      }
+    },
     "profile": "Profile",
     "logout": "Logout",
     "login": "Login",
     "register": "Register"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "hero_title": "Marketplace",
+    "all_categories": "All Categories",
+    "hero_subtitle": "Discover unique products from our community",
+    "products": "Products",
+    "results": "Results",
+    "search_placeholder": "Search products...",
+    "categories": "Categories",
+    "filters": "Filters",
+    "clearFilters": "Clear",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "noProductsFound": "No products found",
+    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for.",
+    "viewDetails": "View Details"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -115,6 +211,18 @@
       "edit": "Edit Category",
       "delete": "Delete Category"
     }
+  },
+  "product_details": {
+    "backToMarketplace": "Back to Marketplace",
+    "addToCart": "Add to Cart",
+    "rentNow": "Rent Now",
+    "description": "Description",
+    "specifications": "Specifications",
+    "relatedProducts": "Related Products",
+    "notFound": "Product not found",
+    "color": "Color",
+    "model": "Model",
+    "style": "Style"
   },
   "products": {
     "title": "Products",
@@ -231,9 +339,23 @@
       "furniture": "Home Furniture",
       "cameras": "Photography",
       "sports": "Sports & Outdoors",
-      "party": "Events & Party"
+      "party": "Events & Party",
+      "no_products_found": "No products found matching your criteria.",
+      "view_all_products": "View All Products"
     },
-    "calendar": {
+    "product": {
+      "addToCart": "Add to Cart",
+      "rentNow": "Rent Now",
+      "description": "Description",
+      "specifications": "Specifications",
+      "backToMarketplace": "Back to Marketplace",
+      "relatedProducts": "Related Products",
+      "notFound": "Product Not Found",
+      "color": "Color",
+      "model": "Model",
+      "style": "Style"
+    },
+    "dashboard": {
       "badge": "Stay Organized",
       "title": "Real-time Availability Calendar",
       "desc": "Check the live status of any item. Our smart calendar prevents double-bookings and ensures product readiness.",

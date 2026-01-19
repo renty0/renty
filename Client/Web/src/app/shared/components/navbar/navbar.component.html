@@ -7,7 +7,7 @@
 
         <!-- Desktop Navigation -->
         <nav class="desktop-nav">
-            @for (link of navLinks; track link.path) {
+            @for (link of filteredNavLinks(); track link.path) {
             <a [routerLink]="link.path" routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: link.path === '/' }" class="nav-link">
                 {{ link.labelKey | translate }}
@@ -63,7 +63,7 @@
     @if (mobileMenuOpen()) {
     <div class="mobile-drawer animate-fade-in">
         <div class="container drawer-content">
-            @for (link of navLinks; track link.path) {
+            @for (link of filteredNavLinks(); track link.path) {
             <a [routerLink]="link.path" routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: link.path === '/' }" class="mobile-link"
                 (click)="closeMobileMenu()">
