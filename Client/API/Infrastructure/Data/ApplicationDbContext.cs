@@ -28,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
     public DbSet<GapAnalysisResult> GapAnalysisResults => Set<GapAnalysisResult>();
+    public DbSet<Brand> Brands => Set<Brand>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

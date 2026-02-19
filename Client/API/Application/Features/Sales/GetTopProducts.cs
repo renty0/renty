@@ -49,12 +49,12 @@ public class GetTopProductsQueryHandler : IRequestHandler<GetTopProductsQuery, G
         }
 
         var products = await query
-            .GroupBy(s => new { s.ProductId, s.Product.ProductName })
+            .GroupBy(s => new { s.ProductId, s.Product.NameEn })
             .Select(g => new TopProductDto(
                 g.Key.ProductId,
-                g.Key.ProductName,
+                g.Key.NameEn,
                 g.Sum(s => s.OrderQuantity),
-                g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice))
+                g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay))
             ))
             .OrderByDescending(p => p.Revenue)
             .Take(request.Top)

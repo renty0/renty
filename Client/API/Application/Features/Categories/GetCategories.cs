@@ -37,8 +37,11 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            query = query.Where(c => c.CategoryName.Contains(request.SearchTerm) || 
-                                     (c.Description != null && c.Description.Contains(request.SearchTerm)));
+            var term = request.SearchTerm;
+            query = query.Where(c => c.NameEn.Contains(term) || 
+                                     c.NameAr.Contains(term) ||
+                                     (c.DescriptionEn != null && c.DescriptionEn.Contains(term)) ||
+                                     (c.DescriptionAr != null && c.DescriptionAr.Contains(term)));
         }
 
         // Apply sorting
@@ -46,43 +49,60 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
         switch (request.SortBy?.ToLower())
         {
             case "name":
-                query = isDescending ? query.OrderByDescending(c => c.CategoryName) : query.OrderBy(c => c.CategoryName);
+                query = isDescending ? query.OrderByDescending(c => c.NameEn) : query.OrderBy(c => c.NameEn);
                 break;
             case "date":
                 query = isDescending ? query.OrderByDescending(c => c.Created) : query.OrderBy(c => c.Created);
                 break;
             default:
-                query = query.OrderBy(c => c.CategoryName);
+                query = query.OrderBy(c => c.NameEn);
                 break;
         }
 
+        // We can't project directly to DTO easily with pagination helper if DTO has complex logic unless we project to anonymous type first
         var paginatedItems = await query
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
-                c.Description,
+                c.NameEn,
+                c.NameAr,
+                c.DescriptionEn,
+                c.DescriptionAr,
                 c.LogoId,
-                LogoStoragePath = c.Logo != null ? c.Logo.StoragePath : null,
+                Logo = c.Logo, // Grab the logo object to get path
                 SubcategoryCount = c.Subcategories.Count,
                 c.Created,
                 c.LastModified
             })
             .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
-        var dtos = paginatedItems.Items.Select(c => new ProductCategoryDto(
-            c.Id, 
-            c.CategoryName, 
-            c.Description, 
-            c.LogoId, 
-            !string.IsNullOrEmpty(c.LogoStoragePath) 
-                ? $"{baseUrl.TrimEnd('/')}/{c.LogoStoragePath.Replace("\\", "/").TrimStart('/')}" 
-                : null,
-            c.SubcategoryCount,
-            c.Created,
-            c.LastModified
-        )).ToList();
+        var dtos = paginatedItems.Items.Select(c => 
+        {
+            string? logoUrl = null;
+            if (c.Logo != null)
+            {
+                 logoUrl = $"{baseUrl.TrimEnd('/')}/{c.Logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+            }
 
+            return new ProductCategoryDto(
+                c.Id, 
+                c.NameEn, 
+                c.NameAr, 
+                c.DescriptionEn, 
+                c.DescriptionAr, 
+                c.LogoId, 
+                logoUrl,
+                c.SubcategoryCount,
+                c.Created,
+                c.LastModified
+            );
+        }).ToList(); // Convert to list
+
+        // Create a new PaginatedList with the projected DTOs
+        // Note: PaginatedList constructor might be internal or specific, let's check how it's used. 
+        // original code was: return new PaginatedList<ProductCategoryDto>(dtos, paginatedItems.TotalCount, paginatedItems.PageNumber, request.PageSize);
+        // Wait, PaginatedList constructor takes (items, count, pageNumber, pageSize). The items need to be the list.
+        
         return new PaginatedList<ProductCategoryDto>(dtos, paginatedItems.TotalCount, paginatedItems.PageNumber, request.PageSize);
     }
 }

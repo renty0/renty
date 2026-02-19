@@ -33,12 +33,12 @@
 
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'categories.columns.name' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
+                <td mat-cell *matCellDef="let row">{{ lang() === 'en' ? row.nameEn : row.nameAr }}</td>
             </ng-container>
 
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.description' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.description | slice:0:50 }}{{ row.description?.length > 50 ?
+                <td mat-cell *matCellDef="let row">{{ lang() === 'en' ? row.descriptionEn : row.descriptionAr | slice:0:50 }}{{ row.description?.length > 50 ?
                     '...' : '' }}</td>
             </ng-container>
 
@@ -73,8 +73,8 @@
                 <img [src]="category.logoUrl || 'assets/images/placeholder.png'" alt="Logo">
             </div>
             <div class="card-content">
-                <h3>{{ category.categoryName }}</h3>
-                <p>{{ category.description | slice:0:100 }}</p>
+                <h3>{{ lang() === 'en' ? category.nameEn : category.nameAr }}</h3>
+                <p>{{ lang() === 'en' ? category.descriptionEn : category.descriptionAr | slice:0:100 }}</p>
             </div>
             <div class="card-actions">
                 <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"

@@ -107,7 +107,7 @@ public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, Creat
         _context.Sales.Add(sale);
         await _context.SaveChangesAsync(cancellationToken);
 
-        var effectivePrice = product.DiscountPrice ?? product.ProductPrice;
+        var effectivePrice = product.RentDiscountPrice ?? product.RentPricePerDay;
         var dto = new SaleDto(
             sale.Id,
             sale.OrderDate,
@@ -116,7 +116,7 @@ public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, Creat
             sale.OrderLineItem,
             sale.OrderQuantity,
             sale.ProductId,
-            product.ProductName,
+            product.NameEn,
             effectivePrice,
             sale.CustomerId,
             customer.FullName,

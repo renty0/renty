@@ -23,7 +23,7 @@ public class GetGapAnalysisTrendsQueryHandler : IRequestHandler<GetGapAnalysisTr
         var prevMonthStart = currentMonthStart.AddMonths(-1);
 
         var categoryList = await _context.ProductCategories
-            .Select(c => new { c.Id, c.CategoryName })
+            .Select(c => new { c.Id, CategoryName = c.NameEn })
             .ToListAsync(cancellationToken);
 
         var trends = new List<GapTrendDto>();

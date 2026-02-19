@@ -119,7 +119,7 @@ public class GetRentableItemsQueryHandler : IRequestHandler<GetRentableItemsQuer
                 r.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
                     ?? r.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
                 r.Owner.FirstName + " " + r.Owner.LastName,
-                r.Category != null ? r.Category.CategoryName : null
+                r.Category != null ? r.Category.NameEn : null
             ));
 
         var items = await PaginatedList<RentableItemListDto>.CreateAsync(

@@ -22,10 +22,10 @@ public class GetOpportunityLossQueryHandler : IRequestHandler<GetOpportunityLoss
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
+                CategoryName = c.NameEn,
                 Supply = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Demand = _context.Sales.Where(s => s.Product.Subcategory.ProductCategoryId == c.Id).Sum(s => s.OrderQuantity),
-                AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.ProductPrice) ?? 0
+                AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.RentPricePerDay) ?? 0
             })
             .ToListAsync(cancellationToken);
 

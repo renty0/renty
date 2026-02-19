@@ -12,8 +12,11 @@ public class ProductSubcategoryConfiguration : IEntityTypeConfiguration<ProductS
 
         builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.SubcategoryName)
+        builder.Property(s => s.NameEn)
             .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(s => s.NameAr)
             .HasMaxLength(100);
 
         builder.HasOne(s => s.Category)
@@ -21,7 +24,7 @@ public class ProductSubcategoryConfiguration : IEntityTypeConfiguration<ProductS
             .HasForeignKey(s => s.ProductCategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(s => s.SubcategoryName);
+        builder.HasIndex(s => s.NameEn);
         builder.HasIndex(s => s.ProductCategoryId);
     }
 }

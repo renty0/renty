@@ -57,9 +57,9 @@ public class GetRentableItemByIdQueryHandler : IRequestHandler<GetRentableItemBy
                 r.OwnerId,
                 r.Owner.FirstName + " " + r.Owner.LastName,
                 r.CategoryId,
-                r.Category != null ? r.Category.CategoryName : null,
+                r.Category != null ? r.Category.NameEn : null,
                 r.SubcategoryId,
-                r.Subcategory != null ? r.Subcategory.SubcategoryName : null,
+                r.Subcategory != null ? r.Subcategory.NameEn : null,
                 r.Images.OrderBy(i => i.DisplayOrder).Select(i => new RentableItemImageDto(
                     i.Id,
                     i.ImageUrl,

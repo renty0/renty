@@ -57,10 +57,10 @@ public class GetSalesSummaryQueryHandler : IRequestHandler<GetSalesSummaryQuery,
         var summary = await query
             .GroupBy(s => 1)
             .Select(g => new SalesSummaryDto(
-                g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)),
+                g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)),
                 g.Select(s => s.OrderNumber).Distinct().Count(),
                 g.Sum(s => s.OrderQuantity),
-                g.Any() ? g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)) / g.Select(s => s.OrderNumber).Distinct().Count() : 0
+                g.Any() ? g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)) / g.Select(s => s.OrderNumber).Distinct().Count() : 0
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

@@ -19,7 +19,6 @@
 }
 .back-link {
     margin-bottom: 2.5rem;
-    color: lighten($text-secondary, 10%);
     transition: all 0.3s;
     font-weight: 500;
 
@@ -131,7 +130,6 @@
 
         .sku {
             font-size: 0.9rem;
-            color: lighten($text-secondary, 20%);
             font-weight: 500;
         }
     }
@@ -144,7 +142,6 @@
 
         .original-price {
             font-size: 1.5rem;
-            color: lighten($text-secondary, 20%);
             text-decoration: line-through;
         }
 
@@ -247,7 +244,6 @@
             .label {
                 font-size: 0.85rem;
                 font-weight: 700;
-                color: lighten($text-secondary, 15%);
                 text-transform: uppercase;
             }
 
@@ -260,7 +256,6 @@
     }
 }
 
-// Related Products
 .related-products {
     max-width: 1600px;
     margin: 0 auto;

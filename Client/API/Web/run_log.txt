@@ -1,0 +1,29 @@
+﻿Using launch settings from E:\Courses\Work\renty\Client\API\Web\Properties\launchSettings.json...
+Building...
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'Product.BrandId1' was created in shadow state because a conflicting property with the simple name 'BrandId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+fail: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      An error occurred while initialising the database.
+      System.ArgumentException: Couldn't set postgres://avnadmin:avns_rqqd-qk-9zokdu2ilzp@rentydb1-khalifa14112003-3419.d.aivencloud.com:12921/defaultdb?sslmode (Parameter 'postgres://avnadmin:avns_rqqd-qk-9zokdu2ilzp@rentydb1-khalifa14112003-3419.d.aivencloud.com:12921/defaultdb?sslmode')
+       ---> System.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+         at Npgsql.NpgsqlConnectionStringBuilder.GeneratedActions(GeneratedAction action, String keyword, Object& value)
+         at Npgsql.NpgsqlConnectionStringBuilder.set_Item(String keyword, Object value)
+         --- End of inner exception stack trace ---
+         at Npgsql.NpgsqlConnectionStringBuilder.set_Item(String keyword, Object value)
+         at System.Data.Common.DbConnectionStringBuilder.set_ConnectionString(String value)
+         at Npgsql.NpgsqlConnectionStringBuilder..ctor(String connectionString)
+         at Npgsql.NpgsqlConnection.SetupDataSource()
+         at Npgsql.NpgsqlConnection.set_ConnectionString(String value)
+         at Npgsql.NpgsqlConnection..ctor(String connectionString)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlRelationalConnection.CreateDbConnection()
+         at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.get_DbConnection()
+         at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.GetAppliedMigrationsAsync(CancellationToken cancellationToken)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlHistoryRepository.GetAppliedMigrationsAsync(CancellationToken cancellationToken)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Infrastructure.Data.ApplicationDbContextInitialiser.InitialiseAsync() in E:\Courses\Work\renty\Client\API\Infrastructure\Data\ApplicationDbContextInitialiser.cs:line 32

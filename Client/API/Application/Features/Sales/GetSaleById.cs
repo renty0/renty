@@ -37,14 +37,14 @@ public class GetSaleByIdQueryHandler : IRequestHandler<GetSaleByIdQuery, GetSale
                 s.OrderLineItem,
                 s.OrderQuantity,
                 s.ProductId,
-                s.Product.ProductName,
-                s.Product.DiscountPrice ?? s.Product.ProductPrice,
+                s.Product.NameEn,
+                s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay,
                 s.CustomerId,
                 s.Customer.FirstName + " " + s.Customer.LastName,
                 s.TerritoryId,
                 s.Territory.Region,
                 s.Territory.Country,
-                s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)
+                s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

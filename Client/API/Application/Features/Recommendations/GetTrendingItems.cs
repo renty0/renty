@@ -30,7 +30,7 @@ public class GetTrendingItemsQueryHandler : IRequestHandler<GetTrendingItemsQuer
                 x.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
                 x.PricePerDay,
                 x.AverageRating,
-                x.Category != null ? x.Category.CategoryName : null,
+                x.Category != null ? x.Category.NameEn : null,
                 "Trending now"
             ))
             .ToListAsync(cancellationToken);

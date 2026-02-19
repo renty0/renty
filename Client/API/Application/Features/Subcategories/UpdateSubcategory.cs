@@ -8,7 +8,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Subcategories;
 
-public record UpdateSubcategoryCommand(int Id, string SubcategoryName, string? Description, int CategoryId, Guid? LogoId) : IRequest<UpdateSubcategoryResponse>;
+public record UpdateSubcategoryCommand(
+    int Id, 
+    string NameEn, 
+    string NameAr, 
+    string? DescriptionEn, 
+    string? DescriptionAr, 
+    int CategoryId, 
+    Guid? LogoId
+) : IRequest<UpdateSubcategoryResponse>;
 
 public record UpdateSubcategoryResponse(
     bool Success,
@@ -23,12 +31,19 @@ public class UpdateSubcategoryCommandValidator : AbstractValidator<UpdateSubcate
         RuleFor(x => x.Id)
             .GreaterThan(0).WithMessage("Invalid subcategory ID.");
 
-        RuleFor(x => x.SubcategoryName)
-            .NotEmpty().WithMessage("Subcategory name is required.")
+        RuleFor(x => x.NameEn)
+            .NotEmpty().WithMessage("English subcategory name is required.")
             .MaximumLength(100).WithMessage("Subcategory name must not exceed 100 characters.");
 
-        RuleFor(x => x.Description)
-            .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Arabic subcategory name is required.")
+            .MaximumLength(100).WithMessage("Subcategory name must not exceed 100 characters.");
+
+        RuleFor(x => x.DescriptionEn)
+            .MaximumLength(500).WithMessage("English description must not exceed 500 characters.");
+
+        RuleFor(x => x.DescriptionAr)
+            .MaximumLength(500).WithMessage("Arabic description must not exceed 500 characters.");
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("Invalid category ID.");
@@ -66,8 +81,10 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
             return new UpdateSubcategoryResponse(false, "Category not found.", null);
         }
 
-        subcategory.SubcategoryName = request.SubcategoryName;
-        subcategory.Description = request.Description ?? string.Empty;
+        subcategory.NameEn = request.NameEn;
+        subcategory.NameAr = request.NameAr;
+        subcategory.DescriptionEn = request.DescriptionEn;
+        subcategory.DescriptionAr = request.DescriptionAr;
         subcategory.ProductCategoryId = request.CategoryId;
         subcategory.LogoId = request.LogoId;
         
@@ -91,12 +108,15 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
         var category = await _context.ProductCategories.FindAsync(new object[] { request.CategoryId }, cancellationToken);
         var dto = new ProductSubcategoryDto(
             subcategory.Id,
-            subcategory.SubcategoryName,
-            subcategory.Description,
+            subcategory.NameEn,
+            subcategory.NameAr,
+            subcategory.DescriptionEn,
+            subcategory.DescriptionAr,
             subcategory.LogoId,
             logoUrl,
             subcategory.ProductCategoryId,
-            category!.CategoryName,
+            category!.NameEn,
+            category!.NameAr,
             subcategory.Products.Count,
             subcategory.Created,
             subcategory.LastModified

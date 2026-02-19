@@ -17,18 +17,24 @@
                     <app-input label="products.fields.sku" [formGroup]="form" controlName="productSku" [required]="true"
                         placeholder="products.placeholders.sku">
                     </app-input>
-                    <app-input label="products.fields.name" [formGroup]="form" controlName="productName"
-                        [required]="true" placeholder="products.placeholders.name">
+                    <app-input label="Name (En)" [formGroup]="form" controlName="nameEn" [required]="true"
+                        placeholder="Name (English)">
                     </app-input>
-                    <app-input label="products.fields.description" [formGroup]="form" controlName="productDescription"
-                        type="textarea" [height]="120" placeholder="products.placeholders.description">
+                    <app-input label="Name (Ar)" [formGroup]="form" controlName="nameAr" placeholder="Name (Arabic)"
+                        direction="rtl">
+                    </app-input>
+                    <app-input label="Description (En)" [formGroup]="form" controlName="descriptionEn" type="textarea"
+                        [height]="120" placeholder="Description (English)">
+                    </app-input>
+                    <app-input label="Description (Ar)" [formGroup]="form" controlName="descriptionAr" type="textarea"
+                        [height]="120" placeholder="Description (Arabic)" direction="rtl">
                     </app-input>
                 </div>
             </div>
             <div class="card">
                 <h3>{{ 'products.sections.pricing' | translate }}</h3>
                 <div class="field-row">
-                    <app-input label="products.fields.price" [formGroup]="form" controlName="productPrice" type="number"
+                    <app-input label="Rent Price / Day" [formGroup]="form" controlName="rentPricePerDay" type="number"
                         [required]="true">
                     </app-input>
                     <app-input label="products.fields.cost" [formGroup]="form" controlName="productCost" type="number"
@@ -36,8 +42,7 @@
                     </app-input>
                 </div>
                 <div class="field-row">
-                    <app-input label="products.fields.discount" [formGroup]="form" controlName="discountPrice"
-                        type="number">
+                    <app-input label="Discount Price" [formGroup]="form" controlName="rentDiscountPrice" type="number">
                     </app-input>
                 </div>
             </div>

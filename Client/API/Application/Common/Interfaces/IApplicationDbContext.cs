@@ -21,5 +21,6 @@ public interface IApplicationDbContext
     DbSet<MediaFile> MediaFiles { get; }
     DbSet<ProductImage> ProductImages { get; }
     DbSet<GapAnalysisResult> GapAnalysisResults { get; }
+    DbSet<Brand> Brands { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

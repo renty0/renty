@@ -34,19 +34,18 @@
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.name' | translate }}
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.subcategoryName }}</td>
+                <td mat-cell *matCellDef="let row">{{ lang() === 'ar' ? row.nameAr : row.nameEn }}</td>
             </ng-container>
 
             <ng-container matColumnDef="category">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.category' | translate }}
                 </th>
-                <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
+                <td mat-cell *matCellDef="let row">{{  lang() === 'ar' ? row.categoryNameAr : row.categoryNameEn }}</td>
             </ng-container>
 
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.description' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.description | slice:0:50 }}{{ row.description?.length > 50 ?
-                    '...' : '' }}</td>
+                <td mat-cell *matCellDef="let row">{{  lang() === 'ar' ? row.descriptionAr : row.descriptionEn | slice:0:50 }}{{ (lang() === 'ar' ? row.descriptionAr : row.descriptionEn)?.length > 50 ? '...' : '' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
@@ -78,11 +77,11 @@
         <mat-card class="entity-card" (click)="editSubcategory(subcategory.id!)">
             <div class="card-image">
                 <img [src]="subcategory.logoUrl || 'assets/images/placeholder.png'" alt="Logo">
-                <div class="category-badge">{{ subcategory.categoryName }}</div>
+                <div class="category-badge">{{ lang() === 'ar' ? subcategory.categoryNameAr : subcategory.categoryNameEn }}</div>
             </div>
             <div class="card-content">
-                <h3>{{ subcategory.subcategoryName }}</h3>
-                <p>{{ subcategory.description | slice:0:100 }}</p>
+                <h3>{{ lang() === 'ar' ? subcategory.nameAr : subcategory.nameEn }}</h3>
+                <p>{{ lang() === 'ar' ? subcategory.descriptionAr : subcategory.descriptionEn | slice:0:100 }}</p>
             </div>
             <div class="card-actions">
                 <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"

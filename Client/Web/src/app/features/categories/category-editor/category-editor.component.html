@@ -7,10 +7,16 @@
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="category-form">
         <div class="form-body">
-            <app-input class="field" label="name" [formGroup]="form" controlName="categoryName">
+            <app-input class="field" label="Name (En)" [formGroup]="form" controlName="nameEn">
             </app-input>
 
-            <app-input class="field" label="description" type="textarea" [formGroup]="form" controlName="description">
+            <app-input class="field" label="Name (Ar)" [formGroup]="form" controlName="nameAr" direction="rtl">
+            </app-input>
+
+            <app-input class="field" label="Description (En)" type="textarea" [formGroup]="form" controlName="descriptionEn">
+            </app-input>
+
+            <app-input class="field" label="Description (Ar)" type="textarea" [formGroup]="form" controlName="descriptionAr" direction="rtl">
             </app-input>
 
             <div class="logo-section">

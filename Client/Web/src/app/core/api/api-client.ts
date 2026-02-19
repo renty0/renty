@@ -5945,8 +5945,10 @@ export interface IPaginatedListOfProductCategoryDto {
 
 export class ProductCategoryDto implements IProductCategoryDto {
     id?: number;
-    categoryName?: string;
-    description?: string;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     subcategoryCount?: number;
@@ -5965,8 +5967,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.subcategoryCount = _data["subcategoryCount"];
@@ -5985,8 +5989,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["subcategoryCount"] = this.subcategoryCount;
@@ -5998,8 +6004,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
 
 export interface IProductCategoryDto {
     id?: number;
-    categoryName?: string;
-    description?: string;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     subcategoryCount?: number;
@@ -6052,8 +6060,10 @@ export interface ICreateCategoryResponse {
 }
 
 export class CreateCategoryCommand implements ICreateCategoryCommand {
-    categoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
 
     constructor(data?: ICreateCategoryCommand) {
@@ -6067,8 +6077,10 @@ export class CreateCategoryCommand implements ICreateCategoryCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.logoId = _data["logoId"];
         }
     }
@@ -6082,16 +6094,20 @@ export class CreateCategoryCommand implements ICreateCategoryCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["logoId"] = this.logoId;
         return data;
     }
 }
 
 export interface ICreateCategoryCommand {
-    categoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
 }
 
@@ -6141,8 +6157,10 @@ export interface IUpdateCategoryResponse {
 
 export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     id?: number;
-    categoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
 
     constructor(data?: IUpdateCategoryCommand) {
@@ -6157,8 +6175,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.logoId = _data["logoId"];
         }
     }
@@ -6173,8 +6193,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["logoId"] = this.logoId;
         return data;
     }
@@ -6182,8 +6204,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
 
 export interface IUpdateCategoryCommand {
     id?: number;
-    categoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
 }
 
@@ -6337,12 +6361,15 @@ export interface IPaginatedListOfProductSubcategoryDto {
 
 export class ProductSubcategoryDto implements IProductSubcategoryDto {
     id?: number;
-    subcategoryName?: string;
-    description?: string;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
-    categoryName?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
@@ -6359,12 +6386,15 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.categoryId = _data["categoryId"];
-            this.categoryName = _data["categoryName"];
+            this.categoryNameEn = _data["categoryNameEn"];
+            this.categoryNameAr = _data["categoryNameAr"];
             this.productCount = _data["productCount"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : undefined as any;
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
@@ -6381,12 +6411,15 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["categoryId"] = this.categoryId;
-        data["categoryName"] = this.categoryName;
+        data["categoryNameEn"] = this.categoryNameEn;
+        data["categoryNameAr"] = this.categoryNameAr;
         data["productCount"] = this.productCount;
         data["created"] = this.created ? this.created.toISOString() : undefined as any;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : undefined as any;
@@ -6396,12 +6429,15 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
 
 export interface IProductSubcategoryDto {
     id?: number;
-    subcategoryName?: string;
-    description?: string;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
-    categoryName?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
@@ -6496,8 +6532,10 @@ export interface ICreateSubcategoryResponse {
 }
 
 export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 
@@ -6512,8 +6550,10 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.categoryId = _data["categoryId"];
             this.logoId = _data["logoId"];
         }
@@ -6528,8 +6568,10 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["categoryId"] = this.categoryId;
         data["logoId"] = this.logoId;
         return data;
@@ -6537,8 +6579,10 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 }
 
 export interface ICreateSubcategoryCommand {
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 }
@@ -6589,8 +6633,10 @@ export interface IUpdateSubcategoryResponse {
 
 export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     id?: number;
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 
@@ -6606,8 +6652,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
             this.categoryId = _data["categoryId"];
             this.logoId = _data["logoId"];
         }
@@ -6623,8 +6671,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
         data["categoryId"] = this.categoryId;
         data["logoId"] = this.logoId;
         return data;
@@ -6633,8 +6683,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
 
 export interface IUpdateSubcategoryCommand {
     id?: number;
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameEn?: string;
+    nameAr?: string;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 }
@@ -6790,12 +6842,17 @@ export interface IPaginatedListOfProductListDto {
 export class ProductListDto implements IProductListDto {
     id?: number;
     productSku?: string;
-    productName?: string;
-    productPrice?: number;
-    discountPrice?: number | undefined;
-    productColor?: string | undefined;
-    subcategoryName?: string;
-    categoryName?: string;
+    nameEn?: string;
+    nameAr?: string;
+    rentPricePerDay?: number;
+    rentDiscountPrice?: number | undefined;
+    color?: string | undefined;
+    subcategoryNameEn?: string;
+    subcategoryNameAr?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
+    brandNameEn?: string | undefined;
+    brandNameAr?: string | undefined;
     created?: Date;
     lastModified?: Date | undefined;
     primaryImageUrl?: string | undefined;
@@ -6813,12 +6870,17 @@ export class ProductListDto implements IProductListDto {
         if (_data) {
             this.id = _data["id"];
             this.productSku = _data["productSku"];
-            this.productName = _data["productName"];
-            this.productPrice = _data["productPrice"];
-            this.discountPrice = _data["discountPrice"];
-            this.productColor = _data["productColor"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.categoryName = _data["categoryName"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
+            this.rentPricePerDay = _data["rentPricePerDay"];
+            this.rentDiscountPrice = _data["rentDiscountPrice"];
+            this.color = _data["color"];
+            this.subcategoryNameEn = _data["subcategoryNameEn"];
+            this.subcategoryNameAr = _data["subcategoryNameAr"];
+            this.categoryNameEn = _data["categoryNameEn"];
+            this.categoryNameAr = _data["categoryNameAr"];
+            this.brandNameEn = _data["brandNameEn"];
+            this.brandNameAr = _data["brandNameAr"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : undefined as any;
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
             this.primaryImageUrl = _data["primaryImageUrl"];
@@ -6836,12 +6898,17 @@ export class ProductListDto implements IProductListDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["productSku"] = this.productSku;
-        data["productName"] = this.productName;
-        data["productPrice"] = this.productPrice;
-        data["discountPrice"] = this.discountPrice;
-        data["productColor"] = this.productColor;
-        data["subcategoryName"] = this.subcategoryName;
-        data["categoryName"] = this.categoryName;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
+        data["rentPricePerDay"] = this.rentPricePerDay;
+        data["rentDiscountPrice"] = this.rentDiscountPrice;
+        data["color"] = this.color;
+        data["subcategoryNameEn"] = this.subcategoryNameEn;
+        data["subcategoryNameAr"] = this.subcategoryNameAr;
+        data["categoryNameEn"] = this.categoryNameEn;
+        data["categoryNameAr"] = this.categoryNameAr;
+        data["brandNameEn"] = this.brandNameEn;
+        data["brandNameAr"] = this.brandNameAr;
         data["created"] = this.created ? this.created.toISOString() : undefined as any;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : undefined as any;
         data["primaryImageUrl"] = this.primaryImageUrl;
@@ -6852,12 +6919,17 @@ export class ProductListDto implements IProductListDto {
 export interface IProductListDto {
     id?: number;
     productSku?: string;
-    productName?: string;
-    productPrice?: number;
-    discountPrice?: number | undefined;
-    productColor?: string | undefined;
-    subcategoryName?: string;
-    categoryName?: string;
+    nameEn?: string;
+    nameAr?: string;
+    rentPricePerDay?: number;
+    rentDiscountPrice?: number | undefined;
+    color?: string | undefined;
+    subcategoryNameEn?: string;
+    subcategoryNameAr?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
+    brandNameEn?: string | undefined;
+    brandNameAr?: string | undefined;
     created?: Date;
     lastModified?: Date | undefined;
     primaryImageUrl?: string | undefined;
@@ -6910,20 +6982,27 @@ export interface IGetProductByIdResponse {
 export class ProductDto implements IProductDto {
     id?: number;
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     effectivePrice?: number;
     profitMargin?: number;
     subcategoryId?: number;
-    subcategoryName?: string;
-    categoryName?: string;
+    subcategoryNameEn?: string;
+    subcategoryNameAr?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
+    brandId?: number | undefined;
+    brandNameEn?: string | undefined;
+    brandNameAr?: string | undefined;
     created?: Date;
     lastModified?: Date | undefined;
     images?: ProductImageDto[];
@@ -6941,20 +7020,27 @@ export class ProductDto implements IProductDto {
         if (_data) {
             this.id = _data["id"];
             this.productSku = _data["productSku"];
-            this.productName = _data["productName"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
             this.modelName = _data["modelName"];
-            this.productDescription = _data["productDescription"];
-            this.productColor = _data["productColor"];
-            this.productStyle = _data["productStyle"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
+            this.color = _data["color"];
+            this.style = _data["style"];
             this.productCost = _data["productCost"];
-            this.productPrice = _data["productPrice"];
+            this.rentPricePerDay = _data["rentPricePerDay"];
             this.skuType = _data["skuType"];
-            this.discountPrice = _data["discountPrice"];
+            this.rentDiscountPrice = _data["rentDiscountPrice"];
             this.effectivePrice = _data["effectivePrice"];
             this.profitMargin = _data["profitMargin"];
             this.subcategoryId = _data["subcategoryId"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.categoryName = _data["categoryName"];
+            this.subcategoryNameEn = _data["subcategoryNameEn"];
+            this.subcategoryNameAr = _data["subcategoryNameAr"];
+            this.categoryNameEn = _data["categoryNameEn"];
+            this.categoryNameAr = _data["categoryNameAr"];
+            this.brandId = _data["brandId"];
+            this.brandNameEn = _data["brandNameEn"];
+            this.brandNameAr = _data["brandNameAr"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : undefined as any;
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
             if (Array.isArray(_data["images"])) {
@@ -6976,20 +7062,27 @@ export class ProductDto implements IProductDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["productSku"] = this.productSku;
-        data["productName"] = this.productName;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
         data["modelName"] = this.modelName;
-        data["productDescription"] = this.productDescription;
-        data["productColor"] = this.productColor;
-        data["productStyle"] = this.productStyle;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
+        data["color"] = this.color;
+        data["style"] = this.style;
         data["productCost"] = this.productCost;
-        data["productPrice"] = this.productPrice;
+        data["rentPricePerDay"] = this.rentPricePerDay;
         data["skuType"] = this.skuType;
-        data["discountPrice"] = this.discountPrice;
+        data["rentDiscountPrice"] = this.rentDiscountPrice;
         data["effectivePrice"] = this.effectivePrice;
         data["profitMargin"] = this.profitMargin;
         data["subcategoryId"] = this.subcategoryId;
-        data["subcategoryName"] = this.subcategoryName;
-        data["categoryName"] = this.categoryName;
+        data["subcategoryNameEn"] = this.subcategoryNameEn;
+        data["subcategoryNameAr"] = this.subcategoryNameAr;
+        data["categoryNameEn"] = this.categoryNameEn;
+        data["categoryNameAr"] = this.categoryNameAr;
+        data["brandId"] = this.brandId;
+        data["brandNameEn"] = this.brandNameEn;
+        data["brandNameAr"] = this.brandNameAr;
         data["created"] = this.created ? this.created.toISOString() : undefined as any;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : undefined as any;
         if (Array.isArray(this.images)) {
@@ -7004,20 +7097,27 @@ export class ProductDto implements IProductDto {
 export interface IProductDto {
     id?: number;
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     effectivePrice?: number;
     profitMargin?: number;
     subcategoryId?: number;
-    subcategoryName?: string;
-    categoryName?: string;
+    subcategoryNameEn?: string;
+    subcategoryNameAr?: string;
+    categoryNameEn?: string;
+    categoryNameAr?: string;
+    brandId?: number | undefined;
+    brandNameEn?: string | undefined;
+    brandNameAr?: string | undefined;
     created?: Date;
     lastModified?: Date | undefined;
     images?: ProductImageDto[];
@@ -7117,16 +7217,19 @@ export interface ICreateProductResponse {
 
 export class CreateProductCommand implements ICreateProductCommand {
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     subcategoryId?: number;
+    brandId?: number | undefined;
     imageUrls?: string[] | undefined;
 
     constructor(data?: ICreateProductCommand) {
@@ -7141,16 +7244,19 @@ export class CreateProductCommand implements ICreateProductCommand {
     init(_data?: any) {
         if (_data) {
             this.productSku = _data["productSku"];
-            this.productName = _data["productName"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
             this.modelName = _data["modelName"];
-            this.productDescription = _data["productDescription"];
-            this.productColor = _data["productColor"];
-            this.productStyle = _data["productStyle"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
+            this.color = _data["color"];
+            this.style = _data["style"];
             this.productCost = _data["productCost"];
-            this.productPrice = _data["productPrice"];
+            this.rentPricePerDay = _data["rentPricePerDay"];
             this.skuType = _data["skuType"];
-            this.discountPrice = _data["discountPrice"];
+            this.rentDiscountPrice = _data["rentDiscountPrice"];
             this.subcategoryId = _data["subcategoryId"];
+            this.brandId = _data["brandId"];
             if (Array.isArray(_data["imageUrls"])) {
                 this.imageUrls = [] as any;
                 for (let item of _data["imageUrls"])
@@ -7169,16 +7275,19 @@ export class CreateProductCommand implements ICreateProductCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["productSku"] = this.productSku;
-        data["productName"] = this.productName;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
         data["modelName"] = this.modelName;
-        data["productDescription"] = this.productDescription;
-        data["productColor"] = this.productColor;
-        data["productStyle"] = this.productStyle;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
+        data["color"] = this.color;
+        data["style"] = this.style;
         data["productCost"] = this.productCost;
-        data["productPrice"] = this.productPrice;
+        data["rentPricePerDay"] = this.rentPricePerDay;
         data["skuType"] = this.skuType;
-        data["discountPrice"] = this.discountPrice;
+        data["rentDiscountPrice"] = this.rentDiscountPrice;
         data["subcategoryId"] = this.subcategoryId;
+        data["brandId"] = this.brandId;
         if (Array.isArray(this.imageUrls)) {
             data["imageUrls"] = [];
             for (let item of this.imageUrls)
@@ -7190,16 +7299,19 @@ export class CreateProductCommand implements ICreateProductCommand {
 
 export interface ICreateProductCommand {
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     subcategoryId?: number;
+    brandId?: number | undefined;
     imageUrls?: string[] | undefined;
 }
 
@@ -7250,16 +7362,19 @@ export interface IUpdateProductResponse {
 export class UpdateProductCommand implements IUpdateProductCommand {
     id?: number;
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     subcategoryId?: number;
+    brandId?: number | undefined;
     images?: ProductImageDto[] | undefined;
 
     constructor(data?: IUpdateProductCommand) {
@@ -7275,16 +7390,19 @@ export class UpdateProductCommand implements IUpdateProductCommand {
         if (_data) {
             this.id = _data["id"];
             this.productSku = _data["productSku"];
-            this.productName = _data["productName"];
+            this.nameEn = _data["nameEn"];
+            this.nameAr = _data["nameAr"];
             this.modelName = _data["modelName"];
-            this.productDescription = _data["productDescription"];
-            this.productColor = _data["productColor"];
-            this.productStyle = _data["productStyle"];
+            this.descriptionEn = _data["descriptionEn"];
+            this.descriptionAr = _data["descriptionAr"];
+            this.color = _data["color"];
+            this.style = _data["style"];
             this.productCost = _data["productCost"];
-            this.productPrice = _data["productPrice"];
+            this.rentPricePerDay = _data["rentPricePerDay"];
             this.skuType = _data["skuType"];
-            this.discountPrice = _data["discountPrice"];
+            this.rentDiscountPrice = _data["rentDiscountPrice"];
             this.subcategoryId = _data["subcategoryId"];
+            this.brandId = _data["brandId"];
             if (Array.isArray(_data["images"])) {
                 this.images = [] as any;
                 for (let item of _data["images"])
@@ -7304,16 +7422,19 @@ export class UpdateProductCommand implements IUpdateProductCommand {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["productSku"] = this.productSku;
-        data["productName"] = this.productName;
+        data["nameEn"] = this.nameEn;
+        data["nameAr"] = this.nameAr;
         data["modelName"] = this.modelName;
-        data["productDescription"] = this.productDescription;
-        data["productColor"] = this.productColor;
-        data["productStyle"] = this.productStyle;
+        data["descriptionEn"] = this.descriptionEn;
+        data["descriptionAr"] = this.descriptionAr;
+        data["color"] = this.color;
+        data["style"] = this.style;
         data["productCost"] = this.productCost;
-        data["productPrice"] = this.productPrice;
+        data["rentPricePerDay"] = this.rentPricePerDay;
         data["skuType"] = this.skuType;
-        data["discountPrice"] = this.discountPrice;
+        data["rentDiscountPrice"] = this.rentDiscountPrice;
         data["subcategoryId"] = this.subcategoryId;
+        data["brandId"] = this.brandId;
         if (Array.isArray(this.images)) {
             data["images"] = [];
             for (let item of this.images)
@@ -7326,16 +7447,19 @@ export class UpdateProductCommand implements IUpdateProductCommand {
 export interface IUpdateProductCommand {
     id?: number;
     productSku?: string;
-    productName?: string;
+    nameEn?: string;
+    nameAr?: string;
     modelName?: string | undefined;
-    productDescription?: string | undefined;
-    productColor?: string | undefined;
-    productStyle?: string | undefined;
+    descriptionEn?: string | undefined;
+    descriptionAr?: string | undefined;
+    color?: string | undefined;
+    style?: string | undefined;
     productCost?: number;
-    productPrice?: number;
+    rentPricePerDay?: number;
     skuType?: string | undefined;
-    discountPrice?: number | undefined;
+    rentDiscountPrice?: number | undefined;
     subcategoryId?: number;
+    brandId?: number | undefined;
     images?: ProductImageDto[] | undefined;
 }
 

@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductsClient, CategoriesClient, ProductListDto, ProductCategoryDto, SubcategoriesClient, ProductSubcategoryDto } from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { LocalizationService } from '../../core/services/localization.service';
 
 @Component({
   selector: 'app-marketplace',
@@ -44,10 +45,11 @@ export class MarketplaceComponent implements OnInit {
   private productsClient = inject(ProductsClient);
   private categoriesClient = inject(CategoriesClient);
   private subcategoriesClient = inject(SubcategoriesClient);
-  private router = inject(Router);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
+  public localization = inject(LocalizationService);
 
+  lang = this.localization.language;
   // Data
   products = signal<ProductListDto[]>([]);
   categories = signal<ProductCategoryDto[]>([]);
@@ -69,12 +71,7 @@ export class MarketplaceComponent implements OnInit {
   totalCount = signal(0);
 
   constructor() {
-    // Reset page when filters change
     effect(() => {
-      const cat = this.selectedCategoryId();
-      const sub = this.selectedSubcategoryId();
-      const search = this.searchTerm();
-
       untracked(() => {
         this.pageNumber.set(1);
       });

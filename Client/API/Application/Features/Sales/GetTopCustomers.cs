@@ -55,7 +55,7 @@ public class GetTopCustomersQueryHandler : IRequestHandler<GetTopCustomersQuery,
                 g.Key.CustomerId,
                 g.Key.FirstName + " " + g.Key.LastName,
                 g.Select(s => s.OrderNumber).Distinct().Count(),
-                g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice))
+                g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay))
             ))
             .OrderByDescending(c => c.TotalSpent)
             .Take(request.Top)

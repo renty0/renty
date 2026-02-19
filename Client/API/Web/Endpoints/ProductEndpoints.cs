@@ -26,16 +26,16 @@ public static class ProductEndpoints
             ISender sender) =>
         {
             var result = await sender.Send(new GetProductsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                subcategoryId,
-                categoryId,
-                searchTerm,
-                minPrice,
-                maxPrice,
-                color,
-                sortBy,
-                sortOrder
+                PageNumber: pageNumber > 0 ? pageNumber : 1,
+                PageSize: pageSize > 0 ? pageSize : 10,
+                SubcategoryId: subcategoryId,
+                CategoryId: categoryId,
+                SearchTerm: searchTerm,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                color: color,
+                sortBy: sortBy,
+                sortOrder: sortOrder
             ));
             return TypedResults.Ok(result);
         })

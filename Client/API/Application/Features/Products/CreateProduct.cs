@@ -9,16 +9,19 @@ namespace Application.Features.Products;
 
 public record CreateProductCommand(
     string ProductSku,
-    string ProductName,
+    string NameEn,
+    string NameAr,
     string? ModelName,
-    string? ProductDescription,
-    string? ProductColor,
-    string? ProductStyle,
+    string? DescriptionEn,
+    string? DescriptionAr,
+    string? Color,
+    string? Style,
     decimal ProductCost,
-    decimal ProductPrice,
+    decimal RentPricePerDay,
     string? SkuType,
-    decimal? DiscountPrice,
+    decimal? RentDiscountPrice,
     int SubcategoryId,
+    int? BrandId,
     List<string>? ImageUrls
 ) : IRequest<CreateProductResponse>;
 
@@ -36,32 +39,39 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotEmpty().WithMessage("Product SKU is required.")
             .MaximumLength(50).WithMessage("Product SKU must not exceed 50 characters.");
 
-        RuleFor(x => x.ProductName)
-            .NotEmpty().WithMessage("Product name is required.")
+        RuleFor(x => x.NameEn)
+            .NotEmpty().WithMessage("English product name is required.")
+            .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
+
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Arabic product name is required.")
             .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
 
         RuleFor(x => x.ModelName)
             .MaximumLength(100).WithMessage("Model name must not exceed 100 characters.");
 
-        RuleFor(x => x.ProductDescription)
-            .MaximumLength(1000).WithMessage("Product description must not exceed 1000 characters.");
+        RuleFor(x => x.DescriptionEn)
+            .MaximumLength(1000).WithMessage("English product description must not exceed 1000 characters.");
 
-        RuleFor(x => x.ProductColor)
+        RuleFor(x => x.DescriptionAr)
+            .MaximumLength(1000).WithMessage("Arabic product description must not exceed 1000 characters.");
+
+        RuleFor(x => x.Color)
             .MaximumLength(50).WithMessage("Product color must not exceed 50 characters.");
 
-        RuleFor(x => x.ProductStyle)
+        RuleFor(x => x.Style)
             .MaximumLength(50).WithMessage("Product style must not exceed 50 characters.");
 
         RuleFor(x => x.ProductCost)
             .GreaterThanOrEqualTo(0).WithMessage("Product cost must be non-negative.");
 
-        RuleFor(x => x.ProductPrice)
-            .GreaterThan(0).WithMessage("Product price must be greater than 0.");
+        RuleFor(x => x.RentPricePerDay)
+            .GreaterThan(0).WithMessage("Rent price must be greater than 0.");
 
-        RuleFor(x => x.DiscountPrice)
-            .LessThan(x => x.ProductPrice)
-            .When(x => x.DiscountPrice.HasValue)
-            .WithMessage("Discount price must be less than product price.");
+        RuleFor(x => x.RentDiscountPrice)
+            .LessThan(x => x.RentPricePerDay)
+            .When(x => x.RentDiscountPrice.HasValue)
+            .WithMessage("Discount price must be less than rent price.");
 
         RuleFor(x => x.SubcategoryId)
             .GreaterThan(0).WithMessage("Invalid subcategory ID.");
@@ -96,19 +106,32 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             return new CreateProductResponse(false, "Subcategory not found.", null);
         }
 
+        Brand? brand = null;
+        if (request.BrandId.HasValue)
+        {
+             brand = await _context.Brands.FindAsync(new object[] { request.BrandId.Value }, cancellationToken);
+             if (brand == null)
+             {
+                 return new CreateProductResponse(false, "Brand not found.", null);
+             }
+        }
+
         var product = new Product
         {
             ProductSku = request.ProductSku,
-            ProductName = request.ProductName,
+            NameEn = request.NameEn,
+            NameAr = request.NameAr,
             ModelName = request.ModelName,
-            ProductDescription = request.ProductDescription,
-            ProductColor = request.ProductColor,
-            ProductStyle = request.ProductStyle,
+            DescriptionEn = request.DescriptionEn,
+            DescriptionAr = request.DescriptionAr,
+            Color = request.Color,
+            Style = request.Style,
             ProductCost = request.ProductCost,
-            ProductPrice = request.ProductPrice,
+            RentPricePerDay = request.RentPricePerDay,
             SkuType = request.SkuType,
-            DiscountPrice = request.DiscountPrice,
-            ProductSubcategoryId = request.SubcategoryId
+            RentDiscountPrice = request.RentDiscountPrice,
+            ProductSubcategoryId = request.SubcategoryId,
+            BrandId = request.BrandId
         };
 
         if (request.ImageUrls != null && request.ImageUrls.Any())
@@ -130,20 +153,27 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var dto = new ProductDto(
             product.Id,
             product.ProductSku,
-            product.ProductName,
+            product.NameEn,
+            product.NameAr,
             product.ModelName,
-            product.ProductDescription,
-            product.ProductColor,
-            product.ProductStyle,
+            product.DescriptionEn,
+            product.DescriptionAr,
+            product.Color,
+            product.Style,
             product.ProductCost,
-            product.ProductPrice,
+            product.RentPricePerDay,
             product.SkuType,
-            product.DiscountPrice,
+            product.RentDiscountPrice,
             product.EffectivePrice,
             product.ProfitMargin,
             product.ProductSubcategoryId,
-            subcategory.SubcategoryName,
-            subcategory.Category.CategoryName,
+            subcategory.NameEn,
+            subcategory.NameAr,
+            subcategory.Category.NameEn,
+            subcategory.Category.NameAr,
+            product.BrandId,
+            brand?.NameEn,
+            brand?.NameAr,
             product.Created,
             product.LastModified,
             product.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()

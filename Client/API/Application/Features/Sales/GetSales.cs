@@ -76,9 +76,9 @@ public class GetSalesQueryHandler : IRequestHandler<GetSalesQuery, GetSalesRespo
                 s.OrderDate,
                 s.OrderNumber,
                 s.OrderQuantity,
-                s.Product.ProductName,
+                s.Product.NameEn,
                 s.Customer.FirstName + " " + s.Customer.LastName,
-                s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)
+                s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)
             ));
 
         var sales = await PaginatedList<SaleListDto>.CreateAsync(

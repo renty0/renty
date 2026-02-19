@@ -23,10 +23,10 @@ public class GetInventoryStatsQueryHandler : IRequestHandler<GetInventoryStatsQu
         var totalStock = await _context.Sales.SumAsync(s => s.OrderQuantity, cancellationToken);
 
         var topProducts = await _context.Sales
-            .GroupBy(s => new { s.ProductId, s.Product!.ProductName })
+            .GroupBy(s => new { s.ProductId, s.Product!.NameEn })
             .Select(g => new
             {
-                ProductName = g.Key.ProductName,
+                ProductName = g.Key.NameEn,
                 TotalQuantity = g.Sum(s => s.OrderQuantity)
             })
             .OrderByDescending(p => p.TotalQuantity)
@@ -42,7 +42,7 @@ public class GetInventoryStatsQueryHandler : IRequestHandler<GetInventoryStatsQu
 
         // Group by category in memory
         var revenueByCategory = salesWithCategories
-            .GroupBy(s => s.Product?.Subcategory?.Category?.CategoryName ?? "Unknown")
+            .GroupBy(s => s.Product?.Subcategory?.Category?.NameEn ?? "Unknown")
             .Select(g => new CategoryPerformanceDto(
                 g.Key,
                 g.Sum(s => s.LineTotal),

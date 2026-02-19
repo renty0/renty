@@ -35,7 +35,7 @@ public class GetPersonalizedRecommendationsQueryHandler : IRequestHandler<GetPer
                     x.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
                     x.PricePerDay,
                     x.AverageRating,
-                    x.Category != null ? x.Category.CategoryName : null,
+                    x.Category != null ? x.Category.NameEn : null,
                     "Popular in Rently"
                 ))
                 .ToListAsync(cancellationToken);
@@ -61,7 +61,7 @@ public class GetPersonalizedRecommendationsQueryHandler : IRequestHandler<GetPer
                     x.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
                     x.PricePerDay,
                     x.AverageRating,
-                    x.Category != null ? x.Category.CategoryName : null,
+                    x.Category != null ? x.Category.NameEn : null,
                     "Highly rated"
                 ))
                 .ToListAsync(cancellationToken);
@@ -79,7 +79,7 @@ public class GetPersonalizedRecommendationsQueryHandler : IRequestHandler<GetPer
                 x.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
                 x.PricePerDay,
                 x.AverageRating,
-                x.Category != null ? x.Category.CategoryName : null,
+                x.Category != null ? x.Category.NameEn : null,
                 "Based on your interest"
             ))
             .ToListAsync(cancellationToken);

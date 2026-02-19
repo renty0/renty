@@ -34,11 +34,11 @@ public class GetReturnByIdQueryHandler : IRequestHandler<GetReturnByIdQuery, Get
                 r.ReturnQuantity,
                 r.ReturnReason,
                 r.ProductId,
-                r.Product.ProductName,
+                r.Product.NameEn,
                 r.TerritoryId,
                 r.Territory.Region,
                 r.Territory.Country,
-                r.ReturnQuantity * (r.Product.DiscountPrice ?? r.Product.ProductPrice)
+                r.ReturnQuantity * (r.Product.RentDiscountPrice ?? r.Product.RentPricePerDay)
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

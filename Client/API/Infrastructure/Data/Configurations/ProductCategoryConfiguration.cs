@@ -12,11 +12,14 @@ public class ProductCategoryConfiguration : IEntityTypeConfiguration<ProductCate
 
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.CategoryName)
+        builder.Property(c => c.NameEn)
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(c => c.CategoryName)
+        builder.Property(c => c.NameAr)
+            .HasMaxLength(100);
+
+        builder.HasIndex(c => c.NameEn)
             .IsUnique();
     }
 }

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -10,6 +10,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ProductsClient, ProductDto, GetProductByIdResponse, ProductListDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { LocalizationService } from '../../../core/services/localization.service';
 
 @Component({
     selector: 'app-product-details',
@@ -31,11 +32,13 @@ export class ProductDetailsComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private productsClient = inject(ProductsClient);
     private toast = inject(ToastService);
+    public localization = inject(LocalizationService);
 
     product = signal<ProductDto | null>(null);
     relatedProducts = signal<ProductListDto[]>([]);
     isLoading = signal(true);
     selectedImage = signal<string | undefined>(undefined);
+  lang = this.localization.language;
 
     ngOnInit() {
         this.route.params.subscribe(params => {

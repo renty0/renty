@@ -16,29 +16,35 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(p => p.ProductName)
+        builder.Property(p => p.NameEn)
             .IsRequired()
+            .HasMaxLength(200);
+
+        builder.Property(p => p.NameAr)
             .HasMaxLength(200);
 
         builder.Property(p => p.ModelName)
             .HasMaxLength(100);
 
-        builder.Property(p => p.ProductDescription)
+        builder.Property(p => p.DescriptionEn)
             .HasMaxLength(1000);
 
-        builder.Property(p => p.ProductColor)
+        builder.Property(p => p.DescriptionAr)
+            .HasMaxLength(1000);
+
+        builder.Property(p => p.Color)
             .HasMaxLength(50);
 
-        builder.Property(p => p.ProductStyle)
+        builder.Property(p => p.Style)
             .HasMaxLength(50);
 
         builder.Property(p => p.ProductCost)
             .HasPrecision(18, 2);
 
-        builder.Property(p => p.ProductPrice)
+        builder.Property(p => p.RentPricePerDay)
             .HasPrecision(18, 2);
 
-        builder.Property(p => p.DiscountPrice)
+        builder.Property(p => p.RentDiscountPrice)
             .HasPrecision(18, 2);
 
         builder.Property(p => p.SkuType)
@@ -53,7 +59,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Ignore(p => p.ProfitMargin);
 
         builder.HasIndex(p => p.ProductSku).IsUnique();
-        builder.HasIndex(p => p.ProductName);
+        builder.HasIndex(p => p.NameEn);
         builder.HasIndex(p => p.ProductSubcategoryId);
     }
 }

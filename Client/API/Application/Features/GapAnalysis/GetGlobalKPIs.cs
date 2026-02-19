@@ -24,7 +24,7 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
     {
         // 1. Basic Stats
         var totalRevenue = await _context.Sales
-            .SumAsync(x => x.OrderQuantity * (x.Product.DiscountPrice ?? x.Product.ProductPrice), cancellationToken);
+            .SumAsync(x => x.OrderQuantity * (x.Product.RentDiscountPrice ?? x.Product.RentPricePerDay), cancellationToken);
 
         var totalOrders = await _context.Sales.CountAsync(cancellationToken);
         var totalCustomers = await _context.Customers.CountAsync(cancellationToken);
@@ -34,10 +34,10 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
         var categories = await _context.ProductCategories
             .Select(c => new
             {
-                c.CategoryName,
+                CategoryName = c.NameEn,
                 Supply = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Demand = _context.Sales.Where(s => s.Product.Subcategory.ProductCategoryId == c.Id).Sum(s => s.OrderQuantity),
-                AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.ProductPrice) ?? 0
+                AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.RentPricePerDay) ?? 0
             })
             .ToListAsync(cancellationToken);
 
@@ -73,7 +73,7 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
             
             var monthlyRevenue = await _context.Sales
                 .Where(x => x.OrderDate.Year == targetMonth.Year && x.OrderDate.Month == targetMonth.Month)
-                .SumAsync(x => x.OrderQuantity * (x.Product.DiscountPrice ?? x.Product.ProductPrice), cancellationToken);
+                .SumAsync(x => x.OrderQuantity * (x.Product.RentDiscountPrice ?? x.Product.RentPricePerDay), cancellationToken);
                 
             revenueTrend.Add(new KpiRevenueTrendDto(targetMonth.ToString("MMM yyyy"), monthlyRevenue));
         }

@@ -66,6 +66,7 @@ app.MapAccountEndpoints();
 app.MapSeedingEndpoints();
 app.MapCategoryEndpoints();
 app.MapSubcategoryEndpoints();
+app.MapBrandEndpoints();
 app.MapProductEndpoints();
 app.MapCustomerEndpoints();
 app.MapTerritoryEndpoints();

@@ -67,7 +67,7 @@ public class GetSalesByPeriodQueryHandler : IRequestHandler<GetSalesByPeriodQuer
                         g.Key.Year,
                         g.Key.Month,
                         null,
-                        g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)),
+                        g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)),
                         g.Select(s => s.OrderNumber).Distinct().Count(),
                         g.Sum(s => s.OrderQuantity)
                     ))
@@ -83,7 +83,7 @@ public class GetSalesByPeriodQueryHandler : IRequestHandler<GetSalesByPeriodQuer
                         g.Key.Year,
                         null,
                         g.Key.Quarter,
-                        g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)),
+                        g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)),
                         g.Select(s => s.OrderNumber).Distinct().Count(),
                         g.Sum(s => s.OrderQuantity)
                     ))
@@ -100,7 +100,7 @@ public class GetSalesByPeriodQueryHandler : IRequestHandler<GetSalesByPeriodQuer
                         g.Key,
                         null,
                         null,
-                        g.Sum(s => s.OrderQuantity * (s.Product.DiscountPrice ?? s.Product.ProductPrice)),
+                        g.Sum(s => s.OrderQuantity * (s.Product.RentDiscountPrice ?? s.Product.RentPricePerDay)),
                         g.Select(s => s.OrderNumber).Distinct().Count(),
                         g.Sum(s => s.OrderQuantity)
                     ))

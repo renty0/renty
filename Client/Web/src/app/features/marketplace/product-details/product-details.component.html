@@ -15,7 +15,7 @@
             <!-- Left: Image Gallery -->
             <div class="gallery-section">
                 <div class="main-image">
-                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="product()?.productName">
+                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="lang() === 'en' ? product()?.nameAr : product()?.nameEn">
                 </div>
                 @if (product()?.images?.length) {
                 <div class="thumbnails">
@@ -32,21 +32,21 @@
             <!-- Right: Product Info -->
             <div class="info-section">
                 <div class="header">
-                    <span class="category-badge">{{ product()?.categoryName }} / {{ product()?.subcategoryName }}</span>
-                    <h1>{{ product()?.productName }}</h1>
+                    <span class="category-badge">{{ lang() === 'en' ? product()?.categoryNameAr : product()?.categoryNameEn }} / {{ lang() === 'en' ? product()?.subcategoryNameAr : product()?.subcategoryNameEn }}</span>
+                    <h1>{{ lang() === 'en' ? product()?.nameAr : product()?.nameEn }}</h1>
                     <div class="sku">SKU: {{ product()?.productSku }}</div>
                 </div>
 
                 <div class="price-section">
-                    @if (product()?.discountPrice) {
-                    <div class="original-price">{{ product()?.productPrice | currency }}</div>
+                    @if (product()?.rentDiscountPrice) {
+                    <div class="original-price">{{ product()?.rentPricePerDay | currency }}</div>
                     <div class="current-price sale">{{ product()?.effectivePrice | currency }}</div>
                     } @else {
-                    <div class="current-price">{{ product()?.productPrice | currency }}</div>
+                    <div class="current-price">{{ product()?.rentPricePerDay | currency }}</div>
                     }
                 </div>
 
-                <p class="short-desc">{{ product()?.productDescription }}</p>
+                <p class="short-desc">{{ lang() === 'en' ? product()?.descriptionAr : product()?.descriptionEn }}</p>
 
                 <div class="actions">
                     <button mat-flat-button color="primary" class="add-to-cart-btn">
@@ -61,14 +61,14 @@
                 <mat-tab-group class="details-tabs">
                     <mat-tab [label]="'product_details.description' | translate">
                         <div class="tab-content">
-                            <p>{{ product()?.productDescription }}</p>
+                            <p>{{ lang() === 'en' ? product()?.descriptionAr : product()?.descriptionEn }}</p>
                         </div>
                     </mat-tab>
                     <mat-tab [label]="'product_details.specifications' | translate">
                         <div class="tab-content specs-list">
                             <div class="spec-item">
                                 <span class="label">{{ 'product_details.color' | translate }}</span>
-                                <span class="value">{{ product()?.productColor || '-' }}</span>
+                                <span class="value">{{ product()?.color || '-' }}</span>
                             </div>
                             <div class="spec-item">
                                 <span class="label">{{ 'product_details.model' | translate }}</span>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="spec-item">
                                 <span class="label">{{ 'product_details.style' | translate }}</span>
-                                <span class="value">{{ product()?.productStyle || '-' }}</span>
+                                <span class="value">{{ product()?.style || '-' }}</span>
                             </div>
                         </div>
                     </mat-tab>
@@ -92,11 +92,11 @@
             @for (item of relatedProducts(); track item.id) {
             <div class="product-card mini" [routerLink]="['/marketplace/product', item.id]">
                 <div class="img-container">
-                    <img [src]="item.primaryImageUrl || 'assets/images/placeholder.png'" [alt]="item.productName">
+                    <img [src]="item.primaryImageUrl || 'assets/images/placeholder.png'" [alt]="lang() === 'en' ? item.nameAr : item.nameEn">
                 </div>
                 <div class="info">
-                    <h3>{{ item.productName }}</h3>
-                    <div class="price">{{ (item.discountPrice || item.productPrice) | currency }}</div>
+                    <h3>{{ lang() === 'en' ? item.nameAr : item.nameEn }}</h3>
+                    <div class="price">{{ (item.rentDiscountPrice || item.rentPricePerDay) | currency }}</div>
                 </div>
             </div>
             }

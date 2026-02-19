@@ -60,7 +60,7 @@ public class GetReturnsSummaryQueryHandler : IRequestHandler<GetReturnsSummaryQu
             {
                 TotalReturns = g.Count(),
                 TotalQuantity = g.Sum(r => r.ReturnQuantity),
-                TotalValue = g.Sum(r => r.ReturnQuantity * (r.Product.DiscountPrice ?? r.Product.ProductPrice))
+                TotalValue = g.Sum(r => r.ReturnQuantity * (r.Product.RentDiscountPrice ?? r.Product.RentPricePerDay))
             })
             .FirstOrDefaultAsync(cancellationToken);
 

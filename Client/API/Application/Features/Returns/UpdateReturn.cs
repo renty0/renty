@@ -85,14 +85,14 @@ public class UpdateReturnCommandHandler : IRequestHandler<UpdateReturnCommand, U
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        var effectivePrice = product.DiscountPrice ?? product.ProductPrice;
+        var effectivePrice = product.RentDiscountPrice ?? product.RentPricePerDay;
         var dto = new ReturnDto(
             returnItem.Id,
             returnItem.ReturnDate,
             returnItem.ReturnQuantity,
             returnItem.ReturnReason,
             returnItem.ProductId,
-            product.ProductName,
+            product.NameEn,
             returnItem.TerritoryId,
             territory.Region,
             territory.Country,

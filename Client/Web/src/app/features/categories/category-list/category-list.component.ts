@@ -17,6 +17,7 @@ import { CategoriesClient, ProductCategoryDto } from '../../../core/api/api-clie
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { CategoryEditorComponent } from '../category-editor/category-editor.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { LocalizationService } from '../../../core/services/localization.service';
 
 @Component({
     selector: 'app-category-list',
@@ -44,11 +45,13 @@ export class CategoryListComponent implements OnInit {
     private dialog = inject(MatDialog);
     private toast = inject(ToastService);
     public translate = inject(TranslateService);
+    public localization = inject(LocalizationService);
 
     displayedColumns = ['logo', 'name', 'description', 'actions'];
     dataSource = signal<ProductCategoryDto[]>([]);
     isLoading = signal(false);
     viewMode = signal<'list' | 'cards'>('list');
+    lang = this.localization.language;
 
     // Dialog state
     showDialog = signal(false);
@@ -73,8 +76,6 @@ export class CategoryListComponent implements OnInit {
                 this.pageSize.set(mode === 'cards' ? 12 : 10);
             });
         }, { allowSignalWrites: true });
-
-        // Reactive data fetching
         effect(() => {
             this.getData();
         }, { allowSignalWrites: true });

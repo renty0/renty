@@ -47,8 +47,11 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
 
         if (!string.IsNullOrWhiteSpace(request.SearchString))
         {
-            query = query.Where(s => s.SubcategoryName.Contains(request.SearchString) || 
-                                     s.Description.Contains(request.SearchString));
+            var term = request.SearchString;
+            query = query.Where(s => s.NameEn.Contains(term) || 
+                                     s.NameAr.Contains(term) ||
+                                     (s.DescriptionEn != null && s.DescriptionEn.Contains(term)) ||
+                                     (s.DescriptionAr != null && s.DescriptionAr.Contains(term)));
         }
 
         // Apply sorting
@@ -56,13 +59,13 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
         switch (request.SortBy?.ToLower())
         {
             case "name":
-                query = isDescending ? query.OrderByDescending(s => s.SubcategoryName) : query.OrderBy(s => s.SubcategoryName);
+                query = isDescending ? query.OrderByDescending(s => s.NameEn) : query.OrderBy(s => s.NameEn);
                 break;
             case "date":
                 query = isDescending ? query.OrderByDescending(s => s.Created) : query.OrderBy(s => s.Created);
                 break;
             default:
-                query = query.OrderBy(s => s.SubcategoryName);
+                query = query.OrderBy(s => s.NameEn);
                 break;
         }
 
@@ -84,12 +87,15 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
 
             return new ProductSubcategoryDto(
                 s.Id,
-                s.SubcategoryName,
-                s.Description,
+                s.NameEn,
+                s.NameAr,
+                s.DescriptionEn,
+                s.DescriptionAr,
                 s.LogoId,
                 logoUrl,
                 s.ProductCategoryId,
-                s.Category.CategoryName,
+                s.Category.NameEn,
+                s.Category.NameAr,
                 s.Products.Count,
                 s.Created,
                 s.LastModified

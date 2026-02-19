@@ -10,6 +10,7 @@ public record GetProductsQuery(
     int PageSize = 10,
     int? SubcategoryId = null,
     int? CategoryId = null,
+    int? BrandId = null,
     string? SearchTerm = null,
     decimal? minPrice = null,
     decimal? maxPrice = null,
@@ -38,6 +39,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
         var query = _context.Products
             .Include(p => p.Subcategory)
             .ThenInclude(s => s.Category)
+            .Include(p => p.Brand)
             .AsQueryable();
 
         if (request.SubcategoryId.HasValue)
@@ -50,29 +52,36 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             query = query.Where(p => p.Subcategory.ProductCategoryId == request.CategoryId.Value);
         }
 
+        if (request.BrandId.HasValue)
+        {
+            query = query.Where(p => p.BrandId == request.BrandId.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             var searchTerm = request.SearchTerm.ToLower();
             query = query.Where(p =>
-                p.ProductName.ToLower().Contains(searchTerm) ||
+                p.NameEn.ToLower().Contains(searchTerm) ||
+                p.NameAr.ToLower().Contains(searchTerm) ||
                 p.ProductSku.ToLower().Contains(searchTerm) ||
-                (p.ProductDescription != null && p.ProductDescription.ToLower().Contains(searchTerm))
+                (p.DescriptionEn != null && p.DescriptionEn.ToLower().Contains(searchTerm)) ||
+                (p.DescriptionAr != null && p.DescriptionAr.ToLower().Contains(searchTerm))
             );
         }
 
         if (request.minPrice.HasValue)
         {
-            query = query.Where(p => p.ProductPrice >= request.minPrice.Value);
+            query = query.Where(p => p.RentPricePerDay >= request.minPrice.Value);
         }
 
         if (request.maxPrice.HasValue)
         {
-            query = query.Where(p => p.ProductPrice <= request.maxPrice.Value);
+            query = query.Where(p => p.RentPricePerDay <= request.maxPrice.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(request.color))
         {
-            query = query.Where(p => p.ProductColor == request.color);
+            query = query.Where(p => p.Color == request.color);
         }
 
         // Apply sorting
@@ -81,9 +90,9 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             var isDescending = request.sortOrder?.ToLower() == "desc";
             query = request.sortBy.ToLower() switch
             {
-                "name" => isDescending ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName),
+                "name" => isDescending ? query.OrderByDescending(p => p.NameEn) : query.OrderBy(p => p.NameEn),
                 "sku" => isDescending ? query.OrderByDescending(p => p.ProductSku) : query.OrderBy(p => p.ProductSku),
-                "price" => isDescending ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice),
+                "price" => isDescending ? query.OrderByDescending(p => p.RentPricePerDay) : query.OrderBy(p => p.RentPricePerDay),
                 "date" => isDescending ? query.OrderByDescending(p => p.Created) : query.OrderBy(p => p.Created),
                 _ => query.OrderByDescending(p => p.Created)
             };
@@ -97,12 +106,17 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             .Select(p => new ProductListDto(
                 p.Id,
                 p.ProductSku,
-                p.ProductName,
-                p.ProductPrice,
-                p.DiscountPrice,
-                p.ProductColor,
-                p.Subcategory.SubcategoryName,
-                p.Subcategory.Category.CategoryName,
+                p.NameEn,
+                p.NameAr,
+                p.RentPricePerDay,
+                p.RentDiscountPrice,
+                p.Color,
+                p.Subcategory.NameEn,
+                p.Subcategory.NameAr,
+                p.Subcategory.Category.NameEn,
+                p.Subcategory.Category.NameAr,
+                p.Brand != null ? p.Brand.NameEn : null,
+                p.Brand != null ? p.Brand.NameAr : null,
                 p.Created,
                 p.LastModified,
                 p.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()

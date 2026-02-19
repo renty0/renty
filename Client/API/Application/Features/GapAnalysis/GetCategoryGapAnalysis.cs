@@ -22,7 +22,7 @@ public class GetCategoryGapAnalysisQueryHandler : IRequestHandler<GetCategoryGap
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
+                CategoryName = c.NameEn,
                 UniqueProducts = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Sales = _context.Sales
                     .Where(s => s.Product.Subcategory.ProductCategoryId == c.Id)

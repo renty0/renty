@@ -7,7 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories;
 
-public record UpdateCategoryCommand(int Id, string CategoryName, string? Description, Guid? LogoId) : IRequest<UpdateCategoryResponse>;
+public record UpdateCategoryCommand(
+    int Id, 
+    string NameEn, 
+    string NameAr, 
+    string? DescriptionEn, 
+    string? DescriptionAr, 
+    Guid? LogoId
+) : IRequest<UpdateCategoryResponse>;
 
 public record UpdateCategoryResponse(
     bool Success,
@@ -22,12 +29,19 @@ public class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCo
         RuleFor(x => x.Id)
             .GreaterThan(0).WithMessage("Invalid category ID.");
 
-        RuleFor(x => x.CategoryName)
-            .NotEmpty().WithMessage("Category name is required.")
+        RuleFor(x => x.NameEn)
+            .NotEmpty().WithMessage("English category name is required.")
             .MaximumLength(100).WithMessage("Category name must not exceed 100 characters.");
 
-        RuleFor(x => x.Description)
-            .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Arabic category name is required.")
+            .MaximumLength(100).WithMessage("Category name must not exceed 100 characters.");
+
+        RuleFor(x => x.DescriptionEn)
+            .MaximumLength(500).WithMessage("English description must not exceed 500 characters.");
+
+        RuleFor(x => x.DescriptionAr)
+            .MaximumLength(500).WithMessage("Arabic description must not exceed 500 characters.");
     }
 }
 
@@ -55,15 +69,17 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         }
 
         var nameExists = await _context.ProductCategories
-            .AnyAsync(c => c.CategoryName == request.CategoryName && c.Id != request.Id, cancellationToken);
+            .AnyAsync(c => c.NameEn == request.NameEn && c.Id != request.Id, cancellationToken);
 
         if (nameExists)
         {
             return new UpdateCategoryResponse(false, "A category with this name already exists.", null);
         }
 
-        category.CategoryName = request.CategoryName;
-        category.Description = request.Description ?? string.Empty;
+        category.NameEn = request.NameEn;
+        category.NameAr = request.NameAr;
+        category.DescriptionEn = request.DescriptionEn;
+        category.DescriptionAr = request.DescriptionAr;
         category.LogoId = request.LogoId;
         
         await _context.SaveChangesAsync(cancellationToken);
@@ -85,7 +101,18 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             }
         }
 
-        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, category.Subcategories.Count, category.Created, category.LastModified);
+        var dto = new ProductCategoryDto(
+            category.Id, 
+            category.NameEn, 
+            category.NameAr, 
+            category.DescriptionEn, 
+            category.DescriptionAr, 
+            category.LogoId, 
+            logoUrl, 
+            category.Subcategories.Count, 
+            category.Created, 
+            category.LastModified
+        );
         return new UpdateCategoryResponse(true, "Category updated successfully.", dto);
     }
 }
