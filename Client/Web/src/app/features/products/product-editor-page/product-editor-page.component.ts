@@ -116,8 +116,8 @@ export class ProductEditorPageComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(200)]],
       description: ['', [Validators.maxLength(1000)]],
-      type: ['standard'],          // standard | premium
-      condition: ['good'],              // new | like_new | good | fair
+      type: ['standard'], // standard | premium
+      condition: ['good'], // new | like_new | good | fair
       defaultDeposit: [0, [Validators.required, Validators.min(0)]],
       dailyPrice: [0, [Validators.required, Validators.min(0.01)]],
       location: [''],
@@ -131,8 +131,8 @@ export class ProductEditorPageComponent implements OnInit {
   private loadSubcategories() {
     this.subcategoriesClient.getSubcategories(1, 1000).subscribe({
       next: (res) => {
-        if (res.data?.items) {
-          const options = res.data.items.map((s) => ({
+        if (res.data) {
+          const options = res.data.map((s) => ({
             name: `${s.subcategoryName} (${s.categoryName})`,
             code: s.id ?? 0,
           }));
@@ -147,7 +147,7 @@ export class ProductEditorPageComponent implements OnInit {
     this.itemsClient.getItemById(id).subscribe({
       next: (res) => {
         if (!res.success) {
-          this.toast.showError(res.error ?? 'Failed to load item details');
+          this.toast.showError(res.message ?? 'Failed to load item details');
           this.router.navigate(['/products']);
           this.isLoading = false;
           return;
@@ -161,7 +161,7 @@ export class ProductEditorPageComponent implements OnInit {
             type: item.type,
             condition: item.condition,
             defaultDeposit: item.defaultDeposit,
-            dailyPrice: item.pricing?.find(p => p.pricingType === 'daily')?.price ?? 0,
+            dailyPrice: item.pricing?.find((p) => p.pricingType === 'daily')?.price ?? 0,
             location: item.location,
             city: item.city,
             subcategoryId: item.subcategory?.id ?? null,
@@ -200,15 +200,15 @@ export class ProductEditorPageComponent implements OnInit {
   }
 
   private buildImages(): CreateItemImageCommand[] {
-    return this.uploadedImages.map((img) =>
-      new CreateItemImageCommand({ imageUrl: img.imageUrl, isPrimary: img.isPrimary })
+    return this.uploadedImages.map(
+      (img) => new CreateItemImageCommand({ imageUrl: img.imageUrl, isPrimary: img.isPrimary }),
     );
   }
 
   private createItem() {
     const v = this.form.value;
     const cmd = new CreateItemCommand({
-      productKey: 1,                  // required by server; update as needed
+      productKey: 1,
       title: v.title,
       description: v.description,
       type: v.type,
@@ -225,8 +225,8 @@ export class ProductEditorPageComponent implements OnInit {
 
     this.itemsClient.createItem(cmd).subscribe({
       next: (res) => {
-        if (!res.success) {
-          this.toast.showError(res.error ?? 'Failed to create item');
+        if (!res.error) {
+          this.toast.showError(res.message ?? 'Failed to create item');
         } else {
           this.toast.showSuccess('Item created successfully');
           this.saved.emit();
@@ -263,8 +263,8 @@ export class ProductEditorPageComponent implements OnInit {
 
     this.itemsClient.updateItem(this.itemId!, cmd).subscribe({
       next: (res) => {
-        if (!res.success) {
-          this.toast.showError(res.error ?? 'Failed to update item');
+        if (!res.error) {
+          this.toast.showError(res.message ?? 'Failed to update item');
         } else {
           this.toast.showSuccess('Item updated successfully');
           this.saved.emit();

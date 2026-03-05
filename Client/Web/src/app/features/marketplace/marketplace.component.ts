@@ -109,7 +109,7 @@ export class MarketplaceComponent implements OnInit {
     this.isLoadingCategories.set(true);
     this.categoriesClient.getCategories(1, 100)
       .pipe(
-        tap(res => this.categories.set(res.data?.items ?? [])),
+        tap(res => this.categories.set(res.data ?? [])),
         catchError(err => {
           console.error('Failed to load categories', err);
           this.toast.showError('errors.failedToLoadCategories');
@@ -124,7 +124,7 @@ export class MarketplaceComponent implements OnInit {
     this.isLoadingSubcategories.set(true);
     this.subcategoriesClient.getSubcategories(1, 100, categoryId)
       .pipe(
-        tap(res => this.subcategories.set(res.data?.items ?? [])),
+        tap(res => this.subcategories.set(res.data ?? [])),
         catchError(err => {
           console.error('Failed to load subcategories', err);
           return of(null);
@@ -152,8 +152,8 @@ export class MarketplaceComponent implements OnInit {
     )
       .pipe(
         tap(res => {
-          this.items.set(res.data?.items ?? []);
-          this.totalCount.set(res.data?.total ?? 0);
+          this.items.set(res.data ?? []);
+          this.totalCount.set(res?.total ?? 0);
         }),
         catchError(err => {
           this.toast.showError('errors.failedToLoadProducts');

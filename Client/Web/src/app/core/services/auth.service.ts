@@ -11,13 +11,13 @@ import {
   AuthRefreshData,
   LoginCommand,
   RefreshTokenCommand,
-  RegisterCommand
+  RegisterCommand,
 } from '../api/api-client';
 import { CookieService } from 'ngx-cookie-service';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly authClient = inject(AuthClient);
@@ -32,7 +32,7 @@ export class AuthService {
   private readonly ROLES_KEY = 'urk';
 
   isLoggedIn: WritableSignal<boolean>;
-  private readonly rolesSignal = signal<string>("user");
+  private readonly rolesSignal = signal<string>('user');
   readonly roles = computed(() => this.rolesSignal());
 
   constructor() {
@@ -59,7 +59,7 @@ export class AuthService {
       expires: expires,
       path: '/',
       secure: true,
-      sameSite: 'Lax'
+      sameSite: 'Lax',
     });
   }
 
@@ -77,7 +77,7 @@ export class AuthService {
         this.rolesSignal.set(JSON.parse(rolesData));
       }
     } catch {
-      this.rolesSignal.set("user");
+      this.rolesSignal.set('user');
     }
   }
 
@@ -86,8 +86,8 @@ export class AuthService {
 
     // Use token expiration for cookie expiration if available, otherwise fallback to 7 days
     const expires = 7;
-    // loginResponse.refreshTokenExpiresAt ?
-    //   new Date(loginResponse.refreshTokenExpiresAt) : 7;
+    loginResponse.refreshTokenExpiresAt ?
+      new Date(loginResponse.refreshTokenExpiresAt) : 7;
 
     if (loginResponse.accessToken) {
       this.setSecureCookie(this.ACCESS_TOKEN_KEY, loginResponse.accessToken, expires);
@@ -95,14 +95,14 @@ export class AuthService {
     if (loginResponse.refreshToken) {
       this.setSecureCookie(this.REFRESH_TOKEN_KEY, loginResponse.refreshToken, expires);
     }
-    // if (loginResponse.refreshTokenExpiresAt) {
-    //   this.setSecureCookie(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.refreshTokenExpiresAt).toISOString(), expires);
-    // }
+    if (loginResponse.refreshTokenExpiresAt) {
+      this.setSecureCookie(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.refreshTokenExpiresAt).toISOString(), expires);
+    }
 
     if (loginResponse.user) {
       const userData = JSON.stringify(loginResponse.user);
       this.setSecureCookie(this.USER_DATA_KEY, userData, expires);
-      const roles = loginResponse.user.role || "user";
+      const roles = loginResponse.user.role || 'user';
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), expires);
       this.rolesSignal.set(roles);
     }
@@ -113,7 +113,7 @@ export class AuthService {
   login(email: string, password: string): Observable<ApiResponseOfAuthLoginData> {
     const command = new LoginCommand({
       email,
-      password
+      password,
     });
 
     return this.authClient.authLogin(command).pipe(
@@ -121,7 +121,7 @@ export class AuthService {
         if (response.success && response.data) {
           this.storeLoginResponse(response.data);
         }
-      })
+      }),
     );
   }
 
@@ -149,7 +149,7 @@ export class AuthService {
       city: payload.city || undefined,
       country: payload.country || undefined,
       bio: payload.bio || undefined,
-      userType: payload.userType
+      userType: payload.userType,
     });
 
     return this.authClient.authRegister(command);
@@ -159,7 +159,7 @@ export class AuthService {
     if (user) {
       const userData = JSON.stringify(user);
       this.setSecureCookie(this.USER_DATA_KEY, userData, 7);
-      const roles = user.role || "user";
+      const roles = user.role || 'user';
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), 7);
       this.rolesSignal.set(roles);
     }
@@ -206,7 +206,7 @@ export class AuthService {
     }
 
     const command = new RefreshTokenCommand({
-      refreshToken
+      refreshToken,
     });
 
     return this.authClient.authRefresh(command).pipe(
@@ -238,7 +238,7 @@ export class AuthService {
       catchError((error: any) => {
         this.logout();
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -248,7 +248,7 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_TOKEN_EXP_KEY, '/');
     this.cookieService.delete(this.USER_DATA_KEY, '/');
     this.cookieService.delete(this.ROLES_KEY, '/');
-    this.rolesSignal.set("user");
+    this.rolesSignal.set('user');
     this.isLoggedIn.set(false);
   }
 

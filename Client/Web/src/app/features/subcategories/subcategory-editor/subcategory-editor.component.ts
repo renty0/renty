@@ -101,7 +101,7 @@ export class SubcategoryEditorComponent implements OnInit {
       .getCategories(1, 1000)
       .pipe(
         tap((res) => {
-          this.categories.set(res.data?.items || []);
+          this.categories.set(res.data || []);
         }),
         catchError((err) => {
           this.toast.showError('errors.failedToLoadCategories');

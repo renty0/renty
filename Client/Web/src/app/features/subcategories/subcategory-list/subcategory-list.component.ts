@@ -100,9 +100,9 @@ export class SubcategoryListComponent implements OnInit {
       .getSubcategories(page, size, undefined, term || undefined)
       .pipe(
         tap((response) => {
-          const items = response?.data?.items || [];
+          const items = response?.data || [];
           this.dataSource.set(items);
-          this.totalCount.set(response?.data?.total || 0);
+          this.totalCount.set(response?.total || 0);
         }),
         catchError((err) => {
           console.error('Failed to load subcategories', err);

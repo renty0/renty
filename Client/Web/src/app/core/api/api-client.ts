@@ -380,7 +380,7 @@ export class ItemsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponseOfPagedResultOfItemListDto> {
+    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponseOfListOfItemListDto> {
         let url_ = this.baseUrl + "/api/v1/items?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -427,14 +427,14 @@ export class ItemsClient {
                 try {
                     return this.processGetItems(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPagedResultOfItemListDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfItemListDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPagedResultOfItemListDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfItemListDto>;
         }));
     }
 
-    protected processGetItems(response: HttpResponseBase): Observable<ApiResponseOfPagedResultOfItemListDto> {
+    protected processGetItems(response: HttpResponseBase): Observable<ApiResponseOfListOfItemListDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -445,7 +445,7 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPagedResultOfItemListDto.fromJS(resultData200);
+            result200 = ApiResponseOfListOfItemListDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1754,7 +1754,7 @@ export class SubcategoriesClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfPagedResultOfProductSubcategoryDto> {
+    getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductSubcategoryDto> {
         let url_ = this.baseUrl + "/api/v1/categories/{categoryId}/subcategories?";
         if (categoryId === undefined || categoryId === null)
             throw new globalThis.Error("The parameter 'categoryId' must be defined.");
@@ -1788,14 +1788,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processGetSubcategoriesByCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPagedResultOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPagedResultOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
         }));
     }
 
-    protected processGetSubcategoriesByCategory(response: HttpResponseBase): Observable<ApiResponseOfPagedResultOfProductSubcategoryDto> {
+    protected processGetSubcategoriesByCategory(response: HttpResponseBase): Observable<ApiResponseOfListOfProductSubcategoryDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1806,7 +1806,7 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPagedResultOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponseOfListOfProductSubcategoryDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1817,7 +1817,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    getSubcategories(page: number, limit: number, categoryId?: number | null | undefined, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfPagedResultOfProductSubcategoryDto> {
+    getSubcategories(page: number, limit: number, categoryId?: number | null | undefined, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductSubcategoryDto> {
         let url_ = this.baseUrl + "/api/v1/subcategories?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1852,14 +1852,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processGetSubcategories(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPagedResultOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPagedResultOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
         }));
     }
 
-    protected processGetSubcategories(response: HttpResponseBase): Observable<ApiResponseOfPagedResultOfProductSubcategoryDto> {
+    protected processGetSubcategories(response: HttpResponseBase): Observable<ApiResponseOfListOfProductSubcategoryDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1870,7 +1870,7 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPagedResultOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponseOfListOfProductSubcategoryDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3701,7 +3701,7 @@ export class CategoriesClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfPagedResultOfProductCategoryDto> {
+    getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductCategoryDto> {
         let url_ = this.baseUrl + "/api/v1/categories?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -3734,14 +3734,14 @@ export class CategoriesClient {
                 try {
                     return this.processGetCategories(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPagedResultOfProductCategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductCategoryDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPagedResultOfProductCategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductCategoryDto>;
         }));
     }
 
-    protected processGetCategories(response: HttpResponseBase): Observable<ApiResponseOfPagedResultOfProductCategoryDto> {
+    protected processGetCategories(response: HttpResponseBase): Observable<ApiResponseOfListOfProductCategoryDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3752,7 +3752,7 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPagedResultOfProductCategoryDto.fromJS(resultData200);
+            result200 = ApiResponseOfListOfProductCategoryDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4012,7 +4012,7 @@ export class BrandsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfPagedResultOfBrandDto> {
+    getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfBrandDto> {
         let url_ = this.baseUrl + "/api/v1/brands?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -4045,14 +4045,14 @@ export class BrandsClient {
                 try {
                     return this.processGetBrands(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPagedResultOfBrandDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfBrandDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPagedResultOfBrandDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfBrandDto>;
         }));
     }
 
-    protected processGetBrands(response: HttpResponseBase): Observable<ApiResponseOfPagedResultOfBrandDto> {
+    protected processGetBrands(response: HttpResponseBase): Observable<ApiResponseOfListOfBrandDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4063,7 +4063,7 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPagedResultOfBrandDto.fromJS(resultData200);
+            result200 = ApiResponseOfListOfBrandDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4314,10 +4314,15 @@ export class BrandsClient {
 
 export class ApiResponseOfAuthRegisterData implements IApiResponseOfAuthRegisterData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthRegisterData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfAuthRegisterData) {
         if (data) {
@@ -4331,10 +4336,19 @@ export class ApiResponseOfAuthRegisterData implements IApiResponseOfAuthRegister
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? AuthRegisterData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -4348,20 +4362,34 @@ export class ApiResponseOfAuthRegisterData implements IApiResponseOfAuthRegister
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfAuthRegisterData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthRegisterData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class AuthRegisterData implements IAuthRegisterData {
@@ -4406,10 +4434,15 @@ export interface IAuthRegisterData {
 
 export class ApiResponseOfObject implements IApiResponseOfObject {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: any | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfObject) {
         if (data) {
@@ -4423,10 +4456,19 @@ export class ApiResponseOfObject implements IApiResponseOfObject {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"];
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -4440,20 +4482,34 @@ export class ApiResponseOfObject implements IApiResponseOfObject {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfObject {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: any | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class RegisterCommand implements IRegisterCommand {
@@ -4540,10 +4596,15 @@ export enum UserType {
 
 export class ApiResponseOfAuthVerifyEmailData implements IApiResponseOfAuthVerifyEmailData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthVerifyEmailData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfAuthVerifyEmailData) {
         if (data) {
@@ -4557,10 +4618,19 @@ export class ApiResponseOfAuthVerifyEmailData implements IApiResponseOfAuthVerif
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? AuthVerifyEmailData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -4574,20 +4644,34 @@ export class ApiResponseOfAuthVerifyEmailData implements IApiResponseOfAuthVerif
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfAuthVerifyEmailData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthVerifyEmailData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class AuthVerifyEmailData implements IAuthVerifyEmailData {
@@ -4668,10 +4752,15 @@ export interface IConfirmEmailCommand {
 
 export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthLoginData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfAuthLoginData) {
         if (data) {
@@ -4685,10 +4774,19 @@ export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? AuthLoginData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -4702,25 +4800,40 @@ export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfAuthLoginData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthLoginData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class AuthLoginData implements IAuthLoginData {
     accessToken?: string | undefined;
     refreshToken?: string | undefined;
+    refreshTokenExpiresAt?: Date | undefined;
     user?: AuthLoginUser | undefined;
 
     constructor(data?: IAuthLoginData) {
@@ -4736,6 +4849,7 @@ export class AuthLoginData implements IAuthLoginData {
         if (_data) {
             this.accessToken = _data["accessToken"];
             this.refreshToken = _data["refreshToken"];
+            this.refreshTokenExpiresAt = _data["refreshTokenExpiresAt"] ? new Date(_data["refreshTokenExpiresAt"].toString()) : undefined as any;
             this.user = _data["user"] ? AuthLoginUser.fromJS(_data["user"]) : undefined as any;
         }
     }
@@ -4751,6 +4865,7 @@ export class AuthLoginData implements IAuthLoginData {
         data = typeof data === 'object' ? data : {};
         data["accessToken"] = this.accessToken;
         data["refreshToken"] = this.refreshToken;
+        data["refreshTokenExpiresAt"] = this.refreshTokenExpiresAt ? this.refreshTokenExpiresAt.toISOString() : undefined as any;
         data["user"] = this.user ? this.user.toJSON() : undefined as any;
         return data;
     }
@@ -4759,6 +4874,7 @@ export class AuthLoginData implements IAuthLoginData {
 export interface IAuthLoginData {
     accessToken?: string | undefined;
     refreshToken?: string | undefined;
+    refreshTokenExpiresAt?: Date | undefined;
     user?: AuthLoginUser | undefined;
 }
 
@@ -4860,10 +4976,15 @@ export interface ILoginCommand {
 
 export class ApiResponseOfAuthRefreshData implements IApiResponseOfAuthRefreshData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthRefreshData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfAuthRefreshData) {
         if (data) {
@@ -4877,10 +4998,19 @@ export class ApiResponseOfAuthRefreshData implements IApiResponseOfAuthRefreshDa
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? AuthRefreshData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -4894,20 +5024,34 @@ export class ApiResponseOfAuthRefreshData implements IApiResponseOfAuthRefreshDa
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfAuthRefreshData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthRefreshData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class AuthRefreshData implements IAuthRefreshData {
@@ -4992,10 +5136,15 @@ export interface IRefreshTokenCommand {
 
 export class ApiResponseOfAuthMeData implements IApiResponseOfAuthMeData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthMeData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfAuthMeData) {
         if (data) {
@@ -5009,10 +5158,19 @@ export class ApiResponseOfAuthMeData implements IApiResponseOfAuthMeData {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? AuthMeData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -5026,20 +5184,34 @@ export class ApiResponseOfAuthMeData implements IApiResponseOfAuthMeData {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfAuthMeData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: AuthMeData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class AuthMeData implements IAuthMeData {
@@ -5178,14 +5350,19 @@ export interface IUpdateUserCommand {
     profilePictureUrl?: string | undefined;
 }
 
-export class ApiResponseOfPagedResultOfItemListDto implements IApiResponseOfPagedResultOfItemListDto {
+export class ApiResponseOfListOfItemListDto implements IApiResponseOfListOfItemListDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfItemListDto | undefined;
+    data?: ItemListDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPagedResultOfItemListDto) {
+    constructor(data?: IApiResponseOfListOfItemListDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5197,16 +5374,29 @@ export class ApiResponseOfPagedResultOfItemListDto implements IApiResponseOfPage
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ItemListDto.fromJS(item));
+            }
             this.error = _data["error"];
-            this.data = _data["data"] ? PagedResultOfItemListDto.fromJS(_data["data"]) : undefined as any;
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
-    static fromJS(data: any): ApiResponseOfPagedResultOfItemListDto {
+    static fromJS(data: any): ApiResponseOfListOfItemListDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPagedResultOfItemListDto();
+        let result = new ApiResponseOfListOfItemListDto();
         result.init(data);
         return result;
     }
@@ -5214,84 +5404,38 @@ export class ApiResponseOfPagedResultOfItemListDto implements IApiResponseOfPage
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : undefined as any);
+        }
         data["error"] = this.error;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPagedResultOfItemListDto {
-    success?: boolean;
-    statusCode?: number;
-    message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfItemListDto | undefined;
-}
-
-export class PagedResultOfItemListDto implements IPagedResultOfItemListDto {
-    items?: ItemListDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
-
-    constructor(data?: IPagedResultOfItemListDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ItemListDto.fromJS(item));
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-            this.sortBy = _data["sortBy"];
-            this.sortOrder = _data["sortOrder"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfItemListDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfItemListDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item ? item.toJSON() : undefined as any);
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         data["total"] = this.total;
         data["page"] = this.page;
         data["pages"] = this.pages;
-        data["sortBy"] = this.sortBy;
-        data["sortOrder"] = this.sortOrder;
         return data;
     }
 }
 
-export interface IPagedResultOfItemListDto {
-    items?: ItemListDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
+export interface IApiResponseOfListOfItemListDto {
+    success?: boolean;
+    successCode?: number | undefined;
+    message?: string | undefined;
+    data?: ItemListDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ItemListDto implements IItemListDto {
@@ -5496,10 +5640,15 @@ export interface IItemBrandRef {
 
 export class ApiResponseOfItemCreateData implements IApiResponseOfItemCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ItemCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfItemCreateData) {
         if (data) {
@@ -5513,10 +5662,19 @@ export class ApiResponseOfItemCreateData implements IApiResponseOfItemCreateData
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ItemCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -5530,20 +5688,34 @@ export class ApiResponseOfItemCreateData implements IApiResponseOfItemCreateData
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfItemCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ItemCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ItemCreateData implements IItemCreateData {
@@ -5772,10 +5944,15 @@ export interface ICreateItemImageCommand {
 
 export class ApiResponseOfItemDetailDto implements IApiResponseOfItemDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ItemDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfItemDetailDto) {
         if (data) {
@@ -5789,10 +5966,19 @@ export class ApiResponseOfItemDetailDto implements IApiResponseOfItemDetailDto {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ItemDetailDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -5806,20 +5992,34 @@ export class ApiResponseOfItemDetailDto implements IApiResponseOfItemDetailDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfItemDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ItemDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ItemDetailDto implements IItemDetailDto {
@@ -6188,10 +6388,15 @@ export interface IUpdateItemCommand {
 
 export class ApiResponseOfSearchItemsResponse implements IApiResponseOfSearchItemsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SearchItemsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfSearchItemsResponse) {
         if (data) {
@@ -6205,10 +6410,19 @@ export class ApiResponseOfSearchItemsResponse implements IApiResponseOfSearchIte
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? SearchItemsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6222,20 +6436,34 @@ export class ApiResponseOfSearchItemsResponse implements IApiResponseOfSearchIte
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfSearchItemsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SearchItemsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class SearchItemsResponse implements ISearchItemsResponse {
@@ -6296,10 +6524,15 @@ export interface ISearchItemsResponse {
 
 export class ApiResponseOfGetMyFavoritesResponse implements IApiResponseOfGetMyFavoritesResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetMyFavoritesResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetMyFavoritesResponse) {
         if (data) {
@@ -6313,10 +6546,19 @@ export class ApiResponseOfGetMyFavoritesResponse implements IApiResponseOfGetMyF
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetMyFavoritesResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6330,20 +6572,34 @@ export class ApiResponseOfGetMyFavoritesResponse implements IApiResponseOfGetMyF
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetMyFavoritesResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetMyFavoritesResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetMyFavoritesResponse implements IGetMyFavoritesResponse {
@@ -6452,10 +6708,15 @@ export interface IFavoriteItemDto {
 
 export class ApiResponseOfListOfTrackingEntryDto implements IApiResponseOfListOfTrackingEntryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: TrackingEntryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfListOfTrackingEntryDto) {
         if (data) {
@@ -6469,14 +6730,23 @@ export class ApiResponseOfListOfTrackingEntryDto implements IApiResponseOfListOf
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             if (Array.isArray(_data["data"])) {
                 this.data = [] as any;
                 for (let item of _data["data"])
                     this.data!.push(TrackingEntryDto.fromJS(item));
             }
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6490,24 +6760,38 @@ export class ApiResponseOfListOfTrackingEntryDto implements IApiResponseOfListOf
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         if (Array.isArray(this.data)) {
             data["data"] = [];
             for (let item of this.data)
                 data["data"].push(item ? item.toJSON() : undefined as any);
         }
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfListOfTrackingEntryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: TrackingEntryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class TrackingEntryDto implements ITrackingEntryDto {
@@ -6600,10 +6884,15 @@ export interface IUpdateDeliveryCommand {
 
 export class ApiResponseOfReviewCreateData implements IApiResponseOfReviewCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ReviewCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfReviewCreateData) {
         if (data) {
@@ -6617,10 +6906,19 @@ export class ApiResponseOfReviewCreateData implements IApiResponseOfReviewCreate
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ReviewCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6634,20 +6932,34 @@ export class ApiResponseOfReviewCreateData implements IApiResponseOfReviewCreate
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfReviewCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ReviewCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ReviewCreateData implements IReviewCreateData {
@@ -6740,10 +7052,15 @@ export interface ICreateReviewCommand {
 
 export class ApiResponseOfGetItemReviewsResponse implements IApiResponseOfGetItemReviewsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetItemReviewsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetItemReviewsResponse) {
         if (data) {
@@ -6757,10 +7074,19 @@ export class ApiResponseOfGetItemReviewsResponse implements IApiResponseOfGetIte
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetItemReviewsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6774,20 +7100,34 @@ export class ApiResponseOfGetItemReviewsResponse implements IApiResponseOfGetIte
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetItemReviewsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetItemReviewsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetItemReviewsResponse implements IGetItemReviewsResponse {
@@ -6936,10 +7276,15 @@ export interface IReviewerDto {
 
 export class ApiResponseOfVerificationCreateData implements IApiResponseOfVerificationCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: VerificationCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfVerificationCreateData) {
         if (data) {
@@ -6953,10 +7298,19 @@ export class ApiResponseOfVerificationCreateData implements IApiResponseOfVerifi
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? VerificationCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -6970,20 +7324,34 @@ export class ApiResponseOfVerificationCreateData implements IApiResponseOfVerifi
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfVerificationCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: VerificationCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class VerificationCreateData implements IVerificationCreateData {
@@ -7080,10 +7448,15 @@ export interface ICreateVerificationCommand {
 
 export class ApiResponseOfGetVerificationsResponse implements IApiResponseOfGetVerificationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetVerificationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetVerificationsResponse) {
         if (data) {
@@ -7097,10 +7470,19 @@ export class ApiResponseOfGetVerificationsResponse implements IApiResponseOfGetV
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetVerificationsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -7114,20 +7496,34 @@ export class ApiResponseOfGetVerificationsResponse implements IApiResponseOfGetV
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetVerificationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetVerificationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetVerificationsResponse implements IGetVerificationsResponse {
@@ -7240,10 +7636,15 @@ export interface IVerificationDto {
 
 export class ApiResponseOfGetExpertAssignedResponse implements IApiResponseOfGetExpertAssignedResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetExpertAssignedResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetExpertAssignedResponse) {
         if (data) {
@@ -7257,10 +7658,19 @@ export class ApiResponseOfGetExpertAssignedResponse implements IApiResponseOfGet
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetExpertAssignedResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -7274,20 +7684,34 @@ export class ApiResponseOfGetExpertAssignedResponse implements IApiResponseOfGet
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetExpertAssignedResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetExpertAssignedResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetExpertAssignedResponse implements IGetExpertAssignedResponse {
@@ -7434,14 +7858,19 @@ export interface IUpdateUserStatusCommand {
     isActive?: boolean;
 }
 
-export class ApiResponseOfPagedResultOfProductSubcategoryDto implements IApiResponseOfPagedResultOfProductSubcategoryDto {
+export class ApiResponseOfListOfProductSubcategoryDto implements IApiResponseOfListOfProductSubcategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfProductSubcategoryDto | undefined;
+    data?: ProductSubcategoryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPagedResultOfProductSubcategoryDto) {
+    constructor(data?: IApiResponseOfListOfProductSubcategoryDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -7453,16 +7882,29 @@ export class ApiResponseOfPagedResultOfProductSubcategoryDto implements IApiResp
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ProductSubcategoryDto.fromJS(item));
+            }
             this.error = _data["error"];
-            this.data = _data["data"] ? PagedResultOfProductSubcategoryDto.fromJS(_data["data"]) : undefined as any;
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
-    static fromJS(data: any): ApiResponseOfPagedResultOfProductSubcategoryDto {
+    static fromJS(data: any): ApiResponseOfListOfProductSubcategoryDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPagedResultOfProductSubcategoryDto();
+        let result = new ApiResponseOfListOfProductSubcategoryDto();
         result.init(data);
         return result;
     }
@@ -7470,84 +7912,38 @@ export class ApiResponseOfPagedResultOfProductSubcategoryDto implements IApiResp
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : undefined as any);
+        }
         data["error"] = this.error;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPagedResultOfProductSubcategoryDto {
-    success?: boolean;
-    statusCode?: number;
-    message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfProductSubcategoryDto | undefined;
-}
-
-export class PagedResultOfProductSubcategoryDto implements IPagedResultOfProductSubcategoryDto {
-    items?: ProductSubcategoryDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
-
-    constructor(data?: IPagedResultOfProductSubcategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ProductSubcategoryDto.fromJS(item));
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-            this.sortBy = _data["sortBy"];
-            this.sortOrder = _data["sortOrder"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfProductSubcategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfProductSubcategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item ? item.toJSON() : undefined as any);
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         data["total"] = this.total;
         data["page"] = this.page;
         data["pages"] = this.pages;
-        data["sortBy"] = this.sortBy;
-        data["sortOrder"] = this.sortOrder;
         return data;
     }
 }
 
-export interface IPagedResultOfProductSubcategoryDto {
-    items?: ProductSubcategoryDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
+export interface IApiResponseOfListOfProductSubcategoryDto {
+    success?: boolean;
+    successCode?: number | undefined;
+    message?: string | undefined;
+    data?: ProductSubcategoryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ProductSubcategoryDto implements IProductSubcategoryDto {
@@ -7624,10 +8020,15 @@ export interface IProductSubcategoryDto {
 
 export class ApiResponseOfRentalCreateData implements IApiResponseOfRentalCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfRentalCreateData) {
         if (data) {
@@ -7641,10 +8042,19 @@ export class ApiResponseOfRentalCreateData implements IApiResponseOfRentalCreate
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? RentalCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -7658,20 +8068,34 @@ export class ApiResponseOfRentalCreateData implements IApiResponseOfRentalCreate
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfRentalCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class RentalCreateData implements IRentalCreateData {
@@ -7776,10 +8200,15 @@ export interface ICreateRentalCommand {
 
 export class ApiResponseOfGetRentalsResponse implements IApiResponseOfGetRentalsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetRentalsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetRentalsResponse) {
         if (data) {
@@ -7793,10 +8222,19 @@ export class ApiResponseOfGetRentalsResponse implements IApiResponseOfGetRentals
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetRentalsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -7810,20 +8248,34 @@ export class ApiResponseOfGetRentalsResponse implements IApiResponseOfGetRentals
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetRentalsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetRentalsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetRentalsResponse implements IGetRentalsResponse {
@@ -7948,10 +8400,15 @@ export interface IRentalListDto {
 
 export class ApiResponseOfRentalDetailDto implements IApiResponseOfRentalDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfRentalDetailDto) {
         if (data) {
@@ -7965,10 +8422,19 @@ export class ApiResponseOfRentalDetailDto implements IApiResponseOfRentalDetailD
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? RentalDetailDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -7982,20 +8448,34 @@ export class ApiResponseOfRentalDetailDto implements IApiResponseOfRentalDetailD
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfRentalDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class RentalDetailDto implements IRentalDetailDto {
@@ -8100,10 +8580,15 @@ export interface IRentalDetailDto {
 
 export class ApiResponseOfRentalStatusData implements IApiResponseOfRentalStatusData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalStatusData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfRentalStatusData) {
         if (data) {
@@ -8117,10 +8602,19 @@ export class ApiResponseOfRentalStatusData implements IApiResponseOfRentalStatus
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? RentalStatusData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8134,20 +8628,34 @@ export class ApiResponseOfRentalStatusData implements IApiResponseOfRentalStatus
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfRentalStatusData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalStatusData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class RentalStatusData implements IRentalStatusData {
@@ -8188,10 +8696,15 @@ export interface IRentalStatusData {
 
 export class ApiResponseOfRentalCompleteData implements IApiResponseOfRentalCompleteData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalCompleteData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfRentalCompleteData) {
         if (data) {
@@ -8205,10 +8718,19 @@ export class ApiResponseOfRentalCompleteData implements IApiResponseOfRentalComp
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? RentalCompleteData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8222,20 +8744,34 @@ export class ApiResponseOfRentalCompleteData implements IApiResponseOfRentalComp
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfRentalCompleteData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: RentalCompleteData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class RentalCompleteData implements IRentalCompleteData {
@@ -8288,10 +8824,15 @@ export interface IRentalCompleteData {
 
 export class ApiResponseOfOrderCreateData implements IApiResponseOfOrderCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: OrderCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfOrderCreateData) {
         if (data) {
@@ -8305,10 +8846,19 @@ export class ApiResponseOfOrderCreateData implements IApiResponseOfOrderCreateDa
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? OrderCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8322,20 +8872,34 @@ export class ApiResponseOfOrderCreateData implements IApiResponseOfOrderCreateDa
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfOrderCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: OrderCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class OrderCreateData implements IOrderCreateData {
@@ -8468,10 +9032,15 @@ export interface IOrderItemInputDto {
 
 export class ApiResponseOfGetOrdersResponse implements IApiResponseOfGetOrdersResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetOrdersResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetOrdersResponse) {
         if (data) {
@@ -8485,10 +9054,19 @@ export class ApiResponseOfGetOrdersResponse implements IApiResponseOfGetOrdersRe
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetOrdersResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8502,20 +9080,34 @@ export class ApiResponseOfGetOrdersResponse implements IApiResponseOfGetOrdersRe
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetOrdersResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetOrdersResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetOrdersResponse implements IGetOrdersResponse {
@@ -8616,10 +9208,15 @@ export interface IOrderListDto {
 
 export class ApiResponseOfOrderDetailDto implements IApiResponseOfOrderDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: OrderDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfOrderDetailDto) {
         if (data) {
@@ -8633,10 +9230,19 @@ export class ApiResponseOfOrderDetailDto implements IApiResponseOfOrderDetailDto
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? OrderDetailDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8650,20 +9256,34 @@ export class ApiResponseOfOrderDetailDto implements IApiResponseOfOrderDetailDto
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfOrderDetailDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: OrderDetailDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class OrderDetailDto implements IOrderDetailDto {
@@ -8788,10 +9408,15 @@ export interface IOrderItemDetailDto {
 
 export class ApiResponseOfPaymentCreateData implements IApiResponseOfPaymentCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: PaymentCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfPaymentCreateData) {
         if (data) {
@@ -8805,10 +9430,19 @@ export class ApiResponseOfPaymentCreateData implements IApiResponseOfPaymentCrea
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? PaymentCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8822,20 +9456,34 @@ export class ApiResponseOfPaymentCreateData implements IApiResponseOfPaymentCrea
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfPaymentCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: PaymentCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class PaymentCreateData implements IPaymentCreateData {
@@ -8928,10 +9576,15 @@ export interface ICreatePaymentCommand {
 
 export class ApiResponseOfPaymentDto implements IApiResponseOfPaymentDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: PaymentDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfPaymentDto) {
         if (data) {
@@ -8945,10 +9598,19 @@ export class ApiResponseOfPaymentDto implements IApiResponseOfPaymentDto {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? PaymentDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -8962,20 +9624,34 @@ export class ApiResponseOfPaymentDto implements IApiResponseOfPaymentDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfPaymentDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: PaymentDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class PaymentDto implements IPaymentDto {
@@ -9032,10 +9708,15 @@ export interface IPaymentDto {
 
 export class ApiResponseOfSupportCreateTicketData implements IApiResponseOfSupportCreateTicketData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportCreateTicketData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfSupportCreateTicketData) {
         if (data) {
@@ -9049,10 +9730,19 @@ export class ApiResponseOfSupportCreateTicketData implements IApiResponseOfSuppo
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? SupportCreateTicketData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9066,20 +9756,34 @@ export class ApiResponseOfSupportCreateTicketData implements IApiResponseOfSuppo
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfSupportCreateTicketData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportCreateTicketData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class SupportCreateTicketData implements ISupportCreateTicketData {
@@ -9164,10 +9868,15 @@ export interface ICreateTicketCommand {
 
 export class ApiResponseOfGetTicketsResponse implements IApiResponseOfGetTicketsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetTicketsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetTicketsResponse) {
         if (data) {
@@ -9181,10 +9890,19 @@ export class ApiResponseOfGetTicketsResponse implements IApiResponseOfGetTickets
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetTicketsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9198,20 +9916,34 @@ export class ApiResponseOfGetTicketsResponse implements IApiResponseOfGetTickets
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetTicketsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetTicketsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetTicketsResponse implements IGetTicketsResponse {
@@ -9312,10 +10044,15 @@ export interface ITicketListDto {
 
 export class ApiResponseOfSupportMessageData implements IApiResponseOfSupportMessageData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportMessageData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfSupportMessageData) {
         if (data) {
@@ -9329,10 +10066,19 @@ export class ApiResponseOfSupportMessageData implements IApiResponseOfSupportMes
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? SupportMessageData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9346,20 +10092,34 @@ export class ApiResponseOfSupportMessageData implements IApiResponseOfSupportMes
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfSupportMessageData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportMessageData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class SupportMessageData implements ISupportMessageData {
@@ -9448,10 +10208,15 @@ export interface IPostSupportMessageCommand {
 
 export class ApiResponseOfSupportTicketStatusData implements IApiResponseOfSupportTicketStatusData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportTicketStatusData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfSupportTicketStatusData) {
         if (data) {
@@ -9465,10 +10230,19 @@ export class ApiResponseOfSupportTicketStatusData implements IApiResponseOfSuppo
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? SupportTicketStatusData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9482,20 +10256,34 @@ export class ApiResponseOfSupportTicketStatusData implements IApiResponseOfSuppo
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfSupportTicketStatusData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: SupportTicketStatusData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class SupportTicketStatusData implements ISupportTicketStatusData {
@@ -9580,10 +10368,15 @@ export interface IUpdateTicketStatusCommand {
 
 export class ApiResponseOfChatCreateData implements IApiResponseOfChatCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ChatCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfChatCreateData) {
         if (data) {
@@ -9597,10 +10390,19 @@ export class ApiResponseOfChatCreateData implements IApiResponseOfChatCreateData
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ChatCreateData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9614,20 +10416,34 @@ export class ApiResponseOfChatCreateData implements IApiResponseOfChatCreateData
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfChatCreateData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ChatCreateData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ChatCreateData implements IChatCreateData {
@@ -9704,10 +10520,15 @@ export interface ICreateChatCommand {
 
 export class ApiResponseOfGetChatsResponse implements IApiResponseOfGetChatsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetChatsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetChatsResponse) {
         if (data) {
@@ -9721,10 +10542,19 @@ export class ApiResponseOfGetChatsResponse implements IApiResponseOfGetChatsResp
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetChatsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9738,20 +10568,34 @@ export class ApiResponseOfGetChatsResponse implements IApiResponseOfGetChatsResp
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetChatsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetChatsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetChatsResponse implements IGetChatsResponse {
@@ -9852,10 +10696,15 @@ export interface IChatListDto {
 
 export class ApiResponseOfChatMessageData implements IApiResponseOfChatMessageData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ChatMessageData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfChatMessageData) {
         if (data) {
@@ -9869,10 +10718,19 @@ export class ApiResponseOfChatMessageData implements IApiResponseOfChatMessageDa
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ChatMessageData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -9886,20 +10744,34 @@ export class ApiResponseOfChatMessageData implements IApiResponseOfChatMessageDa
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfChatMessageData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ChatMessageData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ChatMessageData implements IChatMessageData {
@@ -9988,10 +10860,15 @@ export interface IPostChatMessageCommand {
 
 export class ApiResponseOfGetChatMessagesResponse implements IApiResponseOfGetChatMessagesResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetChatMessagesResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetChatMessagesResponse) {
         if (data) {
@@ -10005,10 +10882,19 @@ export class ApiResponseOfGetChatMessagesResponse implements IApiResponseOfGetCh
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetChatMessagesResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10022,20 +10908,34 @@ export class ApiResponseOfGetChatMessagesResponse implements IApiResponseOfGetCh
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetChatMessagesResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetChatMessagesResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetChatMessagesResponse implements IGetChatMessagesResponse {
@@ -10144,10 +11044,15 @@ export interface IChatMessageDto {
 
 export class ApiResponseOfGetNotificationsResponse implements IApiResponseOfGetNotificationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetNotificationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetNotificationsResponse) {
         if (data) {
@@ -10161,10 +11066,19 @@ export class ApiResponseOfGetNotificationsResponse implements IApiResponseOfGetN
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetNotificationsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10178,20 +11092,34 @@ export class ApiResponseOfGetNotificationsResponse implements IApiResponseOfGetN
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetNotificationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetNotificationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetNotificationsResponse implements IGetNotificationsResponse {
@@ -10296,10 +11224,15 @@ export interface INotificationDto {
 
 export class ApiResponseOfNotificationMarkAllData implements IApiResponseOfNotificationMarkAllData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: NotificationMarkAllData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfNotificationMarkAllData) {
         if (data) {
@@ -10313,10 +11246,19 @@ export class ApiResponseOfNotificationMarkAllData implements IApiResponseOfNotif
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? NotificationMarkAllData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10330,20 +11272,34 @@ export class ApiResponseOfNotificationMarkAllData implements IApiResponseOfNotif
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfNotificationMarkAllData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: NotificationMarkAllData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class NotificationMarkAllData implements INotificationMarkAllData {
@@ -10388,10 +11344,15 @@ export interface INotificationMarkAllData {
 
 export class ApiResponseOfGetRecommendationsResponse implements IApiResponseOfGetRecommendationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetRecommendationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfGetRecommendationsResponse) {
         if (data) {
@@ -10405,10 +11366,19 @@ export class ApiResponseOfGetRecommendationsResponse implements IApiResponseOfGe
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? GetRecommendationsResponse.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10422,20 +11392,34 @@ export class ApiResponseOfGetRecommendationsResponse implements IApiResponseOfGe
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfGetRecommendationsResponse {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: GetRecommendationsResponse | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class GetRecommendationsResponse implements IGetRecommendationsResponse {
@@ -10588,10 +11572,15 @@ export interface IRecommendationItemDto {
 
 export class ApiResponseOfMediaUploadData implements IApiResponseOfMediaUploadData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: MediaUploadData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfMediaUploadData) {
         if (data) {
@@ -10605,10 +11594,19 @@ export class ApiResponseOfMediaUploadData implements IApiResponseOfMediaUploadDa
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? MediaUploadData.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10622,20 +11620,34 @@ export class ApiResponseOfMediaUploadData implements IApiResponseOfMediaUploadDa
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfMediaUploadData {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: MediaUploadData | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class MediaUploadData implements IMediaUploadData {
@@ -10718,14 +11730,19 @@ export interface IMediaUploadData {
     entityType?: string | undefined;
 }
 
-export class ApiResponseOfPagedResultOfProductCategoryDto implements IApiResponseOfPagedResultOfProductCategoryDto {
+export class ApiResponseOfListOfProductCategoryDto implements IApiResponseOfListOfProductCategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfProductCategoryDto | undefined;
+    data?: ProductCategoryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPagedResultOfProductCategoryDto) {
+    constructor(data?: IApiResponseOfListOfProductCategoryDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -10737,16 +11754,29 @@ export class ApiResponseOfPagedResultOfProductCategoryDto implements IApiRespons
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ProductCategoryDto.fromJS(item));
+            }
             this.error = _data["error"];
-            this.data = _data["data"] ? PagedResultOfProductCategoryDto.fromJS(_data["data"]) : undefined as any;
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
-    static fromJS(data: any): ApiResponseOfPagedResultOfProductCategoryDto {
+    static fromJS(data: any): ApiResponseOfListOfProductCategoryDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPagedResultOfProductCategoryDto();
+        let result = new ApiResponseOfListOfProductCategoryDto();
         result.init(data);
         return result;
     }
@@ -10754,84 +11784,38 @@ export class ApiResponseOfPagedResultOfProductCategoryDto implements IApiRespons
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : undefined as any);
+        }
         data["error"] = this.error;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPagedResultOfProductCategoryDto {
-    success?: boolean;
-    statusCode?: number;
-    message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfProductCategoryDto | undefined;
-}
-
-export class PagedResultOfProductCategoryDto implements IPagedResultOfProductCategoryDto {
-    items?: ProductCategoryDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
-
-    constructor(data?: IPagedResultOfProductCategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ProductCategoryDto.fromJS(item));
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-            this.sortBy = _data["sortBy"];
-            this.sortOrder = _data["sortOrder"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfProductCategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfProductCategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item ? item.toJSON() : undefined as any);
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         data["total"] = this.total;
         data["page"] = this.page;
         data["pages"] = this.pages;
-        data["sortBy"] = this.sortBy;
-        data["sortOrder"] = this.sortOrder;
         return data;
     }
 }
 
-export interface IPagedResultOfProductCategoryDto {
-    items?: ProductCategoryDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
+export interface IApiResponseOfListOfProductCategoryDto {
+    success?: boolean;
+    successCode?: number | undefined;
+    message?: string | undefined;
+    data?: ProductCategoryDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class ProductCategoryDto implements IProductCategoryDto {
@@ -10900,10 +11884,15 @@ export interface IProductCategoryDto {
 
 export class ApiResponseOfProductCategoryDto implements IApiResponseOfProductCategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ProductCategoryDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfProductCategoryDto) {
         if (data) {
@@ -10917,10 +11906,19 @@ export class ApiResponseOfProductCategoryDto implements IApiResponseOfProductCat
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ProductCategoryDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -10934,20 +11932,34 @@ export class ApiResponseOfProductCategoryDto implements IApiResponseOfProductCat
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfProductCategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ProductCategoryDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class CreateCategoryCommand implements ICreateCategoryCommand {
@@ -11044,10 +12056,15 @@ export interface IUpdateCategoryCommand {
 
 export class ApiResponseOfProductSubcategoryDto implements IApiResponseOfProductSubcategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ProductSubcategoryDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfProductSubcategoryDto) {
         if (data) {
@@ -11061,10 +12078,19 @@ export class ApiResponseOfProductSubcategoryDto implements IApiResponseOfProduct
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? ProductSubcategoryDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -11078,20 +12104,34 @@ export class ApiResponseOfProductSubcategoryDto implements IApiResponseOfProduct
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfProductSubcategoryDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: ProductSubcategoryDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
@@ -11194,14 +12234,19 @@ export interface IUpdateSubcategoryCommand {
     logoId?: string | undefined;
 }
 
-export class ApiResponseOfPagedResultOfBrandDto implements IApiResponseOfPagedResultOfBrandDto {
+export class ApiResponseOfListOfBrandDto implements IApiResponseOfListOfBrandDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfBrandDto | undefined;
+    data?: BrandDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPagedResultOfBrandDto) {
+    constructor(data?: IApiResponseOfListOfBrandDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -11213,16 +12258,29 @@ export class ApiResponseOfPagedResultOfBrandDto implements IApiResponseOfPagedRe
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(BrandDto.fromJS(item));
+            }
             this.error = _data["error"];
-            this.data = _data["data"] ? PagedResultOfBrandDto.fromJS(_data["data"]) : undefined as any;
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
-    static fromJS(data: any): ApiResponseOfPagedResultOfBrandDto {
+    static fromJS(data: any): ApiResponseOfListOfBrandDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPagedResultOfBrandDto();
+        let result = new ApiResponseOfListOfBrandDto();
         result.init(data);
         return result;
     }
@@ -11230,84 +12288,38 @@ export class ApiResponseOfPagedResultOfBrandDto implements IApiResponseOfPagedRe
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : undefined as any);
+        }
         data["error"] = this.error;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPagedResultOfBrandDto {
-    success?: boolean;
-    statusCode?: number;
-    message?: string | undefined;
-    error?: string | undefined;
-    data?: PagedResultOfBrandDto | undefined;
-}
-
-export class PagedResultOfBrandDto implements IPagedResultOfBrandDto {
-    items?: BrandDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
-
-    constructor(data?: IPagedResultOfBrandDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(BrandDto.fromJS(item));
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-            this.sortBy = _data["sortBy"];
-            this.sortOrder = _data["sortOrder"];
-        }
-    }
-
-    static fromJS(data: any): PagedResultOfBrandDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PagedResultOfBrandDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item ? item.toJSON() : undefined as any);
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
         }
         data["total"] = this.total;
         data["page"] = this.page;
         data["pages"] = this.pages;
-        data["sortBy"] = this.sortBy;
-        data["sortOrder"] = this.sortOrder;
         return data;
     }
 }
 
-export interface IPagedResultOfBrandDto {
-    items?: BrandDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-    sortBy?: string | undefined;
-    sortOrder?: string | undefined;
+export interface IApiResponseOfListOfBrandDto {
+    success?: boolean;
+    successCode?: number | undefined;
+    message?: string | undefined;
+    data?: BrandDto[] | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class BrandDto implements IBrandDto {
@@ -11364,10 +12376,15 @@ export interface IBrandDto {
 
 export class ApiResponseOfBrandDto implements IApiResponseOfBrandDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: BrandDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 
     constructor(data?: IApiResponseOfBrandDto) {
         if (data) {
@@ -11381,10 +12398,19 @@ export class ApiResponseOfBrandDto implements IApiResponseOfBrandDto {
     init(_data?: any) {
         if (_data) {
             this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
+            this.successCode = _data["successCode"];
             this.message = _data["message"];
-            this.error = _data["error"];
             this.data = _data["data"] ? BrandDto.fromJS(_data["data"]) : undefined as any;
+            this.error = _data["error"];
+            this.errorCode = _data["errorCode"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
         }
     }
 
@@ -11398,20 +12424,34 @@ export class ApiResponseOfBrandDto implements IApiResponseOfBrandDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
+        data["successCode"] = this.successCode;
         data["message"] = this.message;
-        data["error"] = this.error;
         data["data"] = this.data ? this.data.toJSON() : undefined as any;
+        data["error"] = this.error;
+        data["errorCode"] = this.errorCode;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
         return data;
     }
 }
 
 export interface IApiResponseOfBrandDto {
     success?: boolean;
-    statusCode?: number;
+    successCode?: number | undefined;
     message?: string | undefined;
-    error?: string | undefined;
     data?: BrandDto | undefined;
+    error?: boolean;
+    errorCode?: number | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
 }
 
 export class CreateBrandCommand implements ICreateBrandCommand {

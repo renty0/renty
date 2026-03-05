@@ -97,8 +97,8 @@ export class ProductListComponent implements OnInit {
         )
             .pipe(
                 tap((response) => {
-                    this.dataSource.set(response.data?.items ?? []);
-                    this.totalCount.set(response.data?.total ?? 0);
+                    this.dataSource.set(response?.data ?? []);
+                    this.totalCount.set(response?.total ?? 0);
                 }),
                 catchError((err) => {
                     console.error('Failed to load items', err);

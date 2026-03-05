@@ -47,7 +47,7 @@ public static class ItemEndpoints
             return Api.Ok(data);
         })
         .WithName("GetItems")
-        .Produces<ApiResponse<PagedResult<ItemListDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<List<ItemListDto>>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
         // POST /items

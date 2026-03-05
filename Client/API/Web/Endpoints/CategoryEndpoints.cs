@@ -33,7 +33,7 @@ public static class CategoryEndpoints
             return Api.Ok(data);
         })
         .WithName("GetCategories")
-        .Produces<ApiResponse<PagedResult<ProductCategoryDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<List<ProductCategoryDto>>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
         // GET /categories/:id

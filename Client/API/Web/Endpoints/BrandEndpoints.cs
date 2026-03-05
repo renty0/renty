@@ -27,7 +27,7 @@ public static class BrandEndpoints
             return Api.Ok(data);
         })
         .WithName("GetBrands")
-        .Produces<ApiResponse<PagedResult<BrandDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<List<BrandDto>>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
         // GET /brands/:id

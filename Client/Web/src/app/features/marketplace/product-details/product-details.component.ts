@@ -87,8 +87,8 @@ export class ProductDetailsComponent implements OnInit {
         )
             .pipe(
                 tap(res => {
-                    if (res.data?.items) {
-                        const filtered = res.data.items
+                    if (res.data) {
+                        const filtered = res.data
                             .filter(i => i.id !== currentItemId)
                             .slice(0, 4);
                         this.relatedItems.set(filtered);

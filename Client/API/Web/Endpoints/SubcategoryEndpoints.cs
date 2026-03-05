@@ -37,7 +37,7 @@ public static class SubcategoryEndpoints
             return Api.Ok(data);
         })
         .WithName("GetSubcategories")
-        .Produces<ApiResponse<PagedResult<ProductSubcategoryDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<List<ProductSubcategoryDto>>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
         // GET /subcategories/:id
@@ -75,7 +75,7 @@ public static class SubcategoryEndpoints
         })
         .WithTags("Subcategories")
         .WithName("GetSubcategoriesByCategory")
-        .Produces<ApiResponse<PagedResult<ProductSubcategoryDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<List<ProductSubcategoryDto>>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
         // POST /subcategories

@@ -50,6 +50,7 @@ public static class AuthEndpoints
             var data = new AuthLoginData(
                 r.Token?.AccessToken,
                 r.Token?.RefreshToken,
+                r.Token?.RefreshTokenExpiresAt,
                 r.User == null ? null : new AuthLoginUser(
                     r.User.Id, r.User.FirstName, r.User.LastName,
                     r.User.Email, r.User.Roles?.FirstOrDefault(),

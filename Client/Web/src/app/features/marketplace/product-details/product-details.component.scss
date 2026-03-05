@@ -1,4 +1,4 @@
-@import '../../../shared/styles/variables';
+@use '../../../shared/styles/variables' as *;
 
 .product-details-container {
   padding: 3rem 0;
@@ -19,7 +19,7 @@
 }
 .back-link {
   margin-bottom: 2.5rem;
-  color: lighten($text-secondary, 10%);
+  color: $text-secondary;
   transition: all 0.3s;
   font-weight: 500;
 
@@ -131,34 +131,29 @@
 
     .sku {
       font-size: 0.9rem;
-      color: lighten($text-secondary, 20%);
+      color: $text-secondary;
       font-weight: 500;
     }
   }
-
   .price-section {
     margin-bottom: 3rem;
     display: flex;
     align-items: baseline;
     gap: 1.5rem;
-
     .original-price {
       font-size: 1.5rem;
-      color: lighten($text-secondary, 20%);
+      color: lighten$text-secondary;
       text-decoration: line-through;
     }
-
     .current-price {
       font-size: 2.5rem;
       font-weight: 800;
       color: $text-primary;
-
       &.sale {
         color: #ef4444;
       }
     }
   }
-
   .short-desc {
     font-size: 1.15rem;
     color: $text-secondary;
@@ -166,24 +161,20 @@
     margin-bottom: 3.5rem;
     max-width: 600px;
   }
-
   .actions {
     display: flex;
     gap: 1.5rem;
     margin-bottom: 4rem;
-
     button {
       height: 60px;
       padding: 0 2.5rem;
       font-size: 1.1rem;
       font-weight: 700;
       border-radius: 16px;
-
       mat-icon {
         margin-right: 0.75rem;
       }
     }
-
     .add-to-cart-btn {
       background-color: $primary-color;
       color: white;
@@ -192,50 +183,40 @@
     }
   }
 }
-
-// Tabs
 .details-tabs {
   ::v-deep {
     .mat-mdc-tab-header {
       margin-bottom: 2rem;
     }
-
     .mat-mdc-tab-labels {
       gap: 2rem;
     }
-
     .mat-mdc-tab {
       padding: 0;
       min-width: auto;
       font-family: inherit;
       font-weight: 700;
       font-size: 1.1rem;
-
       .mdc-tab__text-label {
         color: $text-secondary;
       }
     }
-
     .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
       color: $text-primary;
     }
-
     .mat-mdc-tab-body-wrapper {
       padding-top: 1rem;
     }
   }
-
   .tab-content {
     color: $text-secondary;
     line-height: 1.8;
     font-size: 1.05rem;
   }
-
   .specs-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 2rem;
-
     .spec-item {
       display: flex;
       flex-direction: column;
@@ -243,14 +224,12 @@
       background: #f8fafc;
       padding: 1.25rem 1.5rem;
       border-radius: 16px;
-
       .label {
         font-size: 0.85rem;
         font-weight: 700;
         color: $text-secondary;
         text-transform: uppercase;
       }
-
       .value {
         font-size: 1.1rem;
         font-weight: 600;
