@@ -15,5 +15,8 @@ public record UserDto(
     string? Address = null,
     string? City = null,
     string? Country = null,
-    string? Bio = null
+    string? Bio = null,
+    string? PhoneNumber = null,
+    DateTimeOffset CreatedAt = default
 );
+

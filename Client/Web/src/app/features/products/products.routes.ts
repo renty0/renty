@@ -9,7 +9,6 @@ export const ProductsRoutes: Routes = [
         path: 'products',
         component: ProductListComponent,
         canActivate: [AdminGuard],
-
     },
     {
         path: 'products/new',
@@ -17,6 +16,7 @@ export const ProductsRoutes: Routes = [
         canActivate: [AuthGuard],
     },
     {
+        // :id is now a Guid string (e.g. "3fa85f64-5717-4562-b3fc-2c963f66afa6")
         path: 'products/:id/edit',
         component: ProductEditorPageComponent,
         canActivate: [AdminGuard],

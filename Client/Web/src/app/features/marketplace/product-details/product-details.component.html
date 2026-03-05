@@ -3,7 +3,7 @@
     <div class="loading-container">
         <mat-spinner></mat-spinner>
     </div>
-    } @else if (product()) {
+    } @else if (item()) {
     <div class="content-wrapper">
         <!-- Back Button -->
         <a mat-button class="back-link" routerLink="/marketplace">
@@ -15,11 +15,11 @@
             <!-- Left: Image Gallery -->
             <div class="gallery-section">
                 <div class="main-image">
-                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="product()?.productName">
+                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="item()?.title">
                 </div>
-                @if (product()?.images?.length) {
+                @if (item()?.images?.length) {
                 <div class="thumbnails">
-                    @for (img of product()?.images; track img.id) {
+                    @for (img of item()?.images; track img.id) {
                     <div class="thumb" [class.active]="selectedImage() === img.imageUrl"
                         (click)="selectedImage.set(img.imageUrl)">
                         <img [src]="img.imageUrl" alt="Thumbnail">
@@ -29,31 +29,43 @@
                 }
             </div>
 
-            <!-- Right: Product Info -->
+            <!-- Right: Item Info -->
             <div class="info-section">
                 <div class="header">
-                    <span class="category-badge">{{ product()?.categoryName }} / {{ product()?.subcategoryName }}</span>
-                    <h1>{{ product()?.productName }}</h1>
-                    <div class="sku">SKU: {{ product()?.productSku }}</div>
-                </div>
-
-                <div class="price-section">
-                    @if (product()?.discountPrice) {
-                    <div class="original-price">{{ product()?.productPrice | currency }}</div>
-                    <div class="current-price sale">{{ product()?.effectivePrice | currency }}</div>
-                    } @else {
-                    <div class="current-price">{{ product()?.productPrice | currency }}</div>
+                    <span class="category-badge">
+                        {{ item()?.category?.name }}
+                        @if (item()?.subcategory?.name) { / {{ item()?.subcategory?.name }} }
+                    </span>
+                    <h1>{{ item()?.title }}</h1>
+                    @if (item()?.condition) {
+                    <div class="condition-badge">{{ item()?.condition }}</div>
                     }
                 </div>
 
-                <p class="short-desc">{{ product()?.productDescription }}</p>
+                <div class="price-section">
+                    @if (item()?.pricing?.length) {
+                    @for (p of item()!.pricing!; track p.pricingType) {
+                    <div class="price-row">
+                        <span class="pricing-type">{{ p.pricingType }}</span>
+                        <span class="current-price">{{ p.price | currency }}<small>/{{ p.pricingType }}</small></span>
+                    </div>
+                    }
+                    }
+                </div>
+
+                <p class="short-desc">{{ item()?.description }}</p>
+
+                @if (item()?.avgRating) {
+                <div class="rating-row">
+                    <mat-icon>star</mat-icon>
+                    <span>{{ item()?.avgRating | number:'1.1-1' }}</span>
+                    <span class="review-count">({{ item()?.reviewCount }} reviews)</span>
+                </div>
+                }
 
                 <div class="actions">
                     <button mat-flat-button color="primary" class="add-to-cart-btn">
-                        <mat-icon>add_shopping_cart</mat-icon>
-                        {{ 'product_details.addToCart' | translate }}
-                    </button>
-                    <button mat-stroked-button color="accent">
+                        <mat-icon>calendar_month</mat-icon>
                         {{ 'product_details.rentNow' | translate }}
                     </button>
                 </div>
@@ -61,23 +73,31 @@
                 <mat-tab-group class="details-tabs">
                     <mat-tab [label]="'product_details.description' | translate">
                         <div class="tab-content">
-                            <p>{{ product()?.productDescription }}</p>
+                            <p>{{ item()?.description }}</p>
                         </div>
                     </mat-tab>
                     <mat-tab [label]="'product_details.specifications' | translate">
                         <div class="tab-content specs-list">
                             <div class="spec-item">
-                                <span class="label">{{ 'product_details.color' | translate }}</span>
-                                <span class="value">{{ product()?.productColor || '-' }}</span>
+                                <span class="label">{{ 'product_details.condition' | translate }}</span>
+                                <span class="value">{{ item()?.condition || '-' }}</span>
                             </div>
                             <div class="spec-item">
-                                <span class="label">{{ 'product_details.model' | translate }}</span>
-                                <span class="value">{{ product()?.modelName || '-' }}</span>
+                                <span class="label">{{ 'product_details.type' | translate }}</span>
+                                <span class="value">{{ item()?.type || '-' }}</span>
                             </div>
+                            @if (item()?.brand) {
                             <div class="spec-item">
-                                <span class="label">{{ 'product_details.style' | translate }}</span>
-                                <span class="value">{{ product()?.productStyle || '-' }}</span>
+                                <span class="label">{{ 'product_details.brand' | translate }}</span>
+                                <span class="value">{{ item()?.brand?.name }}</span>
                             </div>
+                            }
+                            @if (item()?.city) {
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.location' | translate }}</span>
+                                <span class="value">{{ item()?.city }}</span>
+                            </div>
+                            }
                         </div>
                     </mat-tab>
                 </mat-tab-group>
@@ -85,18 +105,18 @@
         </div>
     </div>
 
-    @if (relatedProducts().length > 0) {
+    @if (relatedItems().length > 0) {
     <div class="related-products">
         <h2>{{ 'product_details.relatedProducts' | translate }}</h2>
         <div class="products-row">
-            @for (item of relatedProducts(); track item.id) {
-            <div class="product-card mini" [routerLink]="['/marketplace/product', item.id]">
+            @for (related of relatedItems(); track related.id) {
+            <div class="product-card mini" [routerLink]="['/marketplace/product', related.id]">
                 <div class="img-container">
-                    <img [src]="item.primaryImageUrl || 'assets/images/placeholder.png'" [alt]="item.productName">
+                    <img [src]="related.primaryImage || 'assets/images/placeholder.png'" [alt]="related.title">
                 </div>
                 <div class="info">
-                    <h3>{{ item.productName }}</h3>
-                    <div class="price">{{ (item.discountPrice || item.productPrice) | currency }}</div>
+                    <h3>{{ related.title }}</h3>
+                    <div class="price">{{ related.dailyPrice | currency }}<small>/day</small></div>
                 </div>
             </div>
             }

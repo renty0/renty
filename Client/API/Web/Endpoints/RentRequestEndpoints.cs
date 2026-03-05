@@ -1,6 +1,8 @@
 using Application.Features.RentRequests;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -8,130 +10,72 @@ public static class RentRequestEndpoints
 {
     public static void MapRentRequestEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/rent-requests")
-            .WithTags("Rent Requests")
-            .RequireAuthorization();
+        var group = app.MapGroup("/api/rent-requests").WithTags("Rent Requests").RequireAuthorization();
 
-        // Get my requests as a renter
-        group.MapGet("/my-requests", async (
-            int pageNumber,
-            int pageSize,
-            RentRequestStatus? status,
-            ISender sender) =>
-        {
-            var result = await sender.Send(new GetRentRequestsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                status,
-                false // As renter
-            ));
-            return Results.Ok(result);
-        })
+        group.MapGet("/my-requests", async (int pageNumber, int pageSize, RentRequestStatus? status, ISender sender) =>
+            Api.Ok(await sender.Send(new GetRentRequestsQuery(pageNumber > 0 ? pageNumber : 1, pageSize > 0 ? pageSize : 10, status, false))))
         .WithName("GetMyRentRequests")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK);
 
-        // Get requests for my items (as owner)
-        group.MapGet("/received", async (
-            int pageNumber,
-            int pageSize,
-            RentRequestStatus? status,
-            ISender sender) =>
-        {
-            var result = await sender.Send(new GetRentRequestsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                status,
-                true // As owner
-            ));
-            return Results.Ok(result);
-        })
+        group.MapGet("/received", async (int pageNumber, int pageSize, RentRequestStatus? status, ISender sender) =>
+            Api.Ok(await sender.Send(new GetRentRequestsQuery(pageNumber > 0 ? pageNumber : 1, pageSize > 0 ? pageSize : 10, status, true))))
         .WithName("GetReceivedRentRequests")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK);
 
-        // Get request details
         group.MapGet("/{id:long}", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new GetRentRequestByIdQuery(id));
-            if (!result.Success)
-            {
-                return Results.NotFound(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new GetRentRequestByIdQuery(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Not found", 404);
         })
         .WithName("GetRentRequestById")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound);
 
-        // Create rent request (Renter)
         group.MapPost("/", async (CreateRentRequestCommand command, ISender sender) =>
         {
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Created($"/api/rent-requests/{result.RequestId}", result);
+            var r = await sender.Send(command);
+            return r.Success ? Api.Created(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("CreateRentRequest")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        // Respond to request (Owner) - Approve or Reject
         group.MapPost("/{id:long}/respond", async (long id, RespondToRentRequestCommand command, ISender sender) =>
         {
-            if (id != command.RequestId)
-            {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            if (id != command.RequestId) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("RespondToRentRequest")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        // Cancel request (Renter)
         group.MapPost("/{id:long}/cancel", async (long id, CancelRentRequestCommand command, ISender sender) =>
         {
-            if (id != command.RequestId)
-            {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            if (id != command.RequestId) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("CancelRentRequest")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        // Start rental (Owner)
         group.MapPost("/{id:long}/start", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new StartRentalCommand(id));
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new StartRentalCommand(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("StartRental")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        // Complete rental (Owner)
         group.MapPost("/{id:long}/complete", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new CompleteRentalCommand(id));
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new CompleteRentalCommand(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
-        .WithName("CompleteRental")
-        .WithOpenApi();
+        .WithName("CompleteRentalRequest")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
     }
 }

@@ -7,17 +7,14 @@ import { HomeComponent } from './features/home/components/home/home.component';
 import { CategoriesRoutes } from './features/categories/categories.routes';
 import { SubcategoriesRoutes } from './features/subcategories/subcategories.routes';
 import { ProductsRoutes } from './features/products/products.routes';
-import { DashboardRoutes } from './features/dashboard/dashboard.routes';
 import { ProductDetailsComponent } from './features/marketplace/product-details/product-details.component';
 import { MarketplaceComponent } from './features/marketplace/marketplace.component';
-import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   ...AuthRoutes,
   ...CategoriesRoutes,
   ...SubcategoriesRoutes,
   ...ProductsRoutes,
-  ...DashboardRoutes,
   {
     path: 'marketplace/product/:id',
     component: ProductDetailsComponent,
@@ -28,11 +25,11 @@ export const routes: Routes = [
     component: MarketplaceComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'profile',
+  //   component: ProfileComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: '',
     component: HomeComponent,

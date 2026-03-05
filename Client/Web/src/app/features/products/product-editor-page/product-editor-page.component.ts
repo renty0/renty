@@ -7,261 +7,284 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 import { InputComponent } from '../../../shared/components/input/input';
-import { MultiImageUploaderComponent, UploadedImage } from '../../../shared/components/multi-image-uploader/multi-image-uploader.component';
+import {
+  MultiImageUploaderComponent,
+  UploadedImage,
+} from '../../../shared/components/multi-image-uploader/multi-image-uploader.component';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 
-import { ProductsClient, SubcategoriesClient, CreateProductCommand, UpdateProductCommand, ProductImageDto } from '../../../core/api/api-client';
+import {
+  ItemsClient,
+  SubcategoriesClient,
+  CreateItemCommand,
+  CreateItemPricingCommand,
+  CreateItemImageCommand,
+  UpdateItemCommand,
+} from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
-    selector: 'app-product-editor-page',
-    standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterModule,
-        TranslateModule,
-        MatButtonModule,
-        MatIconModule,
-        InputComponent,
-        MultiImageUploaderComponent,
-        HeaderSectionComponent,
-        LoadingButtonComponent
-    ],
-    templateUrl: './product-editor-page.component.html',
-    styleUrl: './product-editor-page.component.scss'
+  selector: 'app-product-editor-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TranslateModule,
+    MatButtonModule,
+    MatIconModule,
+    InputComponent,
+    MultiImageUploaderComponent,
+    HeaderSectionComponent,
+    LoadingButtonComponent,
+  ],
+  templateUrl: './product-editor-page.component.html',
+  styleUrl: './product-editor-page.component.scss',
 })
 export class ProductEditorPageComponent implements OnInit {
-    private fb = inject(FormBuilder);
-    private productsClient = inject(ProductsClient);
-    private subcategoriesClient = inject(SubcategoriesClient);
-    private toast = inject(ToastService);
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+  private itemsClient = inject(ItemsClient);
+  private subcategoriesClient = inject(SubcategoriesClient);
+  private toast = inject(ToastService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-    @Input('productId') set setProductId(val: number | undefined | null) {
-        if (val !== undefined && val !== null) {
-            this.productId = val;
-            this.isEditMode = !!val;
-            if (this.isEditMode) {
-                this.loadProduct(this.productId!);
-            } else {
-                this.resetForm();
-            }
+  // When used as a dialog/embedded component the itemId is a Guid string
+  @Input('itemId') set setItemId(val: string | undefined | null) {
+    if (val != null) {
+      this.itemId = val;
+      this.isEditMode = true;
+      this.loadItem(val);
+    } else {
+      this.resetForm();
+    }
+  }
+
+  @Output() saved = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
+
+  form!: FormGroup;
+  isEditMode = false;
+  itemId: string | null = null;
+  isLoading = false;
+  isSaving = false;
+
+  subcategories = signal<{ name: string; code: number }[]>([]);
+  uploadedImages: UploadedImage[] = [];
+
+  readonly typeOptions: { name: string; code: any }[] = [
+    { name: 'Standard', code: 'standard' },
+    { name: 'Premium', code: 'premium' },
+  ];
+
+  readonly conditionOptions: { name: string; code: any }[] = [
+    { name: 'New', code: 'new' },
+    { name: 'Like New', code: 'like_new' },
+    { name: 'Good', code: 'good' },
+    { name: 'Fair', code: 'fair' },
+  ];
+
+  /** Daily price (the primary pricing entry) — kept as a plain form control */
+  constructor() {
+    this.initForm();
+  }
+
+  ngOnInit() {
+    this.loadSubcategories();
+    // When used as a routed page, read the :id param
+    if (this.itemId === null) {
+      this.route.params.subscribe((params) => {
+        if (params['id']) {
+          this.itemId = params['id'];
+          this.isEditMode = true;
+          this.loadItem(this.itemId!);
         }
+      });
     }
+  }
 
-    @Output() saved = new EventEmitter<void>();
-    @Output() cancelled = new EventEmitter<void>();
-
-    form!: FormGroup;
-    isEditMode = false;
-    productId: number | null = null;
-    isLoading = false;
-    isSaving = false;
-
-    subcategories = signal<{ name: string; code: number }[]>([]);
-    uploadedImages: UploadedImage[] = [];
-
-    constructor() {
-        this.initForm();
+  private resetForm() {
+    if (this.form) {
+      this.form.reset();
+      this.uploadedImages = [];
+      this.form.patchValue({ defaultDeposit: 0, dailyPrice: 0 });
     }
+  }
 
-    ngOnInit() {
-        this.loadSubcategories();
-        if (this.productId === null) {
-            this.route.params.subscribe(params => {
-                if (params['id']) {
-                    this.productId = +params['id'];
-                    this.isEditMode = true;
-                    this.loadProduct(this.productId);
-                }
-            });
+  private initForm() {
+    this.form = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(200)]],
+      description: ['', [Validators.maxLength(1000)]],
+      type: ['standard'],          // standard | premium
+      condition: ['good'],              // new | like_new | good | fair
+      defaultDeposit: [0, [Validators.required, Validators.min(0)]],
+      dailyPrice: [0, [Validators.required, Validators.min(0.01)]],
+      location: [''],
+      city: [''],
+      subcategoryId: [null, [Validators.required]],
+      categoryId: [null],
+      brandId: [null],
+    });
+  }
+
+  private loadSubcategories() {
+    this.subcategoriesClient.getSubcategories(1, 1000).subscribe({
+      next: (res) => {
+        if (res.data?.items) {
+          const options = res.data.items.map((s) => ({
+            name: `${s.subcategoryName} (${s.categoryName})`,
+            code: s.id ?? 0,
+          }));
+          this.subcategories.set(options);
         }
-    }
+      },
+    });
+  }
 
-    private resetForm() {
-        if (this.form) {
-            this.form.reset();
-            this.uploadedImages = [];
-            this.form.patchValue({ productCost: 0, productPrice: 0 });
+  private loadItem(id: string) {
+    this.isLoading = true;
+    this.itemsClient.getItemById(id).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          this.toast.showError(res.error ?? 'Failed to load item details');
+          this.router.navigate(['/products']);
+          this.isLoading = false;
+          return;
         }
+
+        const item = res.data;
+        if (item) {
+          this.form.patchValue({
+            title: item.title,
+            description: item.description,
+            type: item.type,
+            condition: item.condition,
+            defaultDeposit: item.defaultDeposit,
+            dailyPrice: item.pricing?.find(p => p.pricingType === 'daily')?.price ?? 0,
+            location: item.location,
+            city: item.city,
+            subcategoryId: item.subcategory?.id ?? null,
+            categoryId: item.category?.id ?? null,
+            brandId: item.brand?.id ?? null,
+          });
+
+          if (item.images) {
+            this.uploadedImages = item.images.map((img, idx) => ({
+              id: img.id ? parseInt(img.id, 10) : idx,
+              imageUrl: img.imageUrl ?? '',
+              isPrimary: img.isPrimary ?? false,
+              displayOrder: idx,
+              isUploading: false,
+            }));
+          }
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.toast.showError('Failed to load item details');
+        this.isLoading = false;
+        this.router.navigate(['/products']);
+      },
+    });
+  }
+
+  onSubmit() {
+    if (this.form.invalid) return;
+    this.isSaving = true;
+    if (this.isEditMode && this.itemId) {
+      this.updateItem();
+    } else {
+      this.createItem();
     }
+  }
 
-    private initForm() {
-        this.form = this.fb.group({
-            productSku: ['', [Validators.required, Validators.maxLength(50)]],
-            productName: ['', [Validators.required, Validators.maxLength(200)]],
-            modelName: ['', [Validators.maxLength(100)]],
-            productDescription: ['', [Validators.maxLength(1000)]],
-            productColor: ['', [Validators.maxLength(50)]],
-            productStyle: ['', [Validators.maxLength(50)]],
-            productCost: [0, [Validators.required, Validators.min(0)]],
-            productPrice: [0, [Validators.required, Validators.min(0.01)]],
-            skuType: ['', [Validators.maxLength(50)]],
-            discountPrice: [null],
-            subcategoryId: [null, [Validators.required]],
-        });
-    }
+  private buildImages(): CreateItemImageCommand[] {
+    return this.uploadedImages.map((img) =>
+      new CreateItemImageCommand({ imageUrl: img.imageUrl, isPrimary: img.isPrimary })
+    );
+  }
 
-    private loadSubcategories() {
-        this.subcategoriesClient.getSubcategories(undefined, 1, 1000).subscribe({
-            next: (res) => {
-                if (res.subcategories?.items) {
-                    console.log(res);
-                    
-                    const options = res.subcategories.items.map(s => ({
-                        name: `${s.subcategoryName} (${s.categoryName})`,
-                        code: s.id || 0
-                    }));
-                    this.subcategories.set(options);
-                }
-            }
-        });
-    }
+  private createItem() {
+    const v = this.form.value;
+    const cmd = new CreateItemCommand({
+      productKey: 1,                  // required by server; update as needed
+      title: v.title,
+      description: v.description,
+      type: v.type,
+      condition: v.condition,
+      defaultDeposit: v.defaultDeposit,
+      location: v.location || undefined,
+      city: v.city || undefined,
+      subcategoryId: v.subcategoryId ?? undefined,
+      categoryId: v.categoryId ?? undefined,
+      brandId: v.brandId ?? undefined,
+      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      images: this.buildImages(),
+    });
 
-    private loadProduct(id: number) {
-        this.isLoading = true;
-        this.productsClient.getProductById(id).subscribe({
-            next: (res: any) => {
-                if (res && res.success === false) {
-                    this.toast.showError(res.message || 'Failed to load product details');
-                    this.router.navigate(['/products']);
-                    this.isLoading = false;
-                    return;
-                }
-
-                const p = res?.product || res;
-                if (p) {
-                    this.form.patchValue({
-                        productSku: p.productSku,
-                        productName: p.productName,
-                        modelName: p.modelName,
-                        productDescription: p.productDescription,
-                        productColor: p.productColor,
-                        productStyle: p.productStyle,
-                        productCost: p.productCost,
-                        productPrice: p.productPrice,
-                        skuType: p.skuType,
-                        discountPrice: p.discountPrice,
-                        subcategoryId: p.subcategoryId || p.productSubcategoryId // Handle possible name mismatch
-                    });
-
-                    // Map images
-                    if (p.images) {
-                        this.uploadedImages = p.images.map((img: ProductImageDto) => ({
-                            id: img.id,
-                            imageUrl: img.imageUrl,
-                            isPrimary: img.isPrimary,
-                            displayOrder: img.displayOrder,
-                            isUploading: false
-                        })).sort((a: UploadedImage, b: UploadedImage) => a.displayOrder - b.displayOrder);
-                    }
-                }
-                this.isLoading = false;
-            },
-            error: () => {
-                this.toast.showError('Failed to load product details');
-                this.isLoading = false;
-                this.router.navigate(['/products']);
-            }
-        });
-    }
-
-    onSubmit() {
-        console.log('valid ' + this.form.valid);
-        
-        if (this.form.invalid) return;
-
-        this.isSaving = true;
-        const formValue = this.form.value;
-        console.log('formValue ' + formValue);
-        console.log('isEditMode ' + this.isEditMode);
-        console.log('productId ' + this.productId);
-        
-        if (this.isEditMode && this.productId) {
-            this.updateProduct(formValue);
+    this.itemsClient.createItem(cmd).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          this.toast.showError(res.error ?? 'Failed to create item');
         } else {
-            this.createProduct(formValue);
-        }
-    }
-
-    private createProduct(formValue: any) {
-        const sortedImages = [...this.uploadedImages].sort((a, b) => {
-            if (a.isPrimary) return -1;
-            if (b.isPrimary) return 1;
-            return a.displayOrder - b.displayOrder;
-        });
-
-        const imageUrls = sortedImages.map(img => img.imageUrl);
-
-        const command = new CreateProductCommand({
-            ...formValue,
-            imageUrls: imageUrls
-        });
-
-        this.productsClient.createProduct(command).subscribe({
-            next: (res: any) => {
-                // If it returns void, res might be null, which counts as success here.
-                if (res && res.success === false) {
-                    this.toast.showError(res.message || 'Failed to create product');
-                } else {
-                    this.toast.showSuccess('Product created successfully');
-                    this.saved.emit();
-                    if (this.saved.observers.length === 0) {
-                        this.router.navigate(['/products']);
-                    }
-                }
-                this.isSaving = false;
-            },
-            error: () => {
-                this.toast.showError('An error occurred while creating product');
-                this.isSaving = false;
-            }
-        });
-    }
-
-    private updateProduct(formValue: any) {
-        const images: ProductImageDto[] = this.uploadedImages.map((img, index) => {
-            return new ProductImageDto({
-                id: img.id && img.id > 0 ? img.id : 0,
-                imageUrl: img.imageUrl,
-                isPrimary: img.isPrimary,
-                displayOrder: index
-            });
-        });
-
-        const command = new UpdateProductCommand({
-            id: this.productId!,
-            ...formValue,
-            images: images
-        });
-
-        this.productsClient.updateProduct(this.productId!, command).subscribe({
-            next: (res: any) => {
-                if (res && res.success === false) {
-                    this.toast.showError(res.message || 'Failed to update product');
-                } else {
-                    this.toast.showSuccess('Product updated successfully');
-                    this.saved.emit();
-                    if (this.saved.observers.length === 0) {
-                        this.router.navigate(['/products']);
-                    }
-                }
-                this.isSaving = false;
-            },
-            error: () => {
-                this.toast.showError('An error occurred while updating product');
-                this.isSaving = false;
-            }
-        });
-    }
-
-    cancel() {
-        this.cancelled.emit();
-        if (this.cancelled.observers.length === 0) {
+          this.toast.showSuccess('Item created successfully');
+          this.saved.emit();
+          if (this.saved.observed === false) {
             this.router.navigate(['/products']);
+          }
         }
+        this.isSaving = false;
+      },
+      error: () => {
+        this.toast.showError('An error occurred while creating item');
+        this.isSaving = false;
+      },
+    });
+  }
+
+  private updateItem() {
+    const v = this.form.value;
+    const cmd = new UpdateItemCommand({
+      itemId: this.itemId!,
+      title: v.title,
+      description: v.description,
+      type: v.type,
+      condition: v.condition,
+      defaultDeposit: v.defaultDeposit,
+      location: v.location || undefined,
+      city: v.city || undefined,
+      subcategoryId: v.subcategoryId ?? undefined,
+      categoryId: v.categoryId ?? undefined,
+      brandId: v.brandId ?? undefined,
+      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      images: this.buildImages(),
+    });
+
+    this.itemsClient.updateItem(this.itemId!, cmd).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          this.toast.showError(res.error ?? 'Failed to update item');
+        } else {
+          this.toast.showSuccess('Item updated successfully');
+          this.saved.emit();
+          if (this.saved.observed === false) {
+            this.router.navigate(['/products']);
+          }
+        }
+        this.isSaving = false;
+      },
+      error: () => {
+        this.toast.showError('An error occurred while updating item');
+        this.isSaving = false;
+      },
+    });
+  }
+
+  cancel() {
+    this.cancelled.emit();
+    if (this.cancelled.observed === false) {
+      this.router.navigate(['/products']);
     }
+  }
 }

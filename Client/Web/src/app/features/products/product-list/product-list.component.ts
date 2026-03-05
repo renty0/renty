@@ -13,11 +13,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
-import { ProductsClient, ProductListDto } from '../../../core/api/api-client';
+import { ItemsClient, ItemListDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ProductEditorPageComponent } from '../product-editor-page/product-editor-page.component';
 
 @Component({
     selector: 'app-product-list',
@@ -35,20 +34,19 @@ import { ProductEditorPageComponent } from '../product-editor-page/product-edito
         MatButtonToggleModule,
         HeaderSectionComponent,
         LoadingButtonComponent,
-        ProductEditorPageComponent
     ],
     templateUrl: './product-list.component.html',
     styleUrl: './product-list.component.scss'
 })
 export class ProductListComponent implements OnInit {
-    private apiClient = inject(ProductsClient);
+    private apiClient = inject(ItemsClient);
     private router = inject(Router);
     private dialog = inject(MatDialog);
     private toast = inject(ToastService);
     public translate = inject(TranslateService);
 
-    displayedColumns = ['image', 'sku', 'name', 'price', 'subcategory', 'actions'];
-    dataSource = signal<ProductListDto[]>([]);
+    displayedColumns = ['image', 'title', 'price', 'category', 'actions'];
+    dataSource = signal<ItemListDto[]>([]);
     isLoading = signal(false);
     viewMode = signal<'list' | 'cards'>('list');
 
@@ -59,12 +57,8 @@ export class ProductListComponent implements OnInit {
     totalCount = signal(0);
 
     // Sorting state
-    sortBy = signal<string | null>('date');
+    sortBy = signal<string | null>('newest');
     sortOrder = signal<'asc' | 'desc' | null>('desc');
-
-    // Dialog state (added to fix errors)
-    showDialog = signal(false);
-    selectedProductId = signal<number | undefined>(undefined);
 
     constructor() {
         effect(() => {
@@ -75,40 +69,39 @@ export class ProductListComponent implements OnInit {
             });
         }, { allowSignalWrites: true });
 
-        // Reactive data fetching
         effect(() => {
             this.getData();
         }, { allowSignalWrites: true });
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
     private getData() {
         const page = this.pageNumber();
-        const size = this.pageSize();
-        const term = this.searchTerm();
+        const limit = this.pageSize();
 
         this.isLoading.set(true);
-        this.apiClient.getProducts(
+        this.apiClient.getItems(
             page,
-            size,
-            undefined, // subcategoryId
-            undefined, // categoryId
-            term || undefined,
-            undefined, // minPrice
-            undefined, // maxPrice
-            undefined, // color
-            this.sortBy() || undefined,
-            this.sortOrder() || undefined
+            limit,
+            undefined,  // categoryId
+            undefined,  // subcategoryId
+            undefined,  // city
+            undefined,  // minPrice
+            undefined,  // maxPrice
+            undefined,  // type
+            undefined,  // condition
+            this.sortBy() ?? undefined,
+            this.sortOrder() ?? undefined,
+            undefined   // owner
         )
             .pipe(
                 tap((response) => {
-                    this.dataSource.set(response.products?.items || []);
-                    this.totalCount.set(response.products?.totalCount || 0);
+                    this.dataSource.set(response.data?.items ?? []);
+                    this.totalCount.set(response.data?.total ?? 0);
                 }),
                 catchError((err) => {
-                    console.error('Failed to load products', err);
+                    console.error('Failed to load items', err);
                     this.dataSource.set([]);
                     this.toast.showError('errors.failedToLoadProducts');
                     return of(null);
@@ -135,37 +128,15 @@ export class ProductListComponent implements OnInit {
         this.pageNumber.set(1);
     }
 
-    // Methods for dialog (added to fix errors)
-    editProduct(id: number) {
-        // Use router for now, matching existing logic
+    editItem(id: string) {
         this.router.navigate(['/products', id, 'edit']);
-        /* 
-        // If we were using dialog:
-        this.selectedProductId.set(id);
-        this.showDialog.set(true);
-        */
     }
 
-    createProduct() {
+    createItem() {
         this.router.navigate(['/products/new']);
-        /*
-        this.selectedProductId.set(undefined);
-        this.showDialog.set(true);
-        */
     }
 
-    closeDialog() {
-        this.showDialog.set(false);
-        this.selectedProductId.set(undefined);
-    }
-
-    onSaved() {
-        this.closeDialog();
-        this.getData();
-        this.toast.showSuccess('Product saved successfully');
-    }
-
-    async deleteProduct(id: number) {
+    async deleteItem(id: string) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             data: {
                 title: this.translate.instant('products.actions.delete'),
@@ -179,7 +150,7 @@ export class ProductListComponent implements OnInit {
         const confirmed = await dialogRef.afterClosed().toPromise();
         if (confirmed) {
             this.isLoading.set(true);
-            this.apiClient.deleteProduct(id)
+            this.apiClient.deleteItem(id)
                 .pipe(
                     tap(() => {
                         this.toast.showSuccess('products.messages.deleteSuccess');

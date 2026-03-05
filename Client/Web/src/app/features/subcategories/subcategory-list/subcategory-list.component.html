@@ -22,8 +22,7 @@
     } @else {
     @if (viewMode() === 'list') {
     <mat-card class="table-card">
-        <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
-            [matSortActive]="sortBy() || 'name'" [matSortDirection]="sortOrder() || 'asc'">
+        <table mat-table [dataSource]="dataSource()" class="data-table">
             <ng-container matColumnDef="logo">
                 <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.logo' | translate }}</th>
                 <td mat-cell *matCellDef="let row">

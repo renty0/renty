@@ -2,6 +2,8 @@ using Application.Common.Interfaces;
 using Application.Features.RentableItems;
 using Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -9,141 +11,81 @@ public static class RentableItemEndpoints
 {
     public static void MapRentableItemEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/items")
-            .WithTags("Rentable Items");
+        var group = app.MapGroup("/api/items").WithTags("Rentable Items");
 
-        // Public endpoint - browse available items
-        group.MapGet("/", async (
-            int pageNumber,
-            int pageSize,
-            string? searchTerm,
-            int? categoryId,
-            int? subcategoryId,
-            string? city,
-            string? country,
-            decimal? minPrice,
-            decimal? maxPrice,
-            bool? isAvailableForDelivery,
-            ISender sender) =>
-        {
-            var result = await sender.Send(new GetRentableItemsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                searchTerm,
-                categoryId,
-                subcategoryId,
-                city,
-                country,
-                minPrice,
-                maxPrice,
-                isAvailableForDelivery,
-                null,
-                ItemStatus.Available
-            ));
-            return Results.Ok(result);
-        })
+        group.MapGet("/", async (int pageNumber, int pageSize, string? searchTerm,
+            int? categoryId, int? subcategoryId, string? city, string? country,
+            decimal? minPrice, decimal? maxPrice, bool? isAvailableForDelivery, ISender sender) =>
+            Api.Ok(await sender.Send(new GetRentableItemsQuery(
+                pageNumber > 0 ? pageNumber : 1, pageSize > 0 ? pageSize : 10,
+                searchTerm, categoryId, subcategoryId, city, country,
+                minPrice, maxPrice, isAvailableForDelivery, null, ItemStatus.Available))))
         .WithName("GetRentableItems")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .AllowAnonymous();
 
-        // Get item details
         group.MapGet("/{id:long}", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new GetRentableItemByIdQuery(id));
-            if (!result.Success)
-            {
-                return Results.NotFound(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new GetRentableItemByIdQuery(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Not found", 404);
         })
         .WithName("GetRentableItemById")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
         .AllowAnonymous();
 
-        // Owner's items
-        group.MapGet("/my-items", async (
-            int pageNumber,
-            int pageSize,
-            ItemStatus? status,
-            ISender sender,
-            IUser currentUser) =>
+        group.MapGet("/my-items", async (int pageNumber, int pageSize, ItemStatus? status,
+            ISender sender, IUser currentUser) =>
         {
-            if (currentUser.Id == null)
-            {
-                return Results.Unauthorized();
-            }
-
-            var result = await sender.Send(new GetRentableItemsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                null, null, null, null, null, null, null, null,
-                currentUser.Id.Value,
-                status
-            ));
-            return Results.Ok(result);
+            if (currentUser.Id == null) return Api.Fail("Unauthorized", 401);
+            var r = await sender.Send(new GetRentableItemsQuery(
+                pageNumber > 0 ? pageNumber : 1, pageSize > 0 ? pageSize : 10,
+                null, null, null, null, null, null, null, null, currentUser.Id.Value, status));
+            return Api.Ok(r);
         })
         .WithName("GetMyItems")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .RequireAuthorization();
 
-        // Create item (Owner only)
         group.MapPost("/", async (CreateRentableItemCommand command, ISender sender) =>
         {
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Created($"/api/items/{result.ItemId}", result);
+            var r = await sender.Send(command);
+            return r.Success ? Api.Created(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("CreateRentableItem")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(policy => policy.RequireRole("Owner", "SuperAdmin", "Admin"));
 
-        // Update item
         group.MapPut("/{id:long}", async (long id, UpdateRentableItemCommand command, ISender sender) =>
         {
-            if (id != command.Id)
-            {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            if (id != command.Id) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("UpdateRentableItem")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization();
 
-        // Update item status
         group.MapPatch("/{id:long}/status", async (long id, ItemStatus status, ISender sender) =>
         {
-            var result = await sender.Send(new UpdateItemStatusCommand(id, status));
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new UpdateItemStatusCommand(id, status));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("UpdateItemStatus")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization();
 
-        // Delete (archive) item
         group.MapDelete("/{id:long}", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new DeleteRentableItemCommand(id));
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new DeleteRentableItemCommand(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("DeleteRentableItem")
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization();
     }
 }

@@ -1,8 +1,8 @@
 using Application.Features.Categories;
 using Application.Common.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -10,76 +10,77 @@ public static class CategoryEndpoints
 {
     public static void MapCategoryEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/categories")
-            .WithTags("Categories");
-            //.RequireAuthorization();
+        var g = app.MapGroup("/api/v1/categories").WithTags("Categories");
 
-        group.MapGet("/", async Task<Ok<PaginatedList<ProductCategoryDto>>> (
-            int? pageNumber, 
-            int? pageSize, 
-            string? searchTerm, 
-            string? sortBy,
-            string? sortOrder,
+        // GET /categories
+        g.MapGet("/", async (
+            [Microsoft.AspNetCore.Mvc.FromQuery] string? search,
+            [Microsoft.AspNetCore.Mvc.FromQuery] int page,
+            [Microsoft.AspNetCore.Mvc.FromQuery] int limit,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string? sortBy,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string? sortOrder,
             ISender sender) =>
         {
-            var result = await sender.Send(new GetCategoriesQuery { 
-                PageNumber = pageNumber ?? 1, 
-                PageSize = pageSize ?? 10, 
-                SearchTerm = searchTerm,
-                SortBy = sortBy,
-                SortOrder = sortOrder
+            var r = await sender.Send(new GetCategoriesQuery
+            {
+                SearchTerm = search,
+                PageNumber = page < 1 ? 1 : page,
+                PageSize   = limit < 1 ? 50 : limit
             });
-            return TypedResults.Ok(result);
+            var data = new PagedResult<ProductCategoryDto>(
+                r.Items ?? [], r.TotalCount, r.PageNumber, r.TotalPages,
+                SortBy: sortBy, SortOrder: sortOrder);
+            return Api.Ok(data);
         })
         .WithName("GetCategories")
-        .WithOpenApi();
+        .Produces<ApiResponse<PagedResult<ProductCategoryDto>>>(StatusCodes.Status200OK)
+        .AllowAnonymous();
 
-        group.MapGet("/{id:int}", async Task<Results<Ok<ProductCategoryDto>, NotFound>> (int id, ISender sender) =>
+        // GET /categories/:id
+        g.MapGet("/{id:int}", async (int id, ISender sender) =>
         {
-            var result = await sender.Send(new GetCategoryByIdQuery(id));
-            return result is not null ? TypedResults.Ok(result) : TypedResults.NotFound();
+            var r = await sender.Send(new GetCategoryByIdQuery(id));
+            return r is null ? Api.Fail("Category not found", 404) : Api.Ok(r);
         })
         .WithName("GetCategoryById")
-        .WithOpenApi();
+        .Produces<ApiResponse<ProductCategoryDto>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
+        .AllowAnonymous();
 
-        group.MapPost("/", async Task<Results<Ok<CreateCategoryResponse>, BadRequest<CreateCategoryResponse>>> (CreateCategoryCommand command, ISender sender) =>
+        // POST /categories
+        g.MapPost("/", async (CreateCategoryCommand cmd, ISender sender) =>
         {
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Ok(result);
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Message ?? "Bad request");
+            return Api.Created(r.Category);
         })
         .WithName("CreateCategory")
-        .WithOpenApi();
+        .Produces<ApiResponse<ProductCategoryDto>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.AdminAccess);
 
-        group.MapPut("/{id:int}", async Task<Results<Ok<UpdateCategoryResponse>, BadRequest<UpdateCategoryResponse>>> (int id, UpdateCategoryCommand command, ISender sender) =>
+        // PUT /categories/:id
+        g.MapPut("/{id:int}", async (int id, UpdateCategoryCommand cmd, ISender sender) =>
         {
-            if (id != command.Id)
-            {
-                return TypedResults.BadRequest(new UpdateCategoryResponse(false, "ID mismatch", null));
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Ok(result);
+            var r = await sender.Send(cmd with { Id = id });
+            if (!r.Success) return Api.Fail(r.Message ?? "Bad request");
+            return Api.Ok(r.Category);
         })
         .WithName("UpdateCategory")
-        .WithOpenApi();
+        .Produces<ApiResponse<ProductCategoryDto>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.AdminAccess);
 
-        group.MapDelete("/{id:int}", async Task<Results<Ok<DeleteCategoryResponse>, BadRequest<DeleteCategoryResponse>>> (int id, ISender sender) =>
+        // DELETE /categories/:id
+        g.MapDelete("/{id:int}", async (int id, ISender sender) =>
         {
-            var result = await sender.Send(new DeleteCategoryCommand(id));
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Ok(result);
+            var r = await sender.Send(new DeleteCategoryCommand(id));
+            if (!r.Success) return Api.Fail(r.Message ?? "Bad request");
+            return Api.Ok(new { message = "Category deleted." });
         })
         .WithName("DeleteCategory")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.AdminAccess);
     }
 }

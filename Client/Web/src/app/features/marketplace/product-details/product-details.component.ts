@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ProductsClient, ProductDto, GetProductByIdResponse, ProductListDto } from '../../../core/api/api-client';
+import { ItemsClient, ItemDetailDto, ItemListDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
 
@@ -29,11 +29,11 @@ import { catchError, finalize, of, tap } from 'rxjs';
 })
 export class ProductDetailsComponent implements OnInit {
     private route = inject(ActivatedRoute);
-    private productsClient = inject(ProductsClient);
+    private itemsClient = inject(ItemsClient);
     private toast = inject(ToastService);
 
-    product = signal<ProductDto | null>(null);
-    relatedProducts = signal<ProductListDto[]>([]);
+    item = signal<ItemDetailDto | null>(null);
+    relatedItems = signal<ItemListDto[]>([]);
     isLoading = signal(true);
     selectedImage = signal<string | undefined>(undefined);
 
@@ -41,32 +41,34 @@ export class ProductDetailsComponent implements OnInit {
         this.route.params.subscribe(params => {
             const id = params['id'];
             if (id) {
-                this.loadProduct(+id);
+                this.loadItem(id);  // id is a Guid string
             }
         });
     }
 
-    loadProduct(id: number) {
+    loadItem(id: string) {
         this.isLoading.set(true);
-        // Reset related products when loading new main product
-        this.relatedProducts.set([]);
+        this.relatedItems.set([]);
 
-        this.productsClient.getProductById(id)
+        this.itemsClient.getItemById(id)
             .pipe(
                 tap(res => {
-                    if (res.product) {
-                        this.product.set(res.product);
-                        // Set initial main image
-                        this.selectedImage.set(res.product.images?.find(i => i.isPrimary)?.imageUrl || res.product.images?.[0]?.imageUrl);
-
-                        // Load related products based on category
-                        if (res.product.subcategoryId) {
-                            this.loadRelatedProducts(res.product.subcategoryId, res.product.id!);
+                    if (res.success && res.data) {
+                        const itemData = res.data;
+                        this.item.set(itemData);
+                        // Set primary image
+                        this.selectedImage.set(
+                            itemData.images?.find(i => i.isPrimary)?.imageUrl ??
+                            itemData.images?.[0]?.imageUrl
+                        );
+                        // Load related items by subcategory if available
+                        if (itemData.subcategory?.id) {
+                            this.loadRelatedItems(itemData.subcategory.id, id);
                         }
                     }
                 }),
                 catchError(err => {
-                    console.error('Failed to load product', err);
+                    console.error('Failed to load item', err);
                     this.toast.showError('errors.failedToLoadProduct');
                     return of(null);
                 }),
@@ -75,19 +77,25 @@ export class ProductDetailsComponent implements OnInit {
             .subscribe();
     }
 
-    loadRelatedProducts(subcategoryId: number, currentProductId: number) {
-        this.productsClient.getProducts(1, 4, subcategoryId)
+    loadRelatedItems(subcategoryId: number, currentItemId: string) {
+        this.itemsClient.getItems(
+            1, 5,
+            undefined,       // categoryId
+            subcategoryId,   // subcategoryId
+            undefined, undefined, undefined, undefined, undefined,
+            'newest', 'desc', undefined
+        )
             .pipe(
                 tap(res => {
-                    if (res.products && res.products.items) {
-                        const filtered = res.products.items
-                            .filter(p => p.id !== currentProductId)
-                            .slice(0, 4); // Limit to 4 related products
-                        this.relatedProducts.set(filtered);
+                    if (res.data?.items) {
+                        const filtered = res.data.items
+                            .filter(i => i.id !== currentItemId)
+                            .slice(0, 4);
+                        this.relatedItems.set(filtered);
                     }
                 }),
                 catchError(err => {
-                    console.error('Failed to load related products', err);
+                    console.error('Failed to load related items', err);
                     return of(null);
                 })
             )

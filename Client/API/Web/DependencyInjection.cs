@@ -1,7 +1,10 @@
+using Application.Features.Chats;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using Application.Web.MediaFiles.Commands.UploadMedia;
+using Web.Hubs;
 using Web.Infrastructure;
+using Web.Services;
 
 namespace Web;
 
@@ -14,6 +17,37 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();
+
+        // ── Real-Time (SignalR) ────────────────────────────────────────────────
+        services.AddSignalR();
+        services.AddScoped<IChatNotifier, ChatHubNotifier>();
+
+        // ── Authorization Policies ────────────────────────────────────────────
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(Policies.AdminAccess, p =>
+                p.RequireRole(Roles.Admin, Roles.SuperAdmin));
+
+            options.AddPolicy(Policies.SuperAdminOnly, p =>
+                p.RequireRole(Roles.SuperAdmin));
+
+            options.AddPolicy(Policies.SupportAccess, p =>
+                p.RequireRole(Roles.Support, Roles.Admin, Roles.SuperAdmin));
+
+            options.AddPolicy(Policies.ExpertAccess, p =>
+                p.RequireRole(Roles.Expert));
+
+            options.AddPolicy(Policies.ExpertOrAdmin, p =>
+                p.RequireRole(Roles.Expert, Roles.Admin, Roles.SuperAdmin));
+
+            // Any authenticated role (all users, EXCLUDES experts for transactional ops)
+            options.AddPolicy(Policies.CanTransact, p =>
+                p.RequireRole(Roles.User, Roles.Admin, Roles.SuperAdmin));
+
+            // Non-expert authenticated user (user/admin/support/super_admin)
+            options.AddPolicy(Policies.NonExpert, p =>
+                p.RequireRole(Roles.User, Roles.Admin, Roles.Support, Roles.SuperAdmin));
+        });
 
         // Configure CORS
         services.AddCors(options =>

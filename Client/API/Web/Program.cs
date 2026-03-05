@@ -2,6 +2,7 @@ using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Web;
+using Web.Hubs;
 using Web.Endpoints;
 using Microsoft.Extensions.FileProviders;
 
@@ -61,25 +62,32 @@ app.UseSwaggerUi(config =>
     config.DocExpansion = "list";
 });
 
-// Map endpoints
-app.MapAccountEndpoints();
-app.MapSeedingEndpoints();
-app.MapCategoryEndpoints();
-app.MapSubcategoryEndpoints();
-app.MapProductEndpoints();
-app.MapCustomerEndpoints();
-app.MapTerritoryEndpoints();
-app.MapSaleEndpoints();
-app.MapReturnEndpoints();
-app.MapCalendarEndpoints();
-app.MapRentableItemEndpoints();
-app.MapRentRequestEndpoints();
-app.MapMediaFilesEndpoints();
-app.MapDashboardEndpoints();
-app.MapRecommendationEndpoints();
-app.MapGapAnalysisEndpoints();
-app.MapKpiEndpoints();
-app.MapAnalyticsEndpoints();
+// ── v1 API Endpoints ──────────────────────────────────────────────────────────
+app.MapAuthEndpoints();              // /api/v1/auth
+app.MapItemEndpoints();              // /api/v1/items
+app.MapSearchEndpoints();            // /api/v1/search
+app.MapFavoriteEndpoints();          // /api/v1/items/:id/favorite, /users/me/favorites
+app.MapRentalEndpoints();            // /api/v1/rentals
+app.MapOrderEndpoints();             // /api/v1/orders
+app.MapPaymentEndpoints();           // /api/v1/payments
+app.MapDeliveryEndpoints();          // /api/v1/orders/:id/delivery
+app.MapReviewEndpoints();            // /api/v1/rentals/:id/review, /items/:id/reviews
+app.MapVerificationEndpoints();      // /api/v1/items/:id/verify, /expert/assigned
+app.MapSupportEndpoints();           // /api/v1/support/tickets
+app.MapChatEndpoints();              // /api/v1/chats
+app.MapNotificationEndpoints();      // /api/v1/notifications
+app.MapRecommendationV1Endpoints();  // /api/v1/recommendations
+app.MapAdminKpiEndpoints();          // /api/v1/admin/kpis, /admin/gap
+app.MapAdminFraudEndpoints();
+app.MapMediaEndpoints();             // /api/v1/media
+app.MapCategoryEndpoints();          // /api/v1/categories
+app.MapSubcategoryEndpoints();       // /api/v1/subcategories, /api/v1/categories/:id/subcategories
+app.MapBrandEndpoints();             // /api/v1/brands
+
+
+
+// ── SignalR Hub ──────────────────────────────────────────────────────────────
+app.MapHub<ChatHub>("/hubs/chat");
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))

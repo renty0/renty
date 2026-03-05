@@ -6,7 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
 import { ToastService } from '../../../shared/services/toast.service';
-import { CategoriesClient, CreateCategoryCommand, UpdateCategoryCommand, MediaFilesClient } from '../../../core/api/api-client';
+import { CategoriesClient, CreateCategoryCommand, UpdateCategoryCommand } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 
@@ -65,14 +65,14 @@ export class CategoryEditorComponent implements OnInit {
             tap(category => {
                 if (category) {
                     this.form.patchValue({
-                        categoryName: category.categoryName,
-                        description: category.description,
-                        logoId: category.logoId
+                        categoryName: category?.data?.categoryName,
+                        description: category?.data?.description,
+                        logoId: category?.data?.logoId
                     });
 
                     if (this.logoUploader) {
-                        this.logoUploader.imageUrl = category.logoUrl || null;
-                        this.logoUploader.fileId = category.logoId?.toString() || null;
+                        this.logoUploader.imageUrl = category?.data?.logoUrl || null;
+                        this.logoUploader.fileId = category?.data?.logoId?.toString() || null;
                     }
                 }
             }),
@@ -116,13 +116,13 @@ export class CategoryEditorComponent implements OnInit {
                         tap((res) => {
                             this.toast.showSuccess(res.message ? res.message : 'categories.messages.updateSuccess');
                             // Emit the updated category data
-                            if (res.category) {
+                            if (res.data) {
                                 this.saved.emit({
-                                    id: res.category.id!,
-                                    categoryName: res.category.categoryName!,
-                                    description: res.category.description,
-                                    logoUrl: res.category.logoUrl,
-                                    logoId: res.category.logoId ? Number(res.category.logoId) : undefined
+                                    id: res?.data?.id!,
+                                    categoryName: res?.data?.categoryName!,
+                                    description: res?.data?.description,
+                                    logoUrl: res?.data?.logoUrl,
+                                    logoId: res?.data?.logoId ? Number(res?.data?.logoId) : undefined
                                 });
                             }
                         }),
@@ -144,13 +144,13 @@ export class CategoryEditorComponent implements OnInit {
                     .pipe(
                         tap((res) => {
                             this.toast.showSuccess(res.message ? res.message : 'categories.messages.createSuccess');
-                            if (res.category) {
+                            if (res.data) {
                                 this.saved.emit({
-                                    id: res.category.id!,
-                                    categoryName: res.category.categoryName!,
-                                    description: res.category.description,
-                                    logoUrl: res.category.logoUrl,
-                                    logoId: res.category.logoId ? Number(res.category.logoId) : undefined
+                                    id: res.data.id!,
+                                    categoryName: res.data.categoryName!,
+                                    description: res.data.description,
+                                    logoUrl: res.data.logoUrl,
+                                    logoId: res.data.logoId ? Number(res.data.logoId) : undefined
                                 });
                             }
                         }),

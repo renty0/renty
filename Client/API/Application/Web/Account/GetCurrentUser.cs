@@ -48,12 +48,13 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,
-
             roles,
             user.Address,
             user.City,
             user.Country,
-            user.Bio
+            user.Bio,
+            user.PhoneNumber,
+            user.CreatedAt
         );
 
         return new GetCurrentUserResponse(true, null, userDto);

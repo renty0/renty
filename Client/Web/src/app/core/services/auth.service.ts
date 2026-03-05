@@ -1,11 +1,18 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { ToastService } from '../../shared/services/toast.service';
-import { LoginResponse, UserDto, AccountClient, RefreshTokenCommand } from '../api/api-client';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Observable, throwError, catchError, map, tap } from 'rxjs';
+import {
+  ApiResponseOfAuthLoginData,
+  ApiResponseOfAuthRefreshData,
+  ApiResponseOfAuthRegisterData,
+  AuthClient,
+  AuthLoginData,
+  AuthLoginUser,
+  AuthRefreshData,
+  LoginCommand,
+  RefreshTokenCommand,
+  RegisterCommand
+} from '../api/api-client';
 import { CookieService } from 'ngx-cookie-service';
 import * as CryptoJS from 'crypto-js';
 
@@ -13,8 +20,7 @@ import * as CryptoJS from 'crypto-js';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly toast = inject(ToastService);
-  private readonly http = inject(HttpClient);
+  private readonly authClient = inject(AuthClient);
   private readonly router = inject(Router);
   private readonly cookieService = inject(CookieService);
 
@@ -26,11 +32,8 @@ export class AuthService {
   private readonly ROLES_KEY = 'urk';
 
   isLoggedIn: WritableSignal<boolean>;
-  private readonly rolesSignal = signal<string[]>([]);
+  private readonly rolesSignal = signal<string>("user");
   readonly roles = computed(() => this.rolesSignal());
-
-  private isRefreshing = false;
-  private refreshPromise: Promise<any> | null = null;
 
   constructor() {
     this.isLoggedIn = signal(this.hasValidToken());
@@ -74,31 +77,32 @@ export class AuthService {
         this.rolesSignal.set(JSON.parse(rolesData));
       }
     } catch {
-      this.rolesSignal.set([]);
+      this.rolesSignal.set("user");
     }
   }
 
-  storeLoginResponse(loginResponse: LoginResponse): void {
-    if (!loginResponse.token) return;
+  storeLoginResponse(loginResponse: AuthLoginData): void {
+    if (!loginResponse.accessToken) return;
 
     // Use token expiration for cookie expiration if available, otherwise fallback to 7 days
-    const expires = loginResponse.token.refreshTokenExpiresAt ?
-      new Date(loginResponse.token.refreshTokenExpiresAt) : 7;
+    const expires = 7;
+    // loginResponse.refreshTokenExpiresAt ?
+    //   new Date(loginResponse.refreshTokenExpiresAt) : 7;
 
-    if (loginResponse.token.accessToken) {
-      this.setSecureCookie(this.ACCESS_TOKEN_KEY, loginResponse.token.accessToken, expires);
+    if (loginResponse.accessToken) {
+      this.setSecureCookie(this.ACCESS_TOKEN_KEY, loginResponse.accessToken, expires);
     }
-    if (loginResponse.token.refreshToken) {
-      this.setSecureCookie(this.REFRESH_TOKEN_KEY, loginResponse.token.refreshToken, expires);
+    if (loginResponse.refreshToken) {
+      this.setSecureCookie(this.REFRESH_TOKEN_KEY, loginResponse.refreshToken, expires);
     }
-    if (loginResponse.token.refreshTokenExpiresAt) {
-      this.setSecureCookie(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.token.refreshTokenExpiresAt).toISOString(), expires);
-    }
+    // if (loginResponse.refreshTokenExpiresAt) {
+    //   this.setSecureCookie(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.refreshTokenExpiresAt).toISOString(), expires);
+    // }
 
     if (loginResponse.user) {
       const userData = JSON.stringify(loginResponse.user);
       this.setSecureCookie(this.USER_DATA_KEY, userData, expires);
-      const roles = loginResponse.user.roles || [];
+      const roles = loginResponse.user.role || "user";
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), expires);
       this.rolesSignal.set(roles);
     }
@@ -106,11 +110,56 @@ export class AuthService {
     this.isLoggedIn.set(true);
   }
 
-  storeUserData(user: UserDto): void {
+  login(email: string, password: string): Observable<ApiResponseOfAuthLoginData> {
+    const command = new LoginCommand({
+      email,
+      password
+    });
+
+    return this.authClient.authLogin(command).pipe(
+      tap((response: ApiResponseOfAuthLoginData) => {
+        if (response.success && response.data) {
+          this.storeLoginResponse(response.data);
+        }
+      })
+    );
+  }
+
+  register(payload: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    bio?: string;
+    userType: any;
+  }): Observable<ApiResponseOfAuthRegisterData> {
+    const command = new RegisterCommand({
+      email: payload.email,
+      password: payload.password,
+      confirmPassword: payload.confirmPassword,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      phoneNumber: payload.phoneNumber || undefined,
+      address: payload.address || undefined,
+      city: payload.city || undefined,
+      country: payload.country || undefined,
+      bio: payload.bio || undefined,
+      userType: payload.userType
+    });
+
+    return this.authClient.authRegister(command);
+  }
+
+  storeUserData(user: AuthLoginUser): void {
     if (user) {
       const userData = JSON.stringify(user);
       this.setSecureCookie(this.USER_DATA_KEY, userData, 7);
-      const roles = user.roles || [];
+      const roles = user.role || "user";
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), 7);
       this.rolesSignal.set(roles);
     }
@@ -124,11 +173,11 @@ export class AuthService {
     return this.getSecureCookie(this.REFRESH_TOKEN_KEY);
   }
 
-  getUserData(): UserDto | null {
+  getUserData(): AuthLoginUser | null {
     const userData = this.getSecureCookie(this.USER_DATA_KEY);
     if (!userData) return null;
     try {
-      return JSON.parse(userData) as UserDto;
+      return JSON.parse(userData) as AuthLoginUser;
     } catch (error) {
       return null;
     }
@@ -147,61 +196,50 @@ export class AuthService {
   }
 
   hasValidRefreshToken(): boolean {
-    const expDate = this.getSecureCookie(this.REFRESH_TOKEN_EXP_KEY);
-    if (!expDate) return false;
-    return new Date() < new Date(expDate);
+    return !!this.getRefreshToken();
   }
 
   refreshTokens(): Observable<any> {
-    if (!this.hasValidRefreshToken()) {
-      return throwError(() => new Error('No valid refresh token available'));
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
     }
 
-    if (this.isRefreshing && this.refreshPromise) {
-      return new Observable(observer => {
-        this.refreshPromise!
-          .then(response => {
-            observer.next(response);
-            observer.complete();
-          })
-          .catch(err => observer.error(err));
-      });
-    }
+    const command = new RefreshTokenCommand({
+      refreshToken
+    });
 
-    this.isRefreshing = true;
-    const refreshToken = this.getRefreshToken() || '';
+    return this.authClient.authRefresh(command).pipe(
+      tap((response: ApiResponseOfAuthRefreshData) => {
+        if (response.success && response.data) {
+          const data: AuthRefreshData = response.data;
+          const expires = 7;
 
-    this.refreshPromise = new Promise((resolve, reject) => {
-      this.http.post<any>(`${environment.apiUrl}/api/account/refresh-token`, { refreshToken }).pipe(
-        tap((response: any) => {
-          if (response && response.success) {
-            this.storeLoginResponse(response);
-            this.isRefreshing = false;
-            this.refreshPromise = null;
-            resolve(response);
-          } else {
-            this.logout();
-            reject(new Error('Refresh token invalid'));
+          if (data.accessToken) {
+            this.setSecureCookie(this.ACCESS_TOKEN_KEY, data.accessToken, expires);
           }
-        }),
-        catchError(error => {
-          this.isRefreshing = false;
-          this.refreshPromise = null;
-          this.logout();
-          reject(error);
-          return throwError(() => error);
-        })
-      ).subscribe();
-    });
 
-    return new Observable(observer => {
-      this.refreshPromise!
-        .then(response => {
-          observer.next(response);
-          observer.complete();
-        })
-        .catch(err => observer.error(err));
-    });
+          if (data.refreshToken) {
+            this.setSecureCookie(this.REFRESH_TOKEN_KEY, data.refreshToken, expires);
+          }
+
+          this.isLoggedIn.set(true);
+        } else {
+          this.logout();
+        }
+      }),
+      map((response: ApiResponseOfAuthRefreshData) => {
+        if (!response.data) {
+          throw new Error('No data in refresh response');
+        }
+
+        return response.data;
+      }),
+      catchError((error: any) => {
+        this.logout();
+        return throwError(() => error);
+      })
+    );
   }
 
   removeAuthData(): void {
@@ -210,18 +248,11 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_TOKEN_EXP_KEY, '/');
     this.cookieService.delete(this.USER_DATA_KEY, '/');
     this.cookieService.delete(this.ROLES_KEY, '/');
-    this.rolesSignal.set([]);
+    this.rolesSignal.set("user");
     this.isLoggedIn.set(false);
   }
 
   logout(): void {
-    const refreshToken = this.getRefreshToken() || '';
-    if (refreshToken) {
-      this.http.post(`${environment.apiUrl}/api/account/logout`, { refreshToken }).pipe(
-        catchError(() => throwError(() => new Error('Logout failed')))
-      ).subscribe();
-    }
-
     this.removeAuthData();
     this.router.navigate(['/login']);
   }

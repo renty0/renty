@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
-import { MediaFilesClient } from '../../../core/api/api-client';
+import { MediaClient } from '../../../core/api/api-client';
 
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -20,7 +20,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class ImageUploaderComponent implements OnInit, OnChanges {
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
-  private apiClient = inject(MediaFilesClient);
+  private apiClient = inject(MediaClient);
 
   @ViewChild('fileInput', { static: false })
   fileInputRef!: ElementRef<HTMLInputElement>;

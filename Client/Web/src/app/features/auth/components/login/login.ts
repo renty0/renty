@@ -10,7 +10,6 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { finalize } from 'rxjs';
 import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
-import { AccountClient, LoginCommand, ApiException } from '../../../../core/api/api-client';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +23,6 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private translate = inject(TranslateService);
   private router = inject(Router);
-  private accountClient = inject(AccountClient);
 
   isLoading = signal(false);
 
@@ -40,24 +38,20 @@ export class LoginComponent {
     }
 
     this.isLoading.set(true);
-    const loginData = new LoginCommand({
-      email: this.loginForm.value.email!,
-      password: this.loginForm.value.password!
-    });
 
-    this.accountClient.login(loginData).pipe(
-      finalize(() => this.isLoading.set(false))
-    ).subscribe({
-      next: (response) => {
-        if (response != undefined && response.success) {
-          this.authService.storeLoginResponse(response);
+    const email = this.loginForm.value.email!;
+    const password = this.loginForm.value.password!;
+
+    this.authService.login(email, password).pipe(finalize(() => this.isLoading.set(false))).subscribe({
+      next: (response: any) => {
+        if (response.data != undefined && response.success) {
           this.router.navigate(['/']);
         } else if (response != undefined && !response.success) {
           this.snackbar.showError(response.message || this.translate.instant('login.invalidCredentials'));
         }
       },
-      error: (error: ApiException | any) => {
-        if (error instanceof ApiException && error.status === 401) {
+      error: (error: any) => {
+        if (error.status === 401) {
           this.snackbar.showError(this.translate.instant('login.invalidCredentials'));
         } else {
           this.snackbar.showError(this.translate.instant('login.serverError'));

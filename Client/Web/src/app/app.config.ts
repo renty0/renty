@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
@@ -10,7 +14,13 @@ import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Preset } from './mytheme';
 import { CookieService } from 'ngx-cookie-service';
-import { API_BASE_URL, AccountClient, CategoriesClient, SubcategoriesClient, ProductsClient, CustomersClient, TerritoriesClient, SalesClient, ReturnsClient, CalendarClient, Rentable_ItemsClient, Rent_RequestsClient, MediaFilesClient, DashboardClient, RecommendationsClient, KPIsClient, Gap_AnalysisClient, AnalyticsClient } from './core/api/api-client';
+import {
+  API_BASE_URL,
+  CategoriesClient,
+  SubcategoriesClient,
+  RecommendationsClient,
+  AuthClient,
+} from './core/api/api-client';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -24,28 +34,15 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         preset: Preset,
-        options: { prefix: 'p', darkModeSelector: '.dark', cssLayer: false, },
+        options: { prefix: 'p', darkModeSelector: '.dark', cssLayer: false },
       },
     }),
     MessageService,
     { provide: API_BASE_URL, useValue: environment.apiUrl },
-    AccountClient,
     CategoriesClient,
     SubcategoriesClient,
-    ProductsClient,
-    CustomersClient,
-    TerritoriesClient,
-    SalesClient,
-    ReturnsClient,
-    CalendarClient,
-    Rentable_ItemsClient,
-    Rent_RequestsClient,
-    MediaFilesClient,
-    DashboardClient,
     RecommendationsClient,
-    KPIsClient,
-    Gap_AnalysisClient,
-    AnalyticsClient,
+    AuthClient,
     CookieService,
-  ]
+  ],
 };

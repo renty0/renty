@@ -14,8 +14,9 @@ import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
 import { phoneValidator } from '../../../../validators/phone.validator';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
-import { AccountClient, RegisterCommand, UserType, ApiException, RegisterResponse } from '../../../../core/api/api-client';
+import { UserType } from '../../../../core/api/api-client';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +39,7 @@ import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-c
 })
 export class RegisterComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private accountClient = inject(AccountClient);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private toast = inject(ToastService);
   translate = inject(TranslateService);
@@ -119,7 +120,8 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading.set(true);
-    const command = new RegisterCommand({
+
+    const payload = {
       email: this.accountInfoGroup.value.email,
       password: this.accountInfoGroup.value.password,
       confirmPassword: this.accountInfoGroup.value.confirmPassword,
@@ -131,12 +133,12 @@ export class RegisterComponent implements OnInit {
       country: this.additionalInfoGroup.value.country || undefined,
       bio: this.additionalInfoGroup.value.bio || undefined,
       userType: this.additionalInfoGroup.value.userType
-    });
+    };
 
-    this.accountClient.register(command).pipe(
+    this.authService.register(payload).pipe(
       finalize(() => this.loading.set(false))
     ).subscribe({
-      next: (response: RegisterResponse) => {
+      next: (response) => {
         if (response.success) {
           this.toast.showSuccess(this.translate.instant('register.success'));
           this.router.navigate(['/login']);
@@ -144,8 +146,8 @@ export class RegisterComponent implements OnInit {
           this.toast.showError(response.message || this.translate.instant('register.failed'));
         }
       },
-      error: (error: ApiException) => {
-        this.toast.showError(error.message || this.translate.instant('login.serverError'));
+      error: (error: any) => {
+        this.toast.showError(error?.message || this.translate.instant('login.serverError'));
       }
     });
   }

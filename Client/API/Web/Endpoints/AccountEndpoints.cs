@@ -1,5 +1,7 @@
 using Application.Web.Account;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -7,122 +9,85 @@ public static class AccountEndpoints
 {
     public static void MapAccountEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/account")
-            .WithTags("Account");
+        var group = app.MapGroup("/api/account").WithTags("Account");
 
         group.MapPost("/register", async (RegisterCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Success ? Api.Ok(result) : Api.Fail(result.Message ?? "Registration failed");
         })
         .WithName("Register")
-        .Produces<RegisterResponse>(StatusCodes.Status200OK)
-        .Produces<RegisterResponse>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
+        .Produces<ApiResponse<RegisterResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
 
         group.MapPost("/login", async (LoginCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Success ? Api.Ok(result) : Api.Fail(result.Message ?? "Login failed", 401);
         })
         .WithName("Login")
-        .Produces<LoginResponse>(StatusCodes.Status200OK)
-        .Produces<LoginResponse>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
+        .Produces<ApiResponse<LoginResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status401Unauthorized)
         .AllowAnonymous();
 
         group.MapPost("/refresh-token", async (RefreshTokenCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Success ? Api.Ok(result) : Api.Fail(result.Message ?? "Invalid token", 401);
         })
         .WithName("RefreshToken")
-        .Produces<RefreshTokenResponse>(StatusCodes.Status200OK)
-        .Produces<RefreshTokenResponse>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
+        .Produces<ApiResponse<RefreshTokenResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status401Unauthorized)
         .AllowAnonymous();
 
         group.MapPost("/logout", async (LogoutCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            return Results.Ok(result);
+            return Api.Ok(result);
         })
         .WithName("Logout")
-        .Produces<LogoutResponse>(StatusCodes.Status200OK)
-        .WithOpenApi()
+        .Produces<ApiResponse<LogoutResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization();
 
         group.MapGet("/me", async (ISender sender) =>
         {
             var result = await sender.Send(new GetCurrentUserQuery());
-            if (!result.Success)
-            {
-                return Results.Unauthorized();
-            }
-            return Results.Ok(result);
+            return result.Success ? Api.Ok(result) : Api.Fail("Unauthorized", 401);
         })
         .WithName("GetCurrentUser")
-        .Produces<GetCurrentUserResponse>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status401Unauthorized)
-        .WithOpenApi()
+        .Produces<ApiResponse<GetCurrentUserResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status401Unauthorized)
         .RequireAuthorization();
 
         group.MapPut("/profile", async (UpdateUserCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Success ? Api.Ok(result) : Api.Fail(result.Message ?? "Update failed");
         })
         .WithName("UpdateProfile")
-        .Produces<UpdateUserResponse>(StatusCodes.Status200OK)
-        .Produces<UpdateUserResponse>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
+        .Produces<ApiResponse<UpdateUserResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization();
 
         group.MapPost("/send-email-confirmation", async (SendEmailConfirmationCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Succeeded)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Succeeded ? Api.Ok(result) : Api.Fail(result.Errors.FirstOrDefault() ?? "Failed");
         })
         .WithName("SendEmailConfirmation")
-        .Produces<Application.Common.Models.Result>(StatusCodes.Status200OK)
-        .Produces<Application.Common.Models.Result>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
-        .AllowAnonymous(); // Allow anonymous so unverified users can request it
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
 
         group.MapPost("/confirm-email", async (ConfirmEmailCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
-            if (!result.Succeeded)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            return result.Succeeded ? Api.Ok(result) : Api.Fail(result.Errors.FirstOrDefault() ?? "Confirmation failed");
         })
         .WithName("ConfirmEmail")
-        .Produces<Application.Common.Models.Result>(StatusCodes.Status200OK)
-        .Produces<Application.Common.Models.Result>(StatusCodes.Status400BadRequest)
-        .WithOpenApi()
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
     }
 }

@@ -70,7 +70,7 @@
             }
         </aside>
 
-        <!-- Product Grid -->
+        <!-- Items Grid -->
         <main class="products-section">
             <header class="section-header">
                 <div class="header-info">
@@ -81,11 +81,11 @@
                 </div>
             </header>
 
-            @if (isLoadingProducts()) {
+            @if (isLoadingItems()) {
             <div class="main-loader">
                 <mat-spinner diameter="48"></mat-spinner>
             </div>
-            } @else if (products().length === 0) {
+            } @else if (items().length === 0) {
             <div class="empty-state">
                 <mat-icon>sentiment_dissatisfied</mat-icon>
                 <h3>{{ 'marketplace.noProductsFound' | translate }}</h3>
@@ -95,26 +95,22 @@
             </div>
             } @else {
             <div class="products-grid">
-                @for (product of products(); track product.id) {
-                <div class="product-card" [routerLink]="['/marketplace/product', product.id]">
+                @for (item of items(); track item.id) {
+                <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
                     <div class="card-image">
-                        <img [src]="product.primaryImageUrl || 'assets/images/placeholder.png'"
-                            [alt]="product.productName">
-                        @if (product.discountPrice) {
-                        <div class="sale-badge">SALE</div>
+                        <img [src]="item.primaryImage || 'assets/images/placeholder.png'" [alt]="item.title">
+                        @if (item.avgRating && item.avgRating > 0) {
+                        <div class="rating-badge">
+                            <mat-icon>star</mat-icon>{{ item.avgRating | number:'1.1-1' }}
+                        </div>
                         }
                     </div>
                     <div class="card-body">
-                        <span class="category-name">{{ product.categoryName }}</span>
-                        <h3 class="product-name">{{ product.productName }}</h3>
+                        <span class="category-name">{{ item.category?.name }}</span>
+                        <h3 class="product-name">{{ item.title }}</h3>
                         <div class="price-footer">
                             <div class="price-box">
-                                @if (product.discountPrice) {
-                                <span class="original-price">{{ product.productPrice | currency }}</span>
-                                <span class="final-price">{{ product.discountPrice| currency }}</span>
-                                } @else {
-                                <span class="final-price">{{ product.productPrice | currency }}</span>
-                                }
+                                <span class="final-price">{{ item.dailyPrice | currency }}<small>/day</small></span>
                             </div>
                             <button mat-icon-button class="view-btn">
                                 <mat-icon>chevron_right</mat-icon>

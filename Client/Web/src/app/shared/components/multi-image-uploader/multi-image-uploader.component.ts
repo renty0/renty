@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
-import { MediaFilesClient } from '../../../core/api/api-client';
+import { MediaClient } from '../../../core/api/api-client';
 import { ToastService } from '../../services/toast.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -25,7 +25,7 @@ export interface UploadedImage {
     styleUrl: './multi-image-uploader.component.scss'
 })
 export class MultiImageUploaderComponent {
-    private apiClient = inject(MediaFilesClient);
+    private apiClient = inject(MediaClient);
     private toast = inject(ToastService);
     private cdr = inject(ChangeDetectorRef);
 
@@ -97,7 +97,7 @@ export class MultiImageUploaderComponent {
                 tempImage.mediaFileId = response.id;
                 tempImage.imageUrl = response.urls?.medium || response.url || '';
                 tempImage.isUploading = false;
-                // Only new images need to be communicated as "URLs" to the CreateProduct, 
+                // Only new images need to be communicated as "URLs" to the CreateProduct,
                 // but for UpdateProduct we need ProductImageDto structure.
                 // The parent component will handle the mapping.
                 this.emitChanges();

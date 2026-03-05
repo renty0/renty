@@ -1,5 +1,7 @@
 using Application.Features.Territories;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -7,68 +9,48 @@ public static class TerritoryEndpoints
 {
     public static void MapTerritoryEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/territories")
-            .WithTags("Territories")
-            .RequireAuthorization();
+        var group = app.MapGroup("/api/territories").WithTags("Territories").RequireAuthorization();
 
         group.MapGet("/", async (string? continent, string? country, ISender sender) =>
-        {
-            var result = await sender.Send(new GetTerritoriesQuery(continent, country));
-            return Results.Ok(result);
-        })
+            Api.Ok(await sender.Send(new GetTerritoriesQuery(continent, country))))
         .WithName("GetTerritories")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK);
 
         group.MapGet("/{id:int}", async (int id, ISender sender) =>
         {
-            var result = await sender.Send(new GetTerritoryByIdQuery(id));
-            if (!result.Success)
-            {
-                return Results.NotFound(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new GetTerritoryByIdQuery(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Not found", 404);
         })
         .WithName("GetTerritoryById")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound);
 
         group.MapPost("/", async (CreateTerritoryCommand command, ISender sender) =>
         {
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Created($"/api/territories/{result.Territory!.Id}", result);
+            var r = await sender.Send(command);
+            return r.Success ? Api.Created(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("CreateTerritory")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
         group.MapPut("/{id:int}", async (int id, UpdateTerritoryCommand command, ISender sender) =>
         {
-            if (id != command.Id)
-            {
-                return Results.BadRequest(new { Success = false, Message = "ID mismatch" });
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            if (id != command.Id) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("UpdateTerritory")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
         group.MapDelete("/{id:int}", async (int id, ISender sender) =>
         {
-            var result = await sender.Send(new DeleteTerritoryCommand(id));
-            if (!result.Success)
-            {
-                return Results.BadRequest(result);
-            }
-            return Results.Ok(result);
+            var r = await sender.Send(new DeleteTerritoryCommand(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("DeleteTerritory")
-        .WithOpenApi();
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
     }
 }

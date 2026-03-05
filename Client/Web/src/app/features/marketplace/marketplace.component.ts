@@ -14,7 +14,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-import { ProductsClient, CategoriesClient, ProductListDto, ProductCategoryDto, SubcategoriesClient, ProductSubcategoryDto } from '../../core/api/api-client';
+import {
+  ItemsClient,
+  ItemListDto,
+  CategoriesClient,
+  SubcategoriesClient,
+  ProductCategoryDto,
+  ProductSubcategoryDto,
+} from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
 
@@ -41,7 +48,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
   styleUrl: './marketplace.component.scss'
 })
 export class MarketplaceComponent implements OnInit {
-  private productsClient = inject(ProductsClient);
+  private itemsClient = inject(ItemsClient);
   private categoriesClient = inject(CategoriesClient);
   private subcategoriesClient = inject(SubcategoriesClient);
   private router = inject(Router);
@@ -49,12 +56,12 @@ export class MarketplaceComponent implements OnInit {
   public translate = inject(TranslateService);
 
   // Data
-  products = signal<ProductListDto[]>([]);
+  items = signal<ItemListDto[]>([]);
   categories = signal<ProductCategoryDto[]>([]);
   subcategories = signal<ProductSubcategoryDto[]>([]);
 
   // Loading States
-  isLoadingProducts = signal(false);
+  isLoadingItems = signal(false);
   isLoadingCategories = signal(false);
   isLoadingSubcategories = signal(false);
 
@@ -71,24 +78,25 @@ export class MarketplaceComponent implements OnInit {
   constructor() {
     // Reset page when filters change
     effect(() => {
-      const cat = this.selectedCategoryId();
-      const sub = this.selectedSubcategoryId();
-      const search = this.searchTerm();
-
-      untracked(() => {
-        this.pageNumber.set(1);
-      });
+      this.selectedCategoryId();
+      this.selectedSubcategoryId();
+      this.searchTerm();
+      untracked(() => this.pageNumber.set(1));
     }, { allowSignalWrites: true });
+
+    // Load items reactively
     effect(() => {
-      this.loadProducts();
+      this.loadItems();
     });
+
+    // Load subcategories when category changes
     effect(() => {
       const catId = this.selectedCategoryId();
       if (catId) {
         this.loadSubcategories(catId);
       } else {
         this.subcategories.set([]);
-        this.selectedSubcategoryId.set(undefined);
+        untracked(() => this.selectedSubcategoryId.set(undefined));
       }
     }, { allowSignalWrites: true });
   }
@@ -99,11 +107,9 @@ export class MarketplaceComponent implements OnInit {
 
   loadCategories() {
     this.isLoadingCategories.set(true);
-    this.categoriesClient.getCategories(1, 100, undefined)
+    this.categoriesClient.getCategories(1, 100)
       .pipe(
-        tap(res => {
-          this.categories.set(res.items || []);
-        }),
+        tap(res => this.categories.set(res.data?.items ?? [])),
         catchError(err => {
           console.error('Failed to load categories', err);
           this.toast.showError('errors.failedToLoadCategories');
@@ -116,11 +122,9 @@ export class MarketplaceComponent implements OnInit {
 
   loadSubcategories(categoryId: number) {
     this.isLoadingSubcategories.set(true);
-    this.subcategoriesClient.getSubcategories(categoryId, 1, 100)
+    this.subcategoriesClient.getSubcategories(1, 100, categoryId)
       .pipe(
-        tap(res => {
-          this.subcategories.set(res.subcategories?.items || []);
-        }),
+        tap(res => this.subcategories.set(res.data?.items ?? [])),
         catchError(err => {
           console.error('Failed to load subcategories', err);
           return of(null);
@@ -130,38 +134,34 @@ export class MarketplaceComponent implements OnInit {
       .subscribe();
   }
 
-  loadProducts() {
-    this.isLoadingProducts.set(true);
-    const page = this.pageNumber();
-    const size = this.pageSize();
-    const cat = this.selectedCategoryId();
-    const sub = this.selectedSubcategoryId();
-    const search = this.searchTerm();
-
-    this.productsClient.getProducts(
-      page,
-      size,
-      sub,
-      cat,
-      search || undefined,
-      undefined, // minPrice
-      undefined, // maxPrice
-      undefined, // color
-      'date', // sortBy
-      'desc' // sortOrder
-    ).pipe(
-      tap(res => {
-        if (res.products) {
-          this.products.set(res.products.items || []);
-          this.totalCount.set(res.products.totalCount || 0);
-        }
-      }),
-      catchError(err => {
-        this.toast.showError('errors.failedToLoadProducts');
-        return of(null);
-      }),
-      finalize(() => this.isLoadingProducts.set(false))
-    ).subscribe();
+  loadItems() {
+    this.isLoadingItems.set(true);
+    this.itemsClient.getItems(
+      this.pageNumber(),
+      this.pageSize(),
+      this.selectedCategoryId() ?? undefined,
+      this.selectedSubcategoryId() ?? undefined,
+      undefined,              // city
+      undefined,              // minPrice
+      undefined,              // maxPrice
+      undefined,              // type
+      undefined,              // condition
+      'newest',               // sort
+      'desc',                 // sortOrder
+      undefined               // owner
+    )
+      .pipe(
+        tap(res => {
+          this.items.set(res.data?.items ?? []);
+          this.totalCount.set(res.data?.total ?? 0);
+        }),
+        catchError(err => {
+          this.toast.showError('errors.failedToLoadProducts');
+          return of(null);
+        }),
+        finalize(() => this.isLoadingItems.set(false))
+      )
+      .subscribe();
   }
 
   onPageChange(event: PageEvent) {

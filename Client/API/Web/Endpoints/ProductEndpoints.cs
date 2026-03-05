@@ -1,6 +1,7 @@
 using Application.Features.Products;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http;
+using Web.Responses;
 
 namespace Web.Endpoints;
 
@@ -8,90 +9,52 @@ public static class ProductEndpoints
 {
     public static void MapProductEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/products")
-            .WithTags("Products")
-            .RequireAuthorization();
+        var group = app.MapGroup("/api/products").WithTags("Products").RequireAuthorization();
 
-        group.MapGet("/", async Task<Ok<GetProductsResponse>> (
-            int pageNumber,
-            int pageSize,
-            int? subcategoryId,
-            int? categoryId,
-            string? searchTerm,
-            decimal? minPrice,
-            decimal? maxPrice,
-            string? color,
-            string? sortBy,
-            string? sortOrder,
-            ISender sender) =>
-        {
-            var result = await sender.Send(new GetProductsQuery(
-                pageNumber > 0 ? pageNumber : 1,
-                pageSize > 0 ? pageSize : 10,
-                subcategoryId,
-                categoryId,
-                searchTerm,
-                minPrice,
-                maxPrice,
-                color,
-                sortBy,
-                sortOrder
-            ));
-            return TypedResults.Ok(result);
-        })
+        group.MapGet("/", async (int pageNumber, int pageSize, int? subcategoryId, int? categoryId,
+            string? searchTerm, decimal? minPrice, decimal? maxPrice, string? color,
+            string? sortBy, string? sortOrder, ISender sender) =>
+            Api.Ok(await sender.Send(new GetProductsQuery(
+                pageNumber > 0 ? pageNumber : 1, pageSize > 0 ? pageSize : 10,
+                subcategoryId, categoryId, searchTerm, minPrice, maxPrice, color, sortBy, sortOrder))))
         .WithName("GetProducts")
-        .WithOpenApi();
+        .Produces<ApiResponse<GetProductsResponse>>(StatusCodes.Status200OK);
 
-        group.MapGet("/{id:long}", async Task<Results<Ok<GetProductByIdResponse>, NotFound>> (long id, ISender sender) =>
+        group.MapGet("/{id:long}", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new GetProductByIdQuery(id));
-            if (!result.Success)
-            {
-                return TypedResults.NotFound();
-            }
-            return TypedResults.Ok(result);
+            var r = await sender.Send(new GetProductByIdQuery(id));
+            return r.Success ? Api.Ok(r) : Api.Fail("Not found", 404);
         })
         .WithName("GetProductById")
-        .WithOpenApi();
+        .Produces<ApiResponse<GetProductByIdResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound);
 
-        group.MapPost("/", async Task<Results<Created<CreateProductResponse>, BadRequest<CreateProductResponse>>> (CreateProductCommand command, ISender sender) =>
+        group.MapPost("/", async (CreateProductCommand command, ISender sender) =>
         {
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Created($"/api/products/{result.Product!.Id}", result);
+            var r = await sender.Send(command);
+            return r.Success ? Api.Created(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("CreateProduct")
-        .WithOpenApi();
+        .Produces<ApiResponse<CreateProductResponse>>(StatusCodes.Status201Created)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        group.MapPut("/{id:long}", async Task<Results<Ok<UpdateProductResponse>, BadRequest<UpdateProductResponse>>> (long id, UpdateProductCommand command, ISender sender) =>
+        group.MapPut("/{id:long}", async (long id, UpdateProductCommand command, ISender sender) =>
         {
-            if (id != command.Id)
-            {
-                return TypedResults.BadRequest(new UpdateProductResponse(false, "ID mismatch", null));
-            }
-            var result = await sender.Send(command);
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Ok(result);
+            if (id != command.Id) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("UpdateProduct")
-        .WithOpenApi();
+        .Produces<ApiResponse<UpdateProductResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
-        group.MapDelete("/{id:long}", async Task<Results<Ok<DeleteProductResponse>, BadRequest<DeleteProductResponse>>> (long id, ISender sender) =>
+        group.MapDelete("/{id:long}", async (long id, ISender sender) =>
         {
-            var result = await sender.Send(new DeleteProductCommand(id));
-            if (!result.Success)
-            {
-                return TypedResults.BadRequest(result);
-            }
-            return TypedResults.Ok(result);
+            var r = await sender.Send(new DeleteProductCommand(id));
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
         })
         .WithName("DeleteProduct")
-        .WithOpenApi();
+        .Produces<ApiResponse<DeleteProductResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
     }
 }
