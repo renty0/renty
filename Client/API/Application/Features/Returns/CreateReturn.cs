@@ -93,7 +93,7 @@ public class CreateReturnCommandHandler : IRequestHandler<CreateReturnCommand, C
             returnItem.ReturnQuantity,
             returnItem.ReturnReason,
             returnItem.ProductId,
-            product.ProductName,
+            product.NameEn,
             returnItem.TerritoryId,
             territory.Region,
             territory.Country,

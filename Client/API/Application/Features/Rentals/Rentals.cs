@@ -185,9 +185,9 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
             .Take(request.Limit)
             .Select(r => new RentalListDto(
                 r.Id,
-                r.Item.Title,
-                r.Item.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                    ?? r.Item.Images.Select(i => i.ImageUrl).FirstOrDefault(),
+                r.Item.TitleEn,
+                r.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                    ?? r.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
                 r.StartDate, r.EndDate, r.RentalPrice,
                 r.Status.ToString(),
                 r.DepositStatus.ToString()
@@ -229,8 +229,8 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             return new GetRentalByIdResponse(false, "Forbidden.", null);
 
         var dto = new RentalDetailDto(
-            rental.Id, rental.ItemId, rental.Item.Title,
-            rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.ImageUrl ?? rental.Item.Images.FirstOrDefault()?.ImageUrl,
+            rental.Id, rental.ItemId, rental.Item.TitleEn,
+            rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath,
             rental.Item.Owner.FirstName, rental.Item.Owner.City,
             rental.StartDate, rental.EndDate, rental.ActualReturnDate,
             rental.RentalPrice, rental.DepositAmount, rental.LateFee,
@@ -279,7 +279,7 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
         {
             UserId = rental.UserId,
             Title = "Rental Confirmed",
-            Message = $"Your rental request for '{rental.Item.Title}' has been confirmed by the owner.",
+            Message = $"Your rental request for '{rental.Item.TitleEn}' has been confirmed by the owner.",
             CreatedAt = DateTime.UtcNow
         });
 
@@ -412,8 +412,8 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
             UserId = rental.UserId,
             Title = "Rental Completed",
             Message = rental.LateFee > 0
-                ? $"Your rental for '{rental.Item.Title}' is complete. Late fee: {rental.LateFee:C}."
-                : $"Your rental for '{rental.Item.Title}' is complete. Thank you!",
+                ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {rental.LateFee:C}."
+                : $"Your rental for '{rental.Item.TitleEn}' is complete. Thank you!",
             CreatedAt = DateTime.UtcNow
         });
 

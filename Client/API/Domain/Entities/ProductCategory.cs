@@ -6,8 +6,11 @@ namespace Domain.Entities;
 public class ProductCategory : IAuditable
 {
     public int Id { get; set; }
-    public string CategoryName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
+
+    public string? DescAr { get; set; }
+    public string? DescEn { get; set; }
 
     public Guid? LogoId { get; set; }
     [ForeignKey(nameof(LogoId))]

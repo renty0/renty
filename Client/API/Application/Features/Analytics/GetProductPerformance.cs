@@ -24,7 +24,7 @@ public class GetProductPerformanceQueryHandler : IRequestHandler<GetProductPerfo
             .Select(s => new
             {
                 s.ProductId,
-                ProductName = s.Product != null ? s.Product.ProductName : "Unknown",
+                ProductName = s.Product != null ? s.Product.NameEn : "Unknown",
                 // Calculate line total in DB: Quantity * EffectivePrice
                 LineRevenue = s.OrderQuantity * (s.Product != null ? (s.Product.DiscountPrice ?? s.Product.ProductPrice) : 0),
                 s.OrderQuantity
@@ -45,7 +45,7 @@ public class GetProductPerformanceQueryHandler : IRequestHandler<GetProductPerfo
             .Select(s => new
             {
                 CategoryName = s.Product != null && s.Product.Subcategory != null && s.Product.Subcategory.Category != null
-                    ? s.Product.Subcategory.Category.CategoryName
+                    ? s.Product.Subcategory.Category.NameEn
                     : "Unknown",
                 LineRevenue = s.OrderQuantity * (s.Product != null ? (s.Product.DiscountPrice ?? s.Product.ProductPrice) : 0),
                 s.OrderQuantity

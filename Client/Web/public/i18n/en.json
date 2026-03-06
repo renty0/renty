@@ -6,6 +6,9 @@
   },
   "nav": {
     "home": "Home",
+    "login": "Login",
+    "profile": "Profile",
+    "register": "Register",
     "market": "Marketplace",
     "categories": "Categories",
     "subcategories": "Subcategories",
@@ -121,6 +124,7 @@
     "acceptOn": "I accept the ",
     "registerButton": "Create Account",
     "success": "Registration successful!",
+    "successVerifyEmail": "Registration successful! Please check your email to verify your account.",
     "successOwner": "Registration successful as Owner!",
     "failed": "Registration failed",
     "roles": {
@@ -145,6 +149,16 @@
     "unauthorized": "You are not authorized to access this resource",
     "serverError": "A server error occurred, please try again later"
   },
+  "verifyEmail": {
+    "title": "Verify your email",
+    "subtitle": "Enter the verification code we sent to your email",
+    "email": "Email Address",
+    "code": "Verification code",
+    "submit": "Verify email",
+    "success": "Your email has been verified. You can now sign in.",
+    "failed": "Verification failed. Please check the code and try again.",
+    "backToLogin": "Back to login"
+  },
   "info": {
     "accountInfo": "Account Information",
     "profileInfo": "Profile Details"
@@ -154,6 +168,11 @@
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "firstName": "First Name",
+    "nameAr": "Name (Arabic)",
+    "nameEn": "Name (English)",
+    "descAr": "Description (Arabic)",
+    "descEn": "Description (English)",
+    "logo": "Logo",
     "lastName": "Last Name",
     "phoneNumber": "Phone Number",
     "city": "City",
@@ -198,6 +217,7 @@
     "title": "Categories",
     "details": "Category Details",
     "search": "Search categories...",
+    "empty": "No categories found. Create one to get started.",
     "confirmDelete": "Are you sure you want to delete this category?",
     "columns": {
       "logo": "Logo",
@@ -209,7 +229,12 @@
     "actions": {
       "create": "New Category",
       "edit": "Edit Category",
-      "delete": "Delete Category"
+      "delete": "Delete Category",
+      "deleted": "Category deleted successfully."
+    },
+    "errors": {
+      "failedToLoad": "Failed to load categories.",
+      "failedToDelete": "Failed to delete category."
     }
   },
   "product_details": {

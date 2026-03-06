@@ -10,9 +10,11 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { finalize } from 'rxjs';
 import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
+import { ApiResponseOfAuthLoginData } from '../../../../core/api/api-client';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RouterModule, LoadingButtonComponent, InputComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -43,19 +45,16 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
 
     this.authService.login(email, password).pipe(finalize(() => this.isLoading.set(false))).subscribe({
-      next: (response: any) => {
-        if (response.data != undefined && response.success) {
+      next: (response: ApiResponseOfAuthLoginData) => {
+        if (response.success && response.data) {
           this.router.navigate(['/']);
-        } else if (response != undefined && !response.success) {
+        } else {
           this.snackbar.showError(response.message || this.translate.instant('login.invalidCredentials'));
         }
       },
-      error: (error: any) => {
-        if (error.status === 401) {
-          this.snackbar.showError(this.translate.instant('login.invalidCredentials'));
-        } else {
-          this.snackbar.showError(this.translate.instant('login.serverError'));
-        }
+      error: (error: { status?: number; error?: { message?: string } }) => {
+        const msg = error?.error?.message ?? (error.status === 401 ? this.translate.instant('login.invalidCredentials') : this.translate.instant('login.serverError'));
+        this.snackbar.showError(msg);
       }
     });
   }

@@ -63,8 +63,10 @@ public class GetRentableItemsQueryHandler : IRequestHandler<GetRentableItemsQuer
         {
             var searchTerm = request.SearchTerm.ToLower();
             query = query.Where(r =>
-                r.Title.ToLower().Contains(searchTerm) ||
-                r.Description.ToLower().Contains(searchTerm) ||
+                r.TitleEn.ToLower().Contains(searchTerm) ||
+                r.TitleAr.ToLower().Contains(searchTerm) ||
+                r.DescEn.ToLower().Contains(searchTerm) ||
+                r.DescAr.ToLower().Contains(searchTerm) ||
                 (r.ShortDescription != null && r.ShortDescription.ToLower().Contains(searchTerm))
             );
         }
@@ -108,7 +110,8 @@ public class GetRentableItemsQueryHandler : IRequestHandler<GetRentableItemsQuer
             .OrderByDescending(r => r.Created)
             .Select(r => new RentableItemListDto(
                 r.Id,
-                r.Title,
+                r.TitleAr,
+                r.TitleEn,
                 r.ShortDescription,
                 r.PricePerDay,
                 r.City,
@@ -116,10 +119,10 @@ public class GetRentableItemsQueryHandler : IRequestHandler<GetRentableItemsQuer
                 r.Status.ToString(),
                 r.AverageRating,
                 r.TotalRatings,
-                r.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                    ?? r.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
+                r.Images.Where(i => i.IsPrimary).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault()
+                    ?? r.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
                 r.Owner.FirstName + " " + r.Owner.LastName,
-                r.Category != null ? r.Category.CategoryName : null
+                r.Category != null ? r.Category.NameEn : null
             ));
 
         var items = await PaginatedList<RentableItemListDto>.CreateAsync(

@@ -50,12 +50,15 @@ public class GetSubcategoryByIdQueryHandler : IRequestHandler<GetSubcategoryById
 
         var dto = new ProductSubcategoryDto(
             item.Id,
-            item.SubcategoryName,
-            item.Description,
+            item.NameAr,
+            item.NameEn,
+            item.DescAr,
+            item.DescEn,
             item.LogoId,
             logoUrl,
             item.ProductCategoryId,
-            item.Category.CategoryName,
+            item.Category?.NameAr ?? "",
+            item.Category?.NameEn ?? "",
             item.Products.Count,
             item.Created,
             item.LastModified

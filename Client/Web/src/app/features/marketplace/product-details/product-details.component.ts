@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -31,6 +31,7 @@ export class ProductDetailsComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private itemsClient = inject(ItemsClient);
     private toast = inject(ToastService);
+    public translate = inject(TranslateService);
 
     item = signal<ItemDetailDto | null>(null);
     relatedItems = signal<ItemListDto[]>([]);
@@ -100,5 +101,15 @@ export class ProductDetailsComponent implements OnInit {
                 })
             )
             .subscribe();
+    }
+
+    getLocalizedName(item: any): string {
+        const isAr = this.translate.currentLang === 'ar';
+        return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
+    }
+
+    getLocalizedDesc(item: any): string {
+        const isAr = this.translate.currentLang === 'ar';
+        return isAr ? (item.descAr || item.descEn || '') : (item.descEn || item.descAr || '');
     }
 }

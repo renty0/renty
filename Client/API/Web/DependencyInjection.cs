@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Features.Chats;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -25,20 +26,35 @@ public static class DependencyInjection
         // ── Authorization Policies ────────────────────────────────────────────
         services.AddAuthorization(options =>
         {
+            var adminEmail = Environment.GetEnvironmentVariable("SEED_ADMIN_EMAIL") ?? "admin@rently.com";
+
             options.AddPolicy(Policies.AdminAccess, p =>
-                p.RequireRole(Roles.Admin, Roles.SuperAdmin));
+                p.RequireAssertion(context =>
+                    context.User.IsInRole(Roles.Admin) || 
+                    context.User.IsInRole(Roles.SuperAdmin) ||
+                    context.User.FindFirstValue(ClaimTypes.Email) == adminEmail));
 
             options.AddPolicy(Policies.SuperAdminOnly, p =>
-                p.RequireRole(Roles.SuperAdmin));
+                p.RequireAssertion(context =>
+                    context.User.IsInRole(Roles.SuperAdmin) ||
+                    context.User.FindFirstValue(ClaimTypes.Email) == adminEmail));
 
             options.AddPolicy(Policies.SupportAccess, p =>
-                p.RequireRole(Roles.Support, Roles.Admin, Roles.SuperAdmin));
+                p.RequireAssertion(context =>
+                    context.User.IsInRole(Roles.Support) ||
+                    context.User.IsInRole(Roles.Admin) || 
+                    context.User.IsInRole(Roles.SuperAdmin) ||
+                    context.User.FindFirstValue(ClaimTypes.Email) == adminEmail));
 
             options.AddPolicy(Policies.ExpertAccess, p =>
                 p.RequireRole(Roles.Expert));
 
             options.AddPolicy(Policies.ExpertOrAdmin, p =>
-                p.RequireRole(Roles.Expert, Roles.Admin, Roles.SuperAdmin));
+                p.RequireAssertion(context =>
+                    context.User.IsInRole(Roles.Expert) ||
+                    context.User.IsInRole(Roles.Admin) || 
+                    context.User.IsInRole(Roles.SuperAdmin) ||
+                    context.User.FindFirstValue(ClaimTypes.Email) == adminEmail));
 
             // Any authenticated role (all users, EXCLUDES experts for transactional ops)
             options.AddPolicy(Policies.CanTransact, p =>

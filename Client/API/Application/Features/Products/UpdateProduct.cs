@@ -10,9 +10,11 @@ namespace Application.Features.Products;
 public record UpdateProductCommand(
     long Id,
     string ProductSku,
-    string ProductName,
+    string NameAr,
+    string NameEn,
     string? ModelName,
-    string? ProductDescription,
+    string DescAr,
+    string DescEn,
     string? ProductColor,
     string? ProductStyle,
     decimal ProductCost,
@@ -20,8 +22,10 @@ public record UpdateProductCommand(
     string? SkuType,
     decimal? DiscountPrice,
     int SubcategoryId,
-    List<ProductImageDto>? Images
+    List<UpdateProductImageDto>? Images
 ) : IRequest<UpdateProductResponse>;
+
+public record UpdateProductImageDto(long Id, Guid ImageId, bool IsPrimary, int DisplayOrder);
 
 public record UpdateProductResponse(
     bool Success,
@@ -40,8 +44,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             .NotEmpty().WithMessage("Product SKU is required.")
             .MaximumLength(50).WithMessage("Product SKU must not exceed 50 characters.");
 
-        RuleFor(x => x.ProductName)
+        RuleFor(x => x.NameEn)
             .NotEmpty().WithMessage("Product name is required.")
+            .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
+
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Product name (Arabic) is required.")
             .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
 
         RuleFor(x => x.ProductCost)
@@ -98,9 +106,11 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         }
 
         product.ProductSku = request.ProductSku;
-        product.ProductName = request.ProductName;
+        product.NameAr = request.NameAr;
+        product.NameEn = request.NameEn;
         product.ModelName = request.ModelName;
-        product.ProductDescription = request.ProductDescription;
+        product.DescAr = request.DescAr;
+        product.DescEn = request.DescEn;
         product.ProductColor = request.ProductColor;
         product.ProductStyle = request.ProductStyle;
         product.ProductCost = request.ProductCost;
@@ -137,7 +147,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 {
                     product.Images.Add(new ProductImage
                     {
-                        ImageUrl = imageDto.ImageUrl,
+                        ImageId = imageDto.ImageId,
                         IsPrimary = imageDto.IsPrimary,
                         DisplayOrder = imageDto.DisplayOrder
                     });
@@ -150,9 +160,11 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         var dto = new ProductDto(
             product.Id,
             product.ProductSku,
-            product.ProductName,
+            product.NameAr,
+            product.NameEn,
             product.ModelName,
-            product.ProductDescription,
+            product.DescAr,
+            product.DescEn,
             product.ProductColor,
             product.ProductStyle,
             product.ProductCost,
@@ -162,11 +174,11 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.EffectivePrice,
             product.ProfitMargin,
             product.ProductSubcategoryId,
-            subcategory.SubcategoryName,
-            subcategory.Category.CategoryName,
+            subcategory.NameEn,
+            subcategory.Category.NameEn,
             product.Created,
             product.LastModified,
-            product.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
+            product.Images.Select(i => new ProductImageDto(i.Id, i.Image?.StoragePath ?? "", i.IsPrimary, i.DisplayOrder)).ToList()
         );
 
         return new UpdateProductResponse(true, "Product updated successfully.", dto);

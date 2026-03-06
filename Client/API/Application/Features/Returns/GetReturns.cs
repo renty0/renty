@@ -63,7 +63,7 @@ public class GetReturnsQueryHandler : IRequestHandler<GetReturnsQuery, GetReturn
                 r.Id,
                 r.ReturnDate,
                 r.ReturnQuantity,
-                r.Product.ProductName,
+                r.Product.NameEn,
                 r.Territory.Region
             ));
 

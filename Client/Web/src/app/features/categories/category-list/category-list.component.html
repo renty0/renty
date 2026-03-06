@@ -1,113 +1,121 @@
 <div class="data-container">
-    <app-header-section [title]="'categories.title' | translate" [buttonText]="'categories.actions.create' | translate"
-        [placeholder]="'categories.search' | translate" [icon]="'add'" [showButton]="true"
-        (searchChange)="onSearchChange($event)" (buttonClick)="createCategory()">
-        <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"
-            class="view-toggle">
-            <mat-button-toggle value="list" aria-label="List view">
-                <mat-icon>view_list</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="cards" aria-label="Cards view">
-                <mat-icon>grid_view</mat-icon>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-    </app-header-section>
+  <app-header-section [title]="'categories.title' | translate" [buttonText]="'categories.actions.create' | translate"
+    [placeholder]="'categories.search' | translate" [icon]="'add'" [showButton]="true"
+    (searchChange)="onSearchChange($event)" (buttonClick)="openEditor(null)">
+    <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="onViewModeChange($event)" class="view-toggle"
+      aria-label="View mode">
+      <mat-button-toggle value="list" aria-label="List view">
+        <mat-icon>view_list</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="cards" aria-label="Cards view">
+        <mat-icon>grid_view</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </app-header-section>
 
-    @if (isLoading()) {
-    <mat-card class="table-card">
-        <div class="loading-container">
-            <mat-spinner diameter="40"></mat-spinner>
-        </div>
-    </mat-card>
-    } @else {
-    @if (viewMode() === 'list') {
-    <mat-card class="table-card">
-        <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
-            [matSortActive]="sortBy() || 'name'" [matSortDirection]="sortOrder() || 'asc'">
-            <ng-container matColumnDef="logo">
-                <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.logo' | translate }}</th>
-                <td mat-cell *matCellDef="let row">
-                    <img [src]="row.logoUrl || 'assets/images/placeholder.png'" class="category-logo-mini" alt="Logo">
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'categories.columns.name' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.description' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.description | slice:0:50 }}{{ row.description?.length > 50 ?
-                    '...' : '' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.actions' | translate }}</th>
-                <td mat-cell *matCellDef="let row">
-                    <div class="actions-cell">
-                        <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="editCategory(row.id)"
-                            [title]="'buttons.edit' | translate">
-                            <mat-icon>edit</mat-icon>
-                        </app-loading-button>
-                        <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteCategory(row.id)"
-                            [title]="'buttons.delete' | translate">
-                            <mat-icon>delete</mat-icon>
-                        </app-loading-button>
-                    </div>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
-            [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)" aria-label="Select page">
-        </mat-paginator>
-    </mat-card>
-    } @else {
-    <div class="cards-grid">
-        @for (category of dataSource(); track category.id) {
-        <mat-card class="entity-card" (click)="editCategory(category.id!)">
-            <div class="card-image">
-                <img [src]="category.logoUrl || 'assets/images/placeholder.png'" alt="Logo">
-            </div>
-            <div class="card-content">
-                <h3>{{ category.categoryName }}</h3>
-                <p>{{ category.description | slice:0:100 }}</p>
-            </div>
-            <div class="card-actions">
-                <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"
-                    (clicked)="editCategory(category.id!)">
-                    <mat-icon>edit</mat-icon>
-                </app-loading-button>
-                <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm"
-                    (clicked)="deleteCategory(category.id!)">
-                    <mat-icon>delete</mat-icon>
-                </app-loading-button>
-            </div>
-        </mat-card>
-        }
+  @if (isLoading()) {
+  <mat-card class="table-card">
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
-    <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
-        [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" aria-label="Select page">
+  </mat-card>
+  } @else {
+  @if (viewMode() === 'list') {
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
+      [matSortActive]="sortBy() || 'name'" [matSortDirection]="sortOrder() || 'asc'">
+      <ng-container matColumnDef="logo">
+        <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.logo' | translate }}</th>
+        <td mat-cell *matCellDef="let row">
+          <img [src]="row.logoUrl || placeholderLogo" [alt]="getLocalizedName(row)" class="category-logo-mini" />
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'categories.columns.name' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ getLocalizedName(row) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.description' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ truncate(getLocalizedDesc(row), 50) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>{{ 'categories.columns.actions' | translate }}</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="actions-cell">
+            <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="openEditor(row.id!)"
+              [title]="'buttons.edit' | translate">
+              <mat-icon>edit</mat-icon>
+            </app-loading-button>
+            <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteCategory(row)"
+              [title]="'buttons.delete' | translate">
+              <mat-icon>delete</mat-icon>
+            </app-loading-button>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    @if (dataSource().length === 0) {
+    <div class="empty-state">
+      <mat-icon>category</mat-icon>
+      <p>{{ 'categories.empty' | translate }}</p>
+    </div>
+    } @else {
+    <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+      [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)" aria-label="Select page">
     </mat-paginator>
     }
+  </mat-card>
+  } @else {
+  @if (dataSource().length === 0) {
+  <mat-card class="table-card">
+    <div class="empty-state">
+      <mat-icon>category</mat-icon>
+      <p>{{ 'categories.empty' | translate }}</p>
+    </div>
+  </mat-card>
+  } @else {
+  <div class="cards-grid">
+    @for (category of dataSource(); track category.id) {
+    <mat-card class="entity-card" (click)="openEditor(category.id!)">
+      <div class="card-image">
+        <img [src]="category.logoUrl || placeholderLogo" [alt]="getLocalizedName(category)" />
+      </div>
+      <div class="card-content">
+        <h3>{{ getLocalizedName(category) }}</h3>
+        <p>{{ truncate(getLocalizedDesc(category), 100) }}</p>
+      </div>
+      <div class="card-actions" (click)="$event.stopPropagation()">
+        <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="openEditor(category.id!)">
+          <mat-icon>edit</mat-icon>
+        </app-loading-button>
+        <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteCategory(category)">
+          <mat-icon>delete</mat-icon>
+        </app-loading-button>
+      </div>
+    </mat-card>
     }
+  </div>
+  <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+    [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" aria-label="Select page">
+  </mat-paginator>
+  }
+  }
+  }
 </div>
 
 @if (showDialog()) {
 <div class="dialog-overlay" (click)="closeDialog()">
-    <mat-card class="dialog-card" (click)="$event.stopPropagation()">
-        <mat-card-header>
-            <mat-card-title>
-                {{ (selectedCategoryId() ? 'categories.actions.edit' : 'categories.actions.create') | translate }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-category-editor [id]="selectedCategoryId()" (saved)="onSaved()" (cancelled)="closeDialog()">
-            </app-category-editor>
-        </mat-card-content>
-    </mat-card>
+  <mat-card class="dialog-card" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>
+        {{ (selectedCategoryId() ? 'categories.actions.edit' : 'categories.actions.create') | translate }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-category-editor [id]="selectedCategoryId()" (saved)="onSaved()" (cancelled)="closeDialog()" />
+    </mat-card-content>
+  </mat-card>
 </div>
 }

@@ -9,9 +9,11 @@ namespace Application.Features.Products;
 
 public record CreateProductCommand(
     string ProductSku,
-    string ProductName,
+    string NameAr,
+    string NameEn,
     string? ModelName,
-    string? ProductDescription,
+    string DescAr,
+    string DescEn,
     string? ProductColor,
     string? ProductStyle,
     decimal ProductCost,
@@ -19,7 +21,7 @@ public record CreateProductCommand(
     string? SkuType,
     decimal? DiscountPrice,
     int SubcategoryId,
-    List<string>? ImageUrls
+    List<Guid>? ImageIds
 ) : IRequest<CreateProductResponse>;
 
 public record CreateProductResponse(
@@ -36,14 +38,20 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotEmpty().WithMessage("Product SKU is required.")
             .MaximumLength(50).WithMessage("Product SKU must not exceed 50 characters.");
 
-        RuleFor(x => x.ProductName)
+        RuleFor(x => x.NameEn)
             .NotEmpty().WithMessage("Product name is required.")
+            .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
+
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Product name (Arabic) is required.")
             .MaximumLength(200).WithMessage("Product name must not exceed 200 characters.");
 
         RuleFor(x => x.ModelName)
             .MaximumLength(100).WithMessage("Model name must not exceed 100 characters.");
 
-        RuleFor(x => x.ProductDescription)
+        RuleFor(x => x.DescEn)
+            .MaximumLength(1000).WithMessage("Product description must not exceed 1000 characters.");
+        RuleFor(x => x.DescAr)
             .MaximumLength(1000).WithMessage("Product description must not exceed 1000 characters.");
 
         RuleFor(x => x.ProductColor)
@@ -99,9 +107,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var product = new Product
         {
             ProductSku = request.ProductSku,
-            ProductName = request.ProductName,
+            NameAr = request.NameAr,
+            NameEn = request.NameEn,
             ModelName = request.ModelName,
-            ProductDescription = request.ProductDescription,
+            DescAr = request.DescAr,
+            DescEn = request.DescEn,
             ProductColor = request.ProductColor,
             ProductStyle = request.ProductStyle,
             ProductCost = request.ProductCost,
@@ -111,13 +121,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             ProductSubcategoryId = request.SubcategoryId
         };
 
-        if (request.ImageUrls != null && request.ImageUrls.Any())
+        if (request.ImageIds != null && request.ImageIds.Any())
         {
-            for (int i = 0; i < request.ImageUrls.Count; i++)
+            for (int i = 0; i < request.ImageIds.Count; i++)
             {
                 product.Images.Add(new ProductImage
                 {
-                    ImageUrl = request.ImageUrls[i],
+                    ImageId = request.ImageIds[i],
                     IsPrimary = i == 0,
                     DisplayOrder = i
                 });
@@ -130,9 +140,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var dto = new ProductDto(
             product.Id,
             product.ProductSku,
-            product.ProductName,
+            product.NameAr,
+            product.NameEn,
             product.ModelName,
-            product.ProductDescription,
+            product.DescAr,
+            product.DescEn,
             product.ProductColor,
             product.ProductStyle,
             product.ProductCost,
@@ -142,11 +154,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             product.EffectivePrice,
             product.ProfitMargin,
             product.ProductSubcategoryId,
-            subcategory.SubcategoryName,
-            subcategory.Category.CategoryName,
+            subcategory.NameEn,
+            subcategory.Category.NameEn,
             product.Created,
             product.LastModified,
-            product.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
+            product.Images.Select(i => new ProductImageDto(i.Id, i.Image?.StoragePath ?? "", i.IsPrimary, i.DisplayOrder)).ToList()
         );
 
         return new CreateProductResponse(true, "Product created successfully.", dto);

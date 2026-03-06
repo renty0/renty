@@ -153,8 +153,10 @@ public class SeedFromExcelCommandHandler : IRequestHandler<SeedFromExcelCommand,
                 categories.Add(new ProductCategory
                 {
                     Id = categoryKey.Value,
-                    CategoryName = categoryName,
-                    Description = categoryName,
+                    NameAr = categoryName,
+                    NameEn = categoryName,
+                    DescAr = categoryName,
+                    DescEn = categoryName,
                     Created = DateTimeOffset.UtcNow,
                     LastModified = DateTimeOffset.UtcNow
                 });
@@ -191,8 +193,10 @@ public class SeedFromExcelCommandHandler : IRequestHandler<SeedFromExcelCommand,
                 subcategories.Add(new ProductSubcategory
                 {
                     Id = subcategoryKey.Value,
-                    SubcategoryName = subcategoryName,
-                    Description = subcategoryName,
+                    NameAr = subcategoryName,
+                    NameEn = subcategoryName,
+                    DescAr = subcategoryName,
+                    DescEn = subcategoryName,
                     ProductCategoryId = categoryKey.Value,
                     Created = DateTimeOffset.UtcNow,
                     LastModified = DateTimeOffset.UtcNow
@@ -238,9 +242,11 @@ public class SeedFromExcelCommandHandler : IRequestHandler<SeedFromExcelCommand,
                 {
                     Id = productKey.Value,
                     ProductSku = productSku,
-                    ProductName = productName ?? "Unknown",
+                    NameAr = productName ?? "Unknown",
+                    NameEn = productName ?? "Unknown",
                     ModelName = modelName,
-                    ProductDescription = description,
+                    DescAr = description ?? productName ?? "Unknown",
+                    DescEn = description ?? productName ?? "Unknown",
                     ProductColor = color,
                     ProductSubcategoryId = subcategoryKey.Value,
                     ProductCost = productCost ?? 0,

@@ -88,7 +88,7 @@ export class SubcategoryListComponent implements OnInit {
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   private getData() {
     const page = this.pageNumber();
@@ -177,5 +177,22 @@ export class SubcategoryListComponent implements OnInit {
   onSaved(subcategory: ProductSubcategoryDto) {
     this.closeDialog();
     this.getData();
+  }
+
+  getLocalizedName(row: ProductSubcategoryDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    return isAr ? (row.nameAr || row.nameEn || '') : (row.nameEn || row.nameAr || '');
+  }
+
+  getLocalizedDesc(row: ProductSubcategoryDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    const desc = isAr ? (row.descAr || row.descEn || '') : (row.descEn || row.descAr || '');
+    return desc || '';
+  }
+
+  getLocalizedCatName(row: ProductSubcategoryDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    // Use the new properties we added to the DTO
+    return isAr ? ((row as any).categoryNameAr || (row as any).categoryNameEn || '') : ((row as any).categoryNameEn || (row as any).categoryNameAr || '');
   }
 }

@@ -13,8 +13,9 @@ public class PaginatedList<T>
 
     public PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
     {
+        var safePageSize = pageSize < 1 ? 1 : pageSize;
         PageNumber = pageNumber;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        TotalPages = count == 0 ? 0 : (int)Math.Ceiling(count / (double)safePageSize);
         TotalCount = count;
         Items = items;
     }
@@ -28,12 +29,14 @@ public class PaginatedList<T>
         int pageSize,
         CancellationToken cancellationToken = default)
     {
+        var safePageSize = pageSize < 1 ? 1 : pageSize;
+        var safePageNumber = pageNumber < 1 ? 1 : pageNumber;
         var count = await source.CountAsync(cancellationToken);
         var items = await source
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((safePageNumber - 1) * safePageSize)
+            .Take(safePageSize)
             .ToListAsync(cancellationToken);
 
-        return new PaginatedList<T>(items, count, pageNumber, pageSize);
+        return new PaginatedList<T>(items, count, safePageNumber, safePageSize);
     }
 }

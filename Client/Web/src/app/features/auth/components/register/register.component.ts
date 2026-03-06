@@ -14,7 +14,7 @@ import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
 import { phoneValidator } from '../../../../validators/phone.validator';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
-import { UserType } from '../../../../core/api/api-client';
+import { ApiResponseOfAuthRegisterData, UserType } from '../../../../core/api/api-client';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 import { AuthService } from '../../../../core/services/auth.service';
 
@@ -138,16 +138,19 @@ export class RegisterComponent implements OnInit {
     this.authService.register(payload).pipe(
       finalize(() => this.loading.set(false))
     ).subscribe({
-      next: (response) => {
+      next: (response: ApiResponseOfAuthRegisterData) => {
         if (response.success) {
-          this.toast.showSuccess(this.translate.instant('register.success'));
-          this.router.navigate(['/login']);
+          this.toast.showSuccess(this.translate.instant('register.successVerifyEmail'));
+          this.router.navigate(['/verify-email'], {
+            queryParams: { email: this.accountInfoGroup.value.email }
+          });
         } else {
           this.toast.showError(response.message || this.translate.instant('register.failed'));
         }
       },
       error: (error: any) => {
-        this.toast.showError(error?.message || this.translate.instant('login.serverError'));
+        const msg = error?.error?.message ?? error?.message ?? this.translate.instant('login.serverError');
+        this.toast.showError(msg);
       }
     });
   }

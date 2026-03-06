@@ -6,8 +6,11 @@ namespace Domain.Entities;
 public class ProductSubcategory : IAuditable
 {
     public int Id { get; set; }
-    public string SubcategoryName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
+
+    public string? DescAr { get; set; }
+    public string? DescEn { get; set; }
     public int ProductCategoryId { get; set; }
 
     public Guid? LogoId { get; set; }

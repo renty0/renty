@@ -1,0 +1,44 @@
+<div class="verify-page">
+  <div class="verify-container">
+    <div class="header">
+      <img class="logo" src="assets/logo.png" alt="Renty Logo" />
+      <h1 class="title">{{ 'verifyEmail.title' | translate }}</h1>
+      <p class="subtitle">{{ 'verifyEmail.subtitle' | translate }}</p>
+    </div>
+
+    @if (verified()) {
+      <div class="success-message">
+        <p>{{ 'verifyEmail.success' | translate }}</p>
+        <a routerLink="/login" class="link">{{ 'verifyEmail.backToLogin' | translate }}</a>
+      </div>
+    } @else {
+      <form [formGroup]="verifyForm" (ngSubmit)="submit()" class="verify-form">
+        <app-input
+          [formGroup]="verifyForm"
+          controlName="email"
+          [label]="'verifyEmail.email' | translate"
+          type="email"
+        />
+        <app-input
+          [formGroup]="verifyForm"
+          controlName="code"
+          [label]="'verifyEmail.code' | translate"
+          type="text"
+        />
+        <app-loading-button
+          [loading]="loading()"
+          type="submit"
+          color="primary"
+          [fullWidth]="true"
+          class="verify-button"
+        >
+          {{ 'verifyEmail.submit' | translate }}
+        </app-loading-button>
+      </form>
+    }
+
+    <div class="login-link">
+      <a routerLink="/login">{{ 'verifyEmail.backToLogin' | translate }}</a>
+    </div>
+  </div>
+</div>

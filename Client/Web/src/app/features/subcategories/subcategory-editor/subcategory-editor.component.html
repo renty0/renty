@@ -12,15 +12,23 @@
             [label]="'subcategories.fields.logo' | translate" [folder]="'subcategories'"></app-image-uploader>
 
         <div class="form-body">
-            <app-input class="field" [formGroup]="form" [controlName]="'subcategoryName'" [label]="'subcategoryName'"
+            <app-input class="field" [formGroup]="form" [controlName]="'nameEn'" [label]="'labels.nameEn' | translate"
                 [required]="true">
             </app-input>
 
-            <app-input class="field" [formGroup]="form" [controlName]="'categoryId'" [label]="'parentCategory'"
-                [type]="'select'" [options]="categoryOptions()" [required]="true">
+            <app-input class="field" [formGroup]="form" [controlName]="'nameAr'" [label]="'labels.nameAr' | translate"
+                [required]="true">
             </app-input>
 
-            <app-input class="field" [formGroup]="form" [controlName]="'description'" [label]="'subcategoryDescription'"
+            <app-input class="field" [formGroup]="form" [controlName]="'categoryId'"
+                [label]="'labels.parentCategory' | translate" [type]="'select'" [options]="categoryOptions()"
+                [required]="true">
+            </app-input>
+
+            <app-input class="field" [formGroup]="form" [controlName]="'descEn'" [label]="'labels.descEn' | translate"
+                [type]="'textarea'"></app-input>
+
+            <app-input class="field" [formGroup]="form" [controlName]="'descAr'" [label]="'labels.descAr' | translate"
                 [type]="'textarea'"></app-input>
         </div>
 

@@ -30,8 +30,10 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
-                c.Description,
+                c.NameAr,
+                c.NameEn,
+                c.DescAr,
+                c.DescEn,
                 c.LogoId,
                 LogoStoragePath = c.Logo != null ? c.Logo.StoragePath : null,
                 SubcategoryCount = c.Subcategories.Count,
@@ -44,8 +46,10 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
 
         return new ProductCategoryDto(
             category.Id,
-            category.CategoryName,
-            category.Description,
+            category.NameAr,
+            category.NameEn,
+            category.DescAr,
+            category.DescEn,
             category.LogoId,
             !string.IsNullOrEmpty(category.LogoStoragePath) 
                 ? $"{baseUrl.TrimEnd('/')}/{category.LogoStoragePath.Replace("\\", "/").TrimStart('/')}" 

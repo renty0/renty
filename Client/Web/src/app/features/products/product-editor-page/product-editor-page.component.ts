@@ -114,8 +114,10 @@ export class ProductEditorPageComponent implements OnInit {
 
   private initForm() {
     this.form = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      description: ['', [Validators.maxLength(1000)]],
+      titleAr: ['', [Validators.required, Validators.maxLength(200)]],
+      titleEn: ['', [Validators.required, Validators.maxLength(200)]],
+      descAr: ['', [Validators.maxLength(1000)]],
+      descEn: ['', [Validators.maxLength(1000)]],
       type: ['standard'], // standard | premium
       condition: ['good'], // new | like_new | good | fair
       defaultDeposit: [0, [Validators.required, Validators.min(0)]],
@@ -133,7 +135,7 @@ export class ProductEditorPageComponent implements OnInit {
       next: (res) => {
         if (res.data) {
           const options = res.data.map((s) => ({
-            name: `${s.subcategoryName} (${s.categoryName})`,
+            name: `${s.nameEn || s.nameAr} (${s.categoryId})`, // Simplified for now, category name might be missing in flat subcategory list
             code: s.id ?? 0,
           }));
           this.subcategories.set(options);
@@ -156,8 +158,10 @@ export class ProductEditorPageComponent implements OnInit {
         const item = res.data;
         if (item) {
           this.form.patchValue({
-            title: item.title,
-            description: item.description,
+            titleAr: item.titleAr,
+            titleEn: item.titleEn,
+            descAr: item.descAr,
+            descEn: item.descEn,
             type: item.type,
             condition: item.condition,
             defaultDeposit: item.defaultDeposit,
@@ -201,7 +205,7 @@ export class ProductEditorPageComponent implements OnInit {
 
   private buildImages(): CreateItemImageCommand[] {
     return this.uploadedImages.map(
-      (img) => new CreateItemImageCommand({ imageUrl: img.imageUrl, isPrimary: img.isPrimary }),
+      (img) => new CreateItemImageCommand({ imageId: img.id?.toString(), isPrimary: img.isPrimary }),
     );
   }
 
@@ -209,8 +213,10 @@ export class ProductEditorPageComponent implements OnInit {
     const v = this.form.value;
     const cmd = new CreateItemCommand({
       productKey: 1,
-      title: v.title,
-      description: v.description,
+      titleAr: v.titleAr,
+      titleEn: v.titleEn,
+      descAr: v.descAr,
+      descEn: v.descEn,
       type: v.type,
       condition: v.condition,
       defaultDeposit: v.defaultDeposit,
@@ -247,8 +253,10 @@ export class ProductEditorPageComponent implements OnInit {
     const v = this.form.value;
     const cmd = new UpdateItemCommand({
       itemId: this.itemId!,
-      title: v.title,
-      description: v.description,
+      titleAr: v.titleAr,
+      titleEn: v.titleEn,
+      descAr: v.descAr,
+      descEn: v.descEn,
       type: v.type,
       condition: v.condition,
       defaultDeposit: v.defaultDeposit,

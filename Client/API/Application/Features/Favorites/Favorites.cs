@@ -122,10 +122,10 @@ public class GetMyFavoritesQueryHandler : IRequestHandler<GetMyFavoritesQuery, G
             .Where(f => f.UserId == _currentUser.Id.Value)
             .Select(f => new FavoriteItemDto(
                 f.Item.Id,
-                f.Item.Title,
+                f.Item.TitleEn,
                 f.Item.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
-                f.Item.Images.Where(img => img.IsPrimary).Select(img => img.ImageUrl).FirstOrDefault()
-                    ?? f.Item.Images.Select(img => img.ImageUrl).FirstOrDefault(),
+                f.Item.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
+                    ?? f.Item.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
                 f.Item.City
             ))
             .ToListAsync(ct);

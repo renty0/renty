@@ -1,0 +1,13 @@
+﻿5820: export class ItemCreateData implements IItemCreateData {
+5856: export class CreateItemCommand implements ICreateItemCommand {
+6132: export class ItemDetailDto implements IItemDetailDto {
+6396: export class UpdateItemCommand implements IUpdateItemCommand {
+8076: export class ProductSubcategoryDto implements IProductSubcategoryDto {
+11952: export class ProductCategoryDto implements IProductCategoryDto {
+12104: export class CreateCategoryCommand implements ICreateCategoryCommand {
+12156: export class UpdateCategoryCommand implements IUpdateCategoryCommand {
+12292: export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
+12348: export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
+12496: export class BrandDto implements IBrandDto {
+12640: export class CreateBrandCommand implements ICreateBrandCommand {
+12692: export class UpdateBrandCommand implements IUpdateBrandCommand {

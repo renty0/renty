@@ -22,8 +22,8 @@ public class GetSubcategoryGapAnalysisQueryHandler : IRequestHandler<GetSubcateg
             .Select(s => new
             {
                 s.Id,
-                s.SubcategoryName,
-                CategoryName = s.Category.CategoryName,
+                SubcategoryName = s.NameEn,
+                CategoryName = s.Category.NameEn,
                 UniqueProducts = _context.Products.Count(p => p.ProductSubcategoryId == s.Id),
                 Sales = _context.Sales
                     .Where(sale => sale.Product.ProductSubcategoryId == s.Id)

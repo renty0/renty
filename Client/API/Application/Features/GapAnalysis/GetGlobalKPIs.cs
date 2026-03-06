@@ -34,7 +34,7 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
         var categories = await _context.ProductCategories
             .Select(c => new
             {
-                c.CategoryName,
+                c.NameEn,
                 Supply = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Demand = _context.Sales.Where(s => s.Product.Subcategory.ProductCategoryId == c.Id).Sum(s => s.OrderQuantity),
                 AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.ProductPrice) ?? 0
@@ -47,7 +47,7 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
             var oppLoss = c.Demand > c.Supply ? (c.Demand - c.Supply) * c.AvgPrice : 0m;
             return new
             {
-                c.CategoryName,
+                c.NameEn,
                 Score = score,
                 Level = score < 1 ? "Low" : score < 2 ? "Moderate" : score < 5 ? "High" : "Critical",
                 OppLoss = oppLoss

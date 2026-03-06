@@ -8,8 +8,10 @@ namespace Application.Features.RentableItems;
 
 public record UpdateRentableItemCommand(
     long Id,
-    string Title,
-    string Description,
+    string TitleAr,
+    string TitleEn,
+    string DescAr,
+    string DescEn,
     string? ShortDescription,
     decimal PricePerDay,
     decimal? PricePerWeek,
@@ -42,11 +44,17 @@ public class UpdateRentableItemCommandValidator : AbstractValidator<UpdateRentab
         RuleFor(x => x.Id)
             .GreaterThan(0).WithMessage("Invalid item ID.");
 
-        RuleFor(x => x.Title)
+        RuleFor(x => x.TitleEn)
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+        RuleFor(x => x.TitleAr)
             .NotEmpty().WithMessage("Title is required.")
             .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
 
-        RuleFor(x => x.Description)
+        RuleFor(x => x.DescEn)
+            .NotEmpty().WithMessage("Description is required.")
+            .MaximumLength(4000).WithMessage("Description must not exceed 4000 characters.");
+        RuleFor(x => x.DescAr)
             .NotEmpty().WithMessage("Description is required.")
             .MaximumLength(4000).WithMessage("Description must not exceed 4000 characters.");
 
@@ -89,8 +97,10 @@ public class UpdateRentableItemCommandHandler : IRequestHandler<UpdateRentableIt
             return new UpdateRentableItemResponse(false, "You can only update your own items.");
         }
 
-        item.Title = request.Title;
-        item.Description = request.Description;
+        item.TitleAr = request.TitleAr;
+        item.TitleEn = request.TitleEn;
+        item.DescAr = request.DescAr;
+        item.DescEn = request.DescEn;
         item.ShortDescription = request.ShortDescription;
         item.PricePerDay = request.PricePerDay;
         item.PricePerWeek = request.PricePerWeek;

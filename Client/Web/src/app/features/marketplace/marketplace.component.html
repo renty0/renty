@@ -47,7 +47,7 @@
                     @for (cat of categories(); track cat.id) {
                     <div class="category-item" [class.active]="selectedCategoryId() === cat.id"
                         (click)="selectedCategoryId.set(cat.id)">
-                        {{ cat.categoryName }}
+                        {{ getLocalizedCatName(cat) }}
                     </div>
                     }
                 </div>
@@ -62,7 +62,7 @@
                     <mat-select [ngModel]="selectedSubcategoryId()" (ngModelChange)="selectedSubcategoryId.set($event)">
                         <mat-option [value]="undefined">{{ 'marketplace.all_subcategories' | translate }}</mat-option>
                         @for (sub of subcategories(); track sub.id) {
-                        <mat-option [value]="sub.id">{{ sub.subcategoryName }}</mat-option>
+                        <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
@@ -98,7 +98,8 @@
                 @for (item of items(); track item.id) {
                 <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
                     <div class="card-image">
-                        <img [src]="item.primaryImage || 'assets/images/placeholder.png'" [alt]="item.title">
+                        <img [src]="item.primaryImage || 'assets/images/placeholder.png'"
+                            [alt]="getLocalizedTitle(item)">
                         @if (item.avgRating && item.avgRating > 0) {
                         <div class="rating-badge">
                             <mat-icon>star</mat-icon>{{ item.avgRating | number:'1.1-1' }}
@@ -107,7 +108,7 @@
                     </div>
                     <div class="card-body">
                         <span class="category-name">{{ item.category?.name }}</span>
-                        <h3 class="product-name">{{ item.title }}</h3>
+                        <h3 class="product-name">{{ getLocalizedTitle(item) }}</h3>
                         <div class="price-footer">
                             <div class="price-box">
                                 <span class="final-price">{{ item.dailyPrice | currency }}<small>/day</small></span>

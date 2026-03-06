@@ -25,8 +25,8 @@ public class GetDeadStockAnalysisQueryHandler : IRequestHandler<GetDeadStockAnal
             .Select(p => new
             {
                 p.Id,
-                p.ProductName,
-                CategoryName = p.Subcategory.Category.CategoryName,
+                ProductName = p.NameEn,
+                CategoryName = p.Subcategory.Category.NameEn,
                 p.ProductPrice,
                 LastSaleDate = _context.Sales
                     .Where(s => s.ProductId == p.Id)

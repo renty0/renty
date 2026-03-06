@@ -12,12 +12,18 @@ public class RentableItemConfiguration : IEntityTypeConfiguration<RentableItem>
 
         builder.HasKey(r => r.Id);
 
-        builder.Property(r => r.Title)
+        builder.Property(r => r.TitleAr)
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.Property(r => r.Description)
+        builder.Property(r => r.TitleEn)
             .IsRequired()
+            .HasMaxLength(200);
+
+        builder.Property(r => r.DescAr)
+            .HasMaxLength(4000);
+
+        builder.Property(r => r.DescEn)
             .HasMaxLength(4000);
 
         builder.Property(r => r.ShortDescription)

@@ -48,8 +48,8 @@ public class GetAdminDashboardQueryHandler : IRequestHandler<GetAdminDashboardQu
                 x.TotalDays,
                 x.TotalAmount + (x.DeliveryFee ?? 0),
                 x.Status.ToString(),
-                x.RentableItem.Title,
-                x.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
+                x.RentableItem.TitleEn,
+                x.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
                 "User", // Simplified
                 "Owner", // Simplified
                 x.Created

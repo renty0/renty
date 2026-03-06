@@ -17,7 +17,8 @@ public record ItemBrandRef(int Id, string Name);
 
 public record ItemListDto(
     Guid Id,
-    string Title,
+    string TitleAr,
+    string TitleEn,
     decimal? DailyPrice,
     string? City,
     string? PrimaryImage,
@@ -38,8 +39,10 @@ public record OwnerDto(string FirstName, string? City, string? ProfileImageUrl);
 
 public record ItemDetailDto(
     Guid Id,
-    string Title,
-    string? Description,
+    string TitleAr,
+    string TitleEn,
+    string? DescAr,
+    string? DescEn,
     string Type,
     string Status,
     string? Condition,
@@ -139,8 +142,8 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
         {
             Item = i,
             DailyPrice = i.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
-            PrimaryImage = i.Images.Where(img => img.IsPrimary).Select(img => img.ImageUrl).FirstOrDefault()
-                ?? i.Images.Select(img => img.ImageUrl).FirstOrDefault(),
+            PrimaryImage = i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
+                ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
         });
 
         // Sorting
@@ -160,17 +163,18 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
             .Take(request.Limit)
             .Select(x => new ItemListDto(
                 x.Item.Id,
-                x.Item.Title,
+                x.Item.TitleAr,
+                x.Item.TitleEn,
                 x.DailyPrice,
                 x.Item.City,
-                x.PrimaryImage,
+                x.PrimaryImage != null ? "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/') : null,
                 0,   // avg rating
                 0,   // review count
                 x.Item.Type.ToString(),
                 x.Item.Condition,
-                x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.CategoryName) : null,
-                x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.SubcategoryName) : null,
-                x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.Name) : null
+                x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameEn) : null,
+                x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameEn) : null,
+                x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameEn) : null
             ))
             .ToListAsync(ct);
 

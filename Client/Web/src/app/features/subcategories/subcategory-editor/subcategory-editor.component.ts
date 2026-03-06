@@ -65,14 +65,16 @@ export class SubcategoryEditorComponent implements OnInit {
   categories = signal<ProductCategoryDto[]>([]);
   isLoadingCategories = signal(false);
   categoryOptions = computed(() =>
-    this.categories().map((c) => ({ name: c.categoryName || '', code: c.id! })),
+    this.categories().map((c) => ({ name: c.nameEn || c.nameAr || '', code: c.id! })),
   );
 
   constructor() {
     this.form = this.fb.group({
-      subcategoryName: ['', [Validators.required, Validators.maxLength(100)]],
+      nameAr: ['', [Validators.required, Validators.maxLength(100)]],
+      nameEn: ['', [Validators.required, Validators.maxLength(100)]],
       categoryId: [null, [Validators.required]],
-      description: ['', [Validators.maxLength(500)]],
+      descAr: ['', [Validators.maxLength(500)]],
+      descEn: ['', [Validators.maxLength(500)]],
       logoId: [null],
     });
 
@@ -121,8 +123,10 @@ export class SubcategoryEditorComponent implements OnInit {
           const subcategory = response.data;
           if (subcategory) {
             this.form.patchValue({
-              subcategoryName: subcategory.subcategoryName,
-              description: subcategory.description,
+              nameAr: subcategory.nameAr,
+              nameEn: subcategory.nameEn,
+              descAr: subcategory.descAr,
+              descEn: subcategory.descEn,
               categoryId: subcategory.categoryId,
               logoId: subcategory.logoId,
             });
@@ -167,10 +171,12 @@ export class SubcategoryEditorComponent implements OnInit {
       if (this.isEditMode() && idValue) {
         const command = new UpdateSubcategoryCommand({
           id: idValue,
-          subcategoryName: formValue.subcategoryName,
-          description: formValue.description,
+          nameAr: formValue.nameAr,
+          nameEn: formValue.nameEn,
+          descAr: formValue.descAr,
+          descEn: formValue.descEn,
           categoryId: formValue.categoryId,
-          logoId: logoId || '',
+          logoId: logoId || undefined,
         });
 
         this.apiClient
@@ -193,10 +199,12 @@ export class SubcategoryEditorComponent implements OnInit {
           .subscribe();
       } else {
         const command = new CreateSubcategoryCommand({
-          subcategoryName: formValue.subcategoryName,
-          description: formValue.description,
+          nameAr: formValue.nameAr,
+          nameEn: formValue.nameEn,
+          descAr: formValue.descAr,
+          descEn: formValue.descEn,
           categoryId: formValue.categoryId,
-          logoId: logoId || '',
+          logoId: logoId || undefined,
         });
 
         this.apiClient

@@ -37,7 +37,7 @@ public class GetGeographicGapHeatmapQueryHandler : IRequestHandler<GetGeographic
                 var score = Math.Round((decimal)(demand + 1) / (supply + 1), 2);
                 var level = score < 50 ? "Low" : score < 100 ? "Moderate" : score < 200 ? "High" : "Critical";
 
-                categoryGaps.Add(new CategoryGapScoreDto(category.CategoryName, score, level, supply, demand));
+                categoryGaps.Add(new CategoryGapScoreDto(category.NameEn, score, level, supply, demand));
             }
 
             heatmap.Add(new GeographicHeatmapDto(

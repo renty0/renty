@@ -3,8 +3,10 @@ namespace Application.Common.Models;
 // Product DTOs
 public record ProductCategoryDto(
     int Id,
-    string CategoryName,
-    string Description,
+    string NameAr,
+    string NameEn,
+    string? DescAr,
+    string? DescEn,
     Guid? LogoId,
     string? LogoUrl,
     int SubcategoryCount,
@@ -14,12 +16,15 @@ public record ProductCategoryDto(
 
 public record ProductSubcategoryDto(
     int Id,
-    string SubcategoryName,
-    string Description,
+    string NameAr,
+    string NameEn,
+    string? DescAr,
+    string? DescEn,
     Guid? LogoId,
     string? LogoUrl,
     int CategoryId,
-    string CategoryName,
+    string CategoryNameAr,
+    string CategoryNameEn,
     int ProductCount,
     DateTimeOffset Created,
     DateTimeOffset? LastModified
@@ -35,9 +40,11 @@ public record ProductImageDto(
 public record ProductDto(
     long Id,
     string ProductSku,
-    string ProductName,
+    string NameAr,
+    string NameEn,
     string? ModelName,
-    string? ProductDescription,
+    string DescAr,
+    string DescEn,
     string? ProductColor,
     string? ProductStyle,
     decimal ProductCost,
@@ -47,8 +54,8 @@ public record ProductDto(
     decimal EffectivePrice,
     decimal ProfitMargin,
     int SubcategoryId,
-    string SubcategoryName,
-    string CategoryName,
+    string SubcategoryNameEn,
+    string CategoryNameEn,
     DateTimeOffset Created,
     DateTimeOffset? LastModified,
     List<ProductImageDto> Images
@@ -57,12 +64,13 @@ public record ProductDto(
 public record ProductListDto(
     long Id,
     string ProductSku,
-    string ProductName,
+    string NameAr,
+    string NameEn,
     decimal ProductPrice,
     decimal? DiscountPrice,
     string? ProductColor,
-    string SubcategoryName,
-    string CategoryName,
+    string SubcategoryNameEn,
+    string CategoryNameEn,
     DateTimeOffset Created,
     DateTimeOffset? LastModified,
     string? PrimaryImageUrl
@@ -124,7 +132,8 @@ public record SaleDto(
     int OrderLineItem,
     int OrderQuantity,
     long ProductId,
-    string ProductName,
+    string ProductNameAr,
+    string ProductNameEn,
     decimal ProductPrice,
     long CustomerId,
     string CustomerName,
@@ -139,7 +148,7 @@ public record SaleListDto(
     DateOnly OrderDate,
     string OrderNumber,
     int OrderQuantity,
-    string ProductName,
+    string ProductNameEn,
     string CustomerName,
     decimal LineTotal
 );
@@ -151,7 +160,7 @@ public record ReturnDto(
     int ReturnQuantity,
     string? ReturnReason,
     long ProductId,
-    string ProductName,
+    string ProductNameEn,
     int TerritoryId,
     string TerritoryRegion,
     string TerritoryCountry,
@@ -162,7 +171,7 @@ public record ReturnListDto(
     long Id,
     DateOnly ReturnDate,
     int ReturnQuantity,
-    string ProductName,
+    string ProductNameEn,
     string TerritoryRegion
 );
 
@@ -185,7 +194,7 @@ public record SalesByPeriodDto(
 
 public record TopProductDto(
     long ProductId,
-    string ProductName,
+    string ProductNameEn,
     int QuantitySold,
     decimal Revenue
 );

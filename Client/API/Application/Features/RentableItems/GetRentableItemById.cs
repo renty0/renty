@@ -32,8 +32,10 @@ public class GetRentableItemByIdQueryHandler : IRequestHandler<GetRentableItemBy
             .Where(r => r.Id == request.Id)
             .Select(r => new RentableItemDto(
                 r.Id,
-                r.Title,
-                r.Description,
+                r.TitleAr,
+                r.TitleEn,
+                r.DescAr,
+                r.DescEn,
                 r.ShortDescription,
                 r.PricePerDay,
                 r.PricePerWeek,
@@ -57,12 +59,12 @@ public class GetRentableItemByIdQueryHandler : IRequestHandler<GetRentableItemBy
                 r.OwnerId,
                 r.Owner.FirstName + " " + r.Owner.LastName,
                 r.CategoryId,
-                r.Category != null ? r.Category.CategoryName : null,
+                r.Category != null ? r.Category.NameEn : null,
                 r.SubcategoryId,
-                r.Subcategory != null ? r.Subcategory.SubcategoryName : null,
+                r.Subcategory != null ? r.Subcategory.NameEn : null,
                 r.Images.OrderBy(i => i.DisplayOrder).Select(i => new RentableItemImageDto(
                     i.Id,
-                    i.ImageUrl,
+                    i.Image != null ? i.Image.StoragePath : "",
                     i.ThumbnailUrl,
                     i.AltText,
                     i.DisplayOrder,

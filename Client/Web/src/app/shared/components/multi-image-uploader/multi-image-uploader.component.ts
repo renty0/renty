@@ -92,10 +92,12 @@ export class MultiImageUploaderComponent {
                 this.apiClient.uploadMedia(undefined, undefined, fileParam)
             );
 
-            if (response.id) {
+            const data = response?.data || response;
+
+            if (data && data.id) {
                 // Update temp image with real data
-                tempImage.mediaFileId = response.id;
-                tempImage.imageUrl = response.urls?.medium || response.url || '';
+                tempImage.mediaFileId = data.id;
+                tempImage.imageUrl = data.urls?.medium || data.url || '';
                 tempImage.isUploading = false;
                 // Only new images need to be communicated as "URLs" to the CreateProduct,
                 // but for UpdateProduct we need ProductImageDto structure.

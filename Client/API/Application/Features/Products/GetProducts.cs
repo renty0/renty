@@ -54,9 +54,11 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
         {
             var searchTerm = request.SearchTerm.ToLower();
             query = query.Where(p =>
-                p.ProductName.ToLower().Contains(searchTerm) ||
+                p.NameEn.ToLower().Contains(searchTerm) ||
+                p.NameAr.ToLower().Contains(searchTerm) ||
                 p.ProductSku.ToLower().Contains(searchTerm) ||
-                (p.ProductDescription != null && p.ProductDescription.ToLower().Contains(searchTerm))
+                p.DescEn.ToLower().Contains(searchTerm) ||
+                p.DescAr.ToLower().Contains(searchTerm)
             );
         }
 
@@ -81,7 +83,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             var isDescending = request.sortOrder?.ToLower() == "desc";
             query = request.sortBy.ToLower() switch
             {
-                "name" => isDescending ? query.OrderByDescending(p => p.ProductName) : query.OrderBy(p => p.ProductName),
+                "name" => isDescending ? query.OrderByDescending(p => p.NameEn) : query.OrderBy(p => p.NameEn),
                 "sku" => isDescending ? query.OrderByDescending(p => p.ProductSku) : query.OrderBy(p => p.ProductSku),
                 "price" => isDescending ? query.OrderByDescending(p => p.ProductPrice) : query.OrderBy(p => p.ProductPrice),
                 "date" => isDescending ? query.OrderByDescending(p => p.Created) : query.OrderBy(p => p.Created),
@@ -97,15 +99,16 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
             .Select(p => new ProductListDto(
                 p.Id,
                 p.ProductSku,
-                p.ProductName,
+                p.NameAr,
+                p.NameEn,
                 p.ProductPrice,
                 p.DiscountPrice,
                 p.ProductColor,
-                p.Subcategory.SubcategoryName,
-                p.Subcategory.Category.CategoryName,
+                p.Subcategory.NameEn,
+                p.Subcategory.Category.NameEn,
                 p.Created,
                 p.LastModified,
-                p.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
+                p.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
             ));
 
         var products = await PaginatedList<ProductListDto>.CreateAsync(

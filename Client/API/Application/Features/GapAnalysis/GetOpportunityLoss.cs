@@ -22,7 +22,7 @@ public class GetOpportunityLossQueryHandler : IRequestHandler<GetOpportunityLoss
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
+                c.NameEn,
                 Supply = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Demand = _context.Sales.Where(s => s.Product.Subcategory.ProductCategoryId == c.Id).Sum(s => s.OrderQuantity),
                 AvgPrice = _context.Products.Where(p => p.Subcategory.ProductCategoryId == c.Id).Average(p => (decimal?)p.ProductPrice) ?? 0
@@ -37,7 +37,7 @@ public class GetOpportunityLossQueryHandler : IRequestHandler<GetOpportunityLoss
                 var estimatedLoss = gap * c.AvgPrice;
                 return new OpportunityLossDto(
                     c.Id,
-                    c.CategoryName,
+                    c.NameEn,
                     gap,
                     Math.Round(c.AvgPrice, 2),
                     Math.Round(estimatedLoss, 2),

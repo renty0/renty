@@ -5,8 +5,10 @@ namespace Application.Common.Models;
 // RentableItem DTOs
 public record RentableItemDto(
     long Id,
-    string Title,
-    string Description,
+    string TitleAr,
+    string TitleEn,
+    string DescAr,
+    string DescEn,
     string? ShortDescription,
     decimal PricePerDay,
     decimal? PricePerWeek,
@@ -30,16 +32,17 @@ public record RentableItemDto(
     long OwnerId,
     string OwnerName,
     int? CategoryId,
-    string? CategoryName,
+    string? CategoryNameEn,
     int? SubcategoryId,
-    string? SubcategoryName,
+    string? SubcategoryNameEn,
     List<RentableItemImageDto> Images,
     DateTimeOffset Created
 );
 
 public record RentableItemListDto(
     long Id,
-    string Title,
+    string TitleAr,
+    string TitleEn,
     string? ShortDescription,
     decimal PricePerDay,
     string? City,
@@ -49,7 +52,7 @@ public record RentableItemListDto(
     int TotalRatings,
     string? PrimaryImageUrl,
     string OwnerName,
-    string? CategoryName
+    string? CategoryNameEn
 );
 
 public record RentableItemImageDto(
@@ -82,7 +85,8 @@ public record RentRequestDto(
     string? DeliveryAddress,
     string? PickupInstructions,
     long RentableItemId,
-    string RentableItemTitle,
+    string RentableItemTitleAr,
+    string RentableItemTitleEn,
     string? RentableItemImageUrl,
     long RenterId,
     string RenterName,
@@ -99,7 +103,7 @@ public record RentRequestListDto(
     int TotalDays,
     decimal GrandTotal,
     string Status,
-    string RentableItemTitle,
+    string RentableItemTitleEn,
     string? RentableItemImageUrl,
     string RenterName,
     string OwnerName,

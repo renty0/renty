@@ -22,7 +22,7 @@ public class GetGapAnalysisActionPlanQueryHandler : IRequestHandler<GetGapAnalys
             .Select(c => new
             {
                 c.Id,
-                c.CategoryName,
+                CategoryName = c.NameEn,
                 UniqueProducts = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 TotalQuantitySold = _context.Sales
                     .Where(s => s.Product.Subcategory.ProductCategoryId == c.Id)

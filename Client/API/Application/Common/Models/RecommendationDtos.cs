@@ -2,10 +2,11 @@ namespace Application.Features.Recommendations;
 
 public record RecommendationDto(
     long Id,
-    string Title,
+    string TitleAr,
+    string TitleEn,
     string? PrimaryImageUrl,
     decimal PricePerDay,
     double AverageRating,
-    string? CategoryName,
+    string? CategoryNameEn,
     string? Reason
 );

@@ -8,8 +8,10 @@ namespace Application.Features.Items;
 
 public record UpdateItemCommand(
     Guid ItemId,
-    string Title,
-    string? Description,
+    string? TitleAr,
+    string? TitleEn,
+    string? DescAr,
+    string? DescEn,
     string? Type,
     string? Condition,
     decimal DefaultDeposit,
@@ -30,7 +32,8 @@ public class UpdateItemCommandValidator : AbstractValidator<UpdateItemCommand>
 {
     public UpdateItemCommandValidator()
     {
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.TitleEn).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
         RuleFor(x => x.DefaultDeposit).GreaterThanOrEqualTo(0);
     }
 }
@@ -71,8 +74,10 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
         if (request.Type != null)
             Enum.TryParse(request.Type, true, out itemType);
 
-        item.Title = request.Title;
-        item.Description = request.Description;
+        item.TitleAr = request.TitleAr ?? string.Empty;
+        item.TitleEn = request.TitleEn ?? string.Empty;
+        item.DescAr = request.DescAr;
+        item.DescEn = request.DescEn;
         item.Type = itemType;
         item.Condition = request.Condition;
         item.DefaultDeposit = request.DefaultDeposit;
@@ -98,19 +103,19 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
         {
             _context.ItemImages.RemoveRange(item.Images);
             foreach (var img in request.Images)
-                item.Images.Add(new Domain.Entities.ItemImage { ImageUrl = img.ImageUrl, IsPrimary = img.IsPrimary });
+                item.Images.Add(new Domain.Entities.ItemImage { ImageId = img.ImageId, IsPrimary = img.IsPrimary });
         }
 
         await _context.SaveChangesAsync(ct);
 
         var dto = new ItemDetailDto(
-            item.Id, item.Title, item.Description,
+            item.Id, item.TitleAr, item.TitleEn, item.DescAr, item.DescEn,
             item.Type.ToString(), item.Status.ToString(), item.Condition,
             item.DefaultDeposit, item.Location, item.City, item.Lat, item.Lng,
             item.CreatedAt,
             new OwnerDto(item.Owner.FirstName, item.Owner.City, item.Owner.ProfilePictureUrl),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
-            item.Images.Select(img => new ItemImageDto(img.Id, img.ImageUrl, img.IsPrimary)).ToList(),
+            item.Images.Select(img => new ItemImageDto(img.Id, img.Image?.StoragePath ?? "", img.IsPrimary)).ToList(),
             0, 0,
             null, null, null   // Category/Subcategory/Brand refreshed on next fetch
         );

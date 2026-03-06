@@ -36,10 +36,10 @@ public class GetRecommendationsQueryHandler : IRequestHandler<GetRecommendations
                 r.Id,
                 new RecommendationItemDto(
                     r.Item.Id,
-                    r.Item.Title,
+                    r.Item.TitleEn,
                     r.Item.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
-                    r.Item.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                        ?? r.Item.Images.Select(i => i.ImageUrl).FirstOrDefault(),
+                    r.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                        ?? r.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
                     r.Item.City
                 ),
                 r.Score, r.Reason, r.Algorithm

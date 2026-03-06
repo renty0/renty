@@ -166,4 +166,9 @@ export class ProductListComponent implements OnInit {
                 .subscribe();
         }
     }
+
+    getLocalizedTitle(item: ItemListDto): string {
+        const isAr = this.translate.currentLang === 'ar';
+        return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
+    }
 }

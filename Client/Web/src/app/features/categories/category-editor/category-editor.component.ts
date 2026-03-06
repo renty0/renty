@@ -32,7 +32,15 @@ export class CategoryEditorComponent implements OnInit {
     public translate = inject(TranslateService);
 
     @Input() id: number | null = null;
-    @Output() saved = new EventEmitter<{ id: number; categoryName: string; description?: string; logoUrl?: string; logoId?: number }>();
+    @Output() saved = new EventEmitter<{
+        id: number;
+        categoryNameAr?: string;
+        categoryNameEn?: string;
+        descriptionAr?: string;
+        descriptionEn?: string;
+        logoUrl?: string;
+        logoId?: number
+    }>();
     @Output() cancelled = new EventEmitter<void>();
 
     @ViewChild('logoUploader') logoUploader!: ImageUploaderComponent;
@@ -45,8 +53,10 @@ export class CategoryEditorComponent implements OnInit {
 
     constructor() {
         this.form = this.fb.group({
-            categoryName: ['', [Validators.required, Validators.maxLength(100)]],
-            description: ['', [Validators.maxLength(500)]],
+            categoryNameAr: ['', [Validators.required, Validators.maxLength(100)]],
+            categoryNameEn: ['', [Validators.required, Validators.maxLength(100)]],
+            descriptionAr: ['', [Validators.maxLength(500)]],
+            descriptionEn: ['', [Validators.maxLength(500)]],
             logoId: [null]
         });
     }
@@ -65,8 +75,10 @@ export class CategoryEditorComponent implements OnInit {
             tap(category => {
                 if (category) {
                     this.form.patchValue({
-                        categoryName: category?.data?.categoryName,
-                        description: category?.data?.description,
+                        categoryNameAr: category?.data?.nameAr,
+                        categoryNameEn: category?.data?.nameEn,
+                        descriptionAr: category?.data?.descAr,
+                        descriptionEn: category?.data?.descEn,
                         logoId: category?.data?.logoId
                     });
 
@@ -107,8 +119,10 @@ export class CategoryEditorComponent implements OnInit {
             if (this.isEditMode && this.categoryId) {
                 const command = new UpdateCategoryCommand();
                 command.id = this.categoryId;
-                command.categoryName = this.form.value.categoryName;
-                command.description = this.form.value.description;
+                command.nameAr = this.form.value.categoryNameAr;
+                command.nameEn = this.form.value.categoryNameEn;
+                command.descAr = this.form.value.descriptionAr;
+                command.descEn = this.form.value.descriptionEn;
                 command.logoId = logoId ? (logoId as any) : undefined;
 
                 this.apiClient.updateCategory(this.categoryId, command)
@@ -119,8 +133,10 @@ export class CategoryEditorComponent implements OnInit {
                             if (res.data) {
                                 this.saved.emit({
                                     id: res?.data?.id!,
-                                    categoryName: res?.data?.categoryName!,
-                                    description: res?.data?.description,
+                                    categoryNameAr: res?.data?.nameAr!,
+                                    categoryNameEn: res?.data?.nameEn!,
+                                    descriptionAr: res?.data?.descAr,
+                                    descriptionEn: res?.data?.descEn,
                                     logoUrl: res?.data?.logoUrl,
                                     logoId: res?.data?.logoId ? Number(res?.data?.logoId) : undefined
                                 });
@@ -136,8 +152,10 @@ export class CategoryEditorComponent implements OnInit {
 
             } else {
                 const command = new CreateCategoryCommand();
-                command.categoryName = this.form.value.categoryName;
-                command.description = this.form.value.description;
+                command.nameAr = this.form.value.categoryNameAr;
+                command.nameEn = this.form.value.categoryNameEn;
+                command.descAr = this.form.value.descriptionAr;
+                command.descEn = this.form.value.descriptionEn;
                 command.logoId = logoId ? (logoId as any) : undefined;
 
                 this.apiClient.createCategory(command)
@@ -147,8 +165,10 @@ export class CategoryEditorComponent implements OnInit {
                             if (res.data) {
                                 this.saved.emit({
                                     id: res.data.id!,
-                                    categoryName: res.data.categoryName!,
-                                    description: res.data.description,
+                                    categoryNameAr: res.data.nameAr!,
+                                    categoryNameEn: res.data.nameEn!,
+                                    descriptionAr: res.data.descAr,
+                                    descriptionEn: res.data.descEn,
                                     logoUrl: res.data.logoUrl,
                                     logoId: res.data.logoId ? Number(res.data.logoId) : undefined
                                 });

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories;
 
-public record CreateCategoryCommand(string CategoryName, string? Description, Guid? LogoId) : IRequest<CreateCategoryResponse>;
+public record CreateCategoryCommand(string NameAr, string NameEn, string? DescAr, string? DescEn, Guid? LogoId) : IRequest<CreateCategoryResponse>;
 
 public record CreateCategoryResponse(
     bool Success,
@@ -20,12 +20,14 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 {
     public CreateCategoryCommandValidator()
     {
-        RuleFor(x => x.CategoryName)
-            .NotEmpty().WithMessage("Category name is required.")
-            .MaximumLength(100).WithMessage("Category name must not exceed 100 characters.");
+        RuleFor(x => x.NameEn)
+            .NotEmpty().WithMessage("Category English name is required.")
+            .MaximumLength(100).WithMessage("Category English name must not exceed 100 characters.");
+        
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Category Arabic name is required.")
+            .MaximumLength(100).WithMessage("Category Arabic name must not exceed 100 characters.");
             
-        RuleFor(x => x.Description)
-            .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
     }
 }
 
@@ -43,17 +45,28 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
     public async Task<CreateCategoryResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         var exists = await _context.ProductCategories
-            .AnyAsync(c => c.CategoryName == request.CategoryName, cancellationToken);
+            .AnyAsync(c => c.NameEn == request.NameEn, cancellationToken);
 
         if (exists)
         {
             return new CreateCategoryResponse(false, "A category with this name already exists.", null);
         }
 
+        if (request.LogoId.HasValue)
+        {
+            var logoExists = await _context.MediaFiles.AnyAsync(m => m.Id == request.LogoId, cancellationToken);
+            if (!logoExists)
+            {
+                return new CreateCategoryResponse(false, "The specified logo image does not exist.", null);
+            }
+        }
+
         var category = new ProductCategory
         {
-            CategoryName = request.CategoryName,
-            Description = request.Description ?? string.Empty,
+            NameAr = request.NameAr ?? string.Empty,
+            NameEn = request.NameEn ?? string.Empty,
+            DescAr = request.DescAr,
+            DescEn = request.DescEn,
             LogoId = request.LogoId
         };
 
@@ -75,7 +88,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
             }
         }
 
-        var dto = new ProductCategoryDto(category.Id, category.CategoryName, category.Description, category.LogoId, logoUrl, 0, category.Created, category.LastModified);
+        var dto = new ProductCategoryDto(category.Id, category.NameAr, category.NameEn, category.DescAr, category.DescEn, category.LogoId, logoUrl, 0, category.Created, category.LastModified);
         return new CreateCategoryResponse(true, "Category created successfully.", dto);
     }
 }

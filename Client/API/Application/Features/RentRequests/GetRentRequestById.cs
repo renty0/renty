@@ -57,9 +57,10 @@ public class GetRentRequestByIdQueryHandler : IRequestHandler<GetRentRequestById
                 r.DeliveryAddress,
                 r.PickupInstructions,
                 r.RentableItemId,
-                r.RentableItem.Title,
-                r.RentableItem.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                    ?? r.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
+                r.RentableItem.TitleAr,
+                r.RentableItem.TitleEn,
+                r.RentableItem.Images.Where(i => i.IsPrimary).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault()
+                    ?? r.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
                 r.RenterId,
                 r.Renter.FirstName + " " + r.Renter.LastName,
                 r.Renter.Email,

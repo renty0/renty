@@ -30,7 +30,7 @@
                 <td mat-cell *matCellDef="let row">
                     <div class="product-image">
                         @if (row.primaryImage) {
-                        <img [src]="row.primaryImage" [alt]="row.title" class="thumb">
+                        <img [src]="row.primaryImage" [alt]="getLocalizedTitle(row)" class="thumb">
                         } @else {
                         <div class="thumb-placeholder">
                             <mat-icon>image_not_supported</mat-icon>
@@ -42,7 +42,7 @@
 
             <ng-container matColumnDef="title">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'products.columns.name' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+                <td mat-cell *matCellDef="let row">{{ getLocalizedTitle(row) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="price">
@@ -94,7 +94,7 @@
             <div class="card-content">
                 <div class="card-image">
                     @if (item.primaryImage) {
-                    <img [src]="item.primaryImage" [alt]="item.title">
+                    <img [src]="item.primaryImage" [alt]="getLocalizedTitle(item)">
                     } @else {
                     <div class="placeholder">
                         <mat-icon>image_not_supported</mat-icon>
@@ -105,14 +105,15 @@
                     @if (item.brand) {
                     <small class="sku-hint">{{ item.brand.name }}</small>
                     }
-                    <h3>{{ item.title }}</h3>
+                    <h3>{{ getLocalizedTitle(item) }}</h3>
                 </div>
                 <div class="price-tag">
                     <span>{{ item.dailyPrice | currency }} <small>/ day</small></span>
                 </div>
                 @if (item.subcategory || item.category) {
                 <p class="subcategory-info">
-                    {{ item.subcategory?.name }}{{ item.subcategory && item.category ? ' / ' : '' }}{{ item.category?.name }}
+                    {{ item.subcategory?.name }}{{ item.subcategory && item.category ? ' / ' : '' }}{{
+                    item.category?.name }}
                 </p>
                 }
             </div>

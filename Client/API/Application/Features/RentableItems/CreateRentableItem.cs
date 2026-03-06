@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.RentableItems;
 
 public record CreateRentableItemCommand(
-    string Title,
-    string Description,
+    string TitleAr,
+    string TitleEn,
+    string DescAr,
+    string DescEn,
     string? ShortDescription,
     decimal PricePerDay,
     decimal? PricePerWeek,
@@ -33,7 +35,7 @@ public record CreateRentableItemCommand(
 ) : IRequest<CreateRentableItemResponse>;
 
 public record CreateRentableItemImageCommand(
-    string ImageUrl,
+    Guid ImageId,
     string? ThumbnailUrl,
     string? AltText,
     int DisplayOrder,
@@ -50,11 +52,17 @@ public class CreateRentableItemCommandValidator : AbstractValidator<CreateRentab
 {
     public CreateRentableItemCommandValidator()
     {
-        RuleFor(x => x.Title)
+        RuleFor(x => x.TitleEn)
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+        RuleFor(x => x.TitleAr)
             .NotEmpty().WithMessage("Title is required.")
             .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
 
-        RuleFor(x => x.Description)
+        RuleFor(x => x.DescEn)
+            .NotEmpty().WithMessage("Description is required.")
+            .MaximumLength(4000).WithMessage("Description must not exceed 4000 characters.");
+        RuleFor(x => x.DescAr)
             .NotEmpty().WithMessage("Description is required.")
             .MaximumLength(4000).WithMessage("Description must not exceed 4000 characters.");
 
@@ -129,8 +137,10 @@ public class CreateRentableItemCommandHandler : IRequestHandler<CreateRentableIt
 
         var item = new RentableItem
         {
-            Title = request.Title,
-            Description = request.Description,
+            TitleAr = request.TitleAr,
+            TitleEn = request.TitleEn,
+            DescAr = request.DescAr,
+            DescEn = request.DescEn,
             ShortDescription = request.ShortDescription,
             PricePerDay = request.PricePerDay,
             PricePerWeek = request.PricePerWeek,
@@ -159,7 +169,7 @@ public class CreateRentableItemCommandHandler : IRequestHandler<CreateRentableIt
             {
                 item.Images.Add(new RentableItemImage
                 {
-                    ImageUrl = imageCommand.ImageUrl,
+                    ImageId = imageCommand.ImageId,
                     ThumbnailUrl = imageCommand.ThumbnailUrl,
                     AltText = imageCommand.AltText,
                     DisplayOrder = imageCommand.DisplayOrder,

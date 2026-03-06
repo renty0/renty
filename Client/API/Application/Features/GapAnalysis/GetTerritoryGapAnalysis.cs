@@ -29,7 +29,7 @@ public class GetTerritoryGapAnalysisQueryHandler : IRequestHandler<GetTerritoryG
                 s.Territory.Region, 
                 s.Territory.Country, 
                 CategoryId = s.Product.Subcategory.ProductCategoryId,
-                CategoryName = s.Product.Subcategory.Category.CategoryName 
+                CategoryName = s.Product.Subcategory.Category.NameEn 
             })
             .Select(g => new
             {

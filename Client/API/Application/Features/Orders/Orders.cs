@@ -64,7 +64,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
             var item = items.FirstOrDefault(x => x.Id == i.ItemId);
             if (item == null) return new CreateOrderResponse(false, $"Item {i.ItemId} not found.", null, null);
             if (item.Status != NewItemStatus.Available)
-                return new CreateOrderResponse(false, $"Item '{item.Title}' is not available.", null, null);
+                return new CreateOrderResponse(false, $"Item '{item.TitleEn}' is not available.", null, null);
         }
 
         var order = new Order
@@ -158,8 +158,8 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, GetOr
         var dto = new OrderDetailDto(
             order.Id, order.TotalAmount, order.Status.ToString(), order.CreatedAt,
             order.Items.Select(oi => new OrderItemDetailDto(
-                oi.ItemId, oi.Item.Title, oi.Quantity, oi.PriceAtTime,
-                oi.Item.Images.FirstOrDefault(i => i.IsPrimary)?.ImageUrl ?? oi.Item.Images.FirstOrDefault()?.ImageUrl
+                oi.ItemId, oi.Item.TitleEn, oi.Quantity, oi.PriceAtTime,
+                oi.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? oi.Item.Images.FirstOrDefault()?.Image?.StoragePath
             )).ToList(),
             order.Payments.OrderByDescending(p => p.CreatedAt).FirstOrDefault()?.Status.ToString(),
             order.DeliveryTrackings.OrderByDescending(d => d.UpdatedAt).FirstOrDefault()?.Status.ToString()

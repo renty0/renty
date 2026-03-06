@@ -12,9 +12,7 @@ public class RentableItemImageConfiguration : IEntityTypeConfiguration<RentableI
 
         builder.HasKey(i => i.Id);
 
-        builder.Property(i => i.ImageUrl)
-            .IsRequired()
-            .HasMaxLength(1000);
+        builder.Property(i => i.ImageId);
 
         builder.Property(i => i.ThumbnailUrl)
             .HasMaxLength(1000);

@@ -2,7 +2,7 @@ namespace Application.Common.Models;
 
 public record CategoryGapAnalysisDto(
     int CategoryId,
-    string CategoryName,
+    string CategoryNameEn,
     int UniqueProducts,
     int UniqueOrders,
     int TotalQuantitySold,
@@ -13,8 +13,8 @@ public record CategoryGapAnalysisDto(
 
 public record SubcategoryGapAnalysisDto(
     int SubcategoryId,
-    string SubcategoryName,
-    string CategoryName,
+    string SubcategoryNameEn,
+    string CategoryNameEn,
     int UniqueProducts,
     int UniqueOrders,
     int TotalQuantitySold,
@@ -28,7 +28,7 @@ public record TerritoryGapAnalysisDto(
     string Region,
     string Country,
     int CategoryId,
-    string CategoryName,
+    string CategoryNameEn,
     int UniqueOrders,
     int TotalQuantitySold,
     int UniqueCustomers,
@@ -49,7 +49,7 @@ public record GapAnalysisSummaryDto(
 
 public record GapActionPlanDto(
     int CategoryId,
-    string CategoryName,
+    string CategoryNameEn,
     decimal GapScore,
     string GapLevel,
     List<string> OperationalActions,
@@ -60,7 +60,7 @@ public record GapActionPlanDto(
 
 public record GapTrendDto(
     int CategoryId,
-    string CategoryName,
+    string CategoryNameEn,
     decimal PreviousGapScore,
     decimal CurrentGapScore,
     decimal GapChangePercentage,
@@ -85,8 +85,8 @@ public record SmartInsightDto(string Title, string Message, string Severity); //
 
 public record DeadStockDto(
     int ProductId,
-    string ProductName,
-    string CategoryName,
+    string ProductNameEn,
+    string CategoryNameEn,
     int SupplyCount,
     decimal TotalValue,
     int DaysSinceLastSale,
@@ -97,7 +97,7 @@ public record GapLevelCountDto(string Level, int Count);
 
 public record OpportunityLossDto(
     int CategoryId,
-    string CategoryName,
+    string CategoryNameEn,
     int DemandSupplyGap,
     decimal AveragePrice,
     decimal EstimatedOpportunityLoss,
@@ -109,6 +109,6 @@ public record GeographicHeatmapDto(
     List<CategoryGapScoreDto> CategoryGaps
 );
 
-public record CategoryGapScoreDto(string CategoryName, decimal GapScore, string GapLevel, int SupplyCount, int DemandCount);
+public record CategoryGapScoreDto(string CategoryNameEn, decimal GapScore, string GapLevel, int SupplyCount, int DemandCount);
 
 public record KpiRevenueTrendDto(string Month, decimal Revenue);

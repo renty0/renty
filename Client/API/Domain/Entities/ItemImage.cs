@@ -7,7 +7,8 @@ public class ItemImage
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid ItemId { get; set; }
-    public string ImageUrl { get; set; } = string.Empty;
+    public Guid ImageId { get; set; }
+    public virtual MediaFile Image { get; set; } = null!;
     public bool IsPrimary { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

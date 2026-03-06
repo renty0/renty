@@ -10,8 +10,11 @@ public class Item
     public Guid Id { get; set; } = Guid.NewGuid();
     public int ProductKey { get; set; }
     public long OwnerId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public string TitleAr { get; set; } = string.Empty;
+    public string TitleEn { get; set; } = string.Empty;
+
+    public string? DescAr { get; set; }
+    public string? DescEn { get; set; }
     public ItemType Type { get; set; } = ItemType.Standard;
     public NewItemStatus Status { get; set; } = NewItemStatus.Available;
     public string? Condition { get; set; }   // new, like_new, good, fair

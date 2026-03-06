@@ -5,8 +5,10 @@ namespace Domain.Entities;
 
 public class RentableItem : BaseAuditableEntity
 {
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string TitleAr { get; set; } = string.Empty;
+    public string TitleEn { get; set; } = string.Empty;
+    public string DescAr { get; set; } = string.Empty;
+    public string DescEn { get; set; } = string.Empty;
     public string? ShortDescription { get; set; }
     public decimal PricePerDay { get; set; }
     public decimal? PricePerWeek { get; set; }

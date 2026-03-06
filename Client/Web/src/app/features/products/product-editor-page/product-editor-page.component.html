@@ -15,11 +15,17 @@
             <div class="card">
                 <h3>{{ 'products.sections.general' | translate }}</h3>
                 <div class="field-group">
-                    <app-input label="products.fields.name" [formGroup]="form" controlName="title" [required]="true"
+                    <app-input label="labels.nameEn" [formGroup]="form" controlName="titleEn" [required]="true"
                         placeholder="products.placeholders.name">
                     </app-input>
-                    <app-input label="products.fields.description" [formGroup]="form" controlName="description"
-                        type="textarea" [height]="120" placeholder="products.placeholders.description">
+                    <app-input label="labels.nameAr" [formGroup]="form" controlName="titleAr" [required]="true"
+                        placeholder="products.placeholders.name">
+                    </app-input>
+                    <app-input label="labels.descEn" [formGroup]="form" controlName="descEn" type="textarea"
+                        [height]="120" placeholder="products.placeholders.description">
+                    </app-input>
+                    <app-input label="labels.descAr" [formGroup]="form" controlName="descAr" type="textarea"
+                        [height]="120" placeholder="products.placeholders.description">
                     </app-input>
                 </div>
             </div>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Subcategories;
 
-public record CreateSubcategoryCommand(string SubcategoryName, string? Description, int CategoryId, Guid? LogoId) : IRequest<CreateSubcategoryResponse>;
+public record CreateSubcategoryCommand(string NameAr, string NameEn, string? DescAr, string? DescEn, int CategoryId, Guid? LogoId) : IRequest<CreateSubcategoryResponse>;
 
 public record CreateSubcategoryResponse(
     bool Success,
@@ -20,12 +20,13 @@ public class CreateSubcategoryCommandValidator : AbstractValidator<CreateSubcate
 {
     public CreateSubcategoryCommandValidator()
     {
-        RuleFor(x => x.SubcategoryName)
-            .NotEmpty().WithMessage("Subcategory name is required.")
-            .MaximumLength(100).WithMessage("Subcategory name must not exceed 100 characters.");
-
-        RuleFor(x => x.Description)
-            .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
+        RuleFor(x => x.NameEn)
+            .NotEmpty().WithMessage("Subcategory English name is required.")
+            .MaximumLength(100).WithMessage("Subcategory English name must not exceed 100 characters.");
+            
+        RuleFor(x => x.NameAr)
+            .NotEmpty().WithMessage("Subcategory Arabic name is required.")
+            .MaximumLength(100).WithMessage("Subcategory Arabic name must not exceed 100 characters.");
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("Invalid category ID.");
@@ -55,8 +56,10 @@ public class CreateSubcategoryCommandHandler : IRequestHandler<CreateSubcategory
 
         var subcategory = new ProductSubcategory
         {
-            SubcategoryName = request.SubcategoryName,
-            Description = request.Description ?? string.Empty,
+            NameAr = request.NameAr ?? string.Empty,
+            NameEn = request.NameEn ?? string.Empty,
+            DescAr = request.DescAr,
+            DescEn = request.DescEn,
             ProductCategoryId = request.CategoryId,
             LogoId = request.LogoId
         };
@@ -79,15 +82,15 @@ public class CreateSubcategoryCommandHandler : IRequestHandler<CreateSubcategory
             }
         }
 
-        var category = await _context.ProductCategories.FindAsync(new object[] { request.CategoryId }, cancellationToken);
         var dto = new ProductSubcategoryDto(
             subcategory.Id,
-            subcategory.SubcategoryName,
-            subcategory.Description,
+            subcategory.NameAr,
+            subcategory.NameEn,
+            subcategory.DescAr,
+            subcategory.DescEn,
             subcategory.LogoId,
             logoUrl,
             subcategory.ProductCategoryId,
-            category!.CategoryName,
             0,
             subcategory.Created,
             subcategory.LastModified

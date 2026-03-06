@@ -26,6 +26,7 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             .Include(i => i.Owner)
             .Include(i => i.Pricing)
             .Include(i => i.Images)
+                .ThenInclude(img => img.Image)
             .Include(i => i.Category)
             .Include(i => i.Subcategory)
             .Include(i => i.Brand)
@@ -49,8 +50,10 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
 
         var dto = new ItemDetailDto(
             item.Id,
-            item.Title,
-            item.Description,
+            item.TitleAr,
+            item.TitleEn,
+            item.DescAr,
+            item.DescEn,
             item.Type.ToString(),
             item.Status.ToString(),
             item.Condition,
@@ -62,12 +65,12 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.CreatedAt,
             new OwnerDto(item.Owner.FirstName, item.Owner.City, item.Owner.ProfilePictureUrl),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
-            item.Images.Select(img => new ItemImageDto(img.Id, img.ImageUrl, img.IsPrimary)).ToList(),
+            item.Images.Select(img => new ItemImageDto(img.Id, img.Image != null ? "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/') : "", img.IsPrimary)).ToList(),
             0, // avg rating
             0, // review count
-            item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.CategoryName) : null,
-            item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.SubcategoryName) : null,
-            item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.Name) : null
+            item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameEn) : null,
+            item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameEn) : null,
+            item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameEn) : null
         );
 
         return new GetItemByIdResponse(true, null, dto);

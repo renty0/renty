@@ -79,7 +79,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         {
             entity.ToTable("brands");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.NameEn).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.NameAr).IsRequired().HasMaxLength(100);
         });
 
         builder.Entity<Item>(entity =>
@@ -89,8 +90,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.ProductKey).HasColumnName("product_key");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
-            entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(200);
-            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.TitleEn).HasColumnName("title_en").HasMaxLength(200);
+            entity.Property(e => e.TitleAr).HasColumnName("title_ar").HasMaxLength(200);
+            entity.Property(e => e.DescEn).HasColumnName("desc_en");
+            entity.Property(e => e.DescAr).HasColumnName("desc_ar");
             entity.Property(e => e.Type).HasColumnName("type").HasConversion<string>();
             entity.Property(e => e.Status).HasColumnName("status").HasConversion<string>();
             entity.Property(e => e.Condition).HasColumnName("condition").HasMaxLength(50);
@@ -128,7 +131,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
-            entity.Property(e => e.ImageUrl).HasColumnName("image_url").HasMaxLength(500);
+            entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.IsPrimary).HasColumnName("is_primary");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.HasOne(e => e.Item).WithMany(i => i.Images).HasForeignKey(e => e.ItemId);

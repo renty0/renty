@@ -15,7 +15,7 @@
             <!-- Left: Image Gallery -->
             <div class="gallery-section">
                 <div class="main-image">
-                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="item()?.title">
+                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="getLocalizedName(item()!)">
                 </div>
                 @if (item()?.images?.length) {
                 <div class="thumbnails">
@@ -36,7 +36,7 @@
                         {{ item()?.category?.name }}
                         @if (item()?.subcategory?.name) { / {{ item()?.subcategory?.name }} }
                     </span>
-                    <h1>{{ item()?.title }}</h1>
+                    <h1>{{ getLocalizedName(item()!) }}</h1>
                     @if (item()?.condition) {
                     <div class="condition-badge">{{ item()?.condition }}</div>
                     }
@@ -53,7 +53,7 @@
                     }
                 </div>
 
-                <p class="short-desc">{{ item()?.description }}</p>
+                <p class="short-desc">{{ getLocalizedDesc(item()!) }}</p>
 
                 @if (item()?.avgRating) {
                 <div class="rating-row">
@@ -73,7 +73,7 @@
                 <mat-tab-group class="details-tabs">
                     <mat-tab [label]="'product_details.description' | translate">
                         <div class="tab-content">
-                            <p>{{ item()?.description }}</p>
+                            <p>{{ getLocalizedDesc(item()!) }}</p>
                         </div>
                     </mat-tab>
                     <mat-tab [label]="'product_details.specifications' | translate">
@@ -112,10 +112,11 @@
             @for (related of relatedItems(); track related.id) {
             <div class="product-card mini" [routerLink]="['/marketplace/product', related.id]">
                 <div class="img-container">
-                    <img [src]="related.primaryImage || 'assets/images/placeholder.png'" [alt]="related.title">
+                    <img [src]="related.primaryImage || 'assets/images/placeholder.png'"
+                        [alt]="getLocalizedName(related)">
                 </div>
                 <div class="info">
-                    <h3>{{ related.title }}</h3>
+                    <h3>{{ getLocalizedName(related) }}</h3>
                     <div class="price">{{ related.dailyPrice | currency }}<small>/day</small></div>
                 </div>
             </div>

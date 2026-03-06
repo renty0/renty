@@ -1,0 +1,323 @@
+﻿Using launch settings from E:\Courses\Work\renty\Client\API\Web\Properties\launchSettings.json...
+Building...
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8 [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc [E:\Courses\Work\renty\Client\API\Web\Web.csproj]
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+E:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (14ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+          "MigrationId" character varying(150) NOT NULL,
+          "ProductVersion" character varying(32) NOT NULL,
+          CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      LOCK TABLE "__EFMigrationsHistory" IN ACCESS EXCLUSIVE MODE
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20260306010215_SyncModelChanges'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE "ProductCategories" DROP CONSTRAINT "FK_ProductCategories_MediaFiles_logoid";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE "ProductCategories" RENAME COLUMN logoid TO "LogoId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE "ProductCategories" RENAME COLUMN lastmodifiedby TO "LastModifiedBy";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE "ProductCategories" RENAME COLUMN lastmodified TO "LastModified";
+fail: Microsoft.EntityFrameworkCore.Database.Command[20102]
+      Failed executing DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      ALTER TABLE "ProductCategories" RENAME COLUMN description TO "Description";
+fail: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      An error occurred while initialising the database.
+      Npgsql.PostgresException (0x80004005): 42703: column "description" does not exist
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+         at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteAsync(IReadOnlyList`1 migrationCommands, IRelationalConnection connection, MigrationExecutionState executionState, Boolean beginTransaction, Boolean commitTransaction, Nullable`1 isolationLevel, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteAsync(IReadOnlyList`1 migrationCommands, IRelationalConnection connection, MigrationExecutionState executionState, Boolean beginTransaction, Boolean commitTransaction, Nullable`1 isolationLevel, CancellationToken cancellationToken)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteNonQueryAsync(IReadOnlyList`1 migrationCommands, IRelationalConnection connection, MigrationExecutionState executionState, Boolean commitTransaction, Nullable`1 isolationLevel, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateImplementationAsync(DbContext context, String targetMigration, MigrationExecutionState state, Boolean useTransaction, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.<>c.<<MigrateAsync>b__22_1>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.MigrateAsync(String targetMigration, CancellationToken cancellationToken)
+         at Infrastructure.Data.ApplicationDbContextInitialiser.InitialiseAsync() in E:\Courses\Work\renty\Client\API\Infrastructure\Data\ApplicationDbContextInitialiser.cs:line 32
+        Exception data:
+          Severity: ERROR
+          SqlState: 42703
+          MessageText: column "description" does not exist
+          File: tablecmds.c
+          Line: 3809
+          Routine: renameatt_internal
+dotnet : Unhandled 
+exception. Npgsql.Postg
+resException 
+(0x80004005): 42703: 
+column "description" 
+does not exist
+At line:1 char:1
++ dotnet run > 
+run_error2.txt 2>&1; 
+Get-Content 
+run_error2.txt | 
+Out-Fi ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Unhandled exc   
+ ep... does not exi    
+st:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+   at Npgsql.Internal.N
+pgsqlConnector.ReadMess
+ageLong(Boolean async, 
+DataRowLoadingMode 
+dataRowLoadingMode, 
+Boolean 
+readingNotifications, 
+Boolean isReadingPrepen
+dedMessage)
+   at System.Runtime.Co
+mpilerServices.PoolingA
+syncValueTaskMethodBuil
+der`1.StateMachineBox`1
+.System.Threading.Tasks
+.Sources.IValueTaskSour
+ce<TResult>.GetResult(I
+nt16 token)
+   at Npgsql.NpgsqlData
+Reader.NextResult(Boole
+an async, Boolean 
+isConsuming, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.NpgsqlData
+Reader.NextResult(Boole
+an async, Boolean 
+isConsuming, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.NpgsqlComm
+and.ExecuteReader(Boole
+an async, 
+CommandBehavior 
+behavior, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.NpgsqlComm
+and.ExecuteReader(Boole
+an async, 
+CommandBehavior 
+behavior, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.NpgsqlComm
+and.ExecuteNonQuery(Boo
+lean async, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Storage.Re
+lationalCommand.Execute
+NonQueryAsync(Relationa
+lCommandParameterObject
+ parameterObject, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Storage.Re
+lationalCommand.Execute
+NonQueryAsync(Relationa
+lCommandParameterObject
+ parameterObject, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Storage.Re
+lationalCommand.Execute
+NonQueryAsync(Relationa
+lCommandParameterObject
+ parameterObject, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.MigrationComm
+andExecutor.ExecuteAsyn
+c(IReadOnlyList`1 
+migrationCommands, 
+IRelationalConnection 
+connection, MigrationEx
+ecutionState 
+executionState, 
+Boolean 
+beginTransaction, 
+Boolean 
+commitTransaction, 
+Nullable`1 
+isolationLevel, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.MigrationComm
+andExecutor.ExecuteAsyn
+c(IReadOnlyList`1 
+migrationCommands, 
+IRelationalConnection 
+connection, MigrationEx
+ecutionState 
+executionState, 
+Boolean 
+beginTransaction, 
+Boolean 
+commitTransaction, 
+Nullable`1 
+isolationLevel, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.EntityFram
+eworkCore.PostgreSQL.St
+orage.Internal.NpgsqlEx
+ecutionStrategy.Execute
+Async[TState,TResult](T
+State state, Func`4 
+operation, Func`4 
+verifySucceeded, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.MigrationComm
+andExecutor.ExecuteNonQ
+ueryAsync(IReadOnlyList
+`1 migrationCommands, 
+IRelationalConnection 
+connection, MigrationEx
+ecutionState 
+executionState, 
+Boolean 
+commitTransaction, 
+Nullable`1 
+isolationLevel, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.Migrator.Migr
+ateImplementationAsync(
+DbContext context, 
+String 
+targetMigration, Migrat
+ionExecutionState 
+state, Boolean 
+useTransaction, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.Migrator.Migr
+ateImplementationAsync(
+DbContext context, 
+String 
+targetMigration, Migrat
+ionExecutionState 
+state, Boolean 
+useTransaction, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.Migrator.<>c.
+<<MigrateAsync>b__22_1>
+d.MoveNext()
+--- End of stack trace 
+from previous location 
+---
+   at Npgsql.EntityFram
+eworkCore.PostgreSQL.St
+orage.Internal.NpgsqlEx
+ecutionStrategy.Execute
+Async[TState,TResult](T
+State state, Func`4 
+operation, Func`4 
+verifySucceeded, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.Migrator.Migr
+ateAsync(String 
+targetMigration, 
+CancellationToken 
+cancellationToken)
+   at Microsoft.EntityF
+rameworkCore.Migrations
+.Internal.Migrator.Migr
+ateAsync(String 
+targetMigration, 
+CancellationToken 
+cancellationToken)
+   at Npgsql.EntityFram
+eworkCore.PostgreSQL.Mi
+grations.Internal.Npgsq
+lMigrator.MigrateAsync(
+String 
+targetMigration, 
+CancellationToken 
+cancellationToken)
+   at Infrastructure.Da
+ta.ApplicationDbContext
+Initialiser.InitialiseA
+sync() in E:\Courses\Wo
+rk\renty\Client\API\Inf
+rastructure\Data\Applic
+ationDbContextInitialis
+er.cs:line 32
+   at Program.<Main>$(S
+tring[] args) in E:\Cou
+rses\Work\renty\Client\
+API\Web\Program.cs:line
+ 23
+   at Program.<Main>(St
+ring[] args)
+  Exception data:
+    Severity: ERROR
+    SqlState: 42703
+    MessageText: 
+column "description" 
+does not exist
+    File: tablecmds.c
+    Line: 3809
+    Routine: 
+renameatt_internal

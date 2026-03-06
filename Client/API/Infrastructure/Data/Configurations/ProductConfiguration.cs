@@ -16,15 +16,22 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(p => p.ProductName)
+        builder.Property(p => p.NameEn)
+            .IsRequired()
+            .HasMaxLength(200);
+
+        builder.Property(p => p.NameAr)
             .IsRequired()
             .HasMaxLength(200);
 
         builder.Property(p => p.ModelName)
             .HasMaxLength(100);
 
-        builder.Property(p => p.ProductDescription)
-            .HasMaxLength(1000);
+        builder.Property(p => p.DescEn)
+            .HasMaxLength(4000);
+
+        builder.Property(p => p.DescAr)
+            .HasMaxLength(4000);
 
         builder.Property(p => p.ProductColor)
             .HasMaxLength(50);
@@ -53,7 +60,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Ignore(p => p.ProfitMargin);
 
         builder.HasIndex(p => p.ProductSku).IsUnique();
-        builder.HasIndex(p => p.ProductName);
+        builder.HasIndex(p => p.NameEn);
+        builder.HasIndex(p => p.NameAr);
         builder.HasIndex(p => p.ProductSubcategoryId);
     }
 }

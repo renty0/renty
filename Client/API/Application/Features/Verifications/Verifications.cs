@@ -16,7 +16,7 @@ public record VerificationDto(
 
 public record AssignedVerificationDto(
     Guid VerificationId,
-    string ItemTitle, string? ItemImage,
+    string ItemTitleAr, string ItemTitleEn, string? ItemImage,
     DateTime? RentalStartDate, DateTime? RentalEndDate,
     string CheckType, DateTime CreatedAt
 );
@@ -151,9 +151,10 @@ public class GetExpertAssignedQueryHandler : IRequestHandler<GetExpertAssignedQu
             .OrderByDescending(v => v.CreatedAt)
             .Select(v => new AssignedVerificationDto(
                 v.Id,
-                v.Item.Title,
-                v.Item.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                    ?? v.Item.Images.Select(i => i.ImageUrl).FirstOrDefault(),
+                v.Item.TitleAr,
+                v.Item.TitleEn,
+                v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                    ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
                 v.Rental != null ? v.Rental.StartDate : null,
                 v.Rental != null ? v.Rental.EndDate : null,
                 v.CheckType.ToString(),

@@ -143,6 +143,65 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
+    authSendVerification(command: SendEmailConfirmationCommand): Observable<ApiResponseOfObject> {
+        let url_ = this.baseUrl + "/api/v1/auth/send-verification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthSendVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthSendVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+        }));
+    }
+
+    protected processAuthSendVerification(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponseOfObject.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponseOfObject.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     authLogin(command: LoginCommand): Observable<ApiResponseOfAuthLoginData> {
         let url_ = this.baseUrl + "/api/v1/auth/login";
         url_ = url_.replace(/[?&]$/, "");
@@ -4750,6 +4809,42 @@ export interface IConfirmEmailCommand {
     code?: string;
 }
 
+export class SendEmailConfirmationCommand implements ISendEmailConfirmationCommand {
+    email?: string;
+
+    constructor(data?: ISendEmailConfirmationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): SendEmailConfirmationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new SendEmailConfirmationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        return data;
+    }
+}
+
+export interface ISendEmailConfirmationCommand {
+    email?: string;
+}
+
 export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
     success?: boolean;
     successCode?: number | undefined;
@@ -5287,8 +5382,8 @@ export interface IAuthMeData {
 }
 
 export class UpdateUserCommand implements IUpdateUserCommand {
-    firstName?: string;
-    lastName?: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -5340,8 +5435,8 @@ export class UpdateUserCommand implements IUpdateUserCommand {
 }
 
 export interface IUpdateUserCommand {
-    firstName?: string;
-    lastName?: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
     phoneNumber?: string | undefined;
     address?: string | undefined;
     city?: string | undefined;
@@ -5440,7 +5535,8 @@ export interface IApiResponseOfListOfItemListDto {
 
 export class ItemListDto implements IItemListDto {
     id?: string;
-    title?: string;
+    titleAr?: string;
+    titleEn?: string;
     dailyPrice?: number | undefined;
     city?: string | undefined;
     primaryImage?: string | undefined;
@@ -5464,7 +5560,8 @@ export class ItemListDto implements IItemListDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.title = _data["title"];
+            this.titleAr = _data["titleAr"];
+            this.titleEn = _data["titleEn"];
             this.dailyPrice = _data["dailyPrice"];
             this.city = _data["city"];
             this.primaryImage = _data["primaryImage"];
@@ -5488,7 +5585,8 @@ export class ItemListDto implements IItemListDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["title"] = this.title;
+        data["titleAr"] = this.titleAr;
+        data["titleEn"] = this.titleEn;
         data["dailyPrice"] = this.dailyPrice;
         data["city"] = this.city;
         data["primaryImage"] = this.primaryImage;
@@ -5505,7 +5603,8 @@ export class ItemListDto implements IItemListDto {
 
 export interface IItemListDto {
     id?: string;
-    title?: string;
+    titleAr?: string;
+    titleEn?: string;
     dailyPrice?: number | undefined;
     city?: string | undefined;
     primaryImage?: string | undefined;
@@ -5756,8 +5855,10 @@ export interface IItemCreateData {
 
 export class CreateItemCommand implements ICreateItemCommand {
     productKey?: number;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string | undefined;
+    titleEn?: string | undefined;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
@@ -5783,8 +5884,10 @@ export class CreateItemCommand implements ICreateItemCommand {
     init(_data?: any) {
         if (_data) {
             this.productKey = _data["productKey"];
-            this.title = _data["title"];
-            this.description = _data["description"];
+            this.titleAr = _data["titleAr"];
+            this.titleEn = _data["titleEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.type = _data["type"];
             this.condition = _data["condition"];
             this.defaultDeposit = _data["defaultDeposit"];
@@ -5818,8 +5921,10 @@ export class CreateItemCommand implements ICreateItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["productKey"] = this.productKey;
-        data["title"] = this.title;
-        data["description"] = this.description;
+        data["titleAr"] = this.titleAr;
+        data["titleEn"] = this.titleEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["type"] = this.type;
         data["condition"] = this.condition;
         data["defaultDeposit"] = this.defaultDeposit;
@@ -5846,8 +5951,10 @@ export class CreateItemCommand implements ICreateItemCommand {
 
 export interface ICreateItemCommand {
     productKey?: number;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string | undefined;
+    titleEn?: string | undefined;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
@@ -5903,7 +6010,7 @@ export interface ICreateItemPricingCommand {
 }
 
 export class CreateItemImageCommand implements ICreateItemImageCommand {
-    imageUrl?: string;
+    imageId?: string;
     isPrimary?: boolean;
 
     constructor(data?: ICreateItemImageCommand) {
@@ -5917,7 +6024,7 @@ export class CreateItemImageCommand implements ICreateItemImageCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.imageUrl = _data["imageUrl"];
+            this.imageId = _data["imageId"];
             this.isPrimary = _data["isPrimary"];
         }
     }
@@ -5931,14 +6038,14 @@ export class CreateItemImageCommand implements ICreateItemImageCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["imageUrl"] = this.imageUrl;
+        data["imageId"] = this.imageId;
         data["isPrimary"] = this.isPrimary;
         return data;
     }
 }
 
 export interface ICreateItemImageCommand {
-    imageUrl?: string;
+    imageId?: string;
     isPrimary?: boolean;
 }
 
@@ -6024,8 +6131,10 @@ export interface IApiResponseOfItemDetailDto {
 
 export class ItemDetailDto implements IItemDetailDto {
     id?: string;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string;
+    titleEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string;
     status?: string;
     condition?: string | undefined;
@@ -6056,8 +6165,10 @@ export class ItemDetailDto implements IItemDetailDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.title = _data["title"];
-            this.description = _data["description"];
+            this.titleAr = _data["titleAr"];
+            this.titleEn = _data["titleEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.type = _data["type"];
             this.status = _data["status"];
             this.condition = _data["condition"];
@@ -6096,8 +6207,10 @@ export class ItemDetailDto implements IItemDetailDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["title"] = this.title;
-        data["description"] = this.description;
+        data["titleAr"] = this.titleAr;
+        data["titleEn"] = this.titleEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["type"] = this.type;
         data["status"] = this.status;
         data["condition"] = this.condition;
@@ -6129,8 +6242,10 @@ export class ItemDetailDto implements IItemDetailDto {
 
 export interface IItemDetailDto {
     id?: string;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string;
+    titleEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string;
     status?: string;
     condition?: string | undefined;
@@ -6280,8 +6395,10 @@ export interface IItemImageDto {
 
 export class UpdateItemCommand implements IUpdateItemCommand {
     itemId?: string;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string | undefined;
+    titleEn?: string | undefined;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
@@ -6307,8 +6424,10 @@ export class UpdateItemCommand implements IUpdateItemCommand {
     init(_data?: any) {
         if (_data) {
             this.itemId = _data["itemId"];
-            this.title = _data["title"];
-            this.description = _data["description"];
+            this.titleAr = _data["titleAr"];
+            this.titleEn = _data["titleEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.type = _data["type"];
             this.condition = _data["condition"];
             this.defaultDeposit = _data["defaultDeposit"];
@@ -6342,8 +6461,10 @@ export class UpdateItemCommand implements IUpdateItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["itemId"] = this.itemId;
-        data["title"] = this.title;
-        data["description"] = this.description;
+        data["titleAr"] = this.titleAr;
+        data["titleEn"] = this.titleEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["type"] = this.type;
         data["condition"] = this.condition;
         data["defaultDeposit"] = this.defaultDeposit;
@@ -6370,8 +6491,10 @@ export class UpdateItemCommand implements IUpdateItemCommand {
 
 export interface IUpdateItemCommand {
     itemId?: string;
-    title?: string;
-    description?: string | undefined;
+    titleAr?: string | undefined;
+    titleEn?: string | undefined;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     type?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
@@ -7760,7 +7883,8 @@ export interface IGetExpertAssignedResponse {
 
 export class AssignedVerificationDto implements IAssignedVerificationDto {
     verificationId?: string;
-    itemTitle?: string;
+    itemTitleAr?: string;
+    itemTitleEn?: string;
     itemImage?: string | undefined;
     rentalStartDate?: Date | undefined;
     rentalEndDate?: Date | undefined;
@@ -7779,7 +7903,8 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
     init(_data?: any) {
         if (_data) {
             this.verificationId = _data["verificationId"];
-            this.itemTitle = _data["itemTitle"];
+            this.itemTitleAr = _data["itemTitleAr"];
+            this.itemTitleEn = _data["itemTitleEn"];
             this.itemImage = _data["itemImage"];
             this.rentalStartDate = _data["rentalStartDate"] ? new Date(_data["rentalStartDate"].toString()) : undefined as any;
             this.rentalEndDate = _data["rentalEndDate"] ? new Date(_data["rentalEndDate"].toString()) : undefined as any;
@@ -7798,7 +7923,8 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["verificationId"] = this.verificationId;
-        data["itemTitle"] = this.itemTitle;
+        data["itemTitleAr"] = this.itemTitleAr;
+        data["itemTitleEn"] = this.itemTitleEn;
         data["itemImage"] = this.itemImage;
         data["rentalStartDate"] = this.rentalStartDate ? this.rentalStartDate.toISOString() : undefined as any;
         data["rentalEndDate"] = this.rentalEndDate ? this.rentalEndDate.toISOString() : undefined as any;
@@ -7810,7 +7936,8 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
 
 export interface IAssignedVerificationDto {
     verificationId?: string;
-    itemTitle?: string;
+    itemTitleAr?: string;
+    itemTitleEn?: string;
     itemImage?: string | undefined;
     rentalStartDate?: Date | undefined;
     rentalEndDate?: Date | undefined;
@@ -7948,12 +8075,13 @@ export interface IApiResponseOfListOfProductSubcategoryDto {
 
 export class ProductSubcategoryDto implements IProductSubcategoryDto {
     id?: number;
-    subcategoryName?: string;
-    description?: string;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
-    categoryName?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
@@ -7970,12 +8098,13 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.categoryId = _data["categoryId"];
-            this.categoryName = _data["categoryName"];
             this.productCount = _data["productCount"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : undefined as any;
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
@@ -7992,12 +8121,13 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["categoryId"] = this.categoryId;
-        data["categoryName"] = this.categoryName;
         data["productCount"] = this.productCount;
         data["created"] = this.created ? this.created.toISOString() : undefined as any;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : undefined as any;
@@ -8007,12 +8137,13 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
 
 export interface IProductSubcategoryDto {
     id?: number;
-    subcategoryName?: string;
-    description?: string;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
-    categoryName?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
@@ -11820,8 +11951,10 @@ export interface IApiResponseOfListOfProductCategoryDto {
 
 export class ProductCategoryDto implements IProductCategoryDto {
     id?: number;
-    categoryName?: string;
-    description?: string;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     subcategoryCount?: number;
@@ -11840,8 +11973,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.subcategoryCount = _data["subcategoryCount"];
@@ -11860,8 +11995,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["subcategoryCount"] = this.subcategoryCount;
@@ -11873,8 +12010,10 @@ export class ProductCategoryDto implements IProductCategoryDto {
 
 export interface IProductCategoryDto {
     id?: number;
-    categoryName?: string;
-    description?: string;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     subcategoryCount?: number;
@@ -11963,8 +12102,10 @@ export interface IApiResponseOfProductCategoryDto {
 }
 
 export class CreateCategoryCommand implements ICreateCategoryCommand {
-    categoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
 
     constructor(data?: ICreateCategoryCommand) {
@@ -11978,8 +12119,10 @@ export class CreateCategoryCommand implements ICreateCategoryCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.logoId = _data["logoId"];
         }
     }
@@ -11993,23 +12136,29 @@ export class CreateCategoryCommand implements ICreateCategoryCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["logoId"] = this.logoId;
         return data;
     }
 }
 
 export interface ICreateCategoryCommand {
-    categoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
 }
 
 export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     id?: number;
-    categoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
 
     constructor(data?: IUpdateCategoryCommand) {
@@ -12024,8 +12173,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.categoryName = _data["categoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.logoId = _data["logoId"];
         }
     }
@@ -12040,8 +12191,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["categoryName"] = this.categoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["logoId"] = this.logoId;
         return data;
     }
@@ -12049,8 +12202,10 @@ export class UpdateCategoryCommand implements IUpdateCategoryCommand {
 
 export interface IUpdateCategoryCommand {
     id?: number;
-    categoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     logoId?: string | undefined;
 }
 
@@ -12135,8 +12290,10 @@ export interface IApiResponseOfProductSubcategoryDto {
 }
 
 export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 
@@ -12151,8 +12308,10 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.categoryId = _data["categoryId"];
             this.logoId = _data["logoId"];
         }
@@ -12167,8 +12326,10 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["categoryId"] = this.categoryId;
         data["logoId"] = this.logoId;
         return data;
@@ -12176,16 +12337,20 @@ export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
 }
 
 export interface ICreateSubcategoryCommand {
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 }
 
 export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     id?: number;
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 
@@ -12201,8 +12366,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.subcategoryName = _data["subcategoryName"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
             this.categoryId = _data["categoryId"];
             this.logoId = _data["logoId"];
         }
@@ -12218,8 +12385,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["subcategoryName"] = this.subcategoryName;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
         data["categoryId"] = this.categoryId;
         data["logoId"] = this.logoId;
         return data;
@@ -12228,8 +12397,10 @@ export class UpdateSubcategoryCommand implements IUpdateSubcategoryCommand {
 
 export interface IUpdateSubcategoryCommand {
     id?: number;
-    subcategoryName?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
     categoryId?: number;
     logoId?: string | undefined;
 }
@@ -12324,8 +12495,11 @@ export interface IApiResponseOfListOfBrandDto {
 
 export class BrandDto implements IBrandDto {
     id?: number;
-    name?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
     logoUrl?: string | undefined;
     itemCount?: number;
 
@@ -12341,8 +12515,11 @@ export class BrandDto implements IBrandDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
+            this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.itemCount = _data["itemCount"];
         }
@@ -12358,8 +12535,11 @@ export class BrandDto implements IBrandDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
+        data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["itemCount"] = this.itemCount;
         return data;
@@ -12368,8 +12548,11 @@ export class BrandDto implements IBrandDto {
 
 export interface IBrandDto {
     id?: number;
-    name?: string;
-    description?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
     logoUrl?: string | undefined;
     itemCount?: number;
 }
@@ -12455,9 +12638,11 @@ export interface IApiResponseOfBrandDto {
 }
 
 export class CreateBrandCommand implements ICreateBrandCommand {
-    name?: string;
-    description?: string | undefined;
-    logoUrl?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
 
     constructor(data?: ICreateBrandCommand) {
         if (data) {
@@ -12470,9 +12655,11 @@ export class CreateBrandCommand implements ICreateBrandCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.logoUrl = _data["logoUrl"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
+            this.logoId = _data["logoId"];
         }
     }
 
@@ -12485,24 +12672,30 @@ export class CreateBrandCommand implements ICreateBrandCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["logoUrl"] = this.logoUrl;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
+        data["logoId"] = this.logoId;
         return data;
     }
 }
 
 export interface ICreateBrandCommand {
-    name?: string;
-    description?: string | undefined;
-    logoUrl?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
 }
 
 export class UpdateBrandCommand implements IUpdateBrandCommand {
     id?: number;
-    name?: string;
-    description?: string | undefined;
-    logoUrl?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
 
     constructor(data?: IUpdateBrandCommand) {
         if (data) {
@@ -12516,9 +12709,11 @@ export class UpdateBrandCommand implements IUpdateBrandCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.logoUrl = _data["logoUrl"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
+            this.descAr = _data["descAr"];
+            this.descEn = _data["descEn"];
+            this.logoId = _data["logoId"];
         }
     }
 
@@ -12532,18 +12727,22 @@ export class UpdateBrandCommand implements IUpdateBrandCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["logoUrl"] = this.logoUrl;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
+        data["descAr"] = this.descAr;
+        data["descEn"] = this.descEn;
+        data["logoId"] = this.logoId;
         return data;
     }
 }
 
 export interface IUpdateBrandCommand {
     id?: number;
-    name?: string;
-    description?: string | undefined;
-    logoUrl?: string | undefined;
+    nameAr?: string;
+    nameEn?: string;
+    descAr?: string | undefined;
+    descEn?: string | undefined;
+    logoId?: string | undefined;
 }
 
 export interface FileParameter {

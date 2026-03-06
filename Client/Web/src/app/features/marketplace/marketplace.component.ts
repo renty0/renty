@@ -175,4 +175,19 @@ export class MarketplaceComponent implements OnInit {
     this.selectedCategoryId.set(undefined);
     this.selectedSubcategoryId.set(undefined);
   }
+
+  getLocalizedCatName(cat: ProductCategoryDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    return isAr ? (cat.nameAr || cat.nameEn || '') : (cat.nameEn || cat.nameAr || '');
+  }
+
+  getLocalizedSubName(sub: ProductSubcategoryDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    return isAr ? (sub.nameAr || sub.nameEn || '') : (sub.nameEn || sub.nameAr || '');
+  }
+
+  getLocalizedTitle(item: ItemListDto): string {
+    const isAr = this.translate.currentLang === 'ar';
+    return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
+  }
 }

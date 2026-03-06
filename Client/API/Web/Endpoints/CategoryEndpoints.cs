@@ -21,11 +21,15 @@ public static class CategoryEndpoints
             [Microsoft.AspNetCore.Mvc.FromQuery] string? sortOrder,
             ISender sender) =>
         {
+            var pageNumber = page < 1 ? 1 : page;
+            var pageSize = limit < 1 ? 50 : limit;
             var r = await sender.Send(new GetCategoriesQuery
             {
                 SearchTerm = search,
-                PageNumber = page < 1 ? 1 : page,
-                PageSize   = limit < 1 ? 50 : limit
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortBy = sortBy,
+                SortOrder = sortOrder
             });
             var data = new PagedResult<ProductCategoryDto>(
                 r.Items ?? [], r.TotalCount, r.PageNumber, r.TotalPages,

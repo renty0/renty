@@ -123,11 +123,14 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
       next: (response: any) => {
         clearInterval(progressInterval);
         this.uploadProgress = 100;
-        if (response.id) {
-          this.formControl?.setValue(response.id);
-          this.fileId = response.id;
-          this.imageUrl = response.urls?.medium || response.url || '';
-          this.imageName = response.originalFileName || this.selectedFile!.name;
+
+        const data = response?.data || response; // Support both unwrapped and wrapped
+
+        if (data && data.id) {
+          this.formControl?.setValue(data.id);
+          this.fileId = data.id;
+          this.imageUrl = data.urls?.medium || data.url || '';
+          this.imageName = data.originalFileName || data.fileName || this.selectedFile!.name;
           this.selectedFile = null;
           this.previewUrl = null;
         } else {
@@ -185,11 +188,14 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
       next: (response: any) => {
         clearInterval(progressInterval);
         this.uploadProgress = 100;
-        if (response.id) {
-          this.formControl?.setValue(response.id);
-          this.fileId = response.id;
-          this.imageUrl = response.urls?.medium || response.url || '';
-          this.imageName = response.originalFileName || this.selectedFile!.name;
+
+        const data = response?.data || response;
+
+        if (data && data.id) {
+          this.formControl?.setValue(data.id);
+          this.fileId = data.id;
+          this.imageUrl = data.urls?.medium || data.url || '';
+          this.imageName = data.originalFileName || data.fileName || this.selectedFile!.name;
           this.selectedFile = null;
           this.previewUrl = null;
           this.toast.showSuccess('Image uploaded successfully!');
@@ -276,11 +282,13 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
       clearInterval(progressInterval);
       this.uploadProgress = 100;
 
-      if (response.id) {
-        this.formControl?.setValue(response.id);
-        this.fileId = response.id;
-        this.imageUrl = response.urls?.medium || response.url || '';
-        this.imageName = response.originalFileName || this.selectedFile.name;
+      const data = response?.data || response;
+
+      if (data && data.id) {
+        this.formControl?.setValue(data.id);
+        this.fileId = data.id;
+        this.imageUrl = data.urls?.medium || data.url || '';
+        this.imageName = data.originalFileName || data.fileName || this.selectedFile.name;
         this.selectedFile = null;
         this.previewUrl = null;
         this.toast.showSuccess('Image uploaded successfully!');

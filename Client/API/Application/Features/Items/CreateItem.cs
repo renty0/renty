@@ -7,12 +7,14 @@ using MediatR;
 namespace Application.Features.Items;
 
 public record CreateItemPricingCommand(decimal Price, string PricingType);
-public record CreateItemImageCommand(string ImageUrl, bool IsPrimary);
+public record CreateItemImageCommand(Guid ImageId, bool IsPrimary);
 
 public record CreateItemCommand(
     int ProductKey,
-    string Title,
-    string? Description,
+    string? TitleAr,
+    string? TitleEn,
+    string? DescAr,
+    string? DescEn,
     string? Type,           // standard | premium
     string? Condition,      // new, like_new, good, fair
     decimal DefaultDeposit,
@@ -33,7 +35,8 @@ public class CreateItemCommandValidator : AbstractValidator<CreateItemCommand>
 {
     public CreateItemCommandValidator()
     {
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.TitleEn).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
         RuleFor(x => x.ProductKey).GreaterThan(0);
         RuleFor(x => x.DefaultDeposit).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Pricing).NotEmpty().WithMessage("At least one pricing entry is required.");
@@ -74,8 +77,10 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
         {
             ProductKey = request.ProductKey,
             OwnerId = _currentUser.Id.Value,
-            Title = request.Title,
-            Description = request.Description,
+            TitleAr = request.TitleAr ?? string.Empty,
+            TitleEn = request.TitleEn ?? string.Empty,
+            DescAr = request.DescAr,
+            DescEn = request.DescEn,
             Type = itemType,
             Status = NewItemStatus.Available,
             Condition = request.Condition,
@@ -95,7 +100,7 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
             item.Pricing.Add(new ItemPricing { Price = p.Price, PricingType = p.PricingType });
 
         foreach (var img in request.Images)
-            item.Images.Add(new ItemImage { ImageUrl = img.ImageUrl, IsPrimary = img.IsPrimary });
+            item.Images.Add(new ItemImage { ImageId = img.ImageId, IsPrimary = img.IsPrimary });
 
         _context.Items.Add(item);
         await _context.SaveChangesAsync(ct);

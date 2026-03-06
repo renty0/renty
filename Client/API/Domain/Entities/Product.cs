@@ -5,9 +5,11 @@ namespace Domain.Entities;
 public class Product : BaseAuditableEntity
 {
     public string ProductSku { get; set; } = string.Empty;
-    public string ProductName { get; set; } = string.Empty;
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
     public string? ModelName { get; set; }
-    public string? ProductDescription { get; set; }
+    public string DescAr { get; set; } = string.Empty;
+    public string DescEn { get; set; } = string.Empty;
     public string? ProductColor { get; set; }
     public string? ProductStyle { get; set; }
     public decimal ProductCost { get; set; }

@@ -49,7 +49,7 @@ public class GetTopProductsQueryHandler : IRequestHandler<GetTopProductsQuery, G
         }
 
         var products = await query
-            .GroupBy(s => new { s.ProductId, s.Product.ProductName })
+            .GroupBy(s => new { s.ProductId, ProductName = s.Product.NameEn })
             .Select(g => new TopProductDto(
                 g.Key.ProductId,
                 g.Key.ProductName,

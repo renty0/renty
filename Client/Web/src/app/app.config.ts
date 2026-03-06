@@ -20,6 +20,7 @@ import {
   SubcategoriesClient,
   RecommendationsClient,
   AuthClient,
+  MediaClient,
 } from './core/api/api-client';
 import { environment } from '../environments/environment';
 
@@ -43,6 +44,7 @@ export const appConfig: ApplicationConfig = {
     SubcategoriesClient,
     RecommendationsClient,
     AuthClient,
+    MediaClient,
     CookieService,
   ],
 };

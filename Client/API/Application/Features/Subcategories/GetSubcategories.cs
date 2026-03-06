@@ -47,22 +47,22 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
 
         if (!string.IsNullOrWhiteSpace(request.SearchString))
         {
-            query = query.Where(s => s.SubcategoryName.Contains(request.SearchString) || 
-                                     s.Description.Contains(request.SearchString));
+            query = query.Where(s => s.NameEn.Contains(request.SearchString) || 
+                                     s.NameAr.Contains(request.SearchString));
         }
 
         // Apply sorting
         bool isDescending = request.SortOrder?.ToLower() == "desc";
         switch (request.SortBy?.ToLower())
         {
-            case "name":
-                query = isDescending ? query.OrderByDescending(s => s.SubcategoryName) : query.OrderBy(s => s.SubcategoryName);
+            case "nameen":
+                query = isDescending ? query.OrderByDescending(s => s.NameEn) : query.OrderBy(s => s.NameEn);
                 break;
             case "date":
                 query = isDescending ? query.OrderByDescending(s => s.Created) : query.OrderBy(s => s.Created);
                 break;
             default:
-                query = query.OrderBy(s => s.SubcategoryName);
+                query = query.OrderBy(s => s.NameEn);
                 break;
         }
 
@@ -84,12 +84,15 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
 
             return new ProductSubcategoryDto(
                 s.Id,
-                s.SubcategoryName,
-                s.Description,
+                s.NameAr ?? "",
+                s.NameEn ?? "",
+                s.DescAr,
+                s.DescEn,
                 s.LogoId,
                 logoUrl,
                 s.ProductCategoryId,
-                s.Category.CategoryName,
+                s.Category?.NameAr ?? "",
+                s.Category?.NameEn ?? "",
                 s.Products.Count,
                 s.Created,
                 s.LastModified

@@ -42,7 +42,7 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
             .Include(i => i.Subcategory)
             .Include(i => i.Brand)
             .Where(i => i.Status == NewItemStatus.Available)
-            .Where(i => i.Title.ToLower().Contains(term))
+            .Where(i => i.TitleEn.ToLower().Contains(term) || i.TitleAr.ToLower().Contains(term))
             .AsQueryable();
 
         if (request.City != null)
@@ -57,17 +57,18 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
             .Take(request.Limit)
             .Select(i => new ItemListDto(
                 i.Id,
-                i.Title,
+                i.TitleAr,
+                i.TitleEn,
                 i.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
                 i.City,
-                i.Images.Where(img => img.IsPrimary).Select(img => img.ImageUrl).FirstOrDefault()
-                    ?? i.Images.Select(img => img.ImageUrl).FirstOrDefault(),
+                i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
+                    ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
                 0, 0,
                 i.Type.ToString(),
                 i.Condition,
-                i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.CategoryName) : null,
-                i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.SubcategoryName) : null,
-                i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.Name) : null
+                i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameEn) : null,
+                i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameEn) : null,
+                i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameEn) : null
             ))
             .ToListAsync(ct);
 

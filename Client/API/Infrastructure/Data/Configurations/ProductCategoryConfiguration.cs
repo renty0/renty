@@ -12,11 +12,36 @@ public class ProductCategoryConfiguration : IEntityTypeConfiguration<ProductCate
 
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.CategoryName)
+        builder.Property(c => c.NameEn)
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(c => c.CategoryName)
-            .IsUnique();
+        builder.Property(c => c.NameAr)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(c => c.DescEn)
+            .HasMaxLength(2000);
+
+        builder.Property(c => c.DescAr)
+            .HasMaxLength(2000);
+
+        builder.Property(c => c.LogoId);
+
+        builder.Property(c => c.Created);
+
+        builder.Property(c => c.CreatedBy);
+
+        builder.Property(c => c.LastModified);
+
+        builder.Property(c => c.LastModifiedBy);
+
+        builder.HasIndex(c => c.NameEn)
+            .IsUnique()
+            .HasDatabaseName("IX_ProductCategories_NameEn");
+        
+        builder.HasIndex(c => c.NameAr)
+            .IsUnique()
+            .HasDatabaseName("IX_ProductCategories_NameAr");
     }
 }

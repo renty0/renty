@@ -1,10 +1,14 @@
 using Domain.Common;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Entities;
 
 public class RentableItemImage : BaseEntity
 {
-    public string ImageUrl { get; set; } = string.Empty;
+    public Guid ImageId { get; set; }
+    [ForeignKey(nameof(ImageId))]
+    public virtual MediaFile? Image { get; set; }
     public string? ThumbnailUrl { get; set; }
     public string? AltText { get; set; }
     public int DisplayOrder { get; set; } = 0;

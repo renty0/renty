@@ -31,9 +31,11 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, G
             .Select(p => new ProductDto(
                 p.Id,
                 p.ProductSku,
-                p.ProductName,
+                p.NameAr,
+                p.NameEn,
                 p.ModelName,
-                p.ProductDescription,
+                p.DescAr,
+                p.DescEn,
                 p.ProductColor,
                 p.ProductStyle,
                 p.ProductCost,
@@ -43,11 +45,11 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, G
                 p.DiscountPrice ?? p.ProductPrice,
                 p.ProductPrice > 0 ? (p.ProductPrice - p.ProductCost) / p.ProductPrice * 100 : 0,
                 p.ProductSubcategoryId,
-                p.Subcategory.SubcategoryName,
-                p.Subcategory.Category.CategoryName,
+                p.Subcategory.NameEn,
+                p.Subcategory.Category.NameEn,
                 p.Created,
                 p.LastModified,
-                p.Images.Select(i => new ProductImageDto(i.Id, i.ImageUrl, i.IsPrimary, i.DisplayOrder)).ToList()
+                p.Images.Select(i => new ProductImageDto(i.Id, i.Image != null ? i.Image.StoragePath : "", i.IsPrimary, i.DisplayOrder)).ToList()
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

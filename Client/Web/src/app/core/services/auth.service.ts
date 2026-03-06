@@ -5,10 +5,12 @@ import {
   ApiResponseOfAuthLoginData,
   ApiResponseOfAuthRefreshData,
   ApiResponseOfAuthRegisterData,
+  ApiResponseOfAuthVerifyEmailData,
   AuthClient,
   AuthLoginData,
   AuthLoginUser,
   AuthRefreshData,
+  ConfirmEmailCommand,
   LoginCommand,
   RefreshTokenCommand,
   RegisterCommand,
@@ -153,6 +155,11 @@ export class AuthService {
     });
 
     return this.authClient.authRegister(command);
+  }
+
+  verifyEmail(email: string, code: string): Observable<ApiResponseOfAuthVerifyEmailData> {
+    const command = new ConfirmEmailCommand({ email, code });
+    return this.authClient.authVerifyEmail(command);
   }
 
   storeUserData(user: AuthLoginUser): void {

@@ -69,9 +69,9 @@ public class GetRentRequestsQueryHandler : IRequestHandler<GetRentRequestsQuery,
                 r.TotalDays,
                 r.GrandTotal,
                 r.Status.ToString(),
-                r.RentableItem.Title,
-                r.RentableItem.Images.Where(i => i.IsPrimary).Select(i => i.ImageUrl).FirstOrDefault()
-                    ?? r.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.ImageUrl).FirstOrDefault(),
+                r.RentableItem.TitleEn,
+                r.RentableItem.Images.Where(i => i.IsPrimary).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault()
+                    ?? r.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
                 r.Renter.FirstName + " " + r.Renter.LastName,
                 r.RentableItem.Owner.FirstName + " " + r.RentableItem.Owner.LastName,
                 r.Created

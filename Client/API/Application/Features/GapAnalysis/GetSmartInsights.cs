@@ -24,13 +24,13 @@ public class GetSmartInsightsQueryHandler : IRequestHandler<GetSmartInsightsQuer
         var categories = await _context.ProductCategories
             .Select(c => new
             {
-                c.CategoryName,
+                CategoryName = c.NameEn,
                 Supply = _context.Products.Count(p => p.Subcategory.ProductCategoryId == c.Id),
                 Demand = _context.Sales.Where(s => s.Product.Subcategory.ProductCategoryId == c.Id).Sum(s => s.OrderQuantity)
             })
             .ToListAsync(cancellationToken);
 
-        var mostSevere = categories.Select(c => new { c.CategoryName, Score = c.Supply > 0 ? (decimal)c.Demand / c.Supply : (decimal)c.Demand })
+        var mostSevere = categories.Select(c => new { CategoryName = c.CategoryName, Score = c.Supply > 0 ? (decimal)c.Demand / c.Supply : (decimal)c.Demand })
             .OrderByDescending(x => x.Score).FirstOrDefault();
 
         if (mostSevere != null && mostSevere.Score >= 5)
@@ -44,7 +44,7 @@ public class GetSmartInsightsQueryHandler : IRequestHandler<GetSmartInsightsQuer
 
         // 2. REVENUE Insight
         var totalOppLoss = categories.Where(c => c.Demand > c.Supply)
-            .Sum(c => (c.Demand - c.Supply) * (_context.Products.Where(p => p.Subcategory.ProductCategoryId == _context.ProductCategories.First(pc => pc.CategoryName == c.CategoryName).Id).Average(p => (decimal?)p.ProductPrice) ?? 0m));
+            .Sum(c => (c.Demand - c.Supply) * (_context.Products.Where(p => p.Subcategory.ProductCategoryId == _context.ProductCategories.First(pc => pc.NameEn == c.CategoryName).Id).Average(p => (decimal?)p.ProductPrice) ?? 0m));
 
         if (totalOppLoss > 1000)
         {

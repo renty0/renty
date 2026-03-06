@@ -4,9 +4,15 @@ namespace Domain.Entities;
 public class Brand
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public string? LogoUrl { get; set; }
+    public string NameAr { get; set; } = string.Empty;
+    public string NameEn { get; set; } = string.Empty;
+
+    public string? DescAr { get; set; }
+    public string? DescEn { get; set; }
+    
+    public Guid? LogoId { get; set; }
+    public virtual MediaFile? Logo { get; set; }
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation

@@ -43,7 +43,7 @@ public class GetRenterDashboardQueryHandler : IRequestHandler<GetRenterDashboard
                 x.TotalDays,
                 x.TotalAmount + (x.DeliveryFee ?? 0),
                 x.Status.ToString(),
-                x.RentableItem.Title,
+                x.RentableItem.TitleEn,
                 null, // Simplified
                 "Renter", // Simplified
                 "Owner", // Simplified

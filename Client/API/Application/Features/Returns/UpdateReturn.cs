@@ -92,7 +92,7 @@ public class UpdateReturnCommandHandler : IRequestHandler<UpdateReturnCommand, U
             returnItem.ReturnQuantity,
             returnItem.ReturnReason,
             returnItem.ProductId,
-            product.ProductName,
+            product.NameEn,
             returnItem.TerritoryId,
             territory.Region,
             territory.Country,

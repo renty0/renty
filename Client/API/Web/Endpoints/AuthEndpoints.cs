@@ -40,6 +40,19 @@ public static class AuthEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
 
+        // POST /auth/send-verification
+        group.MapPost("/send-verification", async (SendEmailConfirmationCommand command, ISender sender) =>
+        {
+            var r = await sender.Send(command);
+            if (!r.Succeeded)
+                return Api.Fail(r.Errors.FirstOrDefault() ?? "Failed to send verification email");
+            return Api.Ok(new { message = "Verification email sent successfully." });
+        })
+        .WithName("AuthSendVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
+
         // POST /auth/login
         group.MapPost("/login", async (LoginCommand command, ISender sender) =>
         {
