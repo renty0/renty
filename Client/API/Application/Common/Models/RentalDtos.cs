@@ -32,8 +32,10 @@ public record RentableItemDto(
     long OwnerId,
     string OwnerName,
     int? CategoryId,
+    string? CategoryNameAr,
     string? CategoryNameEn,
     int? SubcategoryId,
+    string? SubcategoryNameAr,
     string? SubcategoryNameEn,
     List<RentableItemImageDto> Images,
     DateTimeOffset Created
@@ -52,6 +54,7 @@ public record RentableItemListDto(
     int TotalRatings,
     string? PrimaryImageUrl,
     string OwnerName,
+    string? CategoryNameAr,
     string? CategoryNameEn
 );
 

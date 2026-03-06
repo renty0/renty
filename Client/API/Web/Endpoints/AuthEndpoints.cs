@@ -53,12 +53,51 @@ public static class AuthEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
 
+        // POST /auth/forgot-password
+        group.MapPost("/forgot-password", async (ForgotPasswordCommand command, ISender sender) =>
+        {
+            var r = await sender.Send(command);
+            if (!r.Succeeded)
+                return Api.Fail(r.Errors.FirstOrDefault() ?? "Failed to process forgot password request");
+            return Api.Ok(new { message = "Password reset code has been sent." });
+        })
+        .WithName("AuthForgotPassword")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
+
+        // POST /auth/reset-password
+        group.MapPost("/reset-password", async (ResetPasswordCommand command, ISender sender) =>
+        {
+            var r = await sender.Send(command);
+            if (!r.Succeeded)
+                return Api.Fail(r.Errors.FirstOrDefault() ?? "Failed to reset password. Token may be invalid or expired.");
+            return Api.Ok(new { message = "Password has been reset successfully." });
+        })
+        .WithName("AuthResetPassword")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
+
+        // POST /auth/verify-reset-code
+        group.MapPost("/verify-reset-code", async (VerifyResetTokenCommand command, ISender sender) =>
+        {
+            var r = await sender.Send(command);
+            if (!r.Succeeded)
+                return Api.Fail(r.Errors.FirstOrDefault() ?? "Invalid or expired reset code.");
+            return Api.Ok(new { message = "Reset code is valid." });
+        })
+        .WithName("AuthVerifyResetCode")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
+
         // POST /auth/login
         group.MapPost("/login", async (LoginCommand command, ISender sender) =>
         {
             var r = await sender.Send(command);
             if (!r.Success)
-                return Api.Fail("Invalid credentials", 401);
+                return Api.Fail(r.Message ?? "Invalid credentials", 401);
 
             var data = new AuthLoginData(
                 r.Token?.AccessToken,

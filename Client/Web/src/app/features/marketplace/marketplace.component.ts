@@ -177,13 +177,17 @@ export class MarketplaceComponent implements OnInit {
   }
 
   getLocalizedCatName(cat: ProductCategoryDto): string {
-    const isAr = this.translate.currentLang === 'ar';
-    return isAr ? (cat.nameAr || cat.nameEn || '') : (cat.nameEn || cat.nameAr || '');
+    return this.getLocalizedRefName(cat);
   }
 
   getLocalizedSubName(sub: ProductSubcategoryDto): string {
+    return this.getLocalizedRefName(sub);
+  }
+
+  getLocalizedRefName(ref: { nameAr?: string, nameEn?: string } | undefined | null): string {
+    if (!ref) return '';
     const isAr = this.translate.currentLang === 'ar';
-    return isAr ? (sub.nameAr || sub.nameEn || '') : (sub.nameEn || sub.nameAr || '');
+    return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
   }
 
   getLocalizedTitle(item: ItemListDto): string {

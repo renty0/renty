@@ -8,7 +8,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { toasterInterceptor } from './core/interceptors/toaster.interceptor';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -28,9 +27,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([authInterceptor, toasterInterceptor]), withFetch()),
     provideTranslateService({ fallbackLang: 'en' }),
     providePrimeNG({
       theme: {

@@ -9,9 +9,9 @@ namespace Application.Features.Items;
 
 // ── Reference DTOs ───────────────────────────────────────────────────────────────
 
-public record ItemCategoryRef(int Id, string Name);
-public record ItemSubcategoryRef(int Id, string Name);
-public record ItemBrandRef(int Id, string Name);
+public record ItemCategoryRef(int Id, string NameAr, string NameEn);
+public record ItemSubcategoryRef(int Id, string NameAr, string NameEn);
+public record ItemBrandRef(int Id, string NameAr, string NameEn);
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────
 
@@ -172,9 +172,9 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 0,   // review count
                 x.Item.Type.ToString(),
                 x.Item.Condition,
-                x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameEn) : null,
-                x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameEn) : null,
-                x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameEn) : null
+                x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
+                x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
+                x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null
             ))
             .ToListAsync(ct);
 

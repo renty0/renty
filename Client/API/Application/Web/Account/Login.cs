@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Shared.Interfaces.Services;
 using FluentValidation;
 using MediatR;
 
@@ -33,13 +34,16 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
+    private readonly IEmailSender _emailSender;
 
     public LoginCommandHandler(
         IIdentityService identityService,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        IEmailSender emailSender)
     {
         _identityService = identityService;
         _tokenService = tokenService;
+        _emailSender = emailSender;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -53,6 +57,22 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         if (!user.IsActive)
         {
             return new LoginResponse(false, "Account is deactivated.", null, null);
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            try
+            {
+                var token = await _identityService.GenerateEmailConfirmationTokenAsync(user);
+                var body = Application.Shared.Utilities.EmailTemplates.GetEmailConfirmationTemplate(token);
+                await _emailSender.SendEmailAsync(user.Email!, "Confirm Your Email - Rently", body);
+            }
+            catch (Exception)
+            {
+                // In a real app, we should log this
+            }
+            
+            return new LoginResponse(false, "EmailNotConfirmed", null, null);
         }
 
         var isValidPassword = await _identityService.ValidatePasswordAsync(user, request.Password);
@@ -83,7 +103,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.Address,
             user.City,
             user.Country,
-            user.Bio
+            user.Bio,
+            user.PhoneNumber
         );
 
         return new LoginResponse(true, "Login successful.", tokenData, userDto);

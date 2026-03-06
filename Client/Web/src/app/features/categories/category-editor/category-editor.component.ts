@@ -128,18 +128,22 @@ export class CategoryEditorComponent implements OnInit {
                 this.apiClient.updateCategory(this.categoryId, command)
                     .pipe(
                         tap((res) => {
-                            this.toast.showSuccess(res.message ? res.message : 'categories.messages.updateSuccess');
-                            // Emit the updated category data
-                            if (res.data) {
-                                this.saved.emit({
-                                    id: res?.data?.id!,
-                                    categoryNameAr: res?.data?.nameAr!,
-                                    categoryNameEn: res?.data?.nameEn!,
-                                    descriptionAr: res?.data?.descAr,
-                                    descriptionEn: res?.data?.descEn,
-                                    logoUrl: res?.data?.logoUrl,
-                                    logoId: res?.data?.logoId ? Number(res?.data?.logoId) : undefined
-                                });
+                            if (res.error) {
+                                this.toast.showError(res.messages?.[0] || 'categories.messages.updateError');
+                            } else {
+                                this.toast.showSuccess(res.messages?.[0] || 'categories.messages.updateSuccess');
+                                // Emit the updated category data
+                                if (res.data) {
+                                    this.saved.emit({
+                                        id: res.data.id!,
+                                        categoryNameAr: res.data.nameAr!,
+                                        categoryNameEn: res.data.nameEn!,
+                                        descriptionAr: res.data.descAr,
+                                        descriptionEn: res.data.descEn,
+                                        logoUrl: res.data.logoUrl,
+                                        logoId: res.data.logoId ? Number(res.data.logoId) : undefined
+                                    });
+                                }
                             }
                         }),
                         catchError(() => {
@@ -161,17 +165,21 @@ export class CategoryEditorComponent implements OnInit {
                 this.apiClient.createCategory(command)
                     .pipe(
                         tap((res) => {
-                            this.toast.showSuccess(res.message ? res.message : 'categories.messages.createSuccess');
-                            if (res.data) {
-                                this.saved.emit({
-                                    id: res.data.id!,
-                                    categoryNameAr: res.data.nameAr!,
-                                    categoryNameEn: res.data.nameEn!,
-                                    descriptionAr: res.data.descAr,
-                                    descriptionEn: res.data.descEn,
-                                    logoUrl: res.data.logoUrl,
-                                    logoId: res.data.logoId ? Number(res.data.logoId) : undefined
-                                });
+                            if (res.error) {
+                                this.toast.showError(res.messages?.[0] || 'categories.messages.createError');
+                            } else {
+                                this.toast.showSuccess(res.messages?.[0] || 'categories.messages.createSuccess');
+                                if (res.data) {
+                                    this.saved.emit({
+                                        id: res.data.id!,
+                                        categoryNameAr: res.data.nameAr!,
+                                        categoryNameEn: res.data.nameEn!,
+                                        descriptionAr: res.data.descAr,
+                                        descriptionEn: res.data.descEn,
+                                        logoUrl: res.data.logoUrl,
+                                        logoId: res.data.logoId ? Number(res.data.logoId) : undefined
+                                    });
+                                }
                             }
                         }),
                         catchError(() => {

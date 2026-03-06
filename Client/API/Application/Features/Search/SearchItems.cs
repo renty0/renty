@@ -66,9 +66,9 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
                 0, 0,
                 i.Type.ToString(),
                 i.Condition,
-                i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameEn) : null,
-                i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameEn) : null,
-                i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameEn) : null
+                i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
+                i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
+                i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null
             ))
             .ToListAsync(ct);
 

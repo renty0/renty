@@ -174,11 +174,13 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.EffectivePrice,
             product.ProfitMargin,
             product.ProductSubcategoryId,
+            subcategory.NameAr,
             subcategory.NameEn,
+            subcategory.Category.NameAr,
             subcategory.Category.NameEn,
             product.Created,
             product.LastModified,
-            product.Images.Select(i => new ProductImageDto(i.Id, i.Image?.StoragePath ?? "", i.IsPrimary, i.DisplayOrder)).ToList()
+            product.Images.Select(i => new ProductImageDto(i.Id, i.Image != null ? "/" + i.Image.StoragePath.Replace("\\", "/").TrimStart('/') : "", i.IsPrimary, i.DisplayOrder)).ToList()
         );
 
         return new UpdateProductResponse(true, "Product updated successfully.", dto);

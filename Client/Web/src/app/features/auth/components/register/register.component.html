@@ -51,15 +51,15 @@
             <div class="step-content">
               <div class="step-header">
                 <h2>{{ 'info.accountInfo' | translate }}</h2>
-                <p>Set up your login credentials</p>
+                <p>{{ 'register.step1Desc' | translate }}</p>
               </div>
               <div class="inputs-grid">
-                <app-input [formGroup]="accountInfoGroup" controlName="email" label="email" type="email"
-                  class="full-width"></app-input>
-                <app-input [formGroup]="accountInfoGroup" controlName="password" label="password"
-                  type="password"></app-input>
-                <app-input [formGroup]="accountInfoGroup" controlName="confirmPassword" label="confirmPassword"
-                  type="password"></app-input>
+                <app-input [formGroup]="accountInfoGroup" controlName="email" label="labels.email" type="email"
+                  class="full-width" />
+                <app-input [formGroup]="accountInfoGroup" controlName="password" label="labels.password"
+                  type="password" />
+                <app-input [formGroup]="accountInfoGroup" controlName="confirmPassword" label="labels.confirmPassword"
+                  type="password" />
               </div>
               <div class="step-actions">
                 <span></span>
@@ -77,13 +77,13 @@
             <div class="step-content">
               <div class="step-header">
                 <h2>{{ 'info.profileInfo' | translate }}</h2>
-                <p>Tell us more about yourself</p>
+                <p>{{ 'register.step2Desc' | translate }}</p>
               </div>
               <div class="inputs-grid">
-                <app-input [formGroup]="profileInfoGroup" controlName="firstName" label="firstName"></app-input>
-                <app-input [formGroup]="profileInfoGroup" controlName="lastName" label="lastName"></app-input>
-                <app-input [formGroup]="profileInfoGroup" controlName="phoneNumber" label="phoneNumber" type="phone"
-                  class="full-width"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="firstName" label="labels.firstName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="lastName" label="labels.lastName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="phoneNumber" label="labels.phoneNumber"
+                  type="phone" class="full-width"></app-input>
               </div>
               <div class="step-actions">
                 <app-loading-button type="button" variant="stroked" color="primary" (clicked)="stepper.previous()">
@@ -103,8 +103,8 @@
             <ng-template matStepLabel>{{ 'labels.userType' | translate }}</ng-template>
             <div class="step-content">
               <div class="step-header">
-                <h2>Complete Your Profile</h2>
-                <p>Select your account type and preferences</p>
+                <h2>{{ 'register.step3Title' | translate }}</h2>
+                <p>{{ 'register.step3Desc' | translate }}</p>
               </div>
 
               <div class="role-selection-grid">
@@ -126,15 +126,15 @@
               </div>
 
               <div class="divider">
-                <span>Location & About</span>
+                <span>{{ 'register.locationAbout' | translate }}</span>
               </div>
 
               <div class="inputs-grid">
-                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="address" label="address"
+                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="labels.city"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="labels.country"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="address" label="labels.address"
                   class="full-width"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="bio" type="textarea"
+                <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="labels.bio" type="textarea"
                   class="full-width"></app-input>
               </div>
 

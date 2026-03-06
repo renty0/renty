@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -10,7 +10,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { finalize } from 'rxjs';
 import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
-import { ApiResponseOfAuthLoginData } from '../../../../core/api/api-client';
+import { ApiResponse, AuthLoginData } from '../../../../core/api/api-client';
 
 @Component({
   selector: 'app-login',
@@ -45,17 +45,28 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
 
     this.authService.login(email, password).pipe(finalize(() => this.isLoading.set(false))).subscribe({
-      next: (response: ApiResponseOfAuthLoginData) => {
-        if (response.success && response.data) {
+      next: (response: ApiResponse<AuthLoginData>) => {
+        if (!response.error && response.data) {
           this.router.navigate(['/']);
+        } else if (response.messages?.[0] === 'EmailNotConfirmed') {
+          this.snackbar.showInfo(this.translate.instant('login.emailNotConfirmed'));
+          this.router.navigate(['/verify-email'], { queryParams: { email } });
         } else {
-          this.snackbar.showError(response.message || this.translate.instant('login.invalidCredentials'));
+          this.snackbar.showError(response.messages?.[0] || this.translate.instant('login.invalidCredentials'));
         }
       },
-      error: (error: { status?: number; error?: { message?: string } }) => {
-        const msg = error?.error?.message ?? (error.status === 401 ? this.translate.instant('login.invalidCredentials') : this.translate.instant('login.serverError'));
-        this.snackbar.showError(msg);
+      error: (error: { status?: number; error?: { messages?: string[] } }) => {
+        const firstMessage = error?.error?.messages?.[0];
+
+        if (firstMessage === 'EmailNotConfirmed') {
+          this.snackbar.showInfo(this.translate.instant('login.emailNotConfirmed'));
+          this.router.navigate(['/verify-email'], { queryParams: { email } });
+        } else {
+          const msg = firstMessage ?? (error.status === 401 ? this.translate.instant('login.invalidCredentials') : this.translate.instant('login.serverError'));
+          this.snackbar.showError(msg);
+        }
       }
     });
   }
 }
+

@@ -54,7 +54,7 @@ export class ProductDetailsComponent implements OnInit {
         this.itemsClient.getItemById(id)
             .pipe(
                 tap(res => {
-                    if (res.success && res.data) {
+                    if (!res.error && res.data) {
                         const itemData = res.data;
                         this.item.set(itemData);
                         // Set primary image
@@ -111,5 +111,11 @@ export class ProductDetailsComponent implements OnInit {
     getLocalizedDesc(item: any): string {
         const isAr = this.translate.currentLang === 'ar';
         return isAr ? (item.descAr || item.descEn || '') : (item.descEn || item.descAr || '');
+    }
+
+    getLocalizedRefName(ref: { nameAr?: string, nameEn?: string } | undefined | null): string {
+        if (!ref) return '';
+        const isAr = this.translate.currentLang === 'ar';
+        return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
     }
 }

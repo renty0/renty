@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-client": "nswag run nswag.json"
+    "generate-client": "nswag run nswag.json && npm run generate-client:fix",
+    "generate-client:fix": "node fix-client-v2.js"
   },
   "prettier": {
     "printWidth": 100,

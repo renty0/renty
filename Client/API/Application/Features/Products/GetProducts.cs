@@ -104,11 +104,13 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProd
                 p.ProductPrice,
                 p.DiscountPrice,
                 p.ProductColor,
+                p.Subcategory.NameAr,
                 p.Subcategory.NameEn,
+                p.Subcategory.Category.NameAr,
                 p.Subcategory.Category.NameEn,
                 p.Created,
                 p.LastModified,
-                p.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                p.Images.Where(i => i.IsPrimary).Select(i => "/" + i.Image.StoragePath.Replace("\\", "/").TrimStart('/')).FirstOrDefault()
             ));
 
         var products = await PaginatedList<ProductListDto>.CreateAsync(

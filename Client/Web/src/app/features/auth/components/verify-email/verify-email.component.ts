@@ -67,19 +67,19 @@ export class VerifyEmailComponent implements OnInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (response) => {
-          if (response.success) {
+          if (!response.error) {
             this.verified.set(true);
             this.toast.showSuccess(this.translate.instant('verifyEmail.success'));
             setTimeout(() => this.router.navigate(['/login']), 1500);
           } else {
             this.toast.showError(
-              response.message || this.translate.instant('verifyEmail.failed')
+              response.messages?.[0] || this.translate.instant('verifyEmail.failed')
             );
           }
         },
-        error: (error: { error?: { message?: string } }) => {
+        error: (error: any) => {
           this.toast.showError(
-            error?.error?.message ?? this.translate.instant('verifyEmail.failed')
+            error?.error?.messages?.[0] ?? this.translate.instant('verifyEmail.failed')
           );
         },
       });

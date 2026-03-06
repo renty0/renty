@@ -100,6 +100,8 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
             subcategory.LogoId,
             logoUrl,
             subcategory.ProductCategoryId,
+            subcategory.Category?.NameAr ?? "",
+            subcategory.Category?.NameEn ?? "",
             subcategory.Products.Count,
             subcategory.Created,
             subcategory.LastModified

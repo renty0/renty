@@ -8,8 +8,9 @@
 
     <form [formGroup]="loginForm" (submit)="onSubmit()" class="login-form">
       <app-input [formGroup]="loginForm" controlName="email" label="{{ 'labels.email' | translate }}" type="email" />
-      <app-input [formGroup]="loginForm" controlName="password" label="{{ 'labels.password' | translate }}" type="password" />
-      <a routerLink="/reset-password" class="forgot-password">{{ 'login.forgotPassword' | translate }}</a>
+      <app-input [formGroup]="loginForm" controlName="password" label="{{ 'labels.password' | translate }}"
+        type="password" />
+      <a routerLink="/forgot-password" class="forgot-password">{{ 'login.forgotPassword' | translate }}</a>
       <app-loading-button [loading]="isLoading()" type="submit" color="primary" [fullWidth]="true" class="login-button">
         {{ 'buttons.login' | translate }}
       </app-loading-button>

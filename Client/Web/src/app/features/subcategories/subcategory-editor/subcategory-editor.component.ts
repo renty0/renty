@@ -183,11 +183,15 @@ export class SubcategoryEditorComponent implements OnInit {
           .updateSubcategory(idValue, command)
           .pipe(
             tap((res) => {
-              this.toast.showSuccess(res.message || 'subcategories.messages.updateSuccess');
-              if (res.data) {
-                this.saved.emit(res.data);
+              if (res.error) {
+                this.toast.showError(res.messages?.[0] || 'errors.unknownError');
               } else {
-                this.saved.emit({ ...formValue, id: idValue, logoId });
+                this.toast.showSuccess(res.messages?.[0] || 'subcategories.messages.updateSuccess');
+                if (res.data) {
+                  this.saved.emit(res.data);
+                } else {
+                  this.saved.emit({ ...formValue, id: idValue, logoId });
+                }
               }
             }),
             catchError((err) => {
@@ -211,9 +215,13 @@ export class SubcategoryEditorComponent implements OnInit {
           .createSubcategory(command)
           .pipe(
             tap((res) => {
-              this.toast.showSuccess(res.message || 'subcategories.messages.createSuccess');
-              if (res.data) {
-                this.saved.emit(res.data);
+              if (res.error) {
+                this.toast.showError(res.messages?.[0] || 'errors.unknownError');
+              } else {
+                this.toast.showSuccess(res.messages?.[0] || 'subcategories.messages.createSuccess');
+                if (res.data) {
+                  this.saved.emit(res.data);
+                }
               }
             }),
             catchError((err) => {

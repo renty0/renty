@@ -119,9 +119,10 @@ public class GetRentableItemsQueryHandler : IRequestHandler<GetRentableItemsQuer
                 r.Status.ToString(),
                 r.AverageRating,
                 r.TotalRatings,
-                r.Images.Where(i => i.IsPrimary).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault()
-                    ?? r.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
+                r.Images.Where(i => i.IsPrimary).Select(i => i.Image != null ? "/" + i.Image.StoragePath.Replace("\\", "/").TrimStart('/') : null).FirstOrDefault()
+                    ?? r.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? "/" + i.Image.StoragePath.Replace("\\", "/").TrimStart('/') : null).FirstOrDefault(),
                 r.Owner.FirstName + " " + r.Owner.LastName,
+                r.Category != null ? r.Category.NameAr : null,
                 r.Category != null ? r.Category.NameEn : null
             ));
 

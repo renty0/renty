@@ -152,9 +152,13 @@ export class ProductListComponent implements OnInit {
             this.isLoading.set(true);
             this.apiClient.deleteItem(id)
                 .pipe(
-                    tap(() => {
-                        this.toast.showSuccess('products.messages.deleteSuccess');
-                        this.getData();
+                    tap((res) => {
+                        if (res.error) {
+                            this.toast.showError(res.messages?.[0] || 'errors.unknownError');
+                        } else {
+                            this.toast.showSuccess(res.messages?.[0] || 'products.messages.deleteSuccess');
+                            this.getData();
+                        }
                     }),
                     catchError((err) => {
                         console.error('Delete failed', err);
@@ -170,5 +174,11 @@ export class ProductListComponent implements OnInit {
     getLocalizedTitle(item: ItemListDto): string {
         const isAr = this.translate.currentLang === 'ar';
         return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
+    }
+
+    getLocalizedName(ref: { nameAr?: string, nameEn?: string } | undefined | null): string {
+        if (!ref) return '';
+        const isAr = this.translate.currentLang === 'ar';
+        return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
     }
 }

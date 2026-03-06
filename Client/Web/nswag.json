@@ -45,7 +45,7 @@
             "typeStyle": "Class",
             "classTypes": [],
             "extendedClasses": [],
-            "extensionCode": null,
+            "extensionCode": "src/app/core/api/extensions.ts",
             "generateDefaultValues": true,
             "excludedTypeNames": [],
             "excludedParameterNames": [],
@@ -65,6 +65,7 @@
             "enumNameGeneratorType": null,
             "serviceHost": null,
             "serviceSchemes": null,
+            "generateGenericTypes": true,
             "output": "src/app/core/api/api-client.ts",
             "newLineBehavior": "Auto"
         }

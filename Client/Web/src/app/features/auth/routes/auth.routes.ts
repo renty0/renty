@@ -18,6 +18,15 @@ export const AuthRoutes: Route[] = [
   {
     path: 'verify-email',
     component: VerifyEmailComponent,
+  },
+  {
+    path: 'forgot-password',
+    redirectTo: 'reset-password',
+    pathMatch: 'full',
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('../components/reset-password/reset-password').then(m => m.ResetPassword),
     canActivate: [LoginGuard],
   },
 ];

@@ -82,6 +82,10 @@ public class CreateSubcategoryCommandHandler : IRequestHandler<CreateSubcategory
             }
         }
 
+        var category = await _context.ProductCategories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == request.CategoryId, cancellationToken);
+
         var dto = new ProductSubcategoryDto(
             subcategory.Id,
             subcategory.NameAr,
@@ -91,6 +95,8 @@ public class CreateSubcategoryCommandHandler : IRequestHandler<CreateSubcategory
             subcategory.LogoId,
             logoUrl,
             subcategory.ProductCategoryId,
+            category?.NameAr ?? "",
+            category?.NameEn ?? "",
             0,
             subcategory.Created,
             subcategory.LastModified

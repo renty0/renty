@@ -89,5 +89,25 @@ public static class AccountEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
+
+        group.MapPost("/forgot-password", async (ForgotPasswordCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            return result.Succeeded ? Api.Ok(new { message = "Password reset code has been sent." }) : Api.Fail(result.Errors.FirstOrDefault() ?? "Failed");
+        })
+        .WithName("ForgotPassword")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
+
+        group.MapPost("/reset-password", async (ResetPasswordCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            return result.Succeeded ? Api.Ok(new { message = "Password has been reset successfully." }) : Api.Fail(result.Errors.FirstOrDefault() ?? "Failed to reset password");
+        })
+        .WithName("ResetPassword")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .AllowAnonymous();
     }
 }

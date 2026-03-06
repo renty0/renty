@@ -25,7 +25,7 @@ export class AuthClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    authRegister(command: RegisterCommand): Observable<ApiResponseOfAuthRegisterData> {
+    authRegister(command: RegisterCommand): Observable<ApiResponse<AuthRegisterData>> {
         let url_ = this.baseUrl + "/api/v1/auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -48,14 +48,14 @@ export class AuthClient {
                 try {
                     return this.processAuthRegister(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfAuthRegisterData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<AuthRegisterData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfAuthRegisterData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<AuthRegisterData>>;
         }));
     }
 
-    protected processAuthRegister(response: HttpResponseBase): Observable<ApiResponseOfAuthRegisterData> {
+    protected processAuthRegister(response: HttpResponseBase): Observable<ApiResponse<AuthRegisterData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -66,14 +66,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfAuthRegisterData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -84,7 +84,7 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authVerifyEmail(command: ConfirmEmailCommand): Observable<ApiResponseOfAuthVerifyEmailData> {
+    authVerifyEmail(command: ConfirmEmailCommand): Observable<ApiResponse<AuthVerifyEmailData>> {
         let url_ = this.baseUrl + "/api/v1/auth/verify-email";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -107,14 +107,14 @@ export class AuthClient {
                 try {
                     return this.processAuthVerifyEmail(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfAuthVerifyEmailData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<AuthVerifyEmailData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfAuthVerifyEmailData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<AuthVerifyEmailData>>;
         }));
     }
 
-    protected processAuthVerifyEmail(response: HttpResponseBase): Observable<ApiResponseOfAuthVerifyEmailData> {
+    protected processAuthVerifyEmail(response: HttpResponseBase): Observable<ApiResponse<AuthVerifyEmailData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -125,14 +125,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfAuthVerifyEmailData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -143,7 +143,7 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authSendVerification(command: SendEmailConfirmationCommand): Observable<ApiResponseOfObject> {
+    authSendVerification(command: SendEmailConfirmationCommand): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/auth/send-verification";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -166,14 +166,14 @@ export class AuthClient {
                 try {
                     return this.processAuthSendVerification(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processAuthSendVerification(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processAuthSendVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -184,14 +184,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -202,7 +202,184 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authLogin(command: LoginCommand): Observable<ApiResponseOfAuthLoginData> {
+    authForgotPassword(command: ForgotPasswordCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/auth/forgot-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthForgotPassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthForgotPassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processAuthForgotPassword(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    authResetPassword(command: ResetPasswordCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/auth/reset-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthResetPassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthResetPassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processAuthResetPassword(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    authVerifyResetCode(command: VerifyResetTokenCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/auth/verify-reset-code";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthVerifyResetCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthVerifyResetCode(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processAuthVerifyResetCode(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    authLogin(command: LoginCommand): Observable<ApiResponse<AuthLoginData>> {
         let url_ = this.baseUrl + "/api/v1/auth/login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -225,14 +402,14 @@ export class AuthClient {
                 try {
                     return this.processAuthLogin(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfAuthLoginData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<AuthLoginData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfAuthLoginData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<AuthLoginData>>;
         }));
     }
 
-    protected processAuthLogin(response: HttpResponseBase): Observable<ApiResponseOfAuthLoginData> {
+    protected processAuthLogin(response: HttpResponseBase): Observable<ApiResponse<AuthLoginData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -243,14 +420,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfAuthLoginData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ApiResponseOfObject.fromJS(resultData401);
+            result401 = ApiResponse.fromJS(resultData401);
             return throwException("A server side error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -261,7 +438,7 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authRefresh(command: RefreshTokenCommand): Observable<ApiResponseOfAuthRefreshData> {
+    authRefresh(command: RefreshTokenCommand): Observable<ApiResponse<AuthRefreshData>> {
         let url_ = this.baseUrl + "/api/v1/auth/refresh";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -284,14 +461,14 @@ export class AuthClient {
                 try {
                     return this.processAuthRefresh(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfAuthRefreshData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<AuthRefreshData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfAuthRefreshData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<AuthRefreshData>>;
         }));
     }
 
-    protected processAuthRefresh(response: HttpResponseBase): Observable<ApiResponseOfAuthRefreshData> {
+    protected processAuthRefresh(response: HttpResponseBase): Observable<ApiResponse<AuthRefreshData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -302,14 +479,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfAuthRefreshData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ApiResponseOfObject.fromJS(resultData401);
+            result401 = ApiResponse.fromJS(resultData401);
             return throwException("A server side error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -320,7 +497,7 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authMe(): Observable<ApiResponseOfAuthMeData> {
+    authMe(): Observable<ApiResponse<AuthMeData>> {
         let url_ = this.baseUrl + "/api/v1/auth/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -339,14 +516,14 @@ export class AuthClient {
                 try {
                     return this.processAuthMe(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfAuthMeData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<AuthMeData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfAuthMeData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<AuthMeData>>;
         }));
     }
 
-    protected processAuthMe(response: HttpResponseBase): Observable<ApiResponseOfAuthMeData> {
+    protected processAuthMe(response: HttpResponseBase): Observable<ApiResponse<AuthMeData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -357,7 +534,7 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfAuthMeData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -368,7 +545,7 @@ export class AuthClient {
         return _observableOf(null as any);
     }
 
-    authUpdateMe(command: UpdateUserCommand): Observable<ApiResponseOfObject> {
+    authUpdateMe(command: UpdateUserCommand): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/auth/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -391,14 +568,14 @@ export class AuthClient {
                 try {
                     return this.processAuthUpdateMe(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processAuthUpdateMe(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processAuthUpdateMe(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -409,14 +586,14 @@ export class AuthClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -439,7 +616,7 @@ export class ItemsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponseOfListOfItemListDto> {
+    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponse<ItemListDto[]>> {
         let url_ = this.baseUrl + "/api/v1/items?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -486,14 +663,14 @@ export class ItemsClient {
                 try {
                     return this.processGetItems(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfItemListDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ItemListDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfItemListDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ItemListDto[]>>;
         }));
     }
 
-    protected processGetItems(response: HttpResponseBase): Observable<ApiResponseOfListOfItemListDto> {
+    protected processGetItems(response: HttpResponseBase): Observable<ApiResponse<ItemListDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -504,7 +681,7 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfItemListDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -515,7 +692,7 @@ export class ItemsClient {
         return _observableOf(null as any);
     }
 
-    createItem(cmd: CreateItemCommand): Observable<ApiResponseOfItemCreateData> {
+    createItem(cmd: CreateItemCommand): Observable<ApiResponse<ItemCreateData>> {
         let url_ = this.baseUrl + "/api/v1/items";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -538,14 +715,14 @@ export class ItemsClient {
                 try {
                     return this.processCreateItem(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfItemCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ItemCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfItemCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ItemCreateData>>;
         }));
     }
 
-    protected processCreateItem(response: HttpResponseBase): Observable<ApiResponseOfItemCreateData> {
+    protected processCreateItem(response: HttpResponseBase): Observable<ApiResponse<ItemCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -556,14 +733,14 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfItemCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -574,7 +751,7 @@ export class ItemsClient {
         return _observableOf(null as any);
     }
 
-    getItemById(id: string): Observable<ApiResponseOfItemDetailDto> {
+    getItemById(id: string): Observable<ApiResponse<ItemDetailDto>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -596,14 +773,14 @@ export class ItemsClient {
                 try {
                     return this.processGetItemById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfItemDetailDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ItemDetailDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfItemDetailDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ItemDetailDto>>;
         }));
     }
 
-    protected processGetItemById(response: HttpResponseBase): Observable<ApiResponseOfItemDetailDto> {
+    protected processGetItemById(response: HttpResponseBase): Observable<ApiResponse<ItemDetailDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -614,14 +791,14 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfItemDetailDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -632,7 +809,7 @@ export class ItemsClient {
         return _observableOf(null as any);
     }
 
-    updateItem(id: string, cmd: UpdateItemCommand): Observable<ApiResponseOfItemDetailDto> {
+    updateItem(id: string, cmd: UpdateItemCommand): Observable<ApiResponse<ItemDetailDto>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -658,14 +835,14 @@ export class ItemsClient {
                 try {
                     return this.processUpdateItem(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfItemDetailDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ItemDetailDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfItemDetailDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ItemDetailDto>>;
         }));
     }
 
-    protected processUpdateItem(response: HttpResponseBase): Observable<ApiResponseOfItemDetailDto> {
+    protected processUpdateItem(response: HttpResponseBase): Observable<ApiResponse<ItemDetailDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -676,14 +853,14 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfItemDetailDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -694,7 +871,7 @@ export class ItemsClient {
         return _observableOf(null as any);
     }
 
-    deleteItem(id: string): Observable<ApiResponseOfObject> {
+    deleteItem(id: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -716,14 +893,14 @@ export class ItemsClient {
                 try {
                     return this.processDeleteItem(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processDeleteItem(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processDeleteItem(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -734,14 +911,14 @@ export class ItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -764,7 +941,7 @@ export class SearchClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    searchItems(q: string, page: number, limit: number, categoryId?: number | null | undefined, city?: string | null | undefined): Observable<ApiResponseOfSearchItemsResponse> {
+    searchItems(q: string, page: number, limit: number, categoryId?: number | null | undefined, city?: string | null | undefined): Observable<ApiResponse<SearchItemsResponse>> {
         let url_ = this.baseUrl + "/api/v1/search?";
         if (q === undefined || q === null)
             throw new globalThis.Error("The parameter 'q' must be defined and cannot be null.");
@@ -799,14 +976,14 @@ export class SearchClient {
                 try {
                     return this.processSearchItems(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfSearchItemsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<SearchItemsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfSearchItemsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<SearchItemsResponse>>;
         }));
     }
 
-    protected processSearchItems(response: HttpResponseBase): Observable<ApiResponseOfSearchItemsResponse> {
+    protected processSearchItems(response: HttpResponseBase): Observable<ApiResponse<SearchItemsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -817,14 +994,14 @@ export class SearchClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfSearchItemsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -847,7 +1024,7 @@ export class FavoritesClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    addFavorite(id: string): Observable<ApiResponseOfObject> {
+    addFavorite(id: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/favorite";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -869,14 +1046,14 @@ export class FavoritesClient {
                 try {
                     return this.processAddFavorite(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processAddFavorite(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processAddFavorite(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -887,14 +1064,14 @@ export class FavoritesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfObject.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -905,7 +1082,7 @@ export class FavoritesClient {
         return _observableOf(null as any);
     }
 
-    removeFavorite(id: string): Observable<ApiResponseOfObject> {
+    removeFavorite(id: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/favorite";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -927,14 +1104,14 @@ export class FavoritesClient {
                 try {
                     return this.processRemoveFavorite(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processRemoveFavorite(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processRemoveFavorite(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -945,14 +1122,14 @@ export class FavoritesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -963,7 +1140,7 @@ export class FavoritesClient {
         return _observableOf(null as any);
     }
 
-    getMyFavorites(): Observable<ApiResponseOfGetMyFavoritesResponse> {
+    getMyFavorites(): Observable<ApiResponse<GetMyFavoritesResponse>> {
         let url_ = this.baseUrl + "/api/v1/users/me/favorites";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -982,14 +1159,14 @@ export class FavoritesClient {
                 try {
                     return this.processGetMyFavorites(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetMyFavoritesResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetMyFavoritesResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetMyFavoritesResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetMyFavoritesResponse>>;
         }));
     }
 
-    protected processGetMyFavorites(response: HttpResponseBase): Observable<ApiResponseOfGetMyFavoritesResponse> {
+    protected processGetMyFavorites(response: HttpResponseBase): Observable<ApiResponse<GetMyFavoritesResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1000,7 +1177,7 @@ export class FavoritesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetMyFavoritesResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1023,7 +1200,7 @@ export class DeliveryClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getDelivery(id: string): Observable<ApiResponseOfListOfTrackingEntryDto> {
+    getDelivery(id: string): Observable<ApiResponse<TrackingEntryDto[]>> {
         let url_ = this.baseUrl + "/api/v1/orders/{id}/delivery";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1045,14 +1222,14 @@ export class DeliveryClient {
                 try {
                     return this.processGetDelivery(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfTrackingEntryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<TrackingEntryDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfTrackingEntryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<TrackingEntryDto[]>>;
         }));
     }
 
-    protected processGetDelivery(response: HttpResponseBase): Observable<ApiResponseOfListOfTrackingEntryDto> {
+    protected processGetDelivery(response: HttpResponseBase): Observable<ApiResponse<TrackingEntryDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1063,14 +1240,14 @@ export class DeliveryClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfTrackingEntryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1081,7 +1258,7 @@ export class DeliveryClient {
         return _observableOf(null as any);
     }
 
-    updateDelivery(id: string, cmd: UpdateDeliveryCommand): Observable<ApiResponseOfObject> {
+    updateDelivery(id: string, cmd: UpdateDeliveryCommand): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/orders/{id}/delivery";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1107,14 +1284,14 @@ export class DeliveryClient {
                 try {
                     return this.processUpdateDelivery(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processUpdateDelivery(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processUpdateDelivery(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1125,14 +1302,14 @@ export class DeliveryClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1155,7 +1332,7 @@ export class ReviewsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createReview(id: string, cmd: CreateReviewCommand): Observable<ApiResponseOfReviewCreateData> {
+    createReview(id: string, cmd: CreateReviewCommand): Observable<ApiResponse<ReviewCreateData>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/review";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1181,14 +1358,14 @@ export class ReviewsClient {
                 try {
                     return this.processCreateReview(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfReviewCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ReviewCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfReviewCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ReviewCreateData>>;
         }));
     }
 
-    protected processCreateReview(response: HttpResponseBase): Observable<ApiResponseOfReviewCreateData> {
+    protected processCreateReview(response: HttpResponseBase): Observable<ApiResponse<ReviewCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1199,14 +1376,14 @@ export class ReviewsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfReviewCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1217,7 +1394,7 @@ export class ReviewsClient {
         return _observableOf(null as any);
     }
 
-    getItemReviews(id: string): Observable<ApiResponseOfGetItemReviewsResponse> {
+    getItemReviews(id: string): Observable<ApiResponse<GetItemReviewsResponse>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/reviews";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1239,14 +1416,14 @@ export class ReviewsClient {
                 try {
                     return this.processGetItemReviews(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetItemReviewsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetItemReviewsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetItemReviewsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetItemReviewsResponse>>;
         }));
     }
 
-    protected processGetItemReviews(response: HttpResponseBase): Observable<ApiResponseOfGetItemReviewsResponse> {
+    protected processGetItemReviews(response: HttpResponseBase): Observable<ApiResponse<GetItemReviewsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1257,7 +1434,7 @@ export class ReviewsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetItemReviewsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1280,7 +1457,7 @@ export class VerificationsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createVerification(id: string, cmd: CreateVerificationCommand): Observable<ApiResponseOfVerificationCreateData> {
+    createVerification(id: string, cmd: CreateVerificationCommand): Observable<ApiResponse<VerificationCreateData>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/verify";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1306,14 +1483,14 @@ export class VerificationsClient {
                 try {
                     return this.processCreateVerification(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfVerificationCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<VerificationCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfVerificationCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<VerificationCreateData>>;
         }));
     }
 
-    protected processCreateVerification(response: HttpResponseBase): Observable<ApiResponseOfVerificationCreateData> {
+    protected processCreateVerification(response: HttpResponseBase): Observable<ApiResponse<VerificationCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1324,14 +1501,14 @@ export class VerificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfVerificationCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1342,7 +1519,7 @@ export class VerificationsClient {
         return _observableOf(null as any);
     }
 
-    getVerifications(id: string): Observable<ApiResponseOfGetVerificationsResponse> {
+    getVerifications(id: string): Observable<ApiResponse<GetVerificationsResponse>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/verifications";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1364,14 +1541,14 @@ export class VerificationsClient {
                 try {
                     return this.processGetVerifications(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetVerificationsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetVerificationsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetVerificationsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetVerificationsResponse>>;
         }));
     }
 
-    protected processGetVerifications(response: HttpResponseBase): Observable<ApiResponseOfGetVerificationsResponse> {
+    protected processGetVerifications(response: HttpResponseBase): Observable<ApiResponse<GetVerificationsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1382,14 +1559,14 @@ export class VerificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetVerificationsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1400,7 +1577,7 @@ export class VerificationsClient {
         return _observableOf(null as any);
     }
 
-    getExpertAssigned(): Observable<ApiResponseOfGetExpertAssignedResponse> {
+    getExpertAssigned(): Observable<ApiResponse<GetExpertAssignedResponse>> {
         let url_ = this.baseUrl + "/api/v1/expert/assigned";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1419,14 +1596,14 @@ export class VerificationsClient {
                 try {
                     return this.processGetExpertAssigned(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetExpertAssignedResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetExpertAssignedResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetExpertAssignedResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetExpertAssignedResponse>>;
         }));
     }
 
-    protected processGetExpertAssigned(response: HttpResponseBase): Observable<ApiResponseOfGetExpertAssignedResponse> {
+    protected processGetExpertAssigned(response: HttpResponseBase): Observable<ApiResponse<GetExpertAssignedResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1437,7 +1614,7 @@ export class VerificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetExpertAssignedResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1460,7 +1637,7 @@ export class AdminClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getFraudLogs(page: number, limit: number, decision?: string | null | undefined, minRisk?: number | null | undefined): Observable<ApiResponseOfObject> {
+    getFraudLogs(page: number, limit: number, decision?: string | null | undefined, minRisk?: number | null | undefined): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/fraud?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1491,14 +1668,14 @@ export class AdminClient {
                 try {
                     return this.processGetFraudLogs(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetFraudLogs(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processGetFraudLogs(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1509,7 +1686,7 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1520,7 +1697,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminUsers(page: number, limit: number): Observable<ApiResponseOfObject> {
+    getAdminUsers(page: number, limit: number): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/users?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1547,14 +1724,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminUsers(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetAdminUsers(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processGetAdminUsers(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1565,7 +1742,7 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1576,7 +1753,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    updateUserStatus(id: number, cmd: UpdateUserStatusCommand): Observable<ApiResponseOfObject> {
+    updateUserStatus(id: number, cmd: UpdateUserStatusCommand): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/users/{id}/status";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1602,14 +1779,14 @@ export class AdminClient {
                 try {
                     return this.processUpdateUserStatus(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processUpdateUserStatus(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processUpdateUserStatus(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1620,14 +1797,14 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1638,7 +1815,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminKpis(period?: string | null | undefined, from?: Date | null | undefined, to?: Date | null | undefined): Observable<ApiResponseOfObject> {
+    getAdminKpis(period?: string | null | undefined, from?: Date | null | undefined, to?: Date | null | undefined): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/kpis?";
         if (period !== undefined && period !== null)
             url_ += "period=" + encodeURIComponent("" + period) + "&";
@@ -1663,14 +1840,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminKpis(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetAdminKpis(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processGetAdminKpis(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1681,7 +1858,7 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1692,7 +1869,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminLatestKpi(): Observable<ApiResponseOfObject> {
+    getAdminLatestKpi(): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/kpis/latest";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1711,14 +1888,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminLatestKpi(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetAdminLatestKpi(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processGetAdminLatestKpi(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1729,14 +1906,14 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1747,7 +1924,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminGapAnalysis(limit: number, period?: string | null | undefined): Observable<ApiResponseOfObject> {
+    getAdminGapAnalysis(limit: number, period?: string | null | undefined): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/admin/gap?";
         if (limit === undefined || limit === null)
             throw new globalThis.Error("The parameter 'limit' must be defined and cannot be null.");
@@ -1772,14 +1949,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminGapAnalysis(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetAdminGapAnalysis(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processGetAdminGapAnalysis(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1790,7 +1967,7 @@ export class AdminClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1813,7 +1990,7 @@ export class SubcategoriesClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductSubcategoryDto> {
+    getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductSubcategoryDto[]>> {
         let url_ = this.baseUrl + "/api/v1/categories/{categoryId}/subcategories?";
         if (categoryId === undefined || categoryId === null)
             throw new globalThis.Error("The parameter 'categoryId' must be defined.");
@@ -1847,14 +2024,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processGetSubcategoriesByCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductSubcategoryDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductSubcategoryDto[]>>;
         }));
     }
 
-    protected processGetSubcategoriesByCategory(response: HttpResponseBase): Observable<ApiResponseOfListOfProductSubcategoryDto> {
+    protected processGetSubcategoriesByCategory(response: HttpResponseBase): Observable<ApiResponse<ProductSubcategoryDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1865,7 +2042,7 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1876,7 +2053,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    getSubcategories(page: number, limit: number, categoryId?: number | null | undefined, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductSubcategoryDto> {
+    getSubcategories(page: number, limit: number, categoryId?: number | null | undefined, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductSubcategoryDto[]>> {
         let url_ = this.baseUrl + "/api/v1/subcategories?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1911,14 +2088,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processGetSubcategories(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductSubcategoryDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductSubcategoryDto[]>>;
         }));
     }
 
-    protected processGetSubcategories(response: HttpResponseBase): Observable<ApiResponseOfListOfProductSubcategoryDto> {
+    protected processGetSubcategories(response: HttpResponseBase): Observable<ApiResponse<ProductSubcategoryDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1929,7 +2106,7 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1940,7 +2117,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    createSubcategory(cmd: CreateSubcategoryCommand): Observable<ApiResponseOfProductSubcategoryDto> {
+    createSubcategory(cmd: CreateSubcategoryCommand): Observable<ApiResponse<ProductSubcategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/subcategories";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1963,14 +2140,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processCreateSubcategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
         }));
     }
 
-    protected processCreateSubcategory(response: HttpResponseBase): Observable<ApiResponseOfProductSubcategoryDto> {
+    protected processCreateSubcategory(response: HttpResponseBase): Observable<ApiResponse<ProductSubcategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1981,14 +2158,14 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfProductSubcategoryDto.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1999,7 +2176,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    getSubcategoryById(id: number): Observable<ApiResponseOfProductSubcategoryDto> {
+    getSubcategoryById(id: number): Observable<ApiResponse<ProductSubcategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/subcategories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2021,14 +2198,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processGetSubcategoryById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
         }));
     }
 
-    protected processGetSubcategoryById(response: HttpResponseBase): Observable<ApiResponseOfProductSubcategoryDto> {
+    protected processGetSubcategoryById(response: HttpResponseBase): Observable<ApiResponse<ProductSubcategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2039,14 +2216,14 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2057,7 +2234,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    updateSubcategory(id: number, cmd: UpdateSubcategoryCommand): Observable<ApiResponseOfProductSubcategoryDto> {
+    updateSubcategory(id: number, cmd: UpdateSubcategoryCommand): Observable<ApiResponse<ProductSubcategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/subcategories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2083,14 +2260,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processUpdateSubcategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductSubcategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductSubcategoryDto>>;
         }));
     }
 
-    protected processUpdateSubcategory(response: HttpResponseBase): Observable<ApiResponseOfProductSubcategoryDto> {
+    protected processUpdateSubcategory(response: HttpResponseBase): Observable<ApiResponse<ProductSubcategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2101,14 +2278,14 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfProductSubcategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2119,7 +2296,7 @@ export class SubcategoriesClient {
         return _observableOf(null as any);
     }
 
-    deleteSubcategory(id: number): Observable<ApiResponseOfObject> {
+    deleteSubcategory(id: number): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/subcategories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2141,14 +2318,14 @@ export class SubcategoriesClient {
                 try {
                     return this.processDeleteSubcategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processDeleteSubcategory(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processDeleteSubcategory(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2159,14 +2336,14 @@ export class SubcategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2189,7 +2366,7 @@ export class RentalsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createRental(cmd: CreateRentalCommand): Observable<ApiResponseOfRentalCreateData> {
+    createRental(cmd: CreateRentalCommand): Observable<ApiResponse<RentalCreateData>> {
         let url_ = this.baseUrl + "/api/v1/rentals";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2212,14 +2389,14 @@ export class RentalsClient {
                 try {
                     return this.processCreateRental(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalCreateData>>;
         }));
     }
 
-    protected processCreateRental(response: HttpResponseBase): Observable<ApiResponseOfRentalCreateData> {
+    protected processCreateRental(response: HttpResponseBase): Observable<ApiResponse<RentalCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2230,14 +2407,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfRentalCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2248,7 +2425,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    getRentals(page: number, limit: number, status?: string | null | undefined): Observable<ApiResponseOfGetRentalsResponse> {
+    getRentals(page: number, limit: number, status?: string | null | undefined): Observable<ApiResponse<GetRentalsResponse>> {
         let url_ = this.baseUrl + "/api/v1/rentals?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -2277,14 +2454,14 @@ export class RentalsClient {
                 try {
                     return this.processGetRentals(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetRentalsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetRentalsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetRentalsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetRentalsResponse>>;
         }));
     }
 
-    protected processGetRentals(response: HttpResponseBase): Observable<ApiResponseOfGetRentalsResponse> {
+    protected processGetRentals(response: HttpResponseBase): Observable<ApiResponse<GetRentalsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2295,7 +2472,7 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetRentalsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2306,7 +2483,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    getRentalById(id: string): Observable<ApiResponseOfRentalDetailDto> {
+    getRentalById(id: string): Observable<ApiResponse<RentalDetailDto>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2328,14 +2505,14 @@ export class RentalsClient {
                 try {
                     return this.processGetRentalById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalDetailDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalDetailDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalDetailDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalDetailDto>>;
         }));
     }
 
-    protected processGetRentalById(response: HttpResponseBase): Observable<ApiResponseOfRentalDetailDto> {
+    protected processGetRentalById(response: HttpResponseBase): Observable<ApiResponse<RentalDetailDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2346,14 +2523,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfRentalDetailDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2364,7 +2541,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    confirmRental(id: string): Observable<ApiResponseOfRentalStatusData> {
+    confirmRental(id: string): Observable<ApiResponse<RentalStatusData>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/confirm";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2386,14 +2563,14 @@ export class RentalsClient {
                 try {
                     return this.processConfirmRental(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalStatusData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalStatusData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalStatusData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalStatusData>>;
         }));
     }
 
-    protected processConfirmRental(response: HttpResponseBase): Observable<ApiResponseOfRentalStatusData> {
+    protected processConfirmRental(response: HttpResponseBase): Observable<ApiResponse<RentalStatusData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2404,14 +2581,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfRentalStatusData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2422,7 +2599,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    activateRental(id: string): Observable<ApiResponseOfRentalStatusData> {
+    activateRental(id: string): Observable<ApiResponse<RentalStatusData>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/activate";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2444,14 +2621,14 @@ export class RentalsClient {
                 try {
                     return this.processActivateRental(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalStatusData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalStatusData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalStatusData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalStatusData>>;
         }));
     }
 
-    protected processActivateRental(response: HttpResponseBase): Observable<ApiResponseOfRentalStatusData> {
+    protected processActivateRental(response: HttpResponseBase): Observable<ApiResponse<RentalStatusData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2462,14 +2639,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfRentalStatusData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2480,7 +2657,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    completeRental(id: string, damaged: boolean): Observable<ApiResponseOfRentalCompleteData> {
+    completeRental(id: string, damaged: boolean): Observable<ApiResponse<RentalCompleteData>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/complete?";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2506,14 +2683,14 @@ export class RentalsClient {
                 try {
                     return this.processCompleteRental(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalCompleteData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalCompleteData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalCompleteData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalCompleteData>>;
         }));
     }
 
-    protected processCompleteRental(response: HttpResponseBase): Observable<ApiResponseOfRentalCompleteData> {
+    protected processCompleteRental(response: HttpResponseBase): Observable<ApiResponse<RentalCompleteData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2524,14 +2701,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfRentalCompleteData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2542,7 +2719,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    cancelRental(id: string): Observable<ApiResponseOfRentalStatusData> {
+    cancelRental(id: string): Observable<ApiResponse<RentalStatusData>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/cancel";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2564,14 +2741,14 @@ export class RentalsClient {
                 try {
                     return this.processCancelRental(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfRentalStatusData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalStatusData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfRentalStatusData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalStatusData>>;
         }));
     }
 
-    protected processCancelRental(response: HttpResponseBase): Observable<ApiResponseOfRentalStatusData> {
+    protected processCancelRental(response: HttpResponseBase): Observable<ApiResponse<RentalStatusData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2582,14 +2759,14 @@ export class RentalsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfRentalStatusData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2612,7 +2789,7 @@ export class OrdersClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createOrder(cmd: CreateOrderCommand): Observable<ApiResponseOfOrderCreateData> {
+    createOrder(cmd: CreateOrderCommand): Observable<ApiResponse<OrderCreateData>> {
         let url_ = this.baseUrl + "/api/v1/orders";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2635,14 +2812,14 @@ export class OrdersClient {
                 try {
                     return this.processCreateOrder(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfOrderCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<OrderCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfOrderCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<OrderCreateData>>;
         }));
     }
 
-    protected processCreateOrder(response: HttpResponseBase): Observable<ApiResponseOfOrderCreateData> {
+    protected processCreateOrder(response: HttpResponseBase): Observable<ApiResponse<OrderCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2653,14 +2830,14 @@ export class OrdersClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfOrderCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2671,7 +2848,7 @@ export class OrdersClient {
         return _observableOf(null as any);
     }
 
-    getOrders(): Observable<ApiResponseOfGetOrdersResponse> {
+    getOrders(): Observable<ApiResponse<GetOrdersResponse>> {
         let url_ = this.baseUrl + "/api/v1/orders";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2690,14 +2867,14 @@ export class OrdersClient {
                 try {
                     return this.processGetOrders(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetOrdersResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetOrdersResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetOrdersResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetOrdersResponse>>;
         }));
     }
 
-    protected processGetOrders(response: HttpResponseBase): Observable<ApiResponseOfGetOrdersResponse> {
+    protected processGetOrders(response: HttpResponseBase): Observable<ApiResponse<GetOrdersResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2708,7 +2885,7 @@ export class OrdersClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetOrdersResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2719,7 +2896,7 @@ export class OrdersClient {
         return _observableOf(null as any);
     }
 
-    getOrderById(id: string): Observable<ApiResponseOfOrderDetailDto> {
+    getOrderById(id: string): Observable<ApiResponse<OrderDetailDto>> {
         let url_ = this.baseUrl + "/api/v1/orders/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -2741,14 +2918,14 @@ export class OrdersClient {
                 try {
                     return this.processGetOrderById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfOrderDetailDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<OrderDetailDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfOrderDetailDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<OrderDetailDto>>;
         }));
     }
 
-    protected processGetOrderById(response: HttpResponseBase): Observable<ApiResponseOfOrderDetailDto> {
+    protected processGetOrderById(response: HttpResponseBase): Observable<ApiResponse<OrderDetailDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2759,14 +2936,14 @@ export class OrdersClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfOrderDetailDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2789,7 +2966,7 @@ export class PaymentsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createPayment(cmd: CreatePaymentCommand): Observable<ApiResponseOfPaymentCreateData> {
+    createPayment(cmd: CreatePaymentCommand): Observable<ApiResponse<PaymentCreateData>> {
         let url_ = this.baseUrl + "/api/v1/payments";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2812,14 +2989,14 @@ export class PaymentsClient {
                 try {
                     return this.processCreatePayment(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPaymentCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<PaymentCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPaymentCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<PaymentCreateData>>;
         }));
     }
 
-    protected processCreatePayment(response: HttpResponseBase): Observable<ApiResponseOfPaymentCreateData> {
+    protected processCreatePayment(response: HttpResponseBase): Observable<ApiResponse<PaymentCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2830,14 +3007,14 @@ export class PaymentsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfPaymentCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2848,7 +3025,7 @@ export class PaymentsClient {
         return _observableOf(null as any);
     }
 
-    getPaymentByOrder(orderId: string): Observable<ApiResponseOfPaymentDto> {
+    getPaymentByOrder(orderId: string): Observable<ApiResponse<PaymentDto>> {
         let url_ = this.baseUrl + "/api/v1/payments/{orderId}";
         if (orderId === undefined || orderId === null)
             throw new globalThis.Error("The parameter 'orderId' must be defined.");
@@ -2870,14 +3047,14 @@ export class PaymentsClient {
                 try {
                     return this.processGetPaymentByOrder(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfPaymentDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<PaymentDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfPaymentDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<PaymentDto>>;
         }));
     }
 
-    protected processGetPaymentByOrder(response: HttpResponseBase): Observable<ApiResponseOfPaymentDto> {
+    protected processGetPaymentByOrder(response: HttpResponseBase): Observable<ApiResponse<PaymentDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2888,14 +3065,14 @@ export class PaymentsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfPaymentDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2918,7 +3095,7 @@ export class SupportClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createSupportTicket(cmd: CreateTicketCommand): Observable<ApiResponseOfSupportCreateTicketData> {
+    createSupportTicket(cmd: CreateTicketCommand): Observable<ApiResponse<SupportCreateTicketData>> {
         let url_ = this.baseUrl + "/api/v1/support/tickets";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2941,14 +3118,14 @@ export class SupportClient {
                 try {
                     return this.processCreateSupportTicket(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfSupportCreateTicketData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<SupportCreateTicketData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfSupportCreateTicketData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<SupportCreateTicketData>>;
         }));
     }
 
-    protected processCreateSupportTicket(response: HttpResponseBase): Observable<ApiResponseOfSupportCreateTicketData> {
+    protected processCreateSupportTicket(response: HttpResponseBase): Observable<ApiResponse<SupportCreateTicketData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2959,14 +3136,14 @@ export class SupportClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfSupportCreateTicketData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2977,7 +3154,7 @@ export class SupportClient {
         return _observableOf(null as any);
     }
 
-    getSupportTickets(): Observable<ApiResponseOfGetTicketsResponse> {
+    getSupportTickets(): Observable<ApiResponse<GetTicketsResponse>> {
         let url_ = this.baseUrl + "/api/v1/support/tickets";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2996,14 +3173,14 @@ export class SupportClient {
                 try {
                     return this.processGetSupportTickets(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetTicketsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetTicketsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetTicketsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetTicketsResponse>>;
         }));
     }
 
-    protected processGetSupportTickets(response: HttpResponseBase): Observable<ApiResponseOfGetTicketsResponse> {
+    protected processGetSupportTickets(response: HttpResponseBase): Observable<ApiResponse<GetTicketsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3014,7 +3191,7 @@ export class SupportClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetTicketsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3025,7 +3202,7 @@ export class SupportClient {
         return _observableOf(null as any);
     }
 
-    postSupportMessage(id: string, cmd: PostSupportMessageCommand): Observable<ApiResponseOfSupportMessageData> {
+    postSupportMessage(id: string, cmd: PostSupportMessageCommand): Observable<ApiResponse<SupportMessageData>> {
         let url_ = this.baseUrl + "/api/v1/support/tickets/{id}/messages";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3051,14 +3228,14 @@ export class SupportClient {
                 try {
                     return this.processPostSupportMessage(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfSupportMessageData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<SupportMessageData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfSupportMessageData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<SupportMessageData>>;
         }));
     }
 
-    protected processPostSupportMessage(response: HttpResponseBase): Observable<ApiResponseOfSupportMessageData> {
+    protected processPostSupportMessage(response: HttpResponseBase): Observable<ApiResponse<SupportMessageData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3069,14 +3246,14 @@ export class SupportClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfSupportMessageData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3087,7 +3264,7 @@ export class SupportClient {
         return _observableOf(null as any);
     }
 
-    updateSupportTicketStatus(id: string, cmd: UpdateTicketStatusCommand): Observable<ApiResponseOfSupportTicketStatusData> {
+    updateSupportTicketStatus(id: string, cmd: UpdateTicketStatusCommand): Observable<ApiResponse<SupportTicketStatusData>> {
         let url_ = this.baseUrl + "/api/v1/support/tickets/{id}/status";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3113,14 +3290,14 @@ export class SupportClient {
                 try {
                     return this.processUpdateSupportTicketStatus(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfSupportTicketStatusData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<SupportTicketStatusData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfSupportTicketStatusData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<SupportTicketStatusData>>;
         }));
     }
 
-    protected processUpdateSupportTicketStatus(response: HttpResponseBase): Observable<ApiResponseOfSupportTicketStatusData> {
+    protected processUpdateSupportTicketStatus(response: HttpResponseBase): Observable<ApiResponse<SupportTicketStatusData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3131,14 +3308,14 @@ export class SupportClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfSupportTicketStatusData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3161,7 +3338,7 @@ export class ChatClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createChat(cmd: CreateChatCommand): Observable<ApiResponseOfChatCreateData> {
+    createChat(cmd: CreateChatCommand): Observable<ApiResponse<ChatCreateData>> {
         let url_ = this.baseUrl + "/api/v1/chats";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3184,14 +3361,14 @@ export class ChatClient {
                 try {
                     return this.processCreateChat(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfChatCreateData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ChatCreateData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfChatCreateData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ChatCreateData>>;
         }));
     }
 
-    protected processCreateChat(response: HttpResponseBase): Observable<ApiResponseOfChatCreateData> {
+    protected processCreateChat(response: HttpResponseBase): Observable<ApiResponse<ChatCreateData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3202,14 +3379,14 @@ export class ChatClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfChatCreateData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3220,7 +3397,7 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    getChats(): Observable<ApiResponseOfGetChatsResponse> {
+    getChats(): Observable<ApiResponse<GetChatsResponse>> {
         let url_ = this.baseUrl + "/api/v1/chats";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3239,14 +3416,14 @@ export class ChatClient {
                 try {
                     return this.processGetChats(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetChatsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetChatsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetChatsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetChatsResponse>>;
         }));
     }
 
-    protected processGetChats(response: HttpResponseBase): Observable<ApiResponseOfGetChatsResponse> {
+    protected processGetChats(response: HttpResponseBase): Observable<ApiResponse<GetChatsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3257,7 +3434,7 @@ export class ChatClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetChatsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3268,7 +3445,7 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    postChatMessage(id: string, cmd: PostChatMessageCommand): Observable<ApiResponseOfChatMessageData> {
+    postChatMessage(id: string, cmd: PostChatMessageCommand): Observable<ApiResponse<ChatMessageData>> {
         let url_ = this.baseUrl + "/api/v1/chats/{id}/messages";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3294,14 +3471,14 @@ export class ChatClient {
                 try {
                     return this.processPostChatMessage(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfChatMessageData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ChatMessageData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfChatMessageData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ChatMessageData>>;
         }));
     }
 
-    protected processPostChatMessage(response: HttpResponseBase): Observable<ApiResponseOfChatMessageData> {
+    protected processPostChatMessage(response: HttpResponseBase): Observable<ApiResponse<ChatMessageData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3312,14 +3489,14 @@ export class ChatClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfChatMessageData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3330,7 +3507,7 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    getChatMessages(id: string): Observable<ApiResponseOfGetChatMessagesResponse> {
+    getChatMessages(id: string): Observable<ApiResponse<GetChatMessagesResponse>> {
         let url_ = this.baseUrl + "/api/v1/chats/{id}/messages";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3352,14 +3529,14 @@ export class ChatClient {
                 try {
                     return this.processGetChatMessages(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetChatMessagesResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetChatMessagesResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetChatMessagesResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetChatMessagesResponse>>;
         }));
     }
 
-    protected processGetChatMessages(response: HttpResponseBase): Observable<ApiResponseOfGetChatMessagesResponse> {
+    protected processGetChatMessages(response: HttpResponseBase): Observable<ApiResponse<GetChatMessagesResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3370,14 +3547,14 @@ export class ChatClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetChatMessagesResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3400,7 +3577,7 @@ export class NotificationsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getNotifications(): Observable<ApiResponseOfGetNotificationsResponse> {
+    getNotifications(): Observable<ApiResponse<GetNotificationsResponse>> {
         let url_ = this.baseUrl + "/api/v1/notifications";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3419,14 +3596,14 @@ export class NotificationsClient {
                 try {
                     return this.processGetNotifications(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetNotificationsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetNotificationsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetNotificationsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetNotificationsResponse>>;
         }));
     }
 
-    protected processGetNotifications(response: HttpResponseBase): Observable<ApiResponseOfGetNotificationsResponse> {
+    protected processGetNotifications(response: HttpResponseBase): Observable<ApiResponse<GetNotificationsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3437,7 +3614,7 @@ export class NotificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetNotificationsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3448,7 +3625,7 @@ export class NotificationsClient {
         return _observableOf(null as any);
     }
 
-    markAllNotificationsRead(): Observable<ApiResponseOfNotificationMarkAllData> {
+    markAllNotificationsRead(): Observable<ApiResponse<NotificationMarkAllData>> {
         let url_ = this.baseUrl + "/api/v1/notifications/read-all";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3467,14 +3644,14 @@ export class NotificationsClient {
                 try {
                     return this.processMarkAllNotificationsRead(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfNotificationMarkAllData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<NotificationMarkAllData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfNotificationMarkAllData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<NotificationMarkAllData>>;
         }));
     }
 
-    protected processMarkAllNotificationsRead(response: HttpResponseBase): Observable<ApiResponseOfNotificationMarkAllData> {
+    protected processMarkAllNotificationsRead(response: HttpResponseBase): Observable<ApiResponse<NotificationMarkAllData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3485,7 +3662,7 @@ export class NotificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfNotificationMarkAllData.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3496,7 +3673,7 @@ export class NotificationsClient {
         return _observableOf(null as any);
     }
 
-    markNotificationRead(id: string): Observable<ApiResponseOfObject> {
+    markNotificationRead(id: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/notifications/{id}/read";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3518,14 +3695,14 @@ export class NotificationsClient {
                 try {
                     return this.processMarkNotificationRead(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processMarkNotificationRead(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processMarkNotificationRead(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3536,14 +3713,14 @@ export class NotificationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3566,7 +3743,7 @@ export class RecommendationsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getRecommendationsV1(): Observable<ApiResponseOfGetRecommendationsResponse> {
+    getRecommendationsV1(): Observable<ApiResponse<GetRecommendationsResponse>> {
         let url_ = this.baseUrl + "/api/v1/recommendations";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3585,14 +3762,14 @@ export class RecommendationsClient {
                 try {
                     return this.processGetRecommendationsV1(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfGetRecommendationsResponse>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetRecommendationsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfGetRecommendationsResponse>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetRecommendationsResponse>>;
         }));
     }
 
-    protected processGetRecommendationsV1(response: HttpResponseBase): Observable<ApiResponseOfGetRecommendationsResponse> {
+    protected processGetRecommendationsV1(response: HttpResponseBase): Observable<ApiResponse<GetRecommendationsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3603,7 +3780,7 @@ export class RecommendationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfGetRecommendationsResponse.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3614,7 +3791,7 @@ export class RecommendationsClient {
         return _observableOf(null as any);
     }
 
-    recordRecommendationClick(id: string): Observable<ApiResponseOfObject> {
+    recordRecommendationClick(id: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/recommendations/{id}/click";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3636,14 +3813,14 @@ export class RecommendationsClient {
                 try {
                     return this.processRecordRecommendationClick(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processRecordRecommendationClick(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processRecordRecommendationClick(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3654,14 +3831,14 @@ export class RecommendationsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3684,7 +3861,7 @@ export class MediaClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    uploadMedia(entityId?: string | null | undefined, entityType?: string | null | undefined, file?: FileParameter | null | undefined): Observable<ApiResponseOfMediaUploadData> {
+    uploadMedia(entityId?: string | null | undefined, entityType?: string | null | undefined, file?: FileParameter | null | undefined): Observable<ApiResponse<MediaUploadData>> {
         let url_ = this.baseUrl + "/api/v1/media?";
         if (entityId !== undefined && entityId !== null)
             url_ += "entityId=" + encodeURIComponent("" + entityId) + "&";
@@ -3712,14 +3889,14 @@ export class MediaClient {
                 try {
                     return this.processUploadMedia(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfMediaUploadData>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<MediaUploadData>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfMediaUploadData>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<MediaUploadData>>;
         }));
     }
 
-    protected processUploadMedia(response: HttpResponseBase): Observable<ApiResponseOfMediaUploadData> {
+    protected processUploadMedia(response: HttpResponseBase): Observable<ApiResponse<MediaUploadData>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3730,14 +3907,14 @@ export class MediaClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfMediaUploadData.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3760,7 +3937,7 @@ export class CategoriesClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfProductCategoryDto> {
+    getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductCategoryDto[]>> {
         let url_ = this.baseUrl + "/api/v1/categories?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -3793,14 +3970,14 @@ export class CategoriesClient {
                 try {
                     return this.processGetCategories(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfProductCategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductCategoryDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfProductCategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductCategoryDto[]>>;
         }));
     }
 
-    protected processGetCategories(response: HttpResponseBase): Observable<ApiResponseOfListOfProductCategoryDto> {
+    protected processGetCategories(response: HttpResponseBase): Observable<ApiResponse<ProductCategoryDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3811,7 +3988,7 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfProductCategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3822,7 +3999,7 @@ export class CategoriesClient {
         return _observableOf(null as any);
     }
 
-    createCategory(cmd: CreateCategoryCommand): Observable<ApiResponseOfProductCategoryDto> {
+    createCategory(cmd: CreateCategoryCommand): Observable<ApiResponse<ProductCategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/categories";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3845,14 +4022,14 @@ export class CategoriesClient {
                 try {
                     return this.processCreateCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductCategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductCategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductCategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductCategoryDto>>;
         }));
     }
 
-    protected processCreateCategory(response: HttpResponseBase): Observable<ApiResponseOfProductCategoryDto> {
+    protected processCreateCategory(response: HttpResponseBase): Observable<ApiResponse<ProductCategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3863,14 +4040,14 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfProductCategoryDto.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3881,7 +4058,7 @@ export class CategoriesClient {
         return _observableOf(null as any);
     }
 
-    getCategoryById(id: number): Observable<ApiResponseOfProductCategoryDto> {
+    getCategoryById(id: number): Observable<ApiResponse<ProductCategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/categories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3903,14 +4080,14 @@ export class CategoriesClient {
                 try {
                     return this.processGetCategoryById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductCategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductCategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductCategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductCategoryDto>>;
         }));
     }
 
-    protected processGetCategoryById(response: HttpResponseBase): Observable<ApiResponseOfProductCategoryDto> {
+    protected processGetCategoryById(response: HttpResponseBase): Observable<ApiResponse<ProductCategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3921,14 +4098,14 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfProductCategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3939,7 +4116,7 @@ export class CategoriesClient {
         return _observableOf(null as any);
     }
 
-    updateCategory(id: number, cmd: UpdateCategoryCommand): Observable<ApiResponseOfProductCategoryDto> {
+    updateCategory(id: number, cmd: UpdateCategoryCommand): Observable<ApiResponse<ProductCategoryDto>> {
         let url_ = this.baseUrl + "/api/v1/categories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3965,14 +4142,14 @@ export class CategoriesClient {
                 try {
                     return this.processUpdateCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfProductCategoryDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<ProductCategoryDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfProductCategoryDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<ProductCategoryDto>>;
         }));
     }
 
-    protected processUpdateCategory(response: HttpResponseBase): Observable<ApiResponseOfProductCategoryDto> {
+    protected processUpdateCategory(response: HttpResponseBase): Observable<ApiResponse<ProductCategoryDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3983,14 +4160,14 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfProductCategoryDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4001,7 +4178,7 @@ export class CategoriesClient {
         return _observableOf(null as any);
     }
 
-    deleteCategory(id: number): Observable<ApiResponseOfObject> {
+    deleteCategory(id: number): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/categories/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -4023,14 +4200,14 @@ export class CategoriesClient {
                 try {
                     return this.processDeleteCategory(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processDeleteCategory(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processDeleteCategory(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4041,14 +4218,14 @@ export class CategoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4071,7 +4248,7 @@ export class BrandsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponseOfListOfBrandDto> {
+    getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<BrandDto[]>> {
         let url_ = this.baseUrl + "/api/v1/brands?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -4104,14 +4281,14 @@ export class BrandsClient {
                 try {
                     return this.processGetBrands(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfListOfBrandDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<BrandDto[]>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfListOfBrandDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<BrandDto[]>>;
         }));
     }
 
-    protected processGetBrands(response: HttpResponseBase): Observable<ApiResponseOfListOfBrandDto> {
+    protected processGetBrands(response: HttpResponseBase): Observable<ApiResponse<BrandDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4122,7 +4299,7 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfListOfBrandDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4133,7 +4310,7 @@ export class BrandsClient {
         return _observableOf(null as any);
     }
 
-    createBrand(cmd: CreateBrandCommand): Observable<ApiResponseOfBrandDto> {
+    createBrand(cmd: CreateBrandCommand): Observable<ApiResponse<BrandDto>> {
         let url_ = this.baseUrl + "/api/v1/brands";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4156,14 +4333,14 @@ export class BrandsClient {
                 try {
                     return this.processCreateBrand(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfBrandDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<BrandDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfBrandDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<BrandDto>>;
         }));
     }
 
-    protected processCreateBrand(response: HttpResponseBase): Observable<ApiResponseOfBrandDto> {
+    protected processCreateBrand(response: HttpResponseBase): Observable<ApiResponse<BrandDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4174,14 +4351,14 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = ApiResponseOfBrandDto.fromJS(resultData201);
+            result201 = ApiResponse.fromJS(resultData201);
             return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4192,7 +4369,7 @@ export class BrandsClient {
         return _observableOf(null as any);
     }
 
-    getBrandById(id: number): Observable<ApiResponseOfBrandDto> {
+    getBrandById(id: number): Observable<ApiResponse<BrandDto>> {
         let url_ = this.baseUrl + "/api/v1/brands/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -4214,14 +4391,14 @@ export class BrandsClient {
                 try {
                     return this.processGetBrandById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfBrandDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<BrandDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfBrandDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<BrandDto>>;
         }));
     }
 
-    protected processGetBrandById(response: HttpResponseBase): Observable<ApiResponseOfBrandDto> {
+    protected processGetBrandById(response: HttpResponseBase): Observable<ApiResponse<BrandDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4232,14 +4409,14 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfBrandDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4250,7 +4427,7 @@ export class BrandsClient {
         return _observableOf(null as any);
     }
 
-    updateBrand(id: number, cmd: UpdateBrandCommand): Observable<ApiResponseOfBrandDto> {
+    updateBrand(id: number, cmd: UpdateBrandCommand): Observable<ApiResponse<BrandDto>> {
         let url_ = this.baseUrl + "/api/v1/brands/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -4276,14 +4453,14 @@ export class BrandsClient {
                 try {
                     return this.processUpdateBrand(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfBrandDto>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<BrandDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfBrandDto>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<BrandDto>>;
         }));
     }
 
-    protected processUpdateBrand(response: HttpResponseBase): Observable<ApiResponseOfBrandDto> {
+    protected processUpdateBrand(response: HttpResponseBase): Observable<ApiResponse<BrandDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4294,14 +4471,14 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfBrandDto.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ApiResponseOfObject.fromJS(resultData400);
+            result400 = ApiResponse.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4312,7 +4489,7 @@ export class BrandsClient {
         return _observableOf(null as any);
     }
 
-    deleteBrand(id: number): Observable<ApiResponseOfObject> {
+    deleteBrand(id: number): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/brands/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -4334,14 +4511,14 @@ export class BrandsClient {
                 try {
                     return this.processDeleteBrand(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponseOfObject>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponseOfObject>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processDeleteBrand(response: HttpResponseBase): Observable<ApiResponseOfObject> {
+    protected processDeleteBrand(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4352,14 +4529,14 @@ export class BrandsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponseOfObject.fromJS(resultData200);
+            result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ApiResponseOfObject.fromJS(resultData404);
+            result404 = ApiResponse.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4371,85 +4548,9 @@ export class BrandsClient {
     }
 }
 
-export class ApiResponseOfAuthRegisterData implements IApiResponseOfAuthRegisterData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthRegisterData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfAuthRegisterData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? AuthRegisterData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfAuthRegisterData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfAuthRegisterData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfAuthRegisterData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthRegisterData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class AuthRegisterData implements IAuthRegisterData {
     message?: string;
@@ -4491,85 +4592,9 @@ export interface IAuthRegisterData {
     userId?: number | undefined;
 }
 
-export class ApiResponseOfObject implements IApiResponseOfObject {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: any | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"];
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfObject {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfObject();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfObject {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: any | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class RegisterCommand implements IRegisterCommand {
     email?: string;
@@ -4653,85 +4678,9 @@ export enum UserType {
     Both = 3,
 }
 
-export class ApiResponseOfAuthVerifyEmailData implements IApiResponseOfAuthVerifyEmailData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthVerifyEmailData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfAuthVerifyEmailData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? AuthVerifyEmailData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfAuthVerifyEmailData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfAuthVerifyEmailData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfAuthVerifyEmailData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthVerifyEmailData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class AuthVerifyEmailData implements IAuthVerifyEmailData {
     message?: string;
@@ -4845,19 +4794,10 @@ export interface ISendEmailConfirmationCommand {
     email?: string;
 }
 
-export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthLoginData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
+export class ForgotPasswordCommand implements IForgotPasswordCommand {
+    email?: string;
 
-    constructor(data?: IApiResponseOfAuthLoginData) {
+    constructor(data?: IForgotPasswordCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4868,62 +4808,115 @@ export class ApiResponseOfAuthLoginData implements IApiResponseOfAuthLoginData {
 
     init(_data?: any) {
         if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? AuthLoginData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
+            this.email = _data["email"];
         }
     }
 
-    static fromJS(data: any): ApiResponseOfAuthLoginData {
+    static fromJS(data: any): ForgotPasswordCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfAuthLoginData();
+        let result = new ForgotPasswordCommand();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
+        data["email"] = this.email;
         return data;
     }
 }
 
-export interface IApiResponseOfAuthLoginData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthLoginData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
+export interface IForgotPasswordCommand {
+    email?: string;
 }
+
+export class ResetPasswordCommand implements IResetPasswordCommand {
+    email?: string;
+    token?: string;
+    newPassword?: string;
+
+    constructor(data?: IResetPasswordCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.token = _data["token"];
+            this.newPassword = _data["newPassword"];
+        }
+    }
+
+    static fromJS(data: any): ResetPasswordCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResetPasswordCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["token"] = this.token;
+        data["newPassword"] = this.newPassword;
+        return data;
+    }
+}
+
+export interface IResetPasswordCommand {
+    email?: string;
+    token?: string;
+    newPassword?: string;
+}
+
+export class VerifyResetTokenCommand implements IVerifyResetTokenCommand {
+    email?: string;
+    token?: string;
+
+    constructor(data?: IVerifyResetTokenCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): VerifyResetTokenCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new VerifyResetTokenCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["token"] = this.token;
+        return data;
+    }
+}
+
+export interface IVerifyResetTokenCommand {
+    email?: string;
+    token?: string;
+}
+
+
+
+
 
 export class AuthLoginData implements IAuthLoginData {
     accessToken?: string | undefined;
@@ -5069,85 +5062,9 @@ export interface ILoginCommand {
     password?: string;
 }
 
-export class ApiResponseOfAuthRefreshData implements IApiResponseOfAuthRefreshData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthRefreshData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfAuthRefreshData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? AuthRefreshData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfAuthRefreshData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfAuthRefreshData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfAuthRefreshData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthRefreshData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class AuthRefreshData implements IAuthRefreshData {
     accessToken?: string | undefined;
@@ -5229,85 +5146,9 @@ export interface IRefreshTokenCommand {
     refreshToken?: string;
 }
 
-export class ApiResponseOfAuthMeData implements IApiResponseOfAuthMeData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthMeData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfAuthMeData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? AuthMeData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfAuthMeData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfAuthMeData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfAuthMeData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: AuthMeData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class AuthMeData implements IAuthMeData {
     id?: number;
@@ -5445,93 +5286,9 @@ export interface IUpdateUserCommand {
     profilePictureUrl?: string | undefined;
 }
 
-export class ApiResponseOfListOfItemListDto implements IApiResponseOfListOfItemListDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemListDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfListOfItemListDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(ItemListDto.fromJS(item));
-            }
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfListOfItemListDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfListOfItemListDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfListOfItemListDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemListDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ItemListDto implements IItemListDto {
     id?: string;
@@ -5619,7 +5376,8 @@ export interface IItemListDto {
 
 export class ItemCategoryRef implements IItemCategoryRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 
     constructor(data?: IItemCategoryRef) {
         if (data) {
@@ -5633,7 +5391,8 @@ export class ItemCategoryRef implements IItemCategoryRef {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
         }
     }
 
@@ -5647,19 +5406,22 @@ export class ItemCategoryRef implements IItemCategoryRef {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
         return data;
     }
 }
 
 export interface IItemCategoryRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 }
 
 export class ItemSubcategoryRef implements IItemSubcategoryRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 
     constructor(data?: IItemSubcategoryRef) {
         if (data) {
@@ -5673,7 +5435,8 @@ export class ItemSubcategoryRef implements IItemSubcategoryRef {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
         }
     }
 
@@ -5687,19 +5450,22 @@ export class ItemSubcategoryRef implements IItemSubcategoryRef {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
         return data;
     }
 }
 
 export interface IItemSubcategoryRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 }
 
 export class ItemBrandRef implements IItemBrandRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 
     constructor(data?: IItemBrandRef) {
         if (data) {
@@ -5713,7 +5479,8 @@ export class ItemBrandRef implements IItemBrandRef {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
+            this.nameAr = _data["nameAr"];
+            this.nameEn = _data["nameEn"];
         }
     }
 
@@ -5727,95 +5494,21 @@ export class ItemBrandRef implements IItemBrandRef {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
+        data["nameAr"] = this.nameAr;
+        data["nameEn"] = this.nameEn;
         return data;
     }
 }
 
 export interface IItemBrandRef {
     id?: number;
-    name?: string;
+    nameAr?: string;
+    nameEn?: string;
 }
 
-export class ApiResponseOfItemCreateData implements IApiResponseOfItemCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfItemCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ItemCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfItemCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfItemCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfItemCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ItemCreateData implements IItemCreateData {
     id?: string | undefined;
@@ -6049,85 +5742,9 @@ export interface ICreateItemImageCommand {
     isPrimary?: boolean;
 }
 
-export class ApiResponseOfItemDetailDto implements IApiResponseOfItemDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfItemDetailDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ItemDetailDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfItemDetailDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfItemDetailDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfItemDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ItemDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ItemDetailDto implements IItemDetailDto {
     id?: string;
@@ -6509,85 +6126,9 @@ export interface IUpdateItemCommand {
     images?: CreateItemImageCommand[] | undefined;
 }
 
-export class ApiResponseOfSearchItemsResponse implements IApiResponseOfSearchItemsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SearchItemsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfSearchItemsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? SearchItemsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfSearchItemsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfSearchItemsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfSearchItemsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SearchItemsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class SearchItemsResponse implements ISearchItemsResponse {
     items?: ItemListDto[];
@@ -6645,85 +6186,9 @@ export interface ISearchItemsResponse {
     pages?: number;
 }
 
-export class ApiResponseOfGetMyFavoritesResponse implements IApiResponseOfGetMyFavoritesResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetMyFavoritesResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetMyFavoritesResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetMyFavoritesResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetMyFavoritesResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetMyFavoritesResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetMyFavoritesResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetMyFavoritesResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetMyFavoritesResponse implements IGetMyFavoritesResponse {
     success?: boolean;
@@ -6829,93 +6294,9 @@ export interface IFavoriteItemDto {
     city?: string | undefined;
 }
 
-export class ApiResponseOfListOfTrackingEntryDto implements IApiResponseOfListOfTrackingEntryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: TrackingEntryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfListOfTrackingEntryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(TrackingEntryDto.fromJS(item));
-            }
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfListOfTrackingEntryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfListOfTrackingEntryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfListOfTrackingEntryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: TrackingEntryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class TrackingEntryDto implements ITrackingEntryDto {
     status?: string;
@@ -7005,85 +6386,9 @@ export interface IUpdateDeliveryCommand {
     location?: string | undefined;
 }
 
-export class ApiResponseOfReviewCreateData implements IApiResponseOfReviewCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ReviewCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfReviewCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ReviewCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfReviewCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfReviewCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfReviewCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ReviewCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ReviewCreateData implements IReviewCreateData {
     reviewId?: string | undefined;
@@ -7173,85 +6478,9 @@ export interface ICreateReviewCommand {
     comment?: string | undefined;
 }
 
-export class ApiResponseOfGetItemReviewsResponse implements IApiResponseOfGetItemReviewsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetItemReviewsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetItemReviewsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetItemReviewsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetItemReviewsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetItemReviewsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetItemReviewsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetItemReviewsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetItemReviewsResponse implements IGetItemReviewsResponse {
     reviews?: ReviewDto[];
@@ -7397,85 +6626,9 @@ export interface IReviewerDto {
     profileImageUrl?: string | undefined;
 }
 
-export class ApiResponseOfVerificationCreateData implements IApiResponseOfVerificationCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: VerificationCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfVerificationCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? VerificationCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfVerificationCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfVerificationCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfVerificationCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: VerificationCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class VerificationCreateData implements IVerificationCreateData {
     verificationId?: string | undefined;
@@ -7569,85 +6722,9 @@ export interface ICreateVerificationCommand {
     notes?: string | undefined;
 }
 
-export class ApiResponseOfGetVerificationsResponse implements IApiResponseOfGetVerificationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetVerificationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetVerificationsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetVerificationsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetVerificationsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetVerificationsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetVerificationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetVerificationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetVerificationsResponse implements IGetVerificationsResponse {
     success?: boolean;
@@ -7757,85 +6834,9 @@ export interface IVerificationDto {
     createdAt?: Date;
 }
 
-export class ApiResponseOfGetExpertAssignedResponse implements IApiResponseOfGetExpertAssignedResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetExpertAssignedResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetExpertAssignedResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetExpertAssignedResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetExpertAssignedResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetExpertAssignedResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetExpertAssignedResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetExpertAssignedResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetExpertAssignedResponse implements IGetExpertAssignedResponse {
     assignments?: AssignedVerificationDto[];
@@ -7985,93 +6986,9 @@ export interface IUpdateUserStatusCommand {
     isActive?: boolean;
 }
 
-export class ApiResponseOfListOfProductSubcategoryDto implements IApiResponseOfListOfProductSubcategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductSubcategoryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfListOfProductSubcategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(ProductSubcategoryDto.fromJS(item));
-            }
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfListOfProductSubcategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfListOfProductSubcategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfListOfProductSubcategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductSubcategoryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ProductSubcategoryDto implements IProductSubcategoryDto {
     id?: number;
@@ -8082,6 +6999,8 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
+    categoryNameAr?: string;
+    categoryNameEn?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
@@ -8105,6 +7024,8 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
             this.logoId = _data["logoId"];
             this.logoUrl = _data["logoUrl"];
             this.categoryId = _data["categoryId"];
+            this.categoryNameAr = _data["categoryNameAr"];
+            this.categoryNameEn = _data["categoryNameEn"];
             this.productCount = _data["productCount"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : undefined as any;
             this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : undefined as any;
@@ -8128,6 +7049,8 @@ export class ProductSubcategoryDto implements IProductSubcategoryDto {
         data["logoId"] = this.logoId;
         data["logoUrl"] = this.logoUrl;
         data["categoryId"] = this.categoryId;
+        data["categoryNameAr"] = this.categoryNameAr;
+        data["categoryNameEn"] = this.categoryNameEn;
         data["productCount"] = this.productCount;
         data["created"] = this.created ? this.created.toISOString() : undefined as any;
         data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : undefined as any;
@@ -8144,90 +7067,16 @@ export interface IProductSubcategoryDto {
     logoId?: string | undefined;
     logoUrl?: string | undefined;
     categoryId?: number;
+    categoryNameAr?: string;
+    categoryNameEn?: string;
     productCount?: number;
     created?: Date;
     lastModified?: Date | undefined;
 }
 
-export class ApiResponseOfRentalCreateData implements IApiResponseOfRentalCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfRentalCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? RentalCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfRentalCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfRentalCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfRentalCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class RentalCreateData implements IRentalCreateData {
     rentalId?: string | undefined;
@@ -8329,85 +7178,9 @@ export interface ICreateRentalCommand {
     pricingType?: string;
 }
 
-export class ApiResponseOfGetRentalsResponse implements IApiResponseOfGetRentalsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetRentalsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetRentalsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetRentalsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetRentalsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetRentalsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetRentalsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetRentalsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetRentalsResponse implements IGetRentalsResponse {
     rentals?: RentalListDto[];
@@ -8529,85 +7302,9 @@ export interface IRentalListDto {
     depositStatus?: string;
 }
 
-export class ApiResponseOfRentalDetailDto implements IApiResponseOfRentalDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfRentalDetailDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? RentalDetailDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfRentalDetailDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfRentalDetailDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfRentalDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class RentalDetailDto implements IRentalDetailDto {
     id?: string;
@@ -8709,85 +7406,9 @@ export interface IRentalDetailDto {
     hasReview?: boolean;
 }
 
-export class ApiResponseOfRentalStatusData implements IApiResponseOfRentalStatusData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalStatusData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfRentalStatusData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? RentalStatusData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfRentalStatusData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfRentalStatusData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfRentalStatusData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalStatusData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class RentalStatusData implements IRentalStatusData {
     status?: string | undefined;
@@ -8825,85 +7446,9 @@ export interface IRentalStatusData {
     status?: string | undefined;
 }
 
-export class ApiResponseOfRentalCompleteData implements IApiResponseOfRentalCompleteData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalCompleteData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfRentalCompleteData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? RentalCompleteData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfRentalCompleteData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfRentalCompleteData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfRentalCompleteData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: RentalCompleteData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class RentalCompleteData implements IRentalCompleteData {
     rentalId?: string | undefined;
@@ -8953,85 +7498,9 @@ export interface IRentalCompleteData {
     depositStatus?: string | undefined;
 }
 
-export class ApiResponseOfOrderCreateData implements IApiResponseOfOrderCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: OrderCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfOrderCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? OrderCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfOrderCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfOrderCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfOrderCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: OrderCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class OrderCreateData implements IOrderCreateData {
     orderId?: string | undefined;
@@ -9161,85 +7630,9 @@ export interface IOrderItemInputDto {
     quantity?: number;
 }
 
-export class ApiResponseOfGetOrdersResponse implements IApiResponseOfGetOrdersResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetOrdersResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetOrdersResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetOrdersResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetOrdersResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetOrdersResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetOrdersResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetOrdersResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetOrdersResponse implements IGetOrdersResponse {
     orders?: OrderListDto[];
@@ -9337,85 +7730,9 @@ export interface IOrderListDto {
     itemCount?: number;
 }
 
-export class ApiResponseOfOrderDetailDto implements IApiResponseOfOrderDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: OrderDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfOrderDetailDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? OrderDetailDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfOrderDetailDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfOrderDetailDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfOrderDetailDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: OrderDetailDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class OrderDetailDto implements IOrderDetailDto {
     id?: string;
@@ -9537,85 +7854,9 @@ export interface IOrderItemDetailDto {
     primaryImage?: string | undefined;
 }
 
-export class ApiResponseOfPaymentCreateData implements IApiResponseOfPaymentCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: PaymentCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPaymentCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? PaymentCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfPaymentCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPaymentCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPaymentCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: PaymentCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class PaymentCreateData implements IPaymentCreateData {
     paymentId?: string | undefined;
@@ -9705,85 +7946,9 @@ export interface ICreatePaymentCommand {
     transactionRef?: string | undefined;
 }
 
-export class ApiResponseOfPaymentDto implements IApiResponseOfPaymentDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: PaymentDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfPaymentDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? PaymentDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfPaymentDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfPaymentDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfPaymentDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: PaymentDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class PaymentDto implements IPaymentDto {
     id?: string;
@@ -9837,85 +8002,9 @@ export interface IPaymentDto {
     createdAt?: Date;
 }
 
-export class ApiResponseOfSupportCreateTicketData implements IApiResponseOfSupportCreateTicketData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportCreateTicketData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfSupportCreateTicketData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? SupportCreateTicketData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfSupportCreateTicketData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfSupportCreateTicketData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfSupportCreateTicketData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportCreateTicketData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class SupportCreateTicketData implements ISupportCreateTicketData {
     ticketId?: string;
@@ -9997,85 +8086,9 @@ export interface ICreateTicketCommand {
     message?: string;
 }
 
-export class ApiResponseOfGetTicketsResponse implements IApiResponseOfGetTicketsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetTicketsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetTicketsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetTicketsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetTicketsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetTicketsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetTicketsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetTicketsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetTicketsResponse implements IGetTicketsResponse {
     tickets?: TicketListDto[];
@@ -10173,85 +8186,9 @@ export interface ITicketListDto {
     lastMessage?: string | undefined;
 }
 
-export class ApiResponseOfSupportMessageData implements IApiResponseOfSupportMessageData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportMessageData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfSupportMessageData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? SupportMessageData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfSupportMessageData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfSupportMessageData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfSupportMessageData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportMessageData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class SupportMessageData implements ISupportMessageData {
     messageId?: string;
@@ -10337,85 +8274,9 @@ export interface IPostSupportMessageCommand {
     message?: string;
 }
 
-export class ApiResponseOfSupportTicketStatusData implements IApiResponseOfSupportTicketStatusData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportTicketStatusData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfSupportTicketStatusData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? SupportTicketStatusData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfSupportTicketStatusData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfSupportTicketStatusData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfSupportTicketStatusData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: SupportTicketStatusData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class SupportTicketStatusData implements ISupportTicketStatusData {
     ticketId?: string | undefined;
@@ -10497,85 +8358,9 @@ export interface IUpdateTicketStatusCommand {
     status?: string;
 }
 
-export class ApiResponseOfChatCreateData implements IApiResponseOfChatCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ChatCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfChatCreateData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ChatCreateData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfChatCreateData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfChatCreateData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfChatCreateData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ChatCreateData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ChatCreateData implements IChatCreateData {
     chatId?: string | undefined;
@@ -10649,85 +8434,9 @@ export interface ICreateChatCommand {
     userId?: number;
 }
 
-export class ApiResponseOfGetChatsResponse implements IApiResponseOfGetChatsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetChatsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetChatsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetChatsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetChatsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetChatsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetChatsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetChatsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetChatsResponse implements IGetChatsResponse {
     chats?: ChatListDto[];
@@ -10825,85 +8534,9 @@ export interface IChatListDto {
     unreadCount?: number;
 }
 
-export class ApiResponseOfChatMessageData implements IApiResponseOfChatMessageData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ChatMessageData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfChatMessageData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ChatMessageData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfChatMessageData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfChatMessageData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfChatMessageData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ChatMessageData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ChatMessageData implements IChatMessageData {
     messageId?: string | undefined;
@@ -10989,85 +8622,9 @@ export interface IPostChatMessageCommand {
     message?: string;
 }
 
-export class ApiResponseOfGetChatMessagesResponse implements IApiResponseOfGetChatMessagesResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetChatMessagesResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetChatMessagesResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetChatMessagesResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetChatMessagesResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetChatMessagesResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetChatMessagesResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetChatMessagesResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetChatMessagesResponse implements IGetChatMessagesResponse {
     found?: boolean;
@@ -11173,85 +8730,9 @@ export interface IChatMessageDto {
     createdAt?: Date;
 }
 
-export class ApiResponseOfGetNotificationsResponse implements IApiResponseOfGetNotificationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetNotificationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetNotificationsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetNotificationsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetNotificationsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetNotificationsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetNotificationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetNotificationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetNotificationsResponse implements IGetNotificationsResponse {
     notifications?: NotificationDto[];
@@ -11353,85 +8834,9 @@ export interface INotificationDto {
     createdAt?: Date;
 }
 
-export class ApiResponseOfNotificationMarkAllData implements IApiResponseOfNotificationMarkAllData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: NotificationMarkAllData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfNotificationMarkAllData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? NotificationMarkAllData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfNotificationMarkAllData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfNotificationMarkAllData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfNotificationMarkAllData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: NotificationMarkAllData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class NotificationMarkAllData implements INotificationMarkAllData {
     message?: string;
@@ -11473,85 +8878,9 @@ export interface INotificationMarkAllData {
     updated?: number;
 }
 
-export class ApiResponseOfGetRecommendationsResponse implements IApiResponseOfGetRecommendationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetRecommendationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfGetRecommendationsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? GetRecommendationsResponse.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfGetRecommendationsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfGetRecommendationsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfGetRecommendationsResponse {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: GetRecommendationsResponse | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class GetRecommendationsResponse implements IGetRecommendationsResponse {
     recommendations?: RecommendationEntryDto[];
@@ -11701,85 +9030,9 @@ export interface IRecommendationItemDto {
     city?: string | undefined;
 }
 
-export class ApiResponseOfMediaUploadData implements IApiResponseOfMediaUploadData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: MediaUploadData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfMediaUploadData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? MediaUploadData.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfMediaUploadData {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfMediaUploadData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfMediaUploadData {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: MediaUploadData | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class MediaUploadData implements IMediaUploadData {
     id?: string;
@@ -11861,93 +9114,9 @@ export interface IMediaUploadData {
     entityType?: string | undefined;
 }
 
-export class ApiResponseOfListOfProductCategoryDto implements IApiResponseOfListOfProductCategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductCategoryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfListOfProductCategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(ProductCategoryDto.fromJS(item));
-            }
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfListOfProductCategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfListOfProductCategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfListOfProductCategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductCategoryDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class ProductCategoryDto implements IProductCategoryDto {
     id?: number;
@@ -12021,85 +9190,9 @@ export interface IProductCategoryDto {
     lastModified?: Date | undefined;
 }
 
-export class ApiResponseOfProductCategoryDto implements IApiResponseOfProductCategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductCategoryDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfProductCategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ProductCategoryDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfProductCategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfProductCategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfProductCategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductCategoryDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class CreateCategoryCommand implements ICreateCategoryCommand {
     nameAr?: string;
@@ -12209,85 +9302,9 @@ export interface IUpdateCategoryCommand {
     logoId?: string | undefined;
 }
 
-export class ApiResponseOfProductSubcategoryDto implements IApiResponseOfProductSubcategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductSubcategoryDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfProductSubcategoryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? ProductSubcategoryDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfProductSubcategoryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfProductSubcategoryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfProductSubcategoryDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: ProductSubcategoryDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class CreateSubcategoryCommand implements ICreateSubcategoryCommand {
     nameAr?: string;
@@ -12405,93 +9422,9 @@ export interface IUpdateSubcategoryCommand {
     logoId?: string | undefined;
 }
 
-export class ApiResponseOfListOfBrandDto implements IApiResponseOfListOfBrandDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: BrandDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfListOfBrandDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(BrandDto.fromJS(item));
-            }
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfListOfBrandDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfListOfBrandDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfListOfBrandDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: BrandDto[] | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class BrandDto implements IBrandDto {
     id?: number;
@@ -12557,85 +9490,9 @@ export interface IBrandDto {
     itemCount?: number;
 }
 
-export class ApiResponseOfBrandDto implements IApiResponseOfBrandDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: BrandDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
 
-    constructor(data?: IApiResponseOfBrandDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
 
-    init(_data?: any) {
-        if (_data) {
-            this.success = _data["success"];
-            this.successCode = _data["successCode"];
-            this.message = _data["message"];
-            this.data = _data["data"] ? BrandDto.fromJS(_data["data"]) : undefined as any;
-            this.error = _data["error"];
-            this.errorCode = _data["errorCode"];
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
 
-    static fromJS(data: any): ApiResponseOfBrandDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponseOfBrandDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["success"] = this.success;
-        data["successCode"] = this.successCode;
-        data["message"] = this.message;
-        data["data"] = this.data ? this.data.toJSON() : undefined as any;
-        data["error"] = this.error;
-        data["errorCode"] = this.errorCode;
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IApiResponseOfBrandDto {
-    success?: boolean;
-    successCode?: number | undefined;
-    message?: string | undefined;
-    data?: BrandDto | undefined;
-    error?: boolean;
-    errorCode?: number | undefined;
-    messages?: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-}
 
 export class CreateBrandCommand implements ICreateBrandCommand {
     nameAr?: string;
@@ -12775,6 +9632,8 @@ export class ApiException extends Error {
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
+    if (result !== null && result !== undefined)
+        return _observableOf(result);
     return _observableThrow(new ApiException(message, status, response, headers, result));
 }
 
@@ -12792,4 +9651,89 @@ function blobToText(blob: any): Observable<string> {
             reader.readAsText(blob);
         }
     });
+}
+
+export class ApiResponse<T> {
+    data?: T | undefined;
+    error?: boolean;
+    errorCode?: number[] | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
+    successCode?: number | undefined;
+
+    constructor(data?: any) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property)) {
+                    (<any>this)[property] = (<any>data)[property];
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data['data'];
+            this.error = _data['error'];
+            if (Array.isArray(_data['errorCode'])) {
+                this.errorCode = [] as any;
+                for (let item of _data['errorCode']) {
+                    this.errorCode!.push(item);
+                }
+            }
+            if (Array.isArray(_data['messages'])) {
+                this.messages = [] as any;
+                for (let item of _data['messages']) {
+                    this.messages!.push(item);
+                }
+            }
+            this.total = _data['total'];
+            this.page = _data['page'];
+            this.pages = _data['pages'];
+            this.successCode = _data['successCode'];
+        }
+    }
+
+    static fromJS(data: any): ApiResponse<any> {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResponse<any>();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data['data'] = this.data;
+        data['error'] = this.error;
+        if (Array.isArray(this.errorCode)) {
+            data['errorCode'] = [];
+            for (let item of this.errorCode) {
+                data['errorCode'].push(item);
+            }
+        }
+        if (Array.isArray(this.messages)) {
+            data['messages'] = [];
+            for (let item of this.messages) {
+                data['messages'].push(item);
+            }
+        }
+        data['total'] = this.total;
+        data['page'] = this.page;
+        data['pages'] = this.pages;
+        data['successCode'] = this.successCode;
+        return data;
+    }
+}
+
+export interface IApiResponse<T> {
+    data?: T | undefined;
+    error?: boolean;
+    errorCode?: number[] | undefined;
+    messages?: string[] | undefined;
+    total?: number | undefined;
+    page?: number | undefined;
+    pages?: number | undefined;
+    successCode?: number | undefined;
 }

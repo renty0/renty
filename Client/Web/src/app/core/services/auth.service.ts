@@ -2,10 +2,7 @@ import { computed, inject, Injectable, signal, WritableSignal } from '@angular/c
 import { Router } from '@angular/router';
 import { Observable, throwError, catchError, map, tap } from 'rxjs';
 import {
-  ApiResponseOfAuthLoginData,
-  ApiResponseOfAuthRefreshData,
-  ApiResponseOfAuthRegisterData,
-  ApiResponseOfAuthVerifyEmailData,
+  ApiResponse,
   AuthClient,
   AuthLoginData,
   AuthLoginUser,
@@ -13,6 +10,8 @@ import {
   ConfirmEmailCommand,
   LoginCommand,
   RefreshTokenCommand,
+  AuthRegisterData,
+  AuthVerifyEmailData,
   RegisterCommand,
 } from '../api/api-client';
 import { CookieService } from 'ngx-cookie-service';
@@ -87,8 +86,7 @@ export class AuthService {
     if (!loginResponse.accessToken) return;
 
     // Use token expiration for cookie expiration if available, otherwise fallback to 7 days
-    const expires = 7;
-    loginResponse.refreshTokenExpiresAt ?
+    const expires = loginResponse.refreshTokenExpiresAt ?
       new Date(loginResponse.refreshTokenExpiresAt) : 7;
 
     if (loginResponse.accessToken) {
@@ -112,15 +110,15 @@ export class AuthService {
     this.isLoggedIn.set(true);
   }
 
-  login(email: string, password: string): Observable<ApiResponseOfAuthLoginData> {
+  login(email: string, password: string): Observable<ApiResponse<AuthLoginData>> {
     const command = new LoginCommand({
       email,
       password,
     });
 
     return this.authClient.authLogin(command).pipe(
-      tap((response: ApiResponseOfAuthLoginData) => {
-        if (response.success && response.data) {
+      tap((response: ApiResponse<AuthLoginData>) => {
+        if (!response.error && response.data) {
           this.storeLoginResponse(response.data);
         }
       }),
@@ -139,7 +137,7 @@ export class AuthService {
     country?: string;
     bio?: string;
     userType: any;
-  }): Observable<ApiResponseOfAuthRegisterData> {
+  }): Observable<ApiResponse<AuthRegisterData>> {
     const command = new RegisterCommand({
       email: payload.email,
       password: payload.password,
@@ -157,7 +155,7 @@ export class AuthService {
     return this.authClient.authRegister(command);
   }
 
-  verifyEmail(email: string, code: string): Observable<ApiResponseOfAuthVerifyEmailData> {
+  verifyEmail(email: string, code: string): Observable<ApiResponse<AuthVerifyEmailData>> {
     const command = new ConfirmEmailCommand({ email, code });
     return this.authClient.authVerifyEmail(command);
   }
@@ -217,9 +215,9 @@ export class AuthService {
     });
 
     return this.authClient.authRefresh(command).pipe(
-      tap((response: ApiResponseOfAuthRefreshData) => {
-        if (response.success && response.data) {
-          const data: AuthRefreshData = response.data;
+      tap((res: ApiResponse<AuthRefreshData>) => {
+        if (!res.error && res.data) {
+          const data: AuthRefreshData = res.data;
           const expires = 7;
 
           if (data.accessToken) {
@@ -235,12 +233,12 @@ export class AuthService {
           this.logout();
         }
       }),
-      map((response: ApiResponseOfAuthRefreshData) => {
-        if (!response.data) {
-          throw new Error('No data in refresh response');
+      map((res: ApiResponse<AuthRefreshData>) => {
+        if (res.error || !res.data) {
+          throw new Error(res.messages?.[0] || 'No data in refresh response');
         }
 
-        return response.data;
+        return res.data;
       }),
       catchError((error: any) => {
         this.logout();

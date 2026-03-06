@@ -1,0 +1,520 @@
+﻿
+> rently@0.0.0 build
+> ng build
+
+node.exe : 
+[1m[33m[baseline-browser-mapping] The 
+data in this module is over two months old. 
+ To ensure accurate Baseline data, please 
+update: `npm i 
+baseline-browser-mapping@latest 
+-D`[39m[22m
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+    ([1m[33m[basel...t -D`[39m[22m:Str  
+  ing) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommand 
+   Error
+ 
+[33mΓ¥»[39m Building...
+[32mΓ£ö[39m Building...
+Application bundle generation failed. [5.530 seconds] - 2026-03-06T17:49:14.280Z
+
+[1m[31m[31mX 
+[41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:507:35:
+[37m      507 Γöé ...    result200 = ApiRes
+ponse[32m<ItemListDto[]>[37m.fromJS(result
+Data200);
+          Γò╡                               
+[32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1066:35:
+[37m      1066 Γöé ...sult200 = ApiResponse
+[32m<TrackingEntryDto[]>[37m.fromJS(result
+Data200);
+           Γò╡                         
+[32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1868:35:
+[37m      1868 Γöé ...t200 = ApiResponse[3
+2m<ProductSubcategoryDto[]>[37m.fromJS(resu
+ltData...
+           Γò╡                      
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1932:35:
+[37m      1932 Γöé ...t200 = ApiResponse[3
+2m<ProductSubcategoryDto[]>[37m.fromJS(resu
+ltData...
+           Γò╡                      
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3814:35:
+[37m      3814 Γöé ...ult200 = ApiResponse
+[32m<ProductCategoryDto[]>[37m.fromJS(resul
+tData2...
+           Γò╡                        
+[32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1477: An instantiation expression 
+cannot be followed by a property 
+access.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4125:35:
+[37m      4125 Γöé ...      result200 = Api
+Response[32m<BrandDto[]>[37m.fromJS(result
+Data200);
+           Γò╡                              
+   [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2305: Module 
+'"../../../../core/api/api-client"' has no 
+exported member 
+'ForgotPasswordCommand'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/forgot-
+password/forgot-password.ts:6:21:
+[37m      6 Γöé import { AuthClient, 
+[32mForgotPasswordCommand[37m } from 
+'../../../../core...
+        Γò╡                      
+[32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'authForgotPassword' 
+does not exist on type 'AuthClient'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/forgot-
+password/forgot-password.ts:54:7:
+[37m      54 Γöé       
+.[32mauthForgotPassword[37m(command)
+         Γò╡        
+[32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'res' implicitly has 
+an 'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/forgot-
+password/forgot-password.ts:62:18:
+[37m      62 Γöé       
+.subscribe(([32mres[37m) => {
+         Γò╡                   [32m~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2305: Module 
+'"../../../../core/api/api-client"' has no 
+exported member 'ResetPasswordCommand'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:8:2:
+[37m      8 Γöé   
+[32mResetPasswordCommand[37m,
+        Γò╡   [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2305: Module 
+'"../../../../core/api/api-client"' has no 
+exported member 
+'ForgotPasswordCommand'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:9:2:
+[37m      9 Γöé   
+[32mForgotPasswordCommand[37m,
+        Γò╡   [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2724: 
+'"../../../../core/api/api-client"' has no 
+exported member named 
+'VerifyResetTokenCommand'. Did you mean 
+'RefreshTokenCommand'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:10:2:
+[37m      10 Γöé   
+[32mVerifyResetTokenCommand[37m,
+         Γò╡   
+[32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  'RefreshTokenCommand' is declared here.
+
+    src/app/core/api/api-client.ts:4802:13:
+[37m      4802 Γöé export class 
+[32mRefreshTokenCommand[37m implements 
+IRefreshTokenCommand {
+           Γò╡              
+[32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'authForgotPassword' 
+does not exist on type 'AuthClient'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:85:7:
+[37m      85 Γöé       
+.[32mauthForgotPassword[37m(command)
+         Γò╡        
+[32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'error' does not exist 
+on type '{}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:94:25:
+[37m      94 Γöé           if (res && 
+res.[32merror[37m) {
+         Γò╡                          
+[32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'error' does not exist 
+on type '{}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:95:28:
+[37m      95 Γöé             
+console.log(res.[32merror[37m);
+         Γò╡                             
+[32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'messages' does not 
+exist on type '{}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:97:18:
+[37m      97 Γöé               
+res.[32mmessages[37m?.[0] || 
+this.translate.instant('forgotP...
+         Γò╡                   
+[32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'messages' does not 
+exist on type '{}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:101:19:
+[37m      101 Γöé               
+res?.[32mmessages[37m?.[0] || 
+this.translate.instant('forgo...
+          Γò╡                    
+[32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'authVerifyResetCode' 
+does not exist on type 'AuthClient'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:125:7:
+[37m      125 Γöé       
+.[32mauthVerifyResetCode[37m(command)
+          Γò╡        
+[32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'res' implicitly has 
+an 'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:133:18:
+[37m      133 Γöé       
+.subscribe(([32mres[37m) => {
+          Γò╡                   [32m~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2339: Property 'authResetPassword' 
+does not exist on type 'AuthClient'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/reset-p
+assword/reset-password.ts:163:7:
+[37m      163 Γöé       
+.[32mauthResetPassword[37m(command)
+          Γò╡        
+[32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 
+'ItemCategoryRef | undefined' is not 
+assignable to parameter of type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; } | null | undefined'.
+  Type 'ItemCategoryRef' has no properties 
+in common with type '{ nameAr?: string | 
+undefined; nameEn?: string | undefined; 
+}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/marketplace/marketplace
+.component.html:110:80:
+[37m      110 Γöé ...s="category-name">{{ g
+etLocalizedRefName(item.[32mcategory[37m) 
+}}</span>
+          Γò╡                               
+                   [32m~~~~~~~~[0m
+
+  Error occurs in the template of component 
+MarketplaceComponent.
+
+    src/app/features/marketplace/marketplace
+.component.ts:47:15:
+[37m      47 Γöé   templateUrl: 
+[32m'./marketplace.component.html'[37m,
+         Γò╡                
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 
+'ItemCategoryRef | undefined' is not 
+assignable to parameter of type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; } | null | undefined'.
+  Type 'ItemCategoryRef' has no properties 
+in common with type '{ nameAr?: string | 
+undefined; nameEn?: string | undefined; 
+}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.html:36:47:
+[37m      36 Γöé                         
+{{ getLocalizedRefName([32mitem()?.category
+[37m) }}
+         Γò╡                                
+                [32m~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component 
+ProductDetailsComponent.
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.ts:27:17:
+[37m      27 Γöé     templateUrl: [32m'./p
+roduct-details.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 
+'ItemSubcategoryRef | undefined' is not 
+assignable to parameter of type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; } | null | undefined'.
+  Type 'ItemSubcategoryRef' has no 
+properties in common with type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; }'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.html:37:77:
+[37m      37 Γöé ....subcategory) { / {{ ge
+tLocalizedRefName([32mitem()?.subcategory[
+37m) }} }
+         Γò╡                                
+             [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component 
+ProductDetailsComponent.
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.ts:27:17:
+[37m      27 Γöé     templateUrl: [32m'./p
+roduct-details.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 'ItemBrandRef 
+| undefined' is not assignable to parameter 
+of type '{ nameAr?: string | undefined; 
+nameEn?: string | undefined; } | null | 
+undefined'.
+  Type 'ItemBrandRef' has no properties in 
+common with type '{ nameAr?: string | 
+undefined; nameEn?: string | undefined; 
+}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.html:92:75:
+[37m      92 Γöé ...span class="value">{{ g
+etLocalizedRefName([32mitem()?.brand[37m) 
+}}</span>
+         Γò╡                                
+              [32m~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component 
+ProductDetailsComponent.
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.ts:27:17:
+[37m      27 Γöé     templateUrl: [32m'./p
+roduct-details.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2559: Type 'ItemBrandRef' has no 
+properties in common with type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; }'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-list/p
+roduct-list.component.html:144:67:
+[37m      144 Γöé ...small 
+class="sku-hint">{{ 
+getLocalizedName(item.[32mbrand[37m) 
+}}</small>
+          Γò╡                               
+                     [32m~~~~~[0m
+
+  Error occurs in the template of component 
+ProductListComponent.
+
+    src/app/features/products/product-list/p
+roduct-list.component.ts:38:17:
+[37m      38 Γöé     templateUrl: 
+[32m'./product-list.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 
+'ItemSubcategoryRef | undefined' is not 
+assignable to parameter of type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; } | null | undefined'.
+  Type 'ItemSubcategoryRef' has no 
+properties in common with type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; }'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-list/p
+roduct-list.component.html:153:43:
+[37m      153 Γöé                   {{ 
+getLocalizedName(item.[32msubcategory[37m)
+          Γò╡                               
+             [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component 
+ProductListComponent.
+
+    src/app/features/products/product-list/p
+roduct-list.component.ts:38:17:
+[37m      38 Γöé     templateUrl: 
+[32m'./product-list.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 
+'ItemCategoryRef | undefined' is not 
+assignable to parameter of type '{ nameAr?: 
+string | undefined; nameEn?: string | 
+undefined; } | null | undefined'.
+  Type 'ItemCategoryRef' has no properties 
+in common with type '{ nameAr?: string | 
+undefined; nameEn?: string | undefined; 
+}'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-list/p
+roduct-list.component.html:155:45:
+[37m      155 Γöé                   }}{{ 
+getLocalizedName(item.[32mcategory[37m) }}
+          Γò╡                               
+               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component 
+ProductListComponent.
+
+    src/app/features/products/product-list/p
+roduct-list.component.ts:38:17:
+[37m      38 Γöé     templateUrl: 
+[32m'./product-list.component.html'[37m,
+         Γò╡                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

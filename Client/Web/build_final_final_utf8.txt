@@ -1,0 +1,1177 @@
+﻿
+> rently@0.0.0 build
+> ng build
+
+node.exe : 
+[1m[33m[baseline-browser-mapping] The 
+data in this module is over two months old. 
+ To ensure accurate Baseline data, please 
+update: `npm i 
+baseline-browser-mapping@latest 
+-D`[39m[22m
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+    ([1m[33m[basel...t -D`[39m[22m:Str  
+  ing) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommand 
+   Error
+ 
+[33mΓ¥»[39m Building...
+[32mΓ£ö[39m Building...
+Application bundle generation failed. [6.959 seconds] - 2026-03-06T17:11:32.231Z
+
+[1m[31m[31mX 
+[41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:200:100:
+[37m      200 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:197:16:
+[37m      197 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:259:100:
+[37m      259 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:256:16:
+[37m      256 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:318:100:
+[37m      318 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:315:16:
+[37m      315 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:377:100:
+[37m      377 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:374:16:
+[37m      374 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:436:100:
+[37m      436 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:433:16:
+[37m      433 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:495:100:
+[37m      495 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:492:16:
+[37m      492 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result401'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:554:100:
+[37m      554 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult401[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:551:16:
+[37m      551 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result401'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:613:100:
+[37m      613 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult401[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:610:16:
+[37m      610 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:720:100:
+[37m      720 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:717:16:
+[37m      717 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2552: Cannot find name 'result400'. 
+Did you mean 'result'?[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:867:100:
+[37m      867 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+  'result' is declared here.
+
+    src/app/core/api/api-client.ts:864:16:
+[37m      864 Γöé             let 
+[32mresult[37m: any = null;
+          Γò╡                 
+[32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:925:100:
+[37m      925 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:987:100:
+[37m      987 Γöé ...de error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+          Γò╡                               
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1045:100:
+[37m      1045 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1128:100:
+[37m      1128 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1198:100:
+[37m      1198 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1256:100:
+[37m      1256 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1374:100:
+[37m      1374 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1436:100:
+[37m      1436 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1510:100:
+[37m      1510 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1635:100:
+[37m      1635 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1693:100:
+[37m      1693 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:1931:100:
+[37m      1931 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2040:100:
+[37m      2040 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2292:100:
+[37m      2292 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2350:100:
+[37m      2350 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2412:100:
+[37m      2412 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2470:100:
+[37m      2470 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2541:100:
+[37m      2541 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2657:100:
+[37m      2657 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2715:100:
+[37m      2715 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2773:100:
+[37m      2773 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2835:100:
+[37m      2835 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2893:100:
+[37m      2893 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:2964:100:
+[37m      2964 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3070:100:
+[37m      3070 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3141:100:
+[37m      3141 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3199:100:
+[37m      3199 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3270:100:
+[37m      3270 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3380:100:
+[37m      3380 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3442:100:
+[37m      3442 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3513:100:
+[37m      3513 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3623:100:
+[37m      3623 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3681:100:
+[37m      3681 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3847:100:
+[37m      3847 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3965:100:
+[37m      3965 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'FileParameter'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:3987:101:
+[37m      3987 Γöé ...ull | undefined, 
+file?: [32mFileParameter[37m | null | 
+undefined): Ob...
+           Γò╡                            
+[32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4041:100:
+[37m      4041 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4174:100:
+[37m      4174 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4232:100:
+[37m      4232 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4294:100:
+[37m      4294 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4352:100:
+[37m      4352 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4485:100:
+[37m      4485 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4543:100:
+[37m      4543 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'UpdateBrandCommand'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4553:33:
+[37m      4553 Γöé ...rand(id: number, 
+cmd: [32mUpdateBrandCommand[37m): 
+Observable<IApiRes...
+           Γò╡                          
+[32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result400'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4605:100:
+[37m      4605 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult400[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'result404'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:4663:100:
+[37m      4663 Γöé ...e error occurred.", 
+status, _responseText, _headers, 
+[32mresult404[37m);
+           Γò╡                              
+                           
+[32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'ICreateBrandCommand'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:9530:43:
+[37m      9530 Γöé export class 
+CreateBrandCommand implements 
+[32mICreateBrandCommand[37m {
+           Γò╡                              
+              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'ICreateBrandCommand'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/core/api/api-client.ts:9537:23:
+[37m      9537 Γöé     constructor(data?: 
+[32mICreateBrandCommand[37m) {
+           Γò╡                        
+[32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1005: '}' expected.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/core/api/api-client.ts:9680:0:
+[37m      9680 Γöé [32m[37m
+           Γò╡ [32m^[0m
+
+  The parser expected to find a '}' to 
+match the '{' token here.
+
+    src/app/core/api/api-client.ts:9537:44:
+[37m      9537 Γöé     constructor(data?: 
+ICreateBrandCommand) [32m{[37m
+           Γò╡                              
+               [32m^[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 'MonoTypeOperat
+orFunction<ApiResponse<AuthLoginData>>' is 
+not assignable to parameter of type 
+'OperatorFunction<IApiResponse<any>, 
+ApiResponse<AuthLoginData>>'.
+  Types of parameters 'source' and 'source' 
+are incompatible.
+    Type 'Observable<IApiResponse<any>>' is 
+not assignable to type 
+'Observable<ApiResponse<AuthLoginData>>'.
+      Type 'IApiResponse<any>' is missing 
+the following properties from type 
+'ApiResponse<AuthLoginData>': init, 
+toJSON[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    
+src/app/core/services/auth.service.ts:120:6:
+[37m      120 Γöé       
+[32mtap((response: 
+ApiResponse<AuthLoginData>) => {[37m
+          Γò╡       [32m~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2322: Type 
+'Observable<IApiResponse<any>>' is not 
+assignable to type 
+'Observable<ApiResponse<AuthRegisterData>>'.
+  Type 'IApiResponse<any>' is missing the 
+following properties from type 
+'ApiResponse<AuthRegisterData>': init, 
+toJSON[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    
+src/app/core/services/auth.service.ts:155:4:
+[37m      155 Γöé     [32mreturn[37m 
+this.authClient.authRegister(command);
+          Γò╡     [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2322: Type 
+'Observable<IApiResponse<any>>' is not 
+assignable to type 'Observable<ApiResponse<A
+uthVerifyEmailData>>'.
+  Type 'IApiResponse<any>' is missing the 
+following properties from type 
+'ApiResponse<AuthVerifyEmailData>': init, 
+toJSON[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    
+src/app/core/services/auth.service.ts:160:4:
+[37m      160 Γöé     [32mreturn[37m 
+this.authClient.authVerifyEmail(command);
+          Γò╡     [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2345: Argument of type 'MonoTypeOperat
+orFunction<ApiResponse<AuthRefreshData>>' 
+is not assignable to parameter of type 
+'OperatorFunction<IApiResponse<any>, 
+ApiResponse<AuthRefreshData>>'.
+  Types of parameters 'source' and 'source' 
+are incompatible.
+    Type 'Observable<IApiResponse<any>>' is 
+not assignable to type 
+'Observable<ApiResponse<AuthRefreshData>>'.
+      Type 'IApiResponse<any>' is missing 
+the following properties from type 
+'ApiResponse<AuthRefreshData>': init, 
+toJSON[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    
+src/app/core/services/auth.service.ts:218:6:
+[37m      218 Γöé       [32mtap((res: 
+ApiResponse<AuthRefreshData>) => {[37m
+          Γò╡       [32m~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1005: ',' expected.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:20:
+[37m      13 Γöé import { 
+ApiResponse[32m<[37mAuthLoginData> } from 
+'../../../../core/api/a...
+         Γò╡                     [32m^[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1141: String literal expected.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:20:
+[37m      13 Γöé import { 
+ApiResponse[32m<AuthLoginData>[37m } from 
+'../../../../core/api/a...
+         Γò╡                     
+[32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1109: Expression expected.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:36:
+[37m      13 Γöé ...t { 
+ApiResponse<AuthLoginData> [32m}[37m from 
+'../../../../core/api/api...
+         Γò╡                                
+   [32m^[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS1434: Unexpected keyword or 
+identifier.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:38:
+[37m      13 Γöé ... 
+ApiResponse<AuthLoginData> } [32mfrom[37m 
+'../../../../core/api/api-cl...
+         Γò╡                                
+  [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 'from'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:38:
+[37m      13 Γöé ... 
+ApiResponse<AuthLoginData> } [32mfrom[37m 
+'../../../../core/api/api-cl...
+         Γò╡                                
+  [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS2304: Cannot find name 
+'AuthLoginData'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:48:35:
+[37m      48 Γöé       next: (response: 
+ApiResponse<[32mAuthLoginData[37m>) => {
+         Γò╡                                
+    [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'i' implicitly has an 
+'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/marketplace/product-det
+ails/product-details.component.ts:62:50:
+[37m      62 Γöé ...              
+itemData.images?.find([32mi[37m => 
+i.isPrimary)?.imageUrl ??
+         Γò╡                                
+        [32m^[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'p' implicitly has an 
+'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-editor
+-page/product-editor-page.component.ts:168:4
+4:
+[37m      168 Γöé ...ailyPrice: 
+item.pricing?.find(([32mp[37m) => 
+p.pricingType === 'daily'...
+          Γò╡                               
+    [32m^[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'img' implicitly has 
+an 'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-editor
+-page/product-editor-page.component.ts:177:5
+1:
+[37m      177 Γöé             
+this.uploadedImages = 
+item.images.map(([32mimg[37m, idx) => ({
+          Γò╡                               
+                     [32m~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mTS7006: Parameter 'idx' implicitly has 
+an 'any' type.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/features/products/product-editor
+-page/product-editor-page.component.ts:177:5
+6:
+[37m      177 Γöé             
+this.uploadedImages = item.images.map((img, 
+[32midx[37m) => ({
+          Γò╡                               
+                          [32m~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mUnexpected "export"[0m
+
+    src/app/core/api/api-client.ts:9046:8:
+[37m      9046 Γöé         
+[32mexport[37m class ApiResponse<T> 
+implements IApiResponse<T> {
+           Γò╡         [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m 
+[1mExpected string but found "<"[0m
+
+    src/app/features/auth/components/login/l
+ogin.ts:13:28:
+[37m      13 Γöé import { ApiResponse } 
+from [32m<[37mAuthLoginData>;
+         Γò╡                             
+[32m^[0m
+
+[39m[22m

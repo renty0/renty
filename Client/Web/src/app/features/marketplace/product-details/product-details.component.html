@@ -33,8 +33,8 @@
             <div class="info-section">
                 <div class="header">
                     <span class="category-badge">
-                        {{ item()?.category?.name }}
-                        @if (item()?.subcategory?.name) { / {{ item()?.subcategory?.name }} }
+                        {{ getLocalizedRefName(item()?.category) }}
+                        @if (item()?.subcategory) { / {{ getLocalizedRefName(item()?.subcategory) }} }
                     </span>
                     <h1>{{ getLocalizedName(item()!) }}</h1>
                     @if (item()?.condition) {
@@ -89,7 +89,7 @@
                             @if (item()?.brand) {
                             <div class="spec-item">
                                 <span class="label">{{ 'product_details.brand' | translate }}</span>
-                                <span class="value">{{ item()?.brand?.name }}</span>
+                                <span class="value">{{ getLocalizedRefName(item()?.brand) }}</span>
                             </div>
                             }
                             @if (item()?.city) {

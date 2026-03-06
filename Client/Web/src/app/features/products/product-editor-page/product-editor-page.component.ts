@@ -148,8 +148,8 @@ export class ProductEditorPageComponent implements OnInit {
     this.isLoading = true;
     this.itemsClient.getItemById(id).subscribe({
       next: (res) => {
-        if (!res.success) {
-          this.toast.showError(res.message ?? 'Failed to load item details');
+        if (res.error) {
+          this.toast.showError(res.messages?.[0] ?? 'Failed to load item details');
           this.router.navigate(['/products']);
           this.isLoading = false;
           return;
@@ -231,10 +231,10 @@ export class ProductEditorPageComponent implements OnInit {
 
     this.itemsClient.createItem(cmd).subscribe({
       next: (res) => {
-        if (!res.error) {
-          this.toast.showError(res.message ?? 'Failed to create item');
+        if (res.error) {
+          this.toast.showError(res.messages?.[0] ?? 'Failed to create item');
         } else {
-          this.toast.showSuccess('Item created successfully');
+          this.toast.showSuccess(res.messages?.[0] || 'Item created successfully');
           this.saved.emit();
           if (this.saved.observed === false) {
             this.router.navigate(['/products']);
@@ -271,10 +271,10 @@ export class ProductEditorPageComponent implements OnInit {
 
     this.itemsClient.updateItem(this.itemId!, cmd).subscribe({
       next: (res) => {
-        if (!res.error) {
-          this.toast.showError(res.message ?? 'Failed to update item');
+        if (res.error) {
+          this.toast.showError(res.messages?.[0] ?? 'Failed to update item');
         } else {
-          this.toast.showSuccess('Item updated successfully');
+          this.toast.showSuccess(res.messages?.[0] || 'Item updated successfully');
           this.saved.emit();
           if (this.saved.observed === false) {
             this.router.navigate(['/products']);

@@ -15,4 +15,7 @@ public interface IIdentityService
     Task<Result> UpdateUserAsync(ApplicationUser user);
     Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);
     Task<Result> ConfirmEmailAsync(ApplicationUser user, string token);
+    Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
+    Task<Result> ResetPasswordAsync(ApplicationUser user, string token, string newPassword);
+    Task<bool> VerifyPasswordResetTokenAsync(ApplicationUser user, string token);
 }

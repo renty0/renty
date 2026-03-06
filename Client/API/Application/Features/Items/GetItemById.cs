@@ -68,9 +68,9 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.Images.Select(img => new ItemImageDto(img.Id, img.Image != null ? "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/') : "", img.IsPrimary)).ToList(),
             0, // avg rating
             0, // review count
-            item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameEn) : null,
-            item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameEn) : null,
-            item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameEn) : null
+            item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,
+            item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameAr, item.Subcategory.NameEn) : null,
+            item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameAr, item.Brand.NameEn) : null
         );
 
         return new GetItemByIdResponse(true, null, dto);

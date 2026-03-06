@@ -51,7 +51,7 @@ export class SubcategoryListComponent implements OnInit {
   displayedColumns = ['logo', 'name', 'category', 'description', 'actions'];
   dataSource = signal<ProductSubcategoryDto[]>([]);
   isLoading = signal(false);
-  viewMode = signal<'list' | 'cards'>('list');
+  viewMode = signal<'list' | 'cards'>('cards');
 
   // Dialog state
   showDialog = signal(false);

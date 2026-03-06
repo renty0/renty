@@ -7,6 +7,7 @@
   "nav": {
     "home": "Home",
     "login": "Login",
+    "logout": "Logout",
     "profile": "Profile",
     "register": "Register",
     "market": "Marketplace",
@@ -127,6 +128,11 @@
     "successVerifyEmail": "Registration successful! Please check your email to verify your account.",
     "successOwner": "Registration successful as Owner!",
     "failed": "Registration failed",
+    "step1Desc": "Set up your login credentials",
+    "step2Desc": "Tell us more about yourself",
+    "step3Title": "Complete Your Profile",
+    "step3Desc": "Select your account type and preferences",
+    "locationAbout": "Location & About",
     "roles": {
       "renterTitle": "Renter",
       "renterDesc": "Browse and rent high-quality items from owners.",
@@ -145,9 +151,37 @@
     "signUp": "Register here",
     "button": "Login",
     "success": "Login successful!",
+    "emailNotConfirmed": "Your email is not confirmed. We have sent a new verification code.",
     "invalidCredentials": "Invalid email or password",
     "unauthorized": "You are not authorized to access this resource",
     "serverError": "A server error occurred, please try again later"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email to receive a reset code",
+    "button": "Send Reset Link",
+    "successMessage": "If your email is registered, you will receive a code shortly.",
+    "enterCodeButton": "Enter Code to Reset Password",
+    "rememberPassword": "Remember your password?",
+    "successSent": "Reset link sent",
+    "errorHeader": "Error",
+    "errorDesc": "Failed to send reset code"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your email, reset code and your new password",
+    "codeLabel": "Reset Code",
+    "newPasswordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "passwordsMismatch": "Passwords do not match",
+    "button": "Reset Password",
+    "rememberPassword": "Remember your password?",
+    "successHeader": "Password Reset",
+    "successDesc": "Your password has been reset successfully. You can now login.",
+    "errorHeader": "Reset Failed",
+    "errorDesc": "Failed to reset password. The code might be invalid or expired.",
+    "invalidCode": "Invalid or expired reset code.",
+    "codeVerified": "Reset code verified successfully."
   },
   "verifyEmail": {
     "title": "Verify your email",
@@ -198,6 +232,7 @@
   },
   "buttons": {
     "login": "Login",
+    "verify": "Verify Code",
     "next": "Next",
     "back": "Back",
     "search": "Search",
