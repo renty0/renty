@@ -1,0 +1,13 @@
+E:\Courses\Work\renty\Client\API\Domain\bin\Release\net9.0\Domain.deps.json
+E:\Courses\Work\renty\Client\API\Domain\bin\Release\net9.0\Domain.dll
+E:\Courses\Work\renty\Client\API\Domain\bin\Release\net9.0\Domain.pdb
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.csproj.AssemblyReference.cache
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.AssemblyInfoInputs.cache
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.AssemblyInfo.cs
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.csproj.CoreCompileInputs.cache
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.sourcelink.json
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.dll
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\refint\Domain.dll
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\Domain.pdb
+E:\Courses\Work\renty\Client\API\Domain\obj\Release\net9.0\ref\Domain.dll

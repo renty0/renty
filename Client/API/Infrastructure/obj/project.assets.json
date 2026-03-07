@@ -5524,11 +5524,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "e:\\Courses\\Work\\renty\\Client\\API\\Application\\Application.csproj": {
-              "projectPath": "e:\\Courses\\Work\\renty\\Client\\API\\Application\\Application.csproj"
+            "E:\\Courses\\Work\\renty\\Client\\API\\Application\\Application.csproj": {
+              "projectPath": "E:\\Courses\\Work\\renty\\Client\\API\\Application\\Application.csproj"
             },
-            "e:\\Courses\\Work\\renty\\Client\\API\\Domain\\Domain.csproj": {
-              "projectPath": "e:\\Courses\\Work\\renty\\Client\\API\\Domain\\Domain.csproj"
+            "E:\\Courses\\Work\\renty\\Client\\API\\Domain\\Domain.csproj": {
+              "projectPath": "E:\\Courses\\Work\\renty\\Client\\API\\Domain\\Domain.csproj"
             }
           }
         }
