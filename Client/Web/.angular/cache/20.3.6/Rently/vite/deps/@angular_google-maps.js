@@ -57,9 +57,11 @@ import {
 var _c0 = ["*"];
 var MapEventManager = class {
   _ngZone;
+  /** Pending listeners that were added before the target was set. */
   _pending = [];
   _listeners = [];
   _targetStream = new BehaviorSubject(void 0);
+  /** Clears all currently-registered event listeners. */
   _clearListeners() {
     for (const listener of this._listeners) {
       listener.remove();
@@ -69,7 +71,8 @@ var MapEventManager = class {
   constructor(_ngZone) {
     this._ngZone = _ngZone;
   }
-  getLazyEmitter(name, type) {
+  /** Gets an observable that adds an event listener to the map when a consumer subscribes to it. */
+  getLazyEmitter(name) {
     return this._targetStream.pipe(switchMap((target) => {
       const observable = new Observable((observer) => {
         if (!target) {
@@ -79,31 +82,20 @@ var MapEventManager = class {
           });
           return void 0;
         }
-        let handle;
-        const listener = (event) => {
+        const listener = target.addListener(name, (event) => {
           this._ngZone.run(() => observer.next(event));
-        };
-        if (type === "native") {
-          if ((typeof ngDevMode === "undefined" || ngDevMode) && (!target.addEventListener || !target.removeEventListener)) {
-            throw new Error("Maps event target that uses native events must have `addEventListener` and `removeEventListener` methods.");
-          }
-          target.addEventListener(name, listener);
-          handle = {
-            remove: () => target.removeEventListener(name, listener)
-          };
-        } else {
-          handle = target.addListener(name, listener);
-        }
-        if (!handle) {
+        });
+        if (!listener) {
           observer.complete();
           return void 0;
         }
-        this._listeners.push(handle);
-        return () => handle.remove();
+        this._listeners.push(listener);
+        return () => listener.remove();
       });
       return observable;
     }));
   }
+  /** Sets the current target that the manager should bind events to. */
   setTarget(target) {
     const currentTarget = this._targetStream.value;
     if (target === currentTarget) {
@@ -117,6 +109,7 @@ var MapEventManager = class {
     this._pending.forEach((subscriber) => subscriber.observable.subscribe(subscriber.observer));
     this._pending = [];
   }
+  /** Destroys the manager and clears the event listeners. */
   destroy() {
     this._clearListeners();
     this._pending = [];
@@ -129,6 +122,7 @@ var DEFAULT_OPTIONS = {
     lng: -122.084092
   },
   zoom: 17,
+  // Note: the type conversion here isn't necessary for our CI, but it resolves a g3 failure.
   mapTypeId: "roadmap"
 };
 var DEFAULT_HEIGHT = "500px";
@@ -139,11 +133,27 @@ var GoogleMap = class _GoogleMap {
   _eventManager = new MapEventManager(inject(NgZone));
   _mapEl;
   _existingAuthFailureCallback;
+  /**
+   * The underlying google.maps.Map object
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#Map
+   */
   googleMap;
+  /** Whether we're currently rendering inside a browser. */
   _isBrowser;
+  /** Height of the map. Set this to `null` if you'd like to control the height through CSS. */
   height = DEFAULT_HEIGHT;
+  /** Width of the map. Set this to `null` if you'd like to control the width through CSS. */
   width = DEFAULT_WIDTH;
+  /**
+   * The Map ID of the map. This parameter cannot be set or changed after a map is instantiated.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions.mapId
+   */
   mapId;
+  /**
+   * Type of map that should be rendered. E.g. hybrid map, terrain map etc.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/map#MapTypeId
+   */
   mapTypeId;
   set center(center) {
     this._center = center;
@@ -157,25 +167,102 @@ var GoogleMap = class _GoogleMap {
     this._options = options || DEFAULT_OPTIONS;
   }
   _options = DEFAULT_OPTIONS;
+  /** Event emitted when the map is initialized. */
   mapInitialized = new EventEmitter();
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/events#auth-errors
+   */
   authFailure = new EventEmitter();
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.bounds_changed
+   */
   boundsChanged = this._eventManager.getLazyEmitter("bounds_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.center_changed
+   */
   centerChanged = this._eventManager.getLazyEmitter("center_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.click
+   */
   mapClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dblclick
+   */
   mapDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.drag
+   */
   mapDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dragend
+   */
   mapDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dragstart
+   */
   mapDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.heading_changed
+   */
   headingChanged = this._eventManager.getLazyEmitter("heading_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.idle
+   */
   idle = this._eventManager.getLazyEmitter("idle");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.maptypeid_changed
+   */
   maptypeidChanged = this._eventManager.getLazyEmitter("maptypeid_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mousemove
+   */
   mapMousemove = this._eventManager.getLazyEmitter("mousemove");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mouseout
+   */
   mapMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mouseover
+   */
   mapMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/map#Map.projection_changed
+   */
   projectionChanged = this._eventManager.getLazyEmitter("projection_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.rightclick
+   */
   mapRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.tilesloaded
+   */
   tilesloaded = this._eventManager.getLazyEmitter("tilesloaded");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.tilt_changed
+   */
   tiltChanged = this._eventManager.getLazyEmitter("tilt_changed");
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.zoom_changed
+   */
   zoomChanged = this._eventManager.getLazyEmitter("zoom_changed");
   constructor() {
     const platformId = inject(PLATFORM_ID);
@@ -242,74 +329,143 @@ var GoogleMap = class _GoogleMap {
       googleMapsWindow.gm_authFailure = this._existingAuthFailureCallback;
     }
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.fitBounds
+   */
   fitBounds(bounds, padding) {
     this._assertInitialized();
     this.googleMap.fitBounds(bounds, padding);
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panBy
+   */
   panBy(x, y) {
     this._assertInitialized();
     this.googleMap.panBy(x, y);
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panTo
+   */
   panTo(latLng) {
     this._assertInitialized();
     this.googleMap.panTo(latLng);
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panToBounds
+   */
   panToBounds(latLngBounds, padding) {
     this._assertInitialized();
     this.googleMap.panToBounds(latLngBounds, padding);
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getBounds
+   */
   getBounds() {
     this._assertInitialized();
     return this.googleMap.getBounds() || null;
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getCenter
+   */
   getCenter() {
     this._assertInitialized();
     return this.googleMap.getCenter();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getClickableIcons
+   */
   getClickableIcons() {
     this._assertInitialized();
     return this.googleMap.getClickableIcons();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getHeading
+   */
   getHeading() {
     this._assertInitialized();
     return this.googleMap.getHeading();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getMapTypeId
+   */
   getMapTypeId() {
     this._assertInitialized();
     return this.googleMap.getMapTypeId();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getProjection
+   */
   getProjection() {
     this._assertInitialized();
     return this.googleMap.getProjection() || null;
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getStreetView
+   */
   getStreetView() {
     this._assertInitialized();
     return this.googleMap.getStreetView();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getTilt
+   */
   getTilt() {
     this._assertInitialized();
     return this.googleMap.getTilt();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getZoom
+   */
   getZoom() {
     this._assertInitialized();
     return this.googleMap.getZoom();
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.controls
+   */
   get controls() {
     this._assertInitialized();
     return this.googleMap.controls;
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.data
+   */
   get data() {
     this._assertInitialized();
     return this.googleMap.data;
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mapTypes
+   */
   get mapTypes() {
     this._assertInitialized();
     return this.googleMap.mapTypes;
   }
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.overlayMapTypes
+   */
   get overlayMapTypes() {
     this._assertInitialized();
     return this.googleMap.overlayMapTypes;
   }
+  /** Returns a promise that resolves when the map has been initialized. */
   _resolveMap() {
     return this.googleMap ? Promise.resolve(this.googleMap) : this.mapInitialized.pipe(take(1)).toPromise();
   }
@@ -320,15 +476,21 @@ var GoogleMap = class _GoogleMap {
       styles.width = this.width === null ? "" : coerceCssPixelValue(this.width) || DEFAULT_WIDTH;
     }
   }
+  /** Combines the center and zoom and the other map options into a single object */
   _combineOptions() {
     const options = this._options || {};
     return __spreadProps(__spreadValues({}, options), {
+      // It's important that we set **some** kind of `center` and `zoom`, otherwise
+      // Google Maps will render a blank rectangle which looks broken.
       center: this._center || options.center || DEFAULT_OPTIONS.center,
       zoom: this._zoom ?? options.zoom ?? DEFAULT_OPTIONS.zoom,
+      // Passing in an undefined `mapTypeId` seems to break tile loading
+      // so make sure that we have some kind of default (see #22082).
       mapTypeId: this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId,
       mapId: this.mapId || options.mapId
     });
   }
+  /** Asserts that the map has been initialized. */
   _assertInitialized() {
     if (!this.googleMap && (typeof ngDevMode === "undefined" || ngDevMode)) {
       throw Error("Cannot access Google Map information before the API has been initialized. Please wait for the API to load before trying to interact with it.");
@@ -538,7 +700,13 @@ var MapBaseLayer = class _MapBaseLayer {
 var MapBicyclingLayer = class _MapBicyclingLayer {
   _map = inject(GoogleMap);
   _zone = inject(NgZone);
+  /**
+   * The underlying google.maps.BicyclingLayer object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#BicyclingLayer
+   */
   bicyclingLayer;
+  /** Event emitted when the bicycling layer is initialized. */
   bicyclingLayerInitialized = new EventEmitter();
   ngOnInit() {
     if (this._map._isBrowser) {
@@ -602,7 +770,13 @@ var MapCircle = class _MapCircle {
   _center = new BehaviorSubject(void 0);
   _radius = new BehaviorSubject(void 0);
   _destroyed = new Subject();
+  /**
+   * Underlying google.maps.Circle object.
+   *
+   * @see developers.google.com/maps/documentation/javascript/reference/polygon#Circle
+   */
   circle;
+  // initialized in ngOnInit
   set options(options) {
     this._options.next(options || {});
   }
@@ -612,19 +786,72 @@ var MapCircle = class _MapCircle {
   set radius(radius) {
     this._radius.next(radius);
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.center_changed
+   */
   centerChanged = this._eventManager.getLazyEmitter("center_changed");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.click
+   */
   circleClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.dblclick
+   */
   circleDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.drag
+   */
   circleDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.dragend
+   */
   circleDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.dragstart
+   */
   circleDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.mousedown
+   */
   circleMousedown = this._eventManager.getLazyEmitter("mousedown");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.mousemove
+   */
   circleMousemove = this._eventManager.getLazyEmitter("mousemove");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.mouseout
+   */
   circleMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.mouseover
+   */
   circleMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.mouseup
+   */
   circleMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.radius_changed
+   */
   radiusChanged = this._eventManager.getLazyEmitter("radius_changed");
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.rightclick
+   */
   circleRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /** Event emitted when the circle is initialized. */
   circleInitialized = new EventEmitter();
   constructor() {
   }
@@ -662,26 +889,50 @@ var MapCircle = class _MapCircle {
     this._destroyed.complete();
     this.circle?.setMap(null);
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getBounds
+   */
   getBounds() {
     this._assertInitialized();
     return this.circle.getBounds();
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getCenter
+   */
   getCenter() {
     this._assertInitialized();
     return this.circle.getCenter();
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getDraggable
+   */
   getDraggable() {
     this._assertInitialized();
     return this.circle.getDraggable();
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getEditable
+   */
   getEditable() {
     this._assertInitialized();
     return this.circle.getEditable();
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getRadius
+   */
   getRadius() {
     this._assertInitialized();
     return this.circle.getRadius();
   }
+  /**
+   * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getVisible
+   */
   getVisible() {
     this._assertInitialized();
     return this.circle.getVisible();
@@ -819,16 +1070,30 @@ var MapDirectionsRenderer = class _MapDirectionsRenderer {
   _googleMap = inject(GoogleMap);
   _ngZone = inject(NgZone);
   _eventManager = new MapEventManager(inject(NgZone));
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRendererOptions.directions
+   */
   set directions(directions) {
     this._directions = directions;
   }
   _directions;
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRendererOptions
+   */
   set options(options) {
     this._options = options;
   }
   _options;
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRenderer.directions_changed
+   */
   directionsChanged = this._eventManager.getLazyEmitter("directions_changed");
+  /** Event emitted when the directions renderer is initialized. */
   directionsRendererInitialized = new EventEmitter();
+  /** The underlying google.maps.DirectionsRenderer object. */
   directionsRenderer;
   constructor() {
   }
@@ -868,14 +1133,26 @@ var MapDirectionsRenderer = class _MapDirectionsRenderer {
     this._eventManager.destroy();
     this.directionsRenderer?.setMap(null);
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRenderer.getDirections
+   */
   getDirections() {
     this._assertInitialized();
     return this.directionsRenderer.getDirections();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRenderer.getPanel
+   */
   getPanel() {
     this._assertInitialized();
     return this.directionsRenderer.getPanel();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsRenderer.getRouteIndex
+   */
   getRouteIndex() {
     this._assertInitialized();
     return this.directionsRenderer.getRouteIndex();
@@ -942,23 +1219,42 @@ var MapGroundOverlay = class _MapGroundOverlay {
   _url = new BehaviorSubject("");
   _bounds = new BehaviorSubject(void 0);
   _destroyed = new Subject();
-  _hasWatchers = false;
+  _hasWatchers;
+  /**
+   * The underlying google.maps.GroundOverlay object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/image-overlay#GroundOverlay
+   */
   groundOverlay;
+  /** URL of the image that will be shown in the overlay. */
   set url(url) {
     this._url.next(url);
   }
+  /** Bounds for the overlay. */
   get bounds() {
     return this._bounds.value;
   }
   set bounds(bounds) {
     this._bounds.next(bounds);
   }
+  /** Whether the overlay is clickable */
   clickable = false;
+  /** Opacity of the overlay. */
   set opacity(opacity) {
     this._opacity.next(opacity);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/image-overlay#GroundOverlay.click
+   */
   mapClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/image-overlay
+   * #GroundOverlay.dblclick
+   */
   mapDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /** Event emitted when the ground overlay is initialized. */
   groundOverlayInitialized = new EventEmitter();
   constructor() {
   }
@@ -1007,14 +1303,29 @@ var MapGroundOverlay = class _MapGroundOverlay {
     this._destroyed.complete();
     this.groundOverlay?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/image-overlay
+   * #GroundOverlay.getBounds
+   */
   getBounds() {
     this._assertInitialized();
     return this.groundOverlay.getBounds();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/image-overlay
+   * #GroundOverlay.getOpacity
+   */
   getOpacity() {
     this._assertInitialized();
     return this.groundOverlay.getOpacity();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/image-overlay
+   * #GroundOverlay.getUrl
+   */
   getUrl() {
     this._assertInitialized();
     return this.groundOverlay.getUrl();
@@ -1102,6 +1413,11 @@ var MapInfoWindow = class _MapInfoWindow {
   _options = new BehaviorSubject({});
   _position = new BehaviorSubject(void 0);
   _destroy = new Subject();
+  /**
+   * Underlying google.maps.InfoWindow
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow
+   */
   infoWindow;
   set options(options) {
     this._options.next(options || {});
@@ -1109,11 +1425,35 @@ var MapInfoWindow = class _MapInfoWindow {
   set position(position) {
     this._position.next(position);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.closeclick
+   */
   closeclick = this._eventManager.getLazyEmitter("closeclick");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window
+   * #InfoWindow.content_changed
+   */
   contentChanged = this._eventManager.getLazyEmitter("content_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.domready
+   */
   domready = this._eventManager.getLazyEmitter("domready");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window
+   * #InfoWindow.position_changed
+   */
   positionChanged = this._eventManager.getLazyEmitter("position_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window
+   * #InfoWindow.zindex_changed
+   */
   zindexChanged = this._eventManager.getLazyEmitter("zindex_changed");
+  /** Event emitted when the info window is initialized. */
   infoWindowInitialized = new EventEmitter();
   constructor() {
   }
@@ -1149,27 +1489,52 @@ var MapInfoWindow = class _MapInfoWindow {
       this.close();
     }
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.close
+   */
   close() {
     this._assertInitialized();
     this.infoWindow.close();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getContent
+   */
   getContent() {
     this._assertInitialized();
     return this.infoWindow.getContent() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window
+   * #InfoWindow.getPosition
+   */
   getPosition() {
     this._assertInitialized();
     return this.infoWindow.getPosition() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getZIndex
+   */
   getZIndex() {
     this._assertInitialized();
     return this.infoWindow.getZIndex();
   }
+  /**
+   * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+   * @deprecated Use the `open` method instead.
+   * @breaking-change 20.0.0
+   */
   openAdvancedMarkerElement(advancedMarkerElement, content) {
     this.open({
       getAnchor: () => advancedMarkerElement
     }, void 0, content);
   }
+  /**
+   * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
+   * then the position property of the options input is used instead.
+   */
   open(anchor, shouldFocus, content) {
     this._assertInitialized();
     if ((typeof ngDevMode === "undefined" || ngDevMode) && anchor && !anchor.getAnchor) {
@@ -1284,6 +1649,11 @@ var MapKmlLayer = class _MapKmlLayer {
   _options = new BehaviorSubject({});
   _url = new BehaviorSubject("");
   _destroyed = new Subject();
+  /**
+   * The underlying google.maps.KmlLayer object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer
+   */
   kmlLayer;
   set options(options) {
     this._options.next(options || {});
@@ -1291,9 +1661,21 @@ var MapKmlLayer = class _MapKmlLayer {
   set url(url) {
     this._url.next(url);
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.click
+   */
   kmlClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/kml
+   * #KmlLayer.defaultviewport_changed
+   */
   defaultviewportChanged = this._eventManager.getLazyEmitter("defaultviewport_changed");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.status_changed
+   */
   statusChanged = this._eventManager.getLazyEmitter("status_changed");
+  /** Event emitted when the KML layer is initialized. */
   kmlLayerInitialized = new EventEmitter();
   constructor() {
   }
@@ -1329,22 +1711,38 @@ var MapKmlLayer = class _MapKmlLayer {
     this._destroyed.complete();
     this.kmlLayer?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getDefaultViewport
+   */
   getDefaultViewport() {
     this._assertInitialized();
     return this.kmlLayer.getDefaultViewport();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getMetadata
+   */
   getMetadata() {
     this._assertInitialized();
     return this.kmlLayer.getMetadata();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getStatus
+   */
   getStatus() {
     this._assertInitialized();
     return this.kmlLayer.getStatus();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getUrl
+   */
   getUrl() {
     this._assertInitialized();
     return this.kmlLayer.getUrl();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getZIndex
+   */
   getZIndex() {
     this._assertInitialized();
     return this.kmlLayer.getZIndex();
@@ -1438,56 +1836,174 @@ var MapMarker = class _MapMarker {
   _googleMap = inject(GoogleMap);
   _ngZone = inject(NgZone);
   _eventManager = new MapEventManager(inject(NgZone));
+  /**
+   * Title of the marker.
+   * See: developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.title
+   */
   set title(title) {
     this._title = title;
   }
   _title;
+  /**
+   * Position of the marker. See:
+   * developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.position
+   */
   set position(position) {
     this._position = position;
   }
   _position;
+  /**
+   * Label for the marker.
+   * See: developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.label
+   */
   set label(label) {
     this._label = label;
   }
   _label;
+  /**
+   * Whether the marker is clickable. See:
+   * developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.clickable
+   */
   set clickable(clickable) {
     this._clickable = clickable;
   }
   _clickable;
+  /**
+   * Options used to configure the marker.
+   * See: developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions
+   */
   set options(options) {
     this._options = options;
   }
   _options;
+  /**
+   * Icon to be used for the marker.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/marker#Icon
+   */
   set icon(icon) {
     this._icon = icon;
   }
   _icon;
+  /**
+   * Whether the marker is visible.
+   * See: developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.visible
+   */
   set visible(value) {
     this._visible = value;
   }
   _visible;
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.animation_changed
+   */
   animationChanged = this._eventManager.getLazyEmitter("animation_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.click
+   */
   mapClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.clickable_changed
+   */
   clickableChanged = this._eventManager.getLazyEmitter("clickable_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.cursor_changed
+   */
   cursorChanged = this._eventManager.getLazyEmitter("cursor_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dblclick
+   */
   mapDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.drag
+   */
   mapDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragend
+   */
   mapDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.draggable_changed
+   */
   draggableChanged = this._eventManager.getLazyEmitter("draggable_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragstart
+   */
   mapDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.flat_changed
+   */
   flatChanged = this._eventManager.getLazyEmitter("flat_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.icon_changed
+   */
   iconChanged = this._eventManager.getLazyEmitter("icon_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mousedown
+   */
   mapMousedown = this._eventManager.getLazyEmitter("mousedown");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseout
+   */
   mapMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseover
+   */
   mapMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseup
+   */
   mapMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.position_changed
+   */
   positionChanged = this._eventManager.getLazyEmitter("position_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.rightclick
+   */
   mapRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.shape_changed
+   */
   shapeChanged = this._eventManager.getLazyEmitter("shape_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.title_changed
+   */
   titleChanged = this._eventManager.getLazyEmitter("title_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.visible_changed
+   */
   visibleChanged = this._eventManager.getLazyEmitter("visible_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.zindex_changed
+   */
   zindexChanged = this._eventManager.getLazyEmitter("zindex_changed");
+  /** Event emitted when the marker is initialized. */
   markerInitialized = new EventEmitter();
+  /**
+   * The underlying google.maps.Marker object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/marker#Marker
+   */
   marker;
   constructor() {
   }
@@ -1553,61 +2069,112 @@ var MapMarker = class _MapMarker {
     this._eventManager.destroy();
     this.marker?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getAnimation
+   */
   getAnimation() {
     this._assertInitialized();
     return this.marker.getAnimation() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getClickable
+   */
   getClickable() {
     this._assertInitialized();
     return this.marker.getClickable();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getCursor
+   */
   getCursor() {
     this._assertInitialized();
     return this.marker.getCursor() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getDraggable
+   */
   getDraggable() {
     this._assertInitialized();
     return !!this.marker.getDraggable();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getIcon
+   */
   getIcon() {
     this._assertInitialized();
     return this.marker.getIcon() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
+   */
   getLabel() {
     this._assertInitialized();
     return this.marker.getLabel() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getOpacity
+   */
   getOpacity() {
     this._assertInitialized();
     return this.marker.getOpacity() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getPosition
+   */
   getPosition() {
     this._assertInitialized();
     return this.marker.getPosition() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getShape
+   */
   getShape() {
     this._assertInitialized();
     return this.marker.getShape() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getTitle
+   */
   getTitle() {
     this._assertInitialized();
     return this.marker.getTitle() || null;
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getVisible
+   */
   getVisible() {
     this._assertInitialized();
     return this.marker.getVisible();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getZIndex
+   */
   getZIndex() {
     this._assertInitialized();
     return this.marker.getZIndex() || null;
   }
+  /** Gets the anchor point that can be used to attach other Google Maps objects. */
   getAnchor() {
     this._assertInitialized();
     return this.marker;
   }
+  /** Returns a promise that resolves when the marker has been initialized. */
   _resolveMarker() {
     return this.marker ? Promise.resolve(this.marker) : this.markerInitialized.pipe(take(1)).toPromise();
   }
+  /** Creates a combined options object using the passed-in options and the individual inputs. */
   _combineOptions() {
     const options = this._options || DEFAULT_MARKER_OPTIONS$1;
     return __spreadProps(__spreadValues({}, options), {
@@ -1781,6 +2348,7 @@ var DeprecatedMapMarkerClusterer = class _DeprecatedMapMarkerClusterer {
   _currentMarkers = /* @__PURE__ */ new Set();
   _eventManager = new MapEventManager(inject(NgZone));
   _destroy = new Subject();
+  /** Whether the clusterer is allowed to be initialized. */
   _canInitialize = this._googleMap._isBrowser;
   ariaLabelFn = () => "";
   set averageCenter(averageCenter) {
@@ -1852,11 +2420,29 @@ var DeprecatedMapMarkerClusterer = class _DeprecatedMapMarkerClusterer {
     this._options = options;
   }
   _options;
+  /**
+   * See
+   * googlemaps.github.io/v3-utility-library/modules/
+   * _google_markerclustererplus.html#clusteringbegin
+   */
   clusteringbegin = this._eventManager.getLazyEmitter("clusteringbegin");
+  /**
+   * See
+   * googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#clusteringend
+   */
   clusteringend = this._eventManager.getLazyEmitter("clusteringend");
+  /** Emits when a cluster has been clicked. */
   clusterClick = this._eventManager.getLazyEmitter("click");
   _markers;
+  /**
+   * The underlying MarkerClusterer object.
+   *
+   * See
+   * googlemaps.github.io/v3-utility-library/classes/
+   * _google_markerclustererplus.markerclusterer.html
+   */
   markerClusterer;
+  /** Event emitted when the clusterer is initialized. */
   markerClustererInitialized = new EventEmitter();
   constructor() {
   }
@@ -2275,6 +2861,11 @@ var MapPolygon = class _MapPolygon {
   _options = new BehaviorSubject({});
   _paths = new BehaviorSubject(void 0);
   _destroyed = new Subject();
+  /**
+   * The underlying google.maps.Polygon object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon
+   */
   polygon;
   set options(options) {
     this._options.next(options || {});
@@ -2282,17 +2873,51 @@ var MapPolygon = class _MapPolygon {
   set paths(paths) {
     this._paths.next(paths);
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.click
+   */
   polygonClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.dblclick
+   */
   polygonDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.drag
+   */
   polygonDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.dragend
+   */
   polygonDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.dragstart
+   */
   polygonDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.mousedown
+   */
   polygonMousedown = this._eventManager.getLazyEmitter("mousedown");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.mousemove
+   */
   polygonMousemove = this._eventManager.getLazyEmitter("mousemove");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.mouseout
+   */
   polygonMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.mouseover
+   */
   polygonMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.mouseup
+   */
   polygonMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.rightclick
+   */
   polygonRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /** Event emitted when the polygon is initialized. */
   polygonInitialized = new EventEmitter();
   constructor() {
   }
@@ -2328,22 +2953,38 @@ var MapPolygon = class _MapPolygon {
     this._destroyed.complete();
     this.polygon?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getDraggable
+   */
   getDraggable() {
     this._assertInitialized();
     return this.polygon.getDraggable();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getEditable
+   */
   getEditable() {
     this._assertInitialized();
     return this.polygon.getEditable();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getPath
+   */
   getPath() {
     this._assertInitialized();
     return this.polygon.getPath();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getPaths
+   */
   getPaths() {
     this._assertInitialized();
     return this.polygon.getPaths();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getVisible
+   */
   getVisible() {
     this._assertInitialized();
     return this.polygon.getVisible();
@@ -2463,6 +3104,11 @@ var MapPolyline = class _MapPolyline {
   _options = new BehaviorSubject({});
   _path = new BehaviorSubject(void 0);
   _destroyed = new Subject();
+  /**
+   * The underlying google.maps.Polyline object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline
+   */
   polyline;
   set options(options) {
     this._options.next(options || {});
@@ -2470,17 +3116,51 @@ var MapPolyline = class _MapPolyline {
   set path(path) {
     this._path.next(path);
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.click
+   */
   polylineClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dblclick
+   */
   polylineDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.drag
+   */
   polylineDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dragend
+   */
   polylineDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dragstart
+   */
   polylineDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mousedown
+   */
   polylineMousedown = this._eventManager.getLazyEmitter("mousedown");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mousemove
+   */
   polylineMousemove = this._eventManager.getLazyEmitter("mousemove");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseout
+   */
   polylineMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseover
+   */
   polylineMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseup
+   */
   polylineMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.rightclick
+   */
   polylineRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /** Event emitted when the polyline is initialized. */
   polylineInitialized = new EventEmitter();
   constructor() {
   }
@@ -2516,18 +3196,31 @@ var MapPolyline = class _MapPolyline {
     this._destroyed.complete();
     this.polyline?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getDraggable
+   */
   getDraggable() {
     this._assertInitialized();
     return this.polyline.getDraggable();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getEditable
+   */
   getEditable() {
     this._assertInitialized();
     return this.polyline.getEditable();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getPath
+   */
   getPath() {
     this._assertInitialized();
     return this.polyline.getPath();
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getVisible
+   */
   getVisible() {
     this._assertInitialized();
     return this.polyline.getVisible();
@@ -2647,6 +3340,11 @@ var MapRectangle = class _MapRectangle {
   _options = new BehaviorSubject({});
   _bounds = new BehaviorSubject(void 0);
   _destroyed = new Subject();
+  /**
+   * The underlying google.maps.Rectangle object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle
+   */
   rectangle;
   set options(options) {
     this._options.next(options || {});
@@ -2654,18 +3352,67 @@ var MapRectangle = class _MapRectangle {
   set bounds(bounds) {
     this._bounds.next(bounds);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.boundsChanged
+   */
   boundsChanged = this._eventManager.getLazyEmitter("bounds_changed");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.click
+   */
   rectangleClick = this._eventManager.getLazyEmitter("click");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dblclick
+   */
   rectangleDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.drag
+   */
   rectangleDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragend
+   */
   rectangleDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragstart
+   */
   rectangleDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousedown
+   */
   rectangleMousedown = this._eventManager.getLazyEmitter("mousedown");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousemove
+   */
   rectangleMousemove = this._eventManager.getLazyEmitter("mousemove");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseout
+   */
   rectangleMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseover
+   */
   rectangleMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseup
+   */
   rectangleMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.rightclick
+   */
   rectangleRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /** Event emitted when the rectangle is initialized. */
   rectangleInitialized = new EventEmitter();
   constructor() {
   }
@@ -2701,18 +3448,34 @@ var MapRectangle = class _MapRectangle {
     this._destroyed.complete();
     this.rectangle?.setMap(null);
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getBounds
+   */
   getBounds() {
     this._assertInitialized();
     return this.rectangle.getBounds();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getDraggable
+   */
   getDraggable() {
     this._assertInitialized();
     return this.rectangle.getDraggable();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getEditable
+   */
   getEditable() {
     this._assertInitialized();
     return this.rectangle.getEditable();
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getVisible
+   */
   getVisible() {
     this._assertInitialized();
     return this.rectangle.getVisible();
@@ -2834,10 +3597,19 @@ var MapTrafficLayer = class _MapTrafficLayer {
   _ngZone = inject(NgZone);
   _autoRefresh = new BehaviorSubject(true);
   _destroyed = new Subject();
+  /**
+   * The underlying google.maps.TrafficLayer object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#TrafficLayer
+   */
   trafficLayer;
+  /**
+   * Whether the traffic layer refreshes with updated information automatically.
+   */
   set autoRefresh(autoRefresh) {
     this._autoRefresh.next(autoRefresh);
   }
+  /** Event emitted when the traffic layer is initialized. */
   trafficLayerInitialized = new EventEmitter();
   constructor() {
   }
@@ -2923,7 +3695,13 @@ var MapTrafficLayer = class _MapTrafficLayer {
 var MapTransitLayer = class _MapTransitLayer {
   _map = inject(GoogleMap);
   _zone = inject(NgZone);
+  /**
+   * The underlying google.maps.TransitLayer object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#TransitLayer
+   */
   transitLayer;
+  /** Event emitted when the transit layer is initialized. */
   transitLayerInitialized = new EventEmitter();
   ngOnInit() {
     if (this._map._isBrowser) {
@@ -2982,15 +3760,29 @@ var MapTransitLayer = class _MapTransitLayer {
 var MapHeatmapLayer = class _MapHeatmapLayer {
   _googleMap = inject(GoogleMap);
   _ngZone = inject(NgZone);
+  /**
+   * Data shown on the heatmap.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
+   */
   set data(data) {
     this._data = data;
   }
   _data;
+  /**
+   * Options used to configure the heatmap. See:
+   * developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions
+   */
   set options(options) {
     this._options = options;
   }
   _options;
+  /**
+   * The underlying google.maps.visualization.HeatmapLayer object.
+   *
+   * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
+   */
   heatmap;
+  /** Event emitted when the heatmap is initialized. */
   heatmapInitialized = new EventEmitter();
   constructor() {
   }
@@ -3035,10 +3827,15 @@ var MapHeatmapLayer = class _MapHeatmapLayer {
   ngOnDestroy() {
     this.heatmap?.setMap(null);
   }
+  /**
+   * Gets the data that is currently shown on the heatmap.
+   * See: developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayer
+   */
   getData() {
     this._assertInitialized();
     return this.heatmap.getData();
   }
+  /** Creates a combined options object using the passed-in options and the individual inputs. */
   _combineOptions() {
     const options = this._options || {};
     return __spreadProps(__spreadValues({}, options), {
@@ -3046,6 +3843,14 @@ var MapHeatmapLayer = class _MapHeatmapLayer {
       map: this._googleMap.googleMap
     });
   }
+  /**
+   * Most Google Maps APIs support both `LatLng` objects and `LatLngLiteral`. The latter is more
+   * convenient to write out, because the Google Maps API doesn't have to have been loaded in order
+   * to construct them. The `HeatmapLayer` appears to be an exception that only allows a `LatLng`
+   * object, or it throws a runtime error. Since it's more convenient and we expect that Angular
+   * users will load the API asynchronously, we allow them to pass in a `LatLngLiteral` and we
+   * convert it to a `LatLng` object before passing it off to Google Maps.
+   */
   _normalizeData(data) {
     const result = [];
     data.forEach((item) => {
@@ -3053,6 +3858,7 @@ var MapHeatmapLayer = class _MapHeatmapLayer {
     });
     return result;
   }
+  /** Asserts that the heatmap object has been initialized. */
   _assertInitialized() {
     if (typeof ngDevMode === "undefined" || ngDevMode) {
       if (!this.heatmap) {
@@ -3109,40 +3915,104 @@ var MapAdvancedMarker = class _MapAdvancedMarker {
   _googleMap = inject(GoogleMap);
   _ngZone = inject(NgZone);
   _eventManager = new MapEventManager(inject(NgZone));
+  /**
+   * Rollover text. If provided, an accessibility text (e.g. for use with screen readers) will be added to the AdvancedMarkerElement with the provided value.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.title
+   */
   set title(title) {
     this._title = title;
   }
   _title;
+  /**
+   * Sets the AdvancedMarkerElement's position. An AdvancedMarkerElement may be constructed without a position, but will not be displayed until its position is provided - for example, by a user's actions or choices. An AdvancedMarkerElement's position can be provided by setting AdvancedMarkerElement.position if not provided at the construction.
+   * Note: AdvancedMarkerElement with altitude is only supported on vector maps.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.position
+   */
   set position(position) {
     this._position = position;
   }
   _position;
+  /**
+   * The DOM Element backing the visual of an AdvancedMarkerElement.
+   * Note: AdvancedMarkerElement does not clone the passed-in DOM element. Once the DOM element is passed to an AdvancedMarkerElement, passing the same DOM element to another AdvancedMarkerElement will move the DOM element and cause the previous AdvancedMarkerElement to look empty.
+   * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.content
+   */
   set content(content) {
     this._content = content;
   }
-  _content = null;
+  _content;
+  /**
+   * If true, the AdvancedMarkerElement can be dragged.
+   * Note: AdvancedMarkerElement with altitude is not draggable.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.gmpDraggable
+   */
   set gmpDraggable(draggable) {
     this._draggable = draggable;
   }
   _draggable;
+  /**
+   * Options for constructing an AdvancedMarkerElement.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions
+   */
   set options(options) {
     this._options = options;
   }
   _options;
+  /**
+   * AdvancedMarkerElements on the map are prioritized by zIndex, with higher values indicating higher display.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.zIndex
+   */
   set zIndex(zIndex) {
     this._zIndex = zIndex;
   }
   _zIndex;
+  /**
+   * This event is fired when the AdvancedMarkerElement element is clicked.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.click
+   */
   mapClick = this._eventManager.getLazyEmitter("click");
-  mapDblclick = this._eventManager.getLazyEmitter("dblclick", "native");
-  mapMouseout = this._eventManager.getLazyEmitter("mouseout", "native");
-  mapMouseover = this._eventManager.getLazyEmitter("mouseover", "native");
-  mapMouseup = this._eventManager.getLazyEmitter("mouseup", "native");
-  mapRightclick = this._eventManager.getLazyEmitter("auxclick", "native");
+  /**
+   * This event is fired when the AdvancedMarkerElement is double-clicked.
+   */
+  mapDblclick = this._eventManager.getLazyEmitter("dblclick");
+  /**
+   * This event is fired when the mouse moves out of the AdvancedMarkerElement.
+   */
+  mapMouseout = this._eventManager.getLazyEmitter("mouseout");
+  /**
+   * This event is fired when the mouse moves over the AdvancedMarkerElement.
+   */
+  mapMouseover = this._eventManager.getLazyEmitter("mouseover");
+  /**
+   * This event is fired when the mouse button is released over the AdvancedMarkerElement.
+   */
+  mapMouseup = this._eventManager.getLazyEmitter("mouseup");
+  /**
+   * This event is fired when the AdvancedMarkerElement is right-clicked.
+   */
+  mapRightclick = this._eventManager.getLazyEmitter("rightclick");
+  /**
+   * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
+   */
   mapDrag = this._eventManager.getLazyEmitter("drag");
+  /**
+   * This event is fired when the user stops dragging the AdvancedMarkerElement.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragend
+   */
   mapDragend = this._eventManager.getLazyEmitter("dragend");
+  /**
+   * This event is fired when the user starts dragging the AdvancedMarkerElement.
+   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragstart
+   */
   mapDragstart = this._eventManager.getLazyEmitter("dragstart");
+  /** Event emitted when the marker is initialized. */
   markerInitialized = new EventEmitter();
+  /**
+   * The underlying google.maps.marker.AdvancedMarkerElement object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement
+   */
   advancedMarker;
   constructor() {
   }
@@ -3207,9 +4077,11 @@ var MapAdvancedMarker = class _MapAdvancedMarker {
     this._assertInitialized();
     return this.advancedMarker;
   }
+  /** Returns a promise that resolves when the marker has been initialized. */
   _resolveMarker() {
     return this.advancedMarker ? Promise.resolve(this.advancedMarker) : this.markerInitialized.pipe(take(1)).toPromise();
   }
+  /** Creates a combined options object using the passed-in options and the individual inputs. */
   _combineOptions() {
     const options = this._options || DEFAULT_MARKER_OPTIONS;
     return __spreadProps(__spreadValues({}, options), {
@@ -3221,6 +4093,7 @@ var MapAdvancedMarker = class _MapAdvancedMarker {
       map: this._googleMap.googleMap
     });
   }
+  /** Asserts that the map has been initialized. */
   _assertInitialized() {
     if (typeof ngDevMode === "undefined" || ngDevMode) {
       if (!this.advancedMarker) {
@@ -3329,14 +4202,28 @@ var MapMarkerClusterer = class _MapMarkerClusterer {
   _currentMarkers = /* @__PURE__ */ new Set();
   _closestMapEventManager = new MapEventManager(this._ngZone);
   _markersSubscription = Subscription.EMPTY;
+  /** Whether the clusterer is allowed to be initialized. */
   _canInitialize = this._googleMap._isBrowser;
+  /**
+   * Used to customize how the marker cluster is rendered.
+   * See https://googlemaps.github.io/js-markerclusterer/interfaces/Renderer.html.
+   */
   renderer;
+  /**
+   * Algorithm used to cluster the markers.
+   * See https://googlemaps.github.io/js-markerclusterer/interfaces/Algorithm.html.
+   */
   algorithm;
+  /** Emits when clustering has started. */
   clusteringbegin = this._closestMapEventManager.getLazyEmitter("clusteringbegin");
+  /** Emits when clustering is done. */
   clusteringend = this._closestMapEventManager.getLazyEmitter("clusteringend");
+  /** Emits when a cluster has been clicked. */
   clusterClick = new EventEmitter();
+  /** Event emitted when the marker clusterer is initialized. */
   markerClustererInitialized = new EventEmitter();
   _markers;
+  /** Underlying MarkerClusterer object used to interact with Google Maps. */
   markerClusterer;
   async ngOnInit() {
     if (this._canInitialize) {
@@ -3532,6 +4419,11 @@ var MapDirectionsService = class _MapDirectionsService {
   _directionsService;
   constructor() {
   }
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/directions
+   * #DirectionsService.route
+   */
   route(request) {
     return new Observable((observer) => {
       this._getService().then((service) => {
@@ -3582,6 +4474,9 @@ var MapGeocoder = class _MapGeocoder {
   _geocoder;
   constructor() {
   }
+  /**
+   * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode
+   */
   geocode(request) {
     return new Observable((observer) => {
       this._getGeocoder().then((geocoder) => {
