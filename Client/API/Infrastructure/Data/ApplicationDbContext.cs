@@ -88,7 +88,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.ToTable("items");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.ProductKey).HasColumnName("product_key");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.TitleEn).HasColumnName("title_en").HasMaxLength(200);
             entity.Property(e => e.TitleAr).HasColumnName("title_ar").HasMaxLength(200);

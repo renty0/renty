@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
+using Domain.Constants;
 using MediatR;
 using Application.Shared.Interfaces.Services;
 
@@ -132,10 +133,10 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
         // Assign role based on user type
         var roleName = request.UserType switch
         {
-            UserType.Owner => "Owner",
-            UserType.Renter => "Renter",
-            UserType.Both => "Owner", // Both gets Owner role (can do everything)
-            _ => "Renter"
+            UserType.Owner => Roles.Owner,
+            UserType.Renter => Roles.Renter,
+            UserType.Both => Roles.Owner, // Both gets Owner role (can do everything)
+            _ => Roles.Renter
         };
 
         await _identityService.AddToRoleAsync(user, roleName);
@@ -143,7 +144,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
         // If user type is Both, also add Renter role
         if (request.UserType == UserType.Both)
         {
-            await _identityService.AddToRoleAsync(user, "Renter");
+            await _identityService.AddToRoleAsync(user, Roles.Renter);
         }
 
         var roles = await _identityService.GetUserRolesAsync(user);

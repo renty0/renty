@@ -1,0 +1,35 @@
+﻿  Determining projects to restore...
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\9.0.300-preview.0.25177.5\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(326,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+  Domain -> e:\Courses\Work\renty\Client\API\Domain\bin\Debug\net9.0\Domain.dll
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(135,31): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(136,32): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(137,30): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(138,18): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(146,57): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(174,26): warning CS0168: The variable 'ex' is declared but never used [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Features\Products\GetProducts.cs(113,68): warning CS8602: Dereference of a possibly null reference. [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+
+Build FAILED.
+
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1903: Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8
+e:\Courses\Work\renty\Client\API\Application\Application.csproj : warning NU1902: Package 'SixLabors.ImageSharp' 3.1.6 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(174,26): warning CS0168: The variable 'ex' is declared but never used [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Features\Products\GetProducts.cs(113,68): warning CS8602: Dereference of a possibly null reference. [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(135,31): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(136,32): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(137,30): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(138,18): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+e:\Courses\Work\renty\Client\API\Application\Web\Account\Register.cs(146,57): error CS0234: The type or namespace name 'Roles' does not exist in the namespace 'Application.Web' (are you missing an assembly reference?) [e:\Courses\Work\renty\Client\API\Application\Application.csproj]
+    6 Warning(s)
+    5 Error(s)
+
+Time Elapsed 00:00:01.58
+
+Workload updates are available. Run `dotnet workload list` for more information.

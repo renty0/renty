@@ -621,10 +621,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("owner_id");
 
-                    b.Property<int>("ProductKey")
-                        .HasColumnType("integer")
-                        .HasColumnName("product_key");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text")

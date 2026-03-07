@@ -2,6 +2,8 @@ using Application.Common.Interfaces;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Application.Features.Items;
 
@@ -13,11 +15,13 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetItemByIdQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetItemByIdQueryHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetItemByIdResponse> Handle(GetItemByIdQuery request, CancellationToken ct)
@@ -48,6 +52,9 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             await _context.SaveChangesAsync(ct);
         }
 
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
         var dto = new ItemDetailDto(
             item.Id,
             item.TitleAr,
@@ -63,9 +70,19 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.Lat,
             item.Lng,
             item.CreatedAt,
-            new OwnerDto(item.Owner.FirstName, item.Owner.City, item.Owner.ProfilePictureUrl),
+            new OwnerDto(
+                item.Owner.FirstName, 
+                item.Owner.City, 
+                !string.IsNullOrEmpty(item.Owner.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 
+                    ? $"{baseUrl.TrimEnd('/')}/{item.Owner.ProfilePictureUrl.TrimStart('/')}" 
+                    : item.Owner.ProfilePictureUrl),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
-            item.Images.Select(img => new ItemImageDto(img.Id, img.Image != null ? "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/') : "", img.IsPrimary)).ToList(),
+            item.Images.Select(img => new ItemImageDto(
+                img.Id, 
+                img.Image != null 
+                    ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{img.Image.StoragePath.TrimStart('/')}" : "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/'))
+                    : "", 
+                img.IsPrimary)).ToList(),
             0, // avg rating
             0, // review count
             item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,

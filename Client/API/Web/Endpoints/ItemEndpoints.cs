@@ -66,8 +66,8 @@ public static class ItemEndpoints
         g.MapGet("/{id:guid}", async (Guid id, ISender sender) =>
         {
             var r = await sender.Send(new GetItemByIdQuery(id));
-            if (r is null) return Api.Fail("Item not found", 404);
-            return Api.Ok(r);
+            if (!r.Found) return Api.Fail(r.Error ?? "Item not found", 404);
+            return Api.Ok(r.Item);
         })
         .WithName("GetItemById")
         .Produces<ApiResponse<ItemDetailDto>>(StatusCodes.Status200OK)

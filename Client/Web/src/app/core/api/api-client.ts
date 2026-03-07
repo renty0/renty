@@ -5547,7 +5547,6 @@ export interface IItemCreateData {
 }
 
 export class CreateItemCommand implements ICreateItemCommand {
-    productKey?: number;
     titleAr?: string | undefined;
     titleEn?: string | undefined;
     descAr?: string | undefined;
@@ -5576,7 +5575,6 @@ export class CreateItemCommand implements ICreateItemCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.productKey = _data["productKey"];
             this.titleAr = _data["titleAr"];
             this.titleEn = _data["titleEn"];
             this.descAr = _data["descAr"];
@@ -5613,7 +5611,6 @@ export class CreateItemCommand implements ICreateItemCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["productKey"] = this.productKey;
         data["titleAr"] = this.titleAr;
         data["titleEn"] = this.titleEn;
         data["descAr"] = this.descAr;
@@ -5643,7 +5640,6 @@ export class CreateItemCommand implements ICreateItemCommand {
 }
 
 export interface ICreateItemCommand {
-    productKey?: number;
     titleAr?: string | undefined;
     titleEn?: string | undefined;
     descAr?: string | undefined;

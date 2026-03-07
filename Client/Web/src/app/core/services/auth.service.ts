@@ -16,6 +16,7 @@ import {
 } from '../api/api-client';
 import { CookieService } from 'ngx-cookie-service';
 import * as CryptoJS from 'crypto-js';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,7 @@ export class AuthService {
     this.cookieService.set(key, encrypted, {
       expires: expires,
       path: '/',
-      secure: true,
+      secure: environment.production,
       sameSite: 'Lax',
     });
   }

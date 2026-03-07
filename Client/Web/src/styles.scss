@@ -1,10 +1,6 @@
-// @use '@angular/material/prebuilt-themes/azure-blue.css';
-// @use '@angular/material' as mat;
 @use 'primeflex/primeflex.scss';
 @use 'primeicons/primeicons.css';
 @use './app/shared/styles/index.scss' as *;
-
-// Alexandria font is now loaded via Google Fonts in index.html
 
 .material-icons {
   font-weight: normal;

@@ -48,7 +48,7 @@ export class SubcategoryListComponent implements OnInit {
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
 
-  displayedColumns = ['logo', 'name', 'category', 'description', 'actions'];
+  displayedColumns = ['logo', 'name', 'category', 'description', 'created', 'actions'];
   dataSource = signal<ProductSubcategoryDto[]>([]);
   isLoading = signal(false);
   viewMode = signal<'list' | 'cards'>('cards');
@@ -97,7 +97,7 @@ export class SubcategoryListComponent implements OnInit {
 
     this.isLoading.set(true);
     this.apiClient
-      .getSubcategories(page, size, undefined, term || undefined)
+      .getSubcategories(page, size, undefined, term || undefined, this.sortBy() || undefined, this.sortOrder() || undefined)
       .pipe(
         tap((response) => {
           const items = response?.data || [];

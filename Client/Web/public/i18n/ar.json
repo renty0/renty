@@ -2,7 +2,13 @@
   "common": {
     "renter": "مستأجر",
     "owner": "مالك",
-    "both": "كلاهما"
+    "both": "كلاهما",
+    "contact": "تواصل",
+    "searchLocation": "ابحث عن موقع...",
+    "enterCoordinates": "أدخل الإحداثيات (خط العرض، خط الطول)",
+    "loadingMap": "جاري تحميل الخريطة...",
+    "noCoordinates": "لا توجد إحداثيات محددة لهذا الموقع",
+    "coordinatesCopied": "تم نسخ الإحداثيات إلى الحافظة"
   },
   "nav": {
     "home": "الرئيسية",
@@ -13,8 +19,9 @@
     "register": "التسجيل",
     "filter": "تصفية",
     "categories": "الفئات",
-    "market": "السوق",
     "subcategories": "الفئات الفرعية",
+    "brands": "الماركات",
+    "market": "السوق",
     "search_placeholder": "البحث عن المنتجات...",
     "hero_title": "اعثر على الهدية المثالية",
     "hero_subtitle": "تصفح مجموعتنا الواسعة من العناصر المتميزة.",
@@ -224,9 +231,18 @@
   "labels": {
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
+    "price": "السعر",
     "confirmPassword": "تأكيد كلمة المرور",
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
+    "deposit": "مبلغ الإيداع",
+    "type": "النوع",
+    "condition": "الحالة",
+    "location": "الموقع",
+    "mapLocation": "موقع الخريطة",
+    "category": "الفئة",
+    "subcategory": "الفئة الفرعية",
+    "brand": "الماركة",
     "phoneNumber": "رقم الهاتف",
     "city": "المدينة",
     "country": "الدولة",
@@ -240,7 +256,46 @@
     "userType": "نوع المستخدم",
     "name": "الاسم",
     "description": "الوصف",
-    "upload_image": "رفع صورة"
+    "upload_image": "رفع صورة",
+    "governorates": {
+      "cairo": "القاهرة",
+      "giza": "الجيزة",
+      "alexandria": "الإسكندرية",
+      "dakahlia": "الدقهلية",
+      "red_sea": "البحر الأحمر",
+      "beheira": "البحيرة",
+      "fayoum": "الفيوم",
+      "gharbiya": "الغربية",
+      "ismailia": "الإسماعيلية",
+      "monufia": "المنوفية",
+      "minya": "المنيا",
+      "qalubiya": "القليوبية",
+      "new_valley": "الوادي الجديد",
+      "suez": "السويس",
+      "aswan": "أسوان",
+      "assiut": "أسيوط",
+      "beni_suef": "بني سويف",
+      "port_said": "بورسعيد",
+      "damietta": "دمياط",
+      "sharkia": "الشرقية",
+      "south_sinai": "جنوب سيناء",
+      "kafr_el_sheikh": "كفر الشيخ",
+      "matrouh": "مطروح",
+      "luxor": "الأقصر",
+      "qena": "قنا",
+      "north_sinai": "شمال سيناء",
+      "sohag": "سوهاج"
+    },
+    "types": {
+      "standard": "عادي",
+      "premium": "مميز"
+    },
+    "conditions": {
+      "new": "جديد",
+      "like_new": "كأنه جديد",
+      "good": "جيد",
+      "fair": "مقبول"
+    }
   },
   "buttons": {
     "login": "دخول",
@@ -304,6 +359,7 @@
       "sku": "المعرف الفريد (SKU)",
       "name": "الاسم",
       "price": "السعر",
+      "perDay": "/ يوم",
       "subcategory": "الفئة الفرعية",
       "date": "التاريخ",
       "actions": "الإجراءات"
@@ -312,6 +368,10 @@
       "create": "منتج جديد",
       "edit": "تعديل",
       "delete": "حذف"
+    },
+    "view": {
+      "list": "عرض قائمة",
+      "cards": "عرض مربعات"
     },
     "editor": {
       "newTitle": "منتج جديد",
@@ -343,7 +403,11 @@
       "name": "أدخل اسم المنتج",
       "sku": "أدخل المعرف الفريد",
       "description": "أدخل وصف المنتج",
-      "subcategory": "اختر الفئة الفرعية"
+      "subcategory": "اختر الفئة الفرعية",
+      "category": "اختر الفئة",
+      "brand": "اختر الماركة",
+      "city": "أدخل المدينة",
+      "location": "أدخل الموقع أو العنوان"
     },
     "messages": {
       "createSuccess": "تم إنشاء المنتج بنجاح",
@@ -442,8 +506,8 @@
       }
     },
     "app": {
-      "title": "خذ رنتلي معك في كل مكان",
-      "desc": "قم بتنزيل تطبيق الهاتف المحمول لإدارة إيجاراتك، والدردشة مع المالكين، والحصول على إشعارات في الوقت الفعلي في أي مكان وفي أي وقت."
+      "title": "Take Renty On The Go",
+      "desc": "Download our mobile app to manage your rentals, chat with owners, and get real-time notifications anywhere, anytime."
     },
     "footer": {
       "about": "رنتلي هو السوق الرائد لتأجير السلع بين الأفراد، مما يمكن الأفراد من الوصول إلى الموارد ومشاركتها بكفاءة.",
@@ -464,26 +528,6 @@
       "rating": "تقييم المستخدمين"
     }
   },
-  "uploader": {
-    "drag_drop": "اسحب وأفلت الصورة هنا",
-    "hint": "يدعم JPG, PNG, GIF, WebP (بحد أقصى 5MB)",
-    "uploading": "جاري رفع الصورة"
-  },
-  "profile": {
-    "title": "ملفي الشخصي",
-    "imageAlt": "صورة الملف الشخصي",
-    "updatePhoto": "تحديث الصورة",
-    "uploadNewPhoto": "رفع صورة جديدة",
-    "firstName": "الاسم الأول",
-    "lastName": "اسم العائلة",
-    "email": "البريد الإلكتروني",
-    "address": "العنوان",
-    "city": "المدينة",
-    "country": "الدولة",
-    "bio": "نبذة تعريفية",
-    "save": "حفظ التغييرات",
-    "uploading": "جاري الرفع..."
-  },
   "subcategories": {
     "title": "الفئات الفرعية",
     "search": "بحث في الفئات الفرعية...",
@@ -492,6 +536,7 @@
       "name": "الاسم",
       "category": "الفئة",
       "description": "الوصف",
+      "date": "التاريخ",
       "actions": "الإجراءات"
     },
     "actions": {
@@ -516,12 +561,78 @@
       "deleteSuccess": "تم حذف الفئة الفرعية بنجاح"
     }
   },
+  "brands": {
+    "title": "الماركات",
+    "search": "بحث في الماركات...",
+    "empty": "لم يتم العثور على ماركات",
+    "columns": {
+      "logo": "الشعار",
+      "name": "الاسم",
+      "description": "الوصف",
+      "items": "المنتجات",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "create": "ماركة جديدة",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "fields": {
+      "nameAr": "الاسم (بالعربية)",
+      "nameEn": "الاسم (بالانجليزية)",
+      "descAr": "الوصف (بالعربية)",
+      "descEn": "الوصف (بالانجليزية)",
+      "logo": "شعار الماركة"
+    },
+    "messages": {
+      "createSuccess": "تم إنشاء الماركة بنجاح",
+      "updateSuccess": "تم تحديث الماركة بنجاح",
+      "deleteConfirmation": "هل أنت متأكد من حذف هذه الماركة؟",
+      "deleteSuccess": "تم حذف الماركة بنجاح"
+    },
+    "errors": {
+      "failedToLoad": "فشل تحميل الماركات",
+      "failedToDelete": "فشل حذف الماركة"
+    }
+  },
+  "uploader": {
+    "drag_drop": "اسحب وأفلت الصورة هنا",
+    "hint": "يدعم JPG, PNG, GIF, WebP (بحد أقصى 5MB)",
+    "uploading": "جاري رفع الصورة"
+  },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "imageAlt": "صورة الملف الشخصي",
+    "updatePhoto": "تحديث الصورة",
+    "uploadNewPhoto": "رفع صورة جديدة",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "city": "المدينة",
+    "country": "الدولة",
+    "bio": "نبذة تعريفية",
+    "save": "حفظ التغييرات",
+    "uploading": "جاري الرفع..."
+  },
   "errors": {
     "unknownError": "حدث خطأ غير متوقع",
     "failedToLoadSubcategories": "فشل تحميل الفئات الفرعية",
     "failedToLoadCategories": "فشل تحميل الفئات",
     "failedToLoadSubcategory": "فشل تحميل بيانات الفئة الفرعية",
     "failedToUploadLogo": "فشل رفع صورة الشعار",
+    "invalidCoordinates": "تنسيق الإحداثيات غير صحيح. استخدم: خط العرض، خط الطول",
     "unexpectedError": "حدث خطأ غير متوقع"
+  },
+  "items": {
+    "daily": "يومي",
+    "category": "الفئة",
+    "brand": "الماركة",
+    "city": "المدينة",
+    "createdAt": "تم النشر في",
+    "description": "الوصف",
+    "owner": "المالك",
+    "rentNow": "استأجر الآن",
+    "addToFavorites": "إضافة للمفضلة"
   }
 }

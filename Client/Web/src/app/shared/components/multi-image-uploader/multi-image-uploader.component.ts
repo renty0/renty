@@ -8,7 +8,7 @@ import { ToastService } from '../../services/toast.service';
 import { firstValueFrom } from 'rxjs';
 
 export interface UploadedImage {
-    id: number | null; // null for new uploads not yet saved to ProductImage (but saved to MediaFile)
+    id: string | null; // null for new uploads (initially), or holds existing ProductImage.id
     mediaFileId?: string; // ID from MediaFile service
     imageUrl: string;
     isPrimary: boolean;
@@ -72,7 +72,7 @@ export class MultiImageUploaderComponent {
 
     async uploadFile(file: File) {
         const tempImage: UploadedImage = {
-            id: -1, // Temporary negative ID
+            id: null, // New image
             imageUrl: URL.createObjectURL(file), // Preview
             isPrimary: this.images.length === 0,
             displayOrder: this.images.length,

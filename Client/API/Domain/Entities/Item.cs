@@ -8,7 +8,6 @@ namespace Domain.Entities;
 public class Item
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public int ProductKey { get; set; }
     public long OwnerId { get; set; }
     public string TitleAr { get; set; } = string.Empty;
     public string TitleEn { get; set; } = string.Empty;

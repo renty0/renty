@@ -6,15 +6,17 @@ import { AuthRoutes } from './features/auth/routes/auth.routes';
 import { HomeComponent } from './features/home/components/home/home.component';
 import { CategoriesRoutes } from './features/categories/categories.routes';
 import { SubcategoriesRoutes } from './features/subcategories/subcategories.routes';
-import { ProductsRoutes } from './features/products/products.routes';
+import { BrandsRoutes } from './features/brands/brands.routes';
 import { ProductDetailsComponent } from './features/marketplace/product-details/product-details.component';
 import { MarketplaceComponent } from './features/marketplace/marketplace.component';
+import { ItemsRoutes } from './features/items/items.routes';
 
 export const routes: Routes = [
   ...AuthRoutes,
   ...CategoriesRoutes,
   ...SubcategoriesRoutes,
-  ...ProductsRoutes,
+  ...BrandsRoutes,
+  ...ItemsRoutes,
   {
     path: 'marketplace/product/:id',
     component: ProductDetailsComponent,

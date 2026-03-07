@@ -10,7 +10,6 @@ public record CreateItemPricingCommand(decimal Price, string PricingType);
 public record CreateItemImageCommand(Guid ImageId, bool IsPrimary);
 
 public record CreateItemCommand(
-    int ProductKey,
     string? TitleAr,
     string? TitleEn,
     string? DescAr,
@@ -37,7 +36,7 @@ public class CreateItemCommandValidator : AbstractValidator<CreateItemCommand>
     {
         RuleFor(x => x.TitleEn).NotEmpty().MaximumLength(200);
         RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
-        RuleFor(x => x.ProductKey).GreaterThan(0);
+        RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
         RuleFor(x => x.DefaultDeposit).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Pricing).NotEmpty().WithMessage("At least one pricing entry is required.");
         RuleFor(x => x.Images).NotEmpty().WithMessage("At least one image is required.");
@@ -75,7 +74,6 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
 
         var item = new Item
         {
-            ProductKey = request.ProductKey,
             OwnerId = _currentUser.Id.Value,
             TitleAr = request.TitleAr ?? string.Empty,
             TitleEn = request.TitleEn ?? string.Empty,

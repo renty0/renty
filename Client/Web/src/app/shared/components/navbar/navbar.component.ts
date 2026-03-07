@@ -41,7 +41,8 @@ export class NavbarComponent implements OnInit {
         { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
         { path: '/categories', labelKey: 'nav.categories', icon: 'category', adminOnly: true },
         { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', adminOnly: true },
-        { path: '/products', labelKey: 'nav.products', icon: 'inventory_2', adminOnly: true },
+        { path: '/brands', labelKey: 'nav.brands', icon: 'branding_watermark', adminOnly: true },
+        { path: '/items', labelKey: 'nav.products', icon: 'inventory_2', adminOnly: true },
         { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard', adminOnly: true }
     ];
 

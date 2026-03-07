@@ -1,0 +1,374 @@
+import { Component, inject, OnInit, signal, Input, Output, EventEmitter, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { InputComponent } from '../../../shared/components/input/input';
+import { MultiImageUploaderComponent, UploadedImage } from '../../../shared/components/multi-image-uploader/multi-image-uploader.component';
+import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
+import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+import { MapComponent } from '../../../shared/components/map/map.component';
+import { ItemsClient, SubcategoriesClient, CreateItemCommand, CreateItemPricingCommand, CreateItemImageCommand, UpdateItemCommand, CategoriesClient, BrandsClient } from '../../../core/api/api-client';
+import { ToastService } from '../../../shared/services/toast.service';
+import { catchError, finalize, of, tap } from 'rxjs';
+import { ITEM_TYPE_OPTIONS, ITEM_CONDITION_OPTIONS, EGYPT_GOVERNORATES } from './items-editor.constants';
+import { LocalizationService } from '../../../core/services/localization.service';
+
+@Component({
+  selector: 'app-items-editor-page',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
+  templateUrl: './items-editor-page.component.html',
+  styleUrl: './items-editor-page.component.scss',
+})
+export class ItemsEditorPageComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private itemsClient = inject(ItemsClient);
+  private subcategoriesClient = inject(SubcategoriesClient);
+  private categoriesClient = inject(CategoriesClient);
+  private brandsClient = inject(BrandsClient);
+  private toast = inject(ToastService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private localization = inject(LocalizationService);
+
+  @Input('itemId') set setItemId(val: string | undefined | null) {
+    if (val != null) {
+      this.itemId = val;
+      this.isEditMode = true;
+      this.loadItem(val);
+    } else {
+      this.resetForm();
+    }
+  }
+
+  @Output() saved = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
+
+  form!: FormGroup;
+  isEditMode = false;
+  itemId: string | null = null;
+  isLoading = false;
+  isSaving = false;
+
+  subcategories = computed(() => {
+    const catId = this.selectedCategoryId();
+    const lang = this.localization.language();
+    if (!catId) return [];
+    return this.allSubcategories()
+      .filter((s) => s.categoryId === catId)
+      .map((s) => ({
+        name: lang === 'ar' ? (s.nameAr || s.nameEn) : (s.nameEn || s.nameAr),
+        code: s.code,
+      }));
+  });
+  allSubcategories = signal<{ nameAr: string; nameEn: string; code: number; categoryId?: number }[]>([]);
+  selectedCategoryId = signal<number | null>(null);
+
+  categories = computed(() => {
+    const lang = this.localization.language();
+    return this.allCategories().map((c) => ({
+      name: lang === 'ar' ? (c.nameAr || c.nameEn) : (c.nameEn || c.nameAr),
+      code: c.code,
+    }));
+  });
+  allCategories = signal<{ nameAr: string; nameEn: string; code: number }[]>([]);
+
+  brands = computed(() => {
+    const lang = this.localization.language();
+    return this.allBrands().map((b) => ({
+      name: lang === 'ar' ? (b.nameAr || b.nameEn) : (b.nameEn || b.nameAr),
+      code: b.code,
+    }));
+  });
+  allBrands = signal<{ nameAr: string; nameEn: string; code: number }[]>([]);
+
+  uploadedImages: UploadedImage[] = [];
+
+  readonly typeOptions = ITEM_TYPE_OPTIONS;
+  readonly conditionOptions = ITEM_CONDITION_OPTIONS;
+  readonly governorateOptions = EGYPT_GOVERNORATES;
+
+  constructor() {
+    this.initForm();
+  }
+
+  ngOnInit() {
+    this.loadSubcategories();
+    this.loadCategories();
+    this.loadBrands();
+
+    const categoryControl = this.form.get('categoryId');
+    const subcategoryControl = this.form.get('subcategoryId');
+
+    if (!categoryControl?.value) subcategoryControl?.disable();
+    categoryControl?.valueChanges.subscribe((catId) => {
+      this.selectedCategoryId.set(catId);
+      if (catId) subcategoryControl?.enable();
+      else {
+        subcategoryControl?.disable();
+        subcategoryControl?.setValue(null);
+      }
+
+      const currentSubId = subcategoryControl?.value;
+      if (currentSubId) {
+        const sub = this.allSubcategories().find((s) => s.code === currentSubId);
+        if (sub && sub.categoryId !== catId) subcategoryControl?.setValue(null);
+      }
+    });
+
+    if (this.itemId === null) {
+      this.route.params.subscribe((params) => {
+        if (params['id']) {
+          this.itemId = params['id'];
+          this.isEditMode = true;
+          this.loadItem(this.itemId!);
+        }
+      });
+    }
+  }
+
+  private resetForm() {
+    if (this.form) {
+      this.form.reset();
+      this.uploadedImages = [];
+      this.form.patchValue({ defaultDeposit: 0, dailyPrice: 0 });
+    }
+  }
+
+  private initForm() {
+    this.form = this.fb.group({
+      titleAr: ['', [Validators.required, Validators.maxLength(200)]],
+      titleEn: ['', [Validators.required, Validators.maxLength(200)]],
+      descAr: ['', [Validators.maxLength(1000)]],
+      descEn: ['', [Validators.maxLength(1000)]],
+      type: ['standard'],
+      condition: ['good'],
+      defaultDeposit: [0, [Validators.required, Validators.min(0)]],
+      dailyPrice: [0, [Validators.required, Validators.min(0.01)]],
+      location: [''],
+      city: [''],
+      lat: [null],
+      lng: [null],
+      subcategoryId: [null, [Validators.required]],
+      categoryId: [null],
+      brandId: [null],
+    });
+  }
+  private loadSubcategories() {
+    this.subcategoriesClient
+      .getSubcategories(1, 1000)
+      .pipe(
+        tap((res) => {
+          if (res.data) {
+            const options = res.data.map((s) => ({
+              nameAr: s.nameAr || '',
+              nameEn: s.nameEn || '',
+              code: s.id ?? 0,
+              categoryId: s.categoryId,
+            }));
+            this.allSubcategories.set(options);
+          }
+        }),
+        catchError((err) => of(null))
+      )
+      .subscribe();
+  }
+  private loadCategories() {
+    this.categoriesClient
+      .getCategories(1, 1000)
+      .pipe(
+        tap((res) => {
+          if (res.data) {
+            const options = res.data.map((s) => ({
+              nameAr: s.nameAr || '',
+              nameEn: s.nameEn || '',
+              code: s.id ?? 0,
+            }));
+            this.allCategories.set(options);
+          }
+        }),
+        catchError((err) => of(null))
+      )
+      .subscribe();
+  }
+  private loadBrands() {
+    this.brandsClient
+      .getBrands(1, 1000)
+      .pipe(
+        tap((res) => {
+          if (res.data) {
+            const options = res.data.map((s) => ({
+              nameAr: s.nameAr || '',
+              nameEn: s.nameEn || '',
+              code: s.id ?? 0,
+            }));
+            this.allBrands.set(options);
+          }
+        }),
+        catchError((err) => of(null))
+      )
+      .subscribe();
+  }
+  private loadItem(id: string) {
+    this.isLoading = true;
+    this.itemsClient
+      .getItemById(id)
+      .pipe(
+        tap((res) => {
+          if (res.error) {
+            this.toast.showError(res.messages?.[0] ?? 'Failed to load item details');
+            this.router.navigate(['/items']);
+            return;
+          }
+
+          const item = res.data;
+          if (item) {
+            this.form.patchValue({
+              titleAr: item.titleAr,
+              titleEn: item.titleEn,
+              descAr: item.descAr,
+              descEn: item.descEn,
+              type: item.type,
+              condition: item.condition,
+              defaultDeposit: item.defaultDeposit,
+              dailyPrice: item.pricing?.find((p) => p.pricingType === 'daily')?.price ?? 0,
+              location: item.location,
+              city: item.city,
+              lat: item.lat,
+              lng: item.lng,
+              subcategoryId: item.subcategory?.id ?? null,
+              categoryId: item.category?.id ?? null,
+              brandId: item.brand?.id ?? null,
+            });
+
+            if (item.category?.id) {
+              this.selectedCategoryId.set(item.category.id);
+              this.form.get('subcategoryId')?.enable();
+            }
+
+            if (item.images) {
+              this.uploadedImages = item.images.map((img, idx) => ({
+                id: img.id ?? null,
+                mediaFileId: img.id, // Assuming img.id is the identifier needed
+                imageUrl: img.imageUrl ?? '',
+                isPrimary: img.isPrimary ?? false,
+                displayOrder: idx,
+                isUploading: false,
+              }));
+            }
+          }
+        }),
+        catchError(() => {
+          this.toast.showError('Failed to load item details');
+          this.router.navigate(['/items']);
+          return of(null);
+        }),
+        finalize(() => (this.isLoading = false)),
+      )
+      .subscribe();
+  }
+  onSubmit() {
+    if (this.form.invalid) return;
+    this.isSaving = true;
+    if (this.isEditMode && this.itemId) this.updateItem();
+    else this.createItem();
+  }
+  private buildImages(): CreateItemImageCommand[] {
+    return this.uploadedImages.map(
+      (img) => new CreateItemImageCommand({
+        imageId: img.mediaFileId || img.id?.toString(),
+        isPrimary: img.isPrimary
+      }),
+    );
+  }
+  private createItem() {
+    const v = this.form.value;
+    const cmd = new CreateItemCommand({
+      titleAr: v.titleAr,
+      titleEn: v.titleEn,
+      descAr: v.descAr,
+      descEn: v.descEn,
+      type: v.type,
+      condition: v.condition,
+      defaultDeposit: v.defaultDeposit,
+      location: v.location ?? null,
+      city: v.city ?? null,
+      lat: v.lat ?? null,
+      lng: v.lng ?? null,
+      subcategoryId: v.subcategoryId ?? null,
+      categoryId: v.categoryId ?? null,
+      brandId: v.brandId ?? null,
+      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      images: this.buildImages(),
+    });
+    this.itemsClient.createItem(cmd)
+      .pipe(
+        tap((res) => {
+          if (res.error) {
+            this.toast.showError(res.messages?.[0] ?? 'Failed to create item');
+          } else {
+            this.toast.showSuccess(res.messages?.[0] || 'Item created successfully');
+            this.saved.emit();
+            if (this.saved.observed === false) this.router.navigate(['/items']);
+          }
+        }),
+        catchError(() => {
+          this.toast.showError('An error occurred while creating item');
+          return of(null);
+        }),
+        finalize(() => (this.isSaving = false)),
+      )
+      .subscribe();
+  }
+
+  private updateItem() {
+    const v = this.form.value;
+    const cmd = new UpdateItemCommand({
+      itemId: this.itemId!,
+      titleAr: v.titleAr,
+      titleEn: v.titleEn,
+      descAr: v.descAr,
+      descEn: v.descEn,
+      type: v.type,
+      condition: v.condition,
+      defaultDeposit: v.defaultDeposit,
+      location: v.location ?? null,
+      city: v.city ?? null,
+      lat: v.lat ?? null,
+      lng: v.lng ?? null,
+      subcategoryId: v.subcategoryId ?? null,
+      categoryId: v.categoryId ?? null,
+      brandId: v.brandId ?? null,
+      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      images: this.buildImages(),
+    });
+
+    this.itemsClient
+      .updateItem(this.itemId!, cmd)
+      .pipe(
+        tap((res) => {
+          if (res.error) {
+            this.toast.showError(res.messages?.[0] ?? 'Failed to update item');
+          } else {
+            this.toast.showSuccess(res.messages?.[0] || 'Item updated successfully');
+            this.saved.emit();
+            if (this.saved.observed === false) this.router.navigate(['/items']);
+          }
+        }),
+        catchError(() => {
+          this.toast.showError('An error occurred while updating item');
+          return of(null);
+        }),
+        finalize(() => (this.isSaving = false)),
+      )
+      .subscribe();
+  }
+
+  cancel() {
+    this.cancelled.emit();
+    if (this.cancelled.observed === false) this.router.navigate(['/items']);
+  }
+}

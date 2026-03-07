@@ -4,6 +4,8 @@ using Domain.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Application.Features.Items;
 
@@ -89,11 +91,13 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetItemsQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetItemsQueryHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetItemsResponse> Handle(GetItemsQuery request, CancellationToken ct)
@@ -158,16 +162,21 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
         var total = await projected.CountAsync(ct);
         var pages = (int)Math.Ceiling((double)total / request.Limit);
 
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
         var items = await projected
             .Skip((request.Page - 1) * request.Limit)
             .Take(request.Limit)
-            .Select(x => new ItemListDto(
+            .ToListAsync(ct);
+
+        var resultItems = items.Select(x => new ItemListDto(
                 x.Item.Id,
                 x.Item.TitleAr,
                 x.Item.TitleEn,
                 x.DailyPrice,
                 x.Item.City,
-                x.PrimaryImage != null ? "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/') : null,
+                x.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
                 0,   // avg rating
                 0,   // review count
                 x.Item.Type.ToString(),
@@ -176,8 +185,8 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
                 x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null
             ))
-            .ToListAsync(ct);
+            .ToList();
 
-        return new GetItemsResponse(items, total, request.Page, pages);
+        return new GetItemsResponse(resultItems, total, request.Page, pages);
     }
 }

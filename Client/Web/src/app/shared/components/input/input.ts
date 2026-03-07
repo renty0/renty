@@ -29,12 +29,13 @@ export class InputComponent {
   @Input() controlName!: string;
   @Input() type = 'text';
   @Input() height = 48;
-  @Input() options: { name: string, code: number }[] = [];
+  @Input() options: { name: string, code: string | number }[] = [];
   @Input() disabled = false;
   @Input() value = '';
   @Input() readonly = false;
   @Input() required = false;
   @Input() error = '';
+  @Input() translateOptions = false;
 
   // For Date
   @Input() minDate?: Date;

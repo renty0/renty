@@ -3,6 +3,8 @@ using Application.Common.Models;
 using Application.Shared.Interfaces.Services;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Application.Web.Account;
 
@@ -35,15 +37,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public LoginCommandHandler(
         IIdentityService identityService,
         ITokenService tokenService,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IHttpContextAccessor httpContextAccessor)
     {
         _identityService = identityService;
         _tokenService = tokenService;
         _emailSender = emailSender;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -87,13 +92,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
         var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
 
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
         var userDto = new UserDto(
             user.Id,
             user.Email!,
             user.FirstName,
             user.LastName,
             user.FullName,
-            user.ProfilePictureUrl,
+            !string.IsNullOrEmpty(user.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 
+                ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" 
+                : user.ProfilePictureUrl,
             user.UserType.ToString(),
             user.IsVerified,
             user.EmailConfirmed,

@@ -67,7 +67,7 @@ export class CategoryListComponent implements OnInit {
   readonly displayedColumns = ['logo', 'name', 'description', 'actions'] as const;
   readonly dataSource = signal<ProductCategoryDto[]>([]);
   readonly isLoading = signal(false);
-  readonly viewMode = signal<ViewMode>('list');
+  readonly viewMode = signal<ViewMode>('cards');
 
   readonly showDialog = signal(false);
   readonly selectedCategoryId = signal<number | null>(null);
@@ -112,7 +112,6 @@ export class CategoryListComponent implements OnInit {
           this.totalCount.set(res?.total ?? 0);
         }),
         catchError((err) => {
-          console.error('Failed to load categories', err);
           this.dataSource.set([]);
           this.toast.showError(
             this.translate.instant('categories.errors.failedToLoad')
