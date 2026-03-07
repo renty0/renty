@@ -1,0 +1,38 @@
+date,week,category,supply,demand,gap_score,gap_status,normalized_gap
+2026-01-09,2,Bottles and Cages,3,15106,3776.75,Critical Gap,0.0
+2026-01-09,2,Tires and Tubes,11,29772,2481.08,Critical Gap,0.0
+2026-01-09,2,Caps,1,4151,2076.0,Critical Gap,0.0
+2026-01-09,2,Fenders,1,3960,1980.5,Critical Gap,0.0
+2026-01-09,2,Helmets,3,6034,1508.75,Critical Gap,0.0
+2026-01-09,2,Cleaners,1,1706,853.5,Critical Gap,0.0
+2026-01-09,2,Gloves,6,2644,377.86,Critical Gap,0.0
+2026-01-09,2,Hydration Packs,1,695,348.0,Critical Gap,0.0
+2026-01-09,2,Jerseys,8,3113,346.0,Critical Gap,0.0
+2026-01-09,2,Socks,4,1063,212.8,Critical Gap,0.0
+2026-01-09,2,Road Bikes,43,7099,161.36,High Gap,0.0
+2026-01-09,2,Bike Racks,1,302,151.5,High Gap,0.0
+2026-01-09,2,Mountain Bikes,32,4706,142.64,High Gap,0.0
+2026-01-09,2,Vests,3,521,130.5,High Gap,0.0
+2026-01-09,2,Shorts,7,944,118.12,High Gap,0.0
+2026-01-09,2,Bike Stands,1,234,117.5,High Gap,0.0
+2026-01-09,2,Touring Bikes,22,2124,92.39,Moderate Gap,0.0
+2026-01-09,2,Panniers,1,0,0.5,Low Gap,0.0
+2026-01-09,2,Locks,1,0,0.5,Low Gap,0.0
+2026-01-09,2,Chains,1,0,0.5,Low Gap,0.0
+2026-01-09,2,Derailleurs,2,0,0.33,Low Gap,0.0
+2026-01-09,2,Pumps,2,0,0.33,Low Gap,0.0
+2026-01-09,2,Brakes,2,0,0.33,Low Gap,0.0
+2026-01-09,2,Bottom Brackets,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Tights,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Lights,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Cranksets,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Bib-Shorts,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Forks,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Headsets,3,0,0.25,Low Gap,0.0
+2026-01-09,2,Pedals,7,0,0.12,Low Gap,0.0
+2026-01-09,2,Handlebars,8,0,0.11,Low Gap,0.0
+2026-01-09,2,Saddles,9,0,0.1,Low Gap,0.0
+2026-01-09,2,Wheels,14,0,0.07,Low Gap,0.0
+2026-01-09,2,Touring Frames,18,0,0.05,Low Gap,0.0
+2026-01-09,2,Mountain Frames,28,0,0.03,Low Gap,0.0
+2026-01-09,2,Road Frames,31,0,0.03,Low Gap,0.0

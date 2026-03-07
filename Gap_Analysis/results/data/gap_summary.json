@@ -5,6 +5,7 @@
     "demand": 57809,
     "gap_score": 1927.0,
     "gap_status": "Critical Gap",
+    "normalized_gap": 1.0,
     "gap_pct": 192600.0
   },
   {
@@ -13,6 +14,7 @@
     "demand": 12436,
     "gap_score": 345.47,
     "gap_status": "Critical Gap",
+    "normalized_gap": 0.1793,
     "gap_pct": 34447.22
   },
   {
@@ -21,6 +23,7 @@
     "demand": 13929,
     "gap_score": 142.14,
     "gap_status": "High Gap",
+    "normalized_gap": 0.0738,
     "gap_pct": 14114.29
   },
   {
@@ -29,6 +32,7 @@
     "demand": 0,
     "gap_score": 0.01,
     "gap_status": "Low Gap",
+    "normalized_gap": 0.0,
     "gap_pct": -99.25
   }
 ]

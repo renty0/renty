@@ -1,0 +1,225 @@
+<div class="home-page" (window:scroll)="onWindowScroll()">
+    <!-- Section 1: Hero -->
+    <section class="hero-section">
+        <div class="hero-bg" style="background-image: url('assets/images/hero_bg.png')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content container">
+            <h1 class="hero-title reveal active">{{ 'home.hero.title' | translate }}<span>.</span></h1>
+            <p class="hero-subtitle reveal active" style="transition-delay: 0.2s">{{ 'home.hero.subtitle' | translate }}
+            </p>
+
+            <div class="hero-search-bar reveal active" style="transition-delay: 0.4s">
+                <mat-icon>search</mat-icon>
+                <input type="text" [placeholder]="'home.hero.searchPlaceholder' | translate">
+                <app-loading-button color="accent">{{ 'buttons.search' | translate }}</app-loading-button>
+            </div>
+
+            <div class="hero-stats reveal active" style="transition-delay: 0.6s">
+                @for (stat of stats(); track stat.labelKey) {
+                <div class="stat-item">
+                    <span class="stat-value">{{ stat.value }}</span>
+                    <span class="stat-label">{{ stat.labelKey | translate }}</span>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Why Renty (Value Proposition) -->
+    <section class="reveal">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge">{{ 'home.features.badge' | translate }}</span>
+                <h2>{{ 'home.features.title' | translate }}</h2>
+                <p>{{ 'home.features.subtitle' | translate }}</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon-box primary">
+                        <mat-icon>verified_user</mat-icon>
+                    </div>
+                    <h3>{{ 'home.features.trust.title' | translate }}</h3>
+                    <p>{{ 'home.features.trust.desc' | translate }}</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box accent">
+                        <mat-icon>monetization_on</mat-icon>
+                    </div>
+                    <h3>{{ 'home.features.value.title' | translate }}</h3>
+                    <p>{{ 'home.features.value.desc' | translate }}</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box success">
+                        <mat-icon>speed</mat-icon>
+                    </div>
+                    <h3>{{ 'home.features.speed.title' | translate }}</h3>
+                    <p>{{ 'home.features.speed.desc' | translate }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Categories -->
+    <section class="bg-light">
+        <div class="container">
+            <div class="section-header flex-header reveal">
+                <div>
+                    <span class="badge">{{ 'home.categories.title' | translate }}</span>
+                    <h2>{{ 'home.categories.subtitle' | translate }}</h2>
+                </div>
+                <a routerLink="/marketplace" class="text-link">
+                    {{ 'buttons.viewAll' | translate }}
+                    <mat-icon>arrow_forward</mat-icon>
+                </a>
+            </div>
+
+            <div class="categories-grid">
+                @for (cat of categories(); track cat.id; let i = $index) {
+                <div class="category-card reveal" [style.background-image]="'url(' + cat.image + ')'"
+                    [style.transition-delay]="(i * 0.1) + 's'">
+                    <div class="cat-overlay"></div>
+                    <div class="cat-content">
+                        <mat-icon>{{ cat.icon }}</mat-icon>
+                        <h3>{{ cat.nameKey | translate }}</h3>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Live Availability (Real-time Calendar) -->
+    <section class="calendar-promo reveal">
+        <div class="promo-grid container">
+            <div class="promo-info">
+                <span class="badge">{{ 'home.calendar.badge' | translate }}</span>
+                <h2>{{ 'home.calendar.title' | translate }}</h2>
+                <p>{{ 'home.calendar.desc' | translate }}</p>
+                <ul class="check-list">
+                    <li><mat-icon>check_circle</mat-icon> {{ 'home.calendar.check1' | translate }}</li>
+                    <li><mat-icon>check_circle</mat-icon> {{ 'home.calendar.check2' | translate }}</li>
+                    <li><mat-icon>check_circle</mat-icon> {{ 'home.calendar.check3' | translate }}</li>
+                </ul>
+                <app-loading-button variant="stroked" color="primary">{{ 'buttons.learnMore' | translate
+                    }}</app-loading-button>
+            </div>
+            <div class="promo-visual">
+                <div class="mock-calendar shadow">
+                    <div class="calendar-header">
+                        <span>January 2026</span>
+                        <div class="flex gap-2">
+                            <mat-icon>chevron_left</mat-icon>
+                            <mat-icon>chevron_right</mat-icon>
+                        </div>
+                    </div>
+                    <div class="calendar-days">
+                        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14, 15, 16, 17, 18, 19, 20, 21]; track i) { <div
+                            class="day-dot"></div> }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Security & Trusted Rental -->
+    <section class="security-section bg-dark text-white">
+        <div class="container security-grid reveal">
+            <div class="huge-icon-wrapper">
+                <mat-icon class="huge-icon">gpp_good</mat-icon>
+            </div>
+            <div class="security-content">
+                <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">SECURE PLATFORM</span>
+                <h2>{{ 'home.security.title' | translate }}</h2>
+                <p>{{ 'home.security.desc' | translate }}</p>
+                <div class="trust-badges">
+                    <div class="trust-item">
+                        <mat-icon>handshake</mat-icon>
+                        <span>{{ 'home.security.badge1'|translate }}</span>
+                    </div>
+                    <div class="trust-item">
+                        <mat-icon>policy</mat-icon>
+                        <span>{{ 'home.security.badge2'|translate }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: How It Works -->
+    <section class="process-section reveal">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge">EASY PROCESS</span>
+                <h2>{{ 'home.steps.title' | translate }}</h2>
+                <p>{{ 'home.steps.subtitle' | translate }}</p>
+            </div>
+            <div class="process-steps">
+                @for (step of steps(); track step.titleKey; let i = $index) {
+                <div class="process-item">
+                    <div class="process-icon-wrapper">
+                        <div class="step-num">{{ i + 1 }}</div>
+                        <mat-icon>{{ step.icon }}</mat-icon>
+                    </div>
+                    <h3>{{ step.titleKey | translate }}</h3>
+                    <p>{{ step.descKey | translate }}</p>
+                </div>
+                @if (i < 2) { <div class="process-arrow"><mat-icon>east</mat-icon>
+            </div>
+            }
+            }
+        </div>
+</div>
+</section>
+
+<!-- Section 7: Mobile Experience -->
+<section class="app-promo-section">
+    <div class="container promo-inner reveal">
+        <div class="promo-text">
+            <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">MOBILE APP</span>
+            <h2>{{ 'home.app.title' | translate }}</h2>
+            <p>{{ 'home.app.desc' | translate }}</p>
+            <div class="app-buttons">
+                <button class="store-btn">App Store</button>
+                <button class="store-btn">Google Play</button>
+            </div>
+        </div>
+        <div class="promo-mockup">
+            <img src="assets/images/app_mockup.png" alt="App Mockup" class="floating-mock">
+        </div>
+    </div>
+</section>
+
+<!-- Section 8: Final CTA & Footer -->
+<footer class="footer-section">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <div class="footer-logo-text">RENTY</div>
+            <p>{{ 'home.footer.about' | translate }}</p>
+        </div>
+        <div class="footer-links">
+            <h3>{{ 'home.footer.quickLinks' | translate }}</h3>
+            <ul>
+                <li><a routerLink="/">{{ 'home.footer.home' | translate }}</a></li>
+                <li><a routerLink="/marketplace">{{ 'home.footer.market' | translate }}</a></li>
+                <li><a routerLink="/register">{{ 'home.footer.join' | translate }}</a></li>
+            </ul>
+        </div>
+        <div class="footer-cta">
+            <h3>{{ 'home.footer.cta.title' | translate }}</h3>
+            <p style="margin-bottom: 25px;">{{ 'home.footer.cta.desc' | translate }}</p>
+            <div class="newsletter-form">
+                <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate">
+                <app-loading-button variant="flat" color="accent">{{ 'buttons.subscribe' | translate
+                    }}</app-loading-button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom container">
+        <p>&copy; 2026 Renty. All rights reserved.</p>
+        <div class="flex gap-4">
+            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">Privacy Policy</a>
+            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+</div>

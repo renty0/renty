@@ -1,5 +1,0 @@
-category,supply,demand,gap_score,gap_status,gap_pct
-Accessories,29,57809,1927.0,Critical Gap,192600.0
-Clothing,35,12436,345.47,Critical Gap,34447.22
-Bikes,97,13929,142.14,High Gap,14114.29
-Components,132,0,0.01,Low Gap,-99.25

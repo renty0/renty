@@ -1,0 +1,1027 @@
+{
+  "week": 2,
+  "date": "2026-01-09",
+  "total_categories": 37,
+  "action_plans": [
+    {
+      "category": "Bottles and Cages",
+      "gap_score": 3776.75,
+      "gap_status": "Critical Gap",
+      "supply": 3,
+      "demand": 15106,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Bottles and Cages items",
+        "Offer 3-month listing incentive (10% commission reduction) for Bottles and Cages",
+        "Create Bottles and Cages category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Bottles and Cages",
+        "Feature trending Bottles and Cages items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Bottles and Cages items",
+        "Contact top lenders outside platform to list Bottles and Cages items",
+        "Establish partnerships with Bottles and Cages retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Bottles and Cages expansion",
+        "Allocate marketing budget (15%) toward Bottles and Cages category growth",
+        "Create Bottles and Cages category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Bottles and Cages SEO/search ranking priority",
+        "Increase Bottles and Cages items in recommendation algorithm weight",
+        "Create dedicated Bottles and Cages landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Bottles and Cages listings",
+        "Implement smart search suggestions for Bottles and Cages terms",
+        "Create Bottles and Cages category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Bottles and Cages lenders",
+        "Send personalized emails to inactive lenders about Bottles and Cages opportunity",
+        "Develop Bottles and Cages-specific renter profiles for targeted outreach",
+        "Display 'Popular in Bottles and Cages' social proof on item pages",
+        "Create Bottles and Cages community discussions and forums",
+        "Implement Bottles and Cages item pre-booking feature",
+        "Reward users who first list Bottles and Cages items with bonus credit"
+      ]
+    },
+    {
+      "category": "Tires and Tubes",
+      "gap_score": 2481.08,
+      "gap_status": "Critical Gap",
+      "supply": 11,
+      "demand": 29772,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Tires and Tubes items",
+        "Offer 3-month listing incentive (10% commission reduction) for Tires and Tubes",
+        "Create Tires and Tubes category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Tires and Tubes",
+        "Feature trending Tires and Tubes items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Tires and Tubes items",
+        "Contact top lenders outside platform to list Tires and Tubes items",
+        "Establish partnerships with Tires and Tubes retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Tires and Tubes expansion",
+        "Allocate marketing budget (15%) toward Tires and Tubes category growth",
+        "Create Tires and Tubes category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Tires and Tubes SEO/search ranking priority",
+        "Increase Tires and Tubes items in recommendation algorithm weight",
+        "Create dedicated Tires and Tubes landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Tires and Tubes listings",
+        "Implement smart search suggestions for Tires and Tubes terms",
+        "Create Tires and Tubes category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Tires and Tubes lenders",
+        "Send personalized emails to inactive lenders about Tires and Tubes opportunity",
+        "Develop Tires and Tubes-specific renter profiles for targeted outreach",
+        "Display 'Popular in Tires and Tubes' social proof on item pages",
+        "Create Tires and Tubes community discussions and forums",
+        "Implement Tires and Tubes item pre-booking feature",
+        "Reward users who first list Tires and Tubes items with bonus credit"
+      ]
+    },
+    {
+      "category": "Caps",
+      "gap_score": 2076.0,
+      "gap_status": "Critical Gap",
+      "supply": 1,
+      "demand": 4151,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Caps items",
+        "Offer 3-month listing incentive (10% commission reduction) for Caps",
+        "Create Caps category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Caps",
+        "Feature trending Caps items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Caps items",
+        "Contact top lenders outside platform to list Caps items",
+        "Establish partnerships with Caps retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Caps expansion",
+        "Allocate marketing budget (15%) toward Caps category growth",
+        "Create Caps category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Caps SEO/search ranking priority",
+        "Increase Caps items in recommendation algorithm weight",
+        "Create dedicated Caps landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Caps listings",
+        "Implement smart search suggestions for Caps terms",
+        "Create Caps category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Caps lenders",
+        "Send personalized emails to inactive lenders about Caps opportunity",
+        "Develop Caps-specific renter profiles for targeted outreach",
+        "Display 'Popular in Caps' social proof on item pages",
+        "Create Caps community discussions and forums",
+        "Implement Caps item pre-booking feature",
+        "Reward users who first list Caps items with bonus credit"
+      ]
+    },
+    {
+      "category": "Fenders",
+      "gap_score": 1980.5,
+      "gap_status": "Critical Gap",
+      "supply": 1,
+      "demand": 3960,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Fenders items",
+        "Offer 3-month listing incentive (10% commission reduction) for Fenders",
+        "Create Fenders category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Fenders",
+        "Feature trending Fenders items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Fenders items",
+        "Contact top lenders outside platform to list Fenders items",
+        "Establish partnerships with Fenders retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Fenders expansion",
+        "Allocate marketing budget (15%) toward Fenders category growth",
+        "Create Fenders category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Fenders SEO/search ranking priority",
+        "Increase Fenders items in recommendation algorithm weight",
+        "Create dedicated Fenders landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Fenders listings",
+        "Implement smart search suggestions for Fenders terms",
+        "Create Fenders category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Fenders lenders",
+        "Send personalized emails to inactive lenders about Fenders opportunity",
+        "Develop Fenders-specific renter profiles for targeted outreach",
+        "Display 'Popular in Fenders' social proof on item pages",
+        "Create Fenders community discussions and forums",
+        "Implement Fenders item pre-booking feature",
+        "Reward users who first list Fenders items with bonus credit"
+      ]
+    },
+    {
+      "category": "Helmets",
+      "gap_score": 1508.75,
+      "gap_status": "Critical Gap",
+      "supply": 3,
+      "demand": 6034,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Helmets items",
+        "Offer 3-month listing incentive (10% commission reduction) for Helmets",
+        "Create Helmets category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Helmets",
+        "Feature trending Helmets items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Helmets items",
+        "Contact top lenders outside platform to list Helmets items",
+        "Establish partnerships with Helmets retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Helmets expansion",
+        "Allocate marketing budget (15%) toward Helmets category growth",
+        "Create Helmets category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Helmets SEO/search ranking priority",
+        "Increase Helmets items in recommendation algorithm weight",
+        "Create dedicated Helmets landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Helmets listings",
+        "Implement smart search suggestions for Helmets terms",
+        "Create Helmets category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Helmets lenders",
+        "Send personalized emails to inactive lenders about Helmets opportunity",
+        "Develop Helmets-specific renter profiles for targeted outreach",
+        "Display 'Popular in Helmets' social proof on item pages",
+        "Create Helmets community discussions and forums",
+        "Implement Helmets item pre-booking feature",
+        "Reward users who first list Helmets items with bonus credit"
+      ]
+    },
+    {
+      "category": "Cleaners",
+      "gap_score": 853.5,
+      "gap_status": "Critical Gap",
+      "supply": 1,
+      "demand": 1706,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Cleaners items",
+        "Offer 3-month listing incentive (10% commission reduction) for Cleaners",
+        "Create Cleaners category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Cleaners",
+        "Feature trending Cleaners items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Cleaners items",
+        "Contact top lenders outside platform to list Cleaners items",
+        "Establish partnerships with Cleaners retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Cleaners expansion",
+        "Allocate marketing budget (15%) toward Cleaners category growth",
+        "Create Cleaners category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Cleaners SEO/search ranking priority",
+        "Increase Cleaners items in recommendation algorithm weight",
+        "Create dedicated Cleaners landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Cleaners listings",
+        "Implement smart search suggestions for Cleaners terms",
+        "Create Cleaners category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Cleaners lenders",
+        "Send personalized emails to inactive lenders about Cleaners opportunity",
+        "Develop Cleaners-specific renter profiles for targeted outreach",
+        "Display 'Popular in Cleaners' social proof on item pages",
+        "Create Cleaners community discussions and forums",
+        "Implement Cleaners item pre-booking feature",
+        "Reward users who first list Cleaners items with bonus credit"
+      ]
+    },
+    {
+      "category": "Gloves",
+      "gap_score": 377.86,
+      "gap_status": "Critical Gap",
+      "supply": 6,
+      "demand": 2644,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Gloves items",
+        "Offer 3-month listing incentive (10% commission reduction) for Gloves",
+        "Create Gloves category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Gloves",
+        "Feature trending Gloves items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Gloves items",
+        "Contact top lenders outside platform to list Gloves items",
+        "Establish partnerships with Gloves retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Gloves expansion",
+        "Allocate marketing budget (15%) toward Gloves category growth",
+        "Create Gloves category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Gloves SEO/search ranking priority",
+        "Increase Gloves items in recommendation algorithm weight",
+        "Create dedicated Gloves landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Gloves listings",
+        "Implement smart search suggestions for Gloves terms",
+        "Create Gloves category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Gloves lenders",
+        "Send personalized emails to inactive lenders about Gloves opportunity",
+        "Develop Gloves-specific renter profiles for targeted outreach",
+        "Display 'Popular in Gloves' social proof on item pages",
+        "Create Gloves community discussions and forums",
+        "Implement Gloves item pre-booking feature",
+        "Reward users who first list Gloves items with bonus credit"
+      ]
+    },
+    {
+      "category": "Hydration Packs",
+      "gap_score": 348.0,
+      "gap_status": "Critical Gap",
+      "supply": 1,
+      "demand": 695,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Hydration Packs items",
+        "Offer 3-month listing incentive (10% commission reduction) for Hydration Packs",
+        "Create Hydration Packs category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Hydration Packs",
+        "Feature trending Hydration Packs items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Hydration Packs items",
+        "Contact top lenders outside platform to list Hydration Packs items",
+        "Establish partnerships with Hydration Packs retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Hydration Packs expansion",
+        "Allocate marketing budget (15%) toward Hydration Packs category growth",
+        "Create Hydration Packs category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Hydration Packs SEO/search ranking priority",
+        "Increase Hydration Packs items in recommendation algorithm weight",
+        "Create dedicated Hydration Packs landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Hydration Packs listings",
+        "Implement smart search suggestions for Hydration Packs terms",
+        "Create Hydration Packs category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Hydration Packs lenders",
+        "Send personalized emails to inactive lenders about Hydration Packs opportunity",
+        "Develop Hydration Packs-specific renter profiles for targeted outreach",
+        "Display 'Popular in Hydration Packs' social proof on item pages",
+        "Create Hydration Packs community discussions and forums",
+        "Implement Hydration Packs item pre-booking feature",
+        "Reward users who first list Hydration Packs items with bonus credit"
+      ]
+    },
+    {
+      "category": "Jerseys",
+      "gap_score": 346.0,
+      "gap_status": "Critical Gap",
+      "supply": 8,
+      "demand": 3113,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Jerseys items",
+        "Offer 3-month listing incentive (10% commission reduction) for Jerseys",
+        "Create Jerseys category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Jerseys",
+        "Feature trending Jerseys items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Jerseys items",
+        "Contact top lenders outside platform to list Jerseys items",
+        "Establish partnerships with Jerseys retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Jerseys expansion",
+        "Allocate marketing budget (15%) toward Jerseys category growth",
+        "Create Jerseys category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Jerseys SEO/search ranking priority",
+        "Increase Jerseys items in recommendation algorithm weight",
+        "Create dedicated Jerseys landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Jerseys listings",
+        "Implement smart search suggestions for Jerseys terms",
+        "Create Jerseys category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Jerseys lenders",
+        "Send personalized emails to inactive lenders about Jerseys opportunity",
+        "Develop Jerseys-specific renter profiles for targeted outreach",
+        "Display 'Popular in Jerseys' social proof on item pages",
+        "Create Jerseys community discussions and forums",
+        "Implement Jerseys item pre-booking feature",
+        "Reward users who first list Jerseys items with bonus credit"
+      ]
+    },
+    {
+      "category": "Socks",
+      "gap_score": 212.8,
+      "gap_status": "Critical Gap",
+      "supply": 4,
+      "demand": 1063,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Socks items",
+        "Offer 3-month listing incentive (10% commission reduction) for Socks",
+        "Create Socks category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Socks",
+        "Feature trending Socks items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Socks items",
+        "Contact top lenders outside platform to list Socks items",
+        "Establish partnerships with Socks retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Socks expansion",
+        "Allocate marketing budget (15%) toward Socks category growth",
+        "Create Socks category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Socks SEO/search ranking priority",
+        "Increase Socks items in recommendation algorithm weight",
+        "Create dedicated Socks landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Socks listings",
+        "Implement smart search suggestions for Socks terms",
+        "Create Socks category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Socks lenders",
+        "Send personalized emails to inactive lenders about Socks opportunity",
+        "Develop Socks-specific renter profiles for targeted outreach",
+        "Display 'Popular in Socks' social proof on item pages",
+        "Create Socks community discussions and forums",
+        "Implement Socks item pre-booking feature",
+        "Reward users who first list Socks items with bonus credit"
+      ]
+    },
+    {
+      "category": "Road Bikes",
+      "gap_score": 161.36,
+      "gap_status": "High Gap",
+      "supply": 43,
+      "demand": 7099,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Road Bikes items",
+        "Offer 3-month listing incentive (10% commission reduction) for Road Bikes",
+        "Create Road Bikes category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Road Bikes",
+        "Feature trending Road Bikes items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Road Bikes items",
+        "Contact top lenders outside platform to list Road Bikes items",
+        "Establish partnerships with Road Bikes retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Road Bikes expansion",
+        "Allocate marketing budget (15%) toward Road Bikes category growth",
+        "Create Road Bikes category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Road Bikes SEO/search ranking priority",
+        "Increase Road Bikes items in recommendation algorithm weight",
+        "Create dedicated Road Bikes landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Road Bikes listings",
+        "Implement smart search suggestions for Road Bikes terms",
+        "Create Road Bikes category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Road Bikes lenders",
+        "Send personalized emails to inactive lenders about Road Bikes opportunity",
+        "Develop Road Bikes-specific renter profiles for targeted outreach",
+        "Display 'Popular in Road Bikes' social proof on item pages",
+        "Create Road Bikes community discussions and forums",
+        "Implement Road Bikes item pre-booking feature",
+        "Reward users who first list Road Bikes items with bonus credit"
+      ]
+    },
+    {
+      "category": "Bike Racks",
+      "gap_score": 151.5,
+      "gap_status": "High Gap",
+      "supply": 1,
+      "demand": 302,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Bike Racks items",
+        "Offer 3-month listing incentive (10% commission reduction) for Bike Racks",
+        "Create Bike Racks category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Bike Racks",
+        "Feature trending Bike Racks items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Bike Racks items",
+        "Contact top lenders outside platform to list Bike Racks items",
+        "Establish partnerships with Bike Racks retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Bike Racks expansion",
+        "Allocate marketing budget (15%) toward Bike Racks category growth",
+        "Create Bike Racks category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Bike Racks SEO/search ranking priority",
+        "Increase Bike Racks items in recommendation algorithm weight",
+        "Create dedicated Bike Racks landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Bike Racks listings",
+        "Implement smart search suggestions for Bike Racks terms",
+        "Create Bike Racks category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Bike Racks lenders",
+        "Send personalized emails to inactive lenders about Bike Racks opportunity",
+        "Develop Bike Racks-specific renter profiles for targeted outreach",
+        "Display 'Popular in Bike Racks' social proof on item pages",
+        "Create Bike Racks community discussions and forums",
+        "Implement Bike Racks item pre-booking feature",
+        "Reward users who first list Bike Racks items with bonus credit"
+      ]
+    },
+    {
+      "category": "Mountain Bikes",
+      "gap_score": 142.64,
+      "gap_status": "High Gap",
+      "supply": 32,
+      "demand": 4706,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Mountain Bikes items",
+        "Offer 3-month listing incentive (10% commission reduction) for Mountain Bikes",
+        "Create Mountain Bikes category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Mountain Bikes",
+        "Feature trending Mountain Bikes items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Mountain Bikes items",
+        "Contact top lenders outside platform to list Mountain Bikes items",
+        "Establish partnerships with Mountain Bikes retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Mountain Bikes expansion",
+        "Allocate marketing budget (15%) toward Mountain Bikes category growth",
+        "Create Mountain Bikes category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Mountain Bikes SEO/search ranking priority",
+        "Increase Mountain Bikes items in recommendation algorithm weight",
+        "Create dedicated Mountain Bikes landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Mountain Bikes listings",
+        "Implement smart search suggestions for Mountain Bikes terms",
+        "Create Mountain Bikes category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Mountain Bikes lenders",
+        "Send personalized emails to inactive lenders about Mountain Bikes opportunity",
+        "Develop Mountain Bikes-specific renter profiles for targeted outreach",
+        "Display 'Popular in Mountain Bikes' social proof on item pages",
+        "Create Mountain Bikes community discussions and forums",
+        "Implement Mountain Bikes item pre-booking feature",
+        "Reward users who first list Mountain Bikes items with bonus credit"
+      ]
+    },
+    {
+      "category": "Vests",
+      "gap_score": 130.5,
+      "gap_status": "High Gap",
+      "supply": 3,
+      "demand": 521,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Vests items",
+        "Offer 3-month listing incentive (10% commission reduction) for Vests",
+        "Create Vests category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Vests",
+        "Feature trending Vests items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Vests items",
+        "Contact top lenders outside platform to list Vests items",
+        "Establish partnerships with Vests retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Vests expansion",
+        "Allocate marketing budget (15%) toward Vests category growth",
+        "Create Vests category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Vests SEO/search ranking priority",
+        "Increase Vests items in recommendation algorithm weight",
+        "Create dedicated Vests landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Vests listings",
+        "Implement smart search suggestions for Vests terms",
+        "Create Vests category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Vests lenders",
+        "Send personalized emails to inactive lenders about Vests opportunity",
+        "Develop Vests-specific renter profiles for targeted outreach",
+        "Display 'Popular in Vests' social proof on item pages",
+        "Create Vests community discussions and forums",
+        "Implement Vests item pre-booking feature",
+        "Reward users who first list Vests items with bonus credit"
+      ]
+    },
+    {
+      "category": "Shorts",
+      "gap_score": 118.12,
+      "gap_status": "High Gap",
+      "supply": 7,
+      "demand": 944,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Shorts items",
+        "Offer 3-month listing incentive (10% commission reduction) for Shorts",
+        "Create Shorts category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Shorts",
+        "Feature trending Shorts items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Shorts items",
+        "Contact top lenders outside platform to list Shorts items",
+        "Establish partnerships with Shorts retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Shorts expansion",
+        "Allocate marketing budget (15%) toward Shorts category growth",
+        "Create Shorts category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Shorts SEO/search ranking priority",
+        "Increase Shorts items in recommendation algorithm weight",
+        "Create dedicated Shorts landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Shorts listings",
+        "Implement smart search suggestions for Shorts terms",
+        "Create Shorts category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Shorts lenders",
+        "Send personalized emails to inactive lenders about Shorts opportunity",
+        "Develop Shorts-specific renter profiles for targeted outreach",
+        "Display 'Popular in Shorts' social proof on item pages",
+        "Create Shorts community discussions and forums",
+        "Implement Shorts item pre-booking feature",
+        "Reward users who first list Shorts items with bonus credit"
+      ]
+    },
+    {
+      "category": "Bike Stands",
+      "gap_score": 117.5,
+      "gap_status": "High Gap",
+      "supply": 1,
+      "demand": 234,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Bike Stands items",
+        "Offer 3-month listing incentive (10% commission reduction) for Bike Stands",
+        "Create Bike Stands category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Bike Stands",
+        "Feature trending Bike Stands items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Bike Stands items",
+        "Contact top lenders outside platform to list Bike Stands items",
+        "Establish partnerships with Bike Stands retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Bike Stands expansion",
+        "Allocate marketing budget (15%) toward Bike Stands category growth",
+        "Create Bike Stands category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Bike Stands SEO/search ranking priority",
+        "Increase Bike Stands items in recommendation algorithm weight",
+        "Create dedicated Bike Stands landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Bike Stands listings",
+        "Implement smart search suggestions for Bike Stands terms",
+        "Create Bike Stands category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Bike Stands lenders",
+        "Send personalized emails to inactive lenders about Bike Stands opportunity",
+        "Develop Bike Stands-specific renter profiles for targeted outreach",
+        "Display 'Popular in Bike Stands' social proof on item pages",
+        "Create Bike Stands community discussions and forums",
+        "Implement Bike Stands item pre-booking feature",
+        "Reward users who first list Bike Stands items with bonus credit"
+      ]
+    },
+    {
+      "category": "Touring Bikes",
+      "gap_score": 92.39,
+      "gap_status": "Moderate Gap",
+      "supply": 22,
+      "demand": 2124,
+      "gap_change_pct": 0.0,
+      "operational_actions": [
+        "Launch supply recruitment campaign targeting lenders with Touring Bikes items",
+        "Offer 3-month listing incentive (10% commission reduction) for Touring Bikes",
+        "Create Touring Bikes category highlight page with featured rewards",
+        "Send targeted push notifications to active renters in Touring Bikes",
+        "Feature trending Touring Bikes items in homepage recommendations",
+        "Implement waitlist feature for out-of-stock Touring Bikes items",
+        "Contact top lenders outside platform to list Touring Bikes items",
+        "Establish partnerships with Touring Bikes retailers for consignment"
+      ],
+      "strategic_actions": [
+        "Develop supplier partnership strategy for Touring Bikes expansion",
+        "Allocate marketing budget (15%) toward Touring Bikes category growth",
+        "Create Touring Bikes category vertical with dedicated team"
+      ],
+      "platform_actions": [
+        "Boost Touring Bikes SEO/search ranking priority",
+        "Increase Touring Bikes items in recommendation algorithm weight",
+        "Create dedicated Touring Bikes landing page with category-specific messaging",
+        "Add 'High-Demand' badge to all Touring Bikes listings",
+        "Implement smart search suggestions for Touring Bikes terms",
+        "Create Touring Bikes category widget on homepage"
+      ],
+      "user_engagement_actions": [
+        "Create referral rewards program specifically for Touring Bikes lenders",
+        "Send personalized emails to inactive lenders about Touring Bikes opportunity",
+        "Develop Touring Bikes-specific renter profiles for targeted outreach",
+        "Display 'Popular in Touring Bikes' social proof on item pages",
+        "Create Touring Bikes community discussions and forums",
+        "Implement Touring Bikes item pre-booking feature",
+        "Reward users who first list Touring Bikes items with bonus credit"
+      ]
+    },
+    {
+      "category": "Panniers",
+      "gap_score": 0.5,
+      "gap_status": "Low Gap",
+      "supply": 1,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Panniers visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Panniers items with bonus credit"
+      ]
+    },
+    {
+      "category": "Locks",
+      "gap_score": 0.5,
+      "gap_status": "Low Gap",
+      "supply": 1,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Locks visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Locks items with bonus credit"
+      ]
+    },
+    {
+      "category": "Chains",
+      "gap_score": 0.5,
+      "gap_status": "Low Gap",
+      "supply": 1,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Chains visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Chains items with bonus credit"
+      ]
+    },
+    {
+      "category": "Derailleurs",
+      "gap_score": 0.33,
+      "gap_status": "Low Gap",
+      "supply": 2,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Derailleurs visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Derailleurs items with bonus credit"
+      ]
+    },
+    {
+      "category": "Pumps",
+      "gap_score": 0.33,
+      "gap_status": "Low Gap",
+      "supply": 2,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Pumps visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Pumps items with bonus credit"
+      ]
+    },
+    {
+      "category": "Brakes",
+      "gap_score": 0.33,
+      "gap_status": "Low Gap",
+      "supply": 2,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Brakes visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Brakes items with bonus credit"
+      ]
+    },
+    {
+      "category": "Bottom Brackets",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Bottom Brackets visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Bottom Brackets items with bonus credit"
+      ]
+    },
+    {
+      "category": "Tights",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Tights visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Tights items with bonus credit"
+      ]
+    },
+    {
+      "category": "Lights",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Lights visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Lights items with bonus credit"
+      ]
+    },
+    {
+      "category": "Cranksets",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Cranksets visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Cranksets items with bonus credit"
+      ]
+    },
+    {
+      "category": "Bib-Shorts",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Bib-Shorts visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Bib-Shorts items with bonus credit"
+      ]
+    },
+    {
+      "category": "Forks",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Forks visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Forks items with bonus credit"
+      ]
+    },
+    {
+      "category": "Headsets",
+      "gap_score": 0.25,
+      "gap_status": "Low Gap",
+      "supply": 3,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Headsets visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Headsets items with bonus credit"
+      ]
+    },
+    {
+      "category": "Pedals",
+      "gap_score": 0.12,
+      "gap_status": "Low Gap",
+      "supply": 7,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Pedals visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Pedals items with bonus credit"
+      ]
+    },
+    {
+      "category": "Handlebars",
+      "gap_score": 0.11,
+      "gap_status": "Low Gap",
+      "supply": 8,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Handlebars visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Handlebars items with bonus credit"
+      ]
+    },
+    {
+      "category": "Saddles",
+      "gap_score": 0.1,
+      "gap_status": "Low Gap",
+      "supply": 9,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Saddles visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Saddles items with bonus credit"
+      ]
+    },
+    {
+      "category": "Wheels",
+      "gap_score": 0.07,
+      "gap_status": "Low Gap",
+      "supply": 14,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Wheels visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Wheels items with bonus credit"
+      ]
+    },
+    {
+      "category": "Touring Frames",
+      "gap_score": 0.05,
+      "gap_status": "Low Gap",
+      "supply": 18,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Touring Frames visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Touring Frames items with bonus credit"
+      ]
+    },
+    {
+      "category": "Mountain Frames",
+      "gap_score": 0.03,
+      "gap_status": "Low Gap",
+      "supply": 28,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Mountain Frames visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Mountain Frames items with bonus credit"
+      ]
+    },
+    {
+      "category": "Road Frames",
+      "gap_score": 0.03,
+      "gap_status": "Low Gap",
+      "supply": 31,
+      "demand": 0,
+      "gap_change_pct": 0.0,
+      "operational_actions": [],
+      "strategic_actions": [],
+      "platform_actions": [
+        "Reduce Road Frames visibility in recommendations (balanced supply)",
+        "Redirect marketing focus to shortage categories"
+      ],
+      "user_engagement_actions": [
+        "Reward users who first list Road Frames items with bonus credit"
+      ]
+    }
+  ]
+}

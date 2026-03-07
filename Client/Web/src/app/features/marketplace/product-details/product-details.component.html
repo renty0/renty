@@ -1,0 +1,133 @@
+<div class="product-details-container">
+    @if (isLoading()) {
+    <div class="loading-container">
+        <mat-spinner></mat-spinner>
+    </div>
+    } @else if (item()) {
+    <div class="content-wrapper">
+        <!-- Back Button -->
+        <a mat-button class="back-link" routerLink="/marketplace">
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'product_details.backToMarketplace' | translate }}
+        </a>
+
+        <div class="product-layout">
+            <!-- Left: Image Gallery -->
+            <div class="gallery-section">
+                <div class="main-image">
+                    <img [src]="selectedImage() || 'assets/images/placeholder.png'" [alt]="getLocalizedName(item()!)">
+                </div>
+                @if (item()?.images?.length) {
+                <div class="thumbnails">
+                    @for (img of item()?.images; track img.id) {
+                    <div class="thumb" [class.active]="selectedImage() === img.imageUrl"
+                        (click)="selectedImage.set(img.imageUrl)">
+                        <img [src]="img.imageUrl" alt="Thumbnail">
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Right: Item Info -->
+            <div class="info-section">
+                <div class="header">
+                    <span class="category-badge">
+                        {{ getLocalizedRefName(item()?.category) }}
+                        @if (item()?.subcategory) { / {{ getLocalizedRefName(item()?.subcategory) }} }
+                    </span>
+                    <h1>{{ getLocalizedName(item()!) }}</h1>
+                    @if (item()?.condition) {
+                    <div class="condition-badge">{{ item()?.condition }}</div>
+                    }
+                </div>
+
+                <div class="price-section">
+                    @if (item()?.pricing?.length) {
+                    @for (p of item()!.pricing!; track p.pricingType) {
+                    <div class="price-row">
+                        <span class="pricing-type">{{ p.pricingType }}</span>
+                        <span class="current-price">{{ p.price | currency }}<small>/{{ p.pricingType }}</small></span>
+                    </div>
+                    }
+                    }
+                </div>
+
+                <p class="short-desc">{{ getLocalizedDesc(item()!) }}</p>
+
+                @if (item()?.avgRating) {
+                <div class="rating-row">
+                    <mat-icon>star</mat-icon>
+                    <span>{{ item()?.avgRating | number:'1.1-1' }}</span>
+                    <span class="review-count">({{ item()?.reviewCount }} reviews)</span>
+                </div>
+                }
+
+                <div class="actions">
+                    <button mat-flat-button color="primary" class="add-to-cart-btn">
+                        <mat-icon>calendar_month</mat-icon>
+                        {{ 'product_details.rentNow' | translate }}
+                    </button>
+                </div>
+
+                <mat-tab-group class="details-tabs">
+                    <mat-tab [label]="'product_details.description' | translate">
+                        <div class="tab-content">
+                            <p>{{ getLocalizedDesc(item()!) }}</p>
+                        </div>
+                    </mat-tab>
+                    <mat-tab [label]="'product_details.specifications' | translate">
+                        <div class="tab-content specs-list">
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.condition' | translate }}</span>
+                                <span class="value">{{ item()?.condition || '-' }}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.type' | translate }}</span>
+                                <span class="value">{{ item()?.type || '-' }}</span>
+                            </div>
+                            @if (item()?.brand) {
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.brand' | translate }}</span>
+                                <span class="value">{{ getLocalizedRefName(item()?.brand) }}</span>
+                            </div>
+                            }
+                            @if (item()?.city) {
+                            <div class="spec-item">
+                                <span class="label">{{ 'product_details.location' | translate }}</span>
+                                <span class="value">{{ item()?.city }}</span>
+                            </div>
+                            }
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+
+    @if (relatedItems().length > 0) {
+    <div class="related-products">
+        <h2>{{ 'product_details.relatedProducts' | translate }}</h2>
+        <div class="products-row">
+            @for (related of relatedItems(); track related.id) {
+            <div class="product-card mini" [routerLink]="['/marketplace/product', related.id]">
+                <div class="img-container">
+                    <img [src]="related.primaryImage || 'assets/images/placeholder.png'"
+                        [alt]="getLocalizedName(related)">
+                </div>
+                <div class="info">
+                    <h3>{{ getLocalizedName(related) }}</h3>
+                    <div class="price">{{ related.dailyPrice | currency }}<small>/day</small></div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    } @else {
+    <div class="not-found">
+        <h2>{{ 'product_details.notFound' | translate }}</h2>
+        <button mat-button routerLink="/marketplace">{{ 'product_details.backToMarketplace' | translate }}</button>
+    </div>
+    }
+</div>

@@ -1,0 +1,50 @@
+@use 'primeflex/primeflex.scss';
+@use 'primeicons/primeicons.css';
+@use './app/shared/styles/index.scss' as *;
+
+.material-icons {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+.p-component,
+.mat-typography {
+  font-family: 'Alexandria', sans-serif !important;
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  margin: 0;
+}
+
+* {
+  font-family: 'Alexandria', sans-serif;
+}

@@ -1,0 +1,30 @@
+@use "../../../shared/styles" as *;
+
+.editor-container {
+    padding: 16px 0;
+}
+
+.logo-section {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}

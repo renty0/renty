@@ -1,0 +1,105 @@
+<div class="item-detail-container">
+  <div *ngIf="isLoading()" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading() && item()" class="item-grid">
+    <!-- Left Column: Image Gallery -->
+    <div class="gallery-column">
+      <div class="gallery-card">
+        <div class="main-image-container">
+          <img [src]="item()?.images?.[activeImageIndex()]?.imageUrl" class="main-image"
+            [alt]="lang === 'ar' ? item()?.titleAr : item()?.titleEn" />
+        </div>
+
+        <div class="thumbnails-container" *ngIf="(item()?.images?.length ?? 0) > 1">
+          <div *ngFor="let img of item()?.images; let i = index" class="thumbnail-item"
+            [class.active]="activeImageIndex() === i" (click)="setActiveImage(i)">
+            <img [src]="img.imageUrl" alt="Item image" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Item Info -->
+    <div class="info-column">
+      <div class="info-stack">
+        <!-- Header Section -->
+        <header class="item-header">
+          <h1 class="item-title" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+            {{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}
+          </h1>
+          <div class="price-condition-row">
+            <span class="price-badge">{{ dailyPrice | currency: 'EGP ' }} / {{ 'items.daily' | translate }}</span>
+            <span class="condition-badge">{{ item()?.condition | translate }}</span>
+          </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <section class="attributes-card">
+          <div class="attr-grid">
+            <div class="attr-item">
+              <small class="attr-label">{{ 'items.category' | translate }}</small>
+              <div class="attr-value">
+                {{ lang === 'ar' ? item()?.category?.nameAr : item()?.category?.nameEn }}
+              </div>
+            </div>
+            <div class="attr-item" *ngIf="item()?.brand">
+              <small class="attr-label">{{ 'items.brand' | translate }}</small>
+              <div class="attr-value">
+                {{ lang === 'ar' ? item()?.brand?.nameAr : item()?.brand?.nameEn }}
+              </div>
+            </div>
+            <div class="attr-item">
+              <small class="attr-label">{{ 'items.city' | translate }}</small>
+              <div class="attr-value">{{ item()?.city }}</div>
+            </div>
+            <div class="attr-item">
+              <small class="attr-label">{{ 'items.createdAt' | translate }}</small>
+              <div class="attr-value">{{ item()?.createdAt | date: 'mediumDate' }}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Description -->
+        <section class="description-section">
+          <h5 class="section-title">{{ 'items.description' | translate }}</h5>
+          <p class="description-text" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+            {{ lang === 'ar' ? item()?.descAr : item()?.descEn }}
+          </p>
+        </section>
+
+        <!-- Owner Card -->
+        <section class="owner-card">
+          <div class="owner-info">
+            <div class="owner-avatar">
+              <img [src]="item()?.owner?.profileImageUrl || 'assets/images/default-avatar.png'" alt="Owner avatar" />
+            </div>
+            <div class="owner-details">
+              <small class="attr-label">{{ 'items.owner' | translate }}</small>
+              <div class="owner-name">{{ item()?.owner?.firstName }}</div>
+              <div class="owner-location">
+                <mat-icon>location_on</mat-icon>
+                {{ item()?.owner?.city }}
+              </div>
+            </div>
+            <button mat-flat-button color="accent" class="contact-btn">
+              {{ 'common.contact' | translate }}
+            </button>
+          </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <footer class="action-footer">
+          <button mat-raised-button color="primary" class="rent-btn">
+            {{ 'items.rentNow' | translate }}
+          </button>
+          <button mat-stroked-button color="warn" class="favorite-btn">
+            <mat-icon>favorite_border</mat-icon>
+            {{ 'items.addToFavorites' | translate }}
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>

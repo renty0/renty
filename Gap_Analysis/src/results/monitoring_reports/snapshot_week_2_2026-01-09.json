@@ -1,0 +1,372 @@
+[
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Bottles and Cages",
+    "supply": 3,
+    "demand": 15106,
+    "gap_score": 3776.75,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Tires and Tubes",
+    "supply": 11,
+    "demand": 29772,
+    "gap_score": 2481.08,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Caps",
+    "supply": 1,
+    "demand": 4151,
+    "gap_score": 2076.0,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Fenders",
+    "supply": 1,
+    "demand": 3960,
+    "gap_score": 1980.5,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Helmets",
+    "supply": 3,
+    "demand": 6034,
+    "gap_score": 1508.75,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Cleaners",
+    "supply": 1,
+    "demand": 1706,
+    "gap_score": 853.5,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Gloves",
+    "supply": 6,
+    "demand": 2644,
+    "gap_score": 377.86,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Hydration Packs",
+    "supply": 1,
+    "demand": 695,
+    "gap_score": 348.0,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Jerseys",
+    "supply": 8,
+    "demand": 3113,
+    "gap_score": 346.0,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Socks",
+    "supply": 4,
+    "demand": 1063,
+    "gap_score": 212.8,
+    "gap_status": "Critical Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Road Bikes",
+    "supply": 43,
+    "demand": 7099,
+    "gap_score": 161.36,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Bike Racks",
+    "supply": 1,
+    "demand": 302,
+    "gap_score": 151.5,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Mountain Bikes",
+    "supply": 32,
+    "demand": 4706,
+    "gap_score": 142.64,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Vests",
+    "supply": 3,
+    "demand": 521,
+    "gap_score": 130.5,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Shorts",
+    "supply": 7,
+    "demand": 944,
+    "gap_score": 118.12,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Bike Stands",
+    "supply": 1,
+    "demand": 234,
+    "gap_score": 117.5,
+    "gap_status": "High Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Touring Bikes",
+    "supply": 22,
+    "demand": 2124,
+    "gap_score": 92.39,
+    "gap_status": "Moderate Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Panniers",
+    "supply": 1,
+    "demand": 0,
+    "gap_score": 0.5,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Locks",
+    "supply": 1,
+    "demand": 0,
+    "gap_score": 0.5,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Chains",
+    "supply": 1,
+    "demand": 0,
+    "gap_score": 0.5,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Derailleurs",
+    "supply": 2,
+    "demand": 0,
+    "gap_score": 0.33,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Pumps",
+    "supply": 2,
+    "demand": 0,
+    "gap_score": 0.33,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Brakes",
+    "supply": 2,
+    "demand": 0,
+    "gap_score": 0.33,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Bottom Brackets",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Tights",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Lights",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Cranksets",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Bib-Shorts",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Forks",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Headsets",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Pedals",
+    "supply": 7,
+    "demand": 0,
+    "gap_score": 0.12,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Handlebars",
+    "supply": 8,
+    "demand": 0,
+    "gap_score": 0.11,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Saddles",
+    "supply": 9,
+    "demand": 0,
+    "gap_score": 0.1,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Wheels",
+    "supply": 14,
+    "demand": 0,
+    "gap_score": 0.07,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Touring Frames",
+    "supply": 18,
+    "demand": 0,
+    "gap_score": 0.05,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Mountain Frames",
+    "supply": 28,
+    "demand": 0,
+    "gap_score": 0.03,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  },
+  {
+    "date": "2026-01-09",
+    "week": 2,
+    "category": "Road Frames",
+    "supply": 31,
+    "demand": 0,
+    "gap_score": 0.03,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0
+  }
+]

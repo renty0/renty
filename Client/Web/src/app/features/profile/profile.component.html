@@ -1,0 +1,37 @@
+<div class="profile-card">
+    <div class="profile-header">
+        <h2>{{ 'profile.title' | translate }}</h2>
+
+        <div class="image-container group">
+            <p-image [src]="profileImageUrl()" [alt]="'profile.imageAlt' | translate" [preview]="true">
+            </p-image>
+
+            <div class="camera-button" (click)="openImageDialog()" title="{{'profile.updatePhoto' | translate}}">
+                <i class="pi pi-camera"></i>
+            </div>
+        </div>
+        <p class="uploading-text" *ngIf="isUploading">{{ 'profile.uploading' | translate }}</p>
+    </div>
+
+    <form [formGroup]="profileForm" (submit)="onSubmit()" class="form-grid">
+        <app-input label="profile.firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
+        <app-input label="profile.lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
+        <app-input label="profile.email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
+        <app-input label="profile.address" [formGroup]="profileForm" controlName="address"></app-input>
+        <app-input label="profile.city" [formGroup]="profileForm" controlName="city"></app-input>
+        <app-input label="profile.country" [formGroup]="profileForm" controlName="country"></app-input>
+        <app-input label="profile.bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
+        <div class="form-actions">
+            <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine"
+                type="submit" color="primary">
+                {{ 'profile.save' | translate }}
+            </app-loading-button>
+        </div>
+    </form>
+</div>
+
+<app-profile-image-dialog [visible]="imageDialogVisible()" (visibleChange)="imageDialogVisible.set($event)"
+    [currentImageUrl]="profileImageUrl()" (imageSaved)="onImageSaved($event)">
+</app-profile-image-dialog>
+
+<p-toast></p-toast>

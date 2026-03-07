@@ -1,0 +1,150 @@
+@use '../../styles/variables' as *;
+
+.uploader-container {
+    width: 100%;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.image-card,
+.add-image-card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    background-color: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: $primary-color;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.image-card {
+    &.primary {
+        border: 2px solid $primary-color;
+    }
+
+    .image-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .actions-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: $primary-color;
+            transition: all 0.2s;
+
+            &:hover {
+                transform: scale(1.1);
+                background: white;
+            }
+
+            &.delete-btn:hover {
+                color: $danger;
+            }
+
+            &.primary-btn:hover {
+                color: $primary-color;
+            }
+
+            mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        .primary-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: $primary-color;
+            background: white;
+            border-radius: 50%;
+            padding: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+.add-image-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-style: dashed;
+    color: $text-secondary;
+    gap: 0.5rem;
+
+    &:hover {
+        background-color: var(--surface-hover);
+        color: $primary-color;
+    }
+
+    &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    span {
+        font-size: $font-size-sm;
+        font-weight: 500;
+    }
+}

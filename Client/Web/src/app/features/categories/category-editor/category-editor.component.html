@@ -1,0 +1,28 @@
+<div class="editor-wrapper">
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+  }
+
+  <form [formGroup]="form" (submit)="submit()" class="category-form">
+    <div class="form-body">
+      <app-input class="field" label="labels.nameEn" [formGroup]="form" controlName="categoryNameEn"/>
+      <app-input class="field" label="labels.nameAr" [formGroup]="form" controlName="categoryNameAr"/>
+      <app-input class="field" label="labels.descEn" type="textarea" [formGroup]="form" controlName="descriptionEn"/>
+      <app-input class="field" label="labels.descAr" type="textarea" [formGroup]="form" controlName="descriptionAr"/>
+      <div class="logo-section">
+        <span class="label">{{ 'labels.logo' | translate }}</span>
+        <app-image-uploader #logoUploader [uploadPath]="'categories/logos'" [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <app-loading-button variant="stroked" (clicked)="cancel()" type="button" class="btn-cancel" [title]="'buttons.cancel' | translate">
+        {{ 'buttons.cancel' | translate }}
+      </app-loading-button>
+      <app-loading-button color="primary" type="submit" [loading]="isSaving" [disabled]="form.invalid" class="btn-submit" [title]="'buttons.save' | translate">
+        {{ 'buttons.save' | translate }}
+      </app-loading-button>
+    </div>
+  </form>
+</div>

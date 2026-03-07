@@ -1,0 +1,89 @@
+<div class="uploader-container" [class.active]="isDragging" [class.has-file]="selectedFile" [class.error]="hasError"
+  (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
+
+  <div class="drop-zone" (click)="triggerFileInput()">
+    <div class="state-container">
+      <!-- Empty State -->
+      @if (!selectedFile && !imageUrl && !isUploading) {
+      <div class="state-content empty-state">
+        <div class="icon-circle">
+          <mat-icon ripple>cloud_upload</mat-icon>
+        </div>
+        <div class="text-group">
+          <h3>{{ (label || 'labels.upload_image') | translate }}</h3>
+          <p>{{ 'uploader.drag_drop' | translate }} or <span class="browse-text">{{ 'buttons.browse' | translate
+              }}</span></p>
+        </div>
+        <div class="hint-text">
+          {{ 'uploader.hint' | translate }}
+        </div>
+      </div>
+      }
+
+      <!-- Uploading State -->
+      @if (isUploading) {
+      <div class="state-content uploading-state">
+        <div class="preview-backdrop" *ngIf="previewUrl">
+          <img [src]="previewUrl" alt="Preview">
+        </div>
+        <div class="upload-info">
+          <div class="progress-circle-container">
+            <svg class="progress-ring" width="80" height="80">
+              <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.2)" stroke-width="4"
+                fill="transparent" r="36" cx="40" cy="40" />
+              <circle class="progress-ring__circle" stroke="white" stroke-width="4" fill="transparent" r="36" cx="40"
+                cy="40" [style.stroke-dashoffset]="226 - (226 * uploadProgress / 100)" />
+            </svg>
+            <span class="progress-number">{{ uploadProgress }}%</span>
+          </div>
+          <p>{{ 'uploader.uploading' | translate }}...</p>
+        </div>
+      </div>
+      }
+
+      <!-- Success/Loaded State -->
+      @if (imageUrl && !isUploading) {
+      <div class="state-content success-state">
+        <div class="image-wrapper">
+          <img [src]="imageUrl" [alt]="imageName" class="final-image">
+          <div class="image-overlay">
+            <button type="button" class="btn-remove" (click)="resetState($event)"
+              [title]="'buttons.delete' | translate">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <div class="file-info">
+              <span class="name">{{ imageName }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Preview/Ready State (if auto-upload is off, but here it's on) -->
+      @if (selectedFile && !isUploading && !imageUrl) {
+      <div class="state-content ready-state">
+        <div class="preview-backdrop" *ngIf="previewUrl">
+          <img [src]="previewUrl" alt="Preview">
+        </div>
+        <div class="ready-actions">
+          <button type="button" class="btn-upload" (click)="uploadFile($event)">
+            <mat-icon>upload</mat-icon>
+            {{ 'buttons.upload' | translate }}
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (hasError) {
+  <div class="error-wrapper">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ 'validation.required' | translate }}</span>
+  </div>
+  }
+
+  <input type="file" [accept]="allowedExtensions.length ? allowedExtensions.join(',') : 'image/*'"
+    (change)="onFileSelected($event)" #fileInput hidden />
+</div>

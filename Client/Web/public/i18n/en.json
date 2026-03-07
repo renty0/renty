@@ -1,0 +1,643 @@
+{
+  "common": {
+    "renter": "Renter",
+    "owner": "Owner",
+    "both": "Both",
+    "contact": "Contact",
+    "searchLocation": "Search for a location...",
+    "enterCoordinates": "Enter coordinates (lat, lng)",
+    "loadingMap": "Loading Map...",
+    "noCoordinates": "No coordinates set for this location",
+    "coordinatesCopied": "Coordinates copied to clipboard"
+  },
+  "nav": {
+    "home": "Home",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "register": "Register",
+    "market": "Marketplace",
+    "categories": "Categories",
+    "subcategories": "Subcategories",
+    "brands": "Brands",
+    "products": "Products",
+    "about": "About",
+    "dashboard": "Dashboard",
+    "kpi_overview": "KPI Overview",
+    "gap_analysis": "Gap Analysis",
+    "deep_analytics": "Deep Analytics"
+  },
+  "dashboard": {
+    "title": "Intelligence Center",
+    "lastUpdated": "Last updated",
+    "tabs": {
+      "kpi": "KPI Overview",
+      "gap": "Gap Analysis",
+      "analytics": "Deep Analytics"
+    },
+    "kpi": {
+      "totalRevenue": "Total Revenue",
+      "revenueTarget": "Target",
+      "totalOrders": "Total Orders",
+      "monthlyGoal": "Monthly goal reached",
+      "avgGapRatio": "Avg Gap Ratio",
+      "riskLevel": "Risk Level",
+      "high": "High",
+      "low": "Low",
+      "avgOrderValue": "Avg Order Value",
+      "activeCustomers": "Active Customers",
+      "smartInsights": "Smart Business Insights",
+      "revenue": "Revenue",
+      "orders": "Orders",
+      "errors": {
+        "failedLoad": "Failed to load KPI data"
+      }
+    },
+    "gap": {
+      "title": "Gap Analysis Dashboard",
+      "runAnalysis": "Run Analysis",
+      "opportunityLoss": "Opportunity Loss",
+      "lossDesc": "Revenue lost due to supply shortages",
+      "criticalCategories": "Critical Categories",
+      "avgGapLevel": "Avg Gap Level",
+      "supplyDemandGap": "Supply vs Demand Gap",
+      "regionalMatrix": "Regional Demand Matrix",
+      "recommendations": "Operational Recommendations",
+      "recommendation": "Recommendation",
+      "deadStock": "Dead Stock Inventory",
+      "product": "Product",
+      "idleDays": "Idle (Days)",
+      "value": "Value",
+      "demand": "Demand (Orders)",
+      "supply": "Supply (Unique Items)",
+      "regionalDemandScore": "Avg Regional Demand Score",
+      "messages": {
+        "analysisSuccess": "Analysis triggered successfully",
+        "analysisFailed": "Failed to trigger analysis",
+        "loadKpiFailed": "Failed to load KPI data",
+        "loadSummaryFailed": "Failed to load gap summary",
+        "loadCategoryFailed": "Failed to load category analysis",
+        "loadTerritoryFailed": "Failed to load territory analysis",
+        "loadDeadStockFailed": "Failed to load dead stock",
+        "loadActionsFailed": "Failed to load actions"
+      }
+    },
+    "analytics": {
+      "revenueProfit": "Revenue & Profit Analysis",
+      "financialEfficiency": "Financial Efficiency",
+      "inventoryTurnover": "Inventory Turnover",
+      "unitsSold": "Units Sold",
+      "genderDist": "Gender Distribution",
+      "customerOccupation": "Customer Occupation",
+      "inventoryHealth": "Inventory Health",
+      "topCategoryShare": "Top Category Share",
+      "topProducts": "Top Performing Products",
+      "product": "Product",
+      "sold": "Sold",
+      "revenue": "Revenue",
+      "errors": {
+        "loadSalesFailed": "Failed to load sales trends",
+        "loadDemographicsFailed": "Failed to load demographics",
+        "loadInventoryFailed": "Failed to load inventory stats",
+        "loadTopProductsFailed": "Failed to load top products"
+      }
+    },
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "hero_title": "Marketplace",
+    "all_categories": "All Categories",
+    "hero_subtitle": "Discover unique products from our community",
+    "products": "Products",
+    "results": "Results",
+    "search_placeholder": "Search products...",
+    "categories": "Categories",
+    "filters": "Filters",
+    "clearFilters": "Clear",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "noProductsFound": "No products found",
+    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for.",
+    "viewDetails": "View Details"
+  },
+  "register": {
+    "welcomeMessage": "Join Renty Today",
+    "haveAccount": "Already have an account?",
+    "login": "Login here",
+    "terms": "Terms and Conditions",
+    "acceptOn": "I accept the ",
+    "registerButton": "Create Account",
+    "success": "Registration successful!",
+    "successVerifyEmail": "Registration successful! Please check your email to verify your account.",
+    "successOwner": "Registration successful as Owner!",
+    "failed": "Registration failed",
+    "step1Desc": "Set up your login credentials",
+    "step2Desc": "Tell us more about yourself",
+    "step3Title": "Complete Your Profile",
+    "step3Desc": "Select your account type and preferences",
+    "locationAbout": "Location & About",
+    "roles": {
+      "renterTitle": "Renter",
+      "renterDesc": "Browse and rent high-quality items from owners.",
+      "ownerTitle": "Owner",
+      "ownerDesc": "List your items and start earning extra income.",
+      "memberTitle": "Member",
+      "memberDesc": "Full access to rent items and list your own."
+    }
+  },
+  "login": {
+    "title": "Login to Renty",
+    "welcomeBack": "Welcome Back!",
+    "signInSubtitle": "Sign in to your account",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Register here",
+    "button": "Login",
+    "success": "Login successful!",
+    "emailNotConfirmed": "Your email is not confirmed. We have sent a new verification code.",
+    "invalidCredentials": "Invalid email or password",
+    "unauthorized": "You are not authorized to access this resource",
+    "serverError": "A server error occurred, please try again later"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email to receive a reset code",
+    "button": "Send Reset Link",
+    "successMessage": "If your email is registered, you will receive a code shortly.",
+    "enterCodeButton": "Enter Code to Reset Password",
+    "rememberPassword": "Remember your password?",
+    "successSent": "Reset link sent",
+    "errorHeader": "Error",
+    "errorDesc": "Failed to send reset code"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your email, reset code and your new password",
+    "codeLabel": "Reset Code",
+    "newPasswordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "passwordsMismatch": "Passwords do not match",
+    "button": "Reset Password",
+    "rememberPassword": "Remember your password?",
+    "successHeader": "Password Reset",
+    "successDesc": "Your password has been reset successfully. You can now login.",
+    "errorHeader": "Reset Failed",
+    "errorDesc": "Failed to reset password. The code might be invalid or expired.",
+    "invalidCode": "Invalid or expired reset code.",
+    "codeVerified": "Reset code verified successfully."
+  },
+  "verifyEmail": {
+    "title": "Verify your email",
+    "subtitle": "Enter the verification code we sent to your email",
+    "email": "Email Address",
+    "code": "Verification code",
+    "submit": "Verify email",
+    "success": "Your email has been verified. You can now sign in.",
+    "failed": "Verification failed. Please check the code and try again.",
+    "backToLogin": "Back to login"
+  },
+  "info": {
+    "accountInfo": "Account Information",
+    "profileInfo": "Profile Details"
+  },
+  "labels": {
+    "email": "Email Address",
+    "password": "Password",
+    "deposit": "Deposit Amount",
+    "type": "Type",
+    "condition": "Condition",
+    "location": "Location",
+    "mapLocation": "Map Location",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "brand": "Brand",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "nameAr": "Name (Arabic)",
+    "nameEn": "Name (English)",
+    "descAr": "Description (Arabic)",
+    "descEn": "Description (English)",
+    "logo": "Logo",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "city": "City",
+    "country": "Country",
+    "address": "Address",
+    "bio": "Bio",
+    "userType": "User Type",
+    "name": "Name",
+    "description": "Description",
+    "upload_image": "Upload Image",
+    "subcategoryName": "Subcategory Name",
+    "subcategoryDescription": "Description",
+    "parentCategory": "Parent Category",
+    "sku": "SKU",
+    "price": "Price",
+    "color": "Color",
+    "style": "Style",
+    "cost": "Cost",
+    "discount": "Discount",
+    "modelName": "Model Name",
+    "skuType": "SKU Type",
+    "governorates": {
+      "cairo": "Cairo",
+      "giza": "Giza",
+      "alexandria": "Alexandria",
+      "dakahlia": "Dakahlia",
+      "red_sea": "Red Sea",
+      "beheira": "Beheira",
+      "fayoum": "Fayoum",
+      "gharbiya": "Gharbiya",
+      "ismailia": "Ismaïlia",
+      "monufia": "Monufia",
+      "minya": "Minya",
+      "qalubiya": "Qalubiya",
+      "new_valley": "New Valley",
+      "suez": "Suez",
+      "aswan": "Aswan",
+      "assiut": "Assiut",
+      "beni_suef": "Beni Suef",
+      "port_said": "Port Said",
+      "damietta": "Damietta",
+      "sharkia": "Sharkia",
+      "south_sinai": "South Sinai",
+      "kafr_el_sheikh": "Kafr el-Sheikh",
+      "matrouh": "Matrouh",
+      "luxor": "Luxor",
+      "qena": "Qena",
+      "north_sinai": "North Sinai",
+      "sohag": "Sohag"
+    },
+    "types": {
+      "standard": "Standard",
+      "premium": "Premium"
+    },
+    "conditions": {
+      "new": "New",
+      "like_new": "Like New",
+      "good": "Good",
+      "fair": "Fair"
+    }
+  },
+  "buttons": {
+    "login": "Login",
+    "verify": "Verify Code",
+    "next": "Next",
+    "back": "Back",
+    "search": "Search",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "subscribe": "Subscribe",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "browse": "Browse",
+    "upload": "Upload",
+    "newProduct": "New Product"
+  },
+  "categories": {
+    "title": "Categories",
+    "details": "Category Details",
+    "search": "Search categories...",
+    "empty": "No categories found. Create one to get started.",
+    "confirmDelete": "Are you sure you want to delete this category?",
+    "columns": {
+      "logo": "Logo",
+      "name": "Name",
+      "description": "Description",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "create": "New Category",
+      "edit": "Edit Category",
+      "delete": "Delete Category",
+      "deleted": "Category deleted successfully."
+    },
+    "errors": {
+      "failedToLoad": "Failed to load categories.",
+      "failedToDelete": "Failed to delete category."
+    }
+  },
+  "product_details": {
+    "backToMarketplace": "Back to Marketplace",
+    "addToCart": "Add to Cart",
+    "rentNow": "Rent Now",
+    "description": "Description",
+    "specifications": "Specifications",
+    "relatedProducts": "Related Products",
+    "notFound": "Product not found",
+    "color": "Color",
+    "model": "Model",
+    "style": "Style"
+  },
+  "products": {
+    "title": "Products",
+    "details": "Product Details",
+    "search": "Search products...",
+    "confirmDelete": "Are you sure you want to delete this product?",
+    "columns": {
+      "image": "Image",
+      "sku": "SKU",
+      "name": "Name",
+      "price": "Price",
+      "perDay": "/ day",
+      "subcategory": "Subcategory",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "create": "New Product",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "view": {
+      "list": "List view",
+      "cards": "Cards view"
+    },
+    "editor": {
+      "newTitle": "New Product",
+      "editTitle": "Edit Product",
+      "newSubtitle": "Create a new product",
+      "editSubtitle": "Update product details"
+    },
+    "sections": {
+      "general": "General Information",
+      "pricing": "Pricing",
+      "details": "Details",
+      "media": "Media",
+      "organization": "Organization"
+    },
+    "fields": {
+      "name": "Product Name",
+      "sku": "SKU (Stock Keeping Unit)",
+      "price": "Selling Price",
+      "cost": "Product Cost",
+      "color": "Color",
+      "style": "Style",
+      "description": "Product Description",
+      "subcategory": "Subcategory",
+      "discount": "Discount Price",
+      "modelName": "Model Name",
+      "skuType": "SKU Type"
+    },
+    "placeholders": {
+      "name": "Enter product name",
+      "sku": "Enter SKU",
+      "description": "Enter product description",
+      "subcategory": "Select Subcategory",
+      "category": "Select Category",
+      "brand": "Select Brand",
+      "city": "Enter city",
+      "location": "Enter location or address"
+    },
+    "messages": {
+      "createSuccess": "Product created successfully",
+      "updateSuccess": "Product updated successfully",
+      "deleteConfirmation": "Are you sure you want to delete this product?",
+      "deleteSuccess": "Product deleted successfully"
+    }
+  },
+  "icons": {
+    "next": "arrow_forward",
+    "back": "arrow_back"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "minLength": "Minimum length not met",
+    "maxLength": "Maximum length exceeded",
+    "invalidFormat": "Invalid format",
+    "invalidPhone": "Invalid phone number",
+    "passwordMismatch": "Passwords do not match",
+    "acceptTerms": "You must accept the terms and conditions"
+  },
+  "notFound": {
+    "alt": "Renty",
+    "title": "Renty",
+    "subtitle": "Manage your website",
+    "pageTitle": "Page Not Found",
+    "errorTitle": "404 - Oops!",
+    "small": "The page you're looking for doesn't exist.",
+    "message": "It looks like you've wandered off the path. Let's get you back to safety!",
+    "return": "Return to Home",
+    "help": "Help",
+    "status": "System Status"
+  },
+  "home": {
+    "hero": {
+      "title": "Rent Everything, Enjoy Everywhere",
+      "subtitle": "Join the smartest rental marketplace. From high-tech gear to professional tools, find what you need or list your own.",
+      "searchPlaceholder": "Search for cameras, drones, tools..."
+    },
+    "features": {
+      "badge": "Why Choose Renty",
+      "title": "The Smarter Way to Access Quality",
+      "subtitle": "Renty is more than just a marketplace; it's a community built on trust, quality, and sustainability.",
+      "trust": {
+        "title": "Verified Users",
+        "desc": "Every member is verified through our robust security system to ensure safe transactions."
+      },
+      "value": {
+        "title": "Unmatched Value",
+        "desc": "Access premium products at a fraction of the cost. Pay only for the time you need."
+      },
+      "speed": {
+        "title": "Rapid Delivery",
+        "desc": "Get your items delivered to your doorstep within hours, not days."
+      }
+    },
+    "categories": {
+      "title": "Explore by Category",
+      "subtitle": "Discover a wide range of products curated for your lifestyle.",
+      "electronics": "Electronics",
+      "tools": "Professional Tools",
+      "furniture": "Home Furniture",
+      "cameras": "Photography",
+      "sports": "Sports & Outdoors",
+      "party": "Events & Party",
+      "no_products_found": "No products found matching your criteria.",
+      "view_all_products": "View All Products"
+    },
+    "product": {
+      "addToCart": "Add to Cart",
+      "rentNow": "Rent Now",
+      "description": "Description",
+      "specifications": "Specifications",
+      "backToMarketplace": "Back to Marketplace",
+      "relatedProducts": "Related Products",
+      "notFound": "Product Not Found",
+      "color": "Color",
+      "model": "Model",
+      "style": "Style"
+    },
+    "dashboard": {
+      "badge": "Stay Organized",
+      "title": "Real-time Availability Calendar",
+      "desc": "Check the live status of any item. Our smart calendar prevents double-bookings and ensures product readiness.",
+      "check1": "Live availability tracking",
+      "check2": "Avoid overlapping bookings",
+      "check3": "Automated reminders"
+    },
+    "security": {
+      "title": "Your Peace of Mind is Our Priority",
+      "desc": "Every rental on Renty is covered by our comprehensive insurance policy. We handle the risks so you can focus on the experience.",
+      "badge1": "Trust & Safety",
+      "badge2": "Insurance Coverage"
+    },
+    "steps": {
+      "title": "How Renty Works",
+      "subtitle": "Renting has never been this easy. Three simple steps to get what you need.",
+      "find": {
+        "title": "Find",
+        "desc": "Search for your desired item and check availability."
+      },
+      "book": {
+        "title": "Book",
+        "desc": "Select your dates and book with secure payment."
+      },
+      "enjoy": {
+        "title": "Enjoy",
+        "desc": "Pick up or get it delivered and enjoy your product."
+      }
+    },
+    "app": {
+      "title": "Take Renty On The Go",
+      "desc": "Download our mobile app to manage your rentals, chat with owners, and get real-time notifications anywhere, anytime."
+    },
+    "footer": {
+      "about": "Renty is the leading peer-to-peer rental marketplace, empowering individuals to access and share resources efficiently.",
+      "quickLinks": "Quick Links",
+      "home": "Home",
+      "market": "Marketplace",
+      "join": "Join Us",
+      "cta": {
+        "title": "Join Our Community",
+        "desc": "Subscribe to get latest updates and exclusive offers."
+      },
+      "emailPlaceholder": "Your email address"
+    },
+    "stats": {
+      "items": "Rentable Items",
+      "cities": "Cities Covered",
+      "users": "Active Users",
+      "rating": "User Rating"
+    }
+  },
+  "subcategories": {
+    "title": "Subcategories",
+    "search": "Search subcategories...",
+    "columns": {
+      "logo": "Logo",
+      "name": "Name",
+      "category": "Category",
+      "description": "Description",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "create": "New Subcategory",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "fields": {
+      "logo": "Logo",
+      "name": "Subcategory Name",
+      "category": "Parent Category",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "Enter subcategory name",
+      "description": "Enter description"
+    },
+    "messages": {
+      "createSuccess": "Subcategory created successfully",
+      "updateSuccess": "Subcategory updated successfully",
+      "deleteConfirmation": "Are you sure you want to delete this subcategory?",
+      "deleteSuccess": "Subcategory deleted successfully"
+    }
+  },
+  "brands": {
+    "title": "Brands",
+    "search": "Search brands...",
+    "empty": "No brands found",
+    "columns": {
+      "logo": "Logo",
+      "name": "Name",
+      "description": "Description",
+      "items": "Products",
+      "actions": "Actions"
+    },
+    "actions": {
+      "create": "New Brand",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "fields": {
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "descAr": "Description (Arabic)",
+      "descEn": "Description (English)",
+      "logo": "Brand Logo"
+    },
+    "messages": {
+      "createSuccess": "Brand created successfully",
+      "updateSuccess": "Brand updated successfully",
+      "deleteConfirmation": "Are you sure you want to delete this brand?",
+      "deleteSuccess": "Brand deleted successfully"
+    },
+    "errors": {
+      "failedToLoad": "Failed to load brands",
+      "failedToCreate": "Failed to create brand",
+      "failedToDelete": "Failed to delete brand"
+    }
+  },
+  "uploader": {
+    "drag_drop": "Drag and drop your image here",
+    "hint": "Supports JPG, PNG, GIF, WebP (Max 5MB)",
+    "uploading": "Uploading image"
+  },
+  "profile": {
+    "title": "My Profile",
+    "imageAlt": "Profile Picture",
+    "updatePhoto": "Update Photo",
+    "uploadNewPhoto": "Upload New Photo",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "bio": "Bio",
+    "save": "Save Changes",
+    "uploading": "Uploading..."
+  },
+  "errors": {
+    "unknownError": "An unexpected error occurred",
+    "failedToLoadSubcategories": "Failed to load subcategories",
+    "failedToLoadCategories": "Failed to load categories",
+    "failedToLoadProducts": "Failed to load products",
+    "failedToLoadSubcategory": "Failed to load subcategory data",
+    "failedToLoadProduct": "Failed to load product data",
+    "failedToUploadLogo": "Failed to upload logo image",
+    "invalidCoordinates": "Invalid coordinates format. Use: lat, lng",
+    "unexpectedError": "An unexpected error occurred"
+  },
+  "items": {
+    "daily": "Daily",
+    "category": "Category",
+    "brand": "Brand",
+    "city": "City",
+    "createdAt": "Posted on",
+    "description": "Description",
+    "owner": "Owner",
+    "rentNow": "Rent Now",
+    "addToFavorites": "Add to Favorites"
+  }
+}

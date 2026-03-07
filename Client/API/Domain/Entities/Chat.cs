@@ -1,0 +1,30 @@
+namespace Domain.Entities;
+
+/// <summary>Matches the `chats` table. Unique on (user1_id, user2_id).</summary>
+public class Chat
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public long User1Id { get; set; }
+    public long User2Id { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation
+    public ApplicationUser User1 { get; set; } = null!;
+    public ApplicationUser User2 { get; set; } = null!;
+    public ICollection<ChatMessage> Messages { get; set; } = new List<ChatMessage>();
+}
+
+/// <summary>Matches the `chat_messages` table.</summary>
+public class ChatMessage
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid ChatId { get; set; }
+    public long SenderId { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public bool IsRead { get; set; } = false;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation
+    public Chat Chat { get; set; } = null!;
+    public ApplicationUser Sender { get; set; } = null!;
+}
