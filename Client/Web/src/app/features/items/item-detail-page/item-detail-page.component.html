@@ -30,7 +30,7 @@
             {{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}
           </h1>
           <div class="price-condition-row">
-            <span class="price-badge">{{ dailyPrice | currency: 'EGP ' }} / {{ 'items.daily' | translate }}</span>
+            <span class="price-badge">{{ dailyPrice }} EGP / {{ 'items.daily' | translate }}</span>
             <span class="condition-badge">{{ item()?.condition | translate }}</span>
           </div>
         </header>

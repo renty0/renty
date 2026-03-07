@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
         { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', adminOnly: true },
         { path: '/brands', labelKey: 'nav.brands', icon: 'branding_watermark', adminOnly: true },
         { path: '/items', labelKey: 'nav.products', icon: 'inventory_2', adminOnly: true },
-        { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard', adminOnly: true }
+        // { path: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard', adminOnly: true }
     ];
 
     filteredNavLinks = computed(() => {

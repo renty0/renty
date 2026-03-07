@@ -47,7 +47,7 @@
                     @for (p of item()!.pricing!; track p.pricingType) {
                     <div class="price-row">
                         <span class="pricing-type">{{ p.pricingType }}</span>
-                        <span class="current-price">{{ p.price | currency }}<small>/{{ p.pricingType }}</small></span>
+                        <span class="current-price">{{ p.price }} EGP<small>/{{ p.pricingType }}</small></span>
                     </div>
                     }
                     }
@@ -117,7 +117,7 @@
                 </div>
                 <div class="info">
                     <h3>{{ getLocalizedName(related) }}</h3>
-                    <div class="price">{{ related.dailyPrice | currency }}<small>/day</small></div>
+                    <div class="price">{{ related.dailyPrice }} EGP<small>/day</small></div>
                 </div>
             </div>
             }
