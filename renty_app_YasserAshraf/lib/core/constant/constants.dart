@@ -5,7 +5,6 @@ class AppConstants {
   static const String appName = 'Renty Admin';
   static const String appVersion = '1.0.0';
 
-  // ⭐ DISABLE MOCK MODE - Use real backend
   static const bool useMockData = false;
 
   // Order Status
