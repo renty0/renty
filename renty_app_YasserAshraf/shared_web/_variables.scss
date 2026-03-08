@@ -1,0 +1,96 @@
+// Colors
+$primary-color: #1a365d;
+$secondary-color: #153149;
+$secondary-color-light: #183458;
+$accent-color: #2563eb;
+$harvard-gray: #f5f5f5;
+$harvard-dark-gray: #2e2e2e;
+$accent-gold: #ffd700;
+$light-blue: #f0f9ff;
+$white: #ffffff;
+$success: #059669;
+$danger: #dc2626;
+$warning: #d97706;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$text-dark: #2e3a59;
+$text-muted: #4f4f4f;
+$row-primary-color: #edf3fc;
+$row-secondary-color: #e3f2fd;
+$text-danger: #991b1b;
+$text-success: #166534;
+$white: #ffffff;
+$white-secondary: #eee;
+
+// Transparencies
+$transparent-white-light: #ffffff0d;
+$transparent-white: #ffffff1a;
+$transparent-white-medium: #ffffff33;
+$transparent-white-heavy: #ffffffe6;
+$transparent-white-full: #fffffff2;
+
+// Gradients
+$primary-gradient: linear-gradient(135deg, $primary-color 50%, $primary-color 100%);
+$text-gradient: linear-gradient(135deg, $primary-color, $secondary-color);
+
+// Spacing
+$spacing-xss: 0.5rem;
+$spacing-xs: 0.75rem;
+$spacing-sm: 1rem;
+$spacing-sm_md: 1.2rem;
+$spacing-md: 1.5rem;
+$spacing-md-lg: 1.75rem;
+$spacing-lg: 2rem;
+$spacing-xl: 2.5rem;
+$spacing-xxl: 3rem;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-sm-md: 6px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+$border-radius-xxl: 20px;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+$shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow-button: 0 6px 20px rgba(102, 126, 234, 0.3);
+
+// Transitions
+$transition-fast: 0.3s ease;
+$transition-medium: 0.5s ease;
+$transition-slow: 0.8s ease;
+
+// Typography
+$font-family-primary: "Alexandria", Tahoma, Geneva, Verdana, sans-serif;
+$font-weight-small: 400;
+$font-weight-normal: 500;
+$font-weight-medium: 600;
+$font-weight-bold: 700;
+
+// Font Sizes
+$font-size-xxs: 0.6rem;
+$font-size-xs: 0.8rem;
+$font-size-sm: 1rem;
+$font-size-md: 1.2rem;
+$font-size-lg: 1.5rem;
+$font-size-xl: 1.8rem;
+$font-size-xxl: 2rem;
+
+// Breakpoints
+$breakpoint-xs: 320px;
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1200px;
