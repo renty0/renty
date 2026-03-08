@@ -1,7 +1,6 @@
 import {
   Component,
   inject,
-  OnInit,
   signal,
   effect,
   untracked,
@@ -9,7 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -57,7 +56,7 @@ type ViewMode = 'list' | 'cards';
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.scss',
 })
-export class CategoryListComponent implements OnInit {
+export class CategoryListComponent {
   private readonly apiClient = inject(CategoriesClient);
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
@@ -93,8 +92,6 @@ export class CategoryListComponent implements OnInit {
       this.loadCategories();
     });
   }
-
-  ngOnInit(): void { }
 
   private loadCategories(): void {
     this.isLoading.set(true);

@@ -22,7 +22,7 @@ export class AuthClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = "https://renty.runasp.net";
     }
 
     authRegister(command: RegisterCommand): Observable<ApiResponse<AuthRegisterData>> {
@@ -613,7 +613,7 @@ export class ItemsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponse<ItemListDto[]>> {
@@ -938,7 +938,7 @@ export class SearchClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     searchItems(q: string, page: number, limit: number, categoryId?: number | null | undefined, city?: string | null | undefined): Observable<ApiResponse<SearchItemsResponse>> {
@@ -1021,7 +1021,7 @@ export class FavoritesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     addFavorite(id: string): Observable<ApiResponse<null>> {
@@ -1197,7 +1197,7 @@ export class DeliveryClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getDelivery(id: string): Observable<ApiResponse<TrackingEntryDto[]>> {
@@ -1329,7 +1329,7 @@ export class ReviewsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createReview(id: string, cmd: CreateReviewCommand): Observable<ApiResponse<ReviewCreateData>> {
@@ -1454,7 +1454,7 @@ export class VerificationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createVerification(id: string, cmd: CreateVerificationCommand): Observable<ApiResponse<VerificationCreateData>> {
@@ -1634,7 +1634,7 @@ export class AdminClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getFraudLogs(page: number, limit: number, decision?: string | null | undefined, minRisk?: number | null | undefined): Observable<ApiResponse<null>> {
@@ -1987,7 +1987,7 @@ export class SubcategoriesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductSubcategoryDto[]>> {
@@ -2363,7 +2363,7 @@ export class RentalsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createRental(cmd: CreateRentalCommand): Observable<ApiResponse<RentalCreateData>> {
@@ -2786,7 +2786,7 @@ export class OrdersClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createOrder(cmd: CreateOrderCommand): Observable<ApiResponse<OrderCreateData>> {
@@ -2963,7 +2963,7 @@ export class PaymentsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createPayment(cmd: CreatePaymentCommand): Observable<ApiResponse<PaymentCreateData>> {
@@ -3092,7 +3092,7 @@ export class SupportClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createSupportTicket(cmd: CreateTicketCommand): Observable<ApiResponse<SupportCreateTicketData>> {
@@ -3335,7 +3335,7 @@ export class ChatClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     createChat(cmd: CreateChatCommand): Observable<ApiResponse<ChatCreateData>> {
@@ -3574,7 +3574,7 @@ export class NotificationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getNotifications(): Observable<ApiResponse<GetNotificationsResponse>> {
@@ -3740,7 +3740,7 @@ export class RecommendationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getRecommendationsV1(): Observable<ApiResponse<GetRecommendationsResponse>> {
@@ -3858,7 +3858,7 @@ export class MediaClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     uploadMedia(entityId?: string | null | undefined, entityType?: string | null | undefined, file?: FileParameter | null | undefined): Observable<ApiResponse<MediaUploadData>> {
@@ -3934,7 +3934,7 @@ export class CategoriesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductCategoryDto[]>> {
@@ -4245,7 +4245,7 @@ export class BrandsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://localhost:5106";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<BrandDto[]>> {
