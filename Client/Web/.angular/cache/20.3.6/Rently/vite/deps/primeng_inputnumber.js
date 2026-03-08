@@ -1,45 +1,51 @@
 import {
   BaseInput
-} from "./chunk-WTGPB5AA.js";
-import "./chunk-YC7H57R5.js";
+} from "./chunk-OA2YVJQI.js";
+import "./chunk-K4BGR2JG.js";
 import {
   AutoFocus
-} from "./chunk-62T5UK2X.js";
+} from "./chunk-YHTNQHMO.js";
+import "./chunk-CDFDPPG6.js";
 import {
   AngleDownIcon,
   AngleUpIcon,
   TimesIcon
-} from "./chunk-FW476L5I.js";
-import "./chunk-CDY4UK5B.js";
+} from "./chunk-76JVMUBN.js";
 import {
   InputText
-} from "./chunk-NULTMVXZ.js";
-import "./chunk-M6VO3KK4.js";
-import "./chunk-JGKWWFMK.js";
-import "./chunk-FNF3KQMZ.js";
+} from "./chunk-UZ33AGC5.js";
+import "./chunk-HQJW4XQM.js";
+import "./chunk-SSB7X4XB.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-HN6JED5D.js";
 import {
   BaseStyle
-} from "./chunk-BOLK46US.js";
+} from "./chunk-24Y6XUNK.js";
+import "./chunk-7WO5LGBC.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-QSEG5POM.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-YMZ6MNKT.js";
-import "./chunk-KK6CJ5OZ.js";
+} from "./chunk-66F6BUWO.js";
 import {
   Mt
-} from "./chunk-Y7QZIZHU.js";
+} from "./chunk-AXG4AWWL.js";
 import {
   NG_VALUE_ACCESSOR,
   NgControl
-} from "./chunk-RR7KSV65.js";
+} from "./chunk-OSXOW2ZV.js";
 import {
   CommonModule,
   NgClass,
   NgIf,
   NgStyle,
   NgTemplateOutlet
-} from "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -55,8 +61,8 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
-  ɵɵNgOnChangesFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
   ɵɵattribute,
@@ -79,8 +85,9 @@ import {
   ɵɵqueryRefresh,
   ɵɵtemplate,
   ɵɵviewQuery
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
+  InjectionToken,
   Injector,
   forwardRef,
   inject,
@@ -89,7 +96,7 @@ import {
   ɵɵnamespaceSVG,
   ɵɵresetView,
   ɵɵrestoreView
-} from "./chunk-OZB3DDOT.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-HWYXSU2G.js";
 import "./chunk-JRFR6BLO.js";
 import "./chunk-MARUHEWW.js";
@@ -121,7 +128,7 @@ function InputNumber_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵattribute("data-pc-section", "clearIcon");
+    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
   }
 }
 function InputNumber_ng_container_2_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -146,7 +153,7 @@ function InputNumber_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵattribute("data-pc-section", "clearIcon");
+    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate);
   }
@@ -167,21 +174,21 @@ function InputNumber_ng_container_2_Template(rf, ctx) {
 }
 function InputNumber_span_3_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 12);
+    ɵɵelement(0, "span", 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ctx_r2.incrementButtonIcon);
-    ɵɵattribute("data-pc-section", "incrementbuttonicon");
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButtonIcon"))("ngClass", ctx_r2.incrementButtonIcon);
   }
 }
 function InputNumber_span_3_ng_container_3__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 14);
+    ɵɵelement(0, "svg", 15);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "incrementbuttonicon");
+    const ctx_r2 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButtonIcon"));
   }
 }
 function InputNumber_span_3_ng_container_3_2_ng_template_0_Template(rf, ctx) {
@@ -194,7 +201,7 @@ function InputNumber_span_3_ng_container_3_2_Template(rf, ctx) {
 function InputNumber_span_3_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, InputNumber_span_3_ng_container_3__svg_svg_1_Template, 1, 1, "svg", 13)(2, InputNumber_span_3_ng_container_3_2_Template, 1, 0, null, 9);
+    ɵɵtemplate(1, InputNumber_span_3_ng_container_3__svg_svg_1_Template, 1, 1, "svg", 14)(2, InputNumber_span_3_ng_container_3_2_Template, 1, 0, null, 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -207,21 +214,21 @@ function InputNumber_span_3_ng_container_3_Template(rf, ctx) {
 }
 function InputNumber_span_3_span_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 12);
+    ɵɵelement(0, "span", 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ctx_r2.decrementButtonIcon);
-    ɵɵattribute("data-pc-section", "decrementbuttonicon");
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButtonIcon"))("ngClass", ctx_r2.decrementButtonIcon);
   }
 }
 function InputNumber_span_3_ng_container_6__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 16);
+    ɵɵelement(0, "svg", 17);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "decrementbuttonicon");
+    const ctx_r2 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButtonIcon"));
   }
 }
 function InputNumber_span_3_ng_container_6_2_ng_template_0_Template(rf, ctx) {
@@ -234,7 +241,7 @@ function InputNumber_span_3_ng_container_6_2_Template(rf, ctx) {
 function InputNumber_span_3_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, InputNumber_span_3_ng_container_6__svg_svg_1_Template, 1, 1, "svg", 15)(2, InputNumber_span_3_ng_container_6_2_Template, 1, 0, null, 9);
+    ɵɵtemplate(1, InputNumber_span_3_ng_container_6__svg_svg_1_Template, 1, 1, "svg", 16)(2, InputNumber_span_3_ng_container_6_2_Template, 1, 0, null, 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -248,7 +255,7 @@ function InputNumber_span_3_ng_container_6_Template(rf, ctx) {
 function InputNumber_span_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span")(1, "button", 10);
+    ɵɵelementStart(0, "span", 10)(1, "button", 11);
     ɵɵlistener("mousedown", function InputNumber_span_3_Template_button_mousedown_1_listener($event) {
       ɵɵrestoreView(_r5);
       const ctx_r2 = ɵɵnextContext();
@@ -270,9 +277,9 @@ function InputNumber_span_3_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onUpButtonKeyUp());
     });
-    ɵɵtemplate(2, InputNumber_span_3_span_2_Template, 1, 2, "span", 11)(3, InputNumber_span_3_ng_container_3_Template, 3, 2, "ng-container", 2);
+    ɵɵtemplate(2, InputNumber_span_3_span_2_Template, 1, 2, "span", 12)(3, InputNumber_span_3_ng_container_3_Template, 3, 2, "ng-container", 2);
     ɵɵelementEnd();
-    ɵɵelementStart(4, "button", 10);
+    ɵɵelementStart(4, "button", 11);
     ɵɵlistener("mousedown", function InputNumber_span_3_Template_button_mousedown_4_listener($event) {
       ɵɵrestoreView(_r5);
       const ctx_r2 = ɵɵnextContext();
@@ -294,23 +301,25 @@ function InputNumber_span_3_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onDownButtonKeyUp());
     });
-    ɵɵtemplate(5, InputNumber_span_3_span_5_Template, 1, 2, "span", 11)(6, InputNumber_span_3_ng_container_6_Template, 3, 2, "ng-container", 2);
+    ɵɵtemplate(5, InputNumber_span_3_span_5_Template, 1, 2, "span", 12)(6, InputNumber_span_3_ng_container_6_Template, 3, 2, "ng-container", 2);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("buttonGroup"));
-    ɵɵattribute("data-pc-section", "buttonGroup");
+    ɵɵproperty("pBind", ctx_r2.ptm("buttonGroup"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("incrementButton"), ctx_r2.incrementButtonClass));
-    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true)("data-pc-section", "incrementbutton");
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButton"));
+    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.incrementButtonIcon);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.incrementButtonIcon);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("decrementButton"), ctx_r2.decrementButtonClass));
-    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true)("data-pc-section", "decrementbutton");
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButton"));
+    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.decrementButtonIcon);
     ɵɵadvance();
@@ -319,21 +328,21 @@ function InputNumber_span_3_Template(rf, ctx) {
 }
 function InputNumber_button_4_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 12);
+    ɵɵelement(0, "span", 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ctx_r2.incrementButtonIcon);
-    ɵɵattribute("data-pc-section", "incrementbuttonicon");
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButtonIcon"))("ngClass", ctx_r2.incrementButtonIcon);
   }
 }
 function InputNumber_button_4_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 14);
+    ɵɵelement(0, "svg", 15);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "incrementbuttonicon");
+    const ctx_r2 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButtonIcon"));
   }
 }
 function InputNumber_button_4_ng_container_2_2_ng_template_0_Template(rf, ctx) {
@@ -346,7 +355,7 @@ function InputNumber_button_4_ng_container_2_2_Template(rf, ctx) {
 function InputNumber_button_4_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, InputNumber_button_4_ng_container_2__svg_svg_1_Template, 1, 1, "svg", 13)(2, InputNumber_button_4_ng_container_2_2_Template, 1, 0, null, 9);
+    ɵɵtemplate(1, InputNumber_button_4_ng_container_2__svg_svg_1_Template, 1, 1, "svg", 14)(2, InputNumber_button_4_ng_container_2_2_Template, 1, 0, null, 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -360,7 +369,7 @@ function InputNumber_button_4_ng_container_2_Template(rf, ctx) {
 function InputNumber_button_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "button", 10);
+    ɵɵelementStart(0, "button", 11);
     ɵɵlistener("mousedown", function InputNumber_button_4_Template_button_mousedown_0_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r2 = ɵɵnextContext();
@@ -382,13 +391,14 @@ function InputNumber_button_4_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onUpButtonKeyUp());
     });
-    ɵɵtemplate(1, InputNumber_button_4_span_1_Template, 1, 2, "span", 11)(2, InputNumber_button_4_ng_container_2_Template, 3, 2, "ng-container", 2);
+    ɵɵtemplate(1, InputNumber_button_4_span_1_Template, 1, 2, "span", 12)(2, InputNumber_button_4_ng_container_2_Template, 3, 2, "ng-container", 2);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("incrementButton"), ctx_r2.incrementButtonClass));
-    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true)("data-pc-section", "incrementbutton");
+    ɵɵproperty("pBind", ctx_r2.ptm("incrementButton"));
+    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.incrementButtonIcon);
     ɵɵadvance();
@@ -397,21 +407,21 @@ function InputNumber_button_4_Template(rf, ctx) {
 }
 function InputNumber_button_5_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 12);
+    ɵɵelement(0, "span", 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ctx_r2.decrementButtonIcon);
-    ɵɵattribute("data-pc-section", "decrementbuttonicon");
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButtonIcon"))("ngClass", ctx_r2.decrementButtonIcon);
   }
 }
 function InputNumber_button_5_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 16);
+    ɵɵelement(0, "svg", 17);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "decrementbuttonicon");
+    const ctx_r2 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButtonIcon"));
   }
 }
 function InputNumber_button_5_ng_container_2_2_ng_template_0_Template(rf, ctx) {
@@ -424,7 +434,7 @@ function InputNumber_button_5_ng_container_2_2_Template(rf, ctx) {
 function InputNumber_button_5_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, InputNumber_button_5_ng_container_2__svg_svg_1_Template, 1, 1, "svg", 15)(2, InputNumber_button_5_ng_container_2_2_Template, 1, 0, null, 9);
+    ɵɵtemplate(1, InputNumber_button_5_ng_container_2__svg_svg_1_Template, 1, 1, "svg", 16)(2, InputNumber_button_5_ng_container_2_2_Template, 1, 0, null, 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -438,7 +448,7 @@ function InputNumber_button_5_ng_container_2_Template(rf, ctx) {
 function InputNumber_button_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "button", 10);
+    ɵɵelementStart(0, "button", 11);
     ɵɵlistener("mousedown", function InputNumber_button_5_Template_button_mousedown_0_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r2 = ɵɵnextContext();
@@ -460,20 +470,21 @@ function InputNumber_button_5_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onDownButtonKeyUp());
     });
-    ɵɵtemplate(1, InputNumber_button_5_span_1_Template, 1, 2, "span", 11)(2, InputNumber_button_5_ng_container_2_Template, 3, 2, "ng-container", 2);
+    ɵɵtemplate(1, InputNumber_button_5_span_1_Template, 1, 2, "span", 12)(2, InputNumber_button_5_ng_container_2_Template, 3, 2, "ng-container", 2);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("decrementButton"), ctx_r2.decrementButtonClass));
-    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true)("data-pc-section", "decrementbutton");
+    ɵɵproperty("pBind", ctx_r2.ptm("decrementButton"));
+    ɵɵattribute("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.decrementButtonIcon);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.decrementButtonIcon);
   }
 }
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -526,7 +537,7 @@ var classes = {
 };
 var InputNumberStyle = class _InputNumberStyle extends BaseStyle {
   name = "inputnumber";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInputNumberStyle_BaseFactory;
@@ -553,6 +564,7 @@ var InputNumberClasses;
   InputNumberClasses2["decrementButton"] = "p-inputnumber-decrement-button";
   InputNumberClasses2["clearIcon"] = "p-autocomplete-clear-icon";
 })(InputNumberClasses || (InputNumberClasses = {}));
+var INPUTNUMBER_INSTANCE = new InjectionToken("INPUTNUMBER_INSTANCE");
 var INPUTNUMBER_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => InputNumber),
@@ -560,6 +572,17 @@ var INPUTNUMBER_VALUE_ACCESSOR = {
 };
 var InputNumber = class _InputNumber extends BaseInput {
   injector;
+  $pcInputNumber = inject(INPUTNUMBER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  _componentStyle = inject(InputNumberStyle);
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Displays spinner buttons.
    * @group Props
@@ -794,28 +817,25 @@ var InputNumber = class _InputNumber extends BaseInput {
   _prefix;
   _suffix;
   _index;
-  _componentStyle = inject(InputNumberStyle);
   ngControl = null;
   constructor(injector) {
     super();
     this.injector = injector;
   }
-  ngOnChanges(simpleChange) {
-    super.ngOnChanges(simpleChange);
+  onChanges(simpleChange) {
     const props = ["locale", "localeMatcher", "mode", "currency", "currencyDisplay", "useGrouping", "minFractionDigits", "maxFractionDigits", "prefix", "suffix"];
     if (props.some((p) => !!simpleChange[p])) {
       this.updateConstructParser();
     }
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.ngControl = this.injector.get(NgControl, null, {
       optional: true
     });
     this.constructParser();
     this.initialized = true;
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "clearicon":
@@ -1677,10 +1697,9 @@ var InputNumber = class _InputNumber extends BaseInput {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.input = _t.first);
       }
     },
-    hostVars: 4,
+    hostVars: 2,
     hostBindings: function InputNumber_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "inputnumber")("data-pc-section", "root");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -1726,10 +1745,16 @@ var InputNumber = class _InputNumber extends BaseInput {
       onKeyDown: "onKeyDown",
       onClear: "onClear"
     },
-    features: [ɵɵProvidersFeature([INPUTNUMBER_VALUE_ACCESSOR, InputNumberStyle]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature],
+    features: [ɵɵProvidersFeature([INPUTNUMBER_VALUE_ACCESSOR, InputNumberStyle, {
+      provide: INPUTNUMBER_INSTANCE,
+      useExisting: _InputNumber
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _InputNumber
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 6,
     vars: 36,
-    consts: [["input", ""], ["pInputText", "", "role", "spinbutton", "inputmode", "decimal", 3, "input", "keydown", "keypress", "paste", "click", "focus", "blur", "value", "ngStyle", "variant", "invalid", "pSize", "pAutoFocus", "fluid"], [4, "ngIf"], [3, "class", 4, "ngIf"], ["type", "button", "tabindex", "-1", 3, "class", "mousedown", "mouseup", "mouseleave", "keydown", "keyup", 4, "ngIf"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet"], ["type", "button", "tabindex", "-1", 3, "mousedown", "mouseup", "mouseleave", "keydown", "keyup"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "angle-up", 4, "ngIf"], ["data-p-icon", "angle-up"], ["data-p-icon", "angle-down", 4, "ngIf"], ["data-p-icon", "angle-down"]],
+    consts: [["input", ""], ["pInputText", "", "role", "spinbutton", "inputmode", "decimal", 3, "input", "keydown", "keypress", "paste", "click", "focus", "blur", "value", "ngStyle", "variant", "invalid", "pSize", "pt", "pAutoFocus", "fluid"], [4, "ngIf"], [3, "pBind", "class", 4, "ngIf"], ["type", "button", "tabindex", "-1", 3, "pBind", "class", "mousedown", "mouseup", "mouseleave", "keydown", "keyup", 4, "ngIf"], ["data-p-icon", "times", 3, "pBind", "class", "click", 4, "ngIf"], [3, "pBind", "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet"], [3, "pBind"], ["type", "button", "tabindex", "-1", 3, "mousedown", "mouseup", "mouseleave", "keydown", "keyup", "pBind"], [3, "pBind", "ngClass", 4, "ngIf"], [3, "pBind", "ngClass"], ["data-p-icon", "angle-up", 3, "pBind", 4, "ngIf"], ["data-p-icon", "angle-up", 3, "pBind"], ["data-p-icon", "angle-down", 3, "pBind", 4, "ngIf"], ["data-p-icon", "angle-down", 3, "pBind"]],
     template: function InputNumber_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -1761,8 +1786,8 @@ var InputNumber = class _InputNumber extends BaseInput {
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cn(ctx.cx("pcInputText"), ctx.inputStyleClass));
-        ɵɵproperty("value", ctx.formattedValue())("ngStyle", ctx.inputStyle)("variant", ctx.$variant())("invalid", ctx.invalid())("pSize", ctx.size())("pAutoFocus", ctx.autofocus)("fluid", ctx.hasFluid);
-        ɵɵattribute("id", ctx.inputId)("aria-valuemin", ctx.min())("aria-valuemax", ctx.max())("aria-valuenow", ctx.value)("placeholder", ctx.placeholder)("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy)("aria-describedby", ctx.ariaDescribedBy)("title", ctx.title)("size", ctx.inputSize())("name", ctx.name())("autocomplete", ctx.autocomplete)("maxlength", ctx.maxlength())("minlength", ctx.minlength())("tabindex", ctx.tabindex)("aria-required", ctx.ariaRequired)("min", ctx.min())("max", ctx.max())("step", ctx.step() ?? 1)("required", ctx.required() ? "" : void 0)("readonly", ctx.readonly ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0)("data-pc-section", "input");
+        ɵɵproperty("value", ctx.formattedValue())("ngStyle", ctx.inputStyle)("variant", ctx.$variant())("invalid", ctx.invalid())("pSize", ctx.size())("pt", ctx.ptm("pcInputText"))("pAutoFocus", ctx.autofocus)("fluid", ctx.hasFluid);
+        ɵɵattribute("id", ctx.inputId)("aria-valuemin", ctx.min())("aria-valuemax", ctx.max())("aria-valuenow", ctx.value)("placeholder", ctx.placeholder)("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy)("aria-describedby", ctx.ariaDescribedBy)("title", ctx.title)("size", ctx.inputSize())("name", ctx.name())("autocomplete", ctx.autocomplete)("maxlength", ctx.maxlength())("minlength", ctx.minlength())("tabindex", ctx.tabindex)("aria-required", ctx.ariaRequired)("min", ctx.min())("max", ctx.max())("step", ctx.step() ?? 1)("required", ctx.required() ? "" : void 0)("readonly", ctx.readonly ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0);
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.buttonLayout != "vertical" && ctx.showClear && ctx.value);
         ɵɵadvance();
@@ -1773,7 +1798,7 @@ var InputNumber = class _InputNumber extends BaseInput {
         ɵɵproperty("ngIf", ctx.showButtons && ctx.buttonLayout !== "stacked");
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, AngleUpIcon, AngleDownIcon, SharedModule],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, AngleUpIcon, AngleDownIcon, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1784,7 +1809,7 @@ var InputNumber = class _InputNumber extends BaseInput {
     args: [{
       selector: "p-inputNumber, p-inputnumber, p-input-number",
       standalone: true,
-      imports: [CommonModule, InputText, AutoFocus, TimesIcon, AngleUpIcon, AngleDownIcon, SharedModule],
+      imports: [CommonModule, InputText, AutoFocus, TimesIcon, AngleUpIcon, AngleDownIcon, SharedModule, BindModule],
       template: `
         <input
             pInputText
@@ -1826,19 +1851,20 @@ var InputNumber = class _InputNumber extends BaseInput {
             (click)="onInputClick()"
             (focus)="onInputFocus($event)"
             (blur)="onInputBlur($event)"
-            [attr.data-pc-section]="'input'"
+            [pt]="ptm('pcInputText')"
             [pAutoFocus]="autofocus"
             [fluid]="hasFluid"
         />
         <ng-container *ngIf="buttonLayout != 'vertical' && showClear && value">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
-            <span *ngIf="clearIconTemplate || _clearIconTemplate" (click)="clear()" [class]="cx('clearIcon')" [attr.data-pc-section]="'clearIcon'">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [pBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear()" />
+            <span *ngIf="clearIconTemplate || _clearIconTemplate" [pBind]="ptm('clearIcon')" (click)="clear()" [class]="cx('clearIcon')">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
-        <span [class]="cx('buttonGroup')" *ngIf="showButtons && buttonLayout === 'stacked'" [attr.data-pc-section]="'buttonGroup'">
+        <span [pBind]="ptm('buttonGroup')" [class]="cx('buttonGroup')" *ngIf="showButtons && buttonLayout === 'stacked'">
             <button
                 type="button"
+                [pBind]="ptm('incrementButton')"
                 [class]="cn(cx('incrementButton'), incrementButtonClass)"
                 [attr.disabled]="$disabled() ? '' : undefined"
                 tabindex="-1"
@@ -1848,17 +1874,17 @@ var InputNumber = class _InputNumber extends BaseInput {
                 (keydown)="onUpButtonKeyDown($event)"
                 (keyup)="onUpButtonKeyUp()"
                 [attr.aria-hidden]="true"
-                [attr.data-pc-section]="'incrementbutton'"
             >
-                <span *ngIf="incrementButtonIcon" [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
+                <span *ngIf="incrementButtonIcon" [pBind]="ptm('incrementButtonIcon')" [ngClass]="incrementButtonIcon"></span>
                 <ng-container *ngIf="!incrementButtonIcon">
-                    <svg data-p-icon="angle-up" *ngIf="!incrementButtonIconTemplate && !_incrementButtonIconTemplate" [attr.data-pc-section]="'incrementbuttonicon'" />
+                    <svg data-p-icon="angle-up" [pBind]="ptm('incrementButtonIcon')" *ngIf="!incrementButtonIconTemplate && !_incrementButtonIconTemplate" />
                     <ng-template *ngTemplateOutlet="incrementButtonIconTemplate || _incrementButtonIconTemplate"></ng-template>
                 </ng-container>
             </button>
 
             <button
                 type="button"
+                [pBind]="ptm('decrementButton')"
                 [class]="cn(cx('decrementButton'), decrementButtonClass)"
                 [attr.disabled]="$disabled() ? '' : undefined"
                 tabindex="-1"
@@ -1868,11 +1894,10 @@ var InputNumber = class _InputNumber extends BaseInput {
                 (mouseleave)="onDownButtonMouseLeave()"
                 (keydown)="onDownButtonKeyDown($event)"
                 (keyup)="onDownButtonKeyUp()"
-                [attr.data-pc-section]="'decrementbutton'"
             >
-                <span *ngIf="decrementButtonIcon" [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
+                <span *ngIf="decrementButtonIcon" [pBind]="ptm('decrementButtonIcon')" [ngClass]="decrementButtonIcon"></span>
                 <ng-container *ngIf="!decrementButtonIcon">
-                    <svg data-p-icon="angle-down" *ngIf="!decrementButtonIconTemplate && !_decrementButtonIconTemplate" [attr.data-pc-section]="'decrementbuttonicon'" />
+                    <svg data-p-icon="angle-down" [pBind]="ptm('decrementButtonIcon')" *ngIf="!decrementButtonIconTemplate && !_decrementButtonIconTemplate" />
                     <ng-template *ngTemplateOutlet="decrementButtonIconTemplate || _decrementButtonIconTemplate"></ng-template>
                 </ng-container>
             </button>
@@ -1880,6 +1905,7 @@ var InputNumber = class _InputNumber extends BaseInput {
         <button
             *ngIf="showButtons && buttonLayout !== 'stacked'"
             type="button"
+            [pBind]="ptm('incrementButton')"
             [class]="cn(cx('incrementButton'), incrementButtonClass)"
             [attr.disabled]="$disabled() ? '' : undefined"
             tabindex="-1"
@@ -1889,17 +1915,17 @@ var InputNumber = class _InputNumber extends BaseInput {
             (mouseleave)="onUpButtonMouseLeave()"
             (keydown)="onUpButtonKeyDown($event)"
             (keyup)="onUpButtonKeyUp()"
-            [attr.data-pc-section]="'incrementbutton'"
         >
-            <span *ngIf="incrementButtonIcon" [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
+            <span *ngIf="incrementButtonIcon" [pBind]="ptm('incrementButtonIcon')" [ngClass]="incrementButtonIcon"></span>
             <ng-container *ngIf="!incrementButtonIcon">
-                <svg data-p-icon="angle-up" *ngIf="!incrementButtonIconTemplate && !_incrementButtonIconTemplate" [attr.data-pc-section]="'incrementbuttonicon'" />
+                <svg data-p-icon="angle-up" [pBind]="ptm('incrementButtonIcon')" *ngIf="!incrementButtonIconTemplate && !_incrementButtonIconTemplate" />
                 <ng-template *ngTemplateOutlet="incrementButtonIconTemplate || _incrementButtonIconTemplate"></ng-template>
             </ng-container>
         </button>
         <button
             *ngIf="showButtons && buttonLayout !== 'stacked'"
             type="button"
+            [pBind]="ptm('decrementButton')"
             [class]="cn(cx('decrementButton'), decrementButtonClass)"
             [attr.disabled]="$disabled() ? '' : undefined"
             tabindex="-1"
@@ -1909,23 +1935,27 @@ var InputNumber = class _InputNumber extends BaseInput {
             (mouseleave)="onDownButtonMouseLeave()"
             (keydown)="onDownButtonKeyDown($event)"
             (keyup)="onDownButtonKeyUp()"
-            [attr.data-pc-section]="'decrementbutton'"
         >
-            <span *ngIf="decrementButtonIcon" [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
+            <span *ngIf="decrementButtonIcon" [pBind]="ptm('decrementButtonIcon')" [ngClass]="decrementButtonIcon"></span>
             <ng-container *ngIf="!decrementButtonIcon">
-                <svg data-p-icon="angle-down" *ngIf="!decrementButtonIconTemplate && !_decrementButtonIconTemplate" [attr.data-pc-section]="'decrementbuttonicon'" />
+                <svg data-p-icon="angle-down" [pBind]="ptm('decrementButtonIcon')" *ngIf="!decrementButtonIconTemplate && !_decrementButtonIconTemplate" />
                 <ng-template *ngTemplateOutlet="decrementButtonIconTemplate || _decrementButtonIconTemplate"></ng-template>
             </ng-container>
         </button>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
-      providers: [INPUTNUMBER_VALUE_ACCESSOR, InputNumberStyle],
+      providers: [INPUTNUMBER_VALUE_ACCESSOR, InputNumberStyle, {
+        provide: INPUTNUMBER_INSTANCE,
+        useExisting: InputNumber
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: InputNumber
+      }],
       encapsulation: ViewEncapsulation.None,
       host: {
-        "[attr.data-pc-name]": "'inputnumber'",
-        "[attr.data-pc-section]": "'root'",
         "[class]": "cn(cx('root'), styleClass)"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: Injector

@@ -1,21 +1,26 @@
 import {
   BaseModelHolder
-} from "./chunk-M6VO3KK4.js";
+} from "./chunk-HQJW4XQM.js";
 import {
   Fluid
-} from "./chunk-JGKWWFMK.js";
-import "./chunk-FNF3KQMZ.js";
+} from "./chunk-SSB7X4XB.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-HN6JED5D.js";
 import {
   BaseStyle
-} from "./chunk-BOLK46US.js";
-import "./chunk-YMZ6MNKT.js";
-import "./chunk-KK6CJ5OZ.js";
-import "./chunk-Y7QZIZHU.js";
+} from "./chunk-24Y6XUNK.js";
+import "./chunk-7WO5LGBC.js";
+import {
+  Bind
+} from "./chunk-QSEG5POM.js";
+import "./chunk-66F6BUWO.js";
+import "./chunk-AXG4AWWL.js";
 import {
   NgControl
-} from "./chunk-RR7KSV65.js";
-import "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-OSXOW2ZV.js";
+import "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   Directive,
   EventEmitter,
@@ -27,6 +32,7 @@ import {
   booleanAttribute,
   input,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵclassMap,
@@ -34,13 +40,14 @@ import {
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory,
   ɵɵlistener
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
+  InjectionToken,
   computed,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
-} from "./chunk-OZB3DDOT.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-HWYXSU2G.js";
 import "./chunk-JRFR6BLO.js";
 import "./chunk-MARUHEWW.js";
@@ -50,7 +57,7 @@ import "./chunk-OCBFZOLU.js";
 var style = "\n    .p-textarea {\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: dt('textarea.color');\n        background: dt('textarea.background');\n        padding-block: dt('textarea.padding.y');\n        padding-inline: dt('textarea.padding.x');\n        border: 1px solid dt('textarea.border.color');\n        transition:\n            background dt('textarea.transition.duration'),\n            color dt('textarea.transition.duration'),\n            border-color dt('textarea.transition.duration'),\n            outline-color dt('textarea.transition.duration'),\n            box-shadow dt('textarea.transition.duration');\n        appearance: none;\n        border-radius: dt('textarea.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('textarea.shadow');\n    }\n\n    .p-textarea:enabled:hover {\n        border-color: dt('textarea.hover.border.color');\n    }\n\n    .p-textarea:enabled:focus {\n        border-color: dt('textarea.focus.border.color');\n        box-shadow: dt('textarea.focus.ring.shadow');\n        outline: dt('textarea.focus.ring.width') dt('textarea.focus.ring.style') dt('textarea.focus.ring.color');\n        outline-offset: dt('textarea.focus.ring.offset');\n    }\n\n    .p-textarea.p-invalid {\n        border-color: dt('textarea.invalid.border.color');\n    }\n\n    .p-textarea.p-variant-filled {\n        background: dt('textarea.filled.background');\n    }\n\n    .p-textarea.p-variant-filled:enabled:hover {\n        background: dt('textarea.filled.hover.background');\n    }\n\n    .p-textarea.p-variant-filled:enabled:focus {\n        background: dt('textarea.filled.focus.background');\n    }\n\n    .p-textarea:disabled {\n        opacity: 1;\n        background: dt('textarea.disabled.background');\n        color: dt('textarea.disabled.color');\n    }\n\n    .p-textarea::placeholder {\n        color: dt('textarea.placeholder.color');\n    }\n\n    .p-textarea.p-invalid::placeholder {\n        color: dt('textarea.invalid.placeholder.color');\n    }\n\n    .p-textarea-fluid {\n        width: 100%;\n    }\n\n    .p-textarea-resizable {\n        overflow: hidden;\n        resize: none;\n    }\n\n    .p-textarea-sm {\n        font-size: dt('textarea.sm.font.size');\n        padding-block: dt('textarea.sm.padding.y');\n        padding-inline: dt('textarea.sm.padding.x');\n    }\n\n    .p-textarea-lg {\n        font-size: dt('textarea.lg.font.size');\n        padding-block: dt('textarea.lg.padding.y');\n        padding-inline: dt('textarea.lg.padding.x');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-textarea.mjs
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -79,7 +86,7 @@ var classes = {
 };
 var TextareaStyle = class _TextareaStyle extends BaseStyle {
   name = "textarea";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTextareaStyle_BaseFactory;
@@ -101,7 +108,15 @@ var TextareaClasses;
 (function(TextareaClasses2) {
   TextareaClasses2["root"] = "p-textarea";
 })(TextareaClasses || (TextareaClasses = {}));
+var TEXTAREA_INSTANCE = new InjectionToken("TEXTAREA_INSTANCE");
 var Textarea = class _Textarea extends BaseModelHolder {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcTextarea = inject(TEXTAREA_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   /**
    * When present, textarea size changes as being typed.
    * @group Props
@@ -165,20 +180,19 @@ var Textarea = class _Textarea extends BaseModelHolder {
   get hasFluid() {
     return this.fluid() ?? !!this.pcFluid;
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.ngControl) {
       this.ngControlSubscription = this.ngControl.valueChanges.subscribe(() => {
         this.updateState();
       });
     }
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (this.autoResize) this.resize();
     this.cd.detectChanges();
   }
-  ngAfterViewChecked() {
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
     if (this.autoResize) {
       this.resize();
     }
@@ -204,11 +218,10 @@ var Textarea = class _Textarea extends BaseModelHolder {
       this.resize();
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.ngControlSubscription) {
       this.ngControlSubscription.unsubscribe();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTextarea_BaseFactory;
@@ -240,7 +253,13 @@ var Textarea = class _Textarea extends BaseModelHolder {
     outputs: {
       onResize: "onResize"
     },
-    features: [ɵɵProvidersFeature([TextareaStyle]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([TextareaStyle, {
+      provide: TEXTAREA_INSTANCE,
+      useExisting: _Textarea
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Textarea
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature]
   });
 };
 (() => {
@@ -252,7 +271,14 @@ var Textarea = class _Textarea extends BaseModelHolder {
       host: {
         "[class]": "cx('root')"
       },
-      providers: [TextareaStyle]
+      providers: [TextareaStyle, {
+        provide: TEXTAREA_INSTANCE,
+        useExisting: Textarea
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Textarea
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     autoResize: [{
@@ -263,6 +289,30 @@ var Textarea = class _Textarea extends BaseModelHolder {
     }],
     pSize: [{
       type: Input
+    }],
+    variant: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "variant",
+        required: false
+      }]
+    }],
+    fluid: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "fluid",
+        required: false
+      }]
+    }],
+    invalid: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "invalid",
+        required: false
+      }]
     }],
     onResize: [{
       type: Output

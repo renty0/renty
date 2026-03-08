@@ -1,18 +1,23 @@
 import {
-  BaseComponent
-} from "./chunk-FNF3KQMZ.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-HN6JED5D.js";
 import {
   BaseStyle
-} from "./chunk-BOLK46US.js";
+} from "./chunk-24Y6XUNK.js";
+import "./chunk-7WO5LGBC.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-QSEG5POM.js";
 import {
   SharedModule
-} from "./chunk-YMZ6MNKT.js";
-import "./chunk-KK6CJ5OZ.js";
-import "./chunk-Y7QZIZHU.js";
+} from "./chunk-66F6BUWO.js";
+import "./chunk-AXG4AWWL.js";
 import {
   CommonModule
-} from "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,6 +26,7 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵclassMap,
@@ -29,12 +35,13 @@ import {
   ɵɵgetInheritedFactory,
   ɵɵprojection,
   ɵɵprojectionDef
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
-} from "./chunk-OZB3DDOT.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-HWYXSU2G.js";
 import "./chunk-JRFR6BLO.js";
 import "./chunk-MARUHEWW.js";
@@ -45,7 +52,7 @@ var style = "\n    .p-floatlabel {\n        display: block;\n        position: r
 
 // node_modules/primeng/fesm2022/primeng-floatlabel.mjs
 var _c0 = ["*"];
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -67,7 +74,7 @@ var classes = {
 };
 var FloatLabelStyle = class _FloatLabelStyle extends BaseStyle {
   name = "floatlabel";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFloatLabelStyle_BaseFactory;
@@ -89,8 +96,19 @@ var FloatLabelClasses;
 (function(FloatLabelClasses2) {
   FloatLabelClasses2["root"] = "p-floatlabel";
 })(FloatLabelClasses || (FloatLabelClasses = {}));
+var FLOATLABEL_INSTANCE = new InjectionToken("FLOATLABEL_INSTANCE");
 var FloatLabel = class _FloatLabel extends BaseComponent {
   _componentStyle = inject(FloatLabelStyle);
+  $pcFloatLabel = inject(FLOATLABEL_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Defines the positioning of the label relative to the input.
    * @group Props
@@ -114,7 +132,13 @@ var FloatLabel = class _FloatLabel extends BaseComponent {
     inputs: {
       variant: "variant"
     },
-    features: [ɵɵProvidersFeature([FloatLabelStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([FloatLabelStyle, {
+      provide: FLOATLABEL_INSTANCE,
+      useExisting: _FloatLabel
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _FloatLabel
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -124,7 +148,7 @@ var FloatLabel = class _FloatLabel extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [CommonModule, SharedModule],
+    dependencies: [CommonModule, SharedModule, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -135,14 +159,21 @@ var FloatLabel = class _FloatLabel extends BaseComponent {
     args: [{
       selector: "p-floatlabel, p-floatLabel, p-float-label",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: ` <ng-content></ng-content> `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [FloatLabelStyle],
+      providers: [FloatLabelStyle, {
+        provide: FLOATLABEL_INSTANCE,
+        useExisting: FloatLabel
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: FloatLabel
+      }],
       host: {
         "[class]": "cx('root')"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     variant: [{
