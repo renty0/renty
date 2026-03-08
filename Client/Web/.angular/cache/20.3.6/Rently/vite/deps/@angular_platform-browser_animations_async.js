@@ -1,8 +1,8 @@
 import {
   DomRendererFactory2
-} from "./chunk-DMEMSCWQ.js";
-import "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-T7FCEBPU.js";
+import "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   ANIMATION_MODULE_TYPE,
   Injectable,
@@ -11,7 +11,7 @@ import {
   performanceMarkFeature,
   setClassMetadata,
   ɵɵinvalidFactory
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
   ChangeDetectionScheduler,
   DOCUMENT,
@@ -21,9 +21,9 @@ import {
   inject,
   makeEnvironmentProviders,
   ɵɵdefineInjectable
-} from "./chunk-OZB3DDOT.js";
-import "./chunk-HWYXSU2G.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-JRFR6BLO.js";
+import "./chunk-HWYXSU2G.js";
 import "./chunk-MARUHEWW.js";
 import "./chunk-OCBFZOLU.js";
 
@@ -61,7 +61,7 @@ var AsyncAnimationRendererFactory = class _AsyncAnimationRendererFactory {
    * @internal
    */
   loadImpl() {
-    const loadFn = () => this.moduleImpl ?? import("./browser-WX7H7DVJ.js").then((m) => m);
+    const loadFn = () => this.moduleImpl ?? import("./browser-YU2MAEGO.js").then((m) => m);
     let moduleImplPromise;
     if (this.loadingSchedulerFn) {
       moduleImplPromise = this.loadingSchedulerFn(loadFn);
