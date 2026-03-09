@@ -1,0 +1,11 @@
+{
+    "name": "mobile-api-client",
+    "version": "1.0.0",
+    "description": "API Client generator for Flutter",
+    "scripts": {
+        "generate-client": "node generate-api.js"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.10"
+    }
+}

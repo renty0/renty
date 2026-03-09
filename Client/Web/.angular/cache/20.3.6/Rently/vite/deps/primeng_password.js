@@ -1,69 +1,75 @@
 import {
-  BaseInput
-} from "./chunk-WTGPB5AA.js";
-import {
   zindexutils
 } from "./chunk-TH5YZEHG.js";
 import {
+  BaseInput
+} from "./chunk-HUIYVY5X.js";
+import {
   BaseEditableHolder
-} from "./chunk-YC7H57R5.js";
+} from "./chunk-GTXVQMKW.js";
+import {
+  InputText
+} from "./chunk-QRIPKYDB.js";
+import "./chunk-HMLLSGO5.js";
 import {
   AutoFocus
-} from "./chunk-62T5UK2X.js";
+} from "./chunk-DFE6MCDK.js";
+import {
+  Fluid
+} from "./chunk-PL75H7O4.js";
+import {
+  ConnectedOverlayScrollHandler,
+  DomHandler
+} from "./chunk-CDFDPPG6.js";
 import {
   EyeIcon,
   EyeSlashIcon,
   TimesIcon
-} from "./chunk-FW476L5I.js";
+} from "./chunk-MUIXJJ6L.js";
 import {
-  ConnectedOverlayScrollHandler,
-  DomHandler
-} from "./chunk-CDY4UK5B.js";
-import {
-  InputText
-} from "./chunk-NULTMVXZ.js";
-import "./chunk-M6VO3KK4.js";
-import {
-  Fluid
-} from "./chunk-JGKWWFMK.js";
-import "./chunk-FNF3KQMZ.js";
+  PARENT_INSTANCE
+} from "./chunk-M5UMARS5.js";
 import {
   BaseStyle
-} from "./chunk-BOLK46US.js";
+} from "./chunk-WHEGA6B4.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-YMZ6MNKT.js";
-import "./chunk-KK6CJ5OZ.js";
+} from "./chunk-66F6BUWO.js";
+import "./chunk-7WO5LGBC.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-QSEG5POM.js";
 import {
   D,
   I,
-  O,
+  P,
   R,
   W,
   Yt,
   v
-} from "./chunk-Y7QZIZHU.js";
+} from "./chunk-AXG4AWWL.js";
 import {
   NG_VALUE_ACCESSOR
-} from "./chunk-RR7KSV65.js";
-import "./chunk-R6DTFLFJ.js";
+} from "./chunk-OSXOW2ZV.js";
+import "./chunk-J3AWIUCF.js";
 import {
   animate,
   style,
   transition,
   trigger
-} from "./chunk-RT3RTPYJ.js";
+} from "./chunk-776NE6DP.js";
 import {
   CommonModule,
   NgIf,
   NgStyle,
   NgTemplateOutlet,
   isPlatformBrowser
-} from "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -84,6 +90,7 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -117,8 +124,9 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵviewQuery
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
+  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -128,9 +136,9 @@ import {
   ɵɵnamespaceSVG,
   ɵɵresetView,
   ɵɵrestoreView
-} from "./chunk-OZB3DDOT.js";
-import "./chunk-HWYXSU2G.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-JRFR6BLO.js";
+import "./chunk-HWYXSU2G.js";
 import "./chunk-MARUHEWW.js";
 import "./chunk-OCBFZOLU.js";
 
@@ -174,7 +182,7 @@ function Password_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r3.cx("clearIcon"));
-    ɵɵattribute("data-pc-section", "clearIcon");
+    ɵɵproperty("pBind", ctx_r3.ptm("clearIcon"));
   }
 }
 function Password_ng_container_2_3_ng_template_0_Template(rf, ctx) {
@@ -205,7 +213,7 @@ function Password_ng_container_2_Template(rf, ctx) {
     ɵɵproperty("ngIf", !ctx_r3.clearIconTemplate && !ctx_r3._clearIconTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r3.cx("clearIcon"));
-    ɵɵattribute("data-pc-section", "clearIcon");
+    ɵɵproperty("pBind", ctx_r3.ptm("clearIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r3.clearIconTemplate || ctx_r3._clearIconTemplate);
   }
@@ -225,7 +233,7 @@ function Password_ng_container_3_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r3.cx("maskIcon"));
-    ɵɵattribute("data-pc-section", "hideIcon");
+    ɵɵproperty("pBind", ctx_r3.ptm("maskIcon"));
   }
 }
 function Password_ng_container_3_ng_container_1_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -249,14 +257,15 @@ function Password_ng_container_3_ng_container_1_span_2_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r3.ptm("maskIcon"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r3.hideIconTemplate || ctx_r3._hideIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c7, ctx_r3.cx("maskIcon")));
+    ɵɵproperty("ngTemplateOutlet", ctx_r3.hideIconTemplate || ctx_r3._hideIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(3, _c7, ctx_r3.cx("maskIcon")));
   }
 }
 function Password_ng_container_3_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Password_ng_container_3_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 10)(2, Password_ng_container_3_ng_container_1_span_2_Template, 2, 4, "span", 11);
+    ɵɵtemplate(1, Password_ng_container_3_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 10)(2, Password_ng_container_3_ng_container_1_span_2_Template, 2, 5, "span", 11);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -282,7 +291,7 @@ function Password_ng_container_3_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r3.cx("unmaskIcon"));
-    ɵɵattribute("data-pc-section", "showIcon");
+    ɵɵproperty("pBind", ctx_r3.ptm("unmaskIcon"));
   }
 }
 function Password_ng_container_3_ng_container_2_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -306,14 +315,15 @@ function Password_ng_container_3_ng_container_2_span_2_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r3.ptm("unmaskIcon"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r3.showIconTemplate || ctx_r3._showIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c7, ctx_r3.cx("unmaskIcon")));
+    ɵɵproperty("ngTemplateOutlet", ctx_r3.showIconTemplate || ctx_r3._showIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(3, _c7, ctx_r3.cx("unmaskIcon")));
   }
 }
 function Password_ng_container_3_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Password_ng_container_3_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 14)(2, Password_ng_container_3_ng_container_2_span_2_Template, 2, 4, "span", 11);
+    ɵɵtemplate(1, Password_ng_container_3_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 14)(2, Password_ng_container_3_ng_container_2_span_2_Template, 2, 5, "span", 11);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -362,26 +372,26 @@ function Password_div_4_ng_container_3_Template(rf, ctx) {
 }
 function Password_div_4_ng_template_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div")(1, "div");
-    ɵɵelement(2, "div", 17);
+    ɵɵelementStart(0, "div", 17)(1, "div", 17);
+    ɵɵelement(2, "div", 18);
     ɵɵelementEnd();
-    ɵɵelementStart(3, "div");
+    ɵɵelementStart(3, "div", 17);
     ɵɵtext(4);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r3 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r3.cx("content"));
+    ɵɵproperty("pBind", ctx_r3.ptm("content"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r3.cx("meter"));
-    ɵɵattribute("data-pc-section", "meter");
+    ɵɵproperty("pBind", ctx_r3.ptm("meter"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r3.cx("meterLabel"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(13, _c10, ctx_r3.meter ? ctx_r3.meter.width : ""));
-    ɵɵattribute("data-pc-section", "meterLabel");
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(14, _c10, ctx_r3.meter ? ctx_r3.meter.width : ""))("pBind", ctx_r3.ptm("meterLabel"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r3.cx("meterText"));
-    ɵɵattribute("data-pc-section", "info");
+    ɵɵproperty("pBind", ctx_r3.ptm("meterText"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r3.infoText);
   }
@@ -408,7 +418,7 @@ function Password_div_4_Template(rf, ctx) {
       const ctx_r3 = ɵɵnextContext();
       return ɵɵresetView(ctx_r3.onAnimationEnd($event));
     });
-    ɵɵtemplate(2, Password_div_4_ng_container_2_Template, 1, 0, "ng-container", 8)(3, Password_div_4_ng_container_3_Template, 2, 1, "ng-container", 16)(4, Password_div_4_ng_template_4_Template, 5, 15, "ng-template", null, 2, ɵɵtemplateRefExtractor)(6, Password_div_4_ng_container_6_Template, 1, 0, "ng-container", 8);
+    ɵɵtemplate(2, Password_div_4_ng_container_2_Template, 1, 0, "ng-container", 8)(3, Password_div_4_ng_container_3_Template, 2, 1, "ng-container", 16)(4, Password_div_4_ng_template_4_Template, 5, 16, "ng-template", null, 2, ɵɵtemplateRefExtractor)(6, Password_div_4_ng_container_6_Template, 1, 0, "ng-container", 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -416,8 +426,7 @@ function Password_div_4_Template(rf, ctx) {
     const ctx_r3 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r3.sx("overlay"));
     ɵɵclassMap(ctx_r3.cx("overlay"));
-    ɵɵproperty("@overlayAnimation", ɵɵpureFunction1(13, _c9, ɵɵpureFunction2(10, _c8, ctx_r3.showTransitionOptions, ctx_r3.hideTransitionOptions)));
-    ɵɵattribute("data-pc-section", "panel");
+    ɵɵproperty("@overlayAnimation", ɵɵpureFunction1(13, _c9, ɵɵpureFunction2(10, _c8, ctx_r3.showTransitionOptions, ctx_r3.hideTransitionOptions)))("pBind", ctx_r3.ptm("overlay"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r3.headerTemplate || ctx_r3._headerTemplate);
     ɵɵadvance();
@@ -426,7 +435,7 @@ function Password_div_4_Template(rf, ctx) {
     ɵɵproperty("ngTemplateOutlet", ctx_r3.footerTemplate || ctx_r3._footerTemplate);
   }
 }
-var theme = (
+var style3 = (
   /*css*/
   `
     ${style2}
@@ -489,7 +498,7 @@ var classes = {
 };
 var PasswordStyle = class _PasswordStyle extends BaseStyle {
   name = "password";
-  theme = theme;
+  style = style3;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -520,8 +529,20 @@ var PasswordClasses;
   PasswordClasses2["meterText"] = "p-password-meter-text";
   PasswordClasses2["clearIcon"] = "p-password-clear-icon";
 })(PasswordClasses || (PasswordClasses = {}));
+var PASSWORD_DIRECTIVE_INSTANCE = new InjectionToken("PASSWORD_DIRECTIVE_INSTANCE");
+var PASSWORD_INSTANCE = new InjectionToken("PASSWORD_INSTANCE");
 var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
   zone;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcPasswordDirective = inject(PASSWORD_DIRECTIVE_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Text to prompt password entry. Defaults to PrimeNG I18N API configuration.
    * @group Props
@@ -656,12 +677,12 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
   hideOverlay() {
     if (this.feedback && this.panel) {
       W(this.panel, "p-connected-overlay-hidden");
-      O(this.panel, "p-connected-overlay-visible");
+      P(this.panel, "p-connected-overlay-visible");
       this.unbindScrollListener();
       this.unbindDocumentResizeListener();
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {
-          this.ngOnDestroy();
+          this.onDestroy();
         }, 150);
       });
     }
@@ -776,7 +797,7 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
       this.hideOverlay();
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.panel) {
       if (this.scrollHandler) {
         this.scrollHandler.destroy();
@@ -788,7 +809,6 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
       this.meter = null;
       this.info = null;
     }
-    super.ngOnDestroy();
   }
   static ɵfac = function PasswordDirective_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _PasswordDirective)(ɵɵdirectiveInject(NgZone));
@@ -824,7 +844,13 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
       fluid: [1, "fluid"],
       size: [1, "pSize", "size"]
     },
-    features: [ɵɵProvidersFeature([PasswordStyle]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([PasswordStyle, {
+      provide: PASSWORD_DIRECTIVE_INSTANCE,
+      useExisting: _PasswordDirective
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _PasswordDirective
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature]
   });
 };
 (() => {
@@ -836,7 +862,14 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
       host: {
         "[class]": "cx('rootDirective')"
       },
-      providers: [PasswordStyle]
+      providers: [PasswordStyle, {
+        provide: PASSWORD_DIRECTIVE_INSTANCE,
+        useExisting: PasswordDirective
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: PasswordDirective
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: NgZone
@@ -861,6 +894,30 @@ var PasswordDirective = class _PasswordDirective extends BaseEditableHolder {
     }],
     showPassword: [{
       type: Input
+    }],
+    variant: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "variant",
+        required: false
+      }]
+    }],
+    fluid: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "fluid",
+        required: false
+      }]
+    }],
+    size: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "pSize",
+        required: false
+      }]
     }],
     onInput: [{
       type: HostListener,
@@ -909,6 +966,16 @@ var Password_VALUE_ACCESSOR = {
   multi: true
 };
 var Password = class _Password extends BaseInput {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcPassword = inject(PASSWORD_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Defines a string that labels the input for accessibility.
    * @group Props
@@ -1082,8 +1149,7 @@ var Password = class _Password extends BaseInput {
   translationSubscription;
   _componentStyle = inject(PasswordStyle);
   overlayService = inject(OverlayService);
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.infoText = this.promptText();
     this.mediumCheckRegExp = new RegExp(this.mediumRegex);
     this.strongCheckRegExp = new RegExp(this.strongRegex);
@@ -1091,7 +1157,7 @@ var Password = class _Password extends BaseInput {
       this.updateUI(this.value || "");
     });
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -1123,7 +1189,7 @@ var Password = class _Password extends BaseInput {
       case "visible":
         this.overlay = event.element;
         zindexutils.set("overlay", this.overlay, this.config.zIndex.overlay);
-        this.attrSelector && this.overlay.setAttribute(this.attrSelector, "");
+        this.$attrSelector && this.overlay.setAttribute(this.$attrSelector, "");
         this.appendContainer();
         this.alignOverlay();
         this.bindScrollListener();
@@ -1310,7 +1376,7 @@ var Password = class _Password extends BaseInput {
     setModelValue(this.value);
     this.cd.markForCheck();
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.overlay) {
       zindexutils.clear(this.overlay);
       this.overlay = null;
@@ -1324,7 +1390,6 @@ var Password = class _Password extends BaseInput {
     if (this.translationSubscription) {
       this.translationSubscription.unsubscribe();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPassword_BaseFactory;
@@ -1365,7 +1430,6 @@ var Password = class _Password extends BaseInput {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.input = _t.first);
       }
     },
-    hostAttrs: ["data-pc-name", "password", "data-pc-section", "root"],
     hostVars: 4,
     hostBindings: function Password_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -1404,10 +1468,16 @@ var Password = class _Password extends BaseInput {
       onBlur: "onBlur",
       onClear: "onClear"
     },
-    features: [ɵɵProvidersFeature([Password_VALUE_ACCESSOR, PasswordStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([Password_VALUE_ACCESSOR, PasswordStyle, {
+      provide: PASSWORD_INSTANCE,
+      useExisting: _Password
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Password
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 5,
     vars: 25,
-    consts: [["input", ""], ["overlay", ""], ["content", ""], ["pInputText", "", 3, "input", "focus", "blur", "keyup", "pSize", "ngStyle", "value", "variant", "invalid", "pAutoFocus"], [4, "ngIf"], [3, "class", "style", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "click"], [4, "ngTemplateOutlet"], ["data-p-icon", "times", 3, "click"], ["data-p-icon", "eyeslash", 3, "class", "click", 4, "ngIf"], [3, "click", 4, "ngIf"], ["data-p-icon", "eyeslash", 3, "click"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "eye", 3, "class", "click", 4, "ngIf"], ["data-p-icon", "eye", 3, "click"], [4, "ngIf", "ngIfElse"], [3, "ngStyle"]],
+    consts: [["input", ""], ["overlay", ""], ["content", ""], ["pInputText", "", 3, "input", "focus", "blur", "keyup", "pSize", "ngStyle", "value", "variant", "invalid", "pAutoFocus", "pt"], [4, "ngIf"], [3, "class", "style", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "class", "pBind", "click", 4, "ngIf"], [3, "click", "pBind"], [4, "ngTemplateOutlet"], ["data-p-icon", "times", 3, "click", "pBind"], ["data-p-icon", "eyeslash", 3, "class", "pBind", "click", 4, "ngIf"], [3, "pBind", "click", 4, "ngIf"], ["data-p-icon", "eyeslash", 3, "click", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "eye", 3, "class", "pBind", "click", 4, "ngIf"], ["data-p-icon", "eye", 3, "click", "pBind"], [4, "ngIf", "ngIfElse"], [3, "pBind"], [3, "ngStyle", "pBind"]],
     template: function Password_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -1430,8 +1500,8 @@ var Password = class _Password extends BaseInput {
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cn(ctx.cx("pcInputText"), ctx.inputStyleClass));
-        ɵɵproperty("pSize", ctx.size())("ngStyle", ctx.inputStyle)("value", ctx.value)("variant", ctx.$variant())("invalid", ctx.invalid())("pAutoFocus", ctx.autofocus);
-        ɵɵattribute("label", ctx.label)("aria-label", ctx.ariaLabel)("aria-labelledBy", ctx.ariaLabelledBy)("id", ctx.inputId)("tabindex", ctx.tabindex)("type", ctx.unmasked ? "text" : "password")("placeholder", ctx.placeholder)("autocomplete", ctx.autocomplete)("name", ctx.name())("maxlength", ctx.maxlength() || ctx.maxLength)("minlength", ctx.minlength())("required", ctx.required() ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0)("data-pc-section", "input");
+        ɵɵproperty("pSize", ctx.size())("ngStyle", ctx.inputStyle)("value", ctx.value)("variant", ctx.$variant())("invalid", ctx.invalid())("pAutoFocus", ctx.autofocus)("pt", ctx.ptm("pcInputText"));
+        ɵɵattribute("label", ctx.label)("aria-label", ctx.ariaLabel)("aria-labelledBy", ctx.ariaLabelledBy)("id", ctx.inputId)("tabindex", ctx.tabindex)("type", ctx.unmasked ? "text" : "password")("placeholder", ctx.placeholder)("autocomplete", ctx.autocomplete)("name", ctx.name())("maxlength", ctx.maxlength() || ctx.maxLength)("minlength", ctx.minlength())("required", ctx.required() ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0);
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.showClear && ctx.value != null);
         ɵɵadvance();
@@ -1440,7 +1510,7 @@ var Password = class _Password extends BaseInput {
         ɵɵproperty("ngIf", ctx.overlayVisible);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, EyeSlashIcon, EyeIcon, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, EyeSlashIcon, EyeIcon, SharedModule, BindModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [transition(":enter", [style({
@@ -1459,7 +1529,7 @@ var Password = class _Password extends BaseInput {
     args: [{
       selector: "p-password",
       standalone: true,
-      imports: [CommonModule, InputText, AutoFocus, TimesIcon, EyeSlashIcon, EyeIcon, SharedModule],
+      imports: [CommonModule, InputText, AutoFocus, TimesIcon, EyeSlashIcon, EyeIcon, SharedModule, BindModule],
       template: `
         <input
             #input
@@ -1487,26 +1557,26 @@ var Password = class _Password extends BaseInput {
             (focus)="onInputFocus($event)"
             (blur)="onInputBlur($event)"
             (keyup)="onKeyUp($event)"
-            [attr.data-pc-section]="'input'"
             [pAutoFocus]="autofocus"
+            [pt]="ptm('pcInputText')"
         />
         <ng-container *ngIf="showClear && value != null">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
-            <span (click)="clear()" [class]="cx('clearIcon')" [attr.data-pc-section]="'clearIcon'">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [pBind]="ptm('clearIcon')" />
+            <span (click)="clear()" [class]="cx('clearIcon')" [pBind]="ptm('clearIcon')">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
 
         <ng-container *ngIf="toggleMask">
             <ng-container *ngIf="unmasked">
-                <svg data-p-icon="eyeslash" [class]="cx('maskIcon')" *ngIf="!hideIconTemplate && !_hideIconTemplate" (click)="onMaskToggle()" [attr.data-pc-section]="'hideIcon'" />
-                <span *ngIf="hideIconTemplate || _hideIconTemplate" (click)="onMaskToggle()">
+                <svg data-p-icon="eyeslash" [class]="cx('maskIcon')" [pBind]="ptm('maskIcon')" *ngIf="!hideIconTemplate && !_hideIconTemplate" (click)="onMaskToggle()" />
+                <span *ngIf="hideIconTemplate || _hideIconTemplate" (click)="onMaskToggle()" [pBind]="ptm('maskIcon')">
                     <ng-template *ngTemplateOutlet="hideIconTemplate || _hideIconTemplate; context: { class: cx('maskIcon') }"></ng-template>
                 </span>
             </ng-container>
             <ng-container *ngIf="!unmasked">
-                <svg data-p-icon="eye" *ngIf="!showIconTemplate && !_showIconTemplate" [class]="cx('unmaskIcon')" (click)="onMaskToggle()" [attr.data-pc-section]="'showIcon'" />
-                <span *ngIf="showIconTemplate || _showIconTemplate" (click)="onMaskToggle()">
+                <svg data-p-icon="eye" *ngIf="!showIconTemplate && !_showIconTemplate" [class]="cx('unmaskIcon')" [pBind]="ptm('unmaskIcon')" (click)="onMaskToggle()" />
+                <span *ngIf="showIconTemplate || _showIconTemplate" (click)="onMaskToggle()" [pBind]="ptm('unmaskIcon')">
                     <ng-template *ngTemplateOutlet="showIconTemplate || _showIconTemplate; context: { class: cx('unmaskIcon') }"></ng-template>
                 </span>
             </ng-container>
@@ -1524,18 +1594,18 @@ var Password = class _Password extends BaseInput {
             }"
             (@overlayAnimation.start)="onAnimationStart($event)"
             (@overlayAnimation.done)="onAnimationEnd($event)"
-            [attr.data-pc-section]="'panel'"
+            [pBind]="ptm('overlay')"
         >
             <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
             <ng-container *ngIf="contentTemplate || _contentTemplate; else content">
                 <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
             </ng-container>
             <ng-template #content>
-                <div [class]="cx('content')">
-                    <div [class]="cx('meter')" [attr.data-pc-section]="'meter'">
-                        <div [class]="cx('meterLabel')" [ngStyle]="{ width: meter ? meter.width : '' }" [attr.data-pc-section]="'meterLabel'"></div>
+                <div [class]="cx('content')" [pBind]="ptm('content')">
+                    <div [class]="cx('meter')" [pBind]="ptm('meter')">
+                        <div [class]="cx('meterLabel')" [ngStyle]="{ width: meter ? meter.width : '' }" [pBind]="ptm('meterLabel')"></div>
                     </div>
-                    <div [class]="cx('meterText')" [attr.data-pc-section]="'info'">{{ infoText }}</div>
+                    <div [class]="cx('meterText')" [pBind]="ptm('meterText')">{{ infoText }}</div>
                 </div>
             </ng-template>
             <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
@@ -1547,15 +1617,20 @@ var Password = class _Password extends BaseInput {
       }), animate("{{showTransitionParams}}")]), transition(":leave", [animate("{{hideTransitionParams}}", style({
         opacity: 0
       }))])])],
-      providers: [Password_VALUE_ACCESSOR, PasswordStyle],
+      providers: [Password_VALUE_ACCESSOR, PasswordStyle, {
+        provide: PASSWORD_INSTANCE,
+        useExisting: Password
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Password
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
-        "[style]": "sx('root')",
-        "data-pc-name": "password",
-        "data-pc-section": "root"
-      }
+        "[style]": "sx('root')"
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     ariaLabel: [{
@@ -1645,6 +1720,14 @@ var Password = class _Password extends BaseInput {
         transform: numberAttribute
       }]
     }],
+    appendTo: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "appendTo",
+        required: false
+      }]
+    }],
     onFocus: [{
       type: Output
     }],
@@ -1706,19 +1789,19 @@ var PasswordModule = class _PasswordModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _PasswordModule,
-    imports: [Password, PasswordDirective, SharedModule],
-    exports: [PasswordDirective, Password, SharedModule]
+    imports: [Password, PasswordDirective, SharedModule, BindModule],
+    exports: [PasswordDirective, Password, SharedModule, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Password, SharedModule, SharedModule]
+    imports: [Password, SharedModule, BindModule, SharedModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PasswordModule, [{
     type: NgModule,
     args: [{
-      imports: [Password, PasswordDirective, SharedModule],
-      exports: [PasswordDirective, Password, SharedModule]
+      imports: [Password, PasswordDirective, SharedModule, BindModule],
+      exports: [PasswordDirective, Password, SharedModule, BindModule]
     }]
   }], null, null);
 })();

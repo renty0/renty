@@ -1,84 +1,89 @@
 import {
-  BaseInput
-} from "./chunk-WTGPB5AA.js";
-import {
   Overlay,
   Scroller
-} from "./chunk-ZGRDWK2P.js";
+} from "./chunk-6Q7WBJY5.js";
 import {
   Tooltip
-} from "./chunk-PTWYD5XP.js";
+} from "./chunk-YOLEDG2L.js";
+import {
+  InputIcon
+} from "./chunk-4JIFJ5UG.js";
+import {
+  IconField
+} from "./chunk-PI2LIGW5.js";
 import "./chunk-TH5YZEHG.js";
 import {
   Ripple
-} from "./chunk-43JFZKTJ.js";
+} from "./chunk-2RKQYFAU.js";
 import {
-  IconField
-} from "./chunk-NOVCFX3M.js";
+  BaseInput
+} from "./chunk-HUIYVY5X.js";
+import "./chunk-GTXVQMKW.js";
 import {
-  InputIcon
-} from "./chunk-ADSYBKRT.js";
-import "./chunk-YC7H57R5.js";
+  InputText
+} from "./chunk-QRIPKYDB.js";
+import "./chunk-HMLLSGO5.js";
 import {
   AutoFocus
-} from "./chunk-62T5UK2X.js";
+} from "./chunk-DFE6MCDK.js";
+import "./chunk-PL75H7O4.js";
+import {
+  unblockBodyScroll
+} from "./chunk-CDFDPPG6.js";
 import {
   BlankIcon,
   CheckIcon,
   ChevronDownIcon,
   SearchIcon,
   TimesIcon
-} from "./chunk-FW476L5I.js";
+} from "./chunk-MUIXJJ6L.js";
 import {
-  unblockBodyScroll
-} from "./chunk-CDY4UK5B.js";
-import {
-  InputText
-} from "./chunk-NULTMVXZ.js";
-import "./chunk-M6VO3KK4.js";
-import "./chunk-JGKWWFMK.js";
-import {
-  BaseComponent
-} from "./chunk-FNF3KQMZ.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-M5UMARS5.js";
 import {
   BaseStyle
-} from "./chunk-BOLK46US.js";
+} from "./chunk-WHEGA6B4.js";
 import {
   FilterService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-YMZ6MNKT.js";
-import "./chunk-KK6CJ5OZ.js";
+} from "./chunk-66F6BUWO.js";
+import "./chunk-7WO5LGBC.js";
 import {
-  Jt,
+  Bind,
+  BindModule
+} from "./chunk-QSEG5POM.js";
+import {
+  J,
+  Kt,
   Lt,
   M,
-  a,
-  b2 as b,
+  b,
   bt,
-  c,
-  j,
   k,
+  l,
+  p,
   s,
   s3 as s2,
   vt,
   y,
   z2 as z
-} from "./chunk-Y7QZIZHU.js";
+} from "./chunk-AXG4AWWL.js";
 import {
   NG_VALUE_ACCESSOR
-} from "./chunk-RR7KSV65.js";
-import "./chunk-R6DTFLFJ.js";
-import "./chunk-RT3RTPYJ.js";
+} from "./chunk-OSXOW2ZV.js";
+import "./chunk-J3AWIUCF.js";
+import "./chunk-776NE6DP.js";
 import {
   CommonModule,
   NgForOf,
   NgIf,
   NgStyle,
   NgTemplateOutlet
-} from "./chunk-IGUAJKSF.js";
-import "./chunk-ZMLREZMJ.js";
+} from "./chunk-E4CDVRJ4.js";
+import "./chunk-I5COZSTS.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -96,6 +101,7 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -135,8 +141,9 @@ import {
   ɵɵtwoWayListener,
   ɵɵtwoWayProperty,
   ɵɵviewQuery
-} from "./chunk-3Z4HVEDU.js";
+} from "./chunk-JNLIHCF3.js";
 import {
+  InjectionToken,
   computed,
   effect,
   forwardRef,
@@ -147,9 +154,9 @@ import {
   ɵɵnamespaceSVG,
   ɵɵresetView,
   ɵɵrestoreView
-} from "./chunk-OZB3DDOT.js";
-import "./chunk-HWYXSU2G.js";
+} from "./chunk-NWXXA5RB.js";
 import "./chunk-JRFR6BLO.js";
+import "./chunk-HWYXSU2G.js";
 import "./chunk-MARUHEWW.js";
 import {
   __spreadProps,
@@ -169,27 +176,29 @@ var _c1 = (a0) => ({
 function SelectItem_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 5);
+    ɵɵelement(0, "svg", 6);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("optionCheckIcon"));
+    ɵɵproperty("pBind", ctx_r0.$pcSelect == null ? null : ctx_r0.$pcSelect.ptm("optionCheckIcon"));
   }
 }
 function SelectItem_ng_container_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 6);
+    ɵɵelement(0, "svg", 7);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("optionBlankIcon"));
+    ɵɵproperty("pBind", ctx_r0.$pcSelect == null ? null : ctx_r0.$pcSelect.ptm("optionBlankIcon"));
   }
 }
 function SelectItem_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, SelectItem_ng_container_1__svg_svg_1_Template, 1, 2, "svg", 3)(2, SelectItem_ng_container_1__svg_svg_2_Template, 1, 2, "svg", 4);
+    ɵɵtemplate(1, SelectItem_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 4)(2, SelectItem_ng_container_1__svg_svg_2_Template, 1, 3, "svg", 5);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -202,12 +211,13 @@ function SelectItem_ng_container_1_Template(rf, ctx) {
 }
 function SelectItem_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 8);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
+    ɵɵproperty("pBind", ctx_r0.$pcSelect == null ? null : ctx_r0.$pcSelect.ptm("optionLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r0.label ?? "empty");
   }
@@ -317,7 +327,7 @@ function Select_span_0_Template(rf, ctx) {
     const defaultPlaceholder_r4 = ɵɵreference(5);
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("label"));
-    ɵɵproperty("pTooltip", ctx_r2.tooltip)("tooltipPosition", ctx_r2.tooltipPosition)("positionStyle", ctx_r2.tooltipPositionStyle)("tooltipStyleClass", ctx_r2.tooltipStyleClass)("pAutoFocus", ctx_r2.autofocus);
+    ɵɵproperty("pBind", ctx_r2.ptm("label"))("pTooltip", ctx_r2.tooltip)("tooltipPosition", ctx_r2.tooltipPosition)("positionStyle", ctx_r2.tooltipPositionStyle)("tooltipStyleClass", ctx_r2.tooltipStyleClass)("pAutoFocus", ctx_r2.autofocus);
     ɵɵattribute("aria-disabled", ctx_r2.$disabled())("id", ctx_r2.inputId)("aria-label", ctx_r2.ariaLabel || (ctx_r2.label() === "p-emptylabel" ? void 0 : ctx_r2.label()))("aria-labelledby", ctx_r2.ariaLabelledBy)("aria-haspopup", "listbox")("aria-expanded", ctx_r2.overlayVisible ?? false)("aria-controls", ctx_r2.overlayVisible ? ctx_r2.id + "_list" : null)("tabindex", !ctx_r2.$disabled() ? ctx_r2.tabindex : -1)("aria-activedescendant", ctx_r2.focused ? ctx_r2.focusedOptionId : void 0)("aria-required", ctx_r2.required())("required", ctx_r2.required() ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r2.selectedItemTemplate && !ctx_r2._selectedItemTemplate)("ngIfElse", defaultPlaceholder_r4);
@@ -351,7 +361,7 @@ function Select_input_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("label"));
-    ɵɵproperty("pAutoFocus", ctx_r2.autofocus);
+    ɵɵproperty("pBind", ctx_r2.ptm("label"))("pAutoFocus", ctx_r2.autofocus);
     ɵɵattribute("id", ctx_r2.inputId)("aria-haspopup", "listbox")("placeholder", ctx_r2.modelValue() === void 0 || ctx_r2.modelValue() === null ? ctx_r2.placeholder() : void 0)("aria-label", ctx_r2.ariaLabel || (ctx_r2.label() === "p-emptylabel" ? void 0 : ctx_r2.label()))("aria-activedescendant", ctx_r2.focused ? ctx_r2.focusedOptionId : void 0)("name", ctx_r2.name())("minlength", ctx_r2.minlength())("min", ctx_r2.min())("max", ctx_r2.max())("pattern", ctx_r2.pattern())("size", ctx_r2.inputSize())("maxlength", ctx_r2.maxlength())("required", ctx_r2.required() ? "" : void 0)("readonly", ctx_r2.readonly ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0);
   }
 }
@@ -370,6 +380,7 @@ function Select_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
+    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
     ɵɵattribute("data-pc-section", "clearicon");
   }
 }
@@ -395,15 +406,16 @@ function Select_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
+    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
     ɵɵattribute("data-pc-section", "clearicon");
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c25, ctx_r2.cx("clearIcon")));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(6, _c25, ctx_r2.cx("clearIcon")));
   }
 }
 function Select_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Select_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 26)(2, Select_ng_container_2_span_2_Template, 2, 7, "span", 27);
+    ɵɵtemplate(1, Select_ng_container_2__svg_svg_1_Template, 1, 4, "svg", 26)(2, Select_ng_container_2_span_2_Template, 2, 8, "span", 27);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -438,6 +450,7 @@ function Select_ng_container_4_ng_container_2_span_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("loadingIcon"), "pi-spin" + ctx_r2.loadingIcon));
+    ɵɵproperty("pBind", ctx_r2.ptm("loadingIcon"));
   }
 }
 function Select_ng_container_4_ng_container_2_span_2_Template(rf, ctx) {
@@ -447,12 +460,13 @@ function Select_ng_container_4_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("loadingIcon"), "pi pi-spinner pi-spin"));
+    ɵɵproperty("pBind", ctx_r2.ptm("loadingIcon"));
   }
 }
 function Select_ng_container_4_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Select_ng_container_4_ng_container_2_span_1_Template, 1, 2, "span", 32)(2, Select_ng_container_4_ng_container_2_span_2_Template, 1, 2, "span", 32);
+    ɵɵtemplate(1, Select_ng_container_4_ng_container_2_span_1_Template, 1, 3, "span", 32)(2, Select_ng_container_4_ng_container_2_span_2_Template, 1, 3, "span", 32);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -479,27 +493,29 @@ function Select_ng_container_4_Template(rf, ctx) {
 }
 function Select_ng_template_5_ng_container_0_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span");
+    ɵɵelement(0, "span", 36);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("dropdownIcon"), ctx_r2.dropdownIcon));
+    ɵɵproperty("pBind", ctx_r2.ptm("dropdownIcon"));
   }
 }
 function Select_ng_template_5_ng_container_0__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 36);
+    ɵɵelement(0, "svg", 37);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cx("dropdownIcon"));
+    ɵɵproperty("pBind", ctx_r2.ptm("dropdownIcon"));
   }
 }
 function Select_ng_template_5_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Select_ng_template_5_ng_container_0_span_1_Template, 1, 2, "span", 34)(2, Select_ng_template_5_ng_container_0__svg_svg_2_Template, 1, 2, "svg", 35);
+    ɵɵtemplate(1, Select_ng_template_5_ng_container_0_span_1_Template, 1, 3, "span", 34)(2, Select_ng_template_5_ng_container_0__svg_svg_2_Template, 1, 3, "svg", 35);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -519,20 +535,21 @@ function Select_ng_template_5_span_1_1_Template(rf, ctx) {
 }
 function Select_ng_template_5_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 36);
     ɵɵtemplate(1, Select_ng_template_5_span_1_1_Template, 1, 0, null, 30);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("dropdownIcon"));
+    ɵɵproperty("pBind", ctx_r2.ptm("dropdownIcon"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.dropdownIconTemplate || ctx_r2._dropdownIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(4, _c25, ctx_r2.cx("dropdownIcon")));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.dropdownIconTemplate || ctx_r2._dropdownIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c25, ctx_r2.cx("dropdownIcon")));
   }
 }
 function Select_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Select_ng_template_5_ng_container_0_Template, 3, 2, "ng-container", 18)(1, Select_ng_template_5_span_1_Template, 2, 6, "span", 34);
+    ɵɵtemplate(0, Select_ng_template_5_ng_container_0_Template, 3, 2, "ng-container", 18)(1, Select_ng_template_5_span_1_Template, 2, 7, "span", 34);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
@@ -566,7 +583,11 @@ function Select_ng_template_9_div_4_ng_container_1_Template(rf, ctx) {
 function Select_ng_template_9_div_4_ng_template_2__svg_svg_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 42);
+    ɵɵelement(0, "svg", 45);
+  }
+  if (rf & 2) {
+    const ctx_r2 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r2.ptm("filterIcon"));
   }
 }
 function Select_ng_template_9_div_4_ng_template_2_span_5_1_ng_template_0_Template(rf, ctx) {
@@ -578,12 +599,13 @@ function Select_ng_template_9_div_4_ng_template_2_span_5_1_Template(rf, ctx) {
 }
 function Select_ng_template_9_div_4_ng_template_2_span_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 36);
     ɵɵtemplate(1, Select_ng_template_9_div_4_ng_template_2_span_5_1_Template, 1, 0, null, 31);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r2.ptm("filterIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.filterIconTemplate || ctx_r2._filterIconTemplate);
   }
@@ -591,7 +613,7 @@ function Select_ng_template_9_div_4_ng_template_2_span_5_Template(rf, ctx) {
 function Select_ng_template_9_div_4_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-iconfield")(1, "input", 40, 10);
+    ɵɵelementStart(0, "p-iconfield", 41)(1, "input", 42, 10);
     ɵɵlistener("input", function Select_ng_template_9_div_4_ng_template_2_Template_input_input_1_listener($event) {
       ɵɵrestoreView(_r10);
       const ctx_r2 = ɵɵnextContext(3);
@@ -606,17 +628,20 @@ function Select_ng_template_9_div_4_ng_template_2_Template(rf, ctx) {
       return ɵɵresetView(ctx_r2.onFilterBlur($event));
     });
     ɵɵelementEnd();
-    ɵɵelementStart(3, "p-inputicon");
-    ɵɵtemplate(4, Select_ng_template_9_div_4_ng_template_2__svg_svg_4_Template, 1, 0, "svg", 41)(5, Select_ng_template_9_div_4_ng_template_2_span_5_Template, 2, 1, "span", 18);
+    ɵɵelementStart(3, "p-inputicon", 41);
+    ɵɵtemplate(4, Select_ng_template_9_div_4_ng_template_2__svg_svg_4_Template, 1, 1, "svg", 43)(5, Select_ng_template_9_div_4_ng_template_2_span_5_Template, 2, 2, "span", 44);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
+    ɵɵproperty("pt", ctx_r2.ptm("pcFilterContainer"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("pcFilter"));
-    ɵɵproperty("pSize", ctx_r2.size())("value", ctx_r2._filterValue() || "")("variant", ctx_r2.$variant());
+    ɵɵproperty("pSize", ctx_r2.size())("value", ctx_r2._filterValue() || "")("variant", ctx_r2.$variant())("pt", ctx_r2.ptm("pcFilter"));
     ɵɵattribute("placeholder", ctx_r2.filterPlaceholder)("aria-owns", ctx_r2.id + "_list")("aria-label", ctx_r2.ariaFilterLabel)("aria-activedescendant", ctx_r2.focusedOptionId);
-    ɵɵadvance(3);
+    ɵɵadvance(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcFilterIconContainer"));
+    ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.filterIconTemplate && !ctx_r2._filterIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.filterIconTemplate || ctx_r2._filterIconTemplate);
@@ -630,13 +655,14 @@ function Select_ng_template_9_div_4_Template(rf, ctx) {
       ɵɵrestoreView(_r9);
       return ɵɵresetView($event.stopPropagation());
     });
-    ɵɵtemplate(1, Select_ng_template_9_div_4_ng_container_1_Template, 2, 4, "ng-container", 20)(2, Select_ng_template_9_div_4_ng_template_2_Template, 6, 11, "ng-template", null, 9, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(1, Select_ng_template_9_div_4_ng_container_1_Template, 2, 4, "ng-container", 20)(2, Select_ng_template_9_div_4_ng_template_2_Template, 6, 14, "ng-template", null, 9, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const builtInFilterElement_r11 = ɵɵreference(3);
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("header"));
+    ɵɵproperty("pBind", ctx_r2.ptm("header"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.filterTemplate || ctx_r2._filterTemplate)("ngIfElse", builtInFilterElement_r11);
   }
@@ -683,7 +709,7 @@ function Select_ng_template_9_p_scroller_6_ng_container_4_Template(rf, ctx) {
 function Select_ng_template_9_p_scroller_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-scroller", 43, 11);
+    ɵɵelementStart(0, "p-scroller", 46, 11);
     ɵɵlistener("onLazyLoad", function Select_ng_template_9_p_scroller_6_Template_p_scroller_onLazyLoad_0_listener($event) {
       ɵɵrestoreView(_r12);
       const ctx_r2 = ɵɵnextContext(2);
@@ -694,8 +720,8 @@ function Select_ng_template_9_p_scroller_6_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵstyleMap(ɵɵpureFunction1(8, _c0, ctx_r2.scrollHeight));
-    ɵɵproperty("items", ctx_r2.visibleOptions())("itemSize", ctx_r2.virtualScrollItemSize)("autoSize", true)("lazy", ctx_r2.lazy)("options", ctx_r2.virtualScrollOptions);
+    ɵɵstyleMap(ɵɵpureFunction1(9, _c0, ctx_r2.scrollHeight));
+    ɵɵproperty("items", ctx_r2.visibleOptions())("itemSize", ctx_r2.virtualScrollItemSize)("autoSize", true)("lazy", ctx_r2.lazy)("options", ctx_r2.virtualScrollOptions)("pt", ctx_r2.ptm("virtualScroller"));
     ɵɵadvance(4);
     ɵɵproperty("ngIf", ctx_r2.loaderTemplate || ctx_r2._loaderTemplate);
   }
@@ -721,13 +747,15 @@ function Select_ng_template_9_ng_container_7_Template(rf, ctx) {
 }
 function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 36);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const option_r17 = ɵɵnextContext(2).$implicit;
     const ctx_r2 = ɵɵnextContext(3);
+    ɵɵclassMap(ctx_r2.cx("optionGroupLabel"));
+    ɵɵproperty("pBind", ctx_r2.ptm("optionGroupLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r2.getOptionGroupLabel(option_r17.optionGroup));
   }
@@ -740,8 +768,8 @@ function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_ng_cont
 function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "li", 47);
-    ɵɵtemplate(2, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_span_2_Template, 2, 1, "span", 18)(3, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_ng_container_3_Template, 1, 0, "ng-container", 30);
+    ɵɵelementStart(1, "li", 50);
+    ɵɵtemplate(2, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_span_2_Template, 2, 4, "span", 34)(3, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_ng_container_3_Template, 1, 0, "ng-container", 30);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -753,19 +781,19 @@ function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_Templat
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("optionGroup"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(7, _c0, scrollerOptions_r20.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(8, _c0, scrollerOptions_r20.itemSize + "px"))("pBind", ctx_r2.ptm("optionGroup"));
     ɵɵattribute("id", ctx_r2.id + "_" + ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.groupTemplate && !ctx_r2._groupTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.groupTemplate || ctx_r2._groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(9, _c1, option_r17.optionGroup));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.groupTemplate || ctx_r2._groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c1, option_r17.optionGroup));
   }
 }
 function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r21 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "p-selectItem", 48);
+    ɵɵelementStart(1, "p-selectItem", 51);
     ɵɵlistener("onClick", function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_1_Template_p_selectItem_onClick_1_listener($event) {
       ɵɵrestoreView(_r21);
       const option_r17 = ɵɵnextContext().$implicit;
@@ -788,12 +816,12 @@ function Select_ng_template_9_ng_template_8_ng_template_2_ng_container_1_Templat
     const scrollerOptions_r20 = ɵɵnextContext().options;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵadvance();
-    ɵɵproperty("id", ctx_r2.id + "_" + ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("option", option_r17)("checkmark", ctx_r2.checkmark)("selected", ctx_r2.isSelected(option_r17))("label", ctx_r2.getOptionLabel(option_r17))("disabled", ctx_r2.isOptionDisabled(option_r17))("template", ctx_r2.itemTemplate || ctx_r2._itemTemplate)("focused", ctx_r2.focusedOptionIndex() === ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("ariaPosInset", ctx_r2.getAriaPosInset(ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20)))("ariaSetSize", ctx_r2.ariaSetSize);
+    ɵɵproperty("id", ctx_r2.id + "_" + ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("option", option_r17)("checkmark", ctx_r2.checkmark)("selected", ctx_r2.isSelected(option_r17))("label", ctx_r2.getOptionLabel(option_r17))("disabled", ctx_r2.isOptionDisabled(option_r17))("template", ctx_r2.itemTemplate || ctx_r2._itemTemplate)("focused", ctx_r2.focusedOptionIndex() === ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("ariaPosInset", ctx_r2.getAriaPosInset(ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20)))("ariaSetSize", ctx_r2.ariaSetSize)("index", i_r19)("scrollerOptions", scrollerOptions_r20);
   }
 }
 function Select_ng_template_9_ng_template_8_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_Template, 4, 11, "ng-container", 18)(1, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_1_Template, 2, 10, "ng-container", 18);
+    ɵɵtemplate(0, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_0_Template, 4, 12, "ng-container", 18)(1, Select_ng_template_9_ng_template_8_ng_template_2_ng_container_1_Template, 2, 12, "ng-container", 18);
   }
   if (rf & 2) {
     const option_r17 = ctx.$implicit;
@@ -828,7 +856,7 @@ function Select_ng_template_9_ng_template_8_li_3_Conditional_2_Template(rf, ctx)
 }
 function Select_ng_template_9_ng_template_8_li_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 47);
+    ɵɵelementStart(0, "li", 50);
     ɵɵconditionalCreate(1, Select_ng_template_9_ng_template_8_li_3_Conditional_1_Template, 1, 1)(2, Select_ng_template_9_ng_template_8_li_3_Conditional_2_Template, 1, 1, "ng-container");
     ɵɵelementEnd();
   }
@@ -836,7 +864,7 @@ function Select_ng_template_9_ng_template_8_li_3_Template(rf, ctx) {
     const scrollerOptions_r20 = ɵɵnextContext().options;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("emptyMessage"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c0, scrollerOptions_r20.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(5, _c0, scrollerOptions_r20.itemSize + "px"))("pBind", ctx_r2.ptm("emptyMessage"));
     ɵɵadvance();
     ɵɵconditional(!ctx_r2.emptyFilterTemplate && !ctx_r2._emptyFilterTemplate && !ctx_r2.emptyTemplate ? 1 : 2);
   }
@@ -866,7 +894,7 @@ function Select_ng_template_9_ng_template_8_li_4_Conditional_2_Template(rf, ctx)
 }
 function Select_ng_template_9_ng_template_8_li_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 47);
+    ɵɵelementStart(0, "li", 50);
     ɵɵconditionalCreate(1, Select_ng_template_9_ng_template_8_li_4_Conditional_1_Template, 1, 1)(2, Select_ng_template_9_ng_template_8_li_4_Conditional_2_Template, 1, 1, "ng-container");
     ɵɵelementEnd();
   }
@@ -874,15 +902,15 @@ function Select_ng_template_9_ng_template_8_li_4_Template(rf, ctx) {
     const scrollerOptions_r20 = ɵɵnextContext().options;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("emptyMessage"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c0, scrollerOptions_r20.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(5, _c0, scrollerOptions_r20.itemSize + "px"))("pBind", ctx_r2.ptm("emptyMessage"));
     ɵɵadvance();
     ɵɵconditional(!ctx_r2.emptyTemplate && !ctx_r2._emptyTemplate ? 1 : 2);
   }
 }
 function Select_ng_template_9_ng_template_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "ul", 44, 13);
-    ɵɵtemplate(2, Select_ng_template_9_ng_template_8_ng_template_2_Template, 2, 2, "ng-template", 45)(3, Select_ng_template_9_ng_template_8_li_3_Template, 3, 6, "li", 46)(4, Select_ng_template_9_ng_template_8_li_4_Template, 3, 6, "li", 46);
+    ɵɵelementStart(0, "ul", 47, 13);
+    ɵɵtemplate(2, Select_ng_template_9_ng_template_8_ng_template_2_Template, 2, 2, "ng-template", 48)(3, Select_ng_template_9_ng_template_8_li_3_Template, 3, 7, "li", 49)(4, Select_ng_template_9_ng_template_8_li_4_Template, 3, 7, "li", 49);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -891,6 +919,7 @@ function Select_ng_template_9_ng_template_8_Template(rf, ctx) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵstyleMap(scrollerOptions_r20.contentStyle);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("list"), scrollerOptions_r20.contentStyleClass));
+    ɵɵproperty("pBind", ctx_r2.ptm("list"));
     ɵɵattribute("id", ctx_r2.id + "_list")("aria-label", ctx_r2.listLabel);
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", items_r22);
@@ -908,19 +937,19 @@ function Select_ng_template_9_ng_container_10_Template(rf, ctx) {
 function Select_ng_template_9_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 37)(1, "span", 38, 6);
+    ɵɵelementStart(0, "div", 38)(1, "span", 39, 6);
     ɵɵlistener("focus", function Select_ng_template_9_Template_span_focus_1_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onFirstHiddenFocus($event));
     });
     ɵɵelementEnd();
-    ɵɵtemplate(3, Select_ng_template_9_ng_container_3_Template, 1, 0, "ng-container", 31)(4, Select_ng_template_9_div_4_Template, 4, 4, "div", 27);
-    ɵɵelementStart(5, "div");
-    ɵɵtemplate(6, Select_ng_template_9_p_scroller_6_Template, 5, 10, "p-scroller", 39)(7, Select_ng_template_9_ng_container_7_Template, 2, 6, "ng-container", 18)(8, Select_ng_template_9_ng_template_8_Template, 5, 9, "ng-template", null, 7, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(3, Select_ng_template_9_ng_container_3_Template, 1, 0, "ng-container", 31)(4, Select_ng_template_9_div_4_Template, 4, 5, "div", 27);
+    ɵɵelementStart(5, "div", 36);
+    ɵɵtemplate(6, Select_ng_template_9_p_scroller_6_Template, 5, 11, "p-scroller", 40)(7, Select_ng_template_9_ng_container_7_Template, 2, 6, "ng-container", 18)(8, Select_ng_template_9_ng_template_8_Template, 5, 10, "ng-template", null, 7, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
     ɵɵtemplate(10, Select_ng_template_9_ng_container_10_Template, 1, 0, "ng-container", 31);
-    ɵɵelementStart(11, "span", 38, 8);
+    ɵɵelementStart(11, "span", 39, 8);
     ɵɵlistener("focus", function Select_ng_template_9_Template_span_focus_11_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r2 = ɵɵnextContext();
@@ -931,8 +960,9 @@ function Select_ng_template_9_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("overlay"), ctx_r2.panelStyleClass));
-    ɵɵproperty("ngStyle", ctx_r2.panelStyle);
+    ɵɵproperty("ngStyle", ctx_r2.panelStyle)("pBind", ctx_r2.ptm("overlay"));
     ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r2.ptm("hiddenFirstFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r2.headerTemplate || ctx_r2._headerTemplate);
@@ -941,6 +971,7 @@ function Select_ng_template_9_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("listContainer"));
     ɵɵstyleProp("max-height", ctx_r2.virtualScroll ? "auto" : ctx_r2.scrollHeight || "auto");
+    ɵɵproperty("pBind", ctx_r2.ptm("listContainer"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.virtualScroll);
     ɵɵadvance();
@@ -948,10 +979,11 @@ function Select_ng_template_9_Template(rf, ctx) {
     ɵɵadvance(3);
     ɵɵproperty("ngTemplateOutlet", ctx_r2.footerTemplate || ctx_r2._footerTemplate);
     ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r2.ptm("hiddenLastFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
   }
 }
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -1017,7 +1049,7 @@ var classes = {
 };
 var SelectStyle = class _SelectStyle extends BaseStyle {
   name = "select";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵSelectStyle_BaseFactory;
@@ -1056,12 +1088,23 @@ var SelectClasses;
   SelectClasses2["optionBlankIcon"] = "p-select-option-blank-icon";
   SelectClasses2["emptyMessage"] = "p-select-empty-message";
 })(SelectClasses || (SelectClasses = {}));
+var SELECT_INSTANCE = new InjectionToken("SELECT_INSTANCE");
+var SELECT_ITEM_INSTANCE = new InjectionToken("SELECT_ITEM_INSTANCE");
 var SELECT_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => Select),
   multi: true
 };
 var SelectItem = class _SelectItem extends BaseComponent {
+  hostName = "select";
+  $pcSelectItem = inject(SELECT_ITEM_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  $pcSelect = inject(SELECT_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   id;
   option;
   selected;
@@ -1074,6 +1117,8 @@ var SelectItem = class _SelectItem extends BaseComponent {
   ariaSetSize;
   template;
   checkmark;
+  index;
+  scrollerOptions;
   onClick = new EventEmitter();
   onMouseEnter = new EventEmitter();
   _componentStyle = inject(SelectStyle);
@@ -1082,6 +1127,16 @@ var SelectItem = class _SelectItem extends BaseComponent {
   }
   onOptionMouseEnter(event) {
     this.onMouseEnter.emit(event);
+  }
+  getPTOptions() {
+    return this.$pcSelect?.getPTItemOptions?.(this.option, this.scrollerOptions, this.index ?? 0, "option") ?? this.$pcSelect?.ptm("option", {
+      context: {
+        option: this.option,
+        selected: this.selected,
+        focused: this.focused,
+        disabled: this.disabled
+      }
+    });
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵSelectItem_BaseFactory;
@@ -1104,16 +1159,21 @@ var SelectItem = class _SelectItem extends BaseComponent {
       ariaPosInset: "ariaPosInset",
       ariaSetSize: "ariaSetSize",
       template: "template",
-      checkmark: [2, "checkmark", "checkmark", booleanAttribute]
+      checkmark: [2, "checkmark", "checkmark", booleanAttribute],
+      index: "index",
+      scrollerOptions: "scrollerOptions"
     },
     outputs: {
       onClick: "onClick",
       onMouseEnter: "onMouseEnter"
     },
-    features: [ɵɵProvidersFeature([SelectStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SelectStyle, {
+      provide: PARENT_INSTANCE,
+      useExisting: _SelectItem
+    }]), ɵɵInheritDefinitionFeature],
     decls: 4,
-    vars: 19,
-    consts: [["role", "option", "pRipple", "", 3, "click", "mouseenter", "id", "ngStyle"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "check", 3, "class", 4, "ngIf"], ["data-p-icon", "blank", 3, "class", 4, "ngIf"], ["data-p-icon", "check"], ["data-p-icon", "blank"]],
+    vars: 20,
+    consts: [["role", "option", "pRipple", "", 3, "click", "mouseenter", "id", "pBind", "ngStyle"], [4, "ngIf"], [3, "pBind", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "check", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "blank", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "check", 3, "pBind"], ["data-p-icon", "blank", 3, "pBind"], [3, "pBind"]],
     template: function SelectItem_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵelementStart(0, "li", 0);
@@ -1122,22 +1182,22 @@ var SelectItem = class _SelectItem extends BaseComponent {
         })("mouseenter", function SelectItem_Template_li_mouseenter_0_listener($event) {
           return ctx.onOptionMouseEnter($event);
         });
-        ɵɵtemplate(1, SelectItem_ng_container_1_Template, 3, 2, "ng-container", 1)(2, SelectItem_span_2_Template, 2, 1, "span", 1)(3, SelectItem_ng_container_3_Template, 1, 0, "ng-container", 2);
+        ɵɵtemplate(1, SelectItem_ng_container_1_Template, 3, 2, "ng-container", 1)(2, SelectItem_span_2_Template, 2, 2, "span", 2)(3, SelectItem_ng_container_3_Template, 1, 0, "ng-container", 3);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("option"));
-        ɵɵproperty("id", ctx.id)("ngStyle", ɵɵpureFunction1(15, _c0, ctx.itemSize + "px"));
+        ɵɵproperty("id", ctx.id)("pBind", ctx.getPTOptions())("ngStyle", ɵɵpureFunction1(16, _c0, ctx.itemSize + "px"));
         ɵɵattribute("aria-label", ctx.label)("aria-setsize", ctx.ariaSetSize)("aria-posinset", ctx.ariaPosInset)("aria-selected", ctx.selected)("data-p-focused", ctx.focused)("data-p-highlight", ctx.selected)("data-p-disabled", ctx.disabled);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.checkmark);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.template);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.template)("ngTemplateOutletContext", ɵɵpureFunction1(17, _c1, ctx.option));
+        ɵɵproperty("ngTemplateOutlet", ctx.template)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c1, ctx.option));
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, Ripple, CheckIcon, BlankIcon],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, Ripple, CheckIcon, BlankIcon, BindModule, Bind],
     encapsulation: 2
   });
 };
@@ -1147,10 +1207,11 @@ var SelectItem = class _SelectItem extends BaseComponent {
     args: [{
       selector: "p-selectItem",
       standalone: true,
-      imports: [CommonModule, SharedModule, Ripple, CheckIcon, BlankIcon],
+      imports: [CommonModule, SharedModule, Ripple, CheckIcon, BlankIcon, BindModule],
       template: `
         <li
             [id]="id"
+            [pBind]="getPTOptions()"
             (click)="onOptionClick($event)"
             (mouseenter)="onOptionMouseEnter($event)"
             role="option"
@@ -1166,14 +1227,17 @@ var SelectItem = class _SelectItem extends BaseComponent {
             [class]="cx('option')"
         >
             <ng-container *ngIf="checkmark">
-                <svg data-p-icon="check" *ngIf="selected" [class]="cx('optionCheckIcon')" />
-                <svg data-p-icon="blank" *ngIf="!selected" [class]="cx('optionBlankIcon')" />
+                <svg data-p-icon="check" *ngIf="selected" [class]="cx('optionCheckIcon')" [pBind]="$pcSelect?.ptm('optionCheckIcon')" />
+                <svg data-p-icon="blank" *ngIf="!selected" [class]="cx('optionBlankIcon')" [pBind]="$pcSelect?.ptm('optionBlankIcon')" />
             </ng-container>
-            <span *ngIf="!template">{{ label ?? 'empty' }}</span>
+            <span *ngIf="!template" [pBind]="$pcSelect?.ptm('optionLabel')">{{ label ?? 'empty' }}</span>
             <ng-container *ngTemplateOutlet="template; context: { $implicit: option }"></ng-container>
         </li>
     `,
-      providers: [SelectStyle]
+      providers: [SelectStyle, {
+        provide: PARENT_INSTANCE,
+        useExisting: SelectItem
+      }]
     }]
   }], null, {
     id: [{
@@ -1230,6 +1294,12 @@ var SelectItem = class _SelectItem extends BaseComponent {
         transform: booleanAttribute
       }]
     }],
+    index: [{
+      type: Input
+    }],
+    scrollerOptions: [{
+      type: Input
+    }],
     onClick: [{
       type: Output
     }],
@@ -1241,6 +1311,9 @@ var SelectItem = class _SelectItem extends BaseComponent {
 var Select = class _Select extends BaseInput {
   zone;
   filterService;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   /**
    * Unique identifier of the component
    * @group Props
@@ -1793,7 +1866,7 @@ var Select = class _Select extends BaseInput {
           }
         }
       }
-      if (a(visibleOptions) && (modelValue === void 0 || this.isModelValueNotSet()) && s(this.selectedOption)) {
+      if (l(visibleOptions) && (modelValue === void 0 || this.isModelValueNotSet()) && s(this.selectedOption)) {
         this.selectedOption = null;
       }
       if (modelValue !== void 0 && this.editable) {
@@ -1808,8 +1881,7 @@ var Select = class _Select extends BaseInput {
   getAllVisibleAndNonVisibleOptions() {
     return this.group ? this.flatOptions(this.options) : this.options || [];
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.id = this.id || s2("pn_id_");
     this.autoUpdateModel();
     if (this.filterBy) {
@@ -1819,7 +1891,7 @@ var Select = class _Select extends BaseInput {
       };
     }
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "item":
@@ -1876,7 +1948,8 @@ var Select = class _Select extends BaseInput {
       }
     });
   }
-  ngAfterViewChecked() {
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
     if (this.optionsChanged && this.overlayVisible) {
       this.optionsChanged = false;
       this.zone.runOutsideAngular(() => {
@@ -1890,7 +1963,7 @@ var Select = class _Select extends BaseInput {
     if (this.selectedOptionUpdated && this.itemsWrapper) {
       let selectedItem = z(this.overlayViewChild?.overlayViewChild?.nativeElement, "li.p-select-option-selected");
       if (selectedItem) {
-        Jt(this.itemsWrapper, selectedItem);
+        Kt(this.itemsWrapper, selectedItem);
       }
       this.selectedOptionUpdated = false;
     }
@@ -1950,8 +2023,7 @@ var Select = class _Select extends BaseInput {
   isOptionValueEqualsModelValue(option) {
     return option !== void 0 && option !== null && !this.isOptionGroup(option) && k(this.modelValue(), this.getOptionValue(option), this.equalityKey());
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (this.editable) {
       this.updateEditableLabel();
     }
@@ -1981,22 +2053,33 @@ var Select = class _Select extends BaseInput {
     return this.virtualScrollerDisabled ? index : scrollerOptions && scrollerOptions.getItemOptions(index)["index"];
   }
   getOptionLabel(option) {
-    return this.optionLabel !== void 0 && this.optionLabel !== null ? c(option, this.optionLabel) : option && option.label !== void 0 ? option.label : option;
+    return this.optionLabel !== void 0 && this.optionLabel !== null ? p(option, this.optionLabel) : option && option.label !== void 0 ? option.label : option;
   }
   getOptionValue(option) {
-    return this.optionValue && this.optionValue !== null ? c(option, this.optionValue) : !this.optionLabel && option && option.value !== void 0 ? option.value : option;
+    return this.optionValue && this.optionValue !== null ? p(option, this.optionValue) : !this.optionLabel && option && option.value !== void 0 ? option.value : option;
+  }
+  getPTItemOptions(option, itemOptions, index, key) {
+    return this.ptm(key, {
+      context: {
+        option,
+        index,
+        selected: this.isSelected(option),
+        focused: this.focusedOptionIndex() === this.getOptionIndex(index, itemOptions),
+        disabled: this.isOptionDisabled(option)
+      }
+    });
   }
   isSelectedOptionEmpty() {
-    return a(this.selectedOption);
+    return l(this.selectedOption);
   }
   isOptionDisabled(option) {
-    return this.optionDisabled ? c(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false;
+    return this.optionDisabled ? p(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false;
   }
   getOptionGroupLabel(optionGroup) {
-    return this.optionGroupLabel !== void 0 && this.optionGroupLabel !== null ? c(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label !== void 0 ? optionGroup.label : optionGroup;
+    return this.optionGroupLabel !== void 0 && this.optionGroupLabel !== null ? p(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label !== void 0 ? optionGroup.label : optionGroup;
   }
   getOptionGroupChildren(optionGroup) {
-    return this.optionGroupChildren !== void 0 && this.optionGroupChildren !== null ? c(optionGroup, this.optionGroupChildren) : optionGroup.items;
+    return this.optionGroupChildren !== void 0 && this.optionGroupChildren !== null ? p(optionGroup, this.optionGroupChildren) : optionGroup.items;
   }
   getAriaPosInset(index) {
     return (this.optionGroupLabel ? index - this.visibleOptions().slice(0, index).filter((option) => this.isOptionGroup(option)).length : index) + 1;
@@ -2018,14 +2101,14 @@ var Select = class _Select extends BaseInput {
     if (this.$disabled() || this.readonly || this.loading) {
       return;
     }
-    this.focusInputViewChild?.nativeElement.focus({
-      preventScroll: true
-    });
     if (event.target.tagName === "INPUT" || event.target.getAttribute("data-pc-section") === "clearicon" || event.target.closest('[data-pc-section="clearicon"]')) {
       return;
     } else if (!this.overlayViewChild || !this.overlayViewChild.el.nativeElement.contains(event.target)) {
       this.overlayVisible ? this.hide(true) : this.show(true);
     }
+    this.focusInputViewChild?.nativeElement.focus({
+      preventScroll: true
+    });
     this.onClick.emit(event);
     this.clicked.set(true);
     this.cd.detectChanges();
@@ -2192,7 +2275,7 @@ var Select = class _Select extends BaseInput {
       case "ShiftRight":
         break;
       default:
-        if (!event.metaKey && j(event.key)) {
+        if (!event.metaKey && J(event.key)) {
           !this.overlayVisible && this.show();
           !this.editable && this.searchOptions(event, event.key);
         }
@@ -2665,14 +2748,20 @@ var Select = class _Select extends BaseInput {
       onClear: "onClear",
       onLazyLoad: "onLazyLoad"
     },
-    features: [ɵɵProvidersFeature([SELECT_VALUE_ACCESSOR, SelectStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SELECT_VALUE_ACCESSOR, SelectStyle, {
+      provide: SELECT_INSTANCE,
+      useExisting: _Select
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Select
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 11,
-    vars: 14,
-    consts: [["elseBlock", ""], ["overlay", ""], ["content", ""], ["focusInput", ""], ["defaultPlaceholder", ""], ["editableInput", ""], ["firstHiddenFocusableEl", ""], ["buildInItems", ""], ["lastHiddenFocusableEl", ""], ["builtInFilterElement", ""], ["filter", ""], ["scroller", ""], ["loader", ""], ["items", ""], ["emptyFilter", ""], ["empty", ""], ["role", "combobox", 3, "class", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus", "focus", "blur", "keydown", 4, "ngIf"], ["type", "text", 3, "class", "pAutoFocus", "input", "keydown", "focus", "blur", 4, "ngIf"], [4, "ngIf"], ["role", "button", "aria-label", "dropdown trigger", "aria-haspopup", "listbox"], [4, "ngIf", "ngIfElse"], [3, "visibleChange", "onAnimationStart", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo"], ["role", "combobox", 3, "focus", "blur", "keydown", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus"], [3, "ngTemplateOutlet", "ngTemplateOutletContext", 4, "ngIf"], [3, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "text", 3, "input", "keydown", "focus", "blur", "pAutoFocus"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], ["aria-hidden", "true", 3, "class", 4, "ngIf"], ["aria-hidden", "true"], [3, "class", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "class", 4, "ngIf"], ["data-p-icon", "chevron-down"], [3, "ngStyle"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus"], [3, "items", "style", "itemSize", "autoSize", "lazy", "options", "onLazyLoad", 4, "ngIf"], ["pInputText", "", "type", "text", "role", "searchbox", "autocomplete", "off", 3, "input", "keydown", "blur", "pSize", "value", "variant"], ["data-p-icon", "search", 4, "ngIf"], ["data-p-icon", "search"], [3, "onLazyLoad", "items", "itemSize", "autoSize", "lazy", "options"], ["role", "listbox"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "class", "ngStyle", 4, "ngIf"], ["role", "option", 3, "ngStyle"], [3, "onClick", "onMouseEnter", "id", "option", "checkmark", "selected", "label", "disabled", "template", "focused", "ariaPosInset", "ariaSetSize"]],
+    vars: 16,
+    consts: [["elseBlock", ""], ["overlay", ""], ["content", ""], ["focusInput", ""], ["defaultPlaceholder", ""], ["editableInput", ""], ["firstHiddenFocusableEl", ""], ["buildInItems", ""], ["lastHiddenFocusableEl", ""], ["builtInFilterElement", ""], ["filter", ""], ["scroller", ""], ["loader", ""], ["items", ""], ["emptyFilter", ""], ["empty", ""], ["role", "combobox", 3, "class", "pBind", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus", "focus", "blur", "keydown", 4, "ngIf"], ["type", "text", 3, "class", "pBind", "pAutoFocus", "input", "keydown", "focus", "blur", 4, "ngIf"], [4, "ngIf"], ["role", "button", "aria-label", "dropdown trigger", "aria-haspopup", "listbox", 3, "pBind"], [4, "ngIf", "ngIfElse"], ["hostName", "select", 3, "visibleChange", "onAnimationStart", "onHide", "hostAttrSelector", "pt", "visible", "options", "target", "appendTo"], ["role", "combobox", 3, "focus", "blur", "keydown", "pBind", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus"], [3, "ngTemplateOutlet", "ngTemplateOutletContext", 4, "ngIf"], [3, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "text", 3, "input", "keydown", "focus", "blur", "pBind", "pAutoFocus"], ["data-p-icon", "times", 3, "class", "pBind", "click", 4, "ngIf"], [3, "class", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], ["aria-hidden", "true", 3, "class", "pBind", 4, "ngIf"], ["aria-hidden", "true", 3, "pBind"], [3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "class", "pBind", 4, "ngIf"], [3, "pBind"], ["data-p-icon", "chevron-down", 3, "pBind"], [3, "ngStyle", "pBind"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus", "pBind"], ["hostName", "select", 3, "items", "style", "itemSize", "autoSize", "lazy", "options", "pt", "onLazyLoad", 4, "ngIf"], [3, "pt"], ["pInputText", "", "type", "text", "role", "searchbox", "autocomplete", "off", 3, "input", "keydown", "blur", "pSize", "value", "variant", "pt"], ["data-p-icon", "search", 3, "pBind", 4, "ngIf"], [3, "pBind", 4, "ngIf"], ["data-p-icon", "search", 3, "pBind"], ["hostName", "select", 3, "onLazyLoad", "items", "itemSize", "autoSize", "lazy", "options", "pt"], ["role", "listbox", 3, "pBind"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "class", "ngStyle", "pBind", 4, "ngIf"], ["role", "option", 3, "ngStyle", "pBind"], [3, "onClick", "onMouseEnter", "id", "option", "checkmark", "selected", "label", "disabled", "template", "focused", "ariaPosInset", "ariaSetSize", "index", "scrollerOptions"]],
     template: function Select_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
-        ɵɵtemplate(0, Select_span_0_Template, 6, 22, "span", 16)(1, Select_input_1_Template, 2, 18, "input", 17)(2, Select_ng_container_2_Template, 3, 2, "ng-container", 18);
+        ɵɵtemplate(0, Select_span_0_Template, 6, 23, "span", 16)(1, Select_input_1_Template, 2, 19, "input", 17)(2, Select_ng_container_2_Template, 3, 2, "ng-container", 18);
         ɵɵelementStart(3, "div", 19);
         ɵɵtemplate(4, Select_ng_container_4_Template, 3, 2, "ng-container", 20)(5, Select_ng_template_5_Template, 2, 2, "ng-template", null, 0, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
@@ -2689,7 +2778,7 @@ var Select = class _Select extends BaseInput {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.hide());
         });
-        ɵɵtemplate(9, Select_ng_template_9_Template, 13, 18, "ng-template", null, 2, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(9, Select_ng_template_9_Template, 13, 22, "ng-template", null, 2, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
       }
       if (rf & 2) {
@@ -2701,16 +2790,17 @@ var Select = class _Select extends BaseInput {
         ɵɵproperty("ngIf", ctx.isVisibleClearIcon);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("dropdown"));
+        ɵɵproperty("pBind", ctx.ptm("dropdown"));
         ɵɵattribute("aria-expanded", ctx.overlayVisible ?? false)("data-pc-section", "trigger");
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.loading)("ngIfElse", elseBlock_r23);
         ɵɵadvance(3);
-        ɵɵproperty("hostAttrSelector", ctx.attrSelector);
+        ɵɵproperty("hostAttrSelector", ctx.$attrSelector)("pt", ctx.ptm("pcOverlay"));
         ɵɵtwoWayProperty("visible", ctx.overlayVisible);
         ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo());
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SelectItem, Overlay, Tooltip, AutoFocus, TimesIcon, ChevronDownIcon, SearchIcon, InputText, IconField, InputIcon, Scroller, SharedModule],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SelectItem, Overlay, Tooltip, AutoFocus, TimesIcon, ChevronDownIcon, SearchIcon, InputText, IconField, InputIcon, Scroller, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -2721,12 +2811,13 @@ var Select = class _Select extends BaseInput {
     args: [{
       selector: "p-select",
       standalone: true,
-      imports: [CommonModule, SelectItem, Overlay, Tooltip, AutoFocus, TimesIcon, ChevronDownIcon, SearchIcon, InputText, IconField, InputIcon, Scroller, SharedModule],
+      imports: [CommonModule, SelectItem, Overlay, Tooltip, AutoFocus, TimesIcon, ChevronDownIcon, SearchIcon, InputText, IconField, InputIcon, Scroller, SharedModule, BindModule],
       template: `
         <span
             #focusInput
             [class]="cx('label')"
             *ngIf="!editable"
+            [pBind]="ptm('label')"
             [pTooltip]="tooltip"
             [tooltipPosition]="tooltipPosition"
             [positionStyle]="tooltipPositionStyle"
@@ -2761,6 +2852,7 @@ var Select = class _Select extends BaseInput {
             type="text"
             [attr.id]="inputId"
             [class]="cx('label')"
+            [pBind]="ptm('label')"
             [attr.aria-haspopup]="'listbox'"
             [attr.placeholder]="modelValue() === undefined || modelValue() === null ? placeholder() : undefined"
             [attr.aria-label]="ariaLabel || (label() === 'p-emptylabel' ? undefined : label())"
@@ -2782,37 +2874,48 @@ var Select = class _Select extends BaseInput {
             [attr.disabled]="$disabled() ? '' : undefined"
         />
         <ng-container *ngIf="isVisibleClearIcon">
-            <svg data-p-icon="times" [class]="cx('clearIcon')" (click)="clear($event)" *ngIf="!clearIconTemplate && !_clearIconTemplate" [attr.data-pc-section]="'clearicon'" />
-            <span [class]="cx('clearIcon')" (click)="clear($event)" *ngIf="clearIconTemplate || _clearIconTemplate" [attr.data-pc-section]="'clearicon'">
+            <svg data-p-icon="times" [class]="cx('clearIcon')" [pBind]="ptm('clearIcon')" (click)="clear($event)" *ngIf="!clearIconTemplate && !_clearIconTemplate" [attr.data-pc-section]="'clearicon'" />
+            <span [class]="cx('clearIcon')" [pBind]="ptm('clearIcon')" (click)="clear($event)" *ngIf="clearIconTemplate || _clearIconTemplate" [attr.data-pc-section]="'clearicon'">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate; context: { class: cx('clearIcon') }"></ng-template>
             </span>
         </ng-container>
 
-        <div [class]="cx('dropdown')" role="button" aria-label="dropdown trigger" aria-haspopup="listbox" [attr.aria-expanded]="overlayVisible ?? false" [attr.data-pc-section]="'trigger'">
+        <div [class]="cx('dropdown')" [pBind]="ptm('dropdown')" role="button" aria-label="dropdown trigger" aria-haspopup="listbox" [attr.aria-expanded]="overlayVisible ?? false" [attr.data-pc-section]="'trigger'">
             <ng-container *ngIf="loading; else elseBlock">
                 <ng-container *ngIf="loadingIconTemplate || _loadingIconTemplate">
                     <ng-container *ngTemplateOutlet="loadingIconTemplate || _loadingIconTemplate"></ng-container>
                 </ng-container>
                 <ng-container *ngIf="!loadingIconTemplate && !_loadingIconTemplate">
-                    <span *ngIf="loadingIcon" [class]="cn(cx('loadingIcon'), 'pi-spin' + loadingIcon)" aria-hidden="true"></span>
-                    <span *ngIf="!loadingIcon" [class]="cn(cx('loadingIcon'), 'pi pi-spinner pi-spin')" aria-hidden="true"></span>
+                    <span *ngIf="loadingIcon" [class]="cn(cx('loadingIcon'), 'pi-spin' + loadingIcon)" [pBind]="ptm('loadingIcon')" aria-hidden="true"></span>
+                    <span *ngIf="!loadingIcon" [class]="cn(cx('loadingIcon'), 'pi pi-spinner pi-spin')" [pBind]="ptm('loadingIcon')" aria-hidden="true"></span>
                 </ng-container>
             </ng-container>
 
             <ng-template #elseBlock>
                 <ng-container *ngIf="!dropdownIconTemplate && !_dropdownIconTemplate">
-                    <span [class]="cn(cx('dropdownIcon'), dropdownIcon)" *ngIf="dropdownIcon"></span>
-                    <svg data-p-icon="chevron-down" *ngIf="!dropdownIcon" [class]="cx('dropdownIcon')" />
+                    <span [class]="cn(cx('dropdownIcon'), dropdownIcon)" [pBind]="ptm('dropdownIcon')" *ngIf="dropdownIcon"></span>
+                    <svg data-p-icon="chevron-down" *ngIf="!dropdownIcon" [class]="cx('dropdownIcon')" [pBind]="ptm('dropdownIcon')" />
                 </ng-container>
-                <span *ngIf="dropdownIconTemplate || _dropdownIconTemplate" [class]="cx('dropdownIcon')">
+                <span *ngIf="dropdownIconTemplate || _dropdownIconTemplate" [class]="cx('dropdownIcon')" [pBind]="ptm('dropdownIcon')">
                     <ng-template *ngTemplateOutlet="dropdownIconTemplate || _dropdownIconTemplate; context: { class: cx('dropdownIcon') }"></ng-template>
                 </span>
             </ng-template>
         </div>
 
-        <p-overlay #overlay [hostAttrSelector]="attrSelector" [(visible)]="overlayVisible" [options]="overlayOptions" [target]="'@parent'" [appendTo]="$appendTo()" (onAnimationStart)="onOverlayAnimationStart($event)" (onHide)="hide()">
+        <p-overlay
+            #overlay
+            [hostAttrSelector]="$attrSelector"
+            hostName="select"
+            [pt]="ptm('pcOverlay')"
+            [(visible)]="overlayVisible"
+            [options]="overlayOptions"
+            [target]="'@parent'"
+            [appendTo]="$appendTo()"
+            (onAnimationStart)="onOverlayAnimationStart($event)"
+            (onHide)="hide()"
+        >
             <ng-template #content>
-                <div [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle">
+                <div [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle" [pBind]="ptm('overlay')">
                     <span
                         #firstHiddenFocusableEl
                         role="presentation"
@@ -2821,15 +2924,16 @@ var Select = class _Select extends BaseInput {
                         (focus)="onFirstHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
                         [attr.data-p-hidden-focusable]="true"
+                        [pBind]="ptm('hiddenFirstFocusableEl')"
                     >
                     </span>
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
-                    <div [class]="cx('header')" *ngIf="filter" (click)="$event.stopPropagation()">
+                    <div [class]="cx('header')" *ngIf="filter" (click)="$event.stopPropagation()" [pBind]="ptm('header')">
                         <ng-container *ngIf="filterTemplate || _filterTemplate; else builtInFilterElement">
                             <ng-container *ngTemplateOutlet="filterTemplate || _filterTemplate; context: { options: filterOptions }"></ng-container>
                         </ng-container>
                         <ng-template #builtInFilterElement>
-                            <p-iconfield>
+                            <p-iconfield [pt]="ptm('pcFilterContainer')">
                                 <input
                                     #filter
                                     pInputText
@@ -2847,19 +2951,21 @@ var Select = class _Select extends BaseInput {
                                     [attr.aria-activedescendant]="focusedOptionId"
                                     (keydown)="onFilterKeyDown($event)"
                                     (blur)="onFilterBlur($event)"
+                                    [pt]="ptm('pcFilter')"
                                 />
-                                <p-inputicon>
-                                    <svg data-p-icon="search" *ngIf="!filterIconTemplate && !_filterIconTemplate" />
-                                    <span *ngIf="filterIconTemplate || _filterIconTemplate">
+                                <p-inputicon [pt]="ptm('pcFilterIconContainer')">
+                                    <svg data-p-icon="search" *ngIf="!filterIconTemplate && !_filterIconTemplate" [pBind]="ptm('filterIcon')" />
+                                    <span *ngIf="filterIconTemplate || _filterIconTemplate" [pBind]="ptm('filterIcon')">
                                         <ng-template *ngTemplateOutlet="filterIconTemplate || _filterIconTemplate"></ng-template>
                                     </span>
                                 </p-inputicon>
                             </p-iconfield>
                         </ng-template>
                     </div>
-                    <div [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'">
+                    <div [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'" [pBind]="ptm('listContainer')">
                         <p-scroller
                             *ngIf="virtualScroll"
+                            hostName="select"
                             #scroller
                             [items]="visibleOptions()"
                             [style]="{ height: scrollHeight }"
@@ -2868,6 +2974,7 @@ var Select = class _Select extends BaseInput {
                             [lazy]="lazy"
                             (onLazyLoad)="onLazyLoad.emit($event)"
                             [options]="virtualScrollOptions"
+                            [pt]="ptm('virtualScroller')"
                         >
                             <ng-template #content let-items let-scrollerOptions="options">
                                 <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: items, options: scrollerOptions }"></ng-container>
@@ -2883,11 +2990,11 @@ var Select = class _Select extends BaseInput {
                         </ng-container>
 
                         <ng-template #buildInItems let-items let-scrollerOptions="options">
-                            <ul #items [attr.id]="id + '_list'" [attr.aria-label]="listLabel" [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox">
+                            <ul #items [attr.id]="id + '_list'" [attr.aria-label]="listLabel" [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox" [pBind]="ptm('list')">
                                 <ng-template ngFor let-option [ngForOf]="items" let-i="index">
                                     <ng-container *ngIf="isOptionGroup(option)">
-                                        <li [class]="cx('optionGroup')" [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                            <span *ngIf="!groupTemplate && !_groupTemplate">{{ getOptionGroupLabel(option.optionGroup) }}</span>
+                                        <li [class]="cx('optionGroup')" [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option" [pBind]="ptm('optionGroup')">
+                                            <span *ngIf="!groupTemplate && !_groupTemplate" [class]="cx('optionGroupLabel')" [pBind]="ptm('optionGroupLabel')">{{ getOptionGroupLabel(option.optionGroup) }}</span>
                                             <ng-container *ngTemplateOutlet="groupTemplate || _groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
                                         </li>
                                     </ng-container>
@@ -2903,19 +3010,21 @@ var Select = class _Select extends BaseInput {
                                             [focused]="focusedOptionIndex() === getOptionIndex(i, scrollerOptions)"
                                             [ariaPosInset]="getAriaPosInset(getOptionIndex(i, scrollerOptions))"
                                             [ariaSetSize]="ariaSetSize"
+                                            [index]="i"
+                                            [scrollerOptions]="scrollerOptions"
                                             (onClick)="onOptionSelect($event, option)"
                                             (onMouseEnter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
                                         ></p-selectItem>
                                     </ng-container>
                                 </ng-template>
-                                <li *ngIf="filterValue && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                <li *ngIf="filterValue && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option" [pBind]="ptm('emptyMessage')">
                                     @if (!emptyFilterTemplate && !_emptyFilterTemplate && !emptyTemplate) {
                                         {{ emptyFilterMessageLabel }}
                                     } @else {
                                         <ng-container #emptyFilter *ngTemplateOutlet="emptyFilterTemplate || _emptyFilterTemplate || emptyTemplate || _emptyTemplate"></ng-container>
                                     }
                                 </li>
-                                <li *ngIf="!filterValue && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                <li *ngIf="!filterValue && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option" [pBind]="ptm('emptyMessage')">
                                     @if (!emptyTemplate && !_emptyTemplate) {
                                         {{ emptyMessageLabel || emptyFilterMessageLabel }}
                                     } @else {
@@ -2930,6 +3039,7 @@ var Select = class _Select extends BaseInput {
                         #lastHiddenFocusableEl
                         role="presentation"
                         class="p-hidden-accessible p-hidden-focusable"
+                        [pBind]="ptm('hiddenLastFocusableEl')"
                         [attr.tabindex]="0"
                         (focus)="onLastHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
@@ -2944,9 +3054,16 @@ var Select = class _Select extends BaseInput {
         "[attr.id]": "id",
         "(click)": "onContainerClick($event)"
       },
-      providers: [SELECT_VALUE_ACCESSOR, SelectStyle],
+      providers: [SELECT_VALUE_ACCESSOR, SelectStyle, {
+        provide: SELECT_INSTANCE,
+        useExisting: Select
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Select
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None
+      encapsulation: ViewEncapsulation.None,
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: NgZone
@@ -3153,6 +3270,14 @@ var Select = class _Select extends BaseInput {
     }],
     options: [{
       type: Input
+    }],
+    appendTo: [{
+      type: Input,
+      args: [{
+        isSignal: true,
+        alias: "appendTo",
+        required: false
+      }]
     }],
     onChange: [{
       type: Output
