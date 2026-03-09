@@ -1,0 +1,61 @@
+﻿node : 
+node:_http_client:191
+At line:1 char:1
++ node 
+generate-api.js 2> 
+error_log.txt
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (node:_h   
+ ttp_client:191:S    
+tring) [], Remot    
+eException
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+    throw new ERR_INV
+ALID_PROTOCOL(protoco
+l, expectedProtocol);
+    ^
+
+TypeError [ERR_INVALI
+D_PROTOCOL]: 
+Protocol "http:" not 
+supported. Expected 
+"https:"
+    at new 
+ClientRequest (node:_
+http_client:191:11)
+    at request 
+(node:https:381:10)
+    at Object.get 
+(node:https:417:15)
+    at 
+downloadAndExtract (E
+:\Courses\Work\renty\
+Client\Mobile\generat
+e-api.js:73:11)
+    at IncomingMessag
+e.<anonymous> (E:\Cou
+rses\Work\renty\Clien
+t\Mobile\generate-api
+.js:52:21)
+    at 
+IncomingMessage.emit 
+(node:events:531:35)
+    at endReadableNT 
+(node:internal/stream
+s/readable:1698:12)
+    at process.proces
+sTicksAndRejections (
+node:internal/process
+/task_queues:90:21) {
+  code: 'ERR_INVALID_
+PROTOCOL'
+}
+
+Node.js v22.19.0
+
