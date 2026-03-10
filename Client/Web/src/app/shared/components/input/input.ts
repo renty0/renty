@@ -23,7 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 })
 export class InputComponent {
   private localizationService = inject(LocalizationService);
-  language: 'ar' | 'en' = 'ar';
+  language = this.localizationService.language;
   @Input() label!: string;
   @Input() formGroup!: FormGroup;
   @Input() controlName!: string;
@@ -41,9 +41,6 @@ export class InputComponent {
   @Input() minDate?: Date;
   @Input() maxDate?: Date;
 
-  constructor() {
-    this.language = this.localizationService.getLanguage();
-  }
   get formControl(): FormControl {
     return this.formGroup.get(this.controlName) as FormControl;
   }

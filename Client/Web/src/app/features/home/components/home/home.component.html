@@ -65,7 +65,7 @@
             <div class="section-header flex-header reveal">
                 <div>
                     <span class="badge">{{ 'home.categories.title' | translate }}</span>
-                    <h2>{{ 'home.categories.subtitle' | translate }}</h2>
+                    <h2 style="color: white;">{{ 'home.categories.subtitle' | translate }}</h2>
                 </div>
                 <a routerLink="/marketplace" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
@@ -106,15 +106,27 @@
             <div class="promo-visual">
                 <div class="mock-calendar shadow">
                     <div class="calendar-header">
-                        <span>January 2026</span>
+                        <span>{{ calendarLabel() }}</span>
                         <div class="flex gap-2">
-                            <mat-icon>chevron_left</mat-icon>
-                            <mat-icon>chevron_right</mat-icon>
+                            <button type="button" class="cal-nav" (click)="prevMonth()" aria-label="Previous month">
+                                <mat-icon>chevron_left</mat-icon>
+                            </button>
+                            <button type="button" class="cal-nav" (click)="nextMonth()" aria-label="Next month">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
                         </div>
                     </div>
                     <div class="calendar-days">
-                        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14, 15, 16, 17, 18, 19, 20, 21]; track i) { <div
-                            class="day-dot"></div> }
+                        @for (w of weekDays(); track w) {
+                        <div class="weekday">{{ w }}</div>
+                        }
+                        @for (cell of calendarCells(); track cell.dayNumber) {
+                        <button type="button" class="day-cell" [class.empty]="!cell.date" [class.today]="cell.isToday"
+                            [class.selected]="cell.isSelected" (click)="selectCalendarCell(cell)"
+                            [disabled]="!cell.date">
+                            {{ cell.dayNumber ?? '' }}
+                        </button>
+                        }
                     </div>
                 </div>
             </div>
@@ -128,7 +140,9 @@
                 <mat-icon class="huge-icon">gpp_good</mat-icon>
             </div>
             <div class="security-content">
-                <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">SECURE PLATFORM</span>
+                <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">
+                    {{ 'home.security.badgeLabel' | translate }}
+                </span>
                 <h2>{{ 'home.security.title' | translate }}</h2>
                 <p>{{ 'home.security.desc' | translate }}</p>
                 <div class="trust-badges">
@@ -149,7 +163,7 @@
     <section class="process-section reveal">
         <div class="container">
             <div class="section-header">
-                <span class="badge">EASY PROCESS</span>
+                <span class="badge">{{ 'home.steps.badge' | translate }}</span>
                 <h2>{{ 'home.steps.title' | translate }}</h2>
                 <p>{{ 'home.steps.subtitle' | translate }}</p>
             </div>
@@ -175,12 +189,14 @@
 <section class="app-promo-section">
     <div class="container promo-inner reveal">
         <div class="promo-text">
-            <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">MOBILE APP</span>
+            <span class="badge" style="background: rgba(255,255,255,0.1); color: white;">
+                {{ 'home.app.badge' | translate }}
+            </span>
             <h2>{{ 'home.app.title' | translate }}</h2>
             <p>{{ 'home.app.desc' | translate }}</p>
             <div class="app-buttons">
-                <button class="store-btn">App Store</button>
-                <button class="store-btn">Google Play</button>
+                <button class="store-btn">{{ 'home.app.appStore' | translate }}</button>
+                <button class="store-btn">{{ 'home.app.googlePlay' | translate }}</button>
             </div>
         </div>
         <div class="promo-mockup">
@@ -215,10 +231,14 @@
         </div>
     </div>
     <div class="footer-bottom container">
-        <p>&copy; 2026 Renty. All rights reserved.</p>
+        <p>{{ 'home.footer.copyright' | translate }}</p>
         <div class="flex gap-4">
-            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">Privacy Policy</a>
-            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">Terms of Service</a>
+            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">
+                {{ 'home.footer.privacy' | translate }}
+            </a>
+            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">
+                {{ 'home.footer.terms' | translate }}
+            </a>
         </div>
     </div>
 </footer>

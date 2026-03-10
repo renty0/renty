@@ -498,6 +498,24 @@
                     font-weight: 800;
                     font-size: 1.2rem;
                     color: $primary-color;
+
+                    .cal-nav {
+                        appearance: none;
+                        border: 0;
+                        background: transparent;
+                        padding: 6px;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: inherit;
+
+                        &:hover {
+                            background: rgba($accent-color, 0.08);
+                            color: $accent-color;
+                        }
+                    }
                 }
 
                 .calendar-days {
@@ -506,34 +524,54 @@
                     gap: 15px;
                     padding-top: 30px;
 
-                    .day-dot {
-                        height: 40px;
-                        background: #f1f5f9;
+                    .weekday {
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                        color: $gray-500;
+                        text-align: center;
+                        text-transform: uppercase;
+                        letter-spacing: 0.8px;
+                        padding-bottom: 8px;
+                    }
+
+                    .day-cell {
+                        height: 44px;
                         border-radius: 12px;
-                        transition: all 0.3s;
+                        border: 1px solid $gray-100;
+                        background: #f8fafc;
+                        transition: all 0.2s;
                         cursor: pointer;
+                        font-weight: 800;
+                        color: $gray-800;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
 
-                        &:nth-child(2),
-                        &:nth-child(5) {
-                            background: rgba($accent-color, 0.1);
-                            border: 2px solid $accent-color;
-                            position: relative;
-
-                            &::after {
-                                content: '';
-                                position: absolute;
-                                top: 50%;
-                                left: 50%;
-                                transform: translate(-50%, -50%);
-                                width: 8px;
-                                height: 8px;
-                                background: $accent-color;
-                                border-radius: 50%;
-                            }
+                        &.empty {
+                            background: transparent;
+                            border-color: transparent;
+                            cursor: default;
                         }
 
-                        &:hover {
-                            background: #e2e8f0;
+                        &:disabled {
+                            opacity: 1;
+                        }
+
+                        &:not(.empty):hover {
+                            background: #eef2ff;
+                            border-color: rgba($accent-color, 0.3);
+                            transform: translateY(-1px);
+                        }
+
+                        &.today {
+                            border-color: rgba($accent-color, 0.5);
+                            box-shadow: 0 0 0 3px rgba($accent-color, 0.12);
+                        }
+
+                        &.selected {
+                            background: rgba($accent-color, 0.12);
+                            border-color: $accent-color;
+                            color: $accent-color;
                         }
                     }
                 }
@@ -900,7 +938,21 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.9rem;
-            opacity: 0.6;
+
+            p {
+                opacity: 0.7;
+            }
+
+            a {
+                color: $gray-200;
+                opacity: 0.9;
+                text-decoration: none;
+
+                &:hover {
+                    color: $white;
+                    opacity: 1;
+                }
+            }
 
             @media (max-width: $breakpoint-md) {
                 flex-direction: column;

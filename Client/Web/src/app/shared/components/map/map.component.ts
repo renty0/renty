@@ -18,7 +18,6 @@ import {
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { GoogleMapsModule, GoogleMap } from '@angular/google-maps';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,7 +37,6 @@ export interface MapCoordinates {
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        GoogleMapsModule,
         TranslateModule,
         MatIconModule,
         MatButtonModule,
@@ -55,7 +53,7 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
     private ngZone = inject(NgZone);
 
     @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-    @ViewChild('googleMap') googleMap!: GoogleMap;
+    @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
     @Input() latitude: string | number | null | undefined = null;
     @Input() longitude: string | number | null | undefined = null;
@@ -104,6 +102,8 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
     private mutationObserver: MutationObserver | null = null;
     private positionDropdownFn: (() => void) | null = null;
     private formControlSubscription: Subscription | null = null;
+    private map: google.maps.Map | null = null;
+    private marker: google.maps.Marker | null = null;
 
     ngOnInit(): void {
         this.zoom = this.defaultZoom;
@@ -116,6 +116,9 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
     ngAfterViewInit(): void {
         if (!this.readonly) {
             this.waitForApiAndSetupAutocomplete();
+        }
+        if (this.apiLoaded) {
+            this.initializeMapInstance();
         }
     }
 
@@ -228,6 +231,7 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
         if (typeof google !== 'undefined' && google.maps) {
             this.apiLoaded = true;
             this.initializeMapOptions();
+            this.initializeMapInstance();
             this.cdr.markForCheck();
             return;
         }
@@ -257,6 +261,7 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
             this.ngZone.run(() => {
                 this.apiLoaded = true;
                 this.initializeMapOptions();
+                this.initializeMapInstance();
                 if (!this.readonly) {
                     setTimeout(() => this.setupAutocomplete(), 100);
                 }
@@ -286,11 +291,56 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
         };
     }
 
+    private initializeMapInstance(): void {
+        if (typeof google === 'undefined' || !google.maps) return;
+        if (!this.mapContainer?.nativeElement) return;
+
+        const element = this.mapContainer.nativeElement;
+
+        const initialCenter = this.getCoordinates() ?? { lat: this.center.lat, lng: this.center.lng };
+
+        this.map = new google.maps.Map(element, {
+            ...this.mapOptions,
+            center: initialCenter,
+            zoom: this.zoom
+        });
+
+        this.marker = new google.maps.Marker({
+            ...this.markerOptions,
+            position: initialCenter,
+            map: this.map
+        });
+
+        if (!this.readonly) {
+            this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
+                if (!event.latLng) {
+                    return;
+                }
+                this.ngZone.run(() => {
+                    this.setLocation(event.latLng!.lat(), event.latLng!.lng());
+                });
+            });
+
+            this.marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+                if (!event.latLng) {
+                    return;
+                }
+                this.ngZone.run(() => {
+                    this.setLocation(event.latLng!.lat(), event.latLng!.lng());
+                });
+            });
+        }
+    }
+
     private updateMarkerOptions(): void {
         this.markerOptions = {
             ...this.markerOptions,
             draggable: !this.readonly
         };
+
+        if (this.marker) {
+            this.marker.setDraggable(!this.readonly);
+        }
     }
 
     private waitForApiAndSetupAutocomplete(): void {
@@ -325,8 +375,8 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
                     });
                 });
 
-                if (this.googleMap?.googleMap) {
-                    this.autocomplete.bindTo('bounds', this.googleMap.googleMap);
+                if (this.map) {
+                    this.autocomplete.bindTo('bounds', this.map);
                 }
 
                 this.setupDropdownObserver();
@@ -419,6 +469,7 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
             this.zoom = this.markerZoom;
             this.hasCoordinates = true;
             this.displayCoordinates = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+            this.updateMapView(coords.lat, coords.lng, this.zoom);
         } else {
             this.hasCoordinates = false;
             this.displayCoordinates = '';
@@ -504,6 +555,8 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
         this.hasCoordinates = true;
         this.displayCoordinates = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
+        this.updateMapView(lat, lng, this.markerZoom);
+
         if (this.formGroup) {
             if (this.latitudeControlName && this.longitudeControlName) {
                 const latControl = this.formGroup.get(this.latitudeControlName);
@@ -523,5 +576,16 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
 
         this.locationChanged.emit({ latitude: lat, longitude: lng });
         this.cdr.markForCheck();
+    }
+
+    private updateMapView(lat: number, lng: number, zoom: number): void {
+        if (this.map) {
+            const position = { lat, lng };
+            this.map.setCenter(position);
+            this.map.setZoom(zoom);
+            if (this.marker) {
+                this.marker.setPosition(position);
+            }
+        }
     }
 }

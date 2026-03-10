@@ -22,12 +22,7 @@
 
     <div class="map-container" [style.height.px]="height">
         @if (apiLoaded) {
-        <google-map #googleMap [height]="height" width="100%" [center]="center" [zoom]="zoom" [options]="mapOptions"
-            (mapClick)="onMapClick($event)">
-            @if (hasCoordinates) {
-            <map-marker [position]="markerPosition" [options]="markerOptions" (mapDragend)="onMarkerDragEnd($event)" />
-            }
-        </google-map>
+        <div #mapContainer class="google-map"></div>
         } @else {
         <div class="map-loading">
             <div class="loading-spinner"></div>

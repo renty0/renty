@@ -1,9 +1,4 @@
 import {
-  CdkPortal,
-  CdkPortalOutlet,
-  TemplatePortal
-} from "./chunk-UTKSSFVW.js";
-import {
   SharedResizeObserver
 } from "./chunk-RIVMTDHB.js";
 import {
@@ -14,6 +9,11 @@ import {
   _StructuralStylesLoader
 } from "./chunk-7U4HWISJ.js";
 import "./chunk-ZK3V5HNW.js";
+import {
+  CdkPortal,
+  CdkPortalOutlet,
+  TemplatePortal
+} from "./chunk-UTKSSFVW.js";
 import "./chunk-UGRWDZBU.js";
 import "./chunk-6ZX4U7PU.js";
 import {
@@ -123,10 +123,10 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-NWXXA5RB.js";
-import "./chunk-JRFR6BLO.js";
 import {
   merge
 } from "./chunk-HWYXSU2G.js";
+import "./chunk-JRFR6BLO.js";
 import {
   BehaviorSubject,
   EMPTY,

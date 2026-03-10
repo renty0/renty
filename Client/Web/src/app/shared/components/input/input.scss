@@ -66,6 +66,36 @@ input.ng-invalid.ng-touched,
   cursor: pointer;
 }
 
+/* Fix password toggle icon in RTL so it is not clipped */
+::ng-deep .p-password,
+::ng-deep .p-password.p-inputwrapper {
+  overflow: visible !important;
+}
+::ng-deep .p-password .p-password-input {
+  overflow: visible !important;
+}
+::ng-deep .p-password .p-inputgroup {
+  overflow: visible !important;
+}
+::ng-deep .p-password button.p-password-toggle-btn {
+  min-width: 2.5rem !important;
+  min-height: 2.5rem !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+[dir='rtl'] ::ng-deep .p-password button.p-password-toggle-btn,
+::ng-deep [dir='rtl'] .p-password button {
+  position: relative !important;
+  z-index: 1 !important;
+}
+/* Prevent float label from clipping the toggle in RTL */
+:host ::ng-deep .p-floatlabel:has(.p-password) {
+  overflow: visible !important;
+}
+
 ::ng-deep .readonly-cursor input,
 ::ng-deep .readonly-cursor {
   pointer-events: none;

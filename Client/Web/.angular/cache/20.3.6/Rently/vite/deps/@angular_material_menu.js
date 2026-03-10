@@ -1,4 +1,14 @@
 import {
+  MatRippleModule
+} from "./chunk-DH53F2VB.js";
+import {
+  MatRipple
+} from "./chunk-AOKR2ESB.js";
+import {
+  _StructuralStylesLoader
+} from "./chunk-7U4HWISJ.js";
+import "./chunk-ZK3V5HNW.js";
+import {
   OverlayConfig,
   OverlayModule,
   createFlexibleConnectedPositionStrategy,
@@ -9,16 +19,6 @@ import {
   DomPortalOutlet,
   TemplatePortal
 } from "./chunk-UTKSSFVW.js";
-import {
-  MatRippleModule
-} from "./chunk-DH53F2VB.js";
-import {
-  MatRipple
-} from "./chunk-AOKR2ESB.js";
-import {
-  _StructuralStylesLoader
-} from "./chunk-7U4HWISJ.js";
-import "./chunk-ZK3V5HNW.js";
 import "./chunk-UGRWDZBU.js";
 import "./chunk-6ZX4U7PU.js";
 import {
@@ -126,10 +126,10 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-NWXXA5RB.js";
-import "./chunk-JRFR6BLO.js";
 import {
   merge
 } from "./chunk-HWYXSU2G.js";
+import "./chunk-JRFR6BLO.js";
 import {
   Subject,
   Subscription,

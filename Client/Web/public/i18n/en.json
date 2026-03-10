@@ -128,6 +128,7 @@
     "welcomeMessage": "Join Renty Today",
     "haveAccount": "Already have an account?",
     "login": "Login here",
+    "pass": " ",
     "terms": "Terms and Conditions",
     "acceptOn": "I accept the ",
     "registerButton": "Create Account",
@@ -416,7 +417,10 @@
     "invalidFormat": "Invalid format",
     "invalidPhone": "Invalid phone number",
     "passwordMismatch": "Passwords do not match",
-    "acceptTerms": "You must accept the terms and conditions"
+    "acceptTerms": "You must accept the terms and conditions",
+    "missingUpperCase": "Password must contain at least one uppercase letter",
+    "missingNumber": "Password must contain at least one number",
+    "missingSpecialChar": "Password must contain at least one special character"
   },
   "notFound": {
     "alt": "Renty",
@@ -477,7 +481,7 @@
       "model": "Model",
       "style": "Style"
     },
-    "dashboard": {
+    "calendar": {
       "badge": "Stay Organized",
       "title": "Real-time Availability Calendar",
       "desc": "Check the live status of any item. Our smart calendar prevents double-bookings and ensures product readiness.",
@@ -486,12 +490,14 @@
       "check3": "Automated reminders"
     },
     "security": {
+      "badgeLabel": "Secure Platform",
       "title": "Your Peace of Mind is Our Priority",
       "desc": "Every rental on Renty is covered by our comprehensive insurance policy. We handle the risks so you can focus on the experience.",
       "badge1": "Trust & Safety",
       "badge2": "Insurance Coverage"
     },
     "steps": {
+      "badge": "Easy Process",
       "title": "How Renty Works",
       "subtitle": "Renting has never been this easy. Three simple steps to get what you need.",
       "find": {
@@ -508,8 +514,11 @@
       }
     },
     "app": {
+      "badge": "Mobile App",
       "title": "Take Renty On The Go",
-      "desc": "Download our mobile app to manage your rentals, chat with owners, and get real-time notifications anywhere, anytime."
+      "desc": "Download our mobile app to manage your rentals, chat with owners, and get real-time notifications anywhere, anytime.",
+      "appStore": "App Store",
+      "googlePlay": "Google Play"
     },
     "footer": {
       "about": "Renty is the leading peer-to-peer rental marketplace, empowering individuals to access and share resources efficiently.",
@@ -521,7 +530,10 @@
         "title": "Join Our Community",
         "desc": "Subscribe to get latest updates and exclusive offers."
       },
-      "emailPlaceholder": "Your email address"
+      "emailPlaceholder": "Your email address",
+      "copyright": "© 2026 Renty. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     },
     "stats": {
       "items": "Rentable Items",
