@@ -1,4 +1,4 @@
-<div class="uploader-container" [class.active]="isDragging" [class.has-file]="selectedFile" [class.error]="hasError"
+<div class="uploader-container" [class.active]="isDragging" [class.has-file]="imageUrl || selectedFile" [class.error]="hasError"
   (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
 
   <div class="drop-zone" (click)="triggerFileInput()">
@@ -7,15 +7,15 @@
       @if (!selectedFile && !imageUrl && !isUploading) {
       <div class="state-content empty-state">
         <div class="icon-circle">
-          <mat-icon ripple>cloud_upload</mat-icon>
+          <mat-icon>cloud_upload</mat-icon>
         </div>
         <div class="text-group">
-          <h3>{{ (label || 'labels.upload_image') | translate }}</h3>
-          <p>{{ 'uploader.drag_drop' | translate }} or <span class="browse-text">{{ 'buttons.browse' | translate
-              }}</span></p>
+          <h3 class="upload-title">{{ (label || 'labels.upload_image') | translate }}</h3>
+          <p class="upload-subtitle">{{ 'uploader.drag_drop' | translate }} <span class="browse-text">{{ 'buttons.browse' | translate }}</span></p>
         </div>
-        <div class="hint-text">
-          {{ 'uploader.hint' | translate }}
+        <div class="hint-pill">
+          <mat-icon class="hint-icon">info_outline</mat-icon>
+          <span>{{ 'uploader.hint' | translate }}</span>
         </div>
       </div>
       }
@@ -23,20 +23,18 @@
       <!-- Uploading State -->
       @if (isUploading) {
       <div class="state-content uploading-state">
-        <div class="preview-backdrop" *ngIf="previewUrl">
-          <img [src]="previewUrl" alt="Preview">
+        <div class="preview-backdrop" *ngIf="previewUrl || imageUrl">
+          <img [src]="previewUrl || imageUrl" alt="Preview blur">
         </div>
-        <div class="upload-info">
+        <div class="glass-panel">
           <div class="progress-circle-container">
-            <svg class="progress-ring" width="80" height="80">
-              <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.2)" stroke-width="4"
-                fill="transparent" r="36" cx="40" cy="40" />
-              <circle class="progress-ring__circle" stroke="white" stroke-width="4" fill="transparent" r="36" cx="40"
-                cy="40" [style.stroke-dashoffset]="226 - (226 * uploadProgress / 100)" />
+            <svg class="progress-ring" width="70" height="70">
+              <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.2)" stroke-width="4" fill="transparent" r="31" cx="35" cy="35" />
+              <circle class="progress-ring__circle" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="transparent" r="31" cx="35" cy="35" [style.stroke-dashoffset]="195 - (195 * uploadProgress / 100)" />
             </svg>
-            <span class="progress-number">{{ uploadProgress }}%</span>
+            <span class="progress-number">{{ uploadProgress | number:'1.0-0' }}%</span>
           </div>
-          <p>{{ 'uploader.uploading' | translate }}...</p>
+          <p class="uploading-text">{{ 'uploader.uploading' | translate }}...</p>
         </div>
       </div>
       }
@@ -46,26 +44,40 @@
       <div class="state-content success-state">
         <div class="image-wrapper">
           <img [src]="imageUrl" [alt]="imageName" class="final-image">
-          <div class="image-overlay">
-            <button type="button" class="btn-remove" (click)="resetState($event)"
-              [title]="'buttons.delete' | translate">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <div class="file-info">
-              <span class="name">{{ imageName }}</span>
+          <div class="glass-overlay">
+            <div class="overlay-header">
+              <div class="file-badge">
+                <mat-icon>image</mat-icon>
+                <span class="name">{{ imageName }}</span>
+              </div>
+              <button type="button" class="btn-remove" (click)="resetState($event)" [title]="'buttons.delete' | translate">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+            
+            <div class="overlay-actions">
+               <button type="button" class="btn-replace" (click)="triggerFileInput(); $event.stopPropagation()">
+                 <mat-icon>edit</mat-icon>
+                 {{ 'buttons.replace' | translate }}
+               </button>
             </div>
           </div>
         </div>
       </div>
       }
 
-      <!-- Preview/Ready State (if auto-upload is off, but here it's on) -->
+      <!-- Ready State (if auto-upload fails or is disabled) -->
       @if (selectedFile && !isUploading && !imageUrl) {
       <div class="state-content ready-state">
         <div class="preview-backdrop" *ngIf="previewUrl">
           <img [src]="previewUrl" alt="Preview">
         </div>
-        <div class="ready-actions">
+        <div class="glass-panel ready-panel">
+          <mat-icon class="ready-icon">check_circle</mat-icon>
+          <div class="ready-info">
+             <span class="ready-name">{{ selectedFile.name }}</span>
+             <span class="ready-size">{{ getFileSize(selectedFile.size) }}</span>
+          </div>
           <button type="button" class="btn-upload" (click)="uploadFile($event)">
             <mat-icon>upload</mat-icon>
             {{ 'buttons.upload' | translate }}

@@ -8,69 +8,54 @@
 .uploader-container {
   width: 100%;
   position: relative;
-  border-radius: $border-radius-xl;
   transition: 0.3s;
 
   &.error {
     .drop-zone {
       border-color: rgba($danger, 0.5);
       background: rgba($danger, 0.02);
+      box-shadow: 0 0 0 4px rgba($danger, 0.05);
     }
   }
 }
 
 .drop-zone {
   width: 100%;
-  min-height: 220px;
-  border: 2px dashed rgba($primary-color, 0.15);
+  min-height: 240px;
+  border: 2px dashed rgba($primary-color, 0.2);
   border-radius: $border-radius-xl;
-  background: rgba($white, 0.5);
+  background: #fafafa;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 
-  &:hover {
+  &:hover, .uploader-container.active & {
     border-color: $accent-color;
     background: rgba($accent-color, 0.02);
-    transform: translateY(-2px);
-    box-shadow: $shadow-lg;
-
+    
     .icon-circle {
-      background: $accent-color;
-      transform: scale(1.1) rotate(5deg);
+      background: $accent-color !important;
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 20px rgba($accent-color, 0.25);
 
       mat-icon {
-        color: $white;
+        color: $white !important;
       }
     }
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba($accent-color, 0.05) 0%, transparent 70%);
-    opacity: 0;
-    transition: $transition-fast;
-    pointer-events: none;
-  }
-
-  &:hover::after {
-    opacity: 1;
   }
 }
 
 .state-container {
   width: 100%;
   height: 100%;
+  padding: $spacing-md;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: $spacing-md;
 }
 
 .state-content {
@@ -80,58 +65,80 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
   animation: fadeIn 0.4s ease-out;
 }
 
 // Empty State
 .empty-state {
-  gap: $spacing-sm;
+  gap: $spacing-md;
 
   .icon-circle {
-    width: 64px;
-    height: 64px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
-    background: rgba($primary-color, 0.05);
-    @include flex-center;
-    transition: $transition-fast;
-    margin-bottom: $spacing-xs;
+    background: rgba($primary-color, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
     mat-icon {
       font-size: 32px;
       width: 32px;
       height: 32px;
       color: $primary-color;
+      transition: color 0.3s;
     }
   }
 
-  h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: $text-dark;
-  }
-
-  p {
-    margin: 4px 0 0;
-    font-size: 14px;
-    color: $gray-500;
-
-    .browse-text {
-      color: $accent-color;
+  .text-group {
+    text-align: center;
+    
+    .upload-title {
+      margin: 0 0 4px 0;
+      font-size: 1.1rem;
       font-weight: 600;
-      text-decoration: underline;
-      text-underline-offset: 4px;
+      color: $text-dark;
+      letter-spacing: -0.01em;
+    }
+
+    .upload-subtitle {
+      margin: 0;
+      font-size: 0.9rem;
+      color: $gray-500;
+
+      .browse-text {
+        color: $accent-color;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        
+        &:hover {
+          opacity: 0.8;
+          text-decoration: underline;
+        }
+      }
     }
   }
 
-  .hint-text {
-    margin-top: $spacing-xs;
-    font-size: 12px;
-    color: $gray-400;
-    background: $gray-50;
-    padding: 4px 12px;
-    border-radius: 20px;
+  .hint-pill {
+    margin-top: $spacing-sm;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: $gray-100;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: $gray-600;
+    font-weight: 500;
+
+    .hint-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: $gray-500;
+    }
   }
 }
 
@@ -142,10 +149,11 @@
 
   .preview-backdrop {
     position: absolute;
-    inset: -20px;
+    inset: -40px;
     z-index: -1;
-    filter: blur(10px) brightness(0.6);
-
+    filter: blur(25px) brightness(0.7);
+    transform: scale(1.1);
+    
     img {
       width: 100%;
       height: 100%;
@@ -153,151 +161,312 @@
     }
   }
 
-  .upload-info {
-    color: $white;
-    @include flex-center;
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: $border-radius-lg;
+    padding: $spacing-lg;
+    display: flex;
     flex-direction: column;
-    gap: $spacing-sm;
-
-    p {
-      margin: 0;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    align-items: center;
+    gap: $spacing-md;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   }
 
   .progress-circle-container {
     position: relative;
-    @include flex-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .progress-ring {
       transform: rotate(-90deg);
     }
 
     .progress-ring__circle {
-      transition: stroke-dashoffset 0.35s;
-      stroke-dasharray: 226; // 2 * PI * 36
+      transition: stroke-dashoffset 0.15s ease-out;
+      stroke-dasharray: 195;
     }
 
     .progress-number {
       position: absolute;
-      font-size: 18px;
+      font-size: 1.1rem;
       font-weight: 700;
+      color: $white;
     }
+  }
+
+  .uploading-text {
+    margin: 0;
+    color: $white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 0.95rem;
   }
 }
 
 // Success State
 .success-state {
-  height: 100%;
+  position: absolute;
+  inset: 0;
+  padding: 0;
 
   .image-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 180px;
-    border-radius: $border-radius-lg;
     overflow: hidden;
-    box-shadow: $shadow-md;
 
     .final-image {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      background: $gray-50;
+      object-fit: cover;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .image-overlay {
+    .glass-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: $spacing-sm;
+      padding: $spacing-md;
       opacity: 0;
-      transition: $transition-fast;
+      transition: all 0.3s ease;
 
-      .btn-remove {
-        align-self: flex-end;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba($danger, 0.9);
-        color: $white;
-        border: none;
-        cursor: pointer;
-        @include flex-center;
-        box-shadow: $shadow-sm;
-        transition: $transition-fast;
-
-        &:hover {
-          background: $danger;
-          transform: scale(1.1);
+      .overlay-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        transform: translateY(-10px);
+        transition: transform 0.3s ease;
+        opacity: 0;
+        
+        .file-badge {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(8px);
+          padding: 6px 12px;
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: $white;
+          
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+          
+          .name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
 
-        mat-icon {
-          font-size: 20px;
-          width: 20px;
-          height: 20px;
+        .btn-remove {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba($danger, 0.9);
+          backdrop-filter: blur(4px);
+          color: $white;
+          border: 1px solid rgba(255,255,255,0.2);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+
+          &:hover {
+            background: $danger;
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
         }
       }
 
-      .file-info {
-        .name {
-          color: $white;
-          font-size: 13px;
-          font-weight: 500;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: block;
+      .overlay-actions {
+        display: flex;
+        justify-content: center;
+        transform: translateY(10px);
+        transition: transform 0.3s ease;
+        opacity: 0;
+
+        .btn-replace {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: $white;
+          color: $text-dark;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 30px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+          transition: all 0.2s;
+
+          &:hover {
+            background: $accent-color;
+            color: $white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+          }
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
         }
       }
     }
 
-    &:hover .image-overlay {
-      opacity: 1;
+    &:hover {
+      .final-image {
+        transform: scale(1.05);
+      }
+      .glass-overlay {
+        opacity: 1;
+        
+        .overlay-header, .overlay-actions {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
     }
   }
 }
 
-// Error Wrapper
+// Ready State
+.ready-state {
+  position: relative;
+  z-index: 1;
+
+  .preview-backdrop {
+    position: absolute;
+    inset: -40px;
+    z-index: -1;
+    filter: blur(20px) brightness(0.6);
+    transform: scale(1.1);
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .ready-panel {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: $border-radius-lg;
+    padding: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-md;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+
+    .ready-icon {
+      color: $white;
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .ready-info {
+      text-align: center;
+      color: $white;
+
+      .ready-name {
+        display: block;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 4px;
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ready-size {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+    }
+
+    .btn-upload {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: $accent-color;
+      color: $white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba($accent-color, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($accent-color, 0.4);
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
 .error-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: $spacing-xs;
+  gap: 6px;
+  margin-top: $spacing-sm;
   color: $danger;
-  font-size: 13px;
+  font-size: 0.85rem;
   font-weight: 500;
-  padding-left: 4px;
+  padding-left: 8px;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.96);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }

@@ -16,6 +16,16 @@ public class TokenGenerator : ITokenGenerator
     public TokenGenerator(IOptions<JwtSettings> jwtSettings)
     {
         _jwtSettings = jwtSettings.Value;
+        
+        // Final sanity check - if somehow IOptions failed to load from Environment
+        if (string.IsNullOrEmpty(_jwtSettings.Key) || _jwtSettings.Key.Length < 32)
+        {
+            var envKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            if (!string.IsNullOrEmpty(envKey))
+            {
+                _jwtSettings.Key = envKey;
+            }
+        }
     }
 
     public int TokenExpMinutes => _jwtSettings.TokenExpMinutes;

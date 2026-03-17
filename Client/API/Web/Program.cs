@@ -5,6 +5,8 @@ using Web;
 using Web.Hubs;
 using Web.Endpoints;
 using Microsoft.Extensions.FileProviders;
+// Load environment variables from .env file
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "../../../.env"));
 
 var builder = WebApplication.CreateBuilder(args);
 

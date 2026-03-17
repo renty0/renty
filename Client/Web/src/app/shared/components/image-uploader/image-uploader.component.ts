@@ -108,11 +108,11 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
     this.isUploading = true;
     this.uploadProgress = 0;
     const progressInterval = setInterval(() => {
-      if (this.uploadProgress < 85) {
-        this.uploadProgress += Math.random() * 25;
+      if (this.uploadProgress < 90) {
+        this.uploadProgress += Math.random() * 5;
         this.cdr.markForCheck();
       }
-    }, 150);
+    }, 50);
 
     const fileParam = {
       data: this.selectedFile,
@@ -173,11 +173,11 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
     this.isUploading = true;
     this.uploadProgress = 0;
     const progressInterval = setInterval(() => {
-      if (this.uploadProgress < 85) {
-        this.uploadProgress += Math.random() * 25;
+      if (this.uploadProgress < 90) {
+        this.uploadProgress += Math.random() * 5;
         this.cdr.markForCheck();
       }
-    }, 150);
+    }, 50);
 
     const fileParam = {
       data: this.selectedFile,
@@ -263,11 +263,11 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
     this.isUploading = true;
     this.uploadProgress = 0;
     const progressInterval = setInterval(() => {
-      if (this.uploadProgress < 85) {
-        this.uploadProgress += Math.random() * 25;
+      if (this.uploadProgress < 90) {
+        this.uploadProgress += Math.random() * 5;
         this.cdr.markForCheck();
       }
-    }, 150);
+    }, 50);
 
     try {
       const fileParam = {

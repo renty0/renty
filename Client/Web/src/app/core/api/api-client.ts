@@ -22,7 +22,7 @@ export class AuthClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
     }
 
     authRegister(command: RegisterCommand): Observable<ApiResponse<AuthRegisterData>> {
