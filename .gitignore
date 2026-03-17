@@ -4,9 +4,21 @@
 *.user
 *.userosscache
 *.sln.docstates
-
-# User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+
+# Diagnostics and logging
+*.log
+*.err
+crash.log
+*_log.txt
+*_log_*.txt
+*_errors*.txt
+run_error*.txt
+build_*.txt
+api_log.txt
+full_errors.txt
+final_errors.txt
+error_log*.txt
 
 # Build results
 [Dd]ebug/
@@ -23,14 +35,41 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+TestResults/
 
-# Visual Studio 2015/2017/2019/2022 cache/options directory
+# Visual Studio / Visual Studio Code / IDEs
 .vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.vscode-test/
+.idea/
+*.swp
+*.bak
+*~.nib
 
-# Node.js
+# Node.js & Angular
 node_modules/
 dist/
+dist-server/
 .npm/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+.nx/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+ENV/
+.env
 
 # OS generated files
 .DS_Store
@@ -43,9 +82,6 @@ Thumbs.db
 
 # Other temp files
 *.tmp
-*.bak
-*.swp
-*~.nib
 local.properties
 .classpath
 .project
