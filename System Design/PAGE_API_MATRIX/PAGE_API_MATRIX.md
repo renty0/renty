@@ -44,6 +44,8 @@
 |--------|----------|---------|------|
 | GET | `/items/:id` | Load full item detail | No |
 | GET | `/items/:id/reviews` | Load item reviews | No |
+| GET | `/items/:id/comments` | Load item comments / replies | No |
+| POST | `/items/:id/comments` | Post a comment or reply | Yes |
 | POST | `/items/:id/favorite` | Add to favorites | Yes |
 | DELETE | `/items/:id/favorite` | Remove from favorites | Yes |
 
@@ -94,6 +96,7 @@
 |--------|----------|---------|-------------|
 | GET | `/rentals/:id` | Load rental detail | renter or owner |
 | PUT | `/rentals/:id/confirm` | Confirm rental request | owner only |
+| PUT | `/rentals/:id/evaluation-decision` | Accept/Reject hub item | renter only |
 | PUT | `/rentals/:id/complete` | Mark rental as returned | owner only |
 | PUT | `/rentals/:id/cancel` | Cancel rental | renter only (before confirmed) |
 
@@ -239,10 +242,13 @@
 | `POST /items/:id/favorite` | Item Details, Browse (heart btn) |
 | `DELETE /items/:id/favorite` | Item Details, Favorites |
 | `GET /users/me/favorites` | Favorites |
+| `GET /items/:id/comments` | Item Details |
+| `POST /items/:id/comments` | Item Details |
 | `POST /rentals` | Rent Modal |
 | `GET /rentals` | My Rentals |
 | `GET /rentals/:id` | Rental Details |
 | `PUT /rentals/:id/confirm` | Rental Details (owner view) |
+| `PUT /rentals/:id/evaluation-decision` | Rental Details (renter view) |
 | `PUT /rentals/:id/activate` | System (after payment) |
 | `PUT /rentals/:id/complete` | Rental Details (owner view) |
 | `PUT /rentals/:id/cancel` | Rental Details (renter view) |
