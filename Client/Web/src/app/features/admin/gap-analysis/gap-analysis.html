@@ -18,62 +18,64 @@
       </button>
     </div>
   } @else {
-    <div class="table-container glass-card">
-      <table mat-table [dataSource]="gaps()">
-
-        <!-- Category Column -->
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>{{ 'labels.category' | translate }}</th>
-          <td mat-cell *matCellDef="let element"><strong>{{ element.categoryName }}</strong></td>
-        </ng-container>
-
-        <!-- Demand Column -->
-        <ng-container matColumnDef="demand">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.demand' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.demand }}</td>
-        </ng-container>
-
-        <!-- Supply Column -->
-        <ng-container matColumnDef="supply">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.supply' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.supply }}</td>
-        </ng-container>
-
-        <!-- Gap Score Column -->
-        <ng-container matColumnDef="gap_score">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.gapScore' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            <div class="gap-score-cell">
-              <span>{{ element.gapScore | number:'1.1-1' }}</span>
-              <mat-progress-bar
-                [mode]="'determinate'"
-                [value]="element.gapScore * 10"
-                [color]="getGapColor(element.gapScore)">
-              </mat-progress-bar>
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- Recommendations Column -->
-        <ng-container matColumnDef="recommendations">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.recommendations' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            <span class="recommendation-badge" [class.urgent]="element.gapScore > 7">
-              {{ element.gapScore > 7 ? 'High Priority' : 'Normal' }}
-            </span>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      @if (gaps().length === 0) {
-        <div class="empty-state">
-            <p>No gap analysis results found.</p>
-        </div>
-      }
-    </div>
+    <mat-card class="table-card">
+      <div class="table-container">
+        <table mat-table [dataSource]="gaps()" class="data-table">
+  
+          <!-- Category Column -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.category' | translate }}</th>
+            <td mat-cell *matCellDef="let element"><strong>{{ element.categoryName }}</strong></td>
+          </ng-container>
+  
+          <!-- Demand Column -->
+          <ng-container matColumnDef="demand">
+            <th mat-header-cell *matHeaderCellDef>{{ 'admin.demand' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.demand }}</td>
+          </ng-container>
+  
+          <!-- Supply Column -->
+          <ng-container matColumnDef="supply">
+            <th mat-header-cell *matHeaderCellDef>{{ 'admin.supply' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.supply }}</td>
+          </ng-container>
+  
+          <!-- Gap Score Column -->
+          <ng-container matColumnDef="gap_score">
+            <th mat-header-cell *matHeaderCellDef>{{ 'admin.gapScore' | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="gap-score-cell">
+                <span>{{ element.gapScore | number:'1.1-1' }}</span>
+                <mat-progress-bar
+                  [mode]="'determinate'"
+                  [value]="element.gapScore * 10"
+                  [color]="getGapColor(element.gapScore)">
+                </mat-progress-bar>
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- Recommendations Column -->
+          <ng-container matColumnDef="recommendations">
+            <th mat-header-cell *matHeaderCellDef>{{ 'admin.recommendations' | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="recommendation-badge" [class.urgent]="element.gapScore > 7">
+                {{ element.gapScore > 7 ? 'High Priority' : 'Normal' }}
+              </span>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+  
+        @if (gaps().length === 0) {
+          <div class="empty-state">
+              <p>No gap analysis results found.</p>
+          </div>
+        }
+      </div>
+    </mat-card>
 
     <div class="actions">
         <button mat-flat-button color="primary" (click)="loadGapAnalysis()">

@@ -47,56 +47,68 @@ input.ng-invalid.ng-touched,
 ::ng-deep p-floatlabel label.error-label {
   color: #7f1d1d !important;
 }
+::ng-deep {
+  .p-select-overlay, .p-multiselect-overlay, .p-datepicker-panel {
+    background-color: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .readonly {
+    input {
+      cursor: none;
+    }
+    button, chevrondownicon {
+      display: none !important;
+    }
+  }
+
+  .p-select-label {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .p-password-panel .p-password-meter, .p-password-strength {
+    display: none !important;
+  }
+
+  .p-password-toggle-mask-icon {
+    cursor: pointer;
+  }
+
+  .p-password, .p-password.p-inputwrapper, .p-password .p-password-input, .p-password .p-inputgroup {
+    overflow: visible !important;
+  }
+
+  .p-password button.p-password-toggle-btn {
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: visible !important;
+  }
+
+  [dir='rtl'] .p-password button.p-password-toggle-btn,
+  [dir='rtl'] .p-password button {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .readonly-cursor input, .readonly-cursor {
+    pointer-events: none;
+  }
+}
+
+:host ::ng-deep .p-floatlabel:has(.p-password) {
+  overflow: visible !important;
+}
+
 .p-floatlabel:has(input.p-filled) label,
 .p-floatlabel:has(textarea.p-filled) label,
 .p-floatlabel:has(.p-inputwrapper-filled) label {
   color: var(--blue-main-color);
 }
-::ng-deep .p-select-label {
-  display: flex !important;
-  align-items: center !important;
-}
-::ng-deep .p-password-panel .p-password-meter {
-  display: none !important;
-}
-::ng-deep .p-password-strength {
-  display: none !important;
-}
-::ng-deep .p-password-toggle-mask-icon {
-  cursor: pointer;
-}
 
-/* Fix password toggle icon in RTL so it is not clipped */
-::ng-deep .p-password,
-::ng-deep .p-password.p-inputwrapper {
-  overflow: visible !important;
-}
-::ng-deep .p-password .p-password-input {
-  overflow: visible !important;
-}
-::ng-deep .p-password .p-inputgroup {
-  overflow: visible !important;
-}
-::ng-deep .p-password button.p-password-toggle-btn {
-  min-width: 2.5rem !important;
-  min-height: 2.5rem !important;
-  flex-shrink: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: visible !important;
-}
-[dir='rtl'] ::ng-deep .p-password button.p-password-toggle-btn,
-::ng-deep [dir='rtl'] .p-password button {
-  position: relative !important;
-  z-index: 1 !important;
-}
-/* Prevent float label from clipping the toggle in RTL */
-:host ::ng-deep .p-floatlabel:has(.p-password) {
-  overflow: visible !important;
-}
 
-::ng-deep .readonly-cursor input,
-::ng-deep .readonly-cursor {
-  pointer-events: none;
-}

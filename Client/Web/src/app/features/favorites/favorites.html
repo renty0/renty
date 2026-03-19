@@ -14,7 +14,8 @@
     } @else {
       <div class="cards-grid">
         @for (item of favorites(); track item.id) {
-          <mat-card class="entity-card animate-fade-in" (click)="viewItem(item.id!)">
+          <mat-card class="entity-card animate-fade-in" [routerLink]="['/items', item.id]">
+
             <div class="card-content">
               <div class="card-image">
                 @if (item.primaryImage) {

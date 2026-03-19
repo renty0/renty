@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,6 +37,7 @@ import { MatDialog } from '@angular/material/dialog';
     MatButtonToggleModule,
     HeaderSectionComponent,
     LoadingButtonComponent,
+    RouterModule
   ],
   templateUrl: './items-list.component.html',
   styleUrl: './items-list.component.scss',

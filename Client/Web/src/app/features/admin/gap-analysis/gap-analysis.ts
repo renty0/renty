@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 import { AdminClient, IGapDto } from '../../../core/api/api-client';
 import { TranslateModule } from '@ngx-translate/core';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
@@ -17,6 +18,7 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
     MatButtonModule,
     MatTableModule,
     MatProgressBarModule,
+    MatCardModule,
     TranslateModule,
     HeaderSectionComponent
   ],

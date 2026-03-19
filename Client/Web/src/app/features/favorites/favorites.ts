@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,9 +16,10 @@ import { HeaderSectionComponent } from '../../shared/components/header-section/h
     CommonModule,
     TranslateModule,
     MatCardModule,
-    MatIconModule,
     MatProgressSpinnerModule,
+    MatIconModule,
     HeaderSectionComponent,
+    RouterModule
   ],
   templateUrl: './favorites.html',
   styleUrl: './favorites.scss'

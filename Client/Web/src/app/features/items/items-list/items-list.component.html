@@ -73,7 +73,8 @@
         <th mat-header-cell *matHeaderCellDef>{{ 'labels.actions' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <div class="actions-cell">
-            <app-loading-button color="accent" variant="stroked" size="sm" (clicked)="viewItem(row.id!)"
+            <app-loading-button color="accent" variant="stroked" size="sm" [routerLink]="['/items', row.id]"
+
               [title]="'buttons.view' | translate">
               <mat-icon>visibility</mat-icon>
             </app-loading-button>
@@ -99,7 +100,7 @@
   } @else {
   <div class="cards-grid">
     @for (item of dataSource(); track item.id) {
-    <mat-card class="entity-card" (click)="viewItem(item.id!)">
+    <mat-card class="entity-card" [routerLink]="['/items', item.id]">
       <div class="card-content">
         <div class="card-image">
           @if (item.primaryImage) {
@@ -129,7 +130,7 @@
       </div>
       <div class="card-actions">
         <app-loading-button (click)="$event.stopPropagation()" color="accent" variant="stroked" size="sm"
-          (clicked)="viewItem(item.id!)">
+          [routerLink]="['/items', item.id]">
           <mat-icon>visibility</mat-icon>
         </app-loading-button>
         <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"

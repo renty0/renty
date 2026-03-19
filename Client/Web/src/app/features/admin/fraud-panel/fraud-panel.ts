@@ -8,7 +8,8 @@ import { AdminClient, IFraudLogDto } from '../../../core/api/api-client';
 import { TranslateModule } from '@ngx-translate/core';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-fraud-panel',
@@ -19,8 +20,9 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     MatButtonModule,
     MatTableModule,
     MatChipsModule,
-    MatProgressBar,
+    MatProgressBarModule,
     MatPaginatorModule,
+    MatCardModule,
     TranslateModule,
     HeaderSectionComponent
   ],

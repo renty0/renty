@@ -275,6 +275,9 @@
     "submit": "Confirm Rental Request",
     "success": "Rental request submitted successfully!",
     "error": "Failed to submit rental request. Please try again.",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
     "list": {
       "title": "My Rentals",
       "empty": "You have no rentals yet.",
@@ -653,6 +656,15 @@
     "noNotifications": "You're all caught up!",
     "markAllRead": "Mark all as read",
     "unread": "Unread"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "summary": "Order Summary",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery Fee",
+    "place_order": "Place Order",
+    "items": "Items",
+    "success": "Your order has been placed successfully!"
   },
   "errors": {
     "unknownError": "An unexpected error occurred",

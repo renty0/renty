@@ -13,6 +13,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RentModalComponent } from '../../rentals/rent-modal/rent-modal';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
     selector: 'app-product-details',
@@ -197,21 +199,34 @@ export class ProductDetailsComponent implements OnInit {
         const id = this.item()?.id;
         if (!id) return;
 
-        if (confirm('Are you sure you want to delete this item?')) {
-            this.itemsClient.deleteItem(id)
-                .pipe(
-                    tap(res => {
-                        if (!res.error) {
-                            this.toast.showSuccess('Item deleted successfully');
-                            this.router.navigate(['/marketplace']);
-                        }
-                    }),
-                    catchError(err => {
-                        this.toast.showError('Failed to delete item');
-                        return of(null);
-                    })
-                ).subscribe();
-        }
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: this.translate.instant('buttons.delete'),
+                message: this.translate.instant('products.deleteConfirmation'),
+                confirmText: this.translate.instant('buttons.delete'),
+                cancelText: this.translate.instant('buttons.cancel'),
+                color: 'warn'
+            } as ConfirmDialogData,
+            width: '480px'
+        });
+
+        dialogRef.afterClosed().subscribe(confirmed => {
+            if (confirmed) {
+                this.itemsClient.deleteItem(id)
+                    .pipe(
+                        tap(res => {
+                            if (!res.error) {
+                                this.toast.showSuccess('Item deleted successfully');
+                                this.router.navigate(['/marketplace']);
+                            }
+                        }),
+                        catchError(err => {
+                            this.toast.showError('Failed to delete item');
+                            return of(null);
+                        })
+                    ).subscribe();
+            }
+        });
     }
 
     openRentModal() {

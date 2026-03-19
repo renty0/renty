@@ -138,6 +138,7 @@
             <div class="related-grid">
                 @for (rItem of relatedItems(); track rItem.id) {
                 <div class="related-card" [routerLink]="['/marketplace/product', rItem.id]">
+
                     <div class="card-img">
                         <img [src]="rItem.primaryImage || 'assets/placeholder-product.png'" [alt]="getLocalizedName(rItem)">
                     </div>

@@ -42,13 +42,9 @@ export class App {
     this.translate.setTranslation('en', translationsEN);
     this.translate.setFallbackLang('en');
     this.sidenavOpened = signal(this.isMobile() === false);
-
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
       this.currentRoute.set(event.urlAfterRedirects);
     });
-
     effect(() => {
       const lang = this.localizationService.language();
       this.translate.use(lang);

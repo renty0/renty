@@ -10,7 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 
 @Component({
@@ -24,7 +25,8 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
     MatSlideToggleModule,
     MatChipsModule,
     MatPaginatorModule,
-    MatProgressBar,
+    MatProgressBarModule,
+    MatCardModule,
     HeaderSectionComponent,
     TranslateModule,
     MatSnackBarModule,

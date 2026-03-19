@@ -1,13 +1,14 @@
 <div class="data-container ticket-list-container">
   <app-header-section
-    [title]="isSupport() ? ('support.dashboard_title' | translate) : ('support.title' | translate)"
+    [title]="isSupport() ? ('support.title' | translate) : ('support.title' | translate)"
     [subtitle]="
       isSupport() ? ('support.dashboard_subtitle' | translate) : ('support.myTickets' | translate)
     "
     icon="support_agent"
     buttonText="{{ 'support.openTicket' | translate }}"
+    [showButton]="false"
   >
-    <div actions>
+    <div extra-actions>
       <button mat-flat-button color="primary" routerLink="new">
         <mat-icon>add</mat-icon>
       </button>

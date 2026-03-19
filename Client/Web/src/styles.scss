@@ -47,3 +47,42 @@ html {
 p {
   margin: 0;
 }
+
+/* Global PrimeNG Overlays Fix - Ensure solid backgrounds */
+.p-select-overlay, 
+.p-multiselect-overlay, 
+.p-datepicker-panel,
+.p-autocomplete-panel,
+.p-cascadeselect-panel,
+.p-tree-select-panel,
+.p-menu,
+.p-tieredmenu-overlay,
+.p-contextmenu,
+.p-popover,
+.p-tooltip {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    color: #1e293b !important;
+}
+
+.p-select-option,
+.p-multiselect-option {
+    color: #1e293b !important;
+    
+    &:hover, &.p-focus {
+        background-color: #f1f5f9 !important;
+    }
+    
+    &.p-selected {
+        background-color: #e2e8f0 !important;
+        color: #0c295e !important;
+        font-weight: 600 !important;
+    }
+}
+
+/* Ensure list items are visible */
+.p-select-list, .p-multiselect-list {
+    background-color: #ffffff !important;
+}
+
