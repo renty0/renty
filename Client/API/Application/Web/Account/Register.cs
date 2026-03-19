@@ -1,34 +1,29 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Shared.Interfaces.Services;
+using Domain.Constants;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
-using Domain.Constants;
 using MediatR;
-using Application.Shared.Interfaces.Services;
 
 namespace Application.Web.Account;
 
-public record RegisterCommand(
-    string Email,
-    string Password,
-    string ConfirmPassword,
-    string FirstName,
-    string LastName,
-    string? PhoneNumber,
-    UserType UserType = UserType.Renter,
-    string? Address = null,
-    string? City = null,
-    string? Country = null,
-    string? Bio = null
-) : IRequest<RegisterResponse>;
+public record RegisterCommand : IRequest<RegisterResponse>
+{
+    public string Email { get; init; } = string.Empty;
+    public string Password { get; init; } = string.Empty;
+    public string FirstName { get; init; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
+    public string? PhoneNumber { get; init; }
+    public UserType UserType { get; init; } = UserType.Renter;
+    public string? Address { get; init; }
+    public string? City { get; init; }
+    public string? Country { get; init; }
+    public string? Bio { get; init; }
+}
 
-public record RegisterResponse(
-    bool Success,
-    string? Message,
-    TokenData? Token,
-    UserDto? User
-);
+public record RegisterResponse(bool Success, string Message, TokenData? Token, UserDto? User);
 
 public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
@@ -40,46 +35,11 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters.")
-            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
-            .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters.");
 
-        RuleFor(x => x.ConfirmPassword)
-            .NotEmpty().WithMessage("Confirm password is required.")
-            .Equal(x => x.Password).WithMessage("Passwords do not match.");
-
-        RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("First name is required.")
-            .MaximumLength(100).WithMessage("First name must not exceed 100 characters.");
-
-        RuleFor(x => x.LastName)
-            .NotEmpty().WithMessage("Last name is required.")
-            .MaximumLength(100).WithMessage("Last name must not exceed 100 characters.");
-
-        RuleFor(x => x.PhoneNumber)
-            .Matches(@"^01[0125]\d{8}$")
-            .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
-            .WithMessage("Invalid Egyptian phone number format (e.g., 01xxxxxxxxx).");
-
-        RuleFor(x => x.UserType)
-            .IsInEnum().WithMessage("Invalid user type.");
-
-        RuleFor(x => x.Address)
-            .MaximumLength(500).When(x => !string.IsNullOrEmpty(x.Address))
-            .WithMessage("Address must not exceed 500 characters.");
-
-        RuleFor(x => x.City)
-            .MaximumLength(100).When(x => !string.IsNullOrEmpty(x.City))
-            .WithMessage("City must not exceed 100 characters.");
-
-        RuleFor(x => x.Country)
-            .MaximumLength(100).When(x => !string.IsNullOrEmpty(x.Country))
-            .WithMessage("Country must not exceed 100 characters.");
-
-        RuleFor(x => x.Bio)
-            .MaximumLength(1000).When(x => !string.IsNullOrEmpty(x.Bio))
-            .WithMessage("Bio must not exceed 1000 characters.");
+        RuleFor(x => x.FirstName).NotEmpty().WithMessage("First name is required.");
+        RuleFor(x => x.LastName).NotEmpty().WithMessage("Last name is required.");
+        RuleFor(x => x.UserType).IsInEnum().WithMessage("Invalid user type.");
     }
 }
 

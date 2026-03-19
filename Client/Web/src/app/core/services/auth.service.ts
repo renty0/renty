@@ -1,19 +1,7 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError, catchError, map, tap } from 'rxjs';
-import {
-  ApiResponse,
-  AuthClient,
-  AuthLoginData,
-  AuthLoginUser,
-  AuthRefreshData,
-  ConfirmEmailCommand,
-  LoginCommand,
-  RefreshTokenCommand,
-  AuthRegisterData,
-  AuthVerifyEmailData,
-  RegisterCommand,
-} from '../api/api-client';
+import { ApiResponse, AuthClient, AuthLoginData, AuthLoginUser, AuthRefreshData, ConfirmEmailCommand, LoginCommand, RefreshTokenCommand, AuthRegisterData, AuthVerifyEmailData, RegisterCommand } from '../api/api-client';
 import { CookieService } from 'ngx-cookie-service';
 import * as CryptoJS from 'crypto-js';
 import { environment } from '../../../environments/environment';
@@ -85,21 +73,14 @@ export class AuthService {
 
   storeLoginResponse(loginResponse: AuthLoginData): void {
     if (!loginResponse.accessToken) return;
-
-    // Use token expiration for cookie expiration if available, otherwise fallback to 7 days
-    const expires = loginResponse.refreshTokenExpiresAt ?
-      new Date(loginResponse.refreshTokenExpiresAt) : 7;
-
-    if (loginResponse.accessToken) {
-      this.setSecureCookie(this.ACCESS_TOKEN_KEY, loginResponse.accessToken, expires);
-    }
-    if (loginResponse.refreshToken) {
-      this.setSecureCookie(this.REFRESH_TOKEN_KEY, loginResponse.refreshToken, expires);
-    }
-    if (loginResponse.refreshTokenExpiresAt) {
-      this.setSecureCookie(this.REFRESH_TOKEN_EXP_KEY, new Date(loginResponse.refreshTokenExpiresAt).toISOString(), expires);
-    }
-
+    const expires = loginResponse.refreshTokenExpiresAt ? new Date(loginResponse.refreshTokenExpiresAt) : 7;
+    if (loginResponse.accessToken) this.setSecureCookie(this.ACCESS_TOKEN_KEY, loginResponse.accessToken, expires);
+    if (loginResponse.refreshToken) this.setSecureCookie(this.REFRESH_TOKEN_KEY, loginResponse.refreshToken, expires);
+    if (loginResponse.refreshTokenExpiresAt) this.setSecureCookie(
+      this.REFRESH_TOKEN_EXP_KEY,
+      new Date(loginResponse.refreshTokenExpiresAt).toISOString(),
+      expires,
+    );
     if (loginResponse.user) {
       const userData = JSON.stringify(loginResponse.user);
       this.setSecureCookie(this.USER_DATA_KEY, userData, expires);
@@ -119,9 +100,8 @@ export class AuthService {
 
     return this.authClient.authLogin(command).pipe(
       tap((response: ApiResponse<AuthLoginData>) => {
-        if (!response.error && response.data) {
+        if (!response.error && response.data)
           this.storeLoginResponse(response.data);
-        }
       }),
     );
   }
@@ -142,7 +122,6 @@ export class AuthService {
     const command = new RegisterCommand({
       email: payload.email,
       password: payload.password,
-      confirmPassword: payload.confirmPassword,
       firstName: payload.firstName,
       lastName: payload.lastName,
       phoneNumber: payload.phoneNumber || undefined,
@@ -170,15 +149,12 @@ export class AuthService {
       this.rolesSignal.set(roles);
     }
   }
-
   getToken(): string | null {
     return this.getSecureCookie(this.ACCESS_TOKEN_KEY);
   }
-
   getRefreshToken(): string | null {
     return this.getSecureCookie(this.REFRESH_TOKEN_KEY);
   }
-
   getUserData(): AuthLoginUser | null {
     const userData = this.getSecureCookie(this.USER_DATA_KEY);
     if (!userData) return null;
@@ -188,7 +164,6 @@ export class AuthService {
       return null;
     }
   }
-
   hasValidToken(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -200,35 +175,22 @@ export class AuthService {
       return false;
     }
   }
-
   hasValidRefreshToken(): boolean {
     return !!this.getRefreshToken();
   }
-
   refreshTokens(): Observable<any> {
     const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
-    }
-
+    if (!refreshToken) return throwError(() => new Error('No refresh token available'));
     const command = new RefreshTokenCommand({
       refreshToken,
     });
-
     return this.authClient.authRefresh(command).pipe(
       tap((res: ApiResponse<AuthRefreshData>) => {
         if (!res.error && res.data) {
           const data: AuthRefreshData = res.data;
-          const expires = 7;
-
-          if (data.accessToken) {
-            this.setSecureCookie(this.ACCESS_TOKEN_KEY, data.accessToken, expires);
-          }
-
-          if (data.refreshToken) {
-            this.setSecureCookie(this.REFRESH_TOKEN_KEY, data.refreshToken, expires);
-          }
-
+          const expires = 7
+          if (data.accessToken) this.setSecureCookie(this.ACCESS_TOKEN_KEY, data.accessToken, expires);
+          if (data.refreshToken) this.setSecureCookie(this.REFRESH_TOKEN_KEY, data.refreshToken, expires);
           this.isLoggedIn.set(true);
         } else {
           this.logout();
@@ -238,7 +200,6 @@ export class AuthService {
         if (res.error || !res.data) {
           throw new Error(res.messages?.[0] || 'No data in refresh response');
         }
-
         return res.data;
       }),
       catchError((error: any) => {
@@ -247,7 +208,6 @@ export class AuthService {
       }),
     );
   }
-
   removeAuthData(): void {
     this.cookieService.delete(this.ACCESS_TOKEN_KEY, '/');
     this.cookieService.delete(this.REFRESH_TOKEN_KEY, '/');
@@ -257,24 +217,19 @@ export class AuthService {
     this.rolesSignal.set('user');
     this.isLoggedIn.set(false);
   }
-
   logout(): void {
     this.removeAuthData();
     this.router.navigate(['/login']);
   }
-
   isAuthenticated(): boolean {
     return this.isLoggedIn();
   }
-
   getCurrentUserId(): number | null {
     return this.getUserData()?.id || null;
   }
-
   getCurrentUserEmail(): string | null {
     return this.getUserData()?.email || null;
   }
-
   getCurrentUserFirstName(): string | null {
     return this.getUserData()?.firstName || null;
   }
@@ -284,11 +239,19 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.hasRole('Admin');
+    return this.hasRole('Admin') || this.hasRole('SuperAdmin');
+  }
+
+  isExpert(): boolean {
+    return this.hasRole('Expert');
+  }
+
+  isSupport(): boolean {
+    return this.hasRole('Support') || this.isAdmin();
   }
 
   isSuperAdmin(): boolean {
-    return this.isAdmin();
+    return this.hasRole('SuperAdmin');
   }
 
   hasPermission(permission: any): boolean {

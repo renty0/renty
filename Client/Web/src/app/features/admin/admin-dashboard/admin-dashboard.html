@@ -1,0 +1,102 @@
+<div class="data-container admin-dashboard-container">
+  <app-header-section
+    [title]="'admin.dashboard_title' | translate"
+    [subtitle]="'admin.dashboard_subtitle' | translate">
+  </app-header-section>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button color="primary" (click)="loadLatestKpi()">
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  } @else if (kpi(); as data) {
+    <div class="kpi-grid">
+      <!-- Revenue Card -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container revenue">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <mat-card-title>{{ data.revenue | currency:'EGP ' }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.total_revenue' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <!-- Users Card -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container users">
+            <mat-icon>group</mat-icon>
+          </div>
+          <mat-card-title>{{ data.activeUsers }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.active_users' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <small class="trend positive">
+            <mat-icon>trending_up</mat-icon>
+            +{{ data.newUsers }} {{ 'admin.new_this_period' | translate }}
+          </small>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Rentals Card -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container rentals">
+            <mat-icon>autorenew</mat-icon>
+          </div>
+          <mat-card-title>{{ data.rentals }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.total_rentals' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <!-- Items Card -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container items">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <mat-card-title>{{ data.totalItems }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.active_items' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <!-- Fraud Rate Card -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container fraud">
+            <mat-icon>security</mat-icon>
+          </div>
+          <mat-card-title>{{ data.fraudRate | percent:'1.2-2' }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.fraud_rate' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <!-- Recommendation CTR -->
+      <mat-card class="kpi-card glass-card">
+        <mat-card-header>
+          <div mat-card-avatar class="icon-container recommendation">
+            <mat-icon>ads_click</mat-icon>
+          </div>
+          <mat-card-title>{{ data.recommendationCtr | percent:'1.2-2' }}</mat-card-title>
+          <mat-card-subtitle>{{ 'admin.recommendation_ctr' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+
+    <div class="dashboard-actions">
+        <button mat-flat-button color="primary" (click)="loadLatestKpi()">
+            <mat-icon>refresh</mat-icon>
+            {{ 'admin.refresh_metrics' | translate }}
+        </button>
+    </div>
+  }
+</div>

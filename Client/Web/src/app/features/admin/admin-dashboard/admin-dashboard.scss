@@ -1,0 +1,135 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.admin-dashboard-container {
+  .loading-state,
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    text-align: center;
+    gap: 16px;
+
+    mat-progress-bar {
+      max-width: 300px;
+    }
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .kpi-card {
+    border-radius: 20px;
+    overflow: hidden;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    mat-card-header {
+      padding: 16px;
+    }
+
+    mat-card-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #fff 0%, #b3b3b3 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    mat-card-subtitle {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+    }
+
+    .icon-container {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+
+      mat-icon {
+        color: #fff;
+      }
+
+      &.revenue {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+      }
+      &.users {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+      &.rentals {
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+      }
+      &.items {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      }
+      &.fraud {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+      &.recommendation {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+      }
+    }
+
+    mat-card-content {
+      padding: 0 24px 24px;
+    }
+
+    .trend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      font-size: 0.85rem;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+
+      &.positive {
+        color: #2ecc71;
+      }
+      &.negative {
+        color: #e74c3c;
+      }
+    }
+  }
+
+  .dashboard-actions {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+
+    button {
+      padding: 0 32px;
+      height: 48px;
+      border-radius: 24px;
+      font-weight: 600;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}

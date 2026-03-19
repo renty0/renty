@@ -13,6 +13,8 @@ public record RentalListDto(
     Guid Id,
     string ItemTitle,
     string? ItemImage,
+    long OwnerId,
+    string OwnerFirstName,
     DateTime StartDate,
     DateTime EndDate,
     decimal RentalPrice,
@@ -25,6 +27,7 @@ public record RentalDetailDto(
     Guid ItemId,
     string ItemTitle,
     string? ItemImage,
+    long OwnerId,
     string OwnerFirstName,
     string? OwnerCity,
     DateTime StartDate,
@@ -188,6 +191,8 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
                 r.Item.TitleEn,
                 r.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
                     ?? r.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
+                r.Item.OwnerId,
+                r.Item.Owner.FirstName,
                 r.StartDate, r.EndDate, r.RentalPrice,
                 r.Status.ToString(),
                 r.DepositStatus.ToString()
@@ -231,6 +236,7 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
         var dto = new RentalDetailDto(
             rental.Id, rental.ItemId, rental.Item.TitleEn,
             rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath,
+            rental.Item.OwnerId,
             rental.Item.Owner.FirstName, rental.Item.Owner.City,
             rental.StartDate, rental.EndDate, rental.ActualReturnDate,
             rental.RentalPrice, rental.DepositAmount, rental.LateFee,

@@ -1,0 +1,64 @@
+<div class="payment-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <app-header-section 
+    [title]="'payment.title' | translate"
+    [subtitle]="'payment.select_method' | translate"
+    icon="payment">
+  </app-header-section>
+
+  <div class="payment-content">
+    <mat-card class="payment-card glass-card">
+      <mat-card-header>
+        <mat-card-title>{{ 'payment.select_method' | translate }}</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <mat-radio-group [(ngModel)]="selectedMethod" class="method-group">
+          @for (method of paymentMethods; track method.id) {
+            <mat-radio-button [value]="method.id" class="method-option">
+              <div class="method-content">
+                <mat-icon>{{ method.icon }}</mat-icon>
+                <span>{{ 'payment.methods.' + method.id | translate }}</span>
+              </div>
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+
+        <div class="transaction-input">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'payment.transaction_ref' | translate }}</mat-label>
+            <input matInput [(ngModel)]="transactionRef" placeholder="TXN-123456">
+            <mat-icon matSuffix>assignment</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <app-loading-button
+          [loading]="isProcessing()"
+          (click)="processPayment()"
+          class="pay-button">
+          <mat-icon>check_circle</mat-icon>
+          {{ 'payment.pay_now' | translate }}
+        </app-loading-button>
+        
+        <button mat-button [routerLink]="['/my-orders']">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div class="payment-info">
+      <mat-card class="info-card glass-card">
+        <mat-icon class="info-icon">security</mat-icon>
+        <h3>Secure Payment</h3>
+        <p>Your transaction is protected with military-grade encryption. We do not store your financial data.</p>
+        
+        <div class="logos">
+          <mat-icon>verified_user</mat-icon>
+          <mat-icon>lock</mat-icon>
+          <mat-icon>shield</mat-icon>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

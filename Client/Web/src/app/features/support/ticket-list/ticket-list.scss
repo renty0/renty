@@ -1,0 +1,53 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.ticket-list-container {
+  .ticket-content {
+    margin-top: 2rem;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  .table-container {
+    table {
+      width: 100%;
+      background: transparent;
+    }
+
+    .mat-mdc-header-cell {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .ticket-row {
+      transition: background 0.3s ease;
+      cursor: pointer;
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+    }
+  }
+
+  .loader-container,
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem;
+    opacity: 0.6;
+
+    mat-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 1rem;
+    }
+  }
+}

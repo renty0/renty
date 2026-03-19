@@ -1,0 +1,102 @@
+.expert-assigned-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .content-wrapper {
+    margin-top: 2rem;
+  }
+
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    padding: 1rem;
+    
+    table {
+      width: 100%;
+      background: transparent;
+
+      th.mat-header-cell {
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      td.mat-cell {
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  .item-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    span {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+  }
+
+  .dates-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .verif-row {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: var(--hover-bg);
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--surface-bg);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+  }
+}

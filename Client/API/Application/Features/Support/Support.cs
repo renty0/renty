@@ -9,7 +9,8 @@ namespace Application.Features.Support;
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────
 public record SupportMessageDto(Guid Id, long SenderId, string Message, DateTime CreatedAt);
-public record TicketListDto(Guid Id, string Type, string Status, DateTime CreatedAt, string? LastMessage);
+public record TicketListDto(Guid Id, string Type, string Status, DateTime CreatedAt, string? LastMessage, string? UserName);
+public record TicketDetailsDto(Guid Id, string Type, string Status, DateTime CreatedAt, List<SupportMessageDto> Messages, string? UserName);
 
 // ── CREATE TICKET ─────────────────────────────────────────────────────────────
 
@@ -69,7 +70,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
 
 // ── GET TICKETS ───────────────────────────────────────────────────────────────
 
-public record GetTicketsQuery : IRequest<GetTicketsResponse>;
+public record GetTicketsQuery(bool IsSupportAgent = false) : IRequest<GetTicketsResponse>;
 public record GetTicketsResponse(List<TicketListDto> Tickets);
 
 public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, GetTicketsResponse>
@@ -85,12 +86,21 @@ public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, GetTicket
 
     public async Task<GetTicketsResponse> Handle(GetTicketsQuery request, CancellationToken ct)
     {
-        var tickets = await _context.SupportTickets
-            .Where(t => t.UserId == _currentUser.Id!.Value)
+        var query = _context.SupportTickets
+            .Include(t => t.User)
+            .AsQueryable();
+
+        if (!request.IsSupportAgent)
+        {
+            query = query.Where(t => t.UserId == _currentUser.Id!.Value);
+        }
+
+        var tickets = await query
             .OrderByDescending(t => t.UpdatedAt)
             .Select(t => new TicketListDto(
                 t.Id, t.Type.ToString(), t.Status.ToString(), t.CreatedAt,
-                t.Messages.OrderByDescending(m => m.CreatedAt).Select(m => m.Message).FirstOrDefault()
+                t.Messages.OrderByDescending(m => m.CreatedAt).Select(m => m.Message).FirstOrDefault(),
+                t.User != null ? t.User.FirstName + " " + t.User.LastName : null
             ))
             .ToListAsync(ct);
 
@@ -98,9 +108,53 @@ public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, GetTicket
     }
 }
 
+// ── GET TICKET DETAILS ────────────────────────────────────────────────────────
+
+public record GetTicketQuery(Guid Id, bool IsSupportAgent = false) : IRequest<GetTicketResponse>;
+public record GetTicketResponse(bool Found, string? Error, TicketDetailsDto? Ticket);
+
+public class GetTicketQueryHandler : IRequestHandler<GetTicketQuery, GetTicketResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public GetTicketQueryHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
+
+    public async Task<GetTicketResponse> Handle(GetTicketQuery request, CancellationToken ct)
+    {
+        if (_currentUser.Id == null)
+            return new GetTicketResponse(false, "Unauthorized.", null);
+
+        var ticket = await _context.SupportTickets
+            .Include(t => t.Messages)
+            .Include(t => t.User)
+            .FirstOrDefaultAsync(t => t.Id == request.Id, ct);
+
+        if (ticket == null) return new GetTicketResponse(false, "Ticket not found.", null);
+
+        if (!request.IsSupportAgent && ticket.UserId != _currentUser.Id.Value)
+            return new GetTicketResponse(false, "Forbidden.", null);
+
+        var dto = new TicketDetailsDto(
+            ticket.Id,
+            ticket.Type.ToString(),
+            ticket.Status.ToString(),
+            ticket.CreatedAt,
+            ticket.Messages.OrderBy(m => m.CreatedAt).Select(m => new SupportMessageDto(m.Id, m.SenderId, m.Message, m.CreatedAt)).ToList(),
+            ticket.User != null ? ticket.User.FirstName + " " + ticket.User.LastName : null
+        );
+
+        return new GetTicketResponse(true, null, dto);
+    }
+}
+
 // ── POST MESSAGE ──────────────────────────────────────────────────────────────
 
-public record PostSupportMessageCommand(Guid TicketId, string Message) : IRequest<PostSupportMessageResponse>;
+public record PostSupportMessageCommand(Guid TicketId, string Message, bool IsSupportAgent = false) : IRequest<PostSupportMessageResponse>;
 public record PostSupportMessageResponse(bool Success, string? Error, Guid? MessageId, string? Message, DateTime? CreatedAt);
 
 public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessageCommand, PostSupportMessageResponse>
@@ -123,7 +177,7 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
         if (ticket == null) return new PostSupportMessageResponse(false, "Ticket not found.", null, null, null);
 
         // Ticket owner or admin/support can message
-        if (ticket.UserId != _currentUser.Id.Value)
+        if (!request.IsSupportAgent && ticket.UserId != _currentUser.Id.Value)
             return new PostSupportMessageResponse(false, "Forbidden.", null, null, null);
 
         var msg = new SupportMessage

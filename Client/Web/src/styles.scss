@@ -3,6 +3,7 @@
 @use './app/shared/styles/index.scss' as *;
 
 .material-icons {
+  font-family: 'Material Icons' !important;
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -45,6 +46,3 @@ p {
   margin: 0;
 }
 
-* {
-  font-family: 'Alexandria', sans-serif;
-}

@@ -1,7 +1,7 @@
 <div class="home-page" (window:scroll)="onWindowScroll()">
     <!-- Section 1: Hero -->
     <section class="hero-section">
-        <div class="hero-bg" style="background-image: url('assets/images/hero_bg.png')"></div>
+        <div class="hero-bg" style="background-image: url('assets/images/hero_sports_egypt.png')"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content container">
             <h1 class="hero-title reveal active">{{ 'home.hero.title' | translate }}<span>.</span></h1>
@@ -88,7 +88,32 @@
         </div>
     </section>
 
-    <!-- Section 4: Live Availability (Real-time Calendar) -->
+    <!-- Section 4: Top Sports Destinations -->
+    <section class="destinations-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="badge">{{ 'home.destinations.badge' | translate }}</span>
+                <h2>{{ 'home.destinations.title' | translate }}</h2>
+                <p>{{ 'home.destinations.subtitle' | translate }}</p>
+            </div>
+            <div class="destinations-grid">
+                @for (dest of topDestinations(); track dest.nameKey) {
+                <div class="destination-card reveal">
+                    <div class="dest-image" [style.background-image]="'url(' + dest.image + ')'">
+                        <div class="dest-overlay">
+                            <div class="dest-info">
+                                <h3>{{ dest.nameKey | translate }}</h3>
+                                <p>{{ dest.descKey | translate }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Live Availability (Real-time Calendar) -->
     <section class="calendar-promo reveal">
         <div class="promo-grid container">
             <div class="promo-info">

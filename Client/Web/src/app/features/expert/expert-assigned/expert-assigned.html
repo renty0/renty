@@ -1,0 +1,79 @@
+<div class="expert-assigned-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <app-header-section 
+    [title]="'expert.assigned.title' | translate"
+    [subtitle]="'expert.assigned.subtitle' | translate"
+    icon="verified_user">
+  </app-header-section>
+
+  <div class="content-wrapper">
+    @if (isLoading()) {
+      <div class="loader-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (assignments().length > 0) {
+      <div class="table-container glass-card">
+        <table mat-table [dataSource]="assignments()">
+          
+          <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.item' | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="item-cell">
+                <img [src]="element.itemImage || 'assets/placeholder-product.png'" alt="Item">
+                <span>{{ getLocalizedName(element) }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="checkType">
+            <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.type' | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-chip-set>
+                <mat-chip [color]="element.checkType?.toLowerCase() === 'beforerent' ? 'primary' : 'accent'" selected>
+                  {{ 'expert.check_types.' + element.checkType?.toLowerCase() | translate }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dates">
+            <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.rental_dates' | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+              @if (element.rentalStartDate && element.rentalEndDate) {
+                <div class="dates-cell">
+                  <span>{{ element.rentalStartDate | date:'shortDate' }}</span>
+                  <mat-icon>arrow_forward</mat-icon>
+                  <span>{{ element.rentalEndDate | date:'shortDate' }}</span>
+                </div>
+              } @else {
+                <span class="text-muted">{{ 'common.not_applicable' | translate }}</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
+            <td mat-cell *matCellDef="let element"> {{ element.createdAt | date:'short' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-stroked-button color="primary" [routerLink]="['/expert/verify', element.verificationId]">
+                <mat-icon>verified</mat-icon>
+                {{ 'expert.assigned.verify_btn' | translate }}
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="verif-row"></tr>
+        </table>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon>fact_check</mat-icon>
+        <p>{{ 'expert.assigned.empty' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<div class="search-results-container">
+    <header class="search-header">
+        <div class="container header-content">
+            <span class="badge">{{ 'marketplace.search_results' | translate }}</span>
+            <h1>{{ 'marketplace.results_for' | translate }} "{{ query() }}"</h1>
+            <p class="results-count">{{ totalCount() }} {{ 'marketplace.results' | translate }}</p>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        @if (isLoading()) {
+            <div class="loading-state">
+                <mat-spinner diameter="50"></mat-spinner>
+                <p>{{ 'dashboard.kpi.loading' | translate }}</p>
+            </div>
+        } @else if (items().length === 0) {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <mat-icon>search_off</mat-icon>
+                </div>
+                <h3>{{ 'marketplace.noProductsFound' | translate }}</h3>
+                <p>{{ 'marketplace.tryAdjustingFilters' | translate }}</p>
+                <button mat-flat-button color="primary" routerLink="/marketplace">
+                    {{ 'nav.market' | translate }}
+                </button>
+            </div>
+        } @else {
+            <div class="results-grid fadeIn">
+                @for (item of items(); track item.id) {
+                    <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
+                        <div class="card-media">
+                            <img [src]="item.primaryImage || 'assets/images/placeholder.webp'" 
+                                 [alt]="getLocalizedTitle(item)"
+                                 loading="lazy">
+                            <div class="card-badges">
+                                @if (item.type === 'premium') {
+                                    <span class="type-badge premium">{{ 'labels.types.premium' | translate }}</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="item-meta">
+                                <span class="category">{{ getLocalizedRefName(item.category) }}</span>
+                                <span class="location">
+                                    <mat-icon>location_on</mat-icon> {{ item.city }}
+                                </span>
+                            </div>
+                            <h3 class="item-title">{{ getLocalizedTitle(item) }}</h3>
+                            <div class="card-footer">
+                                <div class="price-info">
+                                    <span class="price">{{ item.dailyPrice }} <small>EGP</small></span>
+                                    <span class="period">/ {{ 'items.daily' | translate }}</span>
+                                </div>
+                                <button mat-flat-button class="view-btn">
+                                    {{ 'marketplace.viewDetails' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="pagination-section">
+                <mat-paginator [length]="totalCount()" 
+                              [pageSize]="pageSize()" 
+                              [pageSizeOptions]="[12, 24, 48]"
+                              (page)="onPageChange($event)"
+                              aria-label="Select page">
+                </mat-paginator>
+            </div>
+        }
+    </div>
+</div>

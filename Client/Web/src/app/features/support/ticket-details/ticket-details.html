@@ -1,0 +1,74 @@
+<div class="ticket-details-container">
+  <div class="ticket-header glass-card">
+    <button mat-icon-button routerLink="/support">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="ticket-info">
+      <h3>{{ ticket()?.type }}</h3>
+      <span class="ticket-id">#{{ ticketId().substring(0, 8) }}</span>
+    </div>
+    <div class="status-badge">
+      @if (isSupport()) {
+        <mat-form-field appearance="outline" class="status-select" subscriptSizing="dynamic">
+          <mat-select [value]="ticket()?.status?.toLowerCase()" (selectionChange)="updateStatus($event.value)" [disabled]="isUpdatingStatus()">
+            <mat-option value="open">
+              <span class="status-dot open"></span> {{ 'support.open' | translate }}
+            </mat-option>
+            <mat-option value="resolved">
+              <span class="status-dot resolved"></span> {{ 'support.resolved' | translate }}
+            </mat-option>
+            <mat-option value="closed">
+              <span class="status-dot closed"></span> {{ 'support.closed' | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      } @else {
+        <mat-chip-set>
+          <mat-chip [color]="getStatusColor(ticket()?.status)" selected>
+            {{ 'support.' + ticket()?.status?.toLowerCase() | translate }}
+          </mat-chip>
+        </mat-chip-set>
+      }
+    </div>
+  </div>
+
+  <div class="messages-container" #scrollContainer>
+    @if (isLoading()) {
+      <div class="loader-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+      @for (msg of ticket()?.messages; track msg.id) {
+        <div class="message-wrapper" [class.mine]="isCurrentUser(msg.senderId)">
+          <div class="message-bubble glass-card">
+            <p>{{ msg.message }}</p>
+            <span class="time">{{ msg.createdAt | date:'short' }}</span>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  @if (ticket()?.status?.toLowerCase() !== 'closed') {
+    <div class="input-area glass-card">
+      <mat-form-field appearance="outline" class="message-input">
+        <textarea matInput 
+               [(ngModel)]="newMessage" 
+               [placeholder]="'support.reply_placeholder' | translate"
+               rows="3"
+               [disabled]="isSending()"></textarea>
+        <button mat-icon-button matSuffix 
+                (click)="sendReply()" 
+                [disabled]="!newMessage().trim() || isSending()" 
+                color="primary">
+          <mat-icon>{{ isSending() ? 'hourglass_empty' : 'send' }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  } @else {
+    <div class="closed-notice glass-card">
+      <mat-icon>lock</mat-icon>
+      <p>{{ 'support.ticket_closed_notice' | translate }}</p>
+    </div>
+  }
+</div>

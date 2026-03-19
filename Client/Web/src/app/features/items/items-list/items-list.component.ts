@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
@@ -41,9 +41,12 @@ import { MatDialog } from '@angular/material/dialog';
 export class ItemsListComponent implements OnInit {
     private apiClient = inject(ItemsClient);
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
     private dialog = inject(MatDialog);
     private toast = inject(ToastService);
     public translate = inject(TranslateService);
+
+    isOwnerMode = signal(false);
 
     displayedColumns = ['image', 'title', 'price', 'category', 'actions'];
     dataSource = signal<ItemListDto[]>([]);
@@ -74,7 +77,14 @@ export class ItemsListComponent implements OnInit {
         }, { allowSignalWrites: true });
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // Read mode from route data
+        this.route.data.subscribe(data => {
+            if (data['ownerMode'] === 'me') {
+                this.isOwnerMode.set(true);
+            }
+        });
+    }
 
     private getData() {
         this.isLoading.set(true);
@@ -91,7 +101,7 @@ export class ItemsListComponent implements OnInit {
             undefined,  // condition
             this.sortBy() ?? undefined,
             this.sortOrder() ?? undefined,
-            undefined   // owner
+            this.isOwnerMode() ? 'me' : undefined // owner
         )
             .pipe(
                 tap((response) => {
@@ -136,6 +146,10 @@ export class ItemsListComponent implements OnInit {
 
     createItem() {
         this.router.navigate(['/items/new']);
+    }
+
+    getPageTitle(): string {
+        return this.isOwnerMode() ? 'nav.myItems' : 'products.title';
     }
 
     async deleteItem(id: string) {

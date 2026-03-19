@@ -1,0 +1,100 @@
+<div class="data-container user-management-container">
+  <app-header-section
+    [title]="'admin.user_management_title' | translate"
+    [subtitle]="'admin.user_management_subtitle' | translate">
+  </app-header-section>
+
+  @if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button color="primary" (click)="loadUsers()">
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  } @else {
+    <div class="table-container glass-card">
+      <table mat-table [dataSource]="users()">
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="user-main">
+              <strong>{{ element.firstName }} {{ element.lastName }}</strong>
+              @if (element.isVerified) {
+                <mat-icon class="verified-icon" color="primary" title="Verified">verified</mat-icon>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.email' | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.role' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-chip-set>
+              <mat-chip [color]="getRoleColor(element.role)" selected>
+                {{ element.role }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="status-indicator" [class.active]="element.isActive">
+              {{ (element.isActive ? 'admin.activate' : 'admin.deactivate') | translate }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-slide-toggle
+              [checked]="element.isActive"
+              (change)="toggleUserStatus(element)"
+              color="primary"
+              [disabled]="!isSuperAdmin">
+              {{ 'admin.is_active' | translate }}
+            </mat-slide-toggle>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (isLoading()) {
+          <div class="table-loading">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+      }
+
+      @if (!isLoading() && users().length === 0) {
+        <div class="empty-state">
+            <p>No users found.</p>
+        </div>
+      }
+
+      <mat-paginator
+        [length]="totalUsers()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        aria-label="Select page of users">
+      </mat-paginator>
+    </div>
+  }
+</div>

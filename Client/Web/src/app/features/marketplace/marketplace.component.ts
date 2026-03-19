@@ -21,6 +21,7 @@ import {
   SubcategoriesClient,
   ProductCategoryDto,
   ProductSubcategoryDto,
+  SearchClient,
 } from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
@@ -49,6 +50,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
 })
 export class MarketplaceComponent implements OnInit {
   private itemsClient = inject(ItemsClient);
+  private searchClient = inject(SearchClient);
   private categoriesClient = inject(CategoriesClient);
   private subcategoriesClient = inject(SubcategoriesClient);
   private router = inject(Router);
@@ -60,6 +62,41 @@ export class MarketplaceComponent implements OnInit {
   categories = signal<ProductCategoryDto[]>([]);
   subcategories = signal<ProductSubcategoryDto[]>([]);
 
+  governorates = [
+    { key: 'cairo', name: 'labels.governorates.cairo' },
+    { key: 'giza', name: 'labels.governorates.giza' },
+    { key: 'alexandria', name: 'labels.governorates.alexandria' },
+    { key: 'dakahlia', name: 'labels.governorates.dakahlia' },
+    { key: 'red_sea', name: 'labels.governorates.red_sea' },
+    { key: 'beheira', name: 'labels.governorates.beheira' },
+    { key: 'fayoum', name: 'labels.governorates.fayoum' },
+    { key: 'gharbiya', name: 'labels.governorates.gharbiya' },
+    { key: 'ismailia', name: 'labels.governorates.ismailia' },
+    { key: 'monufia', name: 'labels.governorates.monufia' },
+    { key: 'minya', name: 'labels.governorates.minya' },
+    { key: 'qalubiya', name: 'labels.governorates.qalubiya' },
+    { key: 'new_valley', name: 'labels.governorates.new_valley' },
+    { key: 'suez', name: 'labels.governorates.suez' },
+    { key: 'aswan', name: 'labels.governorates.aswan' },
+    { key: 'assiut', name: 'labels.governorates.assiut' },
+    { key: 'beni_suef', name: 'labels.governorates.beni_suef' },
+    { key: 'port_said', name: 'labels.governorates.port_said' },
+    { key: 'damietta', name: 'labels.governorates.damietta' },
+    { key: 'sharkia', name: 'labels.governorates.sharkia' },
+    { key: 'south_sinai', name: 'labels.governorates.south_sinai' },
+    { key: 'kafr_el_sheikh', name: 'labels.governorates.kafr_el_sheikh' },
+    { key: 'matrouh', name: 'labels.governorates.matrouh' },
+    { key: 'luxor', name: 'labels.governorates.luxor' },
+    { key: 'qena', name: 'labels.governorates.qena' },
+    { key: 'north_sinai', name: 'labels.governorates.north_sinai' },
+    { key: 'sohag', name: 'labels.governorates.sohag' }
+  ];
+
+  itemTypes = [
+    { key: 'standard', name: 'labels.types.standard' },
+    { key: 'premium', name: 'labels.types.premium' }
+  ];
+
   // Loading States
   isLoadingItems = signal(false);
   isLoadingCategories = signal(false);
@@ -69,6 +106,11 @@ export class MarketplaceComponent implements OnInit {
   searchTerm = signal('');
   selectedCategoryId = signal<number | undefined>(undefined);
   selectedSubcategoryId = signal<number | undefined>(undefined);
+  selectedCity = signal<string | undefined>(undefined);
+  minPrice = signal<number | undefined>(undefined);
+  maxPrice = signal<number | undefined>(undefined);
+  selectedType = signal<string | undefined>(undefined);
+  sortBy = signal<string>('newest');
 
   // Pagination
   pageNumber = signal(1);
@@ -81,6 +123,11 @@ export class MarketplaceComponent implements OnInit {
       this.selectedCategoryId();
       this.selectedSubcategoryId();
       this.searchTerm();
+      this.selectedCity();
+      this.minPrice();
+      this.maxPrice();
+      this.selectedType();
+      this.sortBy();
       untracked(() => this.pageNumber.set(1));
     }, { allowSignalWrites: true });
 
@@ -136,18 +183,69 @@ export class MarketplaceComponent implements OnInit {
 
   loadItems() {
     this.isLoadingItems.set(true);
+    const q = this.searchTerm();
+
+    if (q && q.trim().length > 0) {
+      this.performSearch(q);
+    } else {
+      this.performGetItems();
+    }
+  }
+
+  private performSearch(q: string) {
+    this.searchClient.searchItems(
+      q,
+      this.pageNumber(),
+      this.pageSize(),
+      this.selectedCategoryId(),
+      this.selectedCity()
+    )
+      .pipe(
+        tap(res => {
+          this.items.set(res.data?.items ?? []);
+          this.totalCount.set(res.data?.total ?? 0);
+        }),
+        catchError(err => {
+          this.toast.showError('errors.failedToLoadProducts');
+          return of(null);
+        }),
+        finalize(() => this.isLoadingItems.set(false))
+      )
+      .subscribe();
+  }
+
+  private performGetItems() {
+    let sort: string | undefined = undefined;
+    let sortOrder: string | undefined = undefined;
+
+    switch (this.sortBy()) {
+      case 'price_low':
+        sort = 'price';
+        sortOrder = 'asc';
+        break;
+      case 'price_high':
+        sort = 'price';
+        sortOrder = 'desc';
+        break;
+      case 'newest':
+      default:
+        sort = 'createdAt';
+        sortOrder = 'desc';
+        break;
+    }
+
     this.itemsClient.getItems(
       this.pageNumber(),
       this.pageSize(),
       this.selectedCategoryId() ?? undefined,
       this.selectedSubcategoryId() ?? undefined,
-      undefined,              // city
-      undefined,              // minPrice
-      undefined,              // maxPrice
-      undefined,              // type
+      this.selectedCity() ?? undefined,
+      this.minPrice() ?? undefined,
+      this.maxPrice() ?? undefined,
+      this.selectedType() ?? undefined,
       undefined,              // condition
-      'newest',               // sort
-      'desc',                 // sortOrder
+      sort,
+      sortOrder,
       undefined               // owner
     )
       .pipe(
@@ -174,6 +272,11 @@ export class MarketplaceComponent implements OnInit {
     this.searchTerm.set('');
     this.selectedCategoryId.set(undefined);
     this.selectedSubcategoryId.set(undefined);
+    this.selectedCity.set(undefined);
+    this.minPrice.set(undefined);
+    this.maxPrice.set(undefined);
+    this.selectedType.set(undefined);
+    this.sortBy.set('newest');
   }
 
   getLocalizedCatName(cat: ProductCategoryDto): string {

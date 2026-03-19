@@ -19,7 +19,7 @@ export class HeaderSectionComponent implements OnInit, OnDestroy {
 
   @Input() title: string = '';
   @Input() subtitle: string = '';
-  @Input() placeholder: string = 'Search...';
+  @Input() placeholder: string = 'بحث...';
   @Input() showSearch: boolean = true;
   @Input() showButton: boolean = true;
   @Input() searchTerm: string = '';

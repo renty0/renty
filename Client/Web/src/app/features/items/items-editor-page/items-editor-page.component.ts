@@ -251,8 +251,8 @@ export class ItemsEditorPageComponent implements OnInit {
 
             if (item.images) {
               this.uploadedImages = item.images.map((img, idx) => ({
-                id: img.id ?? null,
-                mediaFileId: img.id, // Assuming img.id is the identifier needed
+                id: img.id || null,
+                mediaFileId: img.id, // In this API, the image ID returned in DTO is used as the imageId for commands
                 imageUrl: img.imageUrl ?? '',
                 isPrimary: img.isPrimary ?? false,
                 displayOrder: idx,

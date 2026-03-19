@@ -22,6 +22,16 @@ import {
   MediaClient,
   BrandsClient,
   ItemsClient,
+  SearchClient,
+  ReviewsClient,
+  FavoritesClient,
+  OrdersClient,
+  RentalsClient,
+  ChatClient,
+  NotificationsClient,
+  SupportClient,
+  VerificationsClient,
+  AdminClient,
 } from './core/api/api-client';
 import { environment } from '../environments/environment';
 
@@ -49,5 +59,15 @@ export const appConfig: ApplicationConfig = {
     BrandsClient,
     CookieService,
     ItemsClient,
+    SearchClient,
+    ReviewsClient,
+    FavoritesClient,
+    OrdersClient,
+    RentalsClient,
+    ChatClient,
+    NotificationsClient,
+    SupportClient,
+    VerificationsClient,
+    AdminClient,
   ],
 };

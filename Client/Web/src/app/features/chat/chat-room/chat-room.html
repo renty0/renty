@@ -1,0 +1,53 @@
+<div class="chat-room-container">
+  <div class="chat-header glass-card">
+    <button mat-icon-button routerLink="/chats">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="user-info">
+      <h3>{{ 'chat.messages' | translate }}</h3>
+      <span class="status">{{ 'chat.online' | translate }}</span>
+    </div>
+    <div class="actions">
+      <button mat-icon-button><mat-icon>videocam</mat-icon></button>
+      <button mat-icon-button><mat-icon>phone</mat-icon></button>
+    </div>
+  </div>
+
+  <div class="messages-container" #scrollContainer>
+    @if (isLoading()) {
+      <div class="loader-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+      @for (msg of messages(); track msg.id) {
+        <div class="message-wrapper" [class.mine]="isCurrentUser(msg.senderId)">
+          <div class="message-bubble glass-card">
+            <p>{{ msg.message }}</p>
+            <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-chat">
+          <mat-icon>waving_hand</mat-icon>
+          <p>{{ 'chat.say_hello' | translate }}</p>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="input-area glass-card">
+    <mat-form-field appearance="outline" class="message-input">
+      <input matInput 
+             [(ngModel)]="newMessage" 
+             [placeholder]="'chat.placeholder' | translate"
+             (keyup.enter)="sendMessage()"
+             [disabled]="isSending()">
+      <button mat-icon-button matSuffix 
+              (click)="sendMessage()" 
+              [disabled]="!newMessage().trim() || isSending()" 
+              color="primary">
+        <mat-icon>{{ isSending() ? 'hourglass_empty' : 'send' }}</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 using Application.Features.Support;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using Web.Responses;
 
 namespace Web.Endpoints;
@@ -24,18 +25,32 @@ public static class SupportEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
         // GET /support/tickets
-        g.MapGet("/tickets", async (ISender sender) =>
+        g.MapGet("/tickets", async (ClaimsPrincipal cp, ISender sender) =>
         {
-            var r = await sender.Send(new GetTicketsQuery());
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var r = await sender.Send(new GetTicketsQuery(isSupport));
             return Api.Ok(r);
         })
         .WithName("GetSupportTickets")
         .Produces<ApiResponse<GetTicketsResponse>>(StatusCodes.Status200OK);
 
-        // POST /support/tickets/:id/messages
-        g.MapPost("/tickets/{id:guid}/messages", async (Guid id, PostSupportMessageCommand cmd, ISender sender) =>
+        // GET /support/tickets/:id
+        g.MapGet("/tickets/{id:guid}", async (Guid id, ClaimsPrincipal cp, ISender sender) =>
         {
-            var r = await sender.Send(cmd with { TicketId = id });
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var r = await sender.Send(new GetTicketQuery(id, isSupport));
+            if (!r.Found) return Api.Fail(r.Error ?? "Not found", 404);
+            return Api.Ok(r);
+        })
+        .WithName("GetSupportTicketDetails")
+        .Produces<ApiResponse<GetTicketResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound);
+
+        // POST /support/tickets/:id/messages
+        g.MapPost("/tickets/{id:guid}/messages", async (Guid id, PostSupportMessageCommand cmd, ClaimsPrincipal cp, ISender sender) =>
+        {
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var r = await sender.Send(cmd with { TicketId = id, IsSupportAgent = isSupport });
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             // MessageId and CreatedAt are Guid?/DateTime? — use .Value on success
             return Api.Created(new SupportMessageData(r.MessageId!.Value, r.Message ?? "", r.CreatedAt!.Value));
@@ -53,6 +68,7 @@ public static class SupportEndpoints
         })
         .WithName("UpdateSupportTicketStatus")
         .Produces<ApiResponse<SupportTicketStatusData>>(StatusCodes.Status200OK)
-        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.SupportAccess); // Only support/admin can change status
     }
 }

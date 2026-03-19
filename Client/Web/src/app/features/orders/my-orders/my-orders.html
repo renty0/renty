@@ -1,0 +1,73 @@
+<div class="orders-container" [class.rtl]="translate.currentLang === 'ar'">
+  <app-header-section 
+    [title]="'my_orders.title' | translate" 
+    [subtitle]="'checkout.view_orders' | translate">
+  </app-header-section>
+
+  <div class="orders-list" *ngIf="!isLoading(); else loading">
+    <div class="empty-state" *ngIf="orders().length === 0">
+      <mat-icon>shopping_bag</mat-icon>
+      <p>{{ 'my_orders.no_orders' | translate }}</p>
+      <button mat-flat-button color="primary" routerLink="/marketplace">
+        {{ 'checkout.back_to_market' | translate }}
+      </button>
+    </div>
+
+    <div class="order-grid" *ngIf="orders().length > 0">
+      <mat-card class="order-card glass-card" *ngFor="let order of orders()" [routerLink]="['/orders', order.id]">
+        <mat-card-header>
+          <div class="header-content">
+            <div class="order-meta">
+              <span class="label">{{ 'checkout.order_id' | translate }}</span>
+              <span class="value">#{{ order.id?.substring(0, 8) }}</span>
+            </div>
+            <mat-chip-set>
+              <mat-chip [class]="'status-chip ' + getStatusColor(order.status)" selected>
+                {{ 'order_details.statuses.' + (order.status?.toLowerCase() || 'pending') | translate }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="details-grid">
+            <div class="detail-item">
+              <mat-icon>calendar_today</mat-icon>
+              <div class="text">
+                <span class="label">{{ 'my_orders.order_date' | translate }}</span>
+                <span class="value">{{ order.createdAt | date:'mediumDate' }}</span>
+              </div>
+            </div>
+            <div class="detail-item">
+              <mat-icon>summarize</mat-icon>
+              <div class="text">
+                <span class="label">{{ 'my_orders.item_count' | translate }}</span>
+                <span class="value">{{ order.itemCount }} {{ 'order_details.items' | translate }}</span>
+              </div>
+            </div>
+            <div class="detail-item total">
+              <mat-icon>payments</mat-icon>
+              <div class="text">
+                <span class="label">{{ 'checkout.total' | translate }}</span>
+                <span class="value">{{ order.totalAmount | currency:'EGP' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button color="primary" [routerLink]="['/orders', order.id]">
+            <mat-icon>visibility</mat-icon>
+            {{ 'my_orders.view_details' | translate }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>
+</div>

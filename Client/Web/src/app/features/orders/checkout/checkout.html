@@ -1,0 +1,90 @@
+<div class="checkout-container" [class.rtl]="translate.currentLang === 'ar'">
+  <app-header-section 
+    [title]="'checkout.title' | translate" 
+    [subtitle]="'checkout.summary' | translate">
+  </app-header-section>
+
+  <div class="content-wrapper" *ngIf="!isLoading(); else loading">
+    <div class="checkout-grid" *ngIf="item() as itemData">
+      
+      <!-- Left Column: Item Details -->
+      <div class="item-section">
+        <mat-card class="glass-card">
+          <mat-card-header>
+            <mat-card-title>{{ 'checkout.items' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="item-row">
+              <div class="item-image">
+                <img [src]="itemData.images?.[0]?.imageUrl" [alt]="getLocalizedName(itemData)">
+              </div>
+              <div class="item-info">
+                <h3>{{ getLocalizedName(itemData) }}</h3>
+                <p class="category">{{ getLocalizedName(itemData.category) }}</p>
+                <div class="price-tag">
+                  <span class="currency">EGP</span>
+                  <span class="amount">{{ subtotal() | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Mocked Shipping/Payment Sections for Visuals -->
+        <mat-card class="glass-card mt-4">
+          <mat-card-header>
+            <mat-card-title>Shipping Address</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="mock-info">
+              <mat-icon ripple>place</mat-icon>
+              <span>123 Nile St, Zamalek, Cairo</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <div class="summary-section">
+        <mat-card class="glass-card summary-card">
+          <mat-card-header>
+            <mat-card-title>{{ 'checkout.summary' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="summary-details">
+              <div class="summary-line">
+                <span>{{ 'checkout.subtotal' | translate }}</span>
+                <span>EGP {{ subtotal() | number:'1.2-2' }}</span>
+              </div>
+              <div class="summary-line">
+                <span>{{ 'checkout.delivery' | translate }}</span>
+                <span>EGP {{ deliveryFee | number:'1.2-2' }}</span>
+              </div>
+              <mat-divider class="my-3"></mat-divider>
+              <div class="summary-line total">
+                <span>{{ 'checkout.total' | translate }}</span>
+                <span>EGP {{ total() | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <app-loading-button
+              class="w-full"
+              [loading]="isPlacingOrder()"
+              color="primary"
+              (click)="placeOrder()">
+              <mat-icon>shopping_cart</mat-icon>
+              {{ 'checkout.place_order' | translate }}
+            </app-loading-button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>
+</div>

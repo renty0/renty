@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-client": "nswag run nswag.json && npm run generate-client:fix",
+    "generate-client": "npx nswag run nswag.json && npm run generate-client:fix",
     "generate-client:fix": "node fix-client-v2.js"
   },
   "prettier": {
@@ -60,7 +60,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "nswag": "^14.2.0",
+    "nswag": "^14.6.3",
     "typescript": "~5.9.2"
   }
 }

@@ -1,0 +1,36 @@
+<div class="chat-list-container">
+  <app-header-section 
+    [title]="'chat.title' | translate"
+    [subtitle]="'chat.subtitle' | translate"
+    icon="forum">
+  </app-header-section>
+
+  <div class="chat-content">
+    @if (isLoading()) {
+      <div class="loader-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (chats().length > 0) {
+      <mat-selection-list [multiple]="false">
+        @for (chat of chats(); track chat.id) {
+          <mat-list-item [routerLink]="['/chats', chat.id]" class="chat-item glass-card">
+            <img matListItemAvatar [src]="chat.otherUserProfileImage || 'assets/images/default-avatar.png'" alt="User">
+            <span matListItemTitle>{{ chat.otherUserFirstName }}</span>
+            <span matListItemLine class="last-message">{{ chat.lastMessage || ('chat.no_messages' | translate) }}</span>
+            <div matListItemMeta>
+              @if (chat.unreadCount && chat.unreadCount > 0) {
+                <span [matBadge]="chat.unreadCount" matBadgeOverlap="false" matBadgeColor="accent"></span>
+              }
+              <mat-icon color="primary">chevron_right</mat-icon>
+            </div>
+          </mat-list-item>
+        }
+      </mat-selection-list>
+    } @else {
+      <div class="empty-state">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <p>{{ 'chat.no_chats' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>

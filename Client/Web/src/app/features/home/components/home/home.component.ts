@@ -44,19 +44,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     calendarCells = computed<CalendarCell[]>(() => this.buildCalendarCells(this.calendarMonth(), this.selectedDate()));
 
     categories = signal([
-        { id: 1, nameKey: 'home.categories.electronics', icon: 'devices', image: 'assets/images/electronics.jpg' },
-        { id: 2, nameKey: 'home.categories.tools', icon: 'construction', image: 'assets/images/tools.jpg' },
-        { id: 3, nameKey: 'home.categories.furniture', icon: 'chair', image: 'assets/images/furniture.jpg' },
-        { id: 4, nameKey: 'home.categories.cameras', icon: 'photo_camera', image: 'assets/images/cameras.jpg' },
-        { id: 5, nameKey: 'home.categories.sports', icon: 'sports_soccer', image: 'assets/images/hero_bg.png' },
-        { id: 6, nameKey: 'home.categories.party', icon: 'celebration', image: 'assets/images/hero_bg.png' }
+        { id: 1, nameKey: 'home.categories.watersports', icon: 'surfing', image: 'assets/images/category_watersports.png' },
+        { id: 2, nameKey: 'home.categories.padel', icon: 'sports_tennis', image: 'assets/images/category_padel.png' },
+        { id: 3, nameKey: 'home.categories.fitness', icon: 'fitness_center', image: 'assets/images/category_fitness.png' },
+        { id: 4, nameKey: 'home.categories.football', icon: 'sports_soccer', image: 'assets/images/category_football.png' },
+        { id: 5, nameKey: 'home.categories.cycling', icon: 'pedal_bike', image: 'assets/images/hero_bg.png' },
+        { id: 6, nameKey: 'home.categories.camping', icon: 'terrain', image: 'assets/images/hero_bg.png' }
     ]);
 
     stats = signal([
-        { value: '50k+', labelKey: 'home.stats.items' },
-        { value: '100+', labelKey: 'home.stats.cities' },
-        { value: '25k+', labelKey: 'home.stats.users' },
+        { value: '10k+', labelKey: 'home.stats.items' },
+        { value: '20+', labelKey: 'home.stats.cities' },
+        { value: '15k+', labelKey: 'home.stats.users' },
         { value: '4.9/5', labelKey: 'home.stats.rating' }
+    ]);
+
+    topDestinations = signal([
+        { nameKey: 'home.destinations.dahab', image: 'assets/images/hero_sports_egypt.png', descKey: 'home.destinations.dahab_desc' },
+        { nameKey: 'home.destinations.gouna', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.gouna_desc' },
+        { nameKey: 'home.destinations.cairo', image: 'assets/images/category_padel.png', descKey: 'home.destinations.cairo_desc' },
+        { nameKey: 'home.destinations.somabay', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.somabay_desc' }
     ]);
 
     steps = signal([

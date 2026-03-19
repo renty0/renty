@@ -106,11 +106,13 @@ public class GetMyFavoritesQueryHandler : IRequestHandler<GetMyFavoritesQuery, G
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public GetMyFavoritesQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetMyFavoritesQueryHandler(IApplicationDbContext context, IUser currentUser, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetMyFavoritesResponse> Handle(GetMyFavoritesQuery request, CancellationToken ct)
@@ -118,17 +120,29 @@ public class GetMyFavoritesQueryHandler : IRequestHandler<GetMyFavoritesQuery, G
         if (_currentUser.Id == null)
             return new GetMyFavoritesResponse(false, null, "Unauthorized.");
 
-        var items = await _context.Favorites
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
+        var favoritesObjects = await _context.Favorites
             .Where(f => f.UserId == _currentUser.Id.Value)
-            .Select(f => new FavoriteItemDto(
+            .Select(f => new
+            {
                 f.Item.Id,
-                f.Item.TitleEn,
-                f.Item.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
-                f.Item.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
+                Title = f.Item.TitleAr ?? f.Item.TitleEn,
+                DailyPrice = f.Item.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
+                PrimaryImage = f.Item.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
                     ?? f.Item.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
                 f.Item.City
-            ))
+            })
             .ToListAsync(ct);
+
+        var items = favoritesObjects.Select(f => new FavoriteItemDto(
+                f.Id,
+                f.Title ?? "",
+                f.DailyPrice,
+                f.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{f.PrimaryImage.TrimStart('/')}" : "/" + f.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
+                f.City
+            )).ToList();
 
         return new GetMyFavoritesResponse(true, items, null);
     }

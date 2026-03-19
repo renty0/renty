@@ -1,0 +1,92 @@
+<div class="data-container fraud-panel-container">
+  <app-header-section
+    [title]="'admin.fraud_title' | translate"
+    [subtitle]="'admin.fraud_subtitle' | translate">
+  </app-header-section>
+
+  @if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button color="primary" (click)="loadFraudLogs()">
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  } @else {
+    <div class="table-container glass-card">
+      <table mat-table [dataSource]="logs()">
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.createdAt | date:'short' }}</td>
+        </ng-container>
+
+        <!-- User Column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>{{ 'common.user' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="user-info">
+              <span class="name">{{ element.user?.firstName }}</span>
+              <span class="email">{{ element.user?.email }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Risk Column -->
+        <ng-container matColumnDef="risk">
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.risk_score' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="risk-badge" [style.color]="getRiskColor(element.riskScore)">
+              {{ element.riskScore | percent:'1.0-1' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Decision Column -->
+        <ng-container matColumnDef="decision">
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.decision' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-chip-set>
+              <mat-chip [color]="getDecisionColor(element.decision)" selected>
+                {{ element.decision }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Reason Column -->
+        <ng-container matColumnDef="reason">
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.reason' | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="reason-text" [title]="element.reason">{{ element.reason }}</span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (isLoading()) {
+          <div class="table-loading">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+      }
+
+      @if (!isLoading() && logs().length === 0) {
+        <div class="empty-state">
+            <p>No fraud logs found.</p>
+        </div>
+      }
+
+      <mat-paginator
+        [length]="totalLogs()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        aria-label="Select page of fraud logs">
+      </mat-paginator>
+    </div>
+  }
+</div>

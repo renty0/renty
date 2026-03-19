@@ -1,5 +1,5 @@
 <div class="data-container">
-  <app-header-section [title]="'products.title' | translate" [buttonText]="'products.actions.create' | translate"
+  <app-header-section [title]="getPageTitle() | translate" [buttonText]="'products.actions.create' | translate"
     [placeholder]="'products.search' | translate" [icon]="'add'" [showButton]="true"
     (searchChange)="onSearchChange($event)" (buttonClick)="createItem()">
     <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"

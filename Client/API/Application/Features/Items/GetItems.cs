@@ -28,6 +28,7 @@ public record ItemListDto(
     int ReviewCount,
     string Type,
     string? Condition,
+    long? OwnerId,
     ItemCategoryRef? Category,
     ItemSubcategoryRef? Subcategory,
     ItemBrandRef? Brand
@@ -37,7 +38,7 @@ public record ItemPricingDto(string PricingType, decimal Price);
 
 public record ItemImageDto(Guid Id, string ImageUrl, bool IsPrimary);
 
-public record OwnerDto(string FirstName, string? City, string? ProfileImageUrl);
+public record OwnerDto(long Id, string FirstName, string? City, string? ProfileImageUrl);
 
 public record ItemDetailDto(
     Guid Id,
@@ -181,6 +182,7 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 0,   // review count
                 x.Item.Type.ToString(),
                 x.Item.Condition,
+                x.Item.OwnerId,
                 x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
                 x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
                 x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null

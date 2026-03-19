@@ -19,10 +19,16 @@ export const ItemsRoutes: Routes = [
   {
     path: 'items/:id/edit',
     component: ItemsEditorPageComponent,
-    canActivate: [AdminGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'items/:id',
     component: ItemDetailPageComponent,
   },
+  {
+    path: 'my-items',
+    component: ItemsListComponent,
+    canActivate: [AuthGuard],
+    data: { ownerMode: 'me' }
+  }
 ];

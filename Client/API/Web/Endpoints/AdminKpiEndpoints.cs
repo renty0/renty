@@ -18,7 +18,7 @@ public static class AdminKpiEndpoints
             ISender sender) =>
             Api.Ok(await sender.Send(new GetKpisQuery(period, from, to))))
         .WithName("GetAdminKpis")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetKpisResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
 
         g.MapGet("/kpis/latest", async (ISender sender) =>
@@ -27,7 +27,7 @@ public static class AdminKpiEndpoints
             return r.Found ? Api.Ok(r.Snapshot) : Api.Fail("No KPI data available.", 404);
         })
         .WithName("GetAdminLatestKpi")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<KpiSnapshotDto>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
         .RequireAuthorization(Policies.AdminAccess);
 
@@ -37,7 +37,7 @@ public static class AdminKpiEndpoints
             ISender sender) =>
             Api.Ok(await sender.Send(new GetGapAnalysisQuery(period, limit < 1 ? 20 : limit))))
         .WithName("GetAdminGapAnalysis")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetGapAnalysisResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
     }
 }

@@ -9,7 +9,16 @@ import { SubcategoriesRoutes } from './features/subcategories/subcategories.rout
 import { BrandsRoutes } from './features/brands/brands.routes';
 import { ProductDetailsComponent } from './features/marketplace/product-details/product-details.component';
 import { MarketplaceComponent } from './features/marketplace/marketplace.component';
+import { SearchResultsComponent } from './features/search-results/search-results.component';
 import { ItemsRoutes } from './features/items/items.routes';
+import { FavoritesComponent } from './features/favorites/favorites';
+import { OrdersRoutes } from './features/orders/orders.routes';
+import { CHAT_ROUTES } from './features/chat/chat.routes';
+import { NOTIFICATIONS_ROUTES } from './features/notifications/notifications.routes';
+import { SUPPORT_ROUTES } from './features/support/support.routes';
+import { EXPERT_ROUTES } from './features/expert/expert.routes';
+import { ADMIN_ROUTES } from './features/admin/admin.routes';
+
 
 export const routes: Routes = [
   ...AuthRoutes,
@@ -17,6 +26,42 @@ export const routes: Routes = [
   ...SubcategoriesRoutes,
   ...BrandsRoutes,
   ...ItemsRoutes,
+  ...OrdersRoutes,
+  {
+    path: 'chats',
+    children: CHAT_ROUTES
+  },
+  {
+    path: 'notifications',
+    children: NOTIFICATIONS_ROUTES
+  },
+  {
+    path: 'support',
+    children: SUPPORT_ROUTES
+  },
+  {
+    path: 'expert',
+    children: EXPERT_ROUTES
+  },
+  {
+    path: 'admin',
+    children: ADMIN_ROUTES
+  },
+  {
+    path: 'my-rentals',
+    loadComponent: () => import('./features/rentals/my-rentals/my-rentals').then(m => m.MyRentalsComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rentals/:id',
+    loadComponent: () => import('./features/rentals/rental-details/rental-details').then(m => m.RentalDetailsComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'search',
+    component: SearchResultsComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'marketplace/product/:id',
     component: ProductDetailsComponent,
@@ -27,11 +72,11 @@ export const routes: Routes = [
     component: MarketplaceComponent,
     canActivate: [AuthGuard]
   },
-  // {
-  //   path: 'profile',
-  //   component: ProfileComponent,
-  //   canActivate: [AuthGuard]
-  // },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: '',
     component: HomeComponent,

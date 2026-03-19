@@ -22,7 +22,7 @@ public static class AdminFraudEndpoints
             return Api.Ok(r);
         })
         .WithTags("Admin").WithName("GetFraudLogs")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetFraudLogsResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
 
         // GET /admin/users
@@ -35,7 +35,7 @@ public static class AdminFraudEndpoints
             return Api.Ok(r);
         })
         .WithTags("Admin").WithName("GetAdminUsers")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetAdminUsersResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
 
         // PUT /admin/users/:id/status
@@ -46,7 +46,7 @@ public static class AdminFraudEndpoints
             return Api.Ok(new { userId = r.UserId, isActive = r.IsActive });
         })
         .WithTags("Admin").WithName("UpdateUserStatus")
-        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<UpdateUserStatusResponse>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
         .RequireAuthorization(Policies.SuperAdminOnly);
     }

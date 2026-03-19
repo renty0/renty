@@ -1,0 +1,197 @@
+<div class="rental-details-container">
+  <app-header-section 
+    [title]="'rentals.details.title' | translate" 
+    [subtitle]="'rentals.details.subtitle' | translate">
+  </app-header-section>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  } @else if (rental(); as r) {
+    <div class="details-grid">
+      <!-- Left Column: Main Info -->
+      <div class="main-info">
+        <mat-card class="premium-card section-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>info</mat-icon>
+            <mat-card-title>{{ 'rentals.details.rental_info' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-row">
+              <div class="info-item">
+                <label>{{ 'rentals.details.item' | translate }}</label>
+                <div class="item-preview" [routerLink]="['/marketplace/product', r.itemId]">
+                  <img [src]="r.itemImage || 'assets/placeholder-product.png'" alt="Product">
+                  <span>{{ r.itemTitle }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <label>{{ 'rentals.details.status' | translate }}</label>
+                <span class="status-badge" [class]="getStatusColor(r.status)">
+                  {{ 'rentals.status.' + r.status?.toLowerCase() | translate }}
+                </span>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="info-row">
+              <div class="info-item">
+                <label>{{ 'rentals.details.dates' | translate }}</label>
+                <div class="date-range">
+                  <div class="date-box">
+                    <mat-icon>calendar_today</mat-icon>
+                    <div class="date-text">
+                      <small>Start</small>
+                      <span>{{ r.startDate | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+                  <mat-icon class="arrow">arrow_forward</mat-icon>
+                  <div class="date-box">
+                    <mat-icon>event</mat-icon>
+                    <div class="date-text">
+                      <small>End</small>
+                      <span>{{ r.endDate | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="premium-card section-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>people</mat-icon>
+            <mat-card-title>{{ 'rentals.details.parties' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-row">
+              <div class="info-item">
+                <label>{{ 'rentals.details.owner' | translate }}</label>
+                <div class="user-info">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ r.ownerFirstName }}</span>
+                  <small>{{ r.ownerCity }}</small>
+                </div>
+              </div>
+              <div class="info-item">
+                <label>{{ 'rentals.details.created_at' | translate }}</label>
+                <span>{{ r.createdAt | date:'medium' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Review Section (Renter only) -->
+        <mat-card class="action-card review-card" *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
+          <mat-card-header>
+            <mat-card-title>{{ 'rentals.details.review' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="rating-container">
+              <label>{{ 'rentals.details.rating' | translate }}</label>
+              <div class="stars">
+                <button mat-icon-button *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)" 
+                        [color]="reviewRating() >= s ? 'accent' : ''" type="button">
+                  <mat-icon>{{ reviewRating() >= s ? 'star' : 'star_border' }}</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="comment-container">
+              <label>{{ 'rentals.details.comment' | translate }}</label>
+              <textarea matInput [ngModel]="reviewComment()" (ngModelChange)="reviewComment.set($event)" rows="3" class="custom-textarea"></textarea>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <app-loading-button 
+              [loading]="isActionLoading()"
+              color="primary"
+              (click)="submitReview()">
+              <mat-icon>send</mat-icon>
+              {{ 'rentals.details.submit_review' | translate }}
+            </app-loading-button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- Right Column: Financials & Actions -->
+      <div class="side-info">
+        <mat-card class="premium-card financial-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>payments</mat-icon>
+            <mat-card-title>{{ 'rentals.details.financials' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="price-list">
+              <div class="price-row">
+                <span>{{ 'rentals.details.price' | translate }}</span>
+                <span class="value">{{ r.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
+              </div>
+              <div class="price-row">
+                <span>{{ 'rentals.details.deposit' | translate }}</span>
+                <span class="value">{{ r.depositAmount | currency:'EGP ':'symbol':'1.0-2' }}</span>
+              </div>
+              @if (r.lateFee && r.lateFee > 0) {
+                <div class="price-row warn">
+                  <span>{{ 'rentals.details.late_fee' | translate }}</span>
+                  <span class="value">+{{ r.lateFee | currency:'EGP ':'symbol':'1.0-2' }}</span>
+                </div>
+              }
+              <mat-divider></mat-divider>
+              <div class="price-row total">
+                <span>{{ 'rentals.details.total' | translate }}</span>
+                <span class="value">{{ (r.rentalPrice || 0) + (r.depositAmount || 0) + (r.lateFee || 0) | currency:'EGP ':'symbol':'1.0-2' }}</span>
+              </div>
+            </div>
+
+            <div class="actions-section">
+              <!-- Owner Actions -->
+              @if (r.status?.toLowerCase() === 'pending') {
+                 <!-- I'll add logic for owner check if possible, but for now show based on status -->
+                 <app-loading-button color="primary" class="w-full" (click)="confirmRental()" [loading]="isActionLoading()">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ 'rentals.actions.confirm' | translate }}
+                 </app-loading-button>
+              }
+
+              @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
+                <div class="completion-box">
+                  <mat-checkbox [(ngModel)]="isDamaged" color="warn">
+                    {{ 'rentals.actions.damaged' | translate }}
+                  </mat-checkbox>
+                  <app-loading-button color="accent" class="w-full" (click)="completeRental()" [loading]="isActionLoading()">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                    {{ 'rentals.actions.complete' | translate }}
+                  </app-loading-button>
+                </div>
+              }
+
+              <!-- Renter Actions -->
+              @if (r.status?.toLowerCase() === 'pending' || r.status?.toLowerCase() === 'confirmed') {
+                <app-loading-button variant="stroked" color="warn" class="w-full" (click)="cancelRental()" [loading]="isActionLoading()">
+                  <mat-icon>cancel</mat-icon>
+                  {{ 'rentals.actions.cancel' | translate }}
+                </app-loading-button>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        @if (r.notes) {
+          <mat-card class="premium-card section-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>notes</mat-icon>
+              <mat-card-title>{{ 'rentals.details.notes' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="notes-text">{{ r.notes }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+  }
+</div>

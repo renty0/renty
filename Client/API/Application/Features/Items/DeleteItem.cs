@@ -2,6 +2,8 @@ using Application.Common.Interfaces;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Application.Features.Items;
 
@@ -13,11 +15,13 @@ public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Delet
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public DeleteItemCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public DeleteItemCommandHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<DeleteItemResponse> Handle(DeleteItemCommand request, CancellationToken ct)
@@ -31,7 +35,8 @@ public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Delet
         if (item == null)
             return new DeleteItemResponse(false, "Item not found.");
 
-        if (item.OwnerId != _currentUser.Id.Value)
+        var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") ?? false;
+        if (!isAdmin && item.OwnerId != _currentUser.Id.Value)
             return new DeleteItemResponse(false, "Forbidden. You do not own this item.");
 
         if (item.Status == NewItemStatus.Rented)

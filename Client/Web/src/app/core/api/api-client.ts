@@ -22,7 +22,7 @@ export class AuthClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     authRegister(command: RegisterCommand): Observable<ApiResponse<AuthRegisterData>> {
@@ -613,7 +613,7 @@ export class ItemsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponse<ItemListDto[]>> {
@@ -938,7 +938,7 @@ export class SearchClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     searchItems(q: string, page: number, limit: number, categoryId?: number | null | undefined, city?: string | null | undefined): Observable<ApiResponse<SearchItemsResponse>> {
@@ -1021,7 +1021,7 @@ export class FavoritesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     addFavorite(id: string): Observable<ApiResponse<null>> {
@@ -1197,7 +1197,7 @@ export class DeliveryClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getDelivery(id: string): Observable<ApiResponse<TrackingEntryDto[]>> {
@@ -1329,7 +1329,7 @@ export class ReviewsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createReview(id: string, cmd: CreateReviewCommand): Observable<ApiResponse<ReviewCreateData>> {
@@ -1454,7 +1454,7 @@ export class VerificationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createVerification(id: string, cmd: CreateVerificationCommand): Observable<ApiResponse<VerificationCreateData>> {
@@ -1634,10 +1634,10 @@ export class AdminClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getFraudLogs(page: number, limit: number, decision?: string | null | undefined, minRisk?: number | null | undefined): Observable<ApiResponse<null>> {
+    getFraudLogs(page: number, limit: number, decision?: string | null | undefined, minRisk?: number | null | undefined): Observable<ApiResponse<GetFraudLogsResponse>> {
         let url_ = this.baseUrl + "/api/v1/admin/fraud?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1668,14 +1668,14 @@ export class AdminClient {
                 try {
                     return this.processGetFraudLogs(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetFraudLogsResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetFraudLogsResponse>>;
         }));
     }
 
-    protected processGetFraudLogs(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processGetFraudLogs(response: HttpResponseBase): Observable<ApiResponse<GetFraudLogsResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1697,7 +1697,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminUsers(page: number, limit: number): Observable<ApiResponse<null>> {
+    getAdminUsers(page: number, limit: number): Observable<ApiResponse<GetAdminUsersResponse>> {
         let url_ = this.baseUrl + "/api/v1/admin/users?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -1724,14 +1724,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminUsers(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetAdminUsersResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetAdminUsersResponse>>;
         }));
     }
 
-    protected processGetAdminUsers(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processGetAdminUsers(response: HttpResponseBase): Observable<ApiResponse<GetAdminUsersResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1753,7 +1753,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    updateUserStatus(id: number, cmd: UpdateUserStatusCommand): Observable<ApiResponse<null>> {
+    updateUserStatus(id: number, cmd: UpdateUserStatusCommand): Observable<ApiResponse<UpdateUserStatusResponse>> {
         let url_ = this.baseUrl + "/api/v1/admin/users/{id}/status";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -1779,14 +1779,14 @@ export class AdminClient {
                 try {
                     return this.processUpdateUserStatus(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<UpdateUserStatusResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<UpdateUserStatusResponse>>;
         }));
     }
 
-    protected processUpdateUserStatus(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processUpdateUserStatus(response: HttpResponseBase): Observable<ApiResponse<UpdateUserStatusResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1815,7 +1815,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminKpis(period?: string | null | undefined, from?: Date | null | undefined, to?: Date | null | undefined): Observable<ApiResponse<null>> {
+    getAdminKpis(period?: string | null | undefined, from?: Date | null | undefined, to?: Date | null | undefined): Observable<ApiResponse<GetKpisResponse>> {
         let url_ = this.baseUrl + "/api/v1/admin/kpis?";
         if (period !== undefined && period !== null)
             url_ += "period=" + encodeURIComponent("" + period) + "&";
@@ -1840,14 +1840,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminKpis(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetKpisResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetKpisResponse>>;
         }));
     }
 
-    protected processGetAdminKpis(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processGetAdminKpis(response: HttpResponseBase): Observable<ApiResponse<GetKpisResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1869,7 +1869,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminLatestKpi(): Observable<ApiResponse<null>> {
+    getAdminLatestKpi(): Observable<ApiResponse<KpiSnapshotDto>> {
         let url_ = this.baseUrl + "/api/v1/admin/kpis/latest";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1888,14 +1888,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminLatestKpi(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<KpiSnapshotDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<KpiSnapshotDto>>;
         }));
     }
 
-    protected processGetAdminLatestKpi(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processGetAdminLatestKpi(response: HttpResponseBase): Observable<ApiResponse<KpiSnapshotDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1924,7 +1924,7 @@ export class AdminClient {
         return _observableOf(null as any);
     }
 
-    getAdminGapAnalysis(limit: number, period?: string | null | undefined): Observable<ApiResponse<null>> {
+    getAdminGapAnalysis(limit: number, period?: string | null | undefined): Observable<ApiResponse<GetGapAnalysisResponse>> {
         let url_ = this.baseUrl + "/api/v1/admin/gap?";
         if (limit === undefined || limit === null)
             throw new globalThis.Error("The parameter 'limit' must be defined and cannot be null.");
@@ -1949,14 +1949,14 @@ export class AdminClient {
                 try {
                     return this.processGetAdminGapAnalysis(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetGapAnalysisResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetGapAnalysisResponse>>;
         }));
     }
 
-    protected processGetAdminGapAnalysis(response: HttpResponseBase): Observable<ApiResponse<null>> {
+    protected processGetAdminGapAnalysis(response: HttpResponseBase): Observable<ApiResponse<GetGapAnalysisResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1987,7 +1987,7 @@ export class SubcategoriesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getSubcategoriesByCategory(categoryId: number, page: number, limit: number, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductSubcategoryDto[]>> {
@@ -2363,7 +2363,7 @@ export class RentalsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createRental(cmd: CreateRentalCommand): Observable<ApiResponse<RentalCreateData>> {
@@ -2786,7 +2786,7 @@ export class OrdersClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createOrder(cmd: CreateOrderCommand): Observable<ApiResponse<OrderCreateData>> {
@@ -2963,7 +2963,7 @@ export class PaymentsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createPayment(cmd: CreatePaymentCommand): Observable<ApiResponse<PaymentCreateData>> {
@@ -3092,7 +3092,7 @@ export class SupportClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createSupportTicket(cmd: CreateTicketCommand): Observable<ApiResponse<SupportCreateTicketData>> {
@@ -3193,6 +3193,64 @@ export class SupportClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getSupportTicketDetails(id: string): Observable<ApiResponse<GetTicketResponse>> {
+        let url_ = this.baseUrl + "/api/v1/support/tickets/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSupportTicketDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSupportTicketDetails(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetTicketResponse>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetTicketResponse>>;
+        }));
+    }
+
+    protected processGetSupportTicketDetails(response: HttpResponseBase): Observable<ApiResponse<GetTicketResponse>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ApiResponse.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3335,7 +3393,7 @@ export class ChatClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     createChat(cmd: CreateChatCommand): Observable<ApiResponse<ChatCreateData>> {
@@ -3574,7 +3632,7 @@ export class NotificationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getNotifications(): Observable<ApiResponse<GetNotificationsResponse>> {
@@ -3740,7 +3798,7 @@ export class RecommendationsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getRecommendationsV1(): Observable<ApiResponse<GetRecommendationsResponse>> {
@@ -3858,7 +3916,7 @@ export class MediaClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     uploadMedia(entityId?: string | null | undefined, entityType?: string | null | undefined, file?: FileParameter | null | undefined): Observable<ApiResponse<MediaUploadData>> {
@@ -3934,7 +3992,7 @@ export class CategoriesClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getCategories(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<ProductCategoryDto[]>> {
@@ -4245,7 +4303,7 @@ export class BrandsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://renty.runasp.net";
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
     getBrands(page: number, limit: number, search?: string | null | undefined, sortBy?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<BrandDto[]>> {
@@ -4599,7 +4657,6 @@ export interface IAuthRegisterData {
 export class RegisterCommand implements IRegisterCommand {
     email?: string;
     password?: string;
-    confirmPassword?: string;
     firstName?: string;
     lastName?: string;
     phoneNumber?: string | undefined;
@@ -4622,7 +4679,6 @@ export class RegisterCommand implements IRegisterCommand {
         if (_data) {
             this.email = _data["email"];
             this.password = _data["password"];
-            this.confirmPassword = _data["confirmPassword"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.phoneNumber = _data["phoneNumber"];
@@ -4645,7 +4701,6 @@ export class RegisterCommand implements IRegisterCommand {
         data = typeof data === 'object' ? data : {};
         data["email"] = this.email;
         data["password"] = this.password;
-        data["confirmPassword"] = this.confirmPassword;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["phoneNumber"] = this.phoneNumber;
@@ -4661,7 +4716,6 @@ export class RegisterCommand implements IRegisterCommand {
 export interface IRegisterCommand {
     email?: string;
     password?: string;
-    confirmPassword?: string;
     firstName?: string;
     lastName?: string;
     phoneNumber?: string | undefined;
@@ -5301,6 +5355,7 @@ export class ItemListDto implements IItemListDto {
     reviewCount?: number;
     type?: string;
     condition?: string | undefined;
+    ownerId?: number | undefined;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -5326,6 +5381,7 @@ export class ItemListDto implements IItemListDto {
             this.reviewCount = _data["reviewCount"];
             this.type = _data["type"];
             this.condition = _data["condition"];
+            this.ownerId = _data["ownerId"];
             this.category = _data["category"] ? ItemCategoryRef.fromJS(_data["category"]) : undefined as any;
             this.subcategory = _data["subcategory"] ? ItemSubcategoryRef.fromJS(_data["subcategory"]) : undefined as any;
             this.brand = _data["brand"] ? ItemBrandRef.fromJS(_data["brand"]) : undefined as any;
@@ -5351,6 +5407,7 @@ export class ItemListDto implements IItemListDto {
         data["reviewCount"] = this.reviewCount;
         data["type"] = this.type;
         data["condition"] = this.condition;
+        data["ownerId"] = this.ownerId;
         data["category"] = this.category ? this.category.toJSON() : undefined as any;
         data["subcategory"] = this.subcategory ? this.subcategory.toJSON() : undefined as any;
         data["brand"] = this.brand ? this.brand.toJSON() : undefined as any;
@@ -5369,6 +5426,7 @@ export interface IItemListDto {
     reviewCount?: number;
     type?: string;
     condition?: string | undefined;
+    ownerId?: number | undefined;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -5879,6 +5937,7 @@ export interface IItemDetailDto {
 }
 
 export class OwnerDto implements IOwnerDto {
+    id?: number;
     firstName?: string;
     city?: string | undefined;
     profileImageUrl?: string | undefined;
@@ -5894,6 +5953,7 @@ export class OwnerDto implements IOwnerDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.firstName = _data["firstName"];
             this.city = _data["city"];
             this.profileImageUrl = _data["profileImageUrl"];
@@ -5909,6 +5969,7 @@ export class OwnerDto implements IOwnerDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["firstName"] = this.firstName;
         data["city"] = this.city;
         data["profileImageUrl"] = this.profileImageUrl;
@@ -5917,6 +5978,7 @@ export class OwnerDto implements IOwnerDto {
 }
 
 export interface IOwnerDto {
+    id?: number;
     firstName?: string;
     city?: string | undefined;
     profileImageUrl?: string | undefined;
@@ -6942,6 +7004,346 @@ export interface IAssignedVerificationDto {
     createdAt?: Date;
 }
 
+
+
+
+
+export class GetFraudLogsResponse implements IGetFraudLogsResponse {
+    logs?: FraudLogDto[];
+    total?: number;
+    page?: number;
+    pages?: number;
+
+    constructor(data?: IGetFraudLogsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["logs"])) {
+                this.logs = [] as any;
+                for (let item of _data["logs"])
+                    this.logs!.push(FraudLogDto.fromJS(item));
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
+        }
+    }
+
+    static fromJS(data: any): GetFraudLogsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFraudLogsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.logs)) {
+            data["logs"] = [];
+            for (let item of this.logs)
+                data["logs"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
+        return data;
+    }
+}
+
+export interface IGetFraudLogsResponse {
+    logs?: FraudLogDto[];
+    total?: number;
+    page?: number;
+    pages?: number;
+}
+
+export class FraudLogDto implements IFraudLogDto {
+    id?: string;
+    user?: FraudUserDto;
+    riskScore?: number;
+    decision?: string;
+    reason?: string | undefined;
+    fraudIndicators?: string | undefined;
+    createdAt?: Date;
+
+    constructor(data?: IFraudLogDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.user = _data["user"] ? FraudUserDto.fromJS(_data["user"]) : undefined as any;
+            this.riskScore = _data["riskScore"];
+            this.decision = _data["decision"];
+            this.reason = _data["reason"];
+            this.fraudIndicators = _data["fraudIndicators"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): FraudLogDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FraudLogDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["user"] = this.user ? this.user.toJSON() : undefined as any;
+        data["riskScore"] = this.riskScore;
+        data["decision"] = this.decision;
+        data["reason"] = this.reason;
+        data["fraudIndicators"] = this.fraudIndicators;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IFraudLogDto {
+    id?: string;
+    user?: FraudUserDto;
+    riskScore?: number;
+    decision?: string;
+    reason?: string | undefined;
+    fraudIndicators?: string | undefined;
+    createdAt?: Date;
+}
+
+export class FraudUserDto implements IFraudUserDto {
+    id?: number;
+    firstName?: string;
+    email?: string;
+
+    constructor(data?: IFraudUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): FraudUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FraudUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["email"] = this.email;
+        return data;
+    }
+}
+
+export interface IFraudUserDto {
+    id?: number;
+    firstName?: string;
+    email?: string;
+}
+
+
+
+
+
+export class GetAdminUsersResponse implements IGetAdminUsersResponse {
+    users?: AdminUserDto[];
+    total?: number;
+    page?: number;
+    pages?: number;
+
+    constructor(data?: IGetAdminUsersResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["users"])) {
+                this.users = [] as any;
+                for (let item of _data["users"])
+                    this.users!.push(AdminUserDto.fromJS(item));
+            }
+            this.total = _data["total"];
+            this.page = _data["page"];
+            this.pages = _data["pages"];
+        }
+    }
+
+    static fromJS(data: any): GetAdminUsersResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAdminUsersResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.users)) {
+            data["users"] = [];
+            for (let item of this.users)
+                data["users"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["total"] = this.total;
+        data["page"] = this.page;
+        data["pages"] = this.pages;
+        return data;
+    }
+}
+
+export interface IGetAdminUsersResponse {
+    users?: AdminUserDto[];
+    total?: number;
+    page?: number;
+    pages?: number;
+}
+
+export class AdminUserDto implements IAdminUserDto {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    email?: string | undefined;
+    role?: string | undefined;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date;
+
+    constructor(data?: IAdminUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.email = _data["email"];
+            this.role = _data["role"];
+            this.isVerified = _data["isVerified"];
+            this.isActive = _data["isActive"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): AdminUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["email"] = this.email;
+        data["role"] = this.role;
+        data["isVerified"] = this.isVerified;
+        data["isActive"] = this.isActive;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IAdminUserDto {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    email?: string | undefined;
+    role?: string | undefined;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date;
+}
+
+
+
+
+
+export class UpdateUserStatusResponse implements IUpdateUserStatusResponse {
+    success?: boolean;
+    error?: string | undefined;
+    userId?: number | undefined;
+    isActive?: boolean | undefined;
+
+    constructor(data?: IUpdateUserStatusResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.error = _data["error"];
+            this.userId = _data["userId"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpdateUserStatusResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateUserStatusResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["error"] = this.error;
+        data["userId"] = this.userId;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpdateUserStatusResponse {
+    success?: boolean;
+    error?: string | undefined;
+    userId?: number | undefined;
+    isActive?: boolean | undefined;
+}
+
 export class UpdateUserStatusCommand implements IUpdateUserStatusCommand {
     userId?: number;
     isActive?: boolean;
@@ -7238,6 +7640,8 @@ export class RentalListDto implements IRentalListDto {
     id?: string;
     itemTitle?: string;
     itemImage?: string | undefined;
+    ownerId?: number;
+    ownerFirstName?: string;
     startDate?: Date;
     endDate?: Date;
     rentalPrice?: number;
@@ -7258,6 +7662,8 @@ export class RentalListDto implements IRentalListDto {
             this.id = _data["id"];
             this.itemTitle = _data["itemTitle"];
             this.itemImage = _data["itemImage"];
+            this.ownerId = _data["ownerId"];
+            this.ownerFirstName = _data["ownerFirstName"];
             this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : undefined as any;
             this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : undefined as any;
             this.rentalPrice = _data["rentalPrice"];
@@ -7278,6 +7684,8 @@ export class RentalListDto implements IRentalListDto {
         data["id"] = this.id;
         data["itemTitle"] = this.itemTitle;
         data["itemImage"] = this.itemImage;
+        data["ownerId"] = this.ownerId;
+        data["ownerFirstName"] = this.ownerFirstName;
         data["startDate"] = this.startDate ? this.startDate.toISOString() : undefined as any;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : undefined as any;
         data["rentalPrice"] = this.rentalPrice;
@@ -7291,6 +7699,8 @@ export interface IRentalListDto {
     id?: string;
     itemTitle?: string;
     itemImage?: string | undefined;
+    ownerId?: number;
+    ownerFirstName?: string;
     startDate?: Date;
     endDate?: Date;
     rentalPrice?: number;
@@ -7307,6 +7717,7 @@ export class RentalDetailDto implements IRentalDetailDto {
     itemId?: string;
     itemTitle?: string;
     itemImage?: string | undefined;
+    ownerId?: number;
     ownerFirstName?: string;
     ownerCity?: string | undefined;
     startDate?: Date;
@@ -7336,6 +7747,7 @@ export class RentalDetailDto implements IRentalDetailDto {
             this.itemId = _data["itemId"];
             this.itemTitle = _data["itemTitle"];
             this.itemImage = _data["itemImage"];
+            this.ownerId = _data["ownerId"];
             this.ownerFirstName = _data["ownerFirstName"];
             this.ownerCity = _data["ownerCity"];
             this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : undefined as any;
@@ -7365,6 +7777,7 @@ export class RentalDetailDto implements IRentalDetailDto {
         data["itemId"] = this.itemId;
         data["itemTitle"] = this.itemTitle;
         data["itemImage"] = this.itemImage;
+        data["ownerId"] = this.ownerId;
         data["ownerFirstName"] = this.ownerFirstName;
         data["ownerCity"] = this.ownerCity;
         data["startDate"] = this.startDate ? this.startDate.toISOString() : undefined as any;
@@ -7387,6 +7800,7 @@ export interface IRentalDetailDto {
     itemId?: string;
     itemTitle?: string;
     itemImage?: string | undefined;
+    ownerId?: number;
     ownerFirstName?: string;
     ownerCity?: string | undefined;
     startDate?: Date;
@@ -8136,6 +8550,7 @@ export class TicketListDto implements ITicketListDto {
     status?: string;
     createdAt?: Date;
     lastMessage?: string | undefined;
+    userName?: string | undefined;
 
     constructor(data?: ITicketListDto) {
         if (data) {
@@ -8153,6 +8568,7 @@ export class TicketListDto implements ITicketListDto {
             this.status = _data["status"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
             this.lastMessage = _data["lastMessage"];
+            this.userName = _data["userName"];
         }
     }
 
@@ -8170,6 +8586,7 @@ export class TicketListDto implements ITicketListDto {
         data["status"] = this.status;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         data["lastMessage"] = this.lastMessage;
+        data["userName"] = this.userName;
         return data;
     }
 }
@@ -8180,6 +8597,167 @@ export interface ITicketListDto {
     status?: string;
     createdAt?: Date;
     lastMessage?: string | undefined;
+    userName?: string | undefined;
+}
+
+
+
+
+
+export class GetTicketResponse implements IGetTicketResponse {
+    found?: boolean;
+    error?: string | undefined;
+    ticket?: TicketDetailsDto | undefined;
+
+    constructor(data?: IGetTicketResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.found = _data["found"];
+            this.error = _data["error"];
+            this.ticket = _data["ticket"] ? TicketDetailsDto.fromJS(_data["ticket"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): GetTicketResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTicketResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["found"] = this.found;
+        data["error"] = this.error;
+        data["ticket"] = this.ticket ? this.ticket.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface IGetTicketResponse {
+    found?: boolean;
+    error?: string | undefined;
+    ticket?: TicketDetailsDto | undefined;
+}
+
+export class TicketDetailsDto implements ITicketDetailsDto {
+    id?: string;
+    type?: string;
+    status?: string;
+    createdAt?: Date;
+    messages?: SupportMessageDto[];
+    userName?: string | undefined;
+
+    constructor(data?: ITicketDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(SupportMessageDto.fromJS(item));
+            }
+            this.userName = _data["userName"];
+        }
+    }
+
+    static fromJS(data: any): TicketDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TicketDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["userName"] = this.userName;
+        return data;
+    }
+}
+
+export interface ITicketDetailsDto {
+    id?: string;
+    type?: string;
+    status?: string;
+    createdAt?: Date;
+    messages?: SupportMessageDto[];
+    userName?: string | undefined;
+}
+
+export class SupportMessageDto implements ISupportMessageDto {
+    id?: string;
+    senderId?: number;
+    message?: string;
+    createdAt?: Date;
+
+    constructor(data?: ISupportMessageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.senderId = _data["senderId"];
+            this.message = _data["message"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): SupportMessageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportMessageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["senderId"] = this.senderId;
+        data["message"] = this.message;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface ISupportMessageDto {
+    id?: string;
+    senderId?: number;
+    message?: string;
+    createdAt?: Date;
 }
 
 
@@ -8233,6 +8811,7 @@ export interface ISupportMessageData {
 export class PostSupportMessageCommand implements IPostSupportMessageCommand {
     ticketId?: string;
     message?: string;
+    isSupportAgent?: boolean;
 
     constructor(data?: IPostSupportMessageCommand) {
         if (data) {
@@ -8247,6 +8826,7 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
         if (_data) {
             this.ticketId = _data["ticketId"];
             this.message = _data["message"];
+            this.isSupportAgent = _data["isSupportAgent"];
         }
     }
 
@@ -8261,6 +8841,7 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
         data = typeof data === 'object' ? data : {};
         data["ticketId"] = this.ticketId;
         data["message"] = this.message;
+        data["isSupportAgent"] = this.isSupportAgent;
         return data;
     }
 }
@@ -8268,6 +8849,7 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
 export interface IPostSupportMessageCommand {
     ticketId?: string;
     message?: string;
+    isSupportAgent?: boolean;
 }
 
 
@@ -9024,6 +9606,242 @@ export interface IRecommendationItemDto {
     price?: number | undefined;
     image?: string | undefined;
     city?: string | undefined;
+}
+
+
+
+
+
+export class GetKpisResponse implements IGetKpisResponse {
+    snapshots?: KpiSnapshotDto[];
+
+    constructor(data?: IGetKpisResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["snapshots"])) {
+                this.snapshots = [] as any;
+                for (let item of _data["snapshots"])
+                    this.snapshots!.push(KpiSnapshotDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetKpisResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetKpisResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.snapshots)) {
+            data["snapshots"] = [];
+            for (let item of this.snapshots)
+                data["snapshots"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IGetKpisResponse {
+    snapshots?: KpiSnapshotDto[];
+}
+
+export class KpiSnapshotDto implements IKpiSnapshotDto {
+    id?: string;
+    date?: Date;
+    period?: string;
+    activeUsers?: number;
+    newUsers?: number;
+    rentals?: number;
+    revenue?: number;
+    fraudRate?: number;
+    recommendationCtr?: number;
+    totalItems?: number;
+    totalOrders?: number;
+    createdAt?: Date;
+
+    constructor(data?: IKpiSnapshotDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : undefined as any;
+            this.period = _data["period"];
+            this.activeUsers = _data["activeUsers"];
+            this.newUsers = _data["newUsers"];
+            this.rentals = _data["rentals"];
+            this.revenue = _data["revenue"];
+            this.fraudRate = _data["fraudRate"];
+            this.recommendationCtr = _data["recommendationCtr"];
+            this.totalItems = _data["totalItems"];
+            this.totalOrders = _data["totalOrders"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): KpiSnapshotDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new KpiSnapshotDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : undefined as any;
+        data["period"] = this.period;
+        data["activeUsers"] = this.activeUsers;
+        data["newUsers"] = this.newUsers;
+        data["rentals"] = this.rentals;
+        data["revenue"] = this.revenue;
+        data["fraudRate"] = this.fraudRate;
+        data["recommendationCtr"] = this.recommendationCtr;
+        data["totalItems"] = this.totalItems;
+        data["totalOrders"] = this.totalOrders;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IKpiSnapshotDto {
+    id?: string;
+    date?: Date;
+    period?: string;
+    activeUsers?: number;
+    newUsers?: number;
+    rentals?: number;
+    revenue?: number;
+    fraudRate?: number;
+    recommendationCtr?: number;
+    totalItems?: number;
+    totalOrders?: number;
+    createdAt?: Date;
+}
+
+
+
+
+
+
+
+
+
+export class GetGapAnalysisResponse implements IGetGapAnalysisResponse {
+    gaps?: GapDto[];
+
+    constructor(data?: IGetGapAnalysisResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["gaps"])) {
+                this.gaps = [] as any;
+                for (let item of _data["gaps"])
+                    this.gaps!.push(GapDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetGapAnalysisResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetGapAnalysisResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.gaps)) {
+            data["gaps"] = [];
+            for (let item of this.gaps)
+                data["gaps"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IGetGapAnalysisResponse {
+    gaps?: GapDto[];
+}
+
+export class GapDto implements IGapDto {
+    categoryName?: string;
+    demand?: number;
+    supply?: number;
+    gapScore?: number;
+    recommendations?: string | undefined;
+    createdAt?: Date;
+
+    constructor(data?: IGapDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryName = _data["categoryName"];
+            this.demand = _data["demand"];
+            this.supply = _data["supply"];
+            this.gapScore = _data["gapScore"];
+            this.recommendations = _data["recommendations"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): GapDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GapDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryName"] = this.categoryName;
+        data["demand"] = this.demand;
+        data["supply"] = this.supply;
+        data["gapScore"] = this.gapScore;
+        data["recommendations"] = this.recommendations;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IGapDto {
+    categoryName?: string;
+    demand?: number;
+    supply?: number;
+    gapScore?: number;
+    recommendations?: string | undefined;
+    createdAt?: Date;
 }
 
 

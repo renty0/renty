@@ -1,0 +1,52 @@
+<div class="data-container">
+  <app-header-section [title]="'favorites.title' | translate" [icon]="'favorite'" />
+
+  @if (isLoading()) {
+    <mat-card class="table-card" style="padding: 2rem; display: flex; justify-content: center;">
+      <mat-spinner diameter="40"></mat-spinner>
+    </mat-card>
+  } @else {
+    @if (favorites().length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">heart_broken</mat-icon>
+        <p>{{ 'favorites.empty' | translate }}</p>
+      </div>
+    } @else {
+      <div class="cards-grid">
+        @for (item of favorites(); track item.id) {
+          <mat-card class="entity-card animate-fade-in" (click)="viewItem(item.id!)">
+            <div class="card-content">
+              <div class="card-image">
+                @if (item.primaryImage) {
+                  <img [src]="item.primaryImage" [alt]="item.title" />
+                } @else {
+                  <div class="placeholder">
+                    <mat-icon>image_not_supported</mat-icon>
+                  </div>
+                }
+              </div>
+              <div class="card-header-info">
+                <h3>{{ item.title }}</h3>
+              </div>
+              <div class="price-tag">
+                <span>{{ item.dailyPrice }} EGP <small>{{ 'products.columns.perDay' | translate }}</small></span>
+              </div>
+              @if (item.city) {
+                <p class="subcategory-info">
+                  <mat-icon inline style="font-size: 16px; margin-inline-end: 4px;">location_on</mat-icon> 
+                  {{ item.city }}
+                </p>
+              }
+            </div>
+            
+            <div class="card-actions">
+              <button mat-icon-button (click)="removeFavorite(item.id!, $event)" color="warn" [title]="'favorites.remove' | translate">
+                <mat-icon>favorite</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

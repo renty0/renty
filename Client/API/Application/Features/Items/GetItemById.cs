@@ -71,6 +71,7 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.Lng,
             item.CreatedAt,
             new OwnerDto(
+                item.OwnerId,
                 item.Owner.FirstName, 
                 item.Owner.City, 
                 !string.IsNullOrEmpty(item.Owner.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 

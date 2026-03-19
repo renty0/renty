@@ -1,14 +1,17 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ItemsClient, ItemDetailDto, ItemListDto } from '../../../core/api/api-client';
+import { ItemsClient, ItemDetailDto, ItemListDto, FavoritesClient, ReviewsClient, ReviewDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RentModalComponent } from '../../rentals/rent-modal/rent-modal';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
@@ -22,7 +25,8 @@ import { catchError, finalize, of, tap } from 'rxjs';
         MatIconModule,
         MatProgressSpinnerModule,
         MatChipsModule,
-        MatTabsModule
+        MatTabsModule,
+        MatDialogModule
     ],
     templateUrl: './product-details.component.html',
     styleUrl: './product-details.component.scss'
@@ -30,19 +34,40 @@ import { catchError, finalize, of, tap } from 'rxjs';
 export class ProductDetailsComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private itemsClient = inject(ItemsClient);
+    private favoritesClient = inject(FavoritesClient);
+    private reviewsClient = inject(ReviewsClient);
     private toast = inject(ToastService);
+    private authService = inject(AuthService);
     public translate = inject(TranslateService);
+    private router = inject(Router);
+    private dialog = inject(MatDialog);
 
     item = signal<ItemDetailDto | null>(null);
+    reviews = signal<ReviewDto[]>([]);
     relatedItems = signal<ItemListDto[]>([]);
     isLoading = signal(true);
+    isFavorite = signal(false);
+    isAdmin = computed(() => this.authService.isAdmin());
+    isLoggedIn = this.authService.isLoggedIn;
+    isOwner = computed(() => {
+        const currentUserId = this.authService.getCurrentUserId();
+        const itemOwnerId = this.item()?.owner?.id;
+        return currentUserId !== null && !!itemOwnerId && currentUserId === itemOwnerId;
+    });
     selectedImage = signal<string | undefined>(undefined);
+
+    displayPrice = computed(() => {
+        const item = this.item();
+        if (!item) return 0;
+        return item.pricing?.find(p => p.pricingType === 'Daily')?.price ?? 
+               item.pricing?.[0]?.price ?? 0;
+    });
 
     ngOnInit() {
         this.route.params.subscribe(params => {
             const id = params['id'];
             if (id) {
-                this.loadItem(id);  // id is a Guid string
+                this.loadItem(id);
             }
         });
     }
@@ -62,9 +87,12 @@ export class ProductDetailsComponent implements OnInit {
                             itemData.images?.find(i => i.isPrimary)?.imageUrl ??
                             itemData.images?.[0]?.imageUrl
                         );
-                        // Load related items by subcategory if available
                         if (itemData.subcategory?.id) {
                             this.loadRelatedItems(itemData.subcategory.id, id);
+                        }
+                        this.loadReviews(id);
+                        if (this.isLoggedIn()) {
+                            this.checkIfFavorite(id);
                         }
                     }
                 }),
@@ -101,6 +129,122 @@ export class ProductDetailsComponent implements OnInit {
                 })
             )
             .subscribe();
+    }
+    loadReviews(id: string) {
+        this.reviewsClient.getItemReviews(id)
+            .pipe(
+                tap(res => {
+                    if (res.data?.reviews) {
+                        this.reviews.set(res.data.reviews);
+                    }
+                }),
+                catchError(err => {
+                    console.error('Failed to load reviews', err);
+                    return of(null);
+                })
+            )
+            .subscribe();
+    }
+
+    checkIfFavorite(id: string) {
+        this.favoritesClient.getMyFavorites()
+            .pipe(
+                tap(res => {
+                    if (res.data?.items) {
+                        const isFav = res.data.items.some(i => i.id === id);
+                        this.isFavorite.set(isFav);
+                    }
+                })
+            )
+            .subscribe();
+    }
+
+    toggleFavorite() {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        const id = this.item()?.id;
+        if (!id) return;
+
+        const action = this.isFavorite()
+            ? this.favoritesClient.removeFavorite(id)
+            : this.favoritesClient.addFavorite(id);
+
+        action.pipe(
+            tap(res => {
+                if (!res.error) {
+                    this.isFavorite.set(!this.isFavorite());
+                    this.toast.showSuccess(this.isFavorite() ? 'marketplace.add_to_favorites' : 'marketplace.remove_from_favorites');
+                }
+            }),
+            catchError(err => {
+                this.toast.showError('errors.generic');
+                return of(null);
+            })
+        ).subscribe();
+    }
+
+    editItem() {
+        const id = this.item()?.id;
+        if (id) {
+            this.router.navigate(['/items', id, 'edit']);
+        }
+    }
+
+    deleteItem() {
+        const id = this.item()?.id;
+        if (!id) return;
+
+        if (confirm('Are you sure you want to delete this item?')) {
+            this.itemsClient.deleteItem(id)
+                .pipe(
+                    tap(res => {
+                        if (!res.error) {
+                            this.toast.showSuccess('Item deleted successfully');
+                            this.router.navigate(['/marketplace']);
+                        }
+                    }),
+                    catchError(err => {
+                        this.toast.showError('Failed to delete item');
+                        return of(null);
+                    })
+                ).subscribe();
+        }
+    }
+
+    openRentModal() {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        const itemData = this.item();
+        if (!itemData) return;
+
+        this.dialog.open(RentModalComponent, {
+            width: '600px',
+            data: { item: itemData },
+            panelClass: 'rent-modal-container'
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                // Optionally navigate to rentals page
+                this.router.navigate(['/my-rentals']);
+            }
+        });
+    }
+    
+    buyNow() {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        const id = this.item()?.id;
+        if (id) {
+            this.router.navigate(['/checkout', id]);
+        }
     }
 
     getLocalizedName(item: any): string {

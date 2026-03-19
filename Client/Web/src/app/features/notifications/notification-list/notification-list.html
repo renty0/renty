@@ -1,0 +1,51 @@
+<div class="notifications-container" [dir]="unreadCount() > 0 ? 'ltr' : 'ltr'">
+  <app-header-section 
+    [title]="'notifications.title' | translate"
+    [subtitle]="unreadCount() + ' ' + ('notifications.unread' | translate)"
+    icon="notifications_active">
+    <div actions>
+      @if (notifications().length > 0) {
+        <button mat-stroked-button color="primary" (click)="markAllAsRead()">
+          <mat-icon>done_all</mat-icon>
+          {{ 'notifications.mark_all_read' | translate }}
+        </button>
+      }
+    </div>
+  </app-header-section>
+
+  <div class="notifications-content">
+    @if (isLoading()) {
+      <div class="loader-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (notifications().length > 0) {
+      <mat-card class="glass-card">
+        <mat-list>
+          @for (notif of notifications(); track notif.id; let last = $last) {
+            <mat-list-item class="notification-item" [class.unread]="!notif.isRead">
+              <mat-icon matListItemIcon [color]="notif.isRead ? '' : 'primary'">
+                {{ notif.isRead ? 'notifications' : 'notifications_active' }}
+              </mat-icon>
+              <div matListItemTitle class="notif-title">{{ notif.title }}</div>
+              <div matListItemLine class="notif-body">{{ notif.message }}</div>
+              <div matListItemLine class="notif-time">{{ notif.createdAt | date:'medium' }}</div>
+              <div matListItemMeta>
+                @if (!notif.isRead) {
+                  <button mat-icon-button (click)="markAsRead(notif.id)" matTooltip="Mark as read">
+                    <mat-icon>check</mat-icon>
+                  </button>
+                }
+              </div>
+            </mat-list-item>
+            @if (!last) { <mat-divider></mat-divider> }
+          }
+        </mat-list>
+      </mat-card>
+    } @else {
+      <div class="empty-state">
+        <mat-icon>notifications_none</mat-icon>
+        <p>{{ 'notifications.no_notifications' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="order-details-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  @if (isLoading()) {
+    <div class="loader-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  } @else if (order()) {
+    <app-header-section 
+      [title]="('order_details.title' | translate) + ' #' + order()?.id?.substring(0,8)"
+      [subtitle]="(order()?.createdAt | date:'medium') || ''"
+      icon="receipt">
+      <div actions>
+        <mat-chip [class]="'status-chip ' + getStatusColor(order()?.status)">
+          {{ 'order_details.statuses.' + (order()?.status?.toLowerCase() || 'pending') | translate }}
+        </mat-chip>
+      </div>
+    </app-header-section>
+
+    <div class="details-grid">
+      <!-- Left Column: Items & Summary -->
+      <div class="main-info">
+        <mat-card class="glass-card items-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>shopping_bag</mat-icon>
+            <mat-card-title>{{ 'order_details.items' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="items-list">
+              @for (item of order()?.items; track item.itemId) {
+                <div class="order-item">
+                  <div class="item-info">
+                    <span class="item-name">{{ getLocalizedName(item) }}</span>
+                    <span class="item-qty">x{{ item.quantity }}</span>
+                  </div>
+                  <span class="item-price">{{ item.priceAtTime | currency }}</span>
+                </div>
+                <mat-divider></mat-divider>
+              }
+            </div>
+            
+            <div class="order-total-section">
+              <div class="total-row large">
+                <span>{{ 'checkout.total' | translate }}</span>
+                <span>{{ order()?.totalAmount | currency }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="glass-card payment-card mt-4">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>payments</mat-icon>
+            <mat-card-title>{{ 'order_details.payment' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (payment()) {
+              <div class="payment-info">
+                <div class="info-row">
+                  <span class="label">{{ 'payment.select_method' | translate }}:</span>
+                  <span class="value">{{ 'payment.methods.' + payment()?.method?.toLowerCase() | translate }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">{{ 'order_details.payment_status' | translate }}:</span>
+                  <mat-chip [class]="getStatusColor(payment()?.status)">
+                    {{ payment()?.status }}
+                  </mat-chip>
+                </div>
+                <div class="info-row">
+                  <span class="label">{{ 'common.date' | translate }}:</span>
+                  <span class="value">{{ payment()?.createdAt | date:'short' }}</span>
+                </div>
+              </div>
+            } @else {
+              <div class="no-payment">
+                <p>{{ 'order_details.no_payment' | translate }}</p>
+                <button mat-raised-button color="primary" [routerLink]="['/checkout', order()?.id, 'payment']">
+                  {{ 'payment.pay_now' | translate }}
+                </button>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right Column: Delivery Tracking -->
+      <div class="tracking-sidebar">
+        <mat-card class="glass-card tracking-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>local_shipping</mat-icon>
+            <mat-card-title>{{ 'order_details.delivery' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (deliveryTracking().length > 0) {
+              <div class="timeline">
+                @for (step of deliveryTracking(); track $index; let last = $last) {
+                  <div class="timeline-item" [class.last]="last">
+                    <div class="timeline-marker">
+                      <div class="dot" [class.active]="$index === 0"></div>
+                      @if (!last) { <div class="line"></div> }
+                    </div>
+                    <div class="timeline-content">
+                      <div class="step-header">
+                        <span class="step-status">{{ 'order_details.statuses.' + step.status?.toLowerCase() | translate }}</span>
+                        <span class="step-time">{{ step.updatedAt | date:'shortTime' }}</span>
+                      </div>
+                      @if (step.location) {
+                        <div class="step-location">
+                          <mat-icon>location_on</mat-icon>
+                          <span>{{ step.location }}</span>
+                        </div>
+                      }
+                      <div class="step-date text-muted">{{ step.updatedAt | date:'mediumDate' }}</div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-tracking">
+                <mat-icon>hourglass_empty</mat-icon>
+                <p>{{ 'order_details.no_tracking' | translate }}</p>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  } @else {
+    <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Order Not Found</h2>
+      <button mat-button routerLink="/my-orders">Back to Orders</button>
+    </div>
+  }
+</div>

@@ -3,6 +3,8 @@ using Domain.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Application.Features.Items;
 
@@ -42,11 +44,13 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateItemCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public UpdateItemCommandHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<UpdateItemResponse> Handle(UpdateItemCommand request, CancellationToken ct)
@@ -63,8 +67,9 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
         if (item == null)
             return new UpdateItemResponse(false, "Item not found.", null);
 
-        // Owner check (admins can bypass — role checked at endpoint level)
-        if (item.OwnerId != _currentUser.Id.Value)
+        // Owner check (admins can bypass)
+        var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") ?? false;
+        if (!isAdmin && item.OwnerId != _currentUser.Id.Value)
             return new UpdateItemResponse(false, "Forbidden. You do not own this item.", null);
 
         if (item.Status == NewItemStatus.Rented)
@@ -113,7 +118,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
             item.Type.ToString(), item.Status.ToString(), item.Condition,
             item.DefaultDeposit, item.Location, item.City, item.Lat, item.Lng,
             item.CreatedAt,
-            new OwnerDto(item.Owner.FirstName, item.Owner.City, item.Owner.ProfilePictureUrl),
+            new OwnerDto(item.OwnerId, item.Owner.FirstName, item.Owner.City, item.Owner.ProfilePictureUrl),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
             item.Images.Select(img => new ItemImageDto(img.Id, img.Image?.StoragePath ?? "", img.IsPrimary)).ToList(),
             0, 0,

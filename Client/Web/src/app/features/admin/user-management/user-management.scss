@@ -1,0 +1,88 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.user-management-container {
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .table-container {
+    margin-top: 32px;
+    border-radius: 20px;
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      background: transparent;
+
+      th {
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+    }
+  }
+
+  .user-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .verified-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .status-indicator {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+
+    &.active {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+  }
+
+  .table-loading {
+    mat-progress-bar {
+      height: 4px;
+    }
+  }
+
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  mat-paginator {
+    background: transparent;
+    color: var(--text-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
