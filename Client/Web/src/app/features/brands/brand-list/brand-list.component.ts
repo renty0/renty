@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect, untracked, DestroyRef } from '@angular/core';
+import { Component, inject, signal, effect, untracked, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -46,7 +46,7 @@ type ViewMode = 'list' | 'cards';
   templateUrl: './brand-list.component.html',
   styleUrl: './brand-list.component.scss',
 })
-export class BrandListComponent implements OnInit {
+export class BrandListComponent {
   private readonly apiClient = inject(BrandsClient);
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
@@ -65,6 +65,7 @@ export class BrandListComponent implements OnInit {
   readonly pageNumber = signal(1);
   readonly pageSize = signal(10);
   readonly totalCount = signal(0);
+  refreshTime = signal(Date.now());
 
   readonly sortBy = signal<string | null>('nameEn');
   readonly sortOrder = signal<'asc' | 'desc' | null>('asc');
@@ -82,8 +83,6 @@ export class BrandListComponent implements OnInit {
       this.loadBrands();
     });
   }
-
-  ngOnInit(): void {}
 
   private loadBrands(): void {
     this.isLoading.set(true);
@@ -143,9 +142,21 @@ export class BrandListComponent implements OnInit {
     this.selectedBrandId.set(null);
   }
 
-  onSaved(): void {
+  onSaved(brand: BrandDto): void {
     this.closeDialog();
-    this.loadBrands();
+    this.dataSource.update((current) => {
+      const index = current.findIndex((b) => b.id === brand.id);
+      if (index !== -1) {
+        const updated = [...current];
+        updated[index] = brand;
+        return updated;
+      }
+      return [brand, ...current];
+    });
+    if (this.selectedBrandId() === null) {
+      this.totalCount.update((t) => t + 1);
+    }
+    this.refreshTime.set(Date.now());
   }
 
   async deleteBrand(brand: BrandDto) {
@@ -153,7 +164,7 @@ export class BrandListComponent implements OnInit {
     if (id == null) return;
 
     const data: ConfirmDialogData = {
-      title: this.translate.instant('brands.actions.delete'),
+      title: this.translate.instant('buttons.delete'),
       message: this.translate.instant('brands.messages.deleteConfirmation'),
       confirmText: this.translate.instant('buttons.delete'),
       cancelText: this.translate.instant('buttons.cancel'),
@@ -171,12 +182,17 @@ export class BrandListComponent implements OnInit {
     this.apiClient
       .deleteBrand(id)
       .pipe(
-        tap(() => {
-          this.toast.showSuccess(this.translate.instant('brands.messages.deleteSuccess'));
-          this.loadBrands();
+        tap((res) => {
+          if (res && !res.error) {
+            if (res.messages?.[0]) this.toast.showSuccess(res.messages?.[0]);
+            this.dataSource.update((current) => current.filter((b) => b.id !== id));
+            this.totalCount.update((t) => Math.max(0, t - 1));
+          } else {
+            if (res.messages?.[0]) this.toast.showError(res.messages?.[0]);
+          }
         }),
-        catchError(() => {
-          this.toast.showError(this.translate.instant('brands.errors.failedToDelete'));
+        catchError((err) => {
+          this.toast.showError(err.messages?.[0] || this.translate.instant('brands.errors.failedToDelete'));
           return of(null);
         }),
         finalize(() => this.isLoading.set(false)),
@@ -190,6 +206,11 @@ export class BrandListComponent implements OnInit {
   truncate(text: string | undefined, maxLen: number): string {
     if (!text) return '';
     return text.length <= maxLen ? text : text.slice(0, maxLen) + '...';
+  }
+
+  getLogoUrl(url: string | undefined): string {
+    if (!url) return this.placeholderLogo;
+    return `${url}?t=${this.refreshTime()}`;
   }
 
   getLocalizedName(brand: BrandDto): string {

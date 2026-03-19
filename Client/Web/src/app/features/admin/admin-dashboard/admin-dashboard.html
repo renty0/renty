@@ -1,7 +1,7 @@
 <div class="data-container admin-dashboard-container">
   <app-header-section
-    [title]="'admin.dashboard_title' | translate"
-    [subtitle]="'admin.dashboard_subtitle' | translate">
+    [title]="'admin.dashboardTitle' | translate"
+    [subtitle]="'admin.dashboardSubtitle' | translate">
   </app-header-section>
 
   @if (isLoading()) {
@@ -26,7 +26,7 @@
             <mat-icon>payments</mat-icon>
           </div>
           <mat-card-title>{{ data.revenue | currency:'EGP ' }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.total_revenue' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.totalRevenue' | translate }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
 
@@ -37,12 +37,12 @@
             <mat-icon>group</mat-icon>
           </div>
           <mat-card-title>{{ data.activeUsers }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.active_users' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.activeUsers' | translate }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <small class="trend positive">
             <mat-icon>trending_up</mat-icon>
-            +{{ data.newUsers }} {{ 'admin.new_this_period' | translate }}
+            +{{ data.newUsers }} {{ 'admin.newThisPeriod' | translate }}
           </small>
         </mat-card-content>
       </mat-card>
@@ -54,7 +54,7 @@
             <mat-icon>autorenew</mat-icon>
           </div>
           <mat-card-title>{{ data.rentals }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.total_rentals' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.totalRentals' | translate }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
 
@@ -65,7 +65,7 @@
             <mat-icon>inventory_2</mat-icon>
           </div>
           <mat-card-title>{{ data.totalItems }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.active_items' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.activeItems' | translate }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
 
@@ -76,7 +76,7 @@
             <mat-icon>security</mat-icon>
           </div>
           <mat-card-title>{{ data.fraudRate | percent:'1.2-2' }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.fraud_rate' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.fraudRate' | translate }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
 
@@ -87,7 +87,7 @@
             <mat-icon>ads_click</mat-icon>
           </div>
           <mat-card-title>{{ data.recommendationCtr | percent:'1.2-2' }}</mat-card-title>
-          <mat-card-subtitle>{{ 'admin.recommendation_ctr' | translate }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'admin.recommendationCtr' | translate }}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
     </div>
@@ -95,7 +95,7 @@
     <div class="dashboard-actions">
         <button mat-flat-button color="primary" (click)="loadLatestKpi()">
             <mat-icon>refresh</mat-icon>
-            {{ 'admin.refresh_metrics' | translate }}
+            {{ 'admin.refreshMetrics' | translate }}
         </button>
     </div>
   }

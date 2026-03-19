@@ -1,7 +1,9 @@
 @use 'primeflex/primeflex.scss';
 @use 'primeicons/primeicons.css';
 @use './app/shared/styles/index.scss' as *;
-
+.mat-mdc-menu-content {
+  background-color: #FFF !important;
+}
 .material-icons {
   font-family: 'Material Icons' !important;
   font-weight: normal;
@@ -45,4 +47,3 @@ html {
 p {
   margin: 0;
 }
-

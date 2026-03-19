@@ -1,7 +1,7 @@
 <div class="data-container fraud-panel-container">
   <app-header-section
-    [title]="'admin.fraud_title' | translate"
-    [subtitle]="'admin.fraud_subtitle' | translate">
+    [title]="'admin.fraudTitle' | translate"
+    [subtitle]="'admin.fraudSubtitle' | translate">
   </app-header-section>
 
   @if (error()) {
@@ -35,7 +35,7 @@
 
         <!-- Risk Column -->
         <ng-container matColumnDef="risk">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.risk_score' | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.riskScore' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             <span class="risk-badge" [style.color]="getRiskColor(element.riskScore)">
               {{ element.riskScore | percent:'1.0-1' }}

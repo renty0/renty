@@ -2,194 +2,89 @@
   "common": {
     "renter": "مستأجر",
     "owner": "مالك",
-    "both": "كلاهما",
+    "loading": "جاري التحميل...",
     "role": "الدور",
-    "user": "المستخدم",
+    "user": "مستخدم",
     "date": "التاريخ",
     "status": "الحالة",
     "actions": "الإجراءات",
     "name": "الاسم",
     "email": "البريد الإلكتروني",
-    "contact": "تواصل",
+    "both": "كلاهما",
+    "contact": "جهة الاتصال",
     "searchLocation": "ابحث عن موقع...",
     "enterCoordinates": "أدخل الإحداثيات (خط العرض، خط الطول)",
     "loadingMap": "جاري تحميل الخريطة...",
     "noCoordinates": "لا توجد إحداثيات محددة لهذا الموقع",
-    "coordinatesCopied": "تم نسخ الإحداثيات إلى الحافظة"
+    "coordinatesCopied": "تم نسخ الإحداثيات",
+    "view": {
+      "list": "عرض القائمة",
+      "cards": "عرض البطاقات"
+    }
+  },
+  "marketplace": {
+    "title": "السوق",
+    "heroTitle": "السوق",
+    "allCategories": "كل الفئات",
+    "allSubcategories": "كل الفئات الفرعية",
+    "heroSubtitle": "اكتشف منتجات فريدة من مجتمعنا",
+    "products": "المنتجات",
+    "results": "النتائج",
+    "searchPlaceholder": "ابحث عن منتجات...",
+    "filters": "الفلاتر",
+    "clearFilters": "مسح",
+    "category": "الفئة",
+    "subcategory": "الفئة الفرعية",
+    "viewDetails": "عرض التفاصيل",
+    "allCities": "كل المدن",
+    "allTypes": "كل الأنواع",
+    "priceRange": "نطاق السعر",
+    "minPrice": "أقل سعر",
+    "maxPrice": "أعلى سعر",
+    "sortNewest": "الأحدث",
+    "sortPriceLow": "السعر: من الأقل إلى الأعلى",
+    "sortPriceHigh": "السعر: من الأعلى إلى الأقل",
+    "searchResults": "نتائج البحث",
+    "resultsFor": "نتائج لـ",
+    "rentNow": "استأجر الآن",
+    "buyNow": "اشترِ الآن",
+    "addToFavorites": "أضف إلى المفضلة",
+    "removeFromFavorites": "إزالة من المفضلة",
+    "reviews": "التقييمات",
+    "noReviewsYet": "لا توجد تقييمات بعد",
+    "relatedProducts": "منتجات ذات صلة",
+    "editItem": "تعديل المنتج",
+    "deleteItem": "حذف المنتج",
+    "day": "يوم",
+    "available": "متاح",
+    "unavailable": "غير متاح",
+    "anonymous": "مجهول"
   },
   "nav": {
     "home": "الرئيسية",
     "management": "الإدارة",
     "profile": "الملف الشخصي",
     "title": "المتجر",
-    "dashboardTitle": "لوحة التحكم",
-    "gapTitle": "تحليل الفجوات",
-    "fraudTitle": "كشف الاحتيال",
-    "userManagementTitle": "إدارة المستخدمين",
+    "gap": "تحليل الفجوات",
+    "fraud": "كشف الاحتيال",
+    "userManagement": "إدارة المستخدمين",
     "login": "تسجيل الدخول",
-    "supportTitle": "الدعم",
+    "support": "الدعم",
     "logout": "تسجيل الخروج",
     "register": "التسجيل",
-    "filter": "تصفية",
     "categories": "الفئات",
-    "subcategories": "الفئات الفرعية",
     "brands": "الماركات",
-    "market": "السوق",
-    "search_placeholder": "البحث عن المنتجات...",
-    "hero_title": "مغامرتك القادمة تبدأ من هنا",
-    "hero_subtitle": "منصة تأجير المعدات الرياضية الأولى في مصر. من ركوب الأمواج في البحر الأحمر إلى ملاعب البادل في القاهرة، احصل على ما تحتاجه وقتما تحتاجه.",
-    "filters": "عوامل التصفية",
-    "reset": "إعادة تعيين",
-    "all_categories": "جميع الفئات",
-    "select_subcategory": "اختر فئة فرعية",
-    "all_subcategories": "جميع الفئات الفرعية",
     "products": "المنتجات",
     "results": "نتائج",
-    "no_products_found": "لم يتم العثور على منتجات تطابق معاييرك.",
-    "view_all_products": "عرض جميع المنتجات",
-    "product": {
-      "addToCart": "أضف إلى السلة",
-      "rentNow": "استأجر الآن",
-      "description": "الوصف",
-      "specifications": "المواصفات",
-      "backToMarketplace": "العودة للمتجر",
-      "relatedProducts": "منتجات ذات صلة",
-      "notFound": "المنتج غير موجود",
-      "color": "اللون",
-      "model": "الموديل",
-      "style": "النمط"
-    },
     "dashboard": "لوحة التحكم",
+    "market": "السوق",
+    "subcategories": "الفئات الفرعية",
     "myItems": "منتجاتي",
     "myRentals": "إيجاراتي",
     "myOrders": "طلباتي",
-    "favorites": "مفضلاتي",
-    "kpi_overview": "نظرة عامة على المؤشرات",
-    "gap_analysis": "تحليل الفجوات",
-    "deep_analytics": "تحليلات عميقة"
-  },
-  "dashboard": {
-    "title": "مركز البيانات الاستراتيجي",
-    "lastUpdated": "آخر تحديث",
-    "tabs": {
-      "kpi": "نظرة عامة على المؤشرات",
-      "gap": "تحليل الفجوات",
-      "analytics": "تحليلات عميقة"
-    },
-    "kpi": {
-      "totalRevenue": "إجمالي الإيرادات",
-      "revenueTarget": "المستهدف",
-      "totalOrders": "إجمالي الطلبات",
-      "monthlyGoal": "تم الوصول للهدف الشهري",
-      "avgGapRatio": "متوسط درجة الفجوة",
-      "riskLevel": "مستوى المخاطرة",
-      "high": "مرتفع",
-      "low": "منخفض",
-      "avgOrderValue": "متوسط قيمة الطلب",
-      "activeCustomers": "العملاء النشطون",
-      "smartInsights": "رؤى ذكية للأعمال",
-      "revenue": "الإيرادات",
-      "orders": "الطلبات",
-      "errors": {
-        "failedLoad": "فشل تحميل بيانات المؤشرات"
-      }
-    },
-    "gap": {
-      "title": "لوحة تحليل الفجوات",
-      "runAnalysis": "تشغيل التحليل",
-      "opportunityLoss": "خسارة الفرص",
-      "lossDesc": "الإيرادات المفقودة بسبب نقص المعروض",
-      "criticalCategories": "الفئات الحرجة",
-      "avgGapLevel": "متوسط مستوى الفجوة",
-      "supplyDemandGap": "الفجوة بين العرض والطلب",
-      "regionalMatrix": "مصفوفة الطلب الإقليمي",
-      "recommendations": "توصيات تشغيلية",
-      "recommendation": "توصية",
-      "deadStock": "المخزون الراكد",
-      "product": "المنتج",
-      "idleDays": "أيام الركود",
-      "value": "القيمة",
-      "demand": "الطلب (الطلبات)",
-      "supply": "العرض (عناصر فريدة)",
-      "regionalDemandScore": "متوسط درجة الطلب الإقليمي",
-      "messages": {
-        "analysisSuccess": "تم بدء التحليل بنجاح",
-        "analysisFailed": "فشل في بدء التحليل",
-        "loadKpiFailed": "فشل تحميل بيانات المؤشرات",
-        "loadSummaryFailed": "فشل تحميل ملخص الفجوات",
-        "loadCategoryFailed": "فشل تحميل تحليل الفئات",
-        "loadTerritoryFailed": "فشل تحميل التحليل الإقليمي",
-        "loadDeadStockFailed": "فشل تحميل المخزون الراكد",
-        "loadActionsFailed": "فشل تحميل الإجراءات المقترحة"
-      }
-    },
-    "analytics": {
-      "revenueProfit": "تحليل الإيرادات والأرباح",
-      "financialEfficiency": "الكفاءة المالية",
-      "inventoryTurnover": "دوران المخزون",
-      "unitsSold": "الوحدات المباعة",
-      "genderDist": "توزيع الجنس",
-      "customerOccupation": "مهن العملاء",
-      "inventoryHealth": "صحة المخزون",
-      "topCategoryShare": "حصة أعلى فئة",
-      "topProducts": "المنتجات الأكثر مبيعاً",
-      "product": "المنتج",
-      "sold": "المباع",
-      "revenue": "الإيرادات",
-      "errors": {
-        "loadSalesFailed": "فشل تحميل اتجاهات المبيعات",
-        "loadDemographicsFailed": "فشل تحميل البيانات الديموغرافية",
-        "loadInventoryFailed": "فشل تحميل إحصائيات المخزون",
-        "loadTopProductsFailed": "فشل تحميل المنتجات الأكثر مبيعاً"
-      }
-    },
-    "profile": "الملف الشخصي",
-    "logout": "تسجيل الخروج",
-    "login": "دخول",
-    "register": "إنشاء حساب",
-    "management": "الإدارة"
-  },
-  "marketplace": {
-    "title": "السوق",
-    "results": "منتج",
-    "search_placeholder": "بحث في المنتجات...",
-    "categories": "الفئات",
-    "all_categories": "جميع الفئات",
-    "all_subcategories": "جميع الفئات الفرعية",
-    "hero_title": "مغامرتك القادمة تبدأ من هنا",
-    "hero_subtitle": "منصة تأجير المعدات الرياضية الأولى في مصر. من ركوب الأمواج في البحر الأحمر إلى ملاعب البادل في القاهرة، احصل على ما تحتاجه وقتما تحتاجه.",
-    "products": "المنتجات",
-    "filters": "تصفية",
-    "clearFilters": "مسح",
-    "category": "الفئة",
-    "subcategory": "الفئة الفرعية",
-    "noProductsFound": "لم يتم العثور على منتجات",
-    "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه.",
-    "viewDetails": "عرض التفاصيل",
-    "all_cities": "كل المدن",
-    "all_types": "كل الأنواع",
-    "price_range": "نطاق السعر",
-    "min_price": "أقل سعر",
-    "max_price": "أقصى سعر",
-    "sort_by": "ترتيب حسب",
-    "sort_newest": "الأحدث",
-    "sort_price_low": "السعر: من الأقل للأعلى",
-    "sort_price_high": "السعر: من الأعلى للأقل",
-    "search_results": "نتائج البحث",
-    "results_for": "نتائج لـ",
-    "rent_now": "احجز الآن",
-    "add_to_favorites": "أضف إلى المفضلة",
-    "remove_from_favorites": "إزالة من المفضلة",
-    "reviews": "التقييمات",
-    "no_reviews_yet": "لا توجد تقييمات بعد",
-    "related_products": "منتجات ذات صلة",
-    "edit_item": "تعديل المنتج",
-    "delete_item": "حذف المنتج",
-    "day": "يوم",
-    "available": "متاح",
-    "unavailable": "غير متاح",
-    "description": "الوصف",
-    "anonymous": "مجهول"
+    "chats": "الرسائل",
+    "notifications": "الإشعارات",
+    "favorites": "مفضلاتي"
   },
   "register": {
     "welcomeMessage": "انضم إلى رنتي اليوم",
@@ -201,7 +96,6 @@
     "registerButton": "إنشاء حساب",
     "success": "تم التسجيل بنجاح!",
     "successVerifyEmail": "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك.",
-    "successOwner": "تم التسجيل بنجاح كمالك!",
     "failed": "فشل التسجيل",
     "step1Desc": "قم بإعداد بيانات تسجيل الدخول الخاصة بك",
     "step2Desc": "أخبرنا المزيد عن نفسك",
@@ -218,17 +112,13 @@
     }
   },
   "login": {
-    "title": "تسجيل الدخول إلى رنتي",
     "welcomeBack": "مرحباً بك مجدداً!",
     "signInSubtitle": "سجل الدخول إلى حسابك",
     "forgotPassword": "هل نسيت كلمة المرور؟",
     "noAccount": "ليس لديك حساب؟",
     "signUp": "سجل هنا",
-    "button": "دخول",
-    "success": "تم تسجيل الدخول بنجاح!",
     "emailNotConfirmed": "بريدك الإلكتروني غير مفعل. لقد أرسلنا رمز تفعيل جديد.",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-    "unauthorized": "غير مصرح لك بالوصول لهذا المورد",
     "serverError": "حدث خطأ في الخادم، يرجى المحاولة لاحقاً"
   },
   "forgotPassword": {
@@ -251,9 +141,7 @@
     "passwordsMismatch": "كلمات المرور غير متطابقة",
     "button": "إعادة التعيين",
     "rememberPassword": "هل تتذكر كلمة المرور؟",
-    "successHeader": "تم إعادة التعيين",
     "successDesc": "تم إعادة تعيين كلمة المرور الخاصة بك بنجاح. يمكنك الآن تسجيل الدخول.",
-    "errorHeader": "فشل إعادة التعيين",
     "errorDesc": "فشل في إعادة تعيين كلمة المرور. قد يكون الرمز غير صالح أو منتهي الصلاحية.",
     "invalidCode": "رمز إعادة التعيين غير صالح أو منتهي الصلاحية.",
     "codeVerified": "تم التحقق من رمز إعادة التعيين بنجاح."
@@ -268,17 +156,9 @@
     "failed": "فشل التحقق. تحقق من الرمز وحاول مرة أخرى.",
     "backToLogin": "العودة لتسجيل الدخول"
   },
-  "info": {
-    "accountInfo": "معلومات الحساب",
-    "profileInfo": "تفاصيل الملف الشخصي"
-  },
   "labels": {
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
-    "price": "السعر",
-    "confirmPassword": "تأكيد كلمة المرور",
-    "firstName": "الاسم الأول",
-    "lastName": "اسم العائلة",
     "deposit": "مبلغ الإيداع",
     "type": "النوع",
     "condition": "الحالة",
@@ -287,49 +167,35 @@
     "category": "الفئة",
     "subcategory": "الفئة الفرعية",
     "brand": "الماركة",
-    "phoneNumber": "رقم الهاتف",
-    "city": "المدينة",
-    "country": "الدولة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "firstName": "الاسم الأول",
     "nameAr": "الاسم (العربية)",
     "nameEn": "الاسم (الإنجليزية)",
     "descAr": "الوصف (العربية)",
     "descEn": "الوصف (الإنجليزية)",
     "logo": "الشعار",
+    "lastName": "اسم العائلة",
+    "phoneNumber": "رقم الهاتف",
+    "city": "المدينة",
+    "country": "الدولة",
     "address": "العنوان",
     "bio": "نبذة تعريفية",
     "userType": "نوع المستخدم",
     "name": "الاسم",
     "description": "الوصف",
-    "upload_image": "رفع صورة",
-    "governorates": {
-      "cairo": "القاهرة",
-      "giza": "الجيزة",
-      "alexandria": "الإسكندرية",
-      "dakahlia": "الدقهلية",
-      "red_sea": "البحر الأحمر",
-      "beheira": "البحيرة",
-      "fayoum": "الفيوم",
-      "gharbiya": "الغربية",
-      "ismailia": "الإسماعيلية",
-      "monufia": "المنوفية",
-      "minya": "المنيا",
-      "qalubiya": "القليوبية",
-      "new_valley": "الوادي الجديد",
-      "suez": "السويس",
-      "aswan": "أسوان",
-      "assiut": "أسيوط",
-      "beni_suef": "بني سويف",
-      "port_said": "بورسعيد",
-      "damietta": "دمياط",
-      "sharkia": "الشرقية",
-      "south_sinai": "جنوب سيناء",
-      "kafr_el_sheikh": "كفر الشيخ",
-      "matrouh": "مطروح",
-      "luxor": "الأقصر",
-      "qena": "قنا",
-      "north_sinai": "شمال سيناء",
-      "sohag": "سوهاج"
-    },
+    "uploadImage": "رفع صورة",
+    "price": "السعر",
+    "parentCategory": "الفئة الأب",
+    "date": "التاريخ",
+    "actions": "الإجراءات",
+    "image": "صورة",
+    "sku": "المعرف الفريد (SKU)",
+    "perDay": "/ يوم",
+    "dailyPrice": "السعر اليومي",
+    "weeklyPrice": "السعر الأسبوعي",
+    "monthlyPrice": "السعر الشهري",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
     "types": {
       "standard": "عادي",
       "premium": "مميز"
@@ -340,6 +206,16 @@
       "good": "جيد",
       "fair": "مقبول"
     }
+  },
+  "placeholders": {
+    "name": "أدخل اسم المنتج",
+    "sku": "أدخل المعرف الفريد",
+    "description": "أدخل وصف المنتج",
+    "subcategory": "اختر الفئة الفرعية",
+    "category": "اختر الفئة",
+    "brand": "اختر الماركة",
+    "city": "أدخل المدينة",
+    "location": "أدخل الموقع أو العنوان"
   },
   "buttons": {
     "login": "دخول",
@@ -357,125 +233,46 @@
     "save": "حفظ",
     "cancel": "إلغاء",
     "browse": "تصفح",
-    "upload": "رفع"
+    "upload": "رفع",
+    "newProduct": "منتج جديد"
   },
   "categories": {
     "title": "الفئات",
-    "details": "تفاصيل الفئة",
     "search": "البحث في الفئات...",
     "empty": "لا توجد فئات. أنشئ فئة للبدء.",
     "confirmDelete": "هل أنت متأكد من حذف هذه الفئة؟",
-    "columns": {
-      "logo": "الشعار",
-      "name": "الاسم",
-      "description": "الوصف",
-      "actions": "الإجراءات"
-    },
     "actions": {
       "create": "فئة جديدة",
       "edit": "تعديل الفئة",
       "delete": "حذف الفئة",
       "deleted": "تم حذف الفئة بنجاح."
-    },
-    "errors": {
-      "failedToLoad": "فشل تحميل الفئات.",
-      "failedToDelete": "فشل حذف الفئة."
     }
-  },
-  "product_details": {
-    "backToMarketplace": "العودة للمتجر",
-    "addToCart": "إضافة للسلة",
-    "rentNow": "استأجر الآن",
-    "description": "الوصف",
-    "specifications": "المواصفات",
-    "relatedProducts": "منتجات ذات صلة",
-    "notFound": "المنتج غير موجود",
-    "color": "اللون",
-    "model": "الموديل",
-    "style": "النمط"
   },
   "products": {
     "title": "المنتجات",
-    "details": "تفاصيل المنتج",
     "search": "بحث في المنتجات...",
-    "confirmDelete": "هل أنت متأكد من حذف هذا المنتج؟",
-    "columns": {
-      "image": "صورة",
-      "sku": "المعرف الفريد (SKU)",
-      "name": "الاسم",
-      "price": "السعر",
-      "perDay": "/ يوم",
-      "subcategory": "الفئة الفرعية",
-      "date": "التاريخ",
-      "actions": "الإجراءات"
-    },
-    "actions": {
-      "create": "منتج جديد",
-      "edit": "تعديل",
-      "delete": "حذف"
-    },
-    "view": {
-      "list": "عرض قائمة",
-      "cards": "عرض مربعات"
-    },
-    "editor": {
-      "newTitle": "منتج جديد",
-      "editTitle": "تعديل المنتج",
-      "newSubtitle": "إضافة منتج جديد",
-      "editSubtitle": "تحديث تفاصيل المنتج"
-    },
-    "sections": {
-      "general": "معلومات عامة",
-      "pricing": "التسعير",
-      "details": "التفاصيل",
-      "media": "الوسائط",
-      "organization": "التنظيم"
-    },
-    "fields": {
-      "name": "اسم المنتج",
-      "sku": "المعرف الفريد (SKU)",
-      "price": "سعر البيع",
-      "cost": "تكلفة المنتج",
-      "color": "اللون",
-      "style": "النمط",
-      "description": "وصف المنتج",
-      "subcategory": "الفئة الفرعية",
-      "discount": "سعر الخصم",
-      "modelName": "اسم الموديل",
-      "skuType": "نوع SKU"
-    },
-    "placeholders": {
-      "name": "أدخل اسم المنتج",
-      "sku": "أدخل المعرف الفريد",
-      "description": "أدخل وصف المنتج",
-      "subcategory": "اختر الفئة الفرعية",
-      "category": "اختر الفئة",
-      "brand": "اختر الماركة",
-      "city": "أدخل المدينة",
-      "location": "أدخل الموقع أو العنوان"
-    },
-    "messages": {
-      "createSuccess": "تم إنشاء المنتج بنجاح",
-      "updateSuccess": "تم تحديث المنتج بنجاح",
-      "deleteConfirmation": "هل أنت متأكد من حذف هذا المنتج؟",
-      "deleteSuccess": "تم حذف المنتج بنجاح",
-      "remove": "إزالة من المفضلة",
-      "removeSuccess": "تمت إزالة المنتج من المفضلة بنجاح"
-    }
+    "create": "منتج جديد",
+    "new": "منتج جديد",
+    "edit": "تعديل المنتج",
+    "deleteConfirmation": "هل أنت متأكد من حذف هذا المنتج؟",
+    "deleteSuccess": "تم حذف المنتج بنجاح",
+    "general": "معلومات عامة",
+    "pricing": "التسعير",
+    "details": "التفاصيل",
+    "media": "الوسائط",
+    "organization": "التنظيم"
+  },
+  "icons": {
+    "next": "arrow_back",
+    "back": "arrow_forward"
   },
   "rentals": {
     "title": "استئجار المنتج",
-    "startDate": "تاريخ البدء",
-    "endDate": "تاريخ الانتهاء",
     "pricingType": "نوع التسعير",
-    "daily": "يومي",
-    "weekly": "أسبوعي",
-    "monthly": "شهري",
     "estimatedPrice": "السعر التقديري",
     "deposit": "مبلغ التأمين",
     "total": "المبلغ الإجمالي",
     "submit": "تأكيد طلب التأجير",
-    "cancel": "إلغاء",
     "success": "تم تقديم طلب التأجير بنجاح!",
     "error": "فشل تقديم طلب التأجير. يرجى المحاولة مرة أخرى.",
     "list": {
@@ -485,7 +282,6 @@
       "dates": "تاريخ التأجير",
       "amount": "المبلغ الإجمالي",
       "status": "الحالة",
-      "filter": "تصفية حسب الحالة",
       "all": "كل الإيجارات"
     },
     "status": {
@@ -493,14 +289,11 @@
       "approved": "مقبول",
       "active": "نشط",
       "completed": "مكتمل",
-      "cancelled": "ملغي",
-      "rejected": "مرفوض",
-      "returnpending": "في انتظار الإرجاع"
+      "cancelled": "ملغي"
     },
     "details": {
       "title": "تفاصيل الإيجار",
       "subtitle": "نظرة عامة على معاملة الإيجار الخاصة بك",
-      "rental_info": "معلومات الإيجار",
       "item": "المنتج",
       "dates": "تواريخ الإيجار",
       "status": "الحالة الحالية",
@@ -508,152 +301,22 @@
       "price": "سعر الإيجار",
       "deposit": "تأمين المنتج",
       "total": "المبلغ الإجمالي",
-      "late_fee": "رسوم التأخير",
+      "lateFee": "رسوم التأخير",
       "notes": "ملاحظات المالك",
       "parties": "الأطراف",
       "owner": "المالك",
-      "renter": "المستأجر",
-      "created_at": "تاريخ الإنشاء",
+      "createdAt": "تاريخ الإنشاء",
       "review": "إضافة تقييم",
-      "review_success": "شكراً لتقييمك!",
-      "review_error": "فشل تقديم التقييم.",
       "rating": "التقييم",
       "comment": "تعليقك",
-      "submit_review": "تقديم التقييم"
-    },
-    "checkout": {
-      "title": "الدفع",
-      "summary": "ملخص الطلب",
-      "items": "المنتجات",
-      "subtotal": "المجموع الفرعي",
-      "delivery": "رسوم التوصيل",
-      "total": "المجموع الكلي",
-      "place_order": "إتمام الطلب",
-      "order_success": "تم تقديم الطلب بنجاح!",
-      "error": "فشل تقديم الطلب.",
-      "order_id": "رقم الطلب",
-      "back_to_market": "العودة للمتجر",
-      "view_orders": "عرض طلباتي"
-    },
-    "admin": {
-      "dashboard_title": "لوحة التحكم للمسؤول",
-      "dashboard_subtitle": "مقاييس أداء النظام والإدارة",
-      "total_revenue": "إجمالي الإيرادات",
-      "active_users": "المستخدمون النشطون",
-      "new_this_period": "جديد في هذه الفترة",
-      "total_rentals": "إجمالي الإيجارات",
-      "active_items": "العناصر النشطة",
-      "fraud_rate": "معدل الاحتيال",
-      "recommendation_ctr": "نسبة النقر على التوصيات",
-      "refresh_metrics": "تحديث المقاييس",
-      "gap_title": "تحليل الفجوات",
-      "gap_subtitle": "فجوة العرض مقابل الطلب حسب الفئة",
-      "category": "الفئة",
-      "demand": "الطلب",
-      "supply": "العرض",
-      "gap_score": "درجة الفجوة",
-      "recommendations": "التوصيات",
-      "fraud_title": "مراقبة الاحتيال",
-      "fraud_subtitle": "تقييم المخاطر في الوقت الفعلي وسجلات النشاط",
-      "risk_score": "درجة المخاطر",
-      "decision": "القرار",
-      "reason": "السبب",
-      "user_management_title": "إدارة المستخدمين",
-      "user_management_subtitle": "إدارة مستخدمي النظام ومستويات الوصول",
-      "is_active": "نشط",
-      "is_verified": "موثق",
-      "role": "دور النظام",
-      "activate": "تنشيط",
-      "deactivate": "إلغاء التنشيط"
-    },
-    "my_orders": {
-      "title": "طلباتي",
-      "no_orders": "لم تقم بإجراء أي طلبات بعد.",
-      "order_date": "تاريخ الطلب",
-      "item_count": "العناصر",
-      "status": "الحالة",
-      "view_details": "عرض التفاصيل"
-    },
-    "payment": {
-      "title": "الدفع",
-      "select_method": "اختر طريقة الدفع",
-      "methods": {
-        "vodafone_cash": "فودافون كاش",
-        "fawry": "فوري",
-        "paymob": "Paymob",
-        "credit_card": "بطاقة ائتمان",
-        "bank_transfer": "تحويل بنكي"
-      },
-      "transaction_ref": "مرجع المعاملة (اختياري)",
-      "pay_now": "ادفع الآن",
-      "success": "تم الدفع بنجاح!",
-      "error": "فشل الدفع. يرجى المحاولة مرة أخرى."
-    },
-    "order_details": {
-      "title": "تفاصيل الطلب",
-      "summary": "ملخص",
-      "items": "العناصر المطلوبة",
-      "status": "حالة الطلب",
-      "payment": "معلومات الدفع",
-      "payment_status": "حالة الدفع",
-      "delivery": "تتبع الشحنة",
-      "tracking_history": "سجل التتبع",
-      "no_tracking": "لا توجد معلومات تتبع متاحة بعد.",
-      "statuses": {
-        "pending": "قيد الانتظار",
-        "paid": "تم الدفع",
-        "processing": "قيد المعالجة",
-        "shipped": "تم الشحن",
-        "delivered": "تم التوصيل",
-        "cancelled": "ملغى"
-      }
-    },
-    "chat": {
-      "title": "الرسائل",
-      "no_chats": "لا توجد محادثات بعد.",
-      "placeholder": "اكتب رسالة...",
-      "send": "إرسال",
-      "online": "متصل",
-      "offline": "غير متصل",
-      "last_message": "آخر رسالة"
-    },
-    "notifications": {
-      "title": "الإشعارات",
-      "no_notifications": "كل شيء محدث!",
-      "mark_all_read": "تحديد الكل كمقروء",
-      "unread": "غير مقروء"
-    },
-    "support": {
-      "title": "المساعدة والدعم",
-      "my_tickets": "تذاكري",
-      "open_ticket": "فتح تذكرة جديدة",
-      "ticket_id": "رقم التذكرة",
-      "subject": "الموضوع",
-      "message": "الرسالة",
-      "status": "الحالة",
-      "priority": "الأولوية",
-      "create": "إنشاء تذكرة",
-      "reply": "رد",
-      "resolved": "تم الحل",
-      "open": "مفتوحة",
-      "closed": "مغلقة",
-      "user": "المستخدم",
-      "dashboard_title": "لوحة دعم العملاء",
-      "dashboard_subtitle": "إدارة جميع تذاكر الدعم للعملاء"
+      "submitReview": "تقديم التقييم"
     },
     "actions": {
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
-      "confirm_msg": "هل أنت متأكد من أنك تريد تأكيد هذا الإيجار؟",
-      "complete_msg": "هل تم إرجاع المنتج في حالة جيدة؟",
-      "cancel_msg": "هل أنت متأكد من أنك تريد إلغاء هذا الطلب؟",
-      "damaged_deposit": "مصادرة التأمين"
+      "damaged": "مصادرة التأمين"
     }
-  },
-  "icons": {
-    "next": "arrow_back",
-    "back": "arrow_forward"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -682,7 +345,7 @@
   },
   "home": {
     "hero": {
-      "title": "مغامرتك القادمة تبدأ من هنا",
+      "title": "اكتشف عالم رنتي",
       "subtitle": "منصة تأجير المعدات الرياضية الأولى في مصر. من ركوب الأمواج في البحر الأحمر إلى ملاعب البادل في القاهرة، احصل على ما تحتاجه وقتما تحتاجه.",
       "searchPlaceholder": "ابحث عن مضارب بادل، معدات غوص، دراجات..."
     },
@@ -690,31 +353,25 @@
       "badge": "لماذا تختار رنتي",
       "title": "الطريقة الأذكى للوصول إلى الجودة",
       "subtitle": "رنتي أكثر من مجرد سوق؛ إنه مجتمع مبني على الثقة والجودة والاستدامة.",
-      "trust": {
-        "title": "مستخدمون موثوقون",
-        "desc": "يتم التحقق من كل عضو من خلال نظامنا الأمني القوي لضمان معاملات آمنة."
-      },
-      "value": {
-        "title": "قيمة لا تضاهى",
-        "desc": "احصل على منتجات متميزة بجزء بسيط من التكلفة. ادفع فقط مقابل الوقت الذي تحتاجه."
-      },
-      "speed": {
-        "title": "توصيل سريع",
-        "desc": "احصل على أغراضك عند باب منزلك في غضون ساعات، وليس أياماً."
-      }
+      "trustTitle": "مستخدمون موثوقون",
+      "trustDesc": "يتم التحقق من كل عضو من خلال نظامنا الأمني القوي لضمان معاملات آمنة.",
+      "valueTitle": "قيمة لا تضاهى",
+      "valueDesc": "احصل على منتجات متميزة بجزء بسيط من التكلفة. ادفع فقط مقابل الوقت الذي تحتاجه.",
+      "speedTitle": "توصيل سريع",
+      "speedDesc": "احصل على أغراضك عند باب منزلك في غضون ساعات، وليس أياماً."
     },
     "destinations": {
       "badge": "سفر ورياضة",
       "title": "أفضل الوجهات الرياضية في مصر",
       "subtitle": "استكشف أفضل الأماكن لممارسة أنشطتك المفضلة، من البحر الأحمر إلى قلب القاهرة.",
       "dahab": "دهب",
-      "dahab_desc": "جنة ركوب الأمواج والغوص",
+      "dahabDesc": "جنة ركوب الأمواج والغوص",
       "gouna": "الجونة",
-      "gouna_desc": "مركز الرياضات الفاخر",
+      "gounaDesc": "مركز الرياضات الفاخر",
       "cairo": "القاهرة",
-      "cairo_desc": "مركز البادل واللياقة البدنية",
+      "cairoDesc": "مركز البادل واللياقة البدنية",
       "somabay": "سوما باي",
-      "somabay_desc": "عاصمة ركوب الأمواج الشراعي"
+      "somabayDesc": "عاصمة ركوب الأمواج الشراعي"
     },
     "categories": {
       "title": "استكشف المعدات الرياضية",
@@ -745,18 +402,12 @@
       "badge": "عملية سهلة",
       "title": "كيف يعمل رنتي",
       "subtitle": "التأجير لم يكن أبداً بهذه السهولة. ثلاث خطوات بسيطة للحصول على ما تحتاجه.",
-      "find": {
-        "title": "ابحث",
-        "desc": "ابحث عن السلعة المطلوبة وتحقق من توفرها."
-      },
-      "book": {
-        "title": "احجز",
-        "desc": "حدد تواريخك واحجز مع دفع آمن."
-      },
-      "enjoy": {
-        "title": "استمتع",
-        "desc": "استلم السلعة أو اطلب توصيلها واستمتع بمنتجك."
-      }
+      "findTitle": "ابحث",
+      "findDesc": "ابحث عن السلعة المطلوبة وتحقق من توفرها.",
+      "bookTitle": "احجز",
+      "bookDesc": "حدد تواريخك واحجز مع دفع آمن.",
+      "enjoyTitle": "استمتع",
+      "enjoyDesc": "استلم السلعة أو اطلب توصيلها واستمتع بمنتجك."
     },
     "app": {
       "badge": "تطبيق الجوال",
@@ -771,10 +422,8 @@
       "home": "الرئيسية",
       "market": "سوق رنتي",
       "join": "انضم إلينا",
-      "cta": {
-        "title": "انضم إلى مجتمعنا",
-        "desc": "اشترك للحصول على آخر التحديثات والعروض الحصرية."
-      },
+      "ctaTitle": "انضم إلى مجتمعنا",
+      "ctaDesc": "اشترك للحصول على آخر التحديثات والعروض الحصرية.",
       "emailPlaceholder": "عنوان بريدك الإلكتروني",
       "copyright": "© 2026 رنتي. جميع الحقوق محفوظة.",
       "privacy": "سياسة الخصوصية",
@@ -790,59 +439,18 @@
   "subcategories": {
     "title": "الفئات الفرعية",
     "search": "بحث في الفئات الفرعية...",
-    "columns": {
-      "logo": "الشعار",
-      "name": "الاسم",
-      "category": "الفئة",
-      "description": "الوصف",
-      "date": "التاريخ",
-      "actions": "الإجراءات"
-    },
-    "actions": {
-      "create": "فئة فرعية جديدة",
-      "edit": "تعديل",
-      "delete": "حذف"
-    },
-    "fields": {
-      "logo": "الشعار",
-      "name": "اسم الفئة الفرعية",
-      "category": "الفئة الأب",
-      "description": "الوصف"
-    },
-    "placeholders": {
-      "name": "أدخل اسم الفئة الفرعية",
-      "description": "أدخل الوصف"
-    },
+    "createButton": "فئة فرعية جديدة",
     "messages": {
       "createSuccess": "تم إنشاء الفئة الفرعية بنجاح",
       "updateSuccess": "تم تحديث الفئة الفرعية بنجاح",
-      "deleteConfirmation": "هل أنت متأكد من حذف هذه الفئة الفرعية؟",
-      "deleteSuccess": "تم حذف الفئة الفرعية بنجاح"
+      "deleteConfirmation": "هل أنت متأكد من حذف هذه الفئة الفرعية؟"
     }
   },
   "brands": {
     "title": "الماركات",
     "search": "بحث في الماركات...",
     "empty": "لم يتم العثور على ماركات",
-    "columns": {
-      "logo": "الشعار",
-      "name": "الاسم",
-      "description": "الوصف",
-      "items": "المنتجات",
-      "actions": "الإجراءات"
-    },
-    "actions": {
-      "create": "ماركة جديدة",
-      "edit": "تعديل",
-      "delete": "حذف"
-    },
-    "fields": {
-      "nameAr": "الاسم (بالعربية)",
-      "nameEn": "الاسم (بالانجليزية)",
-      "descAr": "الوصف (بالعربية)",
-      "descEn": "الوصف (بالانجليزية)",
-      "logo": "شعار الماركة"
-    },
+    "createButton": "ماركة جديدة",
     "messages": {
       "createSuccess": "تم إنشاء الماركة بنجاح",
       "updateSuccess": "تم تحديث الماركة بنجاح",
@@ -851,11 +459,13 @@
     },
     "errors": {
       "failedToLoad": "فشل تحميل الماركات",
+      "failedToCreate": "فشل إنشاء الماركة",
+      "failedToUpdate": "فشل تحديث الماركة",
       "failedToDelete": "فشل حذف الماركة"
     }
   },
   "uploader": {
-    "drag_drop": "اسحب وأفلت الصورة هنا",
+    "dragDrop": "اسحب وأفلت الصورة هنا",
     "hint": "يدعم JPG, PNG, GIF, WebP (بحد أقصى 5MB)",
     "uploading": "جاري رفع الصورة"
   },
@@ -864,24 +474,8 @@
     "imageAlt": "صورة الملف الشخصي",
     "updatePhoto": "تحديث الصورة",
     "uploadNewPhoto": "رفع صورة جديدة",
-    "firstName": "الاسم الأول",
-    "lastName": "اسم العائلة",
-    "email": "البريد الإلكتروني",
-    "address": "العنوان",
-    "city": "المدينة",
-    "country": "الدولة",
-    "bio": "نبذة تعريفية",
     "save": "حفظ التغييرات",
     "uploading": "جاري الرفع..."
-  },
-  "errors": {
-    "unknownError": "حدث خطأ غير متوقع",
-    "failedToLoadSubcategories": "فشل تحميل الفئات الفرعية",
-    "failedToLoadCategories": "فشل تحميل الفئات",
-    "failedToLoadSubcategory": "فشل تحميل بيانات الفئة الفرعية",
-    "failedToUploadLogo": "فشل رفع صورة الشعار",
-    "invalidCoordinates": "تنسيق الإحداثيات غير صحيح. استخدم: خط العرض، خط الطول",
-    "unexpectedError": "حدث خطأ غير متوقع"
   },
   "items": {
     "daily": "يومي",
@@ -895,37 +489,34 @@
     "addToFavorites": "إضافة للمفضلة"
   },
   "expert": {
+    "verifyItem": "فحص جديد",
+    "backToAssigned": "العودة للقائمة",
+    "verifySuccess": "تم إرسال الفحص بنجاح",
     "assigned": {
       "title": "الفحوصات المخصصة",
       "subtitle": "المنتجات التي تنتظر مراجعتك وتقييمك",
       "item": "المنتج",
       "type": "نوع الفحص",
-      "rental_dates": "تواريخ الإيجار",
-      "verify_btn": "إجراء فحص",
+      "rentalDates": "تواريخ الإيجار",
       "empty": "لا توجد منتجات مخصصة لك في الوقت الحالي."
     },
     "history": {
       "title": "سجل الفحوصات",
       "subtitle": "مراجعة حالة المنتج التاريخية وإرسال فحص جديد",
-      "list_title": "الجدول الزمني للفحص",
-      "verified_by": "تم الفحص بواسطة",
+      "listTitle": "الجدول الزمني للفحص",
+      "verifiedBy": "تم الفحص بواسطة",
       "empty": "لم يتم العثور على فحوصات سابقة."
     },
     "verify": {
-      "check_type": "نوع الفحص",
+      "checkType": "نوع الفحص",
       "status": "النتيجة",
       "notes": "ملاحظات الخبير",
-      "notes_placeholder": "أضف أي تفاصيل بخصوص حالة المنتج...",
+      "notesPlaceholder": "أضف أي تفاصيل بخصوص حالة المنتج...",
       "submit": "إرسال الفحص"
     },
-    "verify_item": "فحص جديد",
-    "back_to_assigned": "العودة للقائمة",
-    "verify_success": "تم إرسال الفحص بنجاح",
-    "check_types": {
-      "before_rent": "قبل الإيجار",
-      "beforerent": "قبل الإيجار",
-      "after_return": "بعد الإرجاع",
-      "afterreturn": "بعد الإرجاع"
+    "checkTypes": {
+      "beforeRent": "قبل الإيجار",
+      "afterReturn": "بعد الإرجاع"
     },
     "status": {
       "approved": "مقبول",
@@ -934,53 +525,143 @@
     }
   },
   "admin": {
-    "dashboard_title": "لوحة التحكم للمسؤول",
-    "dashboard_subtitle": "مقاييس أداء النظام والإدارة",
-    "total_revenue": "إجمالي الإيرادات",
-    "active_users": "المستخدمون النشطون",
-    "new_this_period": "جديد في هذه الفترة",
-    "total_rentals": "إجمالي الإيجارات",
-    "active_items": "العناصر النشطة",
-    "fraud_rate": "معدل الاحتيال",
-    "recommendation_ctr": "نسبة النقر على التوصيات",
-    "refresh_metrics": "تحديث المقاييس",
-    "gap_title": "تحليل الفجوات",
-    "gap_subtitle": "فجوة العرض مقابل الطلب حسب الفئة",
+    "dashboardTitle": "لوحة التحكم للمسؤول",
+    "dashboardSubtitle": "مقاييس أداء النظام والإدارة",
+    "totalRevenue": "إجمالي الإيرادات",
+    "activeUsers": "المستخدمون النشطون",
+    "newThisPeriod": "جديد في هذه الفترة",
+    "totalRentals": "إجمالي الإيجارات",
+    "activeItems": "العناصر النشطة",
+    "fraudRate": "معدل الاحتيال",
+    "recommendationCtr": "نسبة النقر على التوصيات",
+    "refreshMetrics": "تحديث المقاييس",
+    "gapTitle": "تحليل الفجوات",
+    "gapSubtitle": "فجوة العرض مقابل الطلب حسب الفئة",
     "category": "الفئة",
     "demand": "الطلب",
     "supply": "العرض",
-    "gap_score": "درجة الفجوة",
+    "gapScore": "درجة الفجوة",
     "recommendations": "التوصيات",
-    "fraud_title": "مراقبة الاحتيال",
-    "fraud_subtitle": "تقييم المخاطر في الوقت الفعلي وسجلات النشاط",
-    "risk_score": "درجة المخاطر",
+    "fraudTitle": "مراقبة الاحتيال",
+    "fraudSubtitle": "تقييم المخاطر في الوقت الفعلي وسجلات النشاط",
+    "riskScore": "درجة المخاطر",
     "decision": "القرار",
     "reason": "السبب",
-    "user_management_title": "إدارة المستخدمين",
-    "user_management_subtitle": "إدارة مستخدمي النظام ومستويات الوصول",
-    "is_active": "نشط",
-    "is_verified": "موثق",
+    "userManagementTitle": "إدارة المستخدمين",
+    "userManagementSubtitle": "إدارة مستخدمي النظام ومستويات الوصول",
+    "isActive": "نشط",
     "role": "دور النظام",
     "activate": "تنشيط",
     "deactivate": "إلغاء التنشيط"
   },
+  "governorates": {
+    "cairo": "القاهرة",
+    "giza": "الجيزة",
+    "alexandria": "الإسكندرية",
+    "dakahlia": "الدقهلية",
+    "red_sea": "البحر الأحمر",
+    "beheira": "البحيرة",
+    "fayoum": "الفيوم",
+    "gharbiya": "الغربية",
+    "ismailia": "الإسماعيلية",
+    "monufia": "المنوفية",
+    "minya": "المنيا",
+    "qalubiya": "القليوبية",
+    "new_valley": "الوادي الجديد",
+    "suez": "السويس",
+    "aswan": "أسوان",
+    "assiut": "أسيوط",
+    "beni_suef": "بني سويف",
+    "port_said": "بورسعيد",
+    "damietta": "دمياط",
+    "sharkia": "الشرقية",
+    "south_sinai": "جنوب سيناء",
+    "kafr_el_sheikh": "كفر الشيخ",
+    "matrouh": "مطروح",
+    "luxor": "الأقصر",
+    "qena": "قنا",
+    "north_sinai": "شمال سيناء",
+    "sohag": "سوهاج"
+  },
   "support": {
     "title": "المساعدة والدعم",
-    "my_tickets": "تذاكري",
+    "myTickets": "تذاكري",
     "open_ticket": "فتح تذكرة جديدة",
     "ticket_id": "رقم التذكرة",
     "subject": "الموضوع",
-    "no_tickets": "ليس لديك أي تذاكر دعم. هل تحتاج للمساعدة؟ افتح تذكرة جديدة للحصول على المساعدة.",
+    "noTickets": "ليس لديك أي تذاكر دعم. هل تحتاج للمساعدة؟ افتح تذكرة جديدة للحصول على المساعدة.",
     "message": "الرسالة",
     "status": "الحالة",
-    "priority": "الأولوية",
     "create": "إنشاء تذكرة",
     "reply": "رد",
     "resolved": "مُحلول",
     "open": "مُفتح",
     "closed": "مُغلق",
-    "user": "المستخدم",
-    "dashboard_title": "لوحة تحكم الدعم",
-    "dashboard_subtitle": "إدارة جميع تذاكر دعم العملاء"
+    "user": "المستخدم"
+  },
+  "myOrders": {
+    "title": "طلباتي",
+    "noOrders": "لم تقم بإجراء أي طلبات بعد.",
+    "orderDate": "تاريخ الطلب",
+    "itemCount": "العناصر",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "payment": {
+    "title": "الدفع",
+    "selectMethod": "اختر طريقة الدفع",
+    "transactionRef": "مرجع المعاملة (اختياري)",
+    "payNow": "ادفع الآن",
+    "success": "تم الدفع بنجاح!",
+    "error": "فشل الدفع. يرجى المحاولة مرة أخرى.",
+    "methods": {
+      "vodafone_cash": "فودافون كاش",
+      "fawry": "فوري",
+      "paymob": "Paymob",
+      "credit_card": "بطاقة ائتمان",
+      "bank_transfer": "تحويل بنكي"
+    }
+  },
+  "order_details": {
+    "title": "تفاصيل الطلب",
+    "items": "العناصر المطلوبة",
+    "payment": "معلومات الدفع",
+    "paymentStatus": "حالة الدفع",
+    "delivery": "تتبع الشحنة",
+    "noTracking": "لا توجد معلومات تتبع متاحة بعد.",
+    "statuses": {
+      "pending": "قيد الانتظار",
+      "paid": "تم الدفع",
+      "processing": "قيد المعالجة",
+      "shipped": "تم الشحن",
+      "delivered": "تم التوصيل",
+      "cancelled": "ملغى"
+    }
+  },
+  "chat": {
+    "title": "الرسائل",
+    "noChats": "لا توجد محادثات بعد.",
+    "placeholder": "اكتب رسالة...",
+    "send": "إرسال",
+    "online": "متصل",
+    "offline": "غير متصل"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "noNotifications": "كل شيء محدث!",
+    "markAllRead": "تحديد الكل كمقروء",
+    "unread": "غير مقروء"
+  },
+  "errors": {
+    "unknownError": "حدث خطأ غير متوقع",
+    "failedToLoadSubcategories": "فشل في تحميل الفئات الفرعية",
+    "failedToLoadCategories": "فشل في تحميل الفئات",
+    "failedToLoadProducts": "فشل في تحميل المنتجات",
+    "failedToLoadSubcategory": "فشل في تحميل بيانات الفئة الفرعية",
+    "failedToLoadProduct": "فشل في تحميل بيانات المنتج",
+    "failedToUploadLogo": "فشل في رفع صورة الشعار",
+    "invalidCoordinates": "تنسيق الإحداثيات غير صالح. استخدم: خط العرض، خط الطول",
+    "unexpectedError": "حدث خطأ غير متوقع",
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه."
   }
 }

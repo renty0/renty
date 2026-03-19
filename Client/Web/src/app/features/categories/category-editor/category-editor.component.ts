@@ -6,7 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
 import { ToastService } from '../../../shared/services/toast.service';
-import { CategoriesClient, CreateCategoryCommand, UpdateCategoryCommand } from '../../../core/api/api-client';
+import { CategoriesClient, CreateCategoryCommand, UpdateCategoryCommand, ProductCategoryDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 
@@ -32,15 +32,7 @@ export class CategoryEditorComponent implements OnInit {
     public translate = inject(TranslateService);
 
     @Input() id: number | null = null;
-    @Output() saved = new EventEmitter<{
-        id: number;
-        categoryNameAr?: string;
-        categoryNameEn?: string;
-        descriptionAr?: string;
-        descriptionEn?: string;
-        logoUrl?: string;
-        logoId?: number
-    }>();
+    @Output() saved = new EventEmitter<ProductCategoryDto>();
     @Output() cancelled = new EventEmitter<void>();
 
     @ViewChild('logoUploader') logoUploader!: ImageUploaderComponent;
@@ -132,17 +124,8 @@ export class CategoryEditorComponent implements OnInit {
                                 this.toast.showError(res.messages?.[0] || 'categories.messages.updateError');
                             } else {
                                 this.toast.showSuccess(res.messages?.[0] || 'categories.messages.updateSuccess');
-                                // Emit the updated category data
                                 if (res.data) {
-                                    this.saved.emit({
-                                        id: res.data.id!,
-                                        categoryNameAr: res.data.nameAr!,
-                                        categoryNameEn: res.data.nameEn!,
-                                        descriptionAr: res.data.descAr,
-                                        descriptionEn: res.data.descEn,
-                                        logoUrl: res.data.logoUrl,
-                                        logoId: res.data.logoId ? Number(res.data.logoId) : undefined
-                                    });
+                                    this.saved.emit(res.data);
                                 }
                             }
                         }),
@@ -170,15 +153,7 @@ export class CategoryEditorComponent implements OnInit {
                             } else {
                                 this.toast.showSuccess(res.messages?.[0] || 'categories.messages.createSuccess');
                                 if (res.data) {
-                                    this.saved.emit({
-                                        id: res.data.id!,
-                                        categoryNameAr: res.data.nameAr!,
-                                        categoryNameEn: res.data.nameEn!,
-                                        descriptionAr: res.data.descAr,
-                                        descriptionEn: res.data.descEn,
-                                        logoUrl: res.data.logoUrl,
-                                        logoId: res.data.logoId ? Number(res.data.logoId) : undefined
-                                    });
+                                    this.saved.emit(res.data);
                                 }
                             }
                         }),

@@ -1,8 +1,8 @@
 <div class="search-results-container">
     <header class="search-header">
         <div class="container header-content">
-            <span class="badge">{{ 'marketplace.search_results' | translate }}</span>
-            <h1>{{ 'marketplace.results_for' | translate }} "{{ query() }}"</h1>
+            <span class="badge">{{ 'marketplace.searchResults' | translate }}</span>
+            <h1>{{ 'marketplace.resultsFor' | translate }} "{{ query() }}"</h1>
             <p class="results-count">{{ totalCount() }} {{ 'marketplace.results' | translate }}</p>
         </div>
     </header>
@@ -11,15 +11,15 @@
         @if (isLoading()) {
             <div class="loading-state">
                 <mat-spinner diameter="50"></mat-spinner>
-                <p>{{ 'dashboard.kpi.loading' | translate }}</p>
+                <p>{{ 'common.loading' | translate }}</p>
             </div>
         } @else if (items().length === 0) {
             <div class="empty-state">
                 <div class="empty-icon">
                     <mat-icon>search_off</mat-icon>
                 </div>
-                <h3>{{ 'marketplace.noProductsFound' | translate }}</h3>
-                <p>{{ 'marketplace.tryAdjustingFilters' | translate }}</p>
+                <h3>{{ 'errors.noProductsFound' | translate }}</h3>
+                <p>{{ 'errors.tryAdjustingFilters' | translate }}</p>
                 <button mat-flat-button color="primary" routerLink="/marketplace">
                     {{ 'nav.market' | translate }}
                 </button>
@@ -29,7 +29,7 @@
                 @for (item of items(); track item.id) {
                     <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
                         <div class="card-media">
-                            <img [src]="item.primaryImage || 'assets/images/placeholder.webp'" 
+                            <img [src]="item.primaryImage || 'assets/images/placeholder.webp'"
                                  [alt]="getLocalizedTitle(item)"
                                  loading="lazy">
                             <div class="card-badges">
@@ -61,8 +61,8 @@
             </div>
 
             <div class="pagination-section">
-                <mat-paginator [length]="totalCount()" 
-                              [pageSize]="pageSize()" 
+                <mat-paginator [length]="totalCount()"
+                              [pageSize]="pageSize()"
                               [pageSizeOptions]="[12, 24, 48]"
                               (page)="onPageChange($event)"
                               aria-label="Select page">

@@ -1,129 +1,193 @@
 <div class="data-container">
-    <app-header-section [title]="'brands.title' | translate" [buttonText]="'brands.actions.create' | translate"
-        [placeholder]="'brands.search' | translate" [icon]="'branding_watermark'" [showButton]="true"
-        (searchChange)="onSearchChange($event)" (buttonClick)="openEditor(null)">
-        <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="onViewModeChange($event)"
-            class="view-toggle" aria-label="View mode">
-            <mat-button-toggle value="list" aria-label="List view">
-                <mat-icon>view_list</mat-icon>
-            </mat-button-toggle>
-            <mat-button-toggle value="cards" aria-label="Cards view">
-                <mat-icon>grid_view</mat-icon>
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-    </app-header-section>
+  <app-header-section
+    [title]="'brands.title' | translate"
+    [buttonText]="'brands.createButton' | translate"
+    [placeholder]="'brands.search' | translate"
+    [icon]="'branding_watermark'"
+    [showButton]="true"
+    (searchChange)="onSearchChange($event)"
+    (buttonClick)="openEditor(null)"
+  >
+    <mat-button-toggle-group
+      extra-actions
+      [value]="viewMode()"
+      (change)="onViewModeChange($event)"
+      class="view-toggle"
+      aria-label="View mode"
+    >
+      <mat-button-toggle value="list" aria-label="List view">
+        <mat-icon>view_list</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="cards" aria-label="Cards view">
+        <mat-icon>grid_view</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </app-header-section>
 
-    @if (isLoading()) {
+  @if (isLoading()) {
     <mat-card class="table-card">
-        <div class="loading-container">
-            <mat-spinner diameter="40"></mat-spinner>
-        </div>
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
     </mat-card>
-    } @else {
+  } @else {
     @if (viewMode() === 'list') {
-    <mat-card class="table-card">
-        <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
-            [matSortActive]="sortBy() || 'nameEn'" [matSortDirection]="sortOrder() || 'asc'">
-            <ng-container matColumnDef="logo">
-                <th mat-header-cell *matHeaderCellDef>{{ 'brands.columns.logo' | translate }}</th>
-                <td mat-cell *matCellDef="let row">
-                    <img [src]="row.logoUrl || placeholderLogo" [alt]="getLocalizedName(row)"
-                        class="category-logo-mini" />
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'brands.columns.name' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ getLocalizedName(row) }}</td>
-            </ng-container>
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>{{ 'brands.columns.description' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ truncate(getLocalizedDesc(row), 50) }}</td>
-            </ng-container>
-            <ng-container matColumnDef="items">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'brands.columns.items' | translate }}</th>
-                <td mat-cell *matCellDef="let row">{{ row.itemCount }}</td>
-            </ng-container>
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>{{ 'brands.columns.actions' | translate }}</th>
-                <td mat-cell *matCellDef="let row">
-                    <div class="actions-cell">
-                        <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="openEditor(row.id!)"
-                            [title]="'buttons.edit' | translate">
-                            <mat-icon>edit</mat-icon>
-                        </app-loading-button>
-                        <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteBrand(row)"
-                            [title]="'buttons.delete' | translate">
-                            <mat-icon>delete</mat-icon>
-                        </app-loading-button>
-                    </div>
-                </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <mat-card class="table-card">
+        <table
+          mat-table
+          [dataSource]="dataSource()"
+          class="data-table"
+          matSort
+          (matSortChange)="onSort($event)"
+          [matSortActive]="sortBy() || 'nameEn'"
+          [matSortDirection]="sortOrder() || 'asc'"
+        >
+          <ng-container matColumnDef="logo">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.logo' | translate }}</th>
+            <td mat-cell *matCellDef="let row">
+              <img
+                [src]="getLogoUrl(row.logoUrl)"
+                [alt]="getLocalizedName(row)"
+                class="category-logo-mini"
+              />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ 'labels.name' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{ getLocalizedName(row) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.description' | translate }}</th>
+            <td mat-cell *matCellDef="let row">{{ truncate(getLocalizedDesc(row), 50) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="items">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ 'labels.items' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.itemCount }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.actions' | translate }}</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="actions-cell">
+                <app-loading-button
+                  color="primary"
+                  variant="stroked"
+                  size="sm"
+                  (clicked)="openEditor(row.id!)"
+                  [title]="'buttons.edit' | translate"
+                >
+                  <mat-icon>edit</mat-icon>
+                </app-loading-button>
+                <app-loading-button
+                  color="warn"
+                  variant="stroked"
+                  size="sm"
+                  (clicked)="deleteBrand(row)"
+                  [title]="'buttons.delete' | translate"
+                >
+                  <mat-icon>delete</mat-icon>
+                </app-loading-button>
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
         @if (dataSource().length === 0) {
-        <div class="empty-state">
+          <div class="empty-state">
             <mat-icon>branding_watermark</mat-icon>
             <p>{{ 'brands.empty' | translate }}</p>
-        </div>
+          </div>
         } @else {
-        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
-            [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)" aria-label="Select page">
-        </mat-paginator>
+          <mat-paginator
+            [length]="totalCount()"
+            [pageSize]="pageSize()"
+            [pageIndex]="pageNumber() - 1"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            (page)="onPageChange($event)"
+            aria-label="Select page"
+          >
+          </mat-paginator>
         }
-    </mat-card>
+      </mat-card>
     } @else {
-    @if (dataSource().length === 0) {
-    <mat-card class="table-card">
-        <div class="empty-state">
+      @if (dataSource().length === 0) {
+        <mat-card class="table-card">
+          <div class="empty-state">
             <mat-icon>branding_watermark</mat-icon>
             <p>{{ 'brands.empty' | translate }}</p>
-        </div>
-    </mat-card>
-    } @else {
-    <div class="cards-grid">
-        @for (brand of dataSource(); track brand.id) {
-        <mat-card class="entity-card" (click)="openEditor(brand.id!)">
-            <div class="card-image">
-                <img [src]="brand.logoUrl || placeholderLogo" [alt]="getLocalizedName(brand)" />
+          </div>
+        </mat-card>
+      } @else {
+        <div class="cards-grid">
+          @for (brand of dataSource(); track brand.id) {
+            <mat-card class="entity-card" (click)="openEditor(brand.id!)">
+              <div class="card-image">
+                <img [src]="getLogoUrl(brand.logoUrl)" [alt]="getLocalizedName(brand)" />
                 @if (brand.itemCount! > 0) {
-                <div class="item-count-badge">{{ brand.itemCount }} {{ 'brands.columns.items' | translate }}</div>
+                  <div class="item-count-badge">
+                    {{ brand.itemCount }} {{ 'labels.items' | translate }}
+                  </div>
                 }
-            </div>
-            <div class="card-content">
+              </div>
+              <div class="card-content">
                 <h3>{{ getLocalizedName(brand) }}</h3>
                 <p>{{ truncate(getLocalizedDesc(brand), 100) }}</p>
-            </div>
-            <div class="card-actions" (click)="$event.stopPropagation()">
-                <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="openEditor(brand.id!)">
-                    <mat-icon>edit</mat-icon>
+              </div>
+              <div class="card-actions" (click)="$event.stopPropagation()">
+                <app-loading-button
+                  color="primary"
+                  variant="stroked"
+                  size="sm"
+                  (clicked)="openEditor(brand.id!)"
+                >
+                  <mat-icon>edit</mat-icon>
                 </app-loading-button>
-                <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteBrand(brand)">
-                    <mat-icon>delete</mat-icon>
+                <app-loading-button
+                  color="warn"
+                  variant="stroked"
+                  size="sm"
+                  (clicked)="deleteBrand(brand)"
+                >
+                  <mat-icon>delete</mat-icon>
                 </app-loading-button>
-            </div>
-        </mat-card>
-        }
-    </div>
-    <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
-        [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" aria-label="Select page">
-    </mat-paginator>
+              </div>
+            </mat-card>
+          }
+        </div>
+        <mat-paginator
+          class="grid-paginator"
+          [length]="totalCount()"
+          [pageSize]="pageSize()"
+          [pageIndex]="pageNumber() - 1"
+          [pageSizeOptions]="[6, 12, 24, 48]"
+          (page)="onPageChange($event)"
+          aria-label="Select page"
+        >
+        </mat-paginator>
+      }
     }
-    }
-    }
+  }
 </div>
 
 @if (showDialog()) {
-<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-overlay" (click)="closeDialog()">
     <mat-card class="dialog-card" (click)="$event.stopPropagation()">
-        <mat-card-header>
-            <mat-card-title>
-                {{ (selectedBrandId() ? 'brands.actions.edit' : 'brands.actions.create') | translate }}
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-brand-editor [id]="selectedBrandId()" (saved)="onSaved()" (cancelled)="closeDialog()" />
-        </mat-card-content>
+      <mat-card-header>
+        <mat-card-title>
+          {{ (selectedBrandId() ? 'buttons.edit' : 'brands.createButton') | translate }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-brand-editor
+          [id]="selectedBrandId()"
+          (saved)="onSaved($event)"
+          (cancelled)="closeDialog()"
+        />
+      </mat-card-content>
     </mat-card>
-</div>
+  </div>
 }

@@ -62,13 +62,13 @@ export class SubcategoryListComponent implements OnInit {
   pageNumber = signal(1);
   pageSize = signal(10);
   totalCount = signal(0);
+  refreshTime = signal(Date.now());
 
   // Sorting state
   sortBy = signal<string | null>('date');
   sortOrder = signal<'asc' | 'desc' | null>('desc');
 
   constructor() {
-    // Adjust page settings when view mode changes
     effect(
       () => {
         const mode = this.viewMode();
@@ -88,7 +88,7 @@ export class SubcategoryListComponent implements OnInit {
     );
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   private getData() {
     const page = this.pageNumber();
@@ -97,22 +97,34 @@ export class SubcategoryListComponent implements OnInit {
 
     this.isLoading.set(true);
     this.apiClient
-      .getSubcategories(page, size, undefined, term || undefined, this.sortBy() || undefined, this.sortOrder() || undefined)
+      .getSubcategories(
+        page,
+        size,
+        undefined,
+        term || undefined,
+        this.sortBy() || undefined,
+        this.sortOrder() || undefined,
+      )
       .pipe(
-        tap((response) => {
-          const items = response?.data || [];
-          this.dataSource.set(items);
-          this.totalCount.set(response?.total || 0);
-        }),
         catchError((err) => {
-          console.error('Failed to load subcategories', err);
           this.dataSource.set([]);
-          this.toast.showError('errors.failedToLoadSubcategories');
           return of(null);
         }),
         finalize(() => this.isLoading.set(false)),
       )
-      .subscribe();
+      .subscribe((res) => {
+        const items = res?.data || [];
+        this.dataSource.set(items);
+        this.totalCount.set(res?.total || 0);
+        if (res && res.messages) {
+          if (res.error) {
+            this.toast.showError(res.messages?.[0]);
+          } else {
+            this.toast.showSuccess(res.messages?.[0]);
+          }
+          return;
+        }
+      });
   }
 
   onSearchChange(event: any): void {
@@ -146,10 +158,10 @@ export class SubcategoryListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: {
-        title: 'subcategories.actions.delete',
-        message: 'subcategories.messages.deleteConfirmation',
-        confirmText: 'buttons.delete',
-        cancelText: 'buttons.cancel',
+        title: this.translate.instant('buttons.delete'),
+        message: this.translate.instant('subcategories.messages.deleteConfirmation'),
+        confirmText: this.translate.instant('buttons.delete'),
+        cancelText: this.translate.instant('buttons.cancel'),
       } as ConfirmDialogData,
     });
 
@@ -159,8 +171,18 @@ export class SubcategoryListComponent implements OnInit {
         this.apiClient
           .deleteSubcategory(id)
           .pipe(
-            tap(() => {
-              this.getData();
+            tap((res) => {
+              if (res && !res.error) {
+                this.toast.showSuccess(res.messages?.[0] || 'subcategories.messages.deleteSuccess');
+                this.dataSource.update((current) => current.filter((s) => s.id !== id));
+                this.totalCount.update((t) => Math.max(0, t - 1));
+              } else {
+                this.toast.showError(res.messages?.[0] || 'subcategories.errors.failedToDelete');
+              }
+            }),
+            catchError((err) => {
+              this.toast.showError(err.messages?.[0] || 'subcategories.errors.failedToDelete');
+              return of(null);
             }),
             finalize(() => this.isLoading.set(false)),
           )
@@ -176,23 +198,42 @@ export class SubcategoryListComponent implements OnInit {
 
   onSaved(subcategory: ProductSubcategoryDto) {
     this.closeDialog();
-    this.getData();
+    this.dataSource.update((current) => {
+      const index = current.findIndex((s) => s.id === subcategory.id);
+      if (index !== -1) {
+        const updated = [...current];
+        updated[index] = subcategory;
+        return updated;
+      }
+      return [subcategory, ...current];
+    });
+    if (this.selectedSubcategoryId() === null) {
+      this.totalCount.update((t) => t + 1);
+    }
+    this.refreshTime.set(Date.now());
   }
 
   getLocalizedName(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    return isAr ? (row.nameAr || row.nameEn || '') : (row.nameEn || row.nameAr || '');
+    return isAr ? row.nameAr || row.nameEn || '' : row.nameEn || row.nameAr || '';
   }
 
   getLocalizedDesc(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    const desc = isAr ? (row.descAr || row.descEn || '') : (row.descEn || row.descAr || '');
-    return desc || '';
+    return isAr
+      ? row.descAr || row.descEn || ''
+      : row.descEn || row.descAr || '';
+  }
+
+  getLogoUrl(url: string | undefined): string {
+    if (!url) return 'assets/images/placeholder.png';
+    return `${url}?t=${this.refreshTime()}`;
   }
 
   getLocalizedCatName(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    // Use the new properties we added to the DTO
-    return isAr ? ((row as any).categoryNameAr || (row as any).categoryNameEn || '') : ((row as any).categoryNameEn || (row as any).categoryNameAr || '');
+    return isAr
+      ? (row as any).categoryNameAr || (row as any).categoryNameEn || ''
+      : (row as any).categoryNameEn || (row as any).categoryNameAr || '';
   }
 }

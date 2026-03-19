@@ -6,7 +6,12 @@ import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
 import { ToastService } from '../../../shared/services/toast.service';
-import { BrandsClient, CreateBrandCommand, UpdateBrandCommand } from '../../../core/api/api-client';
+import {
+  BrandsClient,
+  CreateBrandCommand,
+  UpdateBrandCommand,
+  BrandDto,
+} from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 
@@ -33,7 +38,7 @@ export class BrandEditorComponent implements OnInit {
   public translate = inject(TranslateService);
 
   @Input() id: number | null = null;
-  @Output() saved = new EventEmitter<void>();
+  @Output() saved = new EventEmitter<BrandDto>();
   @Output() cancelled = new EventEmitter<void>();
 
   @ViewChild('logoUploader') logoUploader!: ImageUploaderComponent;
@@ -126,8 +131,9 @@ export class BrandEditorComponent implements OnInit {
           .pipe(
             tap((res) => {
               if (!res.error) {
-                this.toast.showSuccess('brands.messages.updateSuccess');
-                this.saved.emit();
+                if (res.data) {
+                  this.saved.emit(res.data);
+                }
               } else {
                 this.toast.showError(res.messages?.[0] || 'brands.errors.failedToUpdate');
               }
@@ -153,8 +159,9 @@ export class BrandEditorComponent implements OnInit {
           .pipe(
             tap((res) => {
               if (!res.error) {
-                this.toast.showSuccess('brands.messages.createSuccess');
-                this.saved.emit();
+                if (res.data) {
+                  this.saved.emit(res.data);
+                }
               } else {
                 this.toast.showError(res.messages?.[0] || 'brands.errors.failedToCreate');
               }

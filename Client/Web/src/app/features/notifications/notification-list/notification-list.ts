@@ -59,7 +59,7 @@ export class NotificationListComponent implements OnInit {
       .pipe(
         tap((res: any) => {
           if (!res.error) {
-            this.notifications.update(list => 
+            this.notifications.update(list =>
               list.map(n => n.id === id ? { ...n, isRead: true } as NotificationDto : n)
             );
             this.unreadCount.update(c => Math.max(0, c - 1));
@@ -73,11 +73,11 @@ export class NotificationListComponent implements OnInit {
       .pipe(
         tap((res: any) => {
           if (!res.error) {
-            this.notifications.update(list => 
+            this.notifications.update(list =>
               list.map(n => ({ ...n, isRead: true } as NotificationDto))
             );
             this.unreadCount.set(0);
-            this.toast.showSuccess('notifications.mark_all_read_success');
+            this.toast.showSuccess('notifications.markAllRead');
           }
         })
       ).subscribe();

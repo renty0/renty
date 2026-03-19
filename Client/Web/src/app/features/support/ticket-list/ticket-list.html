@@ -2,10 +2,10 @@
   <app-header-section
     [title]="isSupport() ? ('support.dashboard_title' | translate) : ('support.title' | translate)"
     [subtitle]="
-      isSupport() ? ('support.dashboard_subtitle' | translate) : ('support.my_tickets' | translate)
+      isSupport() ? ('support.dashboard_subtitle' | translate) : ('support.myTickets' | translate)
     "
     icon="support_agent"
-    buttonText="{{ 'support.open_ticket' | translate }}"
+    buttonText="{{ 'support.openTicket' | translate }}"
   >
     <div actions>
       <button mat-flat-button color="primary" routerLink="new">
@@ -23,7 +23,7 @@
       <div class="table-container glass-card">
         <table mat-table [dataSource]="tickets()">
           <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>{{ 'support.ticket_id' | translate }}</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'support.ticketId' | translate }}</th>
             <td mat-cell *matCellDef="let ticket">#{{ ticket.id?.substring(0, 8) }}</td>
           </ng-container>
 
@@ -71,7 +71,7 @@
     } @else {
       <div class="empty-state">
         <mat-icon>confirmation_number</mat-icon>
-        <p>{{ 'support.no_tickets' | translate }}</p>
+        <p>{{ 'support.noTickets' | translate }}</p>
       </div>
     }
   </div>

@@ -110,7 +110,7 @@ export class VerificationHistoryComponent implements OnInit {
 
     this.isSubmitting.set(true);
     const formVal = this.verifyForm.value;
-    
+
     // The command requires item id, rental id, checktype, status, notes
     const cmd = new CreateVerificationCommand({
       itemId: this.itemId(),
@@ -123,11 +123,9 @@ export class VerificationHistoryComponent implements OnInit {
     this.verificationsClient.createVerification(this.itemId(), cmd).subscribe({
       next: (res) => {
         if (!res.error) {
-          this.toast.showSuccess('expert.verify_success');
+          this.toast.showSuccess('expert.verifySuccess');
           this.loadHistory();
           this.verifyForm.reset({ checkType: formVal.checkType });
-          // Optionally redirect back to assigned list
-          // this.router.navigate(['/expert/assigned']);
         } else {
           this.toast.showError(res.messages?.[0] || 'errors.unknownError');
         }

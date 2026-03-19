@@ -27,6 +27,7 @@ export class NavbarComponent implements OnInit {
   isLoggedIn = this.authService.isLoggedIn;
   isAdmin = computed(() => this.authService.isAdmin());
   isExpert = computed(() => this.authService.isExpert());
+  userData = computed(() => this.authService.getUserData());
   isMobile = this.responsiveService.isMobile;
 
   isScrolled = signal(false);
@@ -68,18 +69,18 @@ export class NavbarComponent implements OnInit {
     const links = [];
 
     if (isSupport || isAdmin) {
-      links.push({ path: '/support', labelKey: 'nav.supportTitle', icon: 'support_agent' });
+      links.push({ path: '/support', labelKey: 'nav.support', icon: 'support_agent' });
     }
 
     if (isAdmin) {
       links.push({
         path: '/admin/dashboard',
-        labelKey: 'nav.dashboardTitle',
+        labelKey: 'nav.dashboard',
         icon: 'dashboard',
       });
-      links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gapTitle', icon: 'analytics' });
-      links.push({ path: '/admin/fraud', labelKey: 'nav.fraudTitle', icon: 'security' });
-      links.push({ path: '/admin/users', labelKey: 'nav.userManagementTitle', icon: 'people' });
+      links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
+      links.push({ path: '/admin/fraud', labelKey: 'nav.fraud', icon: 'security' });
+      links.push({ path: '/admin/users', labelKey: 'nav.userManagement', icon: 'people' });
       links.push(...this.allNavLinks.filter((link) => link.adminOnly));
     }
 

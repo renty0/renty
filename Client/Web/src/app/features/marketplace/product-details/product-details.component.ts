@@ -59,7 +59,7 @@ export class ProductDetailsComponent implements OnInit {
     displayPrice = computed(() => {
         const item = this.item();
         if (!item) return 0;
-        return item.pricing?.find(p => p.pricingType === 'Daily')?.price ?? 
+        return item.pricing?.find(p => p.pricingType === 'Daily')?.price ??
                item.pricing?.[0]?.price ?? 0;
     });
 
@@ -176,7 +176,7 @@ export class ProductDetailsComponent implements OnInit {
             tap(res => {
                 if (!res.error) {
                     this.isFavorite.set(!this.isFavorite());
-                    this.toast.showSuccess(this.isFavorite() ? 'marketplace.add_to_favorites' : 'marketplace.remove_from_favorites');
+                    this.toast.showSuccess(this.isFavorite() ? 'marketplace.addToFavorites' : 'marketplace.removeFromFavorites');
                 }
             }),
             catchError(err => {
@@ -234,7 +234,7 @@ export class ProductDetailsComponent implements OnInit {
             }
         });
     }
-    
+
     buyNow() {
         if (!this.isLoggedIn()) {
             this.router.navigate(['/login']);

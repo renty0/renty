@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,7 @@ import {
 } from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.constants';
 
 @Component({
   selector: 'app-marketplace',
@@ -53,7 +54,6 @@ export class MarketplaceComponent implements OnInit {
   private searchClient = inject(SearchClient);
   private categoriesClient = inject(CategoriesClient);
   private subcategoriesClient = inject(SubcategoriesClient);
-  private router = inject(Router);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
 
@@ -62,35 +62,7 @@ export class MarketplaceComponent implements OnInit {
   categories = signal<ProductCategoryDto[]>([]);
   subcategories = signal<ProductSubcategoryDto[]>([]);
 
-  governorates = [
-    { key: 'cairo', name: 'labels.governorates.cairo' },
-    { key: 'giza', name: 'labels.governorates.giza' },
-    { key: 'alexandria', name: 'labels.governorates.alexandria' },
-    { key: 'dakahlia', name: 'labels.governorates.dakahlia' },
-    { key: 'red_sea', name: 'labels.governorates.red_sea' },
-    { key: 'beheira', name: 'labels.governorates.beheira' },
-    { key: 'fayoum', name: 'labels.governorates.fayoum' },
-    { key: 'gharbiya', name: 'labels.governorates.gharbiya' },
-    { key: 'ismailia', name: 'labels.governorates.ismailia' },
-    { key: 'monufia', name: 'labels.governorates.monufia' },
-    { key: 'minya', name: 'labels.governorates.minya' },
-    { key: 'qalubiya', name: 'labels.governorates.qalubiya' },
-    { key: 'new_valley', name: 'labels.governorates.new_valley' },
-    { key: 'suez', name: 'labels.governorates.suez' },
-    { key: 'aswan', name: 'labels.governorates.aswan' },
-    { key: 'assiut', name: 'labels.governorates.assiut' },
-    { key: 'beni_suef', name: 'labels.governorates.beni_suef' },
-    { key: 'port_said', name: 'labels.governorates.port_said' },
-    { key: 'damietta', name: 'labels.governorates.damietta' },
-    { key: 'sharkia', name: 'labels.governorates.sharkia' },
-    { key: 'south_sinai', name: 'labels.governorates.south_sinai' },
-    { key: 'kafr_el_sheikh', name: 'labels.governorates.kafr_el_sheikh' },
-    { key: 'matrouh', name: 'labels.governorates.matrouh' },
-    { key: 'luxor', name: 'labels.governorates.luxor' },
-    { key: 'qena', name: 'labels.governorates.qena' },
-    { key: 'north_sinai', name: 'labels.governorates.north_sinai' },
-    { key: 'sohag', name: 'labels.governorates.sohag' }
-  ];
+  governorates = EGYPT_GOVERNORATES;
 
   itemTypes = [
     { key: 'standard', name: 'labels.types.standard' },

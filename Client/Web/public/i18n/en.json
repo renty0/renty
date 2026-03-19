@@ -2,6 +2,7 @@
   "common": {
     "renter": "Renter",
     "owner": "Owner",
+    "loading": "Loading...",
     "role": "Role",
     "user": "User",
     "date": "Date",
@@ -15,158 +16,75 @@
     "enterCoordinates": "Enter coordinates (lat, lng)",
     "loadingMap": "Loading Map...",
     "noCoordinates": "No coordinates set for this location",
-    "coordinatesCopied": "Coordinates copied to clipboard"
-  },
-  "nav": {
-    "home": "Home",
-    "login": "Login",
-    "dashboardTitle": "Dashboard",
-    "supportTitle": "Support",
-    "gapTitle": "Gap Analysis",
-    "fraudTitle": "Fraud Detection",
-    "userManagementTitle": "User Management",
-
-    "logout": "Logout",
-    "profile": "Profile",
-    "management": "Management",
-    "register": "Register",
-    "market": "Marketplace",
-    "categories": "Categories",
-    "subcategories": "Subcategories",
-    "brands": "Brands",
-    "products": "Products",
-    "about": "About",
-    "dashboard": "Dashboard",
-    "myItems": "My Items",
-    "myRentals": "My Rentals",
-    "myOrders": "My Orders",
-    "favorites": "Favorites",
-    "kpi_overview": "KPI Overview",
-    "gap_analysis": "Gap Analysis",
-    "deep_analytics": "Deep Analytics"
-  },
-  "dashboard": {
-    "title": "Intelligence Center",
-    "lastUpdated": "Last updated",
-    "tabs": {
-      "kpi": "KPI Overview",
-      "gap": "Gap Analysis",
-      "analytics": "Deep Analytics"
-    },
-    "kpi": {
-      "totalRevenue": "Total Revenue",
-      "revenueTarget": "Target",
-      "totalOrders": "Total Orders",
-      "monthlyGoal": "Monthly goal reached",
-      "avgGapRatio": "Avg Gap Ratio",
-      "riskLevel": "Risk Level",
-      "high": "High",
-      "low": "Low",
-      "avgOrderValue": "Avg Order Value",
-      "activeCustomers": "Active Customers",
-      "smartInsights": "Smart Business Insights",
-      "revenue": "Revenue",
-      "orders": "Orders",
-      "errors": {
-        "failedLoad": "Failed to load KPI data"
-      }
-    },
-    "gap": {
-      "title": "Gap Analysis Dashboard",
-      "runAnalysis": "Run Analysis",
-      "opportunityLoss": "Opportunity Loss",
-      "lossDesc": "Revenue lost due to supply shortages",
-      "criticalCategories": "Critical Categories",
-      "avgGapLevel": "Avg Gap Level",
-      "supplyDemandGap": "Supply vs Demand Gap",
-      "regionalMatrix": "Regional Demand Matrix",
-      "recommendations": "Operational Recommendations",
-      "recommendation": "Recommendation",
-      "deadStock": "Dead Stock Inventory",
-      "product": "Product",
-      "idleDays": "Idle (Days)",
-      "value": "Value",
-      "demand": "Demand (Orders)",
-      "supply": "Supply (Unique Items)",
-      "regionalDemandScore": "Avg Regional Demand Score",
-      "messages": {
-        "analysisSuccess": "Analysis triggered successfully",
-        "analysisFailed": "Failed to trigger analysis",
-        "loadKpiFailed": "Failed to load KPI data",
-        "loadSummaryFailed": "Failed to load gap summary",
-        "loadCategoryFailed": "Failed to load category analysis",
-        "loadTerritoryFailed": "Failed to load territory analysis",
-        "loadDeadStockFailed": "Failed to load dead stock",
-        "loadActionsFailed": "Failed to load actions"
-      }
-    },
-    "analytics": {
-      "revenueProfit": "Revenue & Profit Analysis",
-      "financialEfficiency": "Financial Efficiency",
-      "inventoryTurnover": "Inventory Turnover",
-      "unitsSold": "Units Sold",
-      "genderDist": "Gender Distribution",
-      "customerOccupation": "Customer Occupation",
-      "inventoryHealth": "Inventory Health",
-      "topCategoryShare": "Top Category Share",
-      "topProducts": "Top Performing Products",
-      "product": "Product",
-      "sold": "Sold",
-      "revenue": "Revenue",
-      "errors": {
-        "loadSalesFailed": "Failed to load sales trends",
-        "loadDemographicsFailed": "Failed to load demographics",
-        "loadInventoryFailed": "Failed to load inventory stats",
-        "loadTopProductsFailed": "Failed to load top products"
-      }
-    },
-    "profile": "Profile",
-    "logout": "Logout",
-    "login": "Login",
-    "register": "Register",
-    "management": "Management"
+    "coordinatesCopied": "Coordinates copied to clipboard",
+    "view": {
+      "list": "List view",
+      "cards": "Cards view"
+    }
   },
   "marketplace": {
     "title": "Marketplace",
-    "hero_title": "Marketplace",
-    "all_categories": "All Categories",
-    "all_subcategories": "All Subcategories",
-    "hero_subtitle": "Discover unique products from our community",
+    "heroTitle": "Marketplace",
+    "allCategories": "All Categories",
+    "allSubcategories": "All Subcategories",
+    "heroSubtitle": "Discover unique products from our community",
     "products": "Products",
     "results": "Results",
-    "search_placeholder": "Search products...",
-    "categories": "Categories",
+    "searchPlaceholder": "Search products...",
     "filters": "Filters",
     "clearFilters": "Clear",
     "category": "Category",
     "subcategory": "Subcategory",
-    "noProductsFound": "No products found",
-    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for.",
     "viewDetails": "View Details",
-    "all_cities": "All Cities",
-    "all_types": "All Types",
-    "price_range": "Price Range",
-    "min_price": "Min Price",
-    "max_price": "Max Price",
-    "sort_by": "Sort By",
-    "sort_newest": "Newest",
-    "sort_price_low": "Price: Low to High",
-    "sort_price_high": "Price: High to Low",
-    "search_results": "Search Results",
-    "results_for": "Results for",
-    "rent_now": "Rent Now",
-    "add_to_favorites": "Add to Favorites",
-    "remove_from_favorites": "Remove from Favorites",
+    "allCities": "All Cities",
+    "allTypes": "All Types",
+    "priceRange": "Price Range",
+    "minPrice": "Min Price",
+    "maxPrice": "Max Price",
+    "sortNewest": "Newest",
+    "sortPriceLow": "Price: Low to High",
+    "sortPriceHigh": "Price: High to Low",
+    "searchResults": "Search Results",
+    "resultsFor": "Results for",
+    "rentNow": "Rent Now",
+    "buyNow": "Buy Now",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites",
     "reviews": "Reviews",
-    "no_reviews_yet": "No reviews yet",
-    "related_products": "Related Products",
-    "edit_item": "Edit Item",
-    "delete_item": "Delete Item",
+    "noReviewsYet": "No reviews yet",
+    "relatedProducts": "Related Products",
+    "editItem": "Edit Item",
+    "deleteItem": "Delete Item",
     "day": "day",
     "available": "Available",
     "unavailable": "Unavailable",
-    "description": "Description",
     "anonymous": "Anonymous"
+  },
+  "nav": {
+    "home": "Home",
+    "management": "Management",
+    "profile": "Profile",
+    "title": "Store",
+    "gap": "Gap Analysis",
+    "fraud": "Fraud Detection",
+    "userManagement": "User Management",
+    "login": "Login",
+    "support": "Support",
+    "logout": "Logout",
+    "register": "Register",
+    "categories": "Categories",
+    "brands": "Brands",
+    "products": "Products",
+    "results": "Results",
+    "dashboard": "Dashboard",
+    "market": "Marketplace",
+    "subcategories": "Subcategories",
+    "myItems": "My Items",
+    "myRentals": "My Rentals",
+    "myOrders": "My Orders",
+    "chats": "Chats",
+    "notifications": "Notifications",
+    "favorites": "My Favorites"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -178,7 +96,6 @@
     "registerButton": "Create Account",
     "success": "Registration successful!",
     "successVerifyEmail": "Registration successful! Please check your email to verify your account.",
-    "successOwner": "Registration successful as Owner!",
     "failed": "Registration failed",
     "step1Desc": "Set up your login credentials",
     "step2Desc": "Tell us more about yourself",
@@ -195,17 +112,13 @@
     }
   },
   "login": {
-    "title": "Login to Renty",
     "welcomeBack": "Welcome Back!",
     "signInSubtitle": "Sign in to your account",
     "forgotPassword": "Forgot password?",
     "noAccount": "Don't have an account?",
     "signUp": "Register here",
-    "button": "Login",
-    "success": "Login successful!",
     "emailNotConfirmed": "Your email is not confirmed. We have sent a new verification code.",
     "invalidCredentials": "Invalid email or password",
-    "unauthorized": "You are not authorized to access this resource",
     "serverError": "A server error occurred, please try again later"
   },
   "forgotPassword": {
@@ -228,9 +141,7 @@
     "passwordsMismatch": "Passwords do not match",
     "button": "Reset Password",
     "rememberPassword": "Remember your password?",
-    "successHeader": "Password Reset",
     "successDesc": "Your password has been reset successfully. You can now login.",
-    "errorHeader": "Reset Failed",
     "errorDesc": "Failed to reset password. The code might be invalid or expired.",
     "invalidCode": "Invalid or expired reset code.",
     "codeVerified": "Reset code verified successfully."
@@ -244,10 +155,6 @@
     "success": "Your email has been verified. You can now sign in.",
     "failed": "Verification failed. Please check the code and try again.",
     "backToLogin": "Back to login"
-  },
-  "info": {
-    "accountInfo": "Account Information",
-    "profileInfo": "Profile Details"
   },
   "labels": {
     "email": "Email Address",
@@ -276,47 +183,19 @@
     "userType": "User Type",
     "name": "Name",
     "description": "Description",
-    "upload_image": "Upload Image",
-    "subcategoryName": "Subcategory Name",
-    "subcategoryDescription": "Description",
+    "uploadImage": "Upload Image",
     "parentCategory": "Parent Category",
-    "sku": "SKU",
     "price": "Price",
-    "color": "Color",
-    "style": "Style",
-    "cost": "Cost",
-    "discount": "Discount",
-    "modelName": "Model Name",
-    "skuType": "SKU Type",
-    "governorates": {
-      "cairo": "Cairo",
-      "giza": "Giza",
-      "alexandria": "Alexandria",
-      "dakahlia": "Dakahlia",
-      "red_sea": "Red Sea",
-      "beheira": "Beheira",
-      "fayoum": "Fayoum",
-      "gharbiya": "Gharbiya",
-      "ismailia": "Ismaïlia",
-      "monufia": "Monufia",
-      "minya": "Minya",
-      "qalubiya": "Qalubiya",
-      "new_valley": "New Valley",
-      "suez": "Suez",
-      "aswan": "Aswan",
-      "assiut": "Assiut",
-      "beni_suef": "Beni Suef",
-      "port_said": "Port Said",
-      "damietta": "Damietta",
-      "sharkia": "Sharkia",
-      "south_sinai": "South Sinai",
-      "kafr_el_sheikh": "Kafr el-Sheikh",
-      "matrouh": "Matrouh",
-      "luxor": "Luxor",
-      "qena": "Qena",
-      "north_sinai": "North Sinai",
-      "sohag": "Sohag"
-    },
+    "date": "Date",
+    "actions": "Actions",
+    "image": "Image",
+    "sku": "SKU",
+    "perDay": "/ day",
+    "dailyPrice": "Daily Price",
+    "weeklyPrice": "Weekly Price",
+    "monthlyPrice": "Monthly Price",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "types": {
       "standard": "Standard",
       "premium": "Premium"
@@ -327,6 +206,16 @@
       "good": "Good",
       "fair": "Fair"
     }
+  },
+  "placeholders": {
+    "name": "Enter product name",
+    "sku": "Enter SKU",
+    "description": "Enter product description",
+    "subcategory": "Select Subcategory",
+    "category": "Select Category",
+    "brand": "Select Brand",
+    "city": "Enter city",
+    "location": "Enter location or address"
   },
   "buttons": {
     "login": "Login",
@@ -349,305 +238,85 @@
   },
   "categories": {
     "title": "Categories",
-    "details": "Category Details",
     "search": "Search categories...",
     "empty": "No categories found. Create one to get started.",
     "confirmDelete": "Are you sure you want to delete this category?",
-    "columns": {
-      "logo": "Logo",
-      "name": "Name",
-      "description": "Description",
-      "date": "Date",
-      "actions": "Actions"
-    },
     "actions": {
       "create": "New Category",
       "edit": "Edit Category",
       "delete": "Delete Category",
       "deleted": "Category deleted successfully."
-    },
-    "errors": {
-      "failedToLoad": "Failed to load categories.",
-      "failedToDelete": "Failed to delete category."
     }
-  },
-  "product_details": {
-    "backToMarketplace": "Back to Marketplace",
-    "addToCart": "Add to Cart",
-    "rentNow": "Rent Now",
-    "description": "Description",
-    "specifications": "Specifications",
-    "relatedProducts": "Related Products",
-    "notFound": "Product not found",
-    "color": "Color",
-    "model": "Model",
-    "style": "Style"
   },
   "products": {
     "title": "Products",
-    "details": "Product Details",
     "search": "Search products...",
-    "confirmDelete": "Are you sure you want to delete this product?",
-    "columns": {
-      "image": "Image",
-      "sku": "SKU",
-      "name": "Name",
-      "price": "Price",
-      "perDay": "/ day",
-      "subcategory": "Subcategory",
-      "date": "Date",
-      "actions": "Actions"
-    },
-    "actions": {
-      "create": "New Product",
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "view": {
-      "list": "List view",
-      "cards": "Cards view"
-    },
-    "editor": {
-      "newTitle": "New Product",
-      "editTitle": "Edit Product",
-      "newSubtitle": "Create a new product",
-      "editSubtitle": "Update product details"
-    },
-    "favorites": {
-      "title": "My Favorites",
-      "empty": "You haven't added any products to your favorites yet.",
-      "remove": "Remove from Favorites",
-      "removeSuccess": "Successfully removed from favorites"
-    },
-    "rentals": {
-      "title": "Rent Product",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "pricingType": "Pricing Type",
-      "daily": "Daily",
-      "weekly": "Weekly",
-      "monthly": "Monthly",
-      "estimatedPrice": "Estimated Price",
-      "deposit": "Security Deposit",
-      "total": "Total Amount",
-      "submit": "Confirm Rental Request",
-      "cancel": "Cancel",
-      "success": "Rental request submitted successfully!",
-      "error": "Failed to submit rental request. Please try again.",
-      "list": {
-        "title": "My Rentals",
-        "empty": "You have no rentals yet.",
-        "item": "Item",
-        "dates": "Rental Dates",
-        "amount": "Total Amount",
-        "status": "Status",
-        "filter": "Filter by Status",
-        "all": "All Rentals"
-      },
-      "status": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "active": "Active",
-        "completed": "Completed",
-        "cancelled": "Cancelled",
-        "rejected": "Rejected",
-        "returnpending": "Return Pending"
-      },
-      "details": {
-        "title": "Rental Details",
-        "subtitle": "Overview of your rental transaction",
-        "rental_info": "Rental Information",
-        "item": "Item",
-        "dates": "Rental Dates",
-        "status": "Current Status",
-        "financials": "Financial Summary",
-        "price": "Rental Price",
-        "deposit": "Security Deposit",
-        "total": "Total Amount",
-        "late_fee": "Late Fee",
-        "notes": "Owner Notes",
-        "parties": "Parties",
-        "owner": "Owner",
-        "renter": "Renter",
-        "created_at": "Created At",
-        "review": "Leave a Review",
-        "review_success": "Thank you for your review!",
-        "review_error": "Failed to submit review.",
-        "rating": "Rating",
-        "comment": "Your Comment",
-        "submit_review": "Submit Review"
-      },
-      "checkout": {
-        "title": "Checkout",
-        "summary": "Order Summary",
-        "items": "Items",
-        "subtotal": "Subtotal",
-        "delivery": "Delivery Fee",
-        "checkout": "Checkout",
-        "total": "Total Amount",
-        "place_order": "Place Order",
-        "order_success": "Order Placed Successfully!",
-        "error": "Failed to place order.",
-        "order_id": "Order ID",
-        "back_to_market": "Back to Marketplace",
-        "view_orders": "View My Orders"
-      },
-      "my_orders": {
-        "title": "My Orders",
-        "no_orders": "You haven't placed any orders yet.",
-        "order_date": "Order Date",
-        "item_count": "Items",
-        "status": "Status",
-        "view_details": "View Details"
-      },
-      "payment": {
-        "title": "Payment",
-        "select_method": "Select Payment Method",
-        "methods": {
-          "vodafone_cash": "Vodafone Cash",
-          "fawry": "Fawry",
-          "paymob": "Paymob",
-          "credit_card": "Credit Card",
-          "bank_transfer": "Bank Transfer"
-        },
-        "transaction_ref": "Transaction Reference (Optional)",
-        "pay_now": "Pay Now",
-        "success": "Payment successful!",
-        "error": "Payment failed. Please try again."
-      },
-      "order_details": {
-        "title": "Order Details",
-        "summary": "Summary",
-        "items": "Items Ordered",
-        "status": "Order Status",
-        "payment": "Payment Information",
-        "payment_status": "Payment Status",
-        "delivery": "Delivery Tracking",
-        "tracking_history": "Tracking History",
-        "no_tracking": "No tracking information available yet.",
-        "statuses": {
-          "pending": "Pending",
-          "paid": "Paid",
-          "processing": "Processing",
-          "shipped": "Shipped",
-          "delivered": "Delivered",
-          "cancelled": "Cancelled"
-        }
-      },
-      "chat": {
-        "title": "Messages",
-        "no_chats": "No conversations yet.",
-        "placeholder": "Type a message...",
-        "send": "Send",
-        "online": "Online",
-        "offline": "Offline",
-        "last_message": "Last message"
-      },
-      "notifications": {
-        "title": "Notifications",
-        "no_notifications": "You're all caught up!",
-        "mark_all_read": "Mark all as read",
-        "unread": "Unread"
-      },
-      "support": {
-        "title": "Help & Support",
-        "my_tickets": "My Tickets",
-        "open_ticket": "Open New Ticket",
-        "ticket_id": "Ticket ID",
-        "subject": "Subject",
-        "message": "Message",
-        "status": "Status",
-        "priority": "Priority",
-        "create": "Create Ticket",
-        "reply": "Reply",
-        "resolved": "Resolved",
-        "open": "Open",
-        "closed": "Closed",
-        "user": "User",
-        "dashboard_title": "Support Dashboard",
-        "dashboard_subtitle": "Manage all customer support tickets"
-      },
-      "actions": {
-        "confirm": "Confirm Rental",
-        "complete": "Complete & Return",
-        "cancel": "Cancel Request",
-        "confirm_msg": "Are you sure you want to confirm this rental?",
-        "complete_msg": "Has the item been returned in good condition?",
-        "cancel_msg": "Are you sure you want to cancel this request?",
-        "damaged_deposit": "Forfeit Deposit"
-      }
-    },
-    "settings": {
-      "general": "General Information",
-      "pricing": "Pricing",
-      "details": "Details",
-      "media": "Media",
-      "organization": "Organization"
-    },
-    "fields": {
-      "name": "Product Name",
-      "sku": "SKU (Stock Keeping Unit)",
-      "price": "Selling Price",
-      "cost": "Product Cost",
-      "color": "Color",
-      "style": "Style",
-      "description": "Product Description",
-      "subcategory": "Subcategory",
-      "discount": "Discount Price",
-      "modelName": "Model Name",
-      "skuType": "SKU Type"
-    },
-    "placeholders": {
-      "name": "Enter product name",
-      "sku": "Enter SKU",
-      "description": "Enter product description",
-      "subcategory": "Select Subcategory",
-      "category": "Select Category",
-      "brand": "Select Brand",
-      "city": "Enter city",
-      "location": "Enter location or address"
-    },
-    "messages": {
-      "createSuccess": "Product created successfully",
-      "updateSuccess": "Product updated successfully",
-      "deleteConfirmation": "Are you sure you want to delete this product?",
-      "deleteSuccess": "Product deleted successfully"
-    },
-    "admin": {
-      "dashboard_title": "Admin Dashboard",
-      "dashboard_subtitle": "System-wide performance metrics and management",
-      "total_revenue": "Total Revenue",
-      "active_users": "Active Users",
-      "new_this_period": "new this period",
-      "total_rentals": "Total Rentals",
-      "active_items": "Active Items",
-      "fraud_rate": "Fraud Rate",
-      "recommendation_ctr": "Recommendation CTR",
-      "refresh_metrics": "Refresh Metrics",
-      "gap_title": "Gap Analysis",
-      "gap_subtitle": "Supply vs Demand gap by category",
-      "category": "Category",
-      "demand": "Demand",
-      "supply": "Supply",
-      "gap_score": "Gap Score",
-      "recommendations": "Recommendations",
-      "fraud_title": "Fraud Monitoring",
-      "fraud_subtitle": "Real-time risk assessment and activity logs",
-      "risk_score": "Risk Score",
-      "decision": "Decision",
-      "reason": "Reason",
-      "user_management_title": "User Management",
-      "user_management_subtitle": "Manage system users and access levels",
-      "is_active": "Is Active",
-      "is_verified": "Is Verified",
-      "role": "System Role",
-      "activate": "Activate",
-      "deactivate": "Deactivate"
-    }
+    "create": "New Product",
+    "new": "New Product",
+    "edit": "Edit Product",
+    "deleteConfirmation": "Are you sure you want to delete this product?",
+    "deleteSuccess": "Product deleted successfully",
+    "general": "General Information",
+    "pricing": "Pricing",
+    "details": "Details",
+    "media": "Media",
+    "organization": "Organization"
   },
   "icons": {
     "next": "arrow_forward",
     "back": "arrow_back"
+  },
+  "rentals": {
+    "title": "Rent Product",
+    "pricingType": "Pricing Type",
+    "estimatedPrice": "Estimated Price",
+    "deposit": "Security Deposit",
+    "total": "Total Amount",
+    "submit": "Confirm Rental Request",
+    "success": "Rental request submitted successfully!",
+    "error": "Failed to submit rental request. Please try again.",
+    "list": {
+      "title": "My Rentals",
+      "empty": "You have no rentals yet.",
+      "item": "Item",
+      "dates": "Rental Dates",
+      "amount": "Total Amount",
+      "status": "Status",
+      "all": "All Rentals"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "details": {
+      "title": "Rental Details",
+      "subtitle": "Overview of your rental transaction",
+      "item": "Item",
+      "dates": "Rental Dates",
+      "status": "Current Status",
+      "financials": "Financial Summary",
+      "price": "Rental Price",
+      "deposit": "Security Deposit",
+      "total": "Total Amount",
+      "lateFee": "Late Fee",
+      "notes": "Owner Notes",
+      "parties": "Parties",
+      "owner": "Owner",
+      "createdAt": "Created At",
+      "review": "Leave a Review",
+      "rating": "Rating",
+      "comment": "Your Comment",
+      "submitReview": "Submit Review"
+    },
+    "actions": {
+      "confirm": "Confirm Rental",
+      "complete": "Complete & Return",
+      "cancel": "Cancel Request",
+      "damaged": "Forfeit Deposit"
+    }
   },
   "validation": {
     "required": "This field is required",
@@ -684,31 +353,25 @@
       "badge": "Why Choose Renty",
       "title": "The Smarter Way to Access Quality",
       "subtitle": "Renty is more than just a marketplace; it's a community built on trust, quality, and sustainability.",
-      "trust": {
-        "title": "Verified Users",
-        "desc": "Every member is verified through our robust security system to ensure safe transactions."
-      },
-      "value": {
-        "title": "Unmatched Value",
-        "desc": "Access premium products at a fraction of the cost. Pay only for the time you need."
-      },
-      "speed": {
-        "title": "Rapid Delivery",
-        "desc": "Get your items delivered to your doorstep within hours, not days."
-      }
+      "trustTitle": "Verified Users",
+      "trustDesc": "Every member is verified through our robust security system to ensure safe transactions.",
+      "valueTitle": "Unmatched Value",
+      "valueDesc": "Access premium products at a fraction of the cost. Pay only for the time you need.",
+      "speedTitle": "Rapid Delivery",
+      "speedDesc": "Get your items delivered to your doorstep within hours, not days."
     },
     "destinations": {
       "badge": "Travel & Sport",
       "title": "Top Sports Destinations in Egypt",
       "subtitle": "Explore the best spots for your favorite activities, from the Red Sea to the heart of Cairo.",
       "dahab": "Dahab",
-      "dahab_desc": "Kitesurfing & Diving Paradise",
+      "dahabDesc": "Kitesurfing & Diving Paradise",
       "gouna": "El Gouna",
-      "gouna_desc": "Luxury Sports Hub",
+      "gounaDesc": "Luxury Sports Hub",
       "cairo": "Cairo",
-      "cairo_desc": "Padel & Fitness Center",
+      "cairoDesc": "Padel & Fitness Center",
       "somabay": "Soma Bay",
-      "somabay_desc": "Windsurfing Capital"
+      "somabayDesc": "Windsurfing Capital"
     },
     "categories": {
       "title": "Explore Sports Gear",
@@ -718,21 +381,7 @@
       "fitness": "Fitness & Gym",
       "football": "Football",
       "cycling": "Cycling",
-      "camping": "Camping & Outdoors",
-      "no_products_found": "No products found matching your criteria.",
-      "view_all_products": "View All Products"
-    },
-    "product": {
-      "addToCart": "Add to Cart",
-      "rentNow": "Rent Now",
-      "description": "Description",
-      "specifications": "Specifications",
-      "backToMarketplace": "Back to Marketplace",
-      "relatedProducts": "Related Products",
-      "notFound": "Product Not Found",
-      "color": "Color",
-      "model": "Model",
-      "style": "Style"
+      "camping": "Camping & Outdoors"
     },
     "calendar": {
       "badge": "Stay Organized",
@@ -753,18 +402,12 @@
       "badge": "Easy Process",
       "title": "How Renty Works",
       "subtitle": "Renting has never been this easy. Three simple steps to get what you need.",
-      "find": {
-        "title": "Find",
-        "desc": "Search for your desired item and check availability."
-      },
-      "book": {
-        "title": "Book",
-        "desc": "Select your dates and book with secure payment."
-      },
-      "enjoy": {
-        "title": "Enjoy",
-        "desc": "Pick up or get it delivered and enjoy your product."
-      }
+      "findTitle": "Find",
+      "findDesc": "Search for your desired item and check availability.",
+      "bookTitle": "Book",
+      "bookDesc": "Select your dates and book with secure payment.",
+      "enjoyTitle": "Enjoy",
+      "enjoyDesc": "Pick up or get it delivered and enjoy your product."
     },
     "app": {
       "badge": "Mobile App",
@@ -779,10 +422,8 @@
       "home": "Home",
       "market": "Marketplace",
       "join": "Join Us",
-      "cta": {
-        "title": "Join Our Community",
-        "desc": "Subscribe to get latest updates and exclusive offers."
-      },
+      "ctaTitle": "Join Our Community",
+      "ctaDesc": "Subscribe to get latest updates and exclusive offers.",
       "emailPlaceholder": "Your email address",
       "copyright": "© 2026 Renty. All rights reserved.",
       "privacy": "Privacy Policy",
@@ -798,59 +439,21 @@
   "subcategories": {
     "title": "Subcategories",
     "search": "Search subcategories...",
-    "columns": {
-      "logo": "Logo",
-      "name": "Name",
-      "category": "Category",
-      "description": "Description",
-      "date": "Date",
-      "actions": "Actions"
-    },
+    "createButton": "New Subcategory",
     "actions": {
-      "create": "New Subcategory",
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "fields": {
-      "logo": "Logo",
-      "name": "Subcategory Name",
-      "category": "Parent Category",
-      "description": "Description"
-    },
-    "placeholders": {
-      "name": "Enter subcategory name",
-      "description": "Enter description"
+      "delete": "Delete Subcategory"
     },
     "messages": {
       "createSuccess": "Subcategory created successfully",
       "updateSuccess": "Subcategory updated successfully",
-      "deleteConfirmation": "Are you sure you want to delete this subcategory?",
-      "deleteSuccess": "Subcategory deleted successfully"
+      "deleteConfirmation": "Are you sure you want to delete this subcategory?"
     }
   },
   "brands": {
     "title": "Brands",
     "search": "Search brands...",
     "empty": "No brands found",
-    "columns": {
-      "logo": "Logo",
-      "name": "Name",
-      "description": "Description",
-      "items": "Products",
-      "actions": "Actions"
-    },
-    "actions": {
-      "create": "New Brand",
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "fields": {
-      "nameAr": "Name (Arabic)",
-      "nameEn": "Name (English)",
-      "descAr": "Description (Arabic)",
-      "descEn": "Description (English)",
-      "logo": "Brand Logo"
-    },
+    "createButton": "New Brand",
     "messages": {
       "createSuccess": "Brand created successfully",
       "updateSuccess": "Brand updated successfully",
@@ -860,11 +463,12 @@
     "errors": {
       "failedToLoad": "Failed to load brands",
       "failedToCreate": "Failed to create brand",
+      "failedToUpdate": "Failed to update brand",
       "failedToDelete": "Failed to delete brand"
     }
   },
   "uploader": {
-    "drag_drop": "Drag and drop your image here",
+    "dragDrop": "Drag and drop your image here",
     "hint": "Supports JPG, PNG, GIF, WebP (Max 5MB)",
     "uploading": "Uploading image"
   },
@@ -873,26 +477,8 @@
     "imageAlt": "Profile Picture",
     "updatePhoto": "Update Photo",
     "uploadNewPhoto": "Upload New Photo",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "email": "Email",
-    "address": "Address",
-    "city": "City",
-    "country": "Country",
-    "bio": "Bio",
     "save": "Save Changes",
     "uploading": "Uploading..."
-  },
-  "errors": {
-    "unknownError": "An unexpected error occurred",
-    "failedToLoadSubcategories": "Failed to load subcategories",
-    "failedToLoadCategories": "Failed to load categories",
-    "failedToLoadProducts": "Failed to load products",
-    "failedToLoadSubcategory": "Failed to load subcategory data",
-    "failedToLoadProduct": "Failed to load product data",
-    "failedToUploadLogo": "Failed to upload logo image",
-    "invalidCoordinates": "Invalid coordinates format. Use: lat, lng",
-    "unexpectedError": "An unexpected error occurred"
   },
   "items": {
     "daily": "Daily",
@@ -906,37 +492,34 @@
     "addToFavorites": "Add to Favorites"
   },
   "expert": {
+    "verifyItem": "New Verification Workflow",
+    "backToAssigned": "Back to Assignments",
+    "verifySuccess": "Verification submitted successfully",
     "assigned": {
       "title": "Assigned Verifications",
       "subtitle": "Items pending your expert review",
       "item": "Item",
       "type": "Check Type",
-      "rental_dates": "Rental Dates",
-      "verify_btn": "Verify",
+      "rentalDates": "Rental Dates",
       "empty": "No items assigned to you at the moment."
     },
     "history": {
       "title": "Verification History",
       "subtitle": "Review item condition history and submit new verification",
-      "list_title": "Verification Timeline",
-      "verified_by": "Verified By",
+      "listTitle": "Verification Timeline",
+      "verifiedBy": "Verified By",
       "empty": "No previous verifications found."
     },
     "verify": {
-      "check_type": "Verification Type",
+      "checkType": "Verification Type",
       "status": "Result",
       "notes": "Expert Notes",
-      "notes_placeholder": "Add any details regarding item condition...",
+      "notesPlaceholder": "Add any details regarding item condition...",
       "submit": "Submit Verification"
     },
-    "verify_item": "New Verification Workflow",
-    "back_to_assigned": "Back to Assignments",
-    "verify_success": "Verification submitted successfully",
-    "check_types": {
-      "before_rent": "Before Rent",
-      "beforerent": "Before Rent",
-      "after_return": "After Return",
-      "afterreturn": "After Return"
+    "checkTypes": {
+      "beforeRent": "Before Rent",
+      "afterReturn": "After Return"
     },
     "status": {
       "approved": "Approved",
@@ -945,53 +528,143 @@
     }
   },
   "admin": {
-    "dashboard_title": "Admin Dashboard",
-    "dashboard_subtitle": "System-wide performance metrics and management",
-    "total_revenue": "Total Revenue",
-    "active_users": "Active Users",
-    "new_this_period": "new this period",
-    "total_rentals": "Total Rentals",
-    "active_items": "Active Items",
-    "fraud_rate": "Fraud Rate",
-    "recommendation_ctr": "Recommendation CTR",
-    "refresh_metrics": "Refresh Metrics",
-    "gap_title": "Gap Analysis",
-    "gap_subtitle": "Supply vs Demand gap by category",
+    "dashboardTitle": "Admin Dashboard",
+    "dashboardSubtitle": "System-wide performance metrics and management",
+    "totalRevenue": "Total Revenue",
+    "activeUsers": "Active Users",
+    "newThisPeriod": "new this period",
+    "totalRentals": "Total Rentals",
+    "activeItems": "Active Items",
+    "fraudRate": "Fraud Rate",
+    "recommendationCtr": "Recommendation CTR",
+    "refreshMetrics": "Refresh Metrics",
+    "gapTitle": "Gap Analysis",
+    "gapSubtitle": "Supply vs Demand gap by category",
     "category": "Category",
     "demand": "Demand",
     "supply": "Supply",
-    "gap_score": "Gap Score",
+    "gapScore": "Gap Score",
     "recommendations": "Recommendations",
-    "fraud_title": "Fraud Monitoring",
-    "fraud_subtitle": "Real-time risk assessment and activity logs",
-    "risk_score": "Risk Score",
+    "fraudTitle": "Fraud Monitoring",
+    "fraudSubtitle": "Real-time risk assessment and activity logs",
+    "riskScore": "Risk Score",
     "decision": "Decision",
     "reason": "Reason",
-    "user_management_title": "User Management",
-    "user_management_subtitle": "Manage system users and access levels",
-    "is_active": "Is Active",
-    "is_verified": "Is Verified",
+    "userManagementTitle": "User Management",
+    "userManagementSubtitle": "Manage system users and access levels",
+    "isActive": "Is Active",
     "role": "System Role",
     "activate": "Activate",
     "deactivate": "Deactivate"
   },
+  "governorates": {
+    "cairo": "Cairo",
+    "giza": "Giza",
+    "alexandria": "Alexandria",
+    "dakahlia": "Dakahlia",
+    "red_sea": "Red Sea",
+    "beheira": "Beheira",
+    "fayoum": "Fayoum",
+    "gharbiya": "Gharbiya",
+    "ismailia": "Ismaïlia",
+    "monufia": "Monufia",
+    "minya": "Minya",
+    "qalubiya": "Qalubiya",
+    "new_valley": "New Valley",
+    "suez": "Suez",
+    "aswan": "Aswan",
+    "assiut": "Assiut",
+    "beni_suef": "Beni Suef",
+    "port_said": "Port Said",
+    "damietta": "Damietta",
+    "sharkia": "Sharkia",
+    "south_sinai": "South Sinai",
+    "kafr_el_sheikh": "Kafr el-Sheikh",
+    "matrouh": "Matrouh",
+    "luxor": "Luxor",
+    "qena": "Qena",
+    "north_sinai": "North Sinai",
+    "sohag": "Sohag"
+  },
   "support": {
     "title": "Help & Support",
-    "my_tickets": "My Tickets",
-    "open_ticket": "Open New Ticket",
-    "ticket_id": "Ticket ID",
+    "myTickets": "My Tickets",
+    "openTicket": "Open New Ticket",
+    "ticketId": "Ticket ID",
     "subject": "Subject",
-    "no_tickets": "You have no support tickets. Need help? Open a new ticket to get assistance.",
+    "noTickets": "You have no support tickets. Need help? Open a new ticket to get assistance.",
     "message": "Message",
     "status": "Status",
-    "priority": "Priority",
     "create": "Create Ticket",
     "reply": "Reply",
     "resolved": "Resolved",
     "open": "Open",
     "closed": "Closed",
-    "user": "User",
-    "dashboard_title": "Support Dashboard",
-    "dashboard_subtitle": "Manage all customer support tickets"
+    "user": "User"
+  },
+  "myOrders": {
+    "title": "My Orders",
+    "noOrders": "You haven't placed any orders yet.",
+    "orderDate": "Order Date",
+    "itemCount": "Items",
+    "viewDetails": "View Details"
+  },
+  "payment": {
+    "title": "Payment",
+    "selectMethod": "Select Payment Method",
+    "transactionRef": "Transaction Reference (Optional)",
+    "payNow": "Pay Now",
+    "success": "Payment successful!",
+    "error": "Payment failed. Please try again.",
+    "methods": {
+      "vodafone_cash": "Vodafone Cash",
+      "fawry": "Fawry",
+      "paymob": "Paymob",
+      "credit_card": "Credit Card",
+      "bank_transfer": "Bank Transfer"
+    }
+  },
+  "order_details": {
+    "title": "Order Details",
+    "items": "Items Ordered",
+    "payment": "Payment Information",
+    "paymentStatus": "Payment Status",
+    "delivery": "Delivery Tracking",
+    "noTracking": "No tracking information available yet.",
+    "statuses": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  },
+  "chat": {
+    "title": "Messages",
+    "noChats": "No conversations yet.",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "You're all caught up!",
+    "markAllRead": "Mark all as read",
+    "unread": "Unread"
+  },
+  "errors": {
+    "unknownError": "An unexpected error occurred",
+    "failedToLoadSubcategories": "Failed to load subcategories",
+    "failedToLoadCategories": "Failed to load categories",
+    "failedToLoadProducts": "Failed to load products",
+    "failedToLoadSubcategory": "Failed to load subcategory data",
+    "failedToLoadProduct": "Failed to load product data",
+    "failedToUploadLogo": "Failed to upload logo image",
+    "invalidCoordinates": "Invalid coordinates format. Use: lat, lng",
+    "unexpectedError": "An unexpected error occurred",
+    "noProductsFound": "No products found",
+    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for."
   }
 }

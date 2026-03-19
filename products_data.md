@@ -1,0 +1,397 @@
+# 20 Premium Items for Renty (Schema Verified)
+
+Here are the 20 products updated to match your exact JSON schema for seeding.
+
+## Products Table (Summary)
+
+| Item (En) | Rent/Day | Brand | City | Condition |
+|---|---|---|---|---|
+| Adidas Predator Boots | 150 EGP | Adidas | Cairo | Excellent |
+| Nike Mercurial Superfly| 140 EGP | Nike | Cairo | New |
+| Mi Electric Scooter 4 | 300 EGP | Xiaomi | Giza | Excellent |
+| GoPro HERO12 Black | 450 EGP | GoPro | Cairo | New |
+| DJI Mini 4 Pro Drone | 800 EGP | DJI | Hurghada | New |
+| Wilson Blade 98 | 200 EGP | Wilson | Cairo | Excellent |
+| Bullpadel Vertex 04 | 250 EGP | Bullpadel | Cairo | New |
+| North Face Nuptse 1996| 180 EGP | North Face | Cairo | Excellent |
+| Technogym Skillmill | 1200 EGP | Technogym | Cairo | New |
+| Xiaomi WalkingPad R2 | 350 EGP | Xiaomi | Cairo | New |
+| Nike Windrunner Jacket| 100 EGP | Nike | Cairo | New |
+| Adidas Terrex Hike | 160 EGP | Adidas | Dahab | New |
+| DJI Osmo Mobile 6 | 200 EGP | DJI | Cairo | New |
+| Theragun PRO Gen 5 | 400 EGP | Theragun | Giza | New |
+| Technogym Bike | 900 EGP | Technogym | Cairo | Excellent |
+| Hyperice Venom 2 | 220 EGP | Hyperice | Cairo | New |
+| North Kite Orbit 2024 | 1500 EGP | North Kite | Dahab | Excellent |
+| Intex Excursion Pro | 400 EGP | Intex | Hurghada | New |
+| Columbia Titan Pass | 120 EGP | Columbia | Dahab | New |
+| Cube Stereo Hybrid 140| 1800 EGP | Cube | Giza | Excellent |
+
+---
+
+## JSON Data (Matching Your Schema)
+
+```json
+[
+  {
+    "titleAr": "حذاء كرة قدم أديداس بريداتور",
+    "titleEn": "Adidas Predator Accuracy .1",
+    "descAr": "حذاء كرة قدم احترافي للتحكم الفائق في الكرة والدقة العالية.",
+    "descEn": "Professional football boots for elite control and precision.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 500,
+    "location": "Zamalek",
+    "city": "Cairo",
+    "lat": 30.0595,
+    "lng": 31.2217,
+    "categoryId": 1,
+    "subcategoryId": 1,
+    "brandId": 1,
+    "pricing": [{ "price": 150, "pricingType": "Daily" }],
+    "images": [{ "imageId": "adidas_boots_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "حذاء نايكي ميركوريال",
+    "titleEn": "Nike Mercurial Superfly 9",
+    "descAr": "حذاء سرعة فائق مصمم للحركة الانفجارية والسيطرة على الأرض.",
+    "descEn": "High-speed boots designed for explosive movement and grip.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 600,
+    "location": "Maadi",
+    "city": "Cairo",
+    "lat": 29.9602,
+    "lng": 31.2569,
+    "categoryId": 1,
+    "subcategoryId": 1,
+    "brandId": 2,
+    "pricing": [{ "price": 140, "pricingType": "Daily" }],
+    "images": [{ "imageId": "nike_boots_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "سكوتر شاومي كهربائي برو 4",
+    "titleEn": "Mi Electric Scooter 4 Pro",
+    "descAr": "سكوتر كهربائي متطور للتنقل الحضري بمدى يصل إلى 55 كم.",
+    "descEn": "Advanced urban electric scooter with up to 55km range.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 2000,
+    "location": "Sheikh Zayed",
+    "city": "Giza",
+    "lat": 30.016,
+    "lng": 30.983,
+    "categoryId": 3,
+    "subcategoryId": 12,
+    "brandId": 3,
+    "pricing": [{ "price": 300, "pricingType": "Daily" }],
+    "images": [{ "imageId": "xiaomi_scooter_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "كاميرا جوبرو 12 بلاك",
+    "titleEn": "GoPro HERO12 Black",
+    "descAr": "أفضل كاميرا أكشن في العالم لتصوير المغامرات بجودة 5.3K.",
+    "descEn": "The world's best action camera for 5.3K adventure filming.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 3000,
+    "location": "Tagamoa",
+    "city": "Cairo",
+    "lat": 30.0131,
+    "lng": 31.436,
+    "categoryId": 4,
+    "subcategoryId": 15,
+    "brandId": 4,
+    "pricing": [{ "price": 450, "pricingType": "Daily" }],
+    "images": [{ "imageId": "gopro_12_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "طائرة دي جي آي ميني 4 برو",
+    "titleEn": "DJI Mini 4 Pro Drone",
+    "descAr": "طائرة مسيرة احترافية وخفيفة الوزن مزودة بكاميرا 4K ذكية.",
+    "descEn": "Ultralight professional drone with 4K intelligent camera.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 5000,
+    "location": "El Gouna",
+    "city": "Hurghada",
+    "lat": 27.3892,
+    "lng": 33.6781,
+    "categoryId": 4,
+    "subcategoryId": 16,
+    "brandId": 16,
+    "pricing": [{ "price": 800, "pricingType": "Daily" }],
+    "images": [{ "imageId": "dji_drone_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "مضرب تنس ويلسون بليد 98",
+    "titleEn": "Wilson Blade 98 V9",
+    "descAr": "مضرب تنس احترافي يوفر دقة متناهية وإحساساً رائعاً بالكرة.",
+    "descEn": "Professional tennis racket offering ultimate precision and feel.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 1000,
+    "location": "Heliopolis",
+    "city": "Cairo",
+    "lat": 30.1017,
+    "lng": 31.3402,
+    "categoryId": 1,
+    "subcategoryId": 2,
+    "brandId": 2,
+    "pricing": [{ "price": 200, "pricingType": "Daily" }],
+    "images": [{ "imageId": "wilson_racket_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "مضرب بول بادل فيرتكس 04",
+    "titleEn": "Bullpadel Vertex 04",
+    "descAr": "مضرب بادل بشكل ماسي يوفر أقصى قدر من القوة والأداء.",
+    "descEn": "Diamond-shaped padel racket for maximum power and performance.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 1500,
+    "location": "6th October",
+    "city": "Giza",
+    "lat": 29.9547,
+    "lng": 30.9167,
+    "categoryId": 1,
+    "subcategoryId": 1,
+    "brandId": 1,
+    "pricing": [{ "price": 250, "pricingType": "Daily" }],
+    "images": [{ "imageId": "bullpadel_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "سترة ذا نورث فيس شتوية",
+    "titleEn": "North Face Nuptse 1996",
+    "descAr": "سترة أيقونية معزولة بالريش للدفء والحماية في أقسى الظروف.",
+    "descEn": "Iconic down-insulated jacket for warmth in extreme conditions.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 1200,
+    "location": "Heliopolis",
+    "city": "Cairo",
+    "lat": 30.1017,
+    "lng": 31.3402,
+    "categoryId": 2,
+    "subcategoryId": 17,
+    "brandId": 17,
+    "pricing": [{ "price": 180, "pricingType": "Daily" }],
+    "images": [{ "imageId": "tf_jacket_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "تريدميل تيكنوجيم سكيل ميل",
+    "titleEn": "Technogym Skillmill",
+    "descAr": "تريدميل رياضي احترافي غير كهربائي للتدريب عالي الكثافة.",
+    "descEn": "Professional non-motorized treadmill for HIIT training.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 10000,
+    "location": "Dokki",
+    "city": "Cairo",
+    "lat": 30.0401,
+    "lng": 31.2114,
+    "categoryId": 2,
+    "subcategoryId": 10,
+    "brandId": 10,
+    "pricing": [{ "price": 1200, "pricingType": "Daily" }],
+    "images": [{ "imageId": "technogym_sm_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "مشاية شاومي القابلة للطي R2",
+    "titleEn": "Xiaomi WalkingPad R2",
+    "descAr": "مشاية ذكية قابلة للطي موفرة للمساحة مثالية للتمارين المنزلية.",
+    "descEn": "Space-saving smart foldable treadmill for home workouts.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 3000,
+    "location": "Sheraton",
+    "city": "Cairo",
+    "lat": 30.1082,
+    "lng": 31.3789,
+    "categoryId": 2,
+    "subcategoryId": 10,
+    "brandId": 3,
+    "pricing": [{ "price": 350, "pricingType": "Daily" }],
+    "images": [{ "imageId": "xiaomi_wp_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "سترة نايكي ويند رانر",
+    "titleEn": "Nike Windrunner Jacket",
+    "descAr": "سترة خفيفة مقاومة للماء والرياح مثالية للجري والنشاط الخارجي.",
+    "descEn": "Lightweight water-repellent jacket for running and outdoors.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 700,
+    "location": "Zamalek",
+    "city": "Cairo",
+    "lat": 30.0595,
+    "lng": 31.2217,
+    "categoryId": 2,
+    "subcategoryId": 17,
+    "brandId": 14,
+    "pricing": [{ "price": 100, "pricingType": "Daily" }],
+    "images": [{ "imageId": "nike_wr_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "حذاء مشي أديداس تيريكس",
+    "titleEn": "Adidas Terrex Swift R3",
+    "descAr": "حذاء مشي جبلي متين ومقاوم للماء مصمم للمسارات الصعبة.",
+    "descEn": "Rugged waterproof hiking shoes built for tough trails.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 1000,
+    "location": "Lighthouse",
+    "city": "Dahab",
+    "lat": 28.5029,
+    "lng": 34.5204,
+    "categoryId": 2,
+    "subcategoryId": 8,
+    "brandId": 13,
+    "pricing": [{ "price": 160, "pricingType": "Daily" }],
+    "images": [{ "imageId": "adidas_hike_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "مثبت موبايل دي جي آي Osmo",
+    "titleEn": "DJI Osmo Mobile 6",
+    "descAr": "مثبت ذكي للهواتف الذكية لتصوير فيديو احترافي فائق النعومة.",
+    "descEn": "Smart smartphone stabilizer for professional smooth video.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 1500,
+    "location": "Tagamoa",
+    "city": "Cairo",
+    "lat": 30.0131,
+    "lng": 31.436,
+    "categoryId": 4,
+    "subcategoryId": 16,
+    "brandId": 16,
+    "pricing": [{ "price": 200, "pricingType": "Daily" }],
+    "images": [{ "imageId": "dji_om6_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "مسدس تدليك ثيراجون برو",
+    "titleEn": "Theragun PRO Gen 5",
+    "descAr": "جهاز تدليك احترافي لاستشفاء العضلات العميق وتخفيف الآلام.",
+    "descEn": "Professional massage device for deep muscle recovery.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 2500,
+    "location": "October",
+    "city": "Giza",
+    "lat": 29.9547,
+    "lng": 30.9167,
+    "categoryId": 2,
+    "subcategoryId": 19,
+    "brandId": 19,
+    "pricing": [{ "price": 400, "pricingType": "Daily" }],
+    "images": [{ "imageId": "theragun_pro_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "دراجة تيكنوجيم الثابتة",
+    "titleEn": "Technogym Personal Bike",
+    "descAr": "دراجة تمارين رياضية فاخرة مع شاشة تفاعلية وبرامج تدريب.",
+    "descEn": "Luxury exercise bike with interactive screen and programs.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 8000,
+    "location": "Garden City",
+    "city": "Cairo",
+    "lat": 30.0357,
+    "lng": 31.2319,
+    "categoryId": 2,
+    "subcategoryId": 10,
+    "brandId": 10,
+    "pricing": [{ "price": 900, "pricingType": "Daily" }],
+    "images": [{ "imageId": "tg_bike_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "حزام هايبر آيس الحراري",
+    "titleEn": "Hyperice Venom 2 Back",
+    "descAr": "حزام تدليك حراري متطور لاستشفاء الظهر وتخفيف التوتر.",
+    "descEn": "Advanced heat and vibration wrap for back recovery.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 1500,
+    "location": "Maadi",
+    "city": "Cairo",
+    "lat": 29.9602,
+    "lng": 31.2569,
+    "categoryId": 2,
+    "subcategoryId": 20,
+    "brandId": 20,
+    "pricing": [{ "price": 220, "pricingType": "Daily" }],
+    "images": [{ "imageId": "hyperice_v2_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "طائرة كايت سيرف نورث أوربيت",
+    "titleEn": "North Kiteboarding Orbit",
+    "descAr": "طائرة ورقية عالية الأداء مخصصة للقفزات العالية والسرعة.",
+    "descEn": "High-performance kite for big-air jumps and speed.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 5000,
+    "location": "Blue Lagoon",
+    "city": "Dahab",
+    "lat": 28.5029,
+    "lng": 34.5204,
+    "categoryId": 1,
+    "subcategoryId": 5,
+    "brandId": 5,
+    "pricing": [{ "price": 1500, "pricingType": "Daily" }],
+    "images": [{ "imageId": "north_kite_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "كاياك إنتاكس برو القابل للنفخ",
+    "titleEn": "Intex Excursion Pro K2",
+    "descAr": "قارب كاياك متين قابل للنفخ مثالي للصيد والاستكشاف البحري.",
+    "descEn": "Rugged inflatable kayak ideal for fishing and sea exploration.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 2500,
+    "location": "Sahl Hasheesh",
+    "city": "Hurghada",
+    "lat": 27.0544,
+    "lng": 33.8812,
+    "categoryId": 3,
+    "subcategoryId": 6,
+    "brandId": 6,
+    "pricing": [{ "price": 400, "pricingType": "Daily" }],
+    "images": [{ "imageId": "intex_k2_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "حقيبة ظهر كولومبيا للمشي",
+    "titleEn": "Columbia Titan Pass 48L",
+    "descAr": "حقيبة ظهر تقنية بسعة 48 لتر مخصصة للرحلات والمشي الجبلي.",
+    "descEn": "48L technical backpack designed for hiking and trekking.",
+    "type": "Rental",
+    "condition": "New",
+    "defaultDeposit": 1000,
+    "location": "Blue Hole",
+    "city": "Dahab",
+    "lat": 28.5029,
+    "lng": 34.5204,
+    "categoryId": 2,
+    "subcategoryId": 8,
+    "brandId": 8,
+    "pricing": [{ "price": 120, "pricingType": "Daily" }],
+    "images": [{ "imageId": "columbia_bag_01", "isPrimary": true }]
+  },
+  {
+    "titleAr": "دراجة كيوب جبلية كهربائية",
+    "titleEn": "Cube Stereo Hybrid 140",
+    "descAr": "دراجة جبلية كهربائية قوية بمساعدات كاملة للمسارات الجبلية.",
+    "descEn": "High-power electric mountain bike with full suspension.",
+    "type": "Rental",
+    "condition": "Excellent",
+    "defaultDeposit": 15000,
+    "location": "Beverly Hills",
+    "city": "Giza",
+    "lat": 30.016,
+    "lng": 30.983,
+    "categoryId": 3,
+    "subcategoryId": 11,
+    "brandId": 11,
+    "pricing": [{ "price": 1800, "pricingType": "Daily" }],
+    "images": [{ "imageId": "cube_ebike_01", "isPrimary": true }]
+  }
+]
+```

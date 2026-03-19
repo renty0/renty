@@ -20,7 +20,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80') center/cover;
+    background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80')
+      center/cover;
     opacity: 0.2;
     z-index: 0;
   }
@@ -46,7 +47,6 @@
       letter-spacing: 1.5px;
       margin-bottom: 24px;
       border: 1px solid rgba($primary-color, 0.3);
-      backdrop-filter: blur(4px);
     }
 
     h1 {
@@ -75,7 +75,6 @@
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 100px;
     padding: 8px 8px 8px 24px;
@@ -227,7 +226,7 @@
             background-color: #f8fafc !important;
             border-radius: 12px !important;
             transition: all 0.3s ease;
-            
+
             &:hover {
               background-color: #f1f5f9 !important;
             }
@@ -434,8 +433,6 @@
       .wishlist-btn {
         background: rgba(255, 255, 255, 0.9);
         color: #64748b;
-        backdrop-filter: blur(4px);
-
         &:hover {
           color: #ef4444;
           background: white;
@@ -621,7 +618,7 @@
 }
 
 // RTL Fixes
-:host-context([dir="rtl"]) {
+:host-context([dir='rtl']) {
   .market-header .header-content .badge {
     letter-spacing: 0;
   }

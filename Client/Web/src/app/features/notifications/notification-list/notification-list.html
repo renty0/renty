@@ -1,5 +1,5 @@
 <div class="notifications-container" [dir]="unreadCount() > 0 ? 'ltr' : 'ltr'">
-  <app-header-section 
+  <app-header-section
     [title]="'notifications.title' | translate"
     [subtitle]="unreadCount() + ' ' + ('notifications.unread' | translate)"
     icon="notifications_active">
@@ -7,7 +7,7 @@
       @if (notifications().length > 0) {
         <button mat-stroked-button color="primary" (click)="markAllAsRead()">
           <mat-icon>done_all</mat-icon>
-          {{ 'notifications.mark_all_read' | translate }}
+          {{ 'notifications.markAllRead' | translate }}
         </button>
       }
     </div>
@@ -44,7 +44,7 @@
     } @else {
       <div class="empty-state">
         <mat-icon>notifications_none</mat-icon>
-        <p>{{ 'notifications.no_notifications' | translate }}</p>
+        <p>{{ 'notifications.noNotifications' | translate }}</p>
       </div>
     }
   </div>

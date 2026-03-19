@@ -14,13 +14,13 @@
     </div>
 
     <form [formGroup]="profileForm" (submit)="onSubmit()" class="form-grid">
-        <app-input label="profile.firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
-        <app-input label="profile.lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
-        <app-input label="profile.email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
-        <app-input label="profile.address" [formGroup]="profileForm" controlName="address"></app-input>
-        <app-input label="profile.city" [formGroup]="profileForm" controlName="city"></app-input>
-        <app-input label="profile.country" [formGroup]="profileForm" controlName="country"></app-input>
-        <app-input label="profile.bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
+        <app-input label="labels.firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
+        <app-input label="labels.lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
+        <app-input label="labels.email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
+        <app-input label="labels.address" [formGroup]="profileForm" controlName="address"></app-input>
+        <app-input label="labels.city" [formGroup]="profileForm" controlName="city"></app-input>
+        <app-input label="labels.country" [formGroup]="profileForm" controlName="country"></app-input>
+        <app-input label="labels.bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
         <div class="form-actions">
             <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine"
                 type="submit" color="primary">

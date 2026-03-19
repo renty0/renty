@@ -10,8 +10,8 @@
           <mat-icon>cloud_upload</mat-icon>
         </div>
         <div class="text-group">
-          <h3 class="upload-title">{{ (label || 'labels.upload_image') | translate }}</h3>
-          <p class="upload-subtitle">{{ 'uploader.drag_drop' | translate }} <span class="browse-text">{{ 'buttons.browse' | translate }}</span></p>
+          <h3 class="upload-title">{{ (label || 'labels.uploadImage') | translate }}</h3>
+          <p class="upload-subtitle">{{ 'uploader.dragDrop' | translate }} <span class="browse-text">{{ 'buttons.browse' | translate }}</span></p>
         </div>
         <div class="hint-pill">
           <mat-icon class="hint-icon">info_outline</mat-icon>
@@ -54,7 +54,7 @@
                 <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
-            
+
             <div class="overlay-actions">
                <button type="button" class="btn-replace" (click)="triggerFileInput(); $event.stopPropagation()">
                  <mat-icon>edit</mat-icon>

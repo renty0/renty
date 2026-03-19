@@ -60,16 +60,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     ]);
 
     topDestinations = signal([
-        { nameKey: 'home.destinations.dahab', image: 'assets/images/hero_sports_egypt.png', descKey: 'home.destinations.dahab_desc' },
-        { nameKey: 'home.destinations.gouna', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.gouna_desc' },
-        { nameKey: 'home.destinations.cairo', image: 'assets/images/category_padel.png', descKey: 'home.destinations.cairo_desc' },
-        { nameKey: 'home.destinations.somabay', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.somabay_desc' }
+        { nameKey: 'home.destinations.dahab', image: 'assets/images/hero_sports_egypt.png', descKey: 'home.destinations.dahabDesc' },
+        { nameKey: 'home.destinations.gouna', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.gounaDesc' },
+        { nameKey: 'home.destinations.cairo', image: 'assets/images/category_padel.png', descKey: 'home.destinations.cairoDesc' },
+        { nameKey: 'home.destinations.somabay', image: 'assets/images/category_watersports.png', descKey: 'home.destinations.somabayDesc' }
     ]);
 
     steps = signal([
-        { icon: 'search', titleKey: 'home.steps.find.title', descKey: 'home.steps.find.desc' },
-        { icon: 'calendar_today', titleKey: 'home.steps.book.title', descKey: 'home.steps.book.desc' },
-        { icon: 'shopping_bag', titleKey: 'home.steps.enjoy.title', descKey: 'home.steps.enjoy.desc' }
+        { icon: 'search', titleKey: 'home.steps.findTitle', descKey: 'home.steps.findDesc' },
+        { icon: 'calendar_today', titleKey: 'home.steps.bookTitle', descKey: 'home.steps.bookDesc' },
+        { icon: 'shopping_bag', titleKey: 'home.steps.enjoyTitle', descKey: 'home.steps.enjoyDesc' }
     ]);
 
     ngOnInit(): void {

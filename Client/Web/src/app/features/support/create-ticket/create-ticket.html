@@ -1,12 +1,12 @@
 <div class="create-ticket-container">
-  <app-header-section 
-    [title]="'support.open_ticket' | translate"
+  <app-header-section
+    [title]="'support.openTicket' | translate"
     [subtitle]="'support.ticket_info' | translate"
     icon="add_task">
     <div actions>
       <button mat-stroked-button color="primary" routerLink="/support">
         <mat-icon>arrow_back</mat-icon>
-        {{ 'support.my_tickets' | translate }}
+        {{ 'support.myTickets' | translate }}
       </button>
     </div>
   </app-header-section>
@@ -25,18 +25,18 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'support.message' | translate }}</mat-label>
-          <textarea matInput 
-                    rows="8" 
-                    [(ngModel)]="message" 
-                    name="message" 
+          <textarea matInput
+                    rows="8"
+                    [(ngModel)]="message"
+                    name="message"
                     placeholder="{{ 'support.message_placeholder' | translate }}"
                     required></textarea>
         </mat-form-field>
 
         <div class="form-actions">
-          <button mat-flat-button 
-                  color="primary" 
-                  type="submit" 
+          <button mat-flat-button
+                  color="primary"
+                  type="submit"
                   [disabled]="!message().trim() || isSubmitting()">
             <mat-icon>{{ isSubmitting() ? 'hourglass_top' : 'send' }}</mat-icon>
             {{ 'support.create' | translate }}

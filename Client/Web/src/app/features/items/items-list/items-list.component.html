@@ -1,13 +1,13 @@
 <div class="data-container">
-  <app-header-section [title]="getPageTitle() | translate" [buttonText]="'products.actions.create' | translate"
+  <app-header-section [title]="getPageTitle() | translate" [buttonText]="'products.create' | translate"
     [placeholder]="'products.search' | translate" [icon]="'add'" [showButton]="true"
     (searchChange)="onSearchChange($event)" (buttonClick)="createItem()">
     <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"
       class="view-toggle">
-      <mat-button-toggle value="list" [aria-label]="'products.view.list' | translate">
+      <mat-button-toggle value="list" [aria-label]="'common.view.list' | translate">
         <mat-icon>view_list</mat-icon>
       </mat-button-toggle>
-      <mat-button-toggle value="cards" [aria-label]="'products.view.cards' | translate">
+      <mat-button-toggle value="cards" [aria-label]="'common.view.cards' | translate">
         <mat-icon>grid_view</mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
@@ -25,7 +25,7 @@
     <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
       [matSortActive]="sortBy() || 'newest'" [matSortDirection]="sortOrder() || 'desc'">
       <ng-container matColumnDef="image">
-        <th mat-header-cell *matHeaderCellDef>{{ 'products.columns.image' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.image' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <div class="product-image">
             @if (row.primaryImage) {
@@ -41,23 +41,23 @@
 
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'products.columns.name' | translate }}
+          {{ 'labels.name' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">{{ getLocalizedTitle(row) }}</td>
       </ng-container>
 
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'products.columns.price' | translate }}
+          {{ 'labels.price' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.dailyPrice }} EGP <small>{{ 'products.columns.perDay' | translate }}</small>
+          {{ row.dailyPrice }} EGP <small>{{ 'labels.perDay' | translate }}</small>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'products.columns.subcategory' | translate }}
+          {{ 'labels.subcategory' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           @if (row.subcategory) {
@@ -70,7 +70,7 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>{{ 'products.columns.actions' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.actions' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <div class="actions-cell">
             <app-loading-button color="accent" variant="stroked" size="sm" (clicked)="viewItem(row.id!)"
@@ -117,7 +117,7 @@
           <h3>{{ getLocalizedTitle(item) }}</h3>
         </div>
         <div class="price-tag">
-          <span>{{ item.dailyPrice }} EGP <small>{{ 'products.columns.perDay' | translate }}</small></span>
+          <span>{{ item.dailyPrice }} EGP <small>{{ 'labels.perDay' | translate }}</small></span>
         </div>
         @if (item.subcategory || item.category) {
         <p class="subcategory-info">

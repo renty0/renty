@@ -1,6 +1,6 @@
 <div class="rental-details-container">
-  <app-header-section 
-    [title]="'rentals.details.title' | translate" 
+  <app-header-section
+    [title]="'rentals.details.title' | translate"
     [subtitle]="'rentals.details.subtitle' | translate">
   </app-header-section>
 
@@ -77,7 +77,7 @@
                 </div>
               </div>
               <div class="info-item">
-                <label>{{ 'rentals.details.created_at' | translate }}</label>
+                <label>{{ 'rentals.details.createdAt' | translate }}</label>
                 <span>{{ r.createdAt | date:'medium' }}</span>
               </div>
             </div>
@@ -93,7 +93,7 @@
             <div class="rating-container">
               <label>{{ 'rentals.details.rating' | translate }}</label>
               <div class="stars">
-                <button mat-icon-button *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)" 
+                <button mat-icon-button *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)"
                         [color]="reviewRating() >= s ? 'accent' : ''" type="button">
                   <mat-icon>{{ reviewRating() >= s ? 'star' : 'star_border' }}</mat-icon>
                 </button>
@@ -106,12 +106,12 @@
             </div>
           </mat-card-content>
           <mat-card-actions>
-            <app-loading-button 
+            <app-loading-button
               [loading]="isActionLoading()"
               color="primary"
               (click)="submitReview()">
               <mat-icon>send</mat-icon>
-              {{ 'rentals.details.submit_review' | translate }}
+              {{ 'rentals.details.submitReview' | translate }}
             </app-loading-button>
           </mat-card-actions>
         </mat-card>
@@ -136,7 +136,7 @@
               </div>
               @if (r.lateFee && r.lateFee > 0) {
                 <div class="price-row warn">
-                  <span>{{ 'rentals.details.late_fee' | translate }}</span>
+                  <span>{{ 'rentals.details.lateFee' | translate }}</span>
                   <span class="value">+{{ r.lateFee | currency:'EGP ':'symbol':'1.0-2' }}</span>
                 </div>
               }
@@ -150,7 +150,6 @@
             <div class="actions-section">
               <!-- Owner Actions -->
               @if (r.status?.toLowerCase() === 'pending') {
-                 <!-- I'll add logic for owner check if possible, but for now show based on status -->
                  <app-loading-button color="primary" class="w-full" (click)="confirmRental()" [loading]="isActionLoading()">
                     <mat-icon>check_circle</mat-icon>
                     {{ 'rentals.actions.confirm' | translate }}

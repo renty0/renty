@@ -1,11 +1,8 @@
 <header class="site-navbar" [class.scrolled]="isScrolled()">
   <div class="container navbar-content">
-    <!-- Logo -->
     <a routerLink="/" class="logo" (click)="closeMobileMenu()">
       <span class="logo-text">RENTY</span>
     </a>
-
-    <!-- Desktop Navigation -->
     <nav class="desktop-nav">
       @for (link of filteredNavLinks(); track link.path) {
       <a
@@ -40,7 +37,7 @@
         <mat-icon>search</mat-icon>
         <input
           type="text"
-          [placeholder]="'marketplace.search_placeholder' | translate"
+          [placeholder]="'marketplace.searchPlaceholder' | translate"
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)"
           (keyup.enter)="onSearch()"
@@ -50,7 +47,6 @@
 
     <!-- Actions -->
     <div class="nav-actions">
-      <!-- Language Toggle -->
       <button
         class="action-btn lang-btn"
         (click)="toggleLanguage()"
@@ -65,56 +61,71 @@
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
         </button>
-        <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu">
-          <button mat-menu-item routerLink="/profile">
-            <mat-icon>person</mat-icon>
-            <span>{{ 'nav.profile' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/my-items" (click)="closeMobileMenu()">
-            <mat-icon>inventory_2</mat-icon>
-            <span>{{ 'nav.myItems' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/my-rentals" (click)="closeMobileMenu()">
-            <mat-icon>receipt_long</mat-icon>
-            <span>{{ 'nav.myRentals' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/my-orders" (click)="closeMobileMenu()">
-            <mat-icon>shopping_bag</mat-icon>
-            <span>{{ 'nav.myOrders' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/favorites" (click)="closeMobileMenu()">
-            <mat-icon class="text-warn">favorite</mat-icon>
-            <span>{{ 'nav.favorites' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/dashboard" (click)="closeMobileMenu()">
-            <mat-icon>dashboard</mat-icon>
-            <span>{{ 'nav.dashboard' | translate }}</span>
-          </button>
-          @if (isExpert()) {
-            <button
-              class="menu-item expert-link"
-              routerLink="/expert/assigned"
-              (click)="closeMobileMenu()"
-            >
-              <mat-icon color="accent">fact_check</mat-icon>
-              <span class="text-accent">{{ 'expert.assigned.title' | translate }}</span>
-            </button>
-          }
+        <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu profile-menu">
+          <div class="menu-header" (click)="$event.stopPropagation()">
+            <div class="user-avatar flex align-items-center">
+              <mat-icon ripple>account_circle</mat-icon>
+              <span class="user-name">{{ userData()?.firstName }} {{ userData()?.lastName }}</span>
+            </div>
+          </div>
+
+          <div class="menu-sections">
+            <div class="section-group">
+              <button mat-menu-item routerLink="/profile">
+                <mat-icon>person</mat-icon>
+                <span>{{ 'nav.profile' | translate }}</span>
+              </button>
+            </div>
+
+            <div class="section-group grid-layout">
+              <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
+                <mat-icon>shopping_bag</mat-icon>
+                <span>{{ 'nav.myOrders' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+                <mat-icon>receipt_long</mat-icon>
+                <span>{{ 'nav.myRentals' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
+                <mat-icon>inventory_2</mat-icon>
+                <span>{{ 'nav.myItems' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
+                <mat-icon class="text-warn">favorite</mat-icon>
+                <span>{{ 'nav.favorites' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/dashboard" (click)="closeMobileMenu()">
+                <mat-icon>dashboard</mat-icon>
+                <span>{{ 'nav.dashboard' | translate }}</span>
+              </button>
+              @if (isExpert()) {
+                <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
+                  <mat-icon color="accent">fact_check</mat-icon>
+                  <span>{{ 'expert.assigned.title' | translate }}</span>
+                </button>
+              }
+            </div>
+
+            <hr class="menu-divider" />
+
+            <div class="section-group grid-layout secondary">
+              <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
+                <mat-icon>chat</mat-icon>
+                <span>{{ 'nav.chats' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/notifications" (click)="closeMobileMenu()">
+                <mat-icon>notifications</mat-icon>
+                <span>{{ 'nav.notifications' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
+                <mat-icon>support_agent</mat-icon>
+                <span>{{ 'nav.support' | translate }}</span>
+              </button>
+            </div>
+          </div>
+
           <hr class="menu-divider" />
-          <button class="menu-item" routerLink="/chats" (click)="closeMobileMenu()">
-            <mat-icon>chat</mat-icon>
-            <span>{{ 'nav.chats' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/notifications" (click)="closeMobileMenu()">
-            <mat-icon>notifications</mat-icon>
-            <span>{{ 'nav.notifications' | translate }}</span>
-          </button>
-          <button class="menu-item" routerLink="/support" (click)="closeMobileMenu()">
-            <mat-icon>support_agent</mat-icon>
-            <span>{{ 'nav.support' | translate }}</span>
-          </button>
-          <hr class="menu-divider" />
-          <button mat-menu-item (click)="logout()">
+          <button mat-menu-item (click)="logout()" class="logout-item">
             <mat-icon color="warn">logout</mat-icon>
             <span class="text-warn">{{ 'nav.logout' | translate }}</span>
           </button>
@@ -134,8 +145,6 @@
       </button>
     </div>
   </div>
-
-  <!-- Mobile Navigation Drawer -->
   @if (mobileMenuOpen()) {
     <div class="mobile-drawer animate-fade-in">
       <div class="container drawer-content">
@@ -145,7 +154,7 @@
             <mat-icon>search</mat-icon>
             <input
               type="text"
-              [placeholder]="'marketplace.search_placeholder' | translate"
+              [placeholder]="'marketplace.searchPlaceholder' | translate"
               [ngModel]="searchTerm()"
               (ngModelChange)="searchTerm.set($event)"
               (keyup.enter)="onSearch()"

@@ -1,6 +1,6 @@
 <div class="data-container">
     <app-header-section [title]="'subcategories.title' | translate"
-        [buttonText]="'subcategories.actions.create' | translate" [placeholder]="'subcategories.search' | translate"
+        [buttonText]="'subcategories.createButton' | translate" [placeholder]="'subcategories.search' | translate"
         [icon]="'add'" [showButton]="true" (searchChange)="onSearchChange($event)" (buttonClick)="createSubcategory()">
         <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"
             class="view-toggle">
@@ -25,40 +25,40 @@
         <table mat-table [dataSource]="dataSource()" class="data-table" matSort [matSortActive]="sortBy() || ''"
             [matSortDirection]="sortOrder() || ''" (matSortChange)="onSort($event)">
             <ng-container matColumnDef="logo">
-                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.logo' | translate }}</th>
+                <th mat-header-cell *matHeaderCellDef>{{ 'labels.logo' | translate }}</th>
                 <td mat-cell *matCellDef="let row">
-                    <img [src]="row.logoUrl || 'assets/images/placeholder.png'" class="category-logo-mini"
+                    <img [src]="getLogoUrl(row.logoUrl)" class="category-logo-mini"
                         [alt]="getLocalizedName(row)">
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.name' | translate }}
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'labels.name' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let row">{{ getLocalizedName(row) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="category">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.category' | translate }}
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'labels.category' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let row">{{ getLocalizedCatName(row) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.description' | translate }}</th>
+                <th mat-header-cell *matHeaderCellDef>{{ 'labels.description' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ getLocalizedDesc(row) | slice:0:50 }}{{
                     getLocalizedDesc(row).length > 50 ?
                     '...' : '' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="created">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'subcategories.columns.date' | translate }}
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'labels.date' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let row">{{ row.created | date:'shortDate' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>{{ 'subcategories.columns.actions' | translate }}</th>
+                <th mat-header-cell *matHeaderCellDef>{{ 'labels.actions' | translate }}</th>
                 <td mat-cell *matCellDef="let row">
                     <div class="actions-cell">
                         <app-loading-button color="primary" variant="stroked" size="sm"
@@ -85,7 +85,7 @@
         @for (subcategory of dataSource(); track subcategory.id) {
         <mat-card class="entity-card" (click)="editSubcategory(subcategory.id!)">
             <div class="card-image">
-                <img [src]="subcategory.logoUrl || 'assets/images/placeholder.png'"
+                <img [src]="getLogoUrl(subcategory.logoUrl)"
                     [alt]="getLocalizedName(subcategory)">
                 <div class="category-badge">{{ getLocalizedCatName(subcategory) }}</div>
             </div>

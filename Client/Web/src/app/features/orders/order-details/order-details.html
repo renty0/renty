@@ -4,7 +4,7 @@
       <mat-spinner diameter="50"></mat-spinner>
     </div>
   } @else if (order()) {
-    <app-header-section 
+    <app-header-section
       [title]="('order_details.title' | translate) + ' #' + order()?.id?.substring(0,8)"
       [subtitle]="(order()?.createdAt | date:'medium') || ''"
       icon="receipt">
@@ -36,7 +36,7 @@
                 <mat-divider></mat-divider>
               }
             </div>
-            
+
             <div class="order-total-section">
               <div class="total-row large">
                 <span>{{ 'checkout.total' | translate }}</span>
@@ -55,11 +55,11 @@
             @if (payment()) {
               <div class="payment-info">
                 <div class="info-row">
-                  <span class="label">{{ 'payment.select_method' | translate }}:</span>
+                  <span class="label">{{ 'payment.selectMethod' | translate }}:</span>
                   <span class="value">{{ 'payment.methods.' + payment()?.method?.toLowerCase() | translate }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="label">{{ 'order_details.payment_status' | translate }}:</span>
+                  <span class="label">{{ 'order_details.paymentStatus' | translate }}:</span>
                   <mat-chip [class]="getStatusColor(payment()?.status)">
                     {{ payment()?.status }}
                   </mat-chip>
@@ -73,7 +73,7 @@
               <div class="no-payment">
                 <p>{{ 'order_details.no_payment' | translate }}</p>
                 <button mat-raised-button color="primary" [routerLink]="['/checkout', order()?.id, 'payment']">
-                  {{ 'payment.pay_now' | translate }}
+                  {{ 'payment.payNow' | translate }}
                 </button>
               </div>
             }

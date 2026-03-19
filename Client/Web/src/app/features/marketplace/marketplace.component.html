@@ -1,231 +1,269 @@
 <div class="marketplace-container">
-    <!-- Hero/Header Section -->
-    <div class="market-header">
-        <div class="header-overlay">
-            <div class="container">
-                <div class="header-content">
-                    <span class="badge">{{ 'marketplace.title' | translate }}</span>
-                    <h1>{{ 'marketplace.hero_title' | translate }}</h1>
-                    <p>{{ 'marketplace.hero_subtitle' | translate }}</p>
-                    
-                    <!-- Integrated Search Bar -->
-                    <div class="search-container">
-                        <div class="search-wrapper">
-                            <mat-icon class="search-icon">search</mat-icon>
-                            <input type="text" 
-                                   [placeholder]="'marketplace.search_placeholder' | translate"
-                                   [ngModel]="searchTerm()" 
-                                   (ngModelChange)="searchTerm.set($event)"
-                                   (keyup.enter)="loadItems()">
-                            <button class="search-btn" (click)="loadItems()">
-                                {{ 'buttons.search' | translate }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+  <!-- Hero/Header Section -->
+  <div class="market-header">
+    <div class="header-overlay">
+      <div class="container">
+        <div class="header-content">
+          <span class="badge">{{ 'marketplace.title' | translate }}</span>
+          <h1>{{ 'marketplace.heroTitle' | translate }}</h1>
+          <p>{{ 'marketplace.heroSubtitle' | translate }}</p>
+
+          <!-- Integrated Search Bar -->
+          <div class="search-container">
+            <div class="search-wrapper">
+              <mat-icon class="search-icon">search</mat-icon>
+              <input
+                type="text"
+                [placeholder]="'marketplace.searchPlaceholder' | translate"
+                [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)"
+                (keyup.enter)="loadItems()"
+              />
+              <button class="search-btn" (click)="loadItems()">
+                {{ 'buttons.search' | translate }}
+              </button>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="container main-content">
-        <div class="layout-grid">
-            <!-- Sidebar Filters -->
-            <aside class="filters-sidebar">
-                <div class="filters-card">
-                    <div class="card-header">
-                        <div class="title-row">
-                            <h3><mat-icon>tune</mat-icon> {{ 'marketplace.filters' | translate }}</h3>
-                            @if (searchTerm() || selectedCategoryId() || selectedCity() || minPrice() || maxPrice() || selectedType()) {
-                                <button mat-button color="warn" (click)="onFilterReset()" class="clear-btn">
-                                    {{ 'marketplace.clearFilters' | translate }}
-                                </button>
-                            }
-                        </div>
-                    </div>
+  <div class="container main-content">
+    <div class="layout-grid">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar">
+        <div class="filters-card">
+          <div class="card-header">
+            <div class="title-row">
+              <h3><mat-icon>tune</mat-icon> {{ 'marketplace.filters' | translate }}</h3>
+              @if (
+                searchTerm() ||
+                selectedCategoryId() ||
+                selectedCity() ||
+                minPrice() ||
+                maxPrice() ||
+                selectedType()
+              ) {
+                <button mat-button color="warn" (click)="onFilterReset()" class="clear-btn">
+                  {{ 'marketplace.clearFilters' | translate }}
+                </button>
+              }
+            </div>
+          </div>
 
-                    <div class="filters-body">
-                        <!-- Category Filter -->
-                        <div class="filter-group">
-                            <label>
-                                <mat-icon>category</mat-icon>
-                                {{ 'marketplace.category' | translate }}
-                            </label>
-                            <mat-form-field appearance="outline" class="full-width custom-field">
-                                <mat-select [ngModel]="selectedCategoryId()" (ngModelChange)="selectedCategoryId.set($event)">
-                                    <mat-option [value]="undefined">{{ 'marketplace.all_categories' | translate }}</mat-option>
-                                    @for (cat of categories(); track cat.id) {
-                                        <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
-                                    }
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
+          <div class="filters-body">
+            <!-- Category Filter -->
+            <div class="filter-group">
+              <label>
+                <mat-icon>category</mat-icon>
+                {{ 'marketplace.category' | translate }}
+              </label>
+              <mat-form-field appearance="outline" class="full-width custom-field">
+                <mat-select
+                  [ngModel]="selectedCategoryId()"
+                  (ngModelChange)="selectedCategoryId.set($event)"
+                >
+                  <mat-option [value]="undefined">{{
+                    'marketplace.allCategories' | translate
+                  }}</mat-option>
+                  @for (cat of categories(); track cat.id) {
+                    <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-                        <!-- Subcategory Filter -->
-                        @if (selectedCategoryId() && subcategories().length > 0) {
-                            <div class="filter-group animate-in">
-                                <label>
-                                    <mat-icon>account_tree</mat-icon>
-                                    {{ 'marketplace.subcategory' | translate }}
-                                </label>
-                                <mat-form-field appearance="outline" class="full-width custom-field">
-                                    <mat-select [ngModel]="selectedSubcategoryId()" (ngModelChange)="selectedSubcategoryId.set($event)">
-                                        <mat-option [value]="undefined">{{ 'marketplace.all_subcategories' | translate }}</mat-option>
-                                        @for (sub of subcategories(); track sub.id) {
-                                            <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
-                                        }
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        }
+            <!-- Subcategory Filter -->
+            @if (selectedCategoryId() && subcategories().length > 0) {
+              <div class="filter-group animate-in">
+                <label>
+                  <mat-icon>account_tree</mat-icon>
+                  {{ 'marketplace.subcategory' | translate }}
+                </label>
+                <mat-form-field appearance="outline" class="full-width custom-field">
+                  <mat-select
+                    [ngModel]="selectedSubcategoryId()"
+                    (ngModelChange)="selectedSubcategoryId.set($event)"
+                  >
+                    <mat-option [value]="undefined">{{
+                      'marketplace.allSubcategories' | translate
+                    }}</mat-option>
+                    @for (sub of subcategories(); track sub.id) {
+                      <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            }
 
-                        <!-- City Filter -->
-                        <div class="filter-group">
-                            <label>
-                                <mat-icon>location_city</mat-icon>
-                                {{ 'items.city' | translate }}
-                            </label>
-                            <mat-form-field appearance="outline" class="full-width custom-field">
-                                <mat-select [ngModel]="selectedCity()" (ngModelChange)="selectedCity.set($event)">
-                                    <mat-option [value]="undefined">{{ 'marketplace.all_cities' | translate }}</mat-option>
-                                    @for (gov of governorates; track gov.key) {
-                                        <mat-option [value]="gov.key">{{ gov.name | translate }}</mat-option>
-                                    }
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
+            <!-- City Filter -->
+            <div class="filter-group">
+              <label>
+                <mat-icon>location_city</mat-icon>
+                {{ 'items.city' | translate }}
+              </label>
+              <mat-form-field appearance="outline" class="full-width custom-field">
+                <mat-select [ngModel]="selectedCity()" (ngModelChange)="selectedCity.set($event)">
+                  <mat-option [value]="undefined">{{
+                    'marketplace.allCities' | translate
+                  }}</mat-option>
+                  @for (gov of governorates; track gov.code) {
+                    <mat-option [value]="gov.code">{{ gov.name | translate }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-                        <!-- Price Range -->
-                        <div class="filter-group">
-                            <label>
-                                <mat-icon>payments</mat-icon>
-                                {{ 'marketplace.price_range' | translate }}
-                            </label>
-                            <div class="price-range-container">
-                                <div class="price-field">
-                                    <span class="currency-label">EGP</span>
-                                    <input type="number" [placeholder]="'marketplace.min_price' | translate"
-                                           [ngModel]="minPrice()" (ngModelChange)="minPrice.set($event)">
-                                </div>
-                                <div class="price-separator"></div>
-                                <div class="price-field">
-                                    <span class="currency-label">EGP</span>
-                                    <input type="number" [placeholder]="'marketplace.max_price' | translate"
-                                           [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set($event)">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item Type -->
-                        <div class="filter-group">
-                            <label>
-                                <mat-icon>layers</mat-icon>
-                                {{ 'labels.type' | translate }}
-                            </label>
-                            <mat-form-field appearance="outline" class="full-width custom-field">
-                                <mat-select [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
-                                    <mat-option [value]="undefined">{{ 'marketplace.all_types' | translate }}</mat-option>
-                                    @for (type of itemTypes; track type.key) {
-                                        <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
-                                    }
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+            <!-- Price Range -->
+            <div class="filter-group">
+              <label>
+                <mat-icon>payments</mat-icon>
+                {{ 'marketplace.priceRange' | translate }}
+              </label>
+              <div class="price-range-container">
+                <div class="price-field">
+                  <span class="currency-label">EGP</span>
+                  <input
+                    type="number"
+                    [placeholder]="'marketplace.minPrice' | translate"
+                    [ngModel]="minPrice()"
+                    (ngModelChange)="minPrice.set($event)"
+                  />
                 </div>
-            </aside>
-
-            <!-- Results Section -->
-            <main class="results-area">
-                <div class="results-header">
-                    <div class="results-count">
-                        <h2>{{ 'marketplace.products' | translate }}</h2>
-                        <span class="count">{{ totalCount() }} {{ 'marketplace.results' | translate }}</span>
-                    </div>
-                    
-                    <div class="results-actions">
-                        <mat-form-field appearance="outline" class="sort-select">
-                            <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
-                                <mat-option value="newest">{{ 'marketplace.sort_newest' | translate }}</mat-option>
-                                <mat-option value="price_low">{{ 'marketplace.sort_price_low' | translate }}</mat-option>
-                                <mat-option value="price_high">{{ 'marketplace.sort_price_high' | translate }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                <div class="price-separator"></div>
+                <div class="price-field">
+                  <span class="currency-label">EGP</span>
+                  <input
+                    type="number"
+                    [placeholder]="'marketplace.maxPrice' | translate"
+                    [ngModel]="maxPrice()"
+                    (ngModelChange)="maxPrice.set($event)"
+                  />
                 </div>
+              </div>
+            </div>
 
-                @if (isLoadingItems()) {
-                    <div class="loading-state">
-                        <mat-spinner diameter="50"></mat-spinner>
-                        <p>{{ 'dashboard.kpi.loading' | translate }}</p>
-                    </div>
-                } @else if (items().length === 0) {
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <mat-icon>search_off</mat-icon>
-                        </div>
-                        <h3>{{ 'marketplace.noProductsFound' | translate }}</h3>
-                        <p>{{ 'marketplace.tryAdjustingFilters' | translate }}</p>
-                        <button mat-flat-button color="primary" (click)="onFilterReset()">
-                            {{ 'marketplace.clearFilters' | translate }}
-                        </button>
-                    </div>
-                } @else {
-                    <div class="products-grid">
-                        @for (item of items(); track item.id) {
-                            <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
-                                <div class="card-media">
-                                    <img [src]="item.primaryImage || 'assets/images/placeholder.webp'" 
-                                         [alt]="getLocalizedTitle(item)"
-                                         loading="lazy">
-                                    <div class="card-badges">
-                                        @if (item.type === 'premium') {
-                                            <span class="type-badge premium">{{ 'labels.types.premium' | translate }}</span>
-                                        }
-                                        @if (item.avgRating && item.avgRating > 0) {
-                                            <span class="rating-badge">
-                                                <mat-icon>star</mat-icon> {{ item.avgRating | number:'1.1-1' }}
-                                            </span>
-                                        }
-                                    </div>
-                                    <div class="card-actions">
-                                        <button mat-icon-button class="wishlist-btn" (click)="$event.stopPropagation()">
-                                            <mat-icon>favorite_border</mat-icon>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <div class="item-meta">
-                                        <span class="category">{{ getLocalizedRefName(item.category) }}</span>
-                                        <span class="location">
-                                            <mat-icon>location_on</mat-icon> {{ item.city }}
-                                        </span>
-                                    </div>
-                                    <h3 class="item-title">{{ getLocalizedTitle(item) }}</h3>
-                                    <div class="card-footer">
-                                        <div class="price-info">
-                                            <span class="price">{{ item.dailyPrice }} <small>EGP</small></span>
-                                            <span class="period">/ {{ 'items.daily' | translate }}</span>
-                                        </div>
-                                        <button mat-flat-button class="view-btn">
-                                            {{ 'marketplace.viewDetails' | translate }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-
-                    <div class="pagination-section">
-                        <mat-paginator [length]="totalCount()" 
-                                      [pageSize]="pageSize()" 
-                                      [pageSizeOptions]="[12, 24, 48, 96]"
-                                      (page)="onPageChange($event)"
-                                      aria-label="Select page">
-                        </mat-paginator>
-                    </div>
-                }
-            </main>
+            <!-- Item Type -->
+            <div class="filter-group">
+              <label>
+                <mat-icon>layers</mat-icon>
+                {{ 'labels.type' | translate }}
+              </label>
+              <mat-form-field appearance="outline" class="full-width custom-field">
+                <mat-select [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
+                  <mat-option [value]="undefined">{{
+                    'marketplace.allTypes' | translate
+                  }}</mat-option>
+                  @for (type of itemTypes; track type.key) {
+                    <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
+      </aside>
+
+      <!-- Results Section -->
+      <main class="results-area">
+        <div class="results-header">
+          <div class="results-count">
+            <h2>{{ 'marketplace.products' | translate }}</h2>
+            <span class="count">{{ totalCount() }} {{ 'marketplace.results' | translate }}</span>
+          </div>
+
+          <div class="results-actions">
+            <mat-form-field appearance="outline" class="sort-select">
+              <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+                <mat-option value="newest">{{ 'marketplace.sortNewest' | translate }}</mat-option>
+                <mat-option value="price_low">{{
+                  'marketplace.sortPriceLow' | translate
+                }}</mat-option>
+                <mat-option value="price_high">{{
+                  'marketplace.sortPriceHigh' | translate
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        @if (isLoadingItems()) {
+          <div class="loading-state">
+            <mat-spinner diameter="50"></mat-spinner>
+            <p>{{ 'common.loading' | translate }}</p>
+          </div>
+        } @else if (items().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">
+              <mat-icon>search_off</mat-icon>
+            </div>
+            <h3>{{ 'errors.noProductsFound' | translate }}</h3>
+            <p>{{ 'errors.tryAdjustingFilters' | translate }}</p>
+            <button mat-flat-button color="primary" (click)="onFilterReset()">
+              {{ 'marketplace.clearFilters' | translate }}
+            </button>
+          </div>
+        } @else {
+          <div class="products-grid">
+            @for (item of items(); track item.id) {
+              <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
+                <div class="card-media">
+                  <img
+                    [src]="item.primaryImage || 'assets/images/placeholder.webp'"
+                    [alt]="getLocalizedTitle(item)"
+                    loading="lazy"
+                  />
+                  <div class="card-badges">
+                    @if (item.type === 'premium') {
+                      <span class="type-badge premium">{{
+                        'labels.types.premium' | translate
+                      }}</span>
+                    }
+                    @if (item.avgRating && item.avgRating > 0) {
+                      <span class="rating-badge">
+                        <mat-icon>star</mat-icon> {{ item.avgRating | number: '1.1-1' }}
+                      </span>
+                    }
+                  </div>
+                  <div class="card-actions">
+                    <button mat-icon-button class="wishlist-btn" (click)="$event.stopPropagation()">
+                      <mat-icon>favorite_border</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <div class="item-meta">
+                    <span class="category">{{ getLocalizedRefName(item.category) }}</span>
+                    <span class="location"> <mat-icon>location_on</mat-icon> {{ item.city }} </span>
+                  </div>
+                  <h3 class="item-title">{{ getLocalizedTitle(item) }}</h3>
+                  <div class="card-footer">
+                    <div class="price-info">
+                      <span class="price">{{ item.dailyPrice }} <small>EGP</small></span>
+                      <span class="period">/ {{ 'items.daily' | translate }}</span>
+                    </div>
+                    <button mat-flat-button class="view-btn">
+                      {{ 'marketplace.viewDetails' | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="pagination-section">
+            <mat-paginator
+              [length]="totalCount()"
+              [pageSize]="pageSize()"
+              [pageSizeOptions]="[12, 24, 48, 96]"
+              (page)="onPageChange($event)"
+              aria-label="Select page"
+            >
+            </mat-paginator>
+          </div>
+        }
+      </main>
     </div>
+  </div>
 </div>
-

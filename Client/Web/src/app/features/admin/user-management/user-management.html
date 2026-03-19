@@ -1,7 +1,7 @@
 <div class="data-container user-management-container">
   <app-header-section
-    [title]="'admin.user_management_title' | translate"
-    [subtitle]="'admin.user_management_subtitle' | translate">
+    [title]="'admin.userManagementTitle' | translate"
+    [subtitle]="'admin.userManagementSubtitle' | translate">
   </app-header-section>
 
   @if (error()) {
@@ -66,7 +66,7 @@
               (change)="toggleUserStatus(element)"
               color="primary"
               [disabled]="!isSuperAdmin">
-              {{ 'admin.is_active' | translate }}
+              {{ 'admin.isActive' | translate }}
             </mat-slide-toggle>
           </td>
         </ng-container>

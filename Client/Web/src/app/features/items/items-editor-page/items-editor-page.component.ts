@@ -134,7 +134,7 @@ export class ItemsEditorPageComponent implements OnInit {
     if (this.form) {
       this.form.reset();
       this.uploadedImages = [];
-      this.form.patchValue({ defaultDeposit: 0, dailyPrice: 0 });
+      this.form.patchValue({ defaultDeposit: 0, dailyPrice: 0, weeklyPrice: 0, monthlyPrice: 0 });
     }
   }
 
@@ -148,6 +148,8 @@ export class ItemsEditorPageComponent implements OnInit {
       condition: ['good'],
       defaultDeposit: [0, [Validators.required, Validators.min(0)]],
       dailyPrice: [0, [Validators.required, Validators.min(0.01)]],
+      weeklyPrice: [0, [Validators.min(0)]],
+      monthlyPrice: [0, [Validators.min(0)]],
       location: [''],
       city: [''],
       lat: [null],
@@ -235,6 +237,8 @@ export class ItemsEditorPageComponent implements OnInit {
               condition: item.condition,
               defaultDeposit: item.defaultDeposit,
               dailyPrice: item.pricing?.find((p) => p.pricingType === 'daily')?.price ?? 0,
+              weeklyPrice: item.pricing?.find((p) => p.pricingType === 'weekly')?.price ?? 0,
+              monthlyPrice: item.pricing?.find((p) => p.pricingType === 'monthly')?.price ?? 0,
               location: item.location,
               city: item.city,
               lat: item.lat,
@@ -301,7 +305,11 @@ export class ItemsEditorPageComponent implements OnInit {
       subcategoryId: v.subcategoryId ?? null,
       categoryId: v.categoryId ?? null,
       brandId: v.brandId ?? null,
-      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      pricing: [
+        new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice }),
+        ...(v.weeklyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'weekly', price: v.weeklyPrice })] : []),
+        ...(v.monthlyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'monthly', price: v.monthlyPrice })] : []),
+      ],
       images: this.buildImages(),
     });
     this.itemsClient.createItem(cmd)
@@ -342,7 +350,11 @@ export class ItemsEditorPageComponent implements OnInit {
       subcategoryId: v.subcategoryId ?? null,
       categoryId: v.categoryId ?? null,
       brandId: v.brandId ?? null,
-      pricing: [new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice })],
+      pricing: [
+        new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice }),
+        ...(v.weeklyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'weekly', price: v.weeklyPrice })] : []),
+        ...(v.monthlyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'monthly', price: v.monthlyPrice })] : []),
+      ],
       images: this.buildImages(),
     });
 

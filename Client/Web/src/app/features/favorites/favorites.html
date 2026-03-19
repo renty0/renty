@@ -29,16 +29,16 @@
                 <h3>{{ item.title }}</h3>
               </div>
               <div class="price-tag">
-                <span>{{ item.dailyPrice }} EGP <small>{{ 'products.columns.perDay' | translate }}</small></span>
+                <span>{{ item.dailyPrice }} EGP <small>{{ 'labels.perDay' | translate }}</small></span>
               </div>
               @if (item.city) {
                 <p class="subcategory-info">
-                  <mat-icon inline style="font-size: 16px; margin-inline-end: 4px;">location_on</mat-icon> 
+                  <mat-icon inline style="font-size: 16px; margin-inline-end: 4px;">location_on</mat-icon>
                   {{ item.city }}
                 </p>
               }
             </div>
-            
+
             <div class="card-actions">
               <button mat-icon-button (click)="removeFavorite(item.id!, $event)" color="warn" [title]="'favorites.remove' | translate">
                 <mat-icon>favorite</mat-icon>

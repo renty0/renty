@@ -340,7 +340,7 @@ export const Preset = definePreset(Aura, {
       focusRing: {
         width: '0',
         style: 'none',
-        color: 'transparent',
+        color: 'white',
         offset: '0',
         shadow: 'none',
       },
@@ -506,7 +506,7 @@ export const Preset = definePreset(Aura, {
             },
           },
           optionGroup: {
-            background: 'transparent',
+            background: 'white',
             color: '{text.muted.color}',
           },
         },
@@ -524,7 +524,7 @@ export const Preset = definePreset(Aura, {
             },
           },
           submenuLabel: {
-            background: 'transparent',
+            background: 'white',
             color: '{text.muted.color}',
           },
           submenuIcon: {
@@ -556,8 +556,8 @@ export const Preset = definePreset(Aura, {
           activeColor: '{primary.200}',
         },
         highlight: {
-          background: 'color-mix(in srgb, {primary.400}, transparent 84%)',
-          focusBackground: 'color-mix(in srgb, {primary.400}, transparent 76%)',
+          background: 'color-mix(in srgb, {primary.400}, white 84%)',
+          focusBackground: 'color-mix(in srgb, {primary.400}, white 76%)',
           color: 'rgba(255,255,255,.87)',
           focusColor: 'rgba(255,255,255,.87)',
         },
@@ -631,7 +631,7 @@ export const Preset = definePreset(Aura, {
             },
           },
           optionGroup: {
-            background: 'transparent',
+            background: 'white',
             color: '{text.muted.color}',
           },
         },
@@ -649,7 +649,7 @@ export const Preset = definePreset(Aura, {
             },
           },
           submenuLabel: {
-            background: 'transparent',
+            background: 'white',
             color: '{text.muted.color}',
           },
           submenuIcon: {

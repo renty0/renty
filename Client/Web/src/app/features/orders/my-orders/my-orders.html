@@ -1,13 +1,13 @@
 <div class="orders-container" [class.rtl]="translate.currentLang === 'ar'">
-  <app-header-section 
-    [title]="'my_orders.title' | translate" 
+  <app-header-section
+    [title]="'myOrders.title' | translate"
     [subtitle]="'checkout.view_orders' | translate">
   </app-header-section>
 
   <div class="orders-list" *ngIf="!isLoading(); else loading">
     <div class="empty-state" *ngIf="orders().length === 0">
       <mat-icon>shopping_bag</mat-icon>
-      <p>{{ 'my_orders.no_orders' | translate }}</p>
+      <p>{{ 'myOrders.noOrders' | translate }}</p>
       <button mat-flat-button color="primary" routerLink="/marketplace">
         {{ 'checkout.back_to_market' | translate }}
       </button>
@@ -28,20 +28,20 @@
             </mat-chip-set>
           </div>
         </mat-card-header>
-        
+
         <mat-card-content>
           <div class="details-grid">
             <div class="detail-item">
               <mat-icon>calendar_today</mat-icon>
               <div class="text">
-                <span class="label">{{ 'my_orders.order_date' | translate }}</span>
+                <span class="label">{{ 'myOrders.orderDate' | translate }}</span>
                 <span class="value">{{ order.createdAt | date:'mediumDate' }}</span>
               </div>
             </div>
             <div class="detail-item">
               <mat-icon>summarize</mat-icon>
               <div class="text">
-                <span class="label">{{ 'my_orders.item_count' | translate }}</span>
+                <span class="label">{{ 'myOrders.itemCount' | translate }}</span>
                 <span class="value">{{ order.itemCount }} {{ 'order_details.items' | translate }}</span>
               </div>
             </div>
@@ -58,7 +58,7 @@
         <mat-card-actions align="end">
           <button mat-button color="primary" [routerLink]="['/orders', order.id]">
             <mat-icon>visibility</mat-icon>
-            {{ 'my_orders.view_details' | translate }}
+            {{ 'myOrders.viewDetails' | translate }}
           </button>
         </mat-card-actions>
       </mat-card>

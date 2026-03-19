@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  effect,
-  untracked,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, signal, effect, untracked, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -25,10 +18,7 @@ import {
   ConfirmDialogData,
 } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
-import {
-  CategoriesClient,
-  ProductCategoryDto,
-} from '../../../core/api/api-client';
+import { CategoriesClient, ProductCategoryDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { CategoryEditorComponent } from '../category-editor/category-editor.component';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -75,6 +65,7 @@ export class CategoryListComponent {
   readonly pageNumber = signal(1);
   readonly pageSize = signal(10);
   readonly totalCount = signal(0);
+  refreshTime = signal(Date.now());
 
   readonly sortBy = signal<string | null>('nameEn');
   readonly sortOrder = signal<'asc' | 'desc' | null>('asc');
@@ -101,7 +92,7 @@ export class CategoryListComponent {
         this.pageSize(),
         this.searchTerm() || undefined,
         this.sortBy() || undefined,
-        this.sortOrder() || undefined
+        this.sortOrder() || undefined,
       )
       .pipe(
         tap((res) => {
@@ -110,22 +101,18 @@ export class CategoryListComponent {
         }),
         catchError((err) => {
           this.dataSource.set([]);
-          this.toast.showError(
-            this.translate.instant('categories.errors.failedToLoad')
-          );
+          this.toast.showSuccess(err.messages?.[0]);
           return of(null);
         }),
         finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }
 
   onSearchChange(event: Event | string): void {
     const value =
-      typeof event === 'string'
-        ? event
-        : (event.target as HTMLInputElement)?.value ?? '';
+      typeof event === 'string' ? event : ((event.target as HTMLInputElement)?.value ?? '');
     this.searchTerm.set(value);
     this.pageNumber.set(1);
   }
@@ -137,9 +124,7 @@ export class CategoryListComponent {
 
   onSort(sort: Sort): void {
     this.sortBy.set(sort.active);
-    this.sortOrder.set(
-      sort.direction ? (sort.direction as 'asc' | 'desc') : null
-    );
+    this.sortOrder.set(sort.direction ? (sort.direction as 'asc' | 'desc') : null);
     this.pageNumber.set(1);
   }
 
@@ -157,9 +142,21 @@ export class CategoryListComponent {
     this.selectedCategoryId.set(null);
   }
 
-  onSaved(): void {
+  onSaved(category: ProductCategoryDto): void {
     this.closeDialog();
-    this.loadCategories();
+    this.dataSource.update((current) => {
+      const index = current.findIndex((c) => c.id === category.id);
+      if (index !== -1) {
+        const updated = [...current];
+        updated[index] = category;
+        return updated;
+      }
+      return [category, ...current];
+    });
+    if (this.selectedCategoryId() === null) {
+      this.totalCount.update((t) => t + 1);
+    }
+    this.refreshTime.set(Date.now());
   }
 
   async deleteCategory(category: ProductCategoryDto) {
@@ -185,22 +182,24 @@ export class CategoryListComponent {
     this.apiClient
       .deleteCategory(id)
       .pipe(
-        tap(() => {
-          this.toast.showSuccess(
-            this.translate.instant('categories.actions.deleted')
-          );
-          this.loadCategories();
-        }),
-        catchError(() => {
-          this.toast.showError(
-            this.translate.instant('categories.errors.failedToDelete')
-          );
+        catchError((res) => {
+          this.toast.showError(res.messages?.[0] || '');
           return of(null);
         }),
         finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe();
+      .subscribe((res) => {
+        if (res) {
+          if (res.error) {
+            this.toast.showError(res.messages?.[0] || '');
+          } else {
+            this.toast.showSuccess(res.messages?.[0] || '');
+            this.dataSource.update((current) => current.filter((c) => c.id !== id));
+            this.totalCount.update((t) => Math.max(0, t - 1));
+          }
+        }
+      });
   }
 
   placeholderLogo = 'assets/images/placeholder.png';
@@ -210,13 +209,22 @@ export class CategoryListComponent {
     return text.length <= maxLen ? text : text.slice(0, maxLen) + '...';
   }
 
+  getLogoUrl(url: string | undefined): string {
+    if (!url) return this.placeholderLogo;
+    return `${url}?t=${this.refreshTime()}`;
+  }
+
   getLocalizedName(category: ProductCategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    return isAr ? (category.nameAr || category.nameEn || '') : (category.nameEn || category.nameAr || '');
+    return isAr
+      ? category.nameAr || category.nameEn || ''
+      : category.nameEn || category.nameAr || '';
   }
 
   getLocalizedDesc(category: ProductCategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    return isAr ? (category.descAr || category.descEn || '') : (category.descEn || category.descAr || '');
+    return isAr
+      ? category.descAr || category.descEn || ''
+      : category.descEn || category.descAr || '';
   }
 }

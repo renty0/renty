@@ -1,29 +1,56 @@
 <div class="editor-container">
   <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid">
+      <app-input
+        class="col-12"
+        label="labels.nameEn"
+        [formGroup]="form"
+        controlName="nameEn"
+        icon="title"
+      />
+
+      <app-input
+        class="col-12"
+        label="labels.nameAr"
+        [formGroup]="form"
+        controlName="nameAr"
+        icon="translate"
+      />
+
+      <app-input
+        class="col-12"
+        label="labels.descEn"
+        [formGroup]="form"
+        controlName="descEn"
+        type="textarea"
+        icon="description"
+      />
+      <app-input
+        class="col-12"
+        label="labels.descAr"
+        [formGroup]="form"
+        controlName="descAr"
+        type="textarea"
+        icon="description"
+      />
+    </div>
     <div class="logo-section">
-      <app-image-uploader [uploadPath]="'brands/logos'" #logoUploader [label]="'brands.fields.logo' | translate"
-        folder="brands">
+      <app-image-uploader
+        [uploadPath]="'brands/logos'"
+        #logoUploader
+        [label]="'labels.logo' | translate"
+        folder="brands"
+      >
       </app-image-uploader>
     </div>
 
-    <div class="form-grid">
-      <app-input label="brands.fields.nameEn" [formGroup]="form" controlName="nameEn" icon="title">
-      </app-input>
-
-      <app-input label="brands.fields.nameAr" [formGroup]="form" controlName="nameAr" icon="translate">
-      </app-input>
-
-      <app-input label="brands.fields.descEn" [formGroup]="form" controlName="descEn" type="textarea"
-        icon="description">
-      </app-input>
-
-      <app-input label="brands.fields.descAr" [formGroup]="form" controlName="descAr" type="textarea"
-        icon="description">
-      </app-input>
-    </div>
-
     <div class="form-actions">
-      <app-loading-button variant="stroked" color="primary" (clicked)="cancel()" [disabled]="isSaving">
+      <app-loading-button
+        variant="stroked"
+        color="primary"
+        (clicked)="cancel()"
+        [disabled]="isSaving"
+      >
         {{ 'buttons.cancel' | translate }}
       </app-loading-button>
       <app-loading-button variant="flat" color="primary" [loading]="isSaving" (clicked)="submit()">

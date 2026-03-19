@@ -18,13 +18,13 @@
             <!-- Left: Gallery -->
             <div class="product-gallery">
                 <div class="main-image-wrapper">
-                    <img [src]="selectedImage() || 'assets/placeholder-product.png'" 
+                    <img [src]="selectedImage() || 'assets/placeholder-product.png'"
                          [alt]="getLocalizedName(item())"
                          class="main-image">
-                    
+
                     @if (isLoggedIn()) {
-                    <button class="favorite-btn" [class.active]="isFavorite()" (click)="toggleFavorite()" 
-                            [title]="isFavorite() ? ('marketplace.remove_from_favorites' | translate) : ('marketplace.add_to_favorites' | translate)">
+                    <button class="favorite-btn" [class.active]="isFavorite()" (click)="toggleFavorite()"
+                            [title]="isFavorite() ? ('marketplace.removeFromFavorites' | translate) : ('marketplace.addToFavorites' | translate)">
                         <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
                     </button>
                     }
@@ -50,7 +50,7 @@
                 </div>
 
                 <h1 class="product-title">{{ getLocalizedName(item()) }}</h1>
-                
+
                 <div class="price-display">
                     <span class="amount">{{ displayPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
                     <span class="per-day">/ {{ 'marketplace.day' | translate }}</span>
@@ -68,22 +68,22 @@
                 <div class="action-buttons">
                     <button mat-flat-button color="primary" class="rent-btn" [disabled]="item()?.status !== 'Available'" (click)="openRentModal()">
                         <mat-icon>calendar_today</mat-icon>
-                        {{ 'marketplace.rent_now' | translate }}
+                        {{ 'marketplace.rentNow' | translate }}
                     </button>
                     <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button" [disabled]="item()?.status !== 'Available'">
                         <mat-icon>shopping_cart</mat-icon>
-                        {{ 'marketplace.buy_now' | translate }}
+                        {{ 'marketplace.buyNow' | translate }}
                     </button>
 
                     @if (isAdmin() || isOwner()) {
                     <div class="admin-actions">
                         <button mat-stroked-button color="primary" (click)="editItem()">
                             <mat-icon>edit</mat-icon>
-                            {{ 'marketplace.edit_item' | translate }}
+                            {{ 'marketplace.editItem' | translate }}
                         </button>
                         <button mat-stroked-button color="warn" (click)="deleteItem()">
                             <mat-icon>delete</mat-icon>
-                            {{ 'marketplace.delete_item' | translate }}
+                            {{ 'marketplace.deleteItem' | translate }}
                         </button>
                     </div>
                     }
@@ -94,7 +94,7 @@
         <!-- Tabs Section -->
         <div class="product-extra-info">
             <mat-tab-group animationDuration="300ms">
-                <mat-tab [label]="'marketplace.description' | translate">
+                <mat-tab [label]="'labels.description' | translate">
                     <div class="tab-content description-tab">
                         <p>{{ getLocalizedDesc(item()) }}</p>
                     </div>
@@ -123,7 +123,7 @@
                         } @else {
                             <div class="no-reviews">
                                 <mat-icon>rate_review</mat-icon>
-                                <p>{{ 'marketplace.no_reviews_yet' | translate }}</p>
+                                <p>{{ 'marketplace.noReviewsYet' | translate }}</p>
                             </div>
                         }
                     </div>
@@ -134,7 +134,7 @@
         <!-- Related Items -->
         @if (relatedItems().length > 0) {
         <div class="related-items-section">
-            <h2 class="section-title">{{ 'marketplace.related_products' | translate }}</h2>
+            <h2 class="section-title">{{ 'marketplace.relatedProducts' | translate }}</h2>
             <div class="related-grid">
                 @for (rItem of relatedItems(); track rItem.id) {
                 <div class="related-card" [routerLink]="['/marketplace/product', rItem.id]">

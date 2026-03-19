@@ -10468,10 +10468,10 @@ function blobToText(blob: any): Observable<string> {
 }
 
 export class ApiResponse<T> {
-    data?: T | undefined;
-    error?: boolean;
+    data: T | undefined;
+    error!: boolean;
     errorCode?: number[] | undefined;
-    messages?: string[] | undefined;
+    messages: string[] | undefined;
     total?: number | undefined;
     page?: number | undefined;
     pages?: number | undefined;
@@ -10542,10 +10542,10 @@ export class ApiResponse<T> {
 }
 
 export interface IApiResponse<T> {
-    data?: T | undefined;
-    error?: boolean;
+    data: T | undefined;
+    error: boolean;
     errorCode?: number[] | undefined;
-    messages?: string[] | undefined;
+    messages: string[] | undefined;
     total?: number | undefined;
     page?: number | undefined;
     pages?: number | undefined;

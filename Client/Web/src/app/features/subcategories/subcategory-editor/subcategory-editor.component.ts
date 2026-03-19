@@ -24,6 +24,7 @@ import {
   CreateSubcategoryCommand,
   UpdateSubcategoryCommand,
   ProductCategoryDto,
+  ProductSubcategoryDto,
 } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
@@ -53,7 +54,7 @@ export class SubcategoryEditorComponent implements OnInit {
   public translate = inject(TranslateService);
 
   id = input<number | null>(null);
-  saved = output<any>();
+  saved = output<ProductSubcategoryDto>();
   cancelled = output<void>();
 
   @ViewChild('logoUploader') logoUploader!: ImageUploaderComponent;
@@ -215,10 +216,9 @@ export class SubcategoryEditorComponent implements OnInit {
           .createSubcategory(command)
           .pipe(
             tap((res) => {
-              if (res.error) {
-                this.toast.showError(res.messages?.[0] || 'errors.unknownError');
+              if (res.error && res.messages) {
+                this.toast.showError(res.messages?.[0]);
               } else {
-                this.toast.showSuccess(res.messages?.[0] || 'subcategories.messages.createSuccess');
                 if (res.data) {
                   this.saved.emit(res.data);
                 }

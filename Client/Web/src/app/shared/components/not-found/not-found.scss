@@ -1,4 +1,4 @@
-@use "../../styles/index.scss" as *;
+@use '../../styles/index.scss' as *;
 
 :host {
   display: flex;
@@ -12,34 +12,24 @@
   position: relative;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: radial-gradient(
-        circle at 20% 20%,
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(255, 255, 255, 0.05) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 40% 40%,
-        rgba(37, 99, 235, 0.1) 0%,
-        transparent 50%
-      );
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
     animation: float 20s ease-in-out infinite;
     pointer-events: none;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   33% {
@@ -88,13 +78,12 @@
   flex-direction: column;
   flex: 1;
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
   border-right: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
   animation: slideInLeft 0.8s ease-out;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -114,14 +103,16 @@
       max-width: 500px;
       height: auto;
       border-radius: $border-radius-xxl;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
         0 0 0 1px rgba(255, 255, 255, 0.1);
       transition: all $transition-medium;
       position: relative;
 
       &:hover {
         transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.35),
+        box-shadow:
+          0 35px 60px -12px rgba(0, 0, 0, 0.35),
           0 0 0 1px rgba(255, 255, 255, 0.2);
       }
     }
@@ -156,23 +147,18 @@
   flex-direction: column;
   flex: 1;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
   overflow-y: auto;
   position: relative;
   animation: slideInRight 0.8s ease-out;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      145deg,
-      transparent 0%,
-      rgba(26, 54, 93, 0.02) 100%
-    );
+    background: linear-gradient(145deg, transparent 0%, rgba(26, 54, 93, 0.02) 100%);
     pointer-events: none;
   }
 
@@ -194,7 +180,7 @@
       position: relative;
 
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         bottom: -8px;
         left: 50%;
@@ -217,18 +203,20 @@
 
     .error-card {
       background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
       border-radius: $border-radius-xl;
       padding: $spacing-xl;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(255, 255, 255, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all $transition-medium;
       text-align: center;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.15),
+        box-shadow:
+          0 25px 35px -5px rgba(0, 0, 0, 0.15),
           0 15px 15px -5px rgba(0, 0, 0, 0.06),
           0 0 0 1px rgba(255, 255, 255, 0.6);
       }
@@ -241,7 +229,7 @@
         position: relative;
 
         &::before {
-          content: "🚫";
+          content: '🚫';
           margin-right: $spacing-xs;
           font-size: 1.2em;
         }
@@ -270,7 +258,8 @@
         font-weight: $font-weight-bold;
         border: none;
         border-radius: $border-radius-lg;
-        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4),
+        box-shadow:
+          0 10px 25px -5px rgba(37, 99, 235, 0.4),
           0 4px 6px -2px rgba(0, 0, 0, 0.05);
         width: 100%;
         transition: all $transition-fast;
@@ -281,24 +270,20 @@
         letter-spacing: 0.5px;
 
         &::before {
-          content: "";
+          content: '';
           position: absolute;
           top: 0;
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.2),
-            transparent
-          );
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
           transition: left 0.6s ease;
         }
 
         &:hover {
           transform: translateY(-3px);
-          box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.5),
+          box-shadow:
+            0 15px 35px -5px rgba(37, 99, 235, 0.5),
             0 6px 10px -2px rgba(0, 0, 0, 0.1);
 
           &::before {

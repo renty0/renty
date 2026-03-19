@@ -1,7 +1,7 @@
 <div class="data-container gap-analysis-container">
   <app-header-section
-    [title]="'admin.gap_title' | translate"
-    [subtitle]="'admin.gap_subtitle' | translate">
+    [title]="'admin.gapTitle' | translate"
+    [subtitle]="'admin.gapSubtitle' | translate">
   </app-header-section>
 
   @if (isLoading()) {
@@ -23,7 +23,7 @@
 
         <!-- Category Column -->
         <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.category' | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'labels.category' | translate }}</th>
           <td mat-cell *matCellDef="let element"><strong>{{ element.categoryName }}</strong></td>
         </ng-container>
 
@@ -41,7 +41,7 @@
 
         <!-- Gap Score Column -->
         <ng-container matColumnDef="gap_score">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.gap_score' | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.gapScore' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             <div class="gap-score-cell">
               <span>{{ element.gapScore | number:'1.1-1' }}</span>
@@ -78,7 +78,7 @@
     <div class="actions">
         <button mat-flat-button color="primary" (click)="loadGapAnalysis()">
             <mat-icon>refresh</mat-icon>
-            {{ 'admin.refresh_metrics' | translate }}
+            {{ 'admin.refreshMetrics' | translate }}
         </button>
     </div>
   }
