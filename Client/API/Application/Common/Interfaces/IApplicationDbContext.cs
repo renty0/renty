@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<MediaFile> MediaFiles { get; }
     DbSet<ProductImage> ProductImages { get; }
     DbSet<GapAnalysisResult> GapAnalysisResults { get; }
+    DbSet<ApplicationUser> Users { get; }
 
     // New schema entities
     DbSet<Item> Items { get; }
@@ -39,6 +40,9 @@ public interface IApplicationDbContext
     DbSet<DeliveryTracking> DeliveryTrackings { get; }
     DbSet<Review> Reviews { get; }
     DbSet<ItemVerification> ItemVerifications { get; }
+    DbSet<IdVerification> IdVerifications { get; }
+    DbSet<WalletTransaction> WalletTransactions { get; }
+    DbSet<SystemSetting> SystemSettings { get; }
 
     // Support, Chat, Notifications, Recommendations, KPIs
     DbSet<SupportTicket> SupportTickets { get; }

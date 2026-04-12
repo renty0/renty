@@ -1,0 +1,48 @@
+<div class="agent-container">
+  <h2>Support Agent Workspace</h2>
+  <p>Resolve disputes and handle item damages here. Changes reflect immediately in user wallets.</p>
+
+  <div *ngIf="errorMsg()" class="alert alert-error">{{ errorMsg() }}</div>
+  <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
+
+  <div class="dispute-form">
+    <h3>Dispute Resolution</h3>
+    
+    <div class="form-group mt-3">
+      <label>Rental ID</label>
+      <input type="text" [(ngModel)]="rentalId" placeholder="Enter Rental UUID" [disabled]="isLoading()" />
+    </div>
+
+    <div class="form-group mt-3">
+      <label>Resolution Action</label>
+      <select [(ngModel)]="resolutionType" [disabled]="isLoading()">
+        <option value="split_deposit">Split Deposit (Partial forfeit & partial refund)</option>
+        <option value="forfeit_deposit">Forfeit Entire Deposit (To Owner)</option>
+        <option value="refund_renter">Refund Entire Deposit (To Renter)</option>
+      </select>
+    </div>
+
+    <div class="split-controls mt-3" *ngIf="resolutionType() === 'split_deposit' || resolutionType() === 'forfeit_deposit'">
+      <div class="form-group">
+        <label>Amount to Owner (Penalty for Renter)</label>
+        <input type="number" [(ngModel)]="ownerCompensation" min="0" placeholder="EGP" [disabled]="isLoading()" />
+      </div>
+    </div>
+
+    <div class="split-controls mt-3" *ngIf="resolutionType() === 'split_deposit' || resolutionType() === 'refund_renter'">
+      <div class="form-group">
+        <label>Amount to Refund Renter</label>
+        <input type="number" [(ngModel)]="renterRefund" min="0" placeholder="EGP" [disabled]="isLoading()" />
+      </div>
+    </div>
+
+    <div class="form-group mt-3">
+      <label>Internal Reason & Log</label>
+      <textarea [(ngModel)]="reason" placeholder="Explain the support decision..." [disabled]="isLoading()" rows="4"></textarea>
+    </div>
+
+    <button class="btn btn-primary mt-4" (click)="resolveDispute()" [disabled]="isLoading() || !rentalId() || !reason()">
+      {{ isLoading() ? 'Processing...' : 'Execute Resolution' }}
+    </button>
+  </div>
+</div>

@@ -46,6 +46,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<DeliveryTracking> DeliveryTrackings => Set<DeliveryTracking>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<ItemVerification> ItemVerifications => Set<ItemVerification>();
+    public DbSet<IdVerification> IdVerifications => Set<IdVerification>();
+    public DbSet<WalletTransaction> WalletTransactions => Set<WalletTransaction>();
+    public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
 
     // Support, Chat, Notifications, Recommendations, KPIs
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
@@ -281,6 +284,48 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.HasOne(e => e.Item).WithMany().HasForeignKey(e => e.ItemId);
             entity.HasOne(e => e.Expert).WithMany().HasForeignKey(e => e.ExpertId);
             entity.HasOne(e => e.Rental).WithMany(r => r.Verifications).HasForeignKey(e => e.RentalId);
+        });
+
+        builder.Entity<SystemSetting>(entity =>
+        {
+            entity.ToTable("system_settings");
+            entity.HasKey(e => e.Key);
+            entity.Property(e => e.Key).HasColumnName("key").HasMaxLength(100);
+            entity.Property(e => e.Value).HasColumnName("value");
+            entity.Property(e => e.Description).HasColumnName("description").HasMaxLength(500);
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+        });
+
+        builder.Entity<WalletTransaction>(entity =>
+        {
+            entity.ToTable("wallet_transactions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.Amount).HasColumnName("amount").HasPrecision(14, 2);
+            entity.Property(e => e.Type).HasColumnName("type").HasConversion<string>();
+            entity.Property(e => e.Description).HasColumnName("description").HasMaxLength(500);
+            entity.Property(e => e.RelatedRentalId).HasColumnName("related_rental_id");
+            entity.Property(e => e.ReferenceId).HasColumnName("reference_id").HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+        });
+
+        builder.Entity<IdVerification>(entity =>
+        {
+            entity.ToTable("id_verifications");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.FrontImageUrl).HasColumnName("front_image_url");
+            entity.Property(e => e.BackImageUrl).HasColumnName("back_image_url");
+            entity.Property(e => e.Status).HasColumnName("status").HasConversion<string>();
+            entity.Property(e => e.RejectionReason).HasColumnName("rejection_reason");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.ReviewedById).HasColumnName("reviewed_by_id");
+            entity.Property(e => e.ReviewedAt).HasColumnName("reviewed_at");
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+            entity.HasOne(e => e.ReviewedBy).WithMany().HasForeignKey(e => e.ReviewedById);
         });
 
         builder.Entity<SupportTicket>(entity =>

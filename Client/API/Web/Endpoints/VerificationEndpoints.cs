@@ -42,5 +42,51 @@ public static class VerificationEndpoints
         .WithTags("Verifications").WithName("GetExpertAssigned")
         .Produces<ApiResponse<GetExpertAssignedResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.ExpertAccess);
+
+        // ── USER IDENTITY VERIFICATIONS ──
+
+        // POST /user/phone/request
+        app.MapPost("/api/v1/user/phone/request", async (RequestPhoneVerificationCommand cmd, ISender sender) =>
+        {
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Created(new { r.SimulatedOtp });
+        })
+        .WithTags("Identity").WithName("RequestPhoneVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
+        .RequireAuthorization();
+
+        // POST /user/phone/confirm
+        app.MapPost("/api/v1/user/phone/confirm", async (ConfirmPhoneVerificationCommand cmd, ISender sender) =>
+        {
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { message = "Phone verified successfully." });
+        })
+        .WithTags("Identity").WithName("ConfirmPhoneVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
+        // POST /user/id/upload
+        app.MapPost("/api/v1/user/id/upload", async (UploadIdVerificationCommand cmd, ISender sender) =>
+        {
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Created(new { r.IdVerificationId });
+        })
+        .WithTags("Identity").WithName("UploadIdVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
+        .RequireAuthorization();
+
+        // POST /admin/id-verifications/{id}/review
+        app.MapPost("/api/v1/admin/id-verifications/{id:guid}/review", async (Guid id, ReviewIdVerificationCommand cmd, ISender sender) =>
+        {
+            var r = await sender.Send(cmd with { IdVerificationId = id });
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { message = "Review processed" });
+        })
+        .WithTags("Identity").WithName("ReviewIdVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .RequireAuthorization(Policies.AdminAccess);
     }
 }

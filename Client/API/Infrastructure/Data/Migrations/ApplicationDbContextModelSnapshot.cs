@@ -98,6 +98,12 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<double>("FraudScore")
+                        .HasColumnType("double precision");
+
+                    b.Property<bool>("IdVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -134,6 +140,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("PhoneVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("text");
 
@@ -155,6 +164,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("UserType")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -557,6 +569,58 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GapAnalysisResults");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IdVerification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("BackImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("back_image_url");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FrontImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("front_image_url");
+
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("text")
+                        .HasColumnName("rejection_reason");
+
+                    b.Property<DateTimeOffset?>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reviewed_at");
+
+                    b.Property<long?>("ReviewedById")
+                        .HasColumnType("bigint")
+                        .HasColumnName("reviewed_by_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewedById");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("id_verifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Item", b =>
@@ -1998,6 +2062,32 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("support_tickets", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.SystemSetting", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("key");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("system_settings", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Territory", b =>
                 {
                     b.Property<int>("Id")
@@ -2066,6 +2156,54 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("user_interactions", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.WalletTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(14, 2)
+                        .HasColumnType("numeric(14,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("ReferenceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("reference_id");
+
+                    b.Property<Guid?>("RelatedRentalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("related_rental_id");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("wallet_transactions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -2255,6 +2393,23 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IdVerification", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", "ReviewedBy")
+                        .WithMany()
+                        .HasForeignKey("ReviewedById");
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReviewedBy");
 
                     b.Navigation("User");
                 });
@@ -2707,6 +2862,17 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WalletTransaction", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

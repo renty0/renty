@@ -1627,6 +1627,632 @@ export class VerificationsClient {
 }
 
 @Injectable()
+export class IdentityClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    requestPhoneVerification(cmd: RequestPhoneVerificationCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/user/phone/request";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestPhoneVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestPhoneVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processRequestPhoneVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = ApiResponse.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    confirmPhoneVerification(cmd: ConfirmPhoneVerificationCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/user/phone/confirm";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processConfirmPhoneVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processConfirmPhoneVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processConfirmPhoneVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    uploadIdVerification(cmd: UploadIdVerificationCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/user/id/upload";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadIdVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadIdVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processUploadIdVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = ApiResponse.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    reviewIdVerification(id: string, cmd: ReviewIdVerificationCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/admin/id-verifications/{id}/review";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReviewIdVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReviewIdVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processReviewIdVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class WalletClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    getWalletBalance(): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/wallet/balance";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWalletBalance(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWalletBalance(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processGetWalletBalance(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getWalletTransactions(): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/wallet/transactions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWalletTransactions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWalletTransactions(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processGetWalletTransactions(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    requestWithdrawal(cmd: RequestWithdrawalCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/wallet/withdraw";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestWithdrawal(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestWithdrawal(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processRequestWithdrawal(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class AdminSettingsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    getAdminSettings(): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/admin/settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAdminSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAdminSettings(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processGetAdminSettings(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateAdminSetting(cmd: UpdateSettingCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/admin/settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAdminSetting(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAdminSetting(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processUpdateAdminSetting(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class AdminItemsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    reviewItem(id: string, baseCmd: ReviewItemCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/admin/items/{id}/review";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(baseCmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReviewItem(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReviewItem(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processReviewItem(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class DisputesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "http://localhost:5106";
+    }
+
+    resolveDispute(cmd: ResolveDisputeCommand): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/support/disputes/resolve";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResolveDispute(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResolveDispute(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processResolveDispute(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class AdminClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -7004,6 +7630,342 @@ export interface IAssignedVerificationDto {
     createdAt?: Date;
 }
 
+export class RequestPhoneVerificationCommand implements IRequestPhoneVerificationCommand {
+    phoneNumber?: string;
+
+    constructor(data?: IRequestPhoneVerificationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.phoneNumber = _data["phoneNumber"];
+        }
+    }
+
+    static fromJS(data: any): RequestPhoneVerificationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new RequestPhoneVerificationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["phoneNumber"] = this.phoneNumber;
+        return data;
+    }
+}
+
+export interface IRequestPhoneVerificationCommand {
+    phoneNumber?: string;
+}
+
+export class ConfirmPhoneVerificationCommand implements IConfirmPhoneVerificationCommand {
+    code?: string;
+
+    constructor(data?: IConfirmPhoneVerificationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): ConfirmPhoneVerificationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConfirmPhoneVerificationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IConfirmPhoneVerificationCommand {
+    code?: string;
+}
+
+export class UploadIdVerificationCommand implements IUploadIdVerificationCommand {
+    frontImageUrl?: string;
+    backImageUrl?: string;
+
+    constructor(data?: IUploadIdVerificationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.frontImageUrl = _data["frontImageUrl"];
+            this.backImageUrl = _data["backImageUrl"];
+        }
+    }
+
+    static fromJS(data: any): UploadIdVerificationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UploadIdVerificationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["frontImageUrl"] = this.frontImageUrl;
+        data["backImageUrl"] = this.backImageUrl;
+        return data;
+    }
+}
+
+export interface IUploadIdVerificationCommand {
+    frontImageUrl?: string;
+    backImageUrl?: string;
+}
+
+export class ReviewIdVerificationCommand implements IReviewIdVerificationCommand {
+    idVerificationId?: string;
+    status?: string;
+    rejectionReason?: string | undefined;
+
+    constructor(data?: IReviewIdVerificationCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.idVerificationId = _data["idVerificationId"];
+            this.status = _data["status"];
+            this.rejectionReason = _data["rejectionReason"];
+        }
+    }
+
+    static fromJS(data: any): ReviewIdVerificationCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReviewIdVerificationCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["idVerificationId"] = this.idVerificationId;
+        data["status"] = this.status;
+        data["rejectionReason"] = this.rejectionReason;
+        return data;
+    }
+}
+
+export interface IReviewIdVerificationCommand {
+    idVerificationId?: string;
+    status?: string;
+    rejectionReason?: string | undefined;
+}
+
+export class RequestWithdrawalCommand implements IRequestWithdrawalCommand {
+    amount?: number;
+    mobileWalletNumber?: string;
+
+    constructor(data?: IRequestWithdrawalCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.amount = _data["amount"];
+            this.mobileWalletNumber = _data["mobileWalletNumber"];
+        }
+    }
+
+    static fromJS(data: any): RequestWithdrawalCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new RequestWithdrawalCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["amount"] = this.amount;
+        data["mobileWalletNumber"] = this.mobileWalletNumber;
+        return data;
+    }
+}
+
+export interface IRequestWithdrawalCommand {
+    amount?: number;
+    mobileWalletNumber?: string;
+}
+
+export class UpdateSettingCommand implements IUpdateSettingCommand {
+    key?: string;
+    value?: string;
+    description?: string | undefined;
+
+    constructor(data?: IUpdateSettingCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.key = _data["key"];
+            this.value = _data["value"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateSettingCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateSettingCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["key"] = this.key;
+        data["value"] = this.value;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IUpdateSettingCommand {
+    key?: string;
+    value?: string;
+    description?: string | undefined;
+}
+
+export class ReviewItemCommand implements IReviewItemCommand {
+    itemId?: string;
+    status?: string;
+    rejectionReason?: string | undefined;
+
+    constructor(data?: IReviewItemCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.itemId = _data["itemId"];
+            this.status = _data["status"];
+            this.rejectionReason = _data["rejectionReason"];
+        }
+    }
+
+    static fromJS(data: any): ReviewItemCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReviewItemCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["itemId"] = this.itemId;
+        data["status"] = this.status;
+        data["rejectionReason"] = this.rejectionReason;
+        return data;
+    }
+}
+
+export interface IReviewItemCommand {
+    itemId?: string;
+    status?: string;
+    rejectionReason?: string | undefined;
+}
+
+export class ResolveDisputeCommand implements IResolveDisputeCommand {
+    rentalId?: string;
+    resolutionDecision?: string;
+    ownerCompensation?: number;
+    renterRefund?: number;
+    reason?: string;
+
+    constructor(data?: IResolveDisputeCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rentalId = _data["rentalId"];
+            this.resolutionDecision = _data["resolutionDecision"];
+            this.ownerCompensation = _data["ownerCompensation"];
+            this.renterRefund = _data["renterRefund"];
+            this.reason = _data["reason"];
+        }
+    }
+
+    static fromJS(data: any): ResolveDisputeCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResolveDisputeCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rentalId"] = this.rentalId;
+        data["resolutionDecision"] = this.resolutionDecision;
+        data["ownerCompensation"] = this.ownerCompensation;
+        data["renterRefund"] = this.renterRefund;
+        data["reason"] = this.reason;
+        return data;
+    }
+}
+
+export interface IResolveDisputeCommand {
+    rentalId?: string;
+    resolutionDecision?: string;
+    ownerCompensation?: number;
+    renterRefund?: number;
+    reason?: string;
+}
+
 
 
 
@@ -10468,86 +11430,86 @@ function blobToText(blob: any): Observable<string> {
 }
 
 export class ApiResponse<T> {
-    data: T | undefined;
-    error!: boolean;
-    errorCode?: number[] | undefined;
-    messages: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-    successCode?: number | undefined;
+  data: T | undefined;
+  error!: boolean;
+  errorCode?: number[] | undefined;
+  messages: string[] | undefined;
+  total?: number | undefined;
+  page?: number | undefined;
+  pages?: number | undefined;
+  successCode?: number | undefined;
 
-    constructor(data?: any) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property)) {
-                    (<any>this)[property] = (<any>data)[property];
-                }
-            }
+  constructor(data?: any) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) {
+          (<any>this)[property] = (<any>data)[property];
         }
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.data = _data['data'];
-            this.error = _data['error'];
-            if (Array.isArray(_data['errorCode'])) {
-                this.errorCode = [] as any;
-                for (let item of _data['errorCode']) {
-                    this.errorCode!.push(item);
-                }
-            }
-            if (Array.isArray(_data['messages'])) {
-                this.messages = [] as any;
-                for (let item of _data['messages']) {
-                    this.messages!.push(item);
-                }
-            }
-            this.total = _data['total'];
-            this.page = _data['page'];
-            this.pages = _data['pages'];
-            this.successCode = _data['successCode'];
+  init(_data?: any) {
+    if (_data) {
+      this.data = _data['data'];
+      this.error = _data['error'];
+      if (Array.isArray(_data['errorCode'])) {
+        this.errorCode = [] as any;
+        for (let item of _data['errorCode']) {
+          this.errorCode!.push(item);
         }
+      }
+      if (Array.isArray(_data['messages'])) {
+        this.messages = [] as any;
+        for (let item of _data['messages']) {
+          this.messages!.push(item);
+        }
+      }
+      this.total = _data['total'];
+      this.page = _data['page'];
+      this.pages = _data['pages'];
+      this.successCode = _data['successCode'];
     }
+  }
 
-    static fromJS(data: any): ApiResponse<any> {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResponse<any>();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ApiResponse<any> {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApiResponse<any>();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data['data'] = this.data;
-        data['error'] = this.error;
-        if (Array.isArray(this.errorCode)) {
-            data['errorCode'] = [];
-            for (let item of this.errorCode) {
-                data['errorCode'].push(item);
-            }
-        }
-        if (Array.isArray(this.messages)) {
-            data['messages'] = [];
-            for (let item of this.messages) {
-                data['messages'].push(item);
-            }
-        }
-        data['total'] = this.total;
-        data['page'] = this.page;
-        data['pages'] = this.pages;
-        data['successCode'] = this.successCode;
-        return data;
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['data'] = this.data;
+    data['error'] = this.error;
+    if (Array.isArray(this.errorCode)) {
+      data['errorCode'] = [];
+      for (let item of this.errorCode) {
+        data['errorCode'].push(item);
+      }
     }
+    if (Array.isArray(this.messages)) {
+      data['messages'] = [];
+      for (let item of this.messages) {
+        data['messages'].push(item);
+      }
+    }
+    data['total'] = this.total;
+    data['page'] = this.page;
+    data['pages'] = this.pages;
+    data['successCode'] = this.successCode;
+    return data;
+  }
 }
 
 export interface IApiResponse<T> {
-    data: T | undefined;
-    error: boolean;
-    errorCode?: number[] | undefined;
-    messages: string[] | undefined;
-    total?: number | undefined;
-    page?: number | undefined;
-    pages?: number | undefined;
-    successCode?: number | undefined;
+  data: T | undefined;
+  error: boolean;
+  errorCode?: number[] | undefined;
+  messages: string[] | undefined;
+  total?: number | undefined;
+  page?: number | undefined;
+  pages?: number | undefined;
+  successCode?: number | undefined;
 }

@@ -20,6 +20,14 @@ export const AuthRoutes: Route[] = [
     component: VerifyEmailComponent,
   },
   {
+    path: 'phone-verification',
+    loadComponent: () => import('../components/phone-verification/phone-verification.component').then(m => m.PhoneVerificationComponent),
+  },
+  {
+    path: 'id-verification',
+    loadComponent: () => import('../components/id-verification/id-verification.component').then(m => m.IdVerificationComponent),
+  },
+  {
     path: 'forgot-password',
     redirectTo: 'reset-password',
     pathMatch: 'full',

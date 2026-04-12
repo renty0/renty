@@ -1,0 +1,44 @@
+.agent-container {
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.dispute-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-top: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label { font-weight: 500; margin-bottom: 0.5rem; }
+  input, select, textarea {
+    padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;
+    &:focus { outline: 2px solid #4f46e5; }
+  }
+}
+
+.split-controls {
+  display: flex; gap: 1rem;
+  .form-group { flex: 1; }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem; background: #dc2626; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;
+  &:disabled { opacity: 0.6; }
+}
+
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.alert {
+  padding: 1rem; border-radius: 6px; margin: 1rem 0;
+  &-error { background: #fee2e2; color: #991b1b; }
+  &-success { background: #dcfce7; color: #166534; }
+}

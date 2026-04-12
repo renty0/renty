@@ -15,6 +15,10 @@ export const SUPPORT_ROUTES: Routes = [
         loadComponent: () => import('./create-ticket/create-ticket').then(m => m.CreateTicketComponent)
       },
       {
+        path: 'agent',
+        loadComponent: () => import('./agent-dashboard/agent-dashboard.component').then(m => m.AgentDashboardComponent)
+      },
+      {
         path: ':id',
         loadComponent: () => import('./ticket-details/ticket-details').then(m => m.TicketDetailsComponent)
       }

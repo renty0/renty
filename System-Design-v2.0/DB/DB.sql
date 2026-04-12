@@ -13,20 +13,28 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. ENUM TYPES
 -- ========================
 
-CREATE TYPE rental_status AS ENUM ('pending', 'confirmed', 'active', 'completed', 'cancelled', 'overdue');
+CREATE TYPE rental_status AS ENUM ('requested', 'confirmed', 'paid', 'in_delivery', 'active', 'extended', 'returned', 'completed', 'cancelled', 'disputed');
 CREATE TYPE order_status AS ENUM ('pending', 'paid', 'shipped', 'delivered', 'cancelled');
 CREATE TYPE payment_status AS ENUM ('pending', 'success', 'failed');
 CREATE TYPE payment_method AS ENUM ('vodafone_cash', 'fawry', 'paymob', 'credit_card', 'bank_transfer');
 CREATE TYPE deposit_status AS ENUM ('held', 'returned', 'forfeited');
+CREATE TYPE rental_guarantee_method AS ENUM ('deposit_upfront', 'card_pre_authorization');
+CREATE TYPE delivery_method AS ENUM ('company_delivery', 'self_pickup_dropoff');
+CREATE TYPE penalty_fault AS ENUM ('owner', 'renter');
 CREATE TYPE item_status AS ENUM ('available', 'rented', 'under_review', 'suspended', 'removed');
 CREATE TYPE item_type AS ENUM ('standard', 'premium');
 CREATE TYPE ticket_status AS ENUM ('open', 'in_progress', 'resolved', 'closed');
-CREATE TYPE delivery_status AS ENUM ('processing', 'shipped', 'in_transit', 'delivered', 'returned', 'cancelled');
+CREATE TYPE delivery_status AS ENUM ('processing', 'to_hub', 'at_hub', 'hub_to_renter', 'hub_to_owner', 'shipped', 'in_transit', 'delivered', 'returned', 'cancelled');
 CREATE TYPE notification_status AS ENUM ('pending', 'sent', 'failed');
 CREATE TYPE verification_check AS ENUM ('before_rent', 'after_return');
 CREATE TYPE verification_status AS ENUM ('pending', 'approved', 'rejected');
 CREATE TYPE fraud_decision AS ENUM ('safe', 'flagged', 'blocked');
 CREATE TYPE interaction_action AS ENUM ('view', 'click', 'search', 'favorite', 'rent', 'review');
+CREATE TYPE hub_evaluation_payer AS ENUM ('owner', 'renter', 'shared');
+CREATE TYPE cancellation_policy AS ENUM ('flexible', 'moderate', 'strict');
+CREATE TYPE id_verification_status AS ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE extension_status AS ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE audit_action AS ENUM ('create', 'update', 'delete', 'override', 'suspend', 'unsuspend', 'forfeit', 'refund', 'escalate');
 
 -- ========================
 -- 3. DATASET / PRODUCT CATALOG
@@ -89,11 +97,17 @@ CREATE TABLE "users" (
   "city" varchar(100),
   "profile_image_url" varchar(500),
   "role_id" int NOT NULL,
-  "is_verified" boolean NOT NULL DEFAULT FALSE,
+  "is_verified" boolean NOT NULL DEFAULT FALSE,  -- email verified
+  "phone_verified" boolean NOT NULL DEFAULT FALSE,
+  "id_verified" boolean NOT NULL DEFAULT FALSE,
   "is_active" boolean NOT NULL DEFAULT TRUE,
+  "owner_rating" decimal(3,2) DEFAULT 0,  -- avg of all owner ratings received
+  "renter_rating" decimal(3,2) DEFAULT 0,  -- avg of all renter ratings received
+  "failed_login_attempts" int NOT NULL DEFAULT 0,
+  "locked_until" timestamp,  -- account locked after 5 failed attempts
   "last_login_at" timestamp,
   "created_at" timestamp NOT NULL DEFAULT NOW(),
-  "created_by" uuid,
+  "created_by" uuid,  -- for staff accounts (created by super_admin)
   "updated_at" timestamp NOT NULL DEFAULT NOW()
 );
 
@@ -120,6 +134,7 @@ CREATE TABLE "items" (
   "status" item_status NOT NULL DEFAULT 'available',
   "condition" varchar(50),  -- new, like_new, good, fair
   "default_deposit" decimal(10,2) NOT NULL DEFAULT 0 CHECK ("default_deposit" >= 0),
+  "cancellation_policy" cancellation_policy NOT NULL DEFAULT 'flexible',
   "location" varchar(200),
   "city" varchar(100),
   "lat" decimal(10,7),
@@ -141,6 +156,16 @@ CREATE TABLE "item_images" (
   "image_url" varchar(500) NOT NULL,
   "is_primary" boolean NOT NULL DEFAULT FALSE,
   "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "item_comments" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "item_id" uuid NOT NULL,
+  "user_id" uuid NOT NULL,
+  "parent_comment_id" uuid,
+  "comment_text" text NOT NULL,
+  "created_at" timestamp NOT NULL DEFAULT NOW(),
+  "updated_at" timestamp NOT NULL DEFAULT NOW()
 );
 
 -- ========================
@@ -188,9 +213,18 @@ CREATE TABLE "rentals" (
   "end_date" timestamp NOT NULL,
   "actual_return_date" timestamp,
   "late_fee" decimal(10,2) NOT NULL DEFAULT 0 CHECK ("late_fee" >= 0),
-  "status" rental_status NOT NULL DEFAULT 'pending',
+  "status" rental_status NOT NULL DEFAULT 'requested',
+  "has_hub_evaluation" boolean NOT NULL DEFAULT FALSE,
+  "evaluation_payer" hub_evaluation_payer,
+  "guarantee_method" rental_guarantee_method NOT NULL DEFAULT 'deposit_upfront',
+  "delivery_method_to_renter" delivery_method NOT NULL DEFAULT 'self_pickup_dropoff',
+  "delivery_method_to_hub_return" delivery_method,
+  "platform_commission_percent" decimal(5,2) NOT NULL DEFAULT 15.00,
   "deposit_amount" decimal(10,2) NOT NULL DEFAULT 0 CHECK ("deposit_amount" >= 0),
   "deposit_status" deposit_status NOT NULL DEFAULT 'held',
+  "rejection_fee_amount" decimal(10,2) DEFAULT 0 CHECK ("rejection_fee_amount" >= 0),
+  "rejection_fault" penalty_fault,
+  "cancellation_fee" decimal(10,2) DEFAULT 0 CHECK ("cancellation_fee" >= 0),
   "notes" text,
   "created_at" timestamp NOT NULL DEFAULT NOW(),
   "updated_at" timestamp NOT NULL DEFAULT NOW()
@@ -285,6 +319,15 @@ CREATE TABLE "kpis_snapshots_derived" (
 -- ========================
 -- 11. SUPPORT & CHAT
 -- ========================
+-- NOTE FOR DEVS: Chat and notifications use REAL-TIME WebSocket connections.
+-- Implementation: Socket.IO or SignalR (ASP.NET Core).
+-- Events emitted via WebSocket:
+--   • 'new_message'        → Chat Room (real-time message delivery)
+--   • 'typing'             → Chat Room (typing indicator)
+--   • 'message_read'       → Chat Room (read receipts)
+--   • 'new_notification'   → Global header bell (real-time badge update)
+--   • 'rental_status_change' → Rental Details (live status update)
+-- REST APIs below are for initial data fetch / history. Real-time updates are pushed via WebSocket.
 
 CREATE TABLE "support_tickets" (
   "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -320,12 +363,35 @@ CREATE TABLE "chat_messages" (
 );
 
 -- ========================
+-- 11.5. COMMENTS & SYSTEM SETTINGS
+-- ========================
+
+CREATE TABLE "item_comments" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "item_id" uuid NOT NULL,
+  "user_id" uuid NOT NULL,
+  "parent_comment_id" uuid,
+  "comment_text" text NOT NULL,
+  "created_at" timestamp NOT NULL DEFAULT NOW(),
+  "updated_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "system_settings" (
+  "setting_key" varchar(100) PRIMARY KEY,
+  "setting_value" text NOT NULL,
+  "description" text,
+  "updated_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+-- ========================
 -- 12. NOTIFICATIONS
 -- ========================
 
 CREATE TABLE "notifications" (
   "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "user_id" uuid NOT NULL,
+  "type" varchar(50) NOT NULL,  -- rental_confirmed, new_message, payment_success, fraud_alert, etc.
+  "redirect_url" varchar(500),  -- e.g., /rentals/abc-123, /chats/xyz-456
   "send_email" boolean NOT NULL DEFAULT FALSE,
   "title" varchar(200) NOT NULL,
   "message" text NOT NULL,
@@ -364,6 +430,86 @@ CREATE TABLE "item_verifications" (
   "notes" text,
   "created_at" timestamp NOT NULL DEFAULT NOW(),
   "updated_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+-- ========================
+-- 13.5 PASSWORD RESETS, ID VERIFICATIONS, CHECKOUT LOCKS,
+--      RENTAL EXTENSIONS, SUPPORT RATINGS, ITEM REPORTS, AUDIT LOGS
+-- ========================
+
+CREATE TABLE "password_resets" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "user_id" uuid NOT NULL,
+  "token" varchar(255) NOT NULL,
+  "expires_at" timestamp NOT NULL,
+  "is_used" boolean NOT NULL DEFAULT FALSE,
+  "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "id_verifications" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "user_id" uuid NOT NULL,
+  "front_image_url" varchar(500) NOT NULL,
+  "back_image_url" varchar(500) NOT NULL,
+  "status" id_verification_status NOT NULL DEFAULT 'pending',
+  "rejection_reason" text,
+  "reviewed_by" uuid,  -- admin who reviewed
+  "reviewed_at" timestamp,
+  "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "checkout_locks" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "item_id" uuid NOT NULL,
+  "user_id" uuid NOT NULL,
+  "start_date" timestamp NOT NULL,
+  "end_date" timestamp NOT NULL,
+  "expires_at" timestamp NOT NULL,  -- lock expires after 5 min
+  "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "rental_extensions" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "rental_id" uuid NOT NULL,
+  "requested_by" uuid NOT NULL,  -- renter
+  "new_end_date" timestamp NOT NULL,
+  "extra_days" int NOT NULL CHECK ("extra_days" > 0),
+  "extra_cost" decimal(10,2) NOT NULL CHECK ("extra_cost" >= 0),
+  "status" extension_status NOT NULL DEFAULT 'pending',
+  "created_at" timestamp NOT NULL DEFAULT NOW(),
+  "updated_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "support_agent_ratings" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "ticket_id" uuid NOT NULL,
+  "user_id" uuid NOT NULL,  -- user who rated
+  "agent_id" uuid NOT NULL,  -- support agent rated
+  "rating" int NOT NULL CHECK ("rating" >= 1 AND "rating" <= 5),
+  "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "item_reports" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "item_id" uuid NOT NULL,
+  "reporter_id" uuid NOT NULL,
+  "reason" varchar(50) NOT NULL,  -- fake_listing, inappropriate, stolen, wrong_category, spam, other
+  "description" text,
+  "is_reviewed" boolean NOT NULL DEFAULT FALSE,
+  "reviewed_by" uuid,
+  "created_at" timestamp NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE "audit_logs" (
+  "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "actor_id" uuid NOT NULL,  -- who performed the action
+  "action" audit_action NOT NULL,
+  "target_type" varchar(50) NOT NULL,  -- user, item, rental, ticket, setting
+  "target_id" uuid,
+  "old_value" jsonb,
+  "new_value" jsonb,
+  "reason" text,
+  "created_at" timestamp NOT NULL DEFAULT NOW()
 );
 
 -- ============================================================
@@ -495,6 +641,11 @@ ALTER TABLE "chats" ADD FOREIGN KEY ("user2_id") REFERENCES "users" ("id");
 ALTER TABLE "chat_messages" ADD FOREIGN KEY ("chat_id") REFERENCES "chats" ("id");
 ALTER TABLE "chat_messages" ADD FOREIGN KEY ("sender_id") REFERENCES "users" ("id");
 
+-- Item Comments / System
+ALTER TABLE "item_comments" ADD FOREIGN KEY ("item_id") REFERENCES "items" ("id");
+ALTER TABLE "item_comments" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "item_comments" ADD FOREIGN KEY ("parent_comment_id") REFERENCES "item_comments" ("id");
+
 -- Notifications, Favorites, Reviews, Verifications
 ALTER TABLE "notifications" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "favorites" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
@@ -544,6 +695,14 @@ CREATE TRIGGER trg_support_tickets_updated_at
 
 CREATE TRIGGER trg_item_verifications_updated_at
   BEFORE UPDATE ON "item_verifications"
+  FOR EACH ROW EXECUTE FUNCTION fn_update_timestamp();
+
+CREATE TRIGGER trg_item_comments_updated_at
+  BEFORE UPDATE ON "item_comments"
+  FOR EACH ROW EXECUTE FUNCTION fn_update_timestamp();
+
+CREATE TRIGGER trg_system_settings_updated_at
+  BEFORE UPDATE ON "system_settings"
   FOR EACH ROW EXECUTE FUNCTION fn_update_timestamp();
 
 -- ============================================================

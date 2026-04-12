@@ -24,6 +24,14 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./user-management/user-management').then(m => m.UserManagementComponent)
       },
       {
+        path: 'item-management',
+        loadComponent: () => import('./item-management/item-management.component').then(m => m.ItemManagementComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./system-settings/system-settings.component').then(m => m.SystemSettingsComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

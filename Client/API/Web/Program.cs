@@ -78,6 +78,10 @@ app.MapPaymentEndpoints();           // /api/v1/payments
 app.MapDeliveryEndpoints();          // /api/v1/orders/:id/delivery
 app.MapReviewEndpoints();            // /api/v1/rentals/:id/review, /items/:id/reviews
 app.MapVerificationEndpoints();      // /api/v1/items/:id/verify, /expert/assigned
+app.MapWalletEndpoints();            // /api/v1/wallet/*
+app.MapAdminSettingsEndpoints();     // /api/v1/admin/settings
+app.MapAdminItemEndpoints();         // /api/v1/admin/items/*
+app.MapDisputeEndpoints();           // /api/v1/support/disputes/*
 app.MapSupportEndpoints();           // /api/v1/support/tickets
 app.MapChatEndpoints();              // /api/v1/chats
 app.MapNotificationEndpoints();      // /api/v1/notifications

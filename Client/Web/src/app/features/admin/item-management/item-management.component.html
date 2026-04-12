@@ -1,0 +1,23 @@
+<div class="management-container">
+  <h2>Pending Items Approval</h2>
+  <p>Review and approve newly submitted items.</p>
+
+  <div *ngIf="isLoading()" class="loading">Loading items...</div>
+
+  <div *ngIf="!isLoading() && items().length === 0" class="empty-state">
+    No pending items to review.
+  </div>
+
+  <div class="items-grid" *ngIf="items().length > 0">
+    <div class="item-card" *ngFor="let item of items()">
+      <h3>{{ item.titleEn }}</h3>
+      <p class="desc">{{ item.descEn }}</p>
+      <small>Submitted: {{ item.createdAt | date }}</small>
+      
+      <div class="card-actions">
+        <button class="btn btn-danger" (click)="reviewItem(item.id, 'rejected')">Reject</button>
+        <button class="btn btn-success" (click)="reviewItem(item.id, 'approved')">Approve</button>
+      </div>
+    </div>
+  </div>
+</div>

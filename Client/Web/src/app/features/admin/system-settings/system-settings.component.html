@@ -1,0 +1,38 @@
+<div class="settings-container">
+  <h2>System Configurations</h2>
+  <p>Manage global platform settings and feature toggles.</p>
+
+  <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
+  <div *ngIf="isLoading()" class="loading">Loading current settings...</div>
+
+  <div class="settings-grid" *ngIf="!isLoading()">
+    <!-- Commission Setting -->
+    <div class="setting-card">
+      <div class="info">
+        <h3>Platform Commission</h3>
+        <p>The percentage fee taken from each rental transaction.</p>
+      </div>
+      <div class="control">
+        <div class="input-group">
+          <input type="number" [(ngModel)]="commissionRate" min="0" max="100" />
+          <span class="addon">%</span>
+        </div>
+        <button class="btn btn-primary" (click)="updateCommission()" [disabled]="isSaving()">Save</button>
+      </div>
+    </div>
+
+    <!-- Maintenance Mode -->
+    <div class="setting-card">
+      <div class="info">
+        <h3>Maintenance Mode</h3>
+        <p>Disable renting and ordering temporarily across the platform.</p>
+      </div>
+      <div class="control">
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="maintenanceMode" (change)="toggleMaintenance()" [disabled]="isSaving()" />
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,6 +18,7 @@ import { NOTIFICATIONS_ROUTES } from './features/notifications/notifications.rou
 import { SUPPORT_ROUTES } from './features/support/support.routes';
 import { EXPERT_ROUTES } from './features/expert/expert.routes';
 import { ADMIN_ROUTES } from './features/admin/admin.routes';
+import { WalletRoutes } from './features/wallet/wallet.routes';
 
 
 export const routes: Routes = [
@@ -27,6 +28,10 @@ export const routes: Routes = [
   ...BrandsRoutes,
   ...ItemsRoutes,
   ...OrdersRoutes,
+  {
+    path: 'wallet',
+    children: WalletRoutes
+  },
   {
     path: 'chats',
     children: CHAT_ROUTES
