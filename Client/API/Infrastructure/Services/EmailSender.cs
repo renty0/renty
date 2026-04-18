@@ -50,7 +50,7 @@ public class EmailSender : IEmailSender
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Error sending email to {to}");
-            throw;
+            // Don't rethrow — email failure should not break registration or other flows
         }
     }
 }

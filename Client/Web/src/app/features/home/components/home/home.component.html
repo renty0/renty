@@ -243,6 +243,7 @@
                 <li><a routerLink="/">{{ 'home.footer.home' | translate }}</a></li>
                 <li><a routerLink="/marketplace">{{ 'home.footer.market' | translate }}</a></li>
                 <li><a routerLink="/register">{{ 'home.footer.join' | translate }}</a></li>
+                <li><a routerLink="/support">{{ 'nav.support' | translate }}</a></li>
             </ul>
         </div>
         <div class="footer-cta">
@@ -258,13 +259,12 @@
     <div class="footer-bottom container">
         <p>{{ 'home.footer.copyright' | translate }}</p>
         <div class="flex gap-4">
-            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">
-                {{ 'home.footer.privacy' | translate }}
-            </a>
-            <a href="#" class="nav-link" style="font-size: 0.8rem; opacity: 0.7;">
+            <a (click)="showTerms.set(true)" class="nav-link" style="font-size: 0.8rem; opacity: 0.7; cursor: pointer;">
                 {{ 'home.footer.terms' | translate }}
             </a>
         </div>
     </div>
 </footer>
 </div>
+
+<app-terms-and-conditions [visible]="showTerms()" (closeDialog)="showTerms.set(false)"></app-terms-and-conditions>

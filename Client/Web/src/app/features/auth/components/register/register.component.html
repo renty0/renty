@@ -142,7 +142,7 @@
                 <mat-checkbox [formControl]="$any(additionalInfoGroup.controls['acceptTerms'])" color="primary">
                   <span class="terms-text">
                     {{ 'register.acceptOn' | translate }}
-                    <button type="button" class="terms-link" (click)="showTerms.set(true)">
+                    <button type="button" class="terms-link" (click)="$event.stopPropagation(); showTerms.set(true)">
                       {{ 'register.terms' | translate }}
                     </button>
                   </span>

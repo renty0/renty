@@ -28,11 +28,14 @@ namespace Infrastructure.Services
             _logger.LogInformation("Starting Gap Analysis Pipeline...");
 
             // 1. Run Python Script
-            // Adjust paths relative to the API running directory or usage absolute paths if confident
-            // Using absolute paths based on knowledge of the workspace
-            string repoRoot = @"e:\Courses\Work\renty"; // Based on context
-            string scriptPath = Path.Combine(repoRoot, @"Gap_Analysis\scripts\run_pipeline.py");
-            string resultPath = Path.Combine(repoRoot, @"Gap_Analysis\results\data\gap_summary.json");
+            // When running locally, the API's working directory is typically:
+            //   <repo>\Client\API\Web
+            // Compute <repo> from that so we don't rely on machine-specific absolute paths.
+            var currentDir = Directory.GetCurrentDirectory();
+            var repoRoot = Path.GetFullPath(Path.Combine(currentDir, "..", "..", ".."));
+
+            var scriptPath = Path.Combine(repoRoot, "Gap_Analysis", "scripts", "run_pipeline.py");
+            var resultPath = Path.Combine(repoRoot, "Gap_Analysis", "results", "data", "gap_summary.json");
 
             var startInfo = new ProcessStartInfo
             {

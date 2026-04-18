@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "renter": "Renter",
     "owner": "Owner",
@@ -261,6 +261,10 @@
     "details": "Details",
     "media": "Media",
     "organization": "Organization"
+  },
+  "info": {
+    "accountInfo": "Account Info",
+    "profileInfo": "Profile Info"
   },
   "icons": {
     "next": "arrow_forward",
@@ -678,5 +682,18 @@
     "unexpectedError": "An unexpected error occurred",
     "noProductsFound": "No products found",
     "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for."
+  },
+"terms": {
+    "title": "Terms and Conditions",
+    "close": "Close",
+    "intro": "By using Renty, you agree to the following terms and conditions. Please read them carefully before registering.",
+    "section1Title": "1. Account Responsibility",
+    "section1Body": "You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account.",
+    "section2Title": "2. Rental Agreement",
+    "section2Body": "All rentals are subject to availability. You agree to return items in the same condition they were received. Late returns may incur additional fees.",
+    "section3Title": "3. Payments and Deposits",
+    "section3Body": "A security deposit may be required for certain items. Payments are processed securely through our payment partners. Refunds are subject to our cancellation policy.",
+    "section4Title": "4. Prohibited Use",
+    "section4Body": "You agree not to use the platform for any unlawful purposes, to misrepresent the condition of items, or to engage in fraudulent transactions."
   }
 }
