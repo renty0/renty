@@ -29,7 +29,8 @@
     </div>
   </div>
 
-  <div class="container main-content">
+    
+  <div class="container main-content mt-5 mb-5">
     <div class="layout-grid">
       <!-- Sidebar Filters -->
       <aside class="filters-sidebar">
@@ -55,18 +56,16 @@
           <div class="filters-body">
             <!-- Category Filter -->
             <div class="filter-group">
-              <label>
-                <mat-icon>category</mat-icon>
-                {{ 'marketplace.category' | translate }}
-              </label>
               <mat-form-field appearance="outline" class="full-width custom-field">
                 <mat-select
+                  panelClass="marketplace-select-panel"
+                  [placeholder]="'marketplace.category' | translate"
                   [ngModel]="selectedCategoryId()"
                   (ngModelChange)="selectedCategoryId.set($event)"
                 >
-                  <mat-option [value]="undefined">{{
-                    'marketplace.allCategories' | translate
-                  }}</mat-option>
+                  <mat-option disabled class="list-header-option">
+                    {{ 'marketplace.category' | translate }}
+                  </mat-option>
                   @for (cat of categories(); track cat.id) {
                     <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
                   }
@@ -77,18 +76,16 @@
             <!-- Subcategory Filter -->
             @if (selectedCategoryId() && subcategories().length > 0) {
               <div class="filter-group animate-in">
-                <label>
-                  <mat-icon>account_tree</mat-icon>
-                  {{ 'marketplace.subcategory' | translate }}
-                </label>
                 <mat-form-field appearance="outline" class="full-width custom-field">
                   <mat-select
+                    panelClass="marketplace-select-panel"
+                    [placeholder]="'marketplace.subcategory' | translate"
                     [ngModel]="selectedSubcategoryId()"
                     (ngModelChange)="selectedSubcategoryId.set($event)"
                   >
-                    <mat-option [value]="undefined">{{
-                      'marketplace.allSubcategories' | translate
-                    }}</mat-option>
+                    <mat-option disabled class="list-header-option">
+                      {{ 'marketplace.subcategory' | translate }}
+                    </mat-option>
                     @for (sub of subcategories(); track sub.id) {
                       <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
                     }
@@ -99,15 +96,16 @@
 
             <!-- City Filter -->
             <div class="filter-group">
-              <label>
-                <mat-icon>location_city</mat-icon>
-                {{ 'items.city' | translate }}
-              </label>
               <mat-form-field appearance="outline" class="full-width custom-field">
-                <mat-select [ngModel]="selectedCity()" (ngModelChange)="selectedCity.set($event)">
-                  <mat-option [value]="undefined">{{
-                    'marketplace.allCities' | translate
-                  }}</mat-option>
+                <mat-select
+                  panelClass="marketplace-select-panel"
+                  [placeholder]="'items.city' | translate"
+                  [ngModel]="selectedCity()"
+                  (ngModelChange)="selectedCity.set($event)"
+                >
+                  <mat-option disabled class="list-header-option">
+                    {{ 'items.city' | translate }}
+                  </mat-option>
                   @for (gov of governorates; track gov.code) {
                     <mat-option [value]="gov.code">{{ gov.name | translate }}</mat-option>
                   }
@@ -146,15 +144,16 @@
 
             <!-- Item Type -->
             <div class="filter-group">
-              <label>
-                <mat-icon>layers</mat-icon>
-                {{ 'labels.type' | translate }}
-              </label>
               <mat-form-field appearance="outline" class="full-width custom-field">
-                <mat-select [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
-                  <mat-option [value]="undefined">{{
-                    'marketplace.allTypes' | translate
-                  }}</mat-option>
+                <mat-select
+                  panelClass="marketplace-select-panel"
+                  [placeholder]="'labels.type' | translate"
+                  [ngModel]="selectedType()"
+                  (ngModelChange)="selectedType.set($event)"
+                >
+                  <mat-option disabled class="list-header-option">
+                    {{ 'labels.type' | translate }}
+                  </mat-option>
                   @for (type of itemTypes; track type.key) {
                     <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
                   }

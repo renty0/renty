@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
+import { TermsAndConditionsComponent } from '../../../auth/components/terms-and-conditions/terms-and-conditions.component';
 
 type CalendarCell = {
     date: Date | null;
@@ -20,7 +21,8 @@ type CalendarCell = {
         RouterModule,
         TranslateModule,
         MatIconModule,
-        LoadingButtonComponent
+        LoadingButtonComponent,
+        TermsAndConditionsComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -29,6 +31,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private el = inject(ElementRef);
 
     isScrolled = signal(false);
+    showTerms = signal(false);
 
     private readonly today = new Date();
     calendarMonth = signal(new Date(this.today.getFullYear(), this.today.getMonth(), 1));
@@ -48,8 +51,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         { id: 2, nameKey: 'home.categories.padel', icon: 'sports_tennis', image: 'assets/images/category_padel.png' },
         { id: 3, nameKey: 'home.categories.fitness', icon: 'fitness_center', image: 'assets/images/category_fitness.png' },
         { id: 4, nameKey: 'home.categories.football', icon: 'sports_soccer', image: 'assets/images/category_football.png' },
-        { id: 5, nameKey: 'home.categories.cycling', icon: 'pedal_bike', image: 'assets/images/hero_bg.png' },
-        { id: 6, nameKey: 'home.categories.camping', icon: 'terrain', image: 'assets/images/hero_bg.png' }
+        { id: 5, nameKey: 'home.categories.cycling', icon: 'pedal_bike', image: 'assets/images/category_cycling.png' },
+        { id: 6, nameKey: 'home.categories.camping', icon: 'terrain', image: 'assets/images/category_camping.png' }
     ]);
 
     stats = signal([
