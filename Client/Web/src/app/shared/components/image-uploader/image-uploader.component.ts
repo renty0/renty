@@ -155,11 +155,11 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
   }
   private validateFile(file: File): boolean {
     if (!this.allowedTypes.includes(file.type)) {
-      this.toast.showError('Please select a valid image file (PNG, JPG, GIF, WebP)');
+      this.toast.showError('uploader.invalidImageType');
       return false;
     }
     if (file.size > this.maxSize) {
-      this.toast.showError('File size must be less than 5MB');
+      this.toast.showError('uploader.fileTooLarge');
       return false;
     }
     return true;
@@ -167,7 +167,7 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
   uploadFile(event: Event): void {
     event.stopPropagation();
     if (!this.selectedFile) {
-      this.toast.showError('Please select a file first');
+      this.toast.showError('uploader.selectFileFirst');
       return;
     }
     this.isUploading = true;
@@ -198,16 +198,16 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
           this.imageName = data.originalFileName || data.fileName || this.selectedFile!.name;
           this.selectedFile = null;
           this.previewUrl = null;
-          this.toast.showSuccess('Image uploaded successfully!');
+          this.toast.showSuccess('uploader.uploadSuccess');
         } else {
-          this.handleUploadError('Upload failed');
+          this.handleUploadError('uploader.uploadFailed');
         }
         this.isUploading = false;
         this.cdr.markForCheck();
       },
       error: () => {
         clearInterval(progressInterval);
-        this.handleUploadError('Upload failed. Please try again.');
+        this.handleUploadError('uploader.uploadFailedRetry');
       }
     });
   }
@@ -291,17 +291,17 @@ export class ImageUploaderComponent implements OnInit, OnChanges {
         this.imageName = data.originalFileName || data.fileName || this.selectedFile.name;
         this.selectedFile = null;
         this.previewUrl = null;
-        this.toast.showSuccess('Image uploaded successfully!');
+        this.toast.showSuccess('uploader.uploadSuccess');
         this.isUploading = false;
         this.cdr.markForCheck();
         return true;
       } else {
-        this.handleUploadError('Upload failed');
+        this.handleUploadError('uploader.uploadFailed');
         return false;
       }
     } catch (error) {
       clearInterval(progressInterval);
-      this.handleUploadError('Upload failed. Please try again.');
+      this.handleUploadError('uploader.uploadFailedRetry');
       return false;
     }
   }

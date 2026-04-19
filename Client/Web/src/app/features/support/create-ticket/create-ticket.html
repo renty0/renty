@@ -16,7 +16,7 @@
       <form (ngSubmit)="submit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'support.type' | translate }}</mat-label>
-          <mat-select [(ngModel)]="ticketType" name="type" required>
+          <mat-select [(ngModel)]="ticketType" name="type" required panelClass="support-select-panel">
             @for (t of types; track t.value) {
               <mat-option [value]="t.value">{{ t.label | translate }}</mat-option>
             }

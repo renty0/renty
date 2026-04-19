@@ -29,8 +29,9 @@
                 @for (item of items(); track item.id) {
                     <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
                         <div class="card-media">
-                            <img [src]="item.primaryImage || 'assets/images/placeholder.webp'"
+                            <img [src]="getItemImage(item)"
                                  [alt]="getLocalizedTitle(item)"
+                                 (error)="onImageError($event)"
                                  loading="lazy">
                             <div class="card-badges">
                                 @if (item.type === 'premium') {

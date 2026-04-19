@@ -221,7 +221,7 @@ export class ItemsEditorPageComponent implements OnInit {
       .pipe(
         tap((res) => {
           if (res.error) {
-            this.toast.showError(res.messages?.[0] ?? 'Failed to load item details');
+            this.toast.showError(res.messages?.[0] ?? 'errors.failedToLoadItemDetails');
             this.router.navigate(['/items']);
             return;
           }
@@ -266,7 +266,7 @@ export class ItemsEditorPageComponent implements OnInit {
           }
         }),
         catchError(() => {
-          this.toast.showError('Failed to load item details');
+          this.toast.showError('errors.failedToLoadItemDetails');
           this.router.navigate(['/items']);
           return of(null);
         }),
@@ -316,15 +316,15 @@ export class ItemsEditorPageComponent implements OnInit {
       .pipe(
         tap((res) => {
           if (res.error) {
-            this.toast.showError(res.messages?.[0] ?? 'Failed to create item');
+            this.toast.showError(res.messages?.[0] ?? 'products.createFailed');
           } else {
-            this.toast.showSuccess(res.messages?.[0] || 'Item created successfully');
+            this.toast.showSuccess(res.messages?.[0] || 'products.createSuccess');
             this.saved.emit();
             if (this.saved.observed === false) this.router.navigate(['/items']);
           }
         }),
         catchError(() => {
-          this.toast.showError('An error occurred while creating item');
+          this.toast.showError('products.createFailed');
           return of(null);
         }),
         finalize(() => (this.isSaving = false)),
@@ -363,15 +363,15 @@ export class ItemsEditorPageComponent implements OnInit {
       .pipe(
         tap((res) => {
           if (res.error) {
-            this.toast.showError(res.messages?.[0] ?? 'Failed to update item');
+            this.toast.showError(res.messages?.[0] ?? 'products.updateFailed');
           } else {
-            this.toast.showSuccess(res.messages?.[0] || 'Item updated successfully');
+            this.toast.showSuccess(res.messages?.[0] || 'products.updateSuccess');
             this.saved.emit();
             if (this.saved.observed === false) this.router.navigate(['/items']);
           }
         }),
         catchError(() => {
-          this.toast.showError('An error occurred while updating item');
+          this.toast.showError('products.updateFailed');
           return of(null);
         }),
         finalize(() => (this.isSaving = false)),

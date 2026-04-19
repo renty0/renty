@@ -216,12 +216,12 @@ export class ProductDetailsComponent implements OnInit {
                     .pipe(
                         tap(res => {
                             if (!res.error) {
-                                this.toast.showSuccess('Item deleted successfully');
+                                this.toast.showSuccess('products.deleteSuccess');
                                 this.router.navigate(['/marketplace']);
                             }
                         }),
                         catchError(err => {
-                            this.toast.showError('Failed to delete item');
+                            this.toast.showError('products.deleteFailed');
                             return of(null);
                         })
                     ).subscribe();

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { SearchClient, ItemListDto } from '../../core/api/api-client';
+import { SearchClient, ItemListDto, API_BASE_URL } from '../../core/api/api-client';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
@@ -28,6 +28,7 @@ export class SearchResultsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private searchClient = inject(SearchClient);
   public translate = inject(TranslateService);
+  private readonly fallbackImage = 'assets/images/placeholder.webp';
 
   query = signal('');
   items = signal<ItemListDto[]>([]);
@@ -38,7 +39,7 @@ export class SearchResultsComponent implements OnInit {
   pageSize = signal(12);
   totalCount = signal(0);
 
-  constructor() {
+  constructor(@Optional() @Inject(API_BASE_URL) private apiBaseUrl?: string) {
     // React to query param changes
     this.route.queryParams.subscribe(params => {
       const q = params['q'] || '';
@@ -94,6 +95,26 @@ export class SearchResultsComponent implements OnInit {
     if (!ref) return '';
     const isAr = this.translate.currentLang === 'ar';
     return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
+  }
+
+  getItemImage(item: ItemListDto): string {
+    const raw = item?.primaryImage?.trim();
+    if (!raw) return this.fallbackImage;
+
+    if (/^https?:\/\//i.test(raw) || raw.startsWith('data:')) return raw;
+
+    if (raw.startsWith('/')) {
+      const base = (this.apiBaseUrl || window.location.origin).replace(/\/+$/, '');
+      return `${base}${raw}`;
+    }
+
+    return raw;
+  }
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement | null;
+    if (!img || img.src.includes(this.fallbackImage)) return;
+    img.src = this.fallbackImage;
   }
 }
 
