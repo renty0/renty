@@ -20,7 +20,7 @@ export class AdminGuard implements CanActivate {
         if (!this.authService.isLoggedIn()) {
             this.router.navigate(['/login'], { queryParams: { returnUrl: _state.url } });
         } else {
-            this.toast.showError('Access Denied: Admin permissions required');
+            this.toast.showError('errors.adminAccessDenied');
             this.router.navigate(['/']);
         }
 

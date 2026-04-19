@@ -299,12 +299,51 @@
 
 ::ng-deep {
   .mat-mdc-paginator {
-    background: transparent;
-    border-top: 1px solid rgba($primary-color, 0.1);
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    min-height: 64px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 
     .mat-mdc-notch-piece {
       border: none !important;
     }
+
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      color: #475569 !important;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .mat-mdc-form-field {
+      min-width: 110px;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background: #f8fafc !important;
+      border: 1px solid #dbe3ee !important;
+      border-radius: 10px !important;
+      min-height: 40px;
+    }
+
+    .mat-mdc-form-field-infix {
+      min-height: auto !important;
+      padding: 8px 10px !important;
+    }
+
+    .mdc-notched-outline {
+      display: none !important;
+    }
+  }
+
+  .mat-mdc-paginator .mat-mdc-icon-button {
+    color: #334155 !important;
+  }
+
+  .mat-mdc-paginator .mat-mdc-icon-button[disabled] {
+    color: #cbd5e1 !important;
   }
 
   .mat-mdc-form-field-outline {

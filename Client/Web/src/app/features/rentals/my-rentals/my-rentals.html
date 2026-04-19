@@ -24,7 +24,7 @@
         <mat-icon ripple="false">history</mat-icon>
         <p>{{ 'rentals.list.empty' | translate }}</p>
         <button mat-flat-button color="primary" routerLink="/marketplace">
-          {{ 'nav.marketplace' | translate }}
+          {{ 'nav.market' | translate }}
         </button>
       </div>
     } @else {
@@ -39,7 +39,7 @@
                 <img [src]="element.itemImage || 'assets/placeholder-product.png'" alt="Item">
                 <div class="item-info">
                    <span class="item-title">{{ element.itemTitle }}</span>
-                   <span class="owner-name">{{ 'marketplace.owner' | translate }}: {{ element.ownerFirstName }}</span>
+                   <span class="owner-name">{{ 'common.owner' | translate }}: {{ element.ownerFirstName }}</span>
                 </div>
               </div>
             </td>

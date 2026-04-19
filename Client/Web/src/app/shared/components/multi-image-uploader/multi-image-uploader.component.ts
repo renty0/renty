@@ -2,7 +2,7 @@ import { Component, inject, Input, Output, EventEmitter, ChangeDetectorRef } fro
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MediaClient } from '../../../core/api/api-client';
 import { ToastService } from '../../services/toast.service';
 import { firstValueFrom } from 'rxjs';
@@ -28,6 +28,7 @@ export class MultiImageUploaderComponent {
     private apiClient = inject(MediaClient);
     private toast = inject(ToastService);
     private cdr = inject(ChangeDetectorRef);
+    private translate = inject(TranslateService);
 
     @Input() images: UploadedImage[] = [];
     @Output() imagesChange = new EventEmitter<UploadedImage[]>();
@@ -47,11 +48,15 @@ export class MultiImageUploaderComponent {
         // Validate files
         const validFiles = files.filter(file => {
             if (!file.type.startsWith('image/')) {
-                this.toast.showError(`Invalid file type: ${file.name}`);
+                this.toast.showError(
+                    this.translate.instant('uploader.invalidFileTypeWithName', { fileName: file.name })
+                );
                 return false;
             }
             if (file.size > 5 * 1024 * 1024) {
-                this.toast.showError(`File too large: ${file.name}`);
+                this.toast.showError(
+                    this.translate.instant('uploader.fileTooLargeWithName', { fileName: file.name })
+                );
                 return false;
             }
             return true;
@@ -105,11 +110,15 @@ export class MultiImageUploaderComponent {
                 this.emitChanges();
             } else {
                 this.removeImage(tempImage);
-                this.toast.showError(`Failed to upload ${file.name}`);
+                this.toast.showError(
+                    this.translate.instant('uploader.uploadFailedWithName', { fileName: file.name })
+                );
             }
         } catch (error) {
             this.removeImage(tempImage);
-            this.toast.showError(`Failed to upload ${file.name}`);
+            this.toast.showError(
+                this.translate.instant('uploader.uploadFailedWithName', { fileName: file.name })
+            );
             console.error(error);
         }
     }
