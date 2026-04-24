@@ -33,14 +33,12 @@ public class GetInventoryStatsQueryHandler : IRequestHandler<GetInventoryStatsQu
             .Take(request.Top)
             .ToListAsync(cancellationToken);
 
-        // Get all sales with product and category info
         var salesWithCategories = await _context.Sales
             .Include(s => s.Product)
                 .ThenInclude(p => p.Subcategory)
                     .ThenInclude(sc => sc.Category)
             .ToListAsync(cancellationToken);
 
-        // Group by category in memory
         var revenueByCategory = salesWithCategories
             .GroupBy(s => s.Product?.Subcategory?.Category?.NameEn ?? "Unknown")
             .Select(g => new CategoryPerformanceDto(

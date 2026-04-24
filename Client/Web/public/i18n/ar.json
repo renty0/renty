@@ -1,6 +1,7 @@
-﻿{
+{
   "common": {
     "renter": "مستأجر",
+    "cancel": "إلغاء",
     "owner": "مالك",
     "success": "نجاح",
     "error": "خطأ",
@@ -8,10 +9,18 @@
     "warning": "تحذير",
     "loading": "جاري التحميل...",
     "role": "الدور",
+    "chat": "المحادثة",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
     "user": "مستخدم",
     "date": "التاريخ",
+    "active": "نشط",
+    "inactive": "غير نشط",
     "status": "الحالة",
     "actions": "الإجراءات",
+    "download": "تحميل",
+    "close": "إغلاق",
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "both": "كلاهما",
@@ -24,7 +33,20 @@
     "view": {
       "list": "عرض القائمة",
       "cards": "عرض البطاقات"
-    }
+    },
+    "FirstName": "الاسم الأول",
+    "LastName": "اسم العائلة",
+    "Email": "البريد الإلكتروني",
+    "Password": "كلمة المرور",
+    "Save": "حفظ",
+    "Cancel": "إلغاء",
+    "Retry": "إعادة المحاولة"
+  },
+  "favorites": {
+    "title": "المفضلة",
+    "remove": "إزالة",
+    "removeSuccess": "تمت إزالة العنصر من المفضلة بنجاح",
+    "empty": "لا توجد مفضلة"
   },
   "marketplace": {
     "title": "السوق",
@@ -67,11 +89,13 @@
   "nav": {
     "home": "الرئيسية",
     "management": "الإدارة",
+    "marketplace": "السوق",
     "profile": "الملف الشخصي",
     "title": "المتجر",
     "gap": "تحليل الفجوات",
     "fraud": "كشف الاحتيال",
     "userManagement": "إدارة المستخدمين",
+    "roleManagement": "إدارة الأدوار",
     "login": "تسجيل الدخول",
     "support": "الدعم",
     "logout": "تسجيل الخروج",
@@ -325,13 +349,20 @@
       "review": "إضافة تقييم",
       "rating": "التقييم",
       "comment": "تعليقك",
-      "submitReview": "تقديم التقييم"
+      "submitReview": "تقديم التقييم",
+      "handoff_code": "رمز تحقق الاستلام",
+      "give_to_owner": "اعرض هذا الكود للمالك عند استلام المنتج",
+      "enter_code": "أدخل كود المستأجر",
+      "condition_photos": "توثيق حالة المنتج",
+      "handover_photos": "صور الاستلام (المالك)",
+      "return_photos": "صور الإرجاع (المالك)"
     },
     "actions": {
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
-      "damaged": "مصادرة التأمين"
+      "damaged": "مصادرة التأمين",
+      "verify": "التحقق وبدء الإيجار"
     }
   },
   "validation": {
@@ -504,14 +535,30 @@
   },
   "items": {
     "daily": "يومي",
+    "noReviewsYet": "لا توجد تقييمات بعد",
+    "reviews": "التقييمات",
     "category": "الفئة",
     "brand": "الماركة",
+    "deposit": "التأمين",
+    "submitReview": "إرسال التقييم",
+    "reviewSubmitted": "تم إرسال التقييم بنجاح",
+    "reviewRequiresRental": "يمكنك فقط تقييم المنتجات التي استأجرتها مسبقاً",
+    "reviewPlaceholder": "شارك تجربتك مع هذا المنتج...",
+    "averageRating": "متوسط التقييم",
+    "rating": "التقييم",
     "city": "المدينة",
+    "leaveReview": "أضف تقييم",
+    "yourComment": "تعليقك",
+    "day": "يوم",
+    "week": "أسبوع",
+    "month": "شهر",
     "createdAt": "تم النشر في",
     "description": "الوصف",
     "owner": "المالك",
     "rentNow": "استأجر الآن",
-    "addToFavorites": "إضافة للمفضلة"
+    "favorite": "المفضلة",
+    "addedToFavorites": "تمت الإضافة للمفضلة",
+    "similarItems": "منتجات مشابهة"
   },
   "expert": {
     "verifyItem": "فحص جديد",
@@ -560,6 +607,8 @@
     "fraudRate": "معدل الاحتيال",
     "recommendationCtr": "نسبة النقر على التوصيات",
     "refreshMetrics": "تحديث المقاييس",
+    "runLive": "تشغيل تحليل مباشر",
+    "analyzing": "جاري التحليل...",
     "gapTitle": "تحليل الفجوات",
     "gapSubtitle": "فجوة العرض مقابل الطلب حسب الفئة",
     "category": "الفئة",
@@ -567,17 +616,45 @@
     "supply": "العرض",
     "gapScore": "درجة الفجوة",
     "recommendations": "التوصيات",
+    "totalCategories": "إجمالي الفئات",
+    "highGaps": "فجوات عالية المخاطر",
+    "topOpportunity": "أفضل فرصة",
+    "noGapData": "لم يتم العثور على نتائج لتحليل الفجوات.",
     "fraudTitle": "مراقبة الاحتيال",
     "fraudSubtitle": "تقييم المخاطر في الوقت الفعلي وسجلات النشاط",
     "riskScore": "درجة المخاطر",
     "decision": "القرار",
     "reason": "السبب",
+    "highRiskFlagged": "تم اكتشاف مخاطر عالية",
+    "automatedDecisions": "قرارات تلقائية",
+    "securityEvents": "أحداث أمنية",
+    "noFraudData": "لم يتم اكتشاف تهديدات أمنية مؤخراً.",
+    "settingsTitle": "إعدادات النظام",
+    "itemsTitle": "تدقيق المنتجات",
+    "commissionRate": "عمولة المنصة",
+    "maintenanceMode": "وضع الصيانة",
     "userManagementTitle": "إدارة المستخدمين",
     "userManagementSubtitle": "إدارة مستخدمي النظام ومستويات الوصول",
     "isActive": "نشط",
     "role": "دور النظام",
     "activate": "تنشيط",
-    "deactivate": "إلغاء التنشيط"
+    "deactivate": "إلغاء التنشيط",
+    "userManagement": {
+      "addUser": "إضافة مستخدم جديد"
+    },
+    "roleManagement": {
+      "title": "إدارة الأدوار",
+      "description": "تحديد وتكوين أدوار النظام وصلاحياتها",
+      "roles": "أدوار النظام",
+      "roleName": "اسم الدور",
+      "editPermission": "تحديد صلاحيات تفصيلية",
+      "hint": "لا يمكن تعديل أدوار SuperAdmin لأسباب أمنية.",
+      "users": "المستخدمين",
+      "editing": "تعديل صلاحيات",
+      "selectRole": "اختر دوراً لتعديل صلاحياته",
+      "selectRoleTitle": "اختر دوراً",
+      "selectRoleSubtitle": "اختر دوراً من القائمة الجانبية لإدارة صلاحياته."
+    }
   },
   "governorates": {
     "cairo": "القاهرة",
@@ -632,6 +709,8 @@
     "feedback": "ملاحظة",
     "inquiry": "استفسار",
     "other": "أخرى",
+    "awaitingSupport": "في انتظار الدعم",
+    "awaitingCustomer": "في انتظار العميل",
     "resolved": "مُحلول",
     "open": "مُفتح",
     "closed": "مُغلق",
@@ -647,25 +726,52 @@
   "payment": {
     "title": "الدفع",
     "selectMethod": "اختر طريقة الدفع",
+    "selectMethodSub": "جميع المعاملات آمنة ومشفرة",
+    "howToPay": "كيفية الدفع",
+    "accountNumber": "رقم الحساب",
     "transactionRef": "مرجع المعاملة (اختياري)",
-    "payNow": "ادفع الآن",
+    "payNow": "إتمام الدفع",
     "success": "تم الدفع بنجاح!",
     "error": "فشل الدفع. يرجى المحاولة مرة أخرى.",
     "methods": {
       "vodafone_cash": "فودافون كاش",
+      "vodafonecash": "فودافون كاش",
+      "vodafoneCashStep1": "افتح تطبيق فودافون كاش أو اتصل بـ *9#",
+      "vodafoneCashStep2": "حوّل المبلغ المحدد بالضبط إلى الرقم الظاهر أعلاه",
+      "vodafoneCashStep3": "أدخل رقم المرجع الظاهر على شاشة التأكيد",
       "fawry": "فوري",
+      "fawryStep1": "توجه لأقرب منفذ فوري أو استخدم تطبيق فوري",
+      "fawryStep2": "استخدم كود فوري الظاهر أعلاه لسداد الطلب",
+      "fawryStep3": "أدخل رقم إيصال فوري في الحقل أدناه",
       "paymob": "Paymob",
+      "paymobStep1": "سيتم تحويلك إلى بوابة Paymob الآمنة",
+      "paymobStep2": "أكمل عملية الدفع على منصة Paymob",
       "credit_card": "بطاقة ائتمان",
-      "bank_transfer": "تحويل بنكي"
+      "creditCardStep1": "أدخل بيانات بطاقتك في النموذج الآمن",
+      "creditCardStep2": "يتم خصم المبلغ فوراً عند التأكيد",
+      "bank_transfer": "تحويل بنكي",
+      "bankTransferStep1": "حوّل المبلغ المحدد بالضبط إلى رقم الـ IBAN الظاهر أعلاه",
+      "bankTransferStep2": "اذكر رقم الطلب في ملاحظات التحويل",
+      "bankTransferStep3": "أدخل رقم مرجع البنك في الحقل أدناه"
+    },
+    "trust": {
+      "ssl": "محمي بـ SSL",
+      "encrypted": "تشفير 256-bit",
+      "protected": "حماية المشتري",
+      "guarantee": "\u0622\u0645\u0646 100% · لا نحتفظ ببياناتك المالية"
     }
   },
   "order_details": {
     "title": "تفاصيل الطلب",
     "items": "العناصر المطلوبة",
     "payment": "معلومات الدفع",
+    "status": "حالة الطلب",
+    "orderDate": "تاريخ الطلب",
+    "qty": "الكمية",
+    "no_payment": "لا توجد معلومات دفع متاحة بعد.",
+    "no_tracking": "لا توجد معلومات تتبع متاحة بعد.",
     "paymentStatus": "حالة الدفع",
     "delivery": "تتبع الشحنة",
-    "noTracking": "لا توجد معلومات تتبع متاحة بعد.",
     "statuses": {
       "pending": "قيد الانتظار",
       "paid": "تم الدفع",
@@ -698,8 +804,11 @@
     "delivery": "رسوم التوصيل",
     "order_id": "رقم الطلب",
     "back_to_market": "العودة إلى السوق",
-    "place_order": "/ اطلب الآن",
+    "place_order": "إكمال الطلب",
     "items": "العناصر",
+    "shipping": "عنوان الشحن",
+    "support_info": "أمان الدفع",
+    "secure_notice": "محمي بواسطة نظام رنتي الآمن. بياناتك مشفرة ومحمية.",
     "success": "تم تقديم طلبك بنجاح!"
   },
   "errors": {
@@ -719,7 +828,7 @@
     "noProductsFound": "لم يتم العثور على منتجات",
     "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه."
   },
-"terms": {
+  "terms": {
     "title": "الشروط والأحكام",
     "close": "إغلاق",
     "intro": "باستخدامك لرنتي، فإنك توافق على الشروط والأحكام التالية. يرجى قراءتها بعناية قبل التسجيل.",

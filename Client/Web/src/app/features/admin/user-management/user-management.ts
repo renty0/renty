@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,10 +9,13 @@ import { AdminClient, IAdminUserDto, UpdateUserStatusCommand } from '../../../co
 import { TranslateModule } from '@ngx-translate/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../../core/services/auth.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ToastService } from '../../../shared/services/toast.service';
 import { MatCardModule } from '@angular/material/card';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CreateUserDialogComponent } from './create-user-dialog/create-user-dialog';
+import { PermissionService } from '../../../core/services/permission.service';
+import { PermissionType } from '../../../core/constants/permissions';
 
 @Component({
   selector: 'app-user-management',
@@ -25,11 +28,10 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
     MatSlideToggleModule,
     MatChipsModule,
     MatPaginatorModule,
-    MatProgressBarModule,
     MatCardModule,
     HeaderSectionComponent,
     TranslateModule,
-    MatSnackBarModule,
+    MatDialogModule,
   ],
   templateUrl: './user-management.html',
   styleUrl: './user-management.scss',
@@ -37,16 +39,20 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
 export class UserManagementComponent implements OnInit {
   private adminClient = inject(AdminClient);
   private authService = inject(AuthService);
-  private snackBar = inject(MatSnackBar);
+  private toast = inject(ToastService);
+  private dialog = inject(MatDialog);
+  private permissionService = inject(PermissionService);
 
   users = signal<IAdminUserDto[]>([]);
   totalUsers = signal(0);
   pageSize = signal(20);
   pageIndex = signal(0);
   isLoading = signal(true);
+  searchTerm = signal<string | null>(null);
   error = signal<string | null>(null);
 
-  isSuperAdmin = this.authService.isAdmin();
+  canAddUsers = computed(() => this.permissionService.hasPermission(PermissionType.Users_Create));
+  canEditUsers = computed(() => this.permissionService.hasPermission(PermissionType.Users_Edit));
 
   displayedColumns: string[] = ['name', 'email', 'role', 'status', 'actions'];
 
@@ -54,11 +60,18 @@ export class UserManagementComponent implements OnInit {
     this.loadUsers();
   }
 
+  onSearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value || null);
+    this.pageIndex.set(0);
+    this.loadUsers();
+  }
+
   loadUsers(): void {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.adminClient.getAdminUsers(this.pageIndex() + 1, this.pageSize()).subscribe({
+    this.adminClient.getAdminUsers(this.pageIndex() + 1, this.pageSize(), this.searchTerm() ?? undefined).subscribe({
       next: (response: any) => {
         if (response && response.data) {
           this.users.set(response.data.users || []);
@@ -73,6 +86,18 @@ export class UserManagementComponent implements OnInit {
         this.isLoading.set(false);
         console.error('User Load Error:', err);
       },
+    });
+  }
+
+  addUser(): void {
+    const dialogRef = this.dialog.open(CreateUserDialogComponent, {
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadUsers();
+      }
     });
   }
 
@@ -95,23 +120,13 @@ export class UserManagementComponent implements OnInit {
       next: (response: any) => {
         if (response && response.success) {
           user.isActive = newStatus;
-          this.snackBar.open(
-            `User ${newStatus ? 'activated' : 'deactivated'} successfully`,
-            'Close',
-            { duration: 3000 },
-          );
+          this.toast.showSuccess(`User ${newStatus ? 'activated' : 'deactivated'} successfully`);
         } else {
-          this.snackBar.open(response?.error || 'Failed to update user status', 'Close', {
-            duration: 3000,
-          });
+          this.toast.showError(response?.error || 'Failed to update user status');
         }
       },
       error: (err) => {
-        this.snackBar.open(
-          'An error occurred. Check if you have SuperAdmin permissions.',
-          'Close',
-          { duration: 5000 },
-        );
+        this.toast.showError('An error occurred. Check if you have SuperAdmin permissions.');
         console.error('Update User Status Error:', err);
       },
     });
@@ -130,5 +145,41 @@ export class UserManagementComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  getInitials(user: IAdminUserDto): string {
+    const first = user.firstName?.charAt(0) || '';
+    const last = user.lastName?.charAt(0) || '';
+    return (first + last).toUpperCase();
+  }
+
+  getAvatarColor(user: IAdminUserDto): string {
+    const colors = [
+      '#6366f1', // Indigo
+      '#8b5cf6', // Violet
+      '#ec4899', // Pink
+      '#f43f5e', // Rose
+      '#f59e0b', // Amber
+      '#10b981', // Emerald
+      '#3b82f6', // Blue
+    ];
+    const index = (user.id || 0) % colors.length;
+    return colors[index];
+  }
+
+  editRoles(user: IAdminUserDto): void {
+    import('./assign-role-dialog/assign-role-dialog.component').then(m => {
+      const dialogRef = this.dialog.open(m.AssignRoleDialogComponent, {
+        width: '400px',
+        data: { user }
+      });
+
+      dialogRef.afterClosed().subscribe(newRoles => {
+        if (newRoles) {
+          user.roles = newRoles;
+          this.toast.showSuccess('Roles updated successfully');
+        }
+      });
+    });
   }
 }

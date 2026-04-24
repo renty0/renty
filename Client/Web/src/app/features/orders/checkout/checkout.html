@@ -1,81 +1,140 @@
-<div class="checkout-container" [class.rtl]="translate.currentLang === 'ar'">
+<div class="checkout-container" [class.rtl]="translate.currentLang === 'ar'" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
   <app-header-section 
     [title]="'checkout.title' | translate" 
-    [subtitle]="'checkout.summary' | translate">
+    [subtitle]="'checkout.summary' | translate"
+    icon="shopping_cart_checkout">
   </app-header-section>
+
+  <div class="checkout-progress">
+    <div class="progress-step active">
+      <div class="step-num">1</div>
+      <span class="step-label">{{ 'checkout.summary' | translate }}</span>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step">
+      <div class="step-num">2</div>
+      <span class="step-label">{{ 'order_details.payment' | translate }}</span>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step">
+      <div class="step-num">3</div>
+      <span class="step-label">{{ 'common.success' | translate }}</span>
+    </div>
+  </div>
 
   <div class="content-wrapper" *ngIf="!isLoading(); else loading">
     <div class="checkout-grid" *ngIf="item() as itemData">
       
-      <!-- Left Column: Item Details -->
-      <div class="item-section">
-        <mat-card class="glass-card">
+      <div class="details-column">
+        <mat-card class="glass-card product-card">
           <mat-card-header>
+            <mat-icon mat-card-avatar>inventory_2</mat-icon>
             <mat-card-title>{{ 'checkout.items' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="item-row">
-              <div class="item-image">
-                <img [src]="itemData.images?.[0]?.imageUrl" [alt]="getLocalizedName(itemData)">
+            <div class="product-item">
+              <div class="product-visual">
+                <img [src]="itemData.images?.[0]?.imageUrl || 'assets/images/placeholder.png'" [alt]="getLocalizedName(itemData)">
               </div>
-              <div class="item-info">
-                <h3>{{ getLocalizedName(itemData) }}</h3>
-                <p class="category">{{ getLocalizedName(itemData.category) }}</p>
-                <div class="price-tag">
-                  <span class="currency">EGP</span>
-                  <span class="amount">{{ subtotal() | number:'1.2-2' }}</span>
+              <div class="product-info">
+                <div class="info-top">
+                  <h3>{{ getLocalizedName(itemData) }}</h3>
+                  <span class="category-tag">{{ getLocalizedName(itemData.category) }}</span>
+                </div>
+                <div class="info-bottom">
+                  <div class="price-box">
+                    <span class="label">{{ 'labels.dailyPrice' | translate }}</span>
+                    <div class="price">
+                      <span class="currency">EGP</span>
+                      <span class="amount">{{ subtotal() | number:'1.2-2' }}</span>
+                    </div>
+                  </div>
+                  <div class="quantity-box">
+                    <span class="label">{{ 'order_details.qty' | translate }}</span>
+                    <span class="value">1</span>
+                  </div>
                 </div>
               </div>
             </div>
           </mat-card-content>
         </mat-card>
+        <div class="info-group">
+          <mat-card class="glass-card flex-1">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>local_shipping</mat-icon>
+              <mat-card-title>{{ 'checkout.shipping' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="mock-address">
+                <p class="name">Ahmed Mohamed</p>
+                <p class="address">123 Nile St, Zamalek, Cairo</p>
+                <p class="phone">+20 123 456 7890</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
 
-        <!-- Mocked Shipping/Payment Sections for Visuals -->
-        <mat-card class="glass-card mt-4">
-          <mat-card-header>
-            <mat-card-title>Shipping Address</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="mock-info">
-              <mat-icon ripple>place</mat-icon>
-              <span>123 Nile St, Zamalek, Cairo</span>
-            </div>
-          </mat-card-content>
-        </mat-card>
+          <mat-card class="glass-card flex-1">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>contact_support</mat-icon>
+              <mat-card-title>{{ 'checkout.support_info' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="support-notice">
+                <mat-icon>verified_user</mat-icon>
+                <p>{{ 'checkout.secure_notice' | translate }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </div>
 
-      <!-- Right Column: Order Summary -->
-      <div class="summary-section">
-        <mat-card class="glass-card summary-card">
+      <div class="summary-column">
+        <mat-card class="glass-card sticky-card">
           <mat-card-header>
+            <mat-icon mat-card-avatar>receipt_long</mat-icon>
             <mat-card-title>{{ 'checkout.summary' | translate }}</mat-card-title>
           </mat-card-header>
+          
           <mat-card-content>
-            <div class="summary-details">
-              <div class="summary-line">
-                <span>{{ 'checkout.subtotal' | translate }}</span>
-                <span>EGP {{ subtotal() | number:'1.2-2' }}</span>
+            <div class="cost-breakdown">
+              <div class="cost-row">
+                <span class="label">{{ 'checkout.subtotal' | translate }}</span>
+                <span class="value">{{ subtotal() | currency:'EGP ' }}</span>
               </div>
-              <div class="summary-line">
-                <span>{{ 'checkout.delivery' | translate }}</span>
-                <span>EGP {{ deliveryFee | number:'1.2-2' }}</span>
+              <div class="cost-row">
+                <span class="label">{{ 'checkout.delivery' | translate }}</span>
+                <span class="value">{{ deliveryFee | currency:'EGP ' }}</span>
               </div>
-              <mat-divider class="my-3"></mat-divider>
-              <div class="summary-line total">
-                <span>{{ 'checkout.total' | translate }}</span>
-                <span>EGP {{ total() | number:'1.2-2' }}</span>
+              
+              <mat-divider></mat-divider>
+              
+              <div class="cost-row grand-total">
+                <span class="label">{{ 'checkout.total' | translate }}</span>
+                <div class="price-value">
+                  <span class="currency">EGP</span>
+                  <span class="amount">{{ total() | number:'1.2-2' }}</span>
+                </div>
               </div>
             </div>
+
+            <div class="payment-guarantee">
+              <mat-icon>shield</mat-icon>
+              <span>100% Secure Payment</span>
+            </div>
           </mat-card-content>
+
           <mat-card-actions>
             <app-loading-button
-              class="w-full"
+              [fullWidth]="true"
               [loading]="isPlacingOrder()"
               color="primary"
-              (click)="placeOrder()">
-              <mat-icon>shopping_cart</mat-icon>
+              (clicked)="placeOrder()">
+              <mat-icon>shopping_cart_checkout</mat-icon>
               {{ 'checkout.place_order' | translate }}
             </app-loading-button>
+            <button mat-button class="cancel-btn" routerLink="/marketplace">
+              {{ 'buttons.cancel' | translate }}
+            </button>
           </mat-card-actions>
         </mat-card>
       </div>
@@ -85,6 +144,7 @@
   <ng-template #loading>
     <div class="loading-state">
       <mat-spinner diameter="50"></mat-spinner>
+      <p>Preparing your checkout...</p>
     </div>
   </ng-template>
 </div>

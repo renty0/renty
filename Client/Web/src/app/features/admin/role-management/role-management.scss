@@ -1,0 +1,326 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.grid-content {
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  gap: $spacing-xl;
+  margin-top: $spacing-lg;
+  align-items: start;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.glass-card {
+  @include glassmorphism(0.015);
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba($primary-color, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+
+  .table-container {
+    padding: $spacing-sm;
+  }
+
+  .role-identity {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .role-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: $border-radius-md;
+      background: rgba($primary-color, 0.05);
+      @include flex-center;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: $primary-color;
+      }
+    }
+
+    .role-name {
+      font-weight: $font-weight-semibold;
+      color: $text-dark;
+      font-size: $font-size-sm;
+    }
+  }
+
+  .user-count-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: rgba($primary-color, 0.08);
+    color: $primary-color;
+    padding: 4px 10px;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .action-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+
+    .chevron {
+      color: $text-muted;
+      opacity: 0.3;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  tr {
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(.disabled-row):not(.is-loading) {
+      background-color: rgba($primary-color, 0.03) !important;
+      
+      .chevron {
+        opacity: 0.8;
+        transform: translateX(3px);
+      }
+    }
+
+    &.selected {
+      background-color: rgba($primary-color, 0.06) !important;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: $spacing-sm;
+        bottom: $spacing-sm;
+        width: 4px;
+        background: $primary-color;
+        border-radius: 0 4px 4px 0;
+      }
+      
+      .role-name { color: $primary-color; }
+      .chevron { opacity: 1; color: $primary-color; }
+    }
+
+    &.disabled-row {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.details-panel {
+  perspective: 1000px;
+}
+
+.permissions-card {
+  &.active-card {
+    animation: slideInRight 0.4s cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  mat-card-header {
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid rgba($primary-color, 0.08);
+    background: rgba($primary-color, 0.02);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-info {
+      .title-with-icon {
+        display: flex;
+        gap: $spacing-md;
+        align-items: flex-start;
+
+        .header-icon {
+          color: $primary-color;
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+          margin-top: 2px;
+        }
+
+        .text-stack {
+          mat-card-title {
+            font-size: $font-size-lg;
+            font-weight: $font-weight-bold;
+            margin: 0;
+            
+            span {
+              color: $primary-color;
+              text-decoration: underline;
+              text-underline-offset: 4px;
+            }
+          }
+
+          .subtitle {
+            color: $text-muted;
+            font-size: $font-size-xs;
+            margin: 4px 0 0 0;
+          }
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: $spacing-sm;
+
+      .cancel-btn {
+        color: $text-muted;
+        &:hover { background: rgba($black, 0.05); }
+      }
+
+      .save-btn {
+        padding: 0 $spacing-lg;
+        height: 40px;
+        border-radius: $border-radius-lg;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+
+        mat-icon { font-size: 18px; width: 18px; height: 18px; }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: $spacing-xl;
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-thumb { background: rgba($primary-color, 0.1); border-radius: 10px; }
+  }
+}
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $spacing-xl;
+}
+
+.module-section {
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+    color: $text-dark;
+    
+    mat-icon { font-size: 18px; width: 18px; height: 18px; color: $primary-color; opacity: 0.7; }
+    h3 { font-size: $font-size-sm; font-weight: $font-weight-bold; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  }
+
+  .permissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .permission-item {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-md;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover { background: rgba($primary-color, 0.04); }
+      &.selected { background: rgba($primary-color, 0.08); .perm-name { color: $text-dark; font-weight: $font-weight-semibold; } }
+
+      .perm-name { font-size: $font-size-sm; color: $text-muted; transition: all 0.2s ease; }
+      
+      mat-checkbox {
+        ::ng-deep .mdc-checkbox__background { border-radius: 4px; }
+      }
+    }
+  }
+}
+
+.empty-state-card {
+  height: 100%;
+  min-height: 450px;
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-3xl;
+  text-align: center;
+
+  .visual-element {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    @include flex-center;
+    margin-bottom: $spacing-xl;
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid $primary-color;
+      opacity: 0.1;
+      
+      &.outer { width: 100px; height: 100px; animation: pulse 3s infinite; }
+      &.inner { width: 70px; height: 70px; animation: pulse 3s infinite 0.5s; }
+    }
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: $primary-color;
+      opacity: 0.4;
+    }
+  }
+
+  h3 { color: $text-dark; font-weight: $font-weight-bold; margin: 0 0 $spacing-sm 0; }
+  p { color: $text-muted; font-size: $font-size-sm; max-width: 250px; line-height: 1.6; margin: 0 0 $spacing-xl 0; }
+
+  .hint {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-lg;
+    background: rgba($black, 0.03);
+    border-radius: $border-radius-xxl;
+    color: $text-muted;
+    font-size: $font-size-xs;
+
+    mat-icon { font-size: 16px; width: 16px; height: 16px; color: $primary-color; }
+  }
+}
+
+// Animations & Skeletons
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.1; }
+  50% { transform: scale(1.1); opacity: 0.15; }
+  100% { transform: scale(1); opacity: 0.1; }
+}
+
+.skeleton {
+  @include skeleton-base;
+  &.skeleton-text { height: 12px; border-radius: 4px; &.name-skeleton { width: 160px; } }
+  &.skeleton-badge { width: 50px; height: 24px; border-radius: 12px; }
+  &.skeleton-actions { width: 32px; height: 32px; border-radius: 50%; }
+}
+

@@ -5,7 +5,6 @@
     </div>
     } @else if (item()) {
     <div class="product-layout">
-        <!-- Breadcrumbs -->
         <div class="breadcrumbs">
             <a routerLink="/marketplace">{{ 'marketplace.title' | translate }}</a>
             <mat-icon ripple="false">chevron_right</mat-icon>
@@ -15,7 +14,6 @@
         </div>
 
         <div class="product-main-grid">
-            <!-- Left: Gallery -->
             <div class="product-gallery">
                 <div class="main-image-wrapper">
                     <img [src]="selectedImage() || 'assets/placeholder-product.png'"
@@ -40,7 +38,6 @@
                 </div>
             </div>
 
-            <!-- Right: Item Info -->
             <div class="product-info">
                 <div class="category-brand">
                     <span class="tag">{{ getLocalizedRefName(item()?.category) }}</span>
@@ -75,23 +72,26 @@
                         {{ 'marketplace.buyNow' | translate }}
                     </button>
 
-                    @if (isAdmin() || isOwner()) {
+                    @if (canEdit() || canDelete()) {
                     <div class="admin-actions">
+                        @if (canEdit()) {
                         <button mat-stroked-button color="primary" (click)="editItem()">
                             <mat-icon>edit</mat-icon>
                             {{ 'marketplace.editItem' | translate }}
                         </button>
+                        }
+                        @if (canDelete()) {
                         <button mat-stroked-button color="warn" (click)="deleteItem()">
                             <mat-icon>delete</mat-icon>
                             {{ 'marketplace.deleteItem' | translate }}
                         </button>
+                        }
                     </div>
                     }
                 </div>
             </div>
         </div>
 
-        <!-- Tabs Section -->
         <div class="product-extra-info">
             <mat-tab-group animationDuration="300ms">
                 <mat-tab [label]="'labels.description' | translate">
@@ -131,7 +131,6 @@
             </mat-tab-group>
         </div>
 
-        <!-- Related Items -->
         @if (relatedItems().length > 0) {
         <div class="related-items-section">
             <h2 class="section-title">{{ 'marketplace.relatedProducts' | translate }}</h2>

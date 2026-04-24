@@ -1,17 +1,26 @@
-﻿{
+{
   "common": {
     "renter": "Renter",
     "owner": "Owner",
     "success": "Success",
     "error": "Error",
     "info": "Info",
+    "chat": "Chat",
     "warning": "Warning",
+    "cancel": "Cancel",
     "loading": "Loading...",
     "role": "Role",
     "user": "User",
     "date": "Date",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "active": "Active",
+    "inactive": "Inactive",
+    "save": "Save",
     "status": "Status",
     "actions": "Actions",
+    "download": "Download",
     "name": "Name",
     "email": "Email",
     "both": "Both",
@@ -24,7 +33,14 @@
     "view": {
       "list": "List view",
       "cards": "Cards view"
-    }
+    },
+    "FirstName": "First Name",
+    "LastName": "Last Name",
+    "Email": "Email",
+    "Password": "Password",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "Retry": "Retry"
   },
   "marketplace": {
     "title": "Marketplace",
@@ -66,12 +82,14 @@
   },
   "nav": {
     "home": "Home",
+    "marketplace": "Marketplace",
     "management": "Management",
     "profile": "Profile",
     "title": "Store",
     "gap": "Gap Analysis",
     "fraud": "Fraud Detection",
     "userManagement": "User Management",
+    "roleManagement": "Role Management",
     "login": "Login",
     "support": "Support",
     "logout": "Logout",
@@ -325,13 +343,20 @@
       "review": "Leave a Review",
       "rating": "Rating",
       "comment": "Your Comment",
-      "submitReview": "Submit Review"
+      "submitReview": "Submit Review",
+      "handoff_code": "Handoff Verification Code",
+      "give_to_owner": "Show this code to the owner when you receive the item",
+      "enter_code": "Enter Renter's Code",
+      "condition_photos": "Condition Documentation",
+      "handover_photos": "Handover Photos (Owner)",
+      "return_photos": "Return Photos (Owner)"
     },
     "actions": {
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
-      "damaged": "Forfeit Deposit"
+      "damaged": "Forfeit Deposit",
+      "verify": "Verify & Start Rental"
     }
   },
   "validation": {
@@ -507,14 +532,30 @@
   },
   "items": {
     "daily": "Daily",
+    "noReviewsYet": "No reviews yet",
+    "reviews": "Reviews",
     "category": "Category",
     "brand": "Brand",
+    "deposit": "Deposit",
+    "submitReview": "Submit Review",
+    "reviewSubmitted": "Review submitted successfully",
+    "reviewRequiresRental": "You can only review items you have previously rented",
+    "reviewPlaceholder": "Share your experience with this item...",
+    "averageRating": "Average Rating",
+    "rating": "Rating",
     "city": "City",
+    "leaveReview": "Leave a Review",
+    "yourComment": "Your Comment",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
     "createdAt": "Posted on",
     "description": "Description",
     "owner": "Owner",
     "rentNow": "Rent Now",
-    "addToFavorites": "Add to Favorites"
+    "favorite": "Favorite",
+    "addedToFavorites": "Added to favorites",
+    "similarItems": "Similar Items"
   },
   "expert": {
     "verifyItem": "New Verification Workflow",
@@ -563,6 +604,8 @@
     "fraudRate": "Fraud Rate",
     "recommendationCtr": "Recommendation CTR",
     "refreshMetrics": "Refresh Metrics",
+    "runLive": "Run Live Analysis",
+    "analyzing": "Analyzing Data...",
     "gapTitle": "Gap Analysis",
     "gapSubtitle": "Supply vs Demand gap by category",
     "category": "Category",
@@ -570,17 +613,51 @@
     "supply": "Supply",
     "gapScore": "Gap Score",
     "recommendations": "Recommendations",
+    "totalCategories": "Total Categories",
+    "highGaps": "High Risk Gaps",
+    "topOpportunity": "Top Opportunity",
+    "noGapData": "No gap analysis results found.",
     "fraudTitle": "Fraud Monitoring",
     "fraudSubtitle": "Real-time risk assessment and activity logs",
     "riskScore": "Risk Score",
     "decision": "Decision",
     "reason": "Reason",
+    "highRiskFlagged": "High Risk Flagged",
+    "automatedDecisions": "Automated Decisions",
+    "securityEvents": "Security Events",
+    "noFraudData": "No security threats detected recently.",
+    "settingsTitle": "System Settings",
+    "itemsTitle": "Item Auditing",
+    "commissionRate": "Platform Commission",
+    "maintenanceMode": "Maintenance Mode",
     "userManagementTitle": "User Management",
     "userManagementSubtitle": "Manage system users and access levels",
     "isActive": "Is Active",
     "role": "System Role",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "userManagement": {
+      "addUser": "Add New User"
+    },
+    "roleManagement": {
+      "title": "Role Management",
+      "description": "Define and configure system roles and their permissions",
+      "roles": "System Roles",
+      "editPermission": "Configure fine-grained access level",
+      "roleName": "Role Name",
+      "users": "Users",
+      "hint": "SuperAdmin roles cannot be modified for security reasons.",
+      "editing": "Editing Permissions for",
+      "selectRole": "Select a role to edit its permissions",
+      "selectRoleTitle": "Select a Role",
+      "selectRoleSubtitle": "Choose a role from the left to manage its permissions."
+    }
+  },
+  "favorites": {
+    "title": "Favorites",
+    "remove": "Remove",
+    "removeSuccess": "Item removed from favorites successfully",
+    "empty": "No favorites found"
   },
   "governorates": {
     "cairo": "Cairo",
@@ -634,6 +711,8 @@
     "feedback": "Feedback",
     "inquiry": "Inquiry",
     "other": "Other",
+    "awaitingSupport": "Awaiting Support",
+    "awaitingCustomer": "Awaiting Customer",
     "resolved": "Resolved",
     "open": "Open",
     "closed": "Closed",
@@ -648,26 +727,53 @@
   },
   "payment": {
     "title": "Payment",
-    "selectMethod": "Select Payment Method",
+    "selectMethod": "Choose Payment Method",
+    "selectMethodSub": "All transactions are secured and encrypted",
+    "howToPay": "How to Pay",
+    "accountNumber": "Account Number",
     "transactionRef": "Transaction Reference (Optional)",
-    "payNow": "Pay Now",
+    "payNow": "Complete Payment",
     "success": "Payment successful!",
     "error": "Payment failed. Please try again.",
     "methods": {
       "vodafone_cash": "Vodafone Cash",
+      "vodafonecash": "Vodafone Cash",
+      "vodafoneCashStep1": "Open your Vodafone Cash app or dial *9#",
+      "vodafoneCashStep2": "Transfer the exact amount to the number shown above",
+      "vodafoneCashStep3": "Enter the transaction reference shown on the confirmation screen",
       "fawry": "Fawry",
+      "fawryStep1": "Visit any Fawry outlet or use the Fawry app",
+      "fawryStep2": "Use the Fawry code shown above to pay your order",
+      "fawryStep3": "Enter the Fawry receipt number in the field below",
       "paymob": "Paymob",
+      "paymobStep1": "You will be redirected to Paymob's secure checkout",
+      "paymobStep2": "Complete the payment on the Paymob platform",
       "credit_card": "Credit Card",
-      "bank_transfer": "Bank Transfer"
+      "creditCardStep1": "Enter your card details in the secure form",
+      "creditCardStep2": "Your card is charged immediately upon confirmation",
+      "bank_transfer": "Bank Transfer",
+      "bankTransferStep1": "Transfer the exact amount to the IBAN shown above",
+      "bankTransferStep2": "Include your Order ID in the transfer notes",
+      "bankTransferStep3": "Enter the bank reference number in the field below"
+    },
+    "trust": {
+      "ssl": "SSL Secured",
+      "encrypted": "256-bit Encrypted",
+      "protected": "Buyer Protected",
+      "guarantee": "100% Secure · Your data is never stored"
     }
   },
   "order_details": {
     "title": "Order Details",
+    "no_payment": "No payment information available yet.",
+    "no_tracking": "No tracking information available yet.",
     "items": "Items Ordered",
     "payment": "Payment Information",
     "paymentStatus": "Payment Status",
+    "status": "Order Status",
+    "orderDate": "Order Date",
+    "qty": "Quantity",
     "delivery": "Delivery Tracking",
-    "noTracking": "No tracking information available yet.",
     "statuses": {
       "pending": "Pending",
       "paid": "Paid",
@@ -702,6 +808,9 @@
     "back_to_market": "Back to marketplace",
     "place_order": "Place Order",
     "items": "Items",
+    "shipping": "Shipping Address",
+    "support_info": "Payment Security",
+    "secure_notice": "Protected by Renty's secure checkout. Your data is encrypted and safe.",
     "success": "Your order has been placed successfully!"
   },
   "errors": {
@@ -721,7 +830,7 @@
     "noProductsFound": "No products found",
     "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for."
   },
-"terms": {
+  "terms": {
     "title": "Terms and Conditions",
     "close": "Close",
     "intro": "By using Renty, you agree to the following terms and conditions. Please read them carefully before registering.",

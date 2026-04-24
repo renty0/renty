@@ -188,6 +188,12 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
             CreatedAt = DateTime.UtcNow
         };
         _context.SupportMessages.Add(msg);
+        
+        // Auto-transition status
+        ticket.Status = request.IsSupportAgent 
+            ? SupportTicketStatus.AwaitingCustomer 
+            : SupportTicketStatus.AwaitingSupport;
+
         ticket.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync(ct);
         return new PostSupportMessageResponse(true, null, msg.Id, msg.Message, msg.CreatedAt);

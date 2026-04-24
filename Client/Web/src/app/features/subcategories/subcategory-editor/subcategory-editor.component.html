@@ -8,62 +8,25 @@
       {{ (isEditMode() ? 'buttons.edit' : 'subcategories.createButton') | translate }}
     </h2>
     <div class="form-body">
-      <app-input
-        class="field"
-        [formGroup]="form"
-        [controlName]="'nameEn'"
-        [label]="'labels.nameEn' | translate"
-        [required]="true"
-      />
+      <app-input class="field" [formGroup]="form" [controlName]="'nameEn'" [label]="'nameEn' | translate"
+        [required]="true" />
 
-      <app-input
-        class="field"
-        [formGroup]="form"
-        [controlName]="'nameAr'"
-        [label]="'labels.nameAr' | translate"
-        [required]="true"
-      />
+      <app-input class="field" [formGroup]="form" [controlName]="'nameAr'" [label]="'nameAr' | translate"
+        [required]="true" />
 
-      <app-input
-        class="field"
-        [formGroup]="form"
-        [controlName]="'descEn'"
-        [label]="'labels.descEn' | translate"
-        [type]="'textarea'"
-      />
-      <app-input
-        class="field"
-        [formGroup]="form"
-        [controlName]="'descAr'"
-        [label]="'labels.descAr' | translate"
-        [type]="'textarea'"
-      />
-      <app-input
-        class="field"
-        [formGroup]="form"
-        [controlName]="'categoryId'"
-        [label]="'labels.parentCategory' | translate"
-        [type]="'select'"
-        [options]="categoryOptions()"
-        [required]="true"
-      />
+      <app-input class="field" [formGroup]="form" [controlName]="'descEn'" [label]="'descEn' | translate"
+        [type]="'textarea'" />
+      <app-input class="field" [formGroup]="form" [controlName]="'descAr'" [label]="'descAr' | translate"
+        [type]="'textarea'" />
+      <app-input class="field" [formGroup]="form" [controlName]="'categoryId'" [label]="'parentCategory' | translate"
+        [type]="'select'" [options]="categoryOptions()" [required]="true" />
     </div>
 
-    <app-image-uploader
-      #logoUploader
-      [formGroup]="form"
-      [controlName]="'logoId'"
-      [label]="'labels.logo' | translate"
-      [folder]="'subcategories'"
-    ></app-image-uploader>
+    <app-image-uploader #logoUploader [formGroup]="form" [controlName]="'logoId'" [label]="'labels.logo' | translate"
+      [folder]="'subcategories'"></app-image-uploader>
 
     <div class="form-actions">
-      <app-loading-button
-        type="button"
-        variant="stroked"
-        color="accent"
-        (clicked)="cancelled.emit()"
-      >
+      <app-loading-button type="button" variant="stroked" color="accent" (clicked)="cancelled.emit()">
         {{ 'buttons.cancel' | translate }}
       </app-loading-button>
 

@@ -7,12 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Rentals;
 
-// ── Shared DTO ────────────────────────────────────────────────────────────────
 
 public record RentalListDto(
     Guid Id,
     string ItemTitle,
-    string? ItemImage,
+    string? ItemImageUrl,
     long OwnerId,
     string OwnerFirstName,
     DateTime StartDate,
@@ -26,7 +25,7 @@ public record RentalDetailDto(
     Guid Id,
     Guid ItemId,
     string ItemTitle,
-    string? ItemImage,
+    string? ItemImageUrl,
     long OwnerId,
     string OwnerFirstName,
     string? OwnerCity,
@@ -39,11 +38,14 @@ public record RentalDetailDto(
     string Status,
     string DepositStatus,
     string? Notes,
+    string? HandoffCode,
+    bool IsHandoffVerified,
     DateTime CreatedAt,
-    bool HasReview
+    bool HasReview,
+    List<string> HandoverImageUrls,
+    List<string> ReturnImageUrls
 );
 
-// ── CREATE RENTAL ─────────────────────────────────────────────────────────────
 
 public record CreateRentalCommand(
     Guid ItemId,
@@ -95,7 +97,6 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
         if (item.Status != NewItemStatus.Available)
             return new CreateRentalResponse(false, "Item is not available.", null, null, null, null);
 
-        // Self-rent check (DB trigger also enforces this)
         if (item.OwnerId == _currentUser.Id.Value)
             return new CreateRentalResponse(false, "A user cannot rent their own item.", null, null, null, null);
 
@@ -103,7 +104,6 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
         if (pricing == null)
             return new CreateRentalResponse(false, $"No {request.PricingType} pricing available for this item.", null, null, null, null);
 
-        // Calculate duration and rental price
         var days = (decimal)(request.EndDate - request.StartDate).TotalDays;
         decimal rentalPrice = request.PricingType switch
         {
@@ -112,7 +112,6 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             _         => pricing.Price * Math.Ceiling(days)
         };
 
-        // Create order first
         var order = new Order
         {
             UserId = _currentUser.Id.Value,
@@ -134,12 +133,12 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             Status = RentalStatus.Pending,
             DepositAmount = item.DefaultDeposit,
             DepositStatus = DepositStatus.Held,
+            HandoffCode = Guid.NewGuid().ToString("N")[..6].ToUpper(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
         _context.Rentals.Add(rental);
 
-        // Log interaction
         _context.UserInteractions.Add(new UserInteraction
         {
             UserId = _currentUser.Id.Value,
@@ -154,26 +153,30 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
     }
 }
 
-// ── GET RENTALS ───────────────────────────────────────────────────────────────
 
 public record GetRentalsQuery(string? Status = null, int Page = 1, int Limit = 20) : IRequest<GetRentalsResponse>;
 public record GetRentalsResponse(List<RentalListDto> Rentals, int Total, int Page, int Pages);
-
+ 
 public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRentalsResponse>
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public GetRentalsQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetRentalsQueryHandler(IApplicationDbContext context, IUser currentUser, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetRentalsResponse> Handle(GetRentalsQuery request, CancellationToken ct)
     {
+        var requestPath = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestPath != null ? $"{requestPath.Scheme}://{requestPath.Host}" : "";
+
         var query = _context.Rentals
-            .Where(r => r.UserId == _currentUser.Id!.Value)
+            .Where(r => r.UserId == _currentUser.Id!.Value || r.Item.OwnerId == _currentUser.Id!.Value)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(request.Status) && Enum.TryParse<RentalStatus>(request.Status, true, out var status))
@@ -186,24 +189,29 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
             .OrderByDescending(r => r.CreatedAt)
             .Skip((request.Page - 1) * request.Limit)
             .Take(request.Limit)
-            .Select(r => new RentalListDto(
+            .Include(r => r.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
+            .Include(r => r.Item).ThenInclude(i => i.Owner)
+            .ToListAsync(ct);
+
+        var dtos = rentals.Select(r => {
+            var storagePath = r.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? r.Item.Images.FirstOrDefault()?.Image?.StoragePath;
+            var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+            return new RentalListDto(
                 r.Id,
                 r.Item.TitleEn,
-                r.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
-                    ?? r.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
+                fullUrl,
                 r.Item.OwnerId,
                 r.Item.Owner.FirstName,
                 r.StartDate, r.EndDate, r.RentalPrice,
                 r.Status.ToString(),
                 r.DepositStatus.ToString()
-            ))
-            .ToListAsync(ct);
+            );
+        }).ToList();
 
-        return new GetRentalsResponse(rentals, total, request.Page, pages);
+        return new GetRentalsResponse(dtos, total, request.Page, pages);
     }
 }
 
-// ── GET RENTAL BY ID ──────────────────────────────────────────────────────────
 
 public record GetRentalByIdQuery(Guid RentalId) : IRequest<GetRentalByIdResponse>;
 public record GetRentalByIdResponse(bool Found, string? Error, RentalDetailDto? Rental);
@@ -212,44 +220,56 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public GetRentalByIdQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetRentalByIdQueryHandler(IApplicationDbContext context, IUser currentUser, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetRentalByIdResponse> Handle(GetRentalByIdQuery request, CancellationToken ct)
     {
+        var requestPath = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestPath != null ? $"{requestPath.Scheme}://{requestPath.Host}" : "";
+
         var rental = await _context.Rentals
-            .Include(r => r.Item).ThenInclude(i => i.Images)
+            .Include(r => r.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .Include(r => r.Item).ThenInclude(i => i.Owner)
             .Include(r => r.Reviews)
+            .Include(r => r.Images).ThenInclude(ri => ri.Image)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new GetRentalByIdResponse(false, "Rental not found.", null);
 
-        // Auth: renter or item owner
         if (rental.UserId != _currentUser.Id!.Value && rental.Item.OwnerId != _currentUser.Id!.Value)
             return new GetRentalByIdResponse(false, "Forbidden.", null);
 
+        var itemStoragePath = rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath;
+        var itemFullUrl = !string.IsNullOrEmpty(itemStoragePath) ? $"{baseUrl}/{itemStoragePath}" : null;
+
         var dto = new RentalDetailDto(
             rental.Id, rental.ItemId, rental.Item.TitleEn,
-            rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath,
+            itemFullUrl,
             rental.Item.OwnerId,
             rental.Item.Owner.FirstName, rental.Item.Owner.City,
             rental.StartDate, rental.EndDate, rental.ActualReturnDate,
             rental.RentalPrice, rental.DepositAmount, rental.LateFee,
             rental.Status.ToString(), rental.DepositStatus.ToString(),
-            rental.Notes, rental.CreatedAt,
-            rental.Reviews.Any()
+            rental.Notes,
+            rental.HandoffCode,
+            rental.IsHandoffVerified,
+            rental.CreatedAt,
+            rental.Reviews.Any(),
+            rental.Images.Where(i => i.Type == RentalImageType.Handover).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList(),
+            rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList()
         );
 
         return new GetRentalByIdResponse(true, null, dto);
     }
 }
 
-// ── CONFIRM RENTAL ────────────────────────────────────────────────────────────
 
 public record ConfirmRentalCommand(Guid RentalId) : IRequest<RentalActionResponse>;
 public record RentalActionResponse(bool Success, string? Error, string? Status);
@@ -280,7 +300,6 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
         rental.Status = RentalStatus.Confirmed;
         rental.UpdatedAt = DateTime.UtcNow;
 
-        // Notify renter
         _context.Notifications.Add(new Notification
         {
             UserId = rental.UserId,
@@ -294,73 +313,45 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
     }
 }
 
-// ── ACTIVATE RENTAL ───────────────────────────────────────────────────────────
 
-public record ActivateRentalCommand(Guid RentalId) : IRequest<RentalActionResponse>;
+public record VerifyHandoffCommand(Guid RentalId, string Code) : IRequest<RentalActionResponse>;
 
-public class ActivateRentalCommandHandler : IRequestHandler<ActivateRentalCommand, RentalActionResponse>
+public class VerifyHandoffCommandHandler : IRequestHandler<VerifyHandoffCommand, RentalActionResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
 
-    public ActivateRentalCommandHandler(IApplicationDbContext context) => _context = context;
+    public VerifyHandoffCommandHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
 
-    public async Task<RentalActionResponse> Handle(ActivateRentalCommand request, CancellationToken ct)
+    public async Task<RentalActionResponse> Handle(VerifyHandoffCommand request, CancellationToken ct)
     {
         var rental = await _context.Rentals
             .Include(r => r.Item)
+            .Include(r => r.Images)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
-        if (rental.Status != RentalStatus.Confirmed)
-            return new RentalActionResponse(false, "Rental must be confirmed before activation.", null);
+        
+        if (rental.Item.OwnerId != _currentUser.Id!.Value)
+            return new RentalActionResponse(false, "Only the item owner can verify the handoff code.", null);
 
-        // Set statuses
+        if (rental.Status != RentalStatus.Confirmed)
+            return new RentalActionResponse(false, "Rental must be confirmed before handoff.", null);
+
+        if (rental.HandoffCode != request.Code?.ToUpper())
+            return new RentalActionResponse(false, "Invalid handoff code.", null);
+
+        if (!rental.Images.Any(i => i.Type == RentalImageType.Handover))
+            return new RentalActionResponse(false, "Handover photos are required before verification.", null);
+
+        rental.IsHandoffVerified = true;
         rental.Status = RentalStatus.Active;
         rental.UpdatedAt = DateTime.UtcNow;
         rental.Item.Status = NewItemStatus.Rented;
-        rental.Item.UpdatedAt = DateTime.UtcNow;
-
-        // Simulated fraud check — in production: call external AI/ML service
-        // Placeholder: derive a simple heuristic risk score
-        var riskScore = 0.05; // safe baseline
-        var decision = "safe";
-        var indicators = new List<string>();
-
-        // Example heuristics (real ML model would replace this)
-        var recentRentals = await _context.Rentals
-            .CountAsync(r => r.UserId == rental.UserId && r.CreatedAt >= DateTime.UtcNow.AddDays(-7), ct);
-        if (recentRentals > 5) { riskScore += 0.3; indicators.Add("rental_spike"); }
-
-        var avgReview = await _context.Reviews
-            .Where(r => r.ReviewerId == rental.UserId)
-            .AverageAsync(r => (double?)((double)r.Rating), ct) ?? 5.0;
-        if (avgReview < 2.5) { riskScore += 0.3; indicators.Add("low_reviews"); }
-
-        if (riskScore >= 0.5) decision = "flagged";
-        else if (riskScore >= 0.8) decision = "blocked";
-
-        _context.FraudLogs.Add(new FraudLog
-        {
-            UserId = rental.UserId,
-            RiskScore = riskScore,
-            Decision = decision,
-            Reason = indicators.Any() ? string.Join(", ", indicators) : "Passed standard checks",
-            FraudIndicators = indicators.Any() ? System.Text.Json.JsonSerializer.Serialize(indicators) : null,
-            CreatedAt = DateTime.UtcNow
-        });
-
-        // Alert admins when flagged (admin panel will surface this via /admin/fraud)
-        if (decision == "flagged" || decision == "blocked")
-        {
-            _context.Notifications.Add(new Notification
-            {
-                UserId = rental.UserId,
-                Title = "⚠️ High Risk User Detected",
-                Message = $"User {rental.UserId} scored {riskScore:F2} risk ({decision}). Indicators: {string.Join(", ", indicators)}",
-                CreatedAt = DateTime.UtcNow
-            });
-        }
-
 
         await _context.SaveChangesAsync(ct);
         return new RentalActionResponse(true, null, rental.Status.ToString());
@@ -368,7 +359,6 @@ public class ActivateRentalCommandHandler : IRequestHandler<ActivateRentalComman
 }
 
 
-// ── COMPLETE RENTAL ───────────────────────────────────────────────────────────
 
 public record CompleteRentalCommand(Guid RentalId, bool Damaged = false) : IRequest<CompleteRentalResponse>;
 public record CompleteRentalResponse(bool Success, string? Error, Guid? RentalId, string? Status, decimal? LateFee, string? DepositStatus);
@@ -388,6 +378,8 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
     {
         var rental = await _context.Rentals
             .Include(r => r.Item)
+            .Include(r => r.User)
+            .Include(r => r.Images)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new CompleteRentalResponse(false, "Rental not found.", null, null, null, null);
@@ -396,6 +388,9 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         if (rental.Status != RentalStatus.Active && rental.Status != RentalStatus.Overdue)
             return new CompleteRentalResponse(false, "Rental must be active or overdue to complete.", null, null, null, null);
 
+        if (!rental.Images.Any(i => i.Type == RentalImageType.Return))
+            return new CompleteRentalResponse(false, "Return photos are required before completion.", null, null, null, null);
+
         var now = DateTime.UtcNow;
         rental.ActualReturnDate = now;
         rental.Status = RentalStatus.Completed;
@@ -403,22 +398,57 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         rental.Item.Status = NewItemStatus.Available;
         rental.Item.UpdatedAt = now;
 
-        // Late fee: 10% of daily rate per overdue day (simple rule)
+        var lateFee = 0m;
         if (now > rental.EndDate)
         {
-            var overdueDays = (decimal)(now - rental.EndDate).TotalDays;
-            rental.LateFee = Math.Round(overdueDays * (rental.RentalPrice / (decimal)(rental.EndDate - rental.StartDate).TotalDays) * 0.1m, 2);
+            var overdueDays = (decimal)Math.Ceiling((now - rental.EndDate).TotalDays);
+            var dailyRate = rental.RentalPrice / (decimal)Math.Max(1, (rental.EndDate - rental.StartDate).TotalDays);
+            lateFee = Math.Round(overdueDays * dailyRate * 1.5m, 2); 
         }
 
         rental.DepositStatus = request.Damaged ? DepositStatus.Forfeited : DepositStatus.Returned;
 
-        // Notify renter
+        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.Item.OwnerId, ct);
+        var renter = rental.User;
+
+        if (owner != null && renter != null)
+        {
+            var totalToOwner = rental.RentalPrice + lateFee;
+            owner.WalletBalance += totalToOwner;
+            _context.WalletTransactions.Add(new WalletTransaction {
+                UserId = owner.Id,
+                Amount = totalToOwner,
+                Type = TransactionType.RentalIncome,
+                Description = $"Rental income for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
+                RelatedRentalId = rental.Id,
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+
+            if (rental.DepositStatus == DepositStatus.Returned)
+            {
+                
+            }
+            else if (rental.DepositStatus == DepositStatus.Forfeited)
+            {
+                var penaltyToOwner = rental.DepositAmount * 0.8m;
+                owner.WalletBalance += penaltyToOwner;
+                _context.WalletTransactions.Add(new WalletTransaction {
+                    UserId = owner.Id,
+                    Amount = penaltyToOwner,
+                    Type = TransactionType.Adjustment,
+                    Description = $"Damage compensation for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
+                    RelatedRentalId = rental.Id,
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+            }
+        }
+
         _context.Notifications.Add(new Notification
         {
             UserId = rental.UserId,
             Title = "Rental Completed",
             Message = rental.LateFee > 0
-                ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {rental.LateFee:C}."
+                ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {rental.LateFee:C}. Status: {rental.DepositStatus}."
                 : $"Your rental for '{rental.Item.TitleEn}' is complete. Thank you!",
             CreatedAt = DateTime.UtcNow
         });
@@ -428,7 +458,6 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
     }
 }
 
-// ── CANCEL RENTAL ─────────────────────────────────────────────────────────────
 
 public record CancelRentalCommand(Guid RentalId) : IRequest<RentalActionResponse>;
 
@@ -458,7 +487,6 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
         rental.Status = RentalStatus.Cancelled;
         rental.UpdatedAt = DateTime.UtcNow;
 
-        // If item was marked rented, restore it
         if (rental.Item.Status == NewItemStatus.Rented)
         {
             rental.Item.Status = NewItemStatus.Available;
@@ -467,5 +495,48 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
 
         await _context.SaveChangesAsync(ct);
         return new RentalActionResponse(true, null, "Rental cancelled");
+    }
+}
+
+
+public record UploadRentalPhotosCommand(Guid RentalId, List<Guid> ImageIds, RentalImageType Type) : IRequest<bool>;
+
+public class UploadRentalPhotosCommandHandler : IRequestHandler<UploadRentalPhotosCommand, bool>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public UploadRentalPhotosCommandHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
+
+    public async Task<bool> Handle(UploadRentalPhotosCommand request, CancellationToken ct)
+    {
+        var rental = await _context.Rentals
+            .Include(r => r.Item)
+            .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
+
+        if (rental == null) return false;
+
+        if (rental.UserId != _currentUser.Id!.Value && rental.Item.OwnerId != _currentUser.Id!.Value)
+            return false;
+
+        foreach (var id in request.ImageIds)
+        {
+            if (!_context.RentalImages.Any(ri => ri.RentalId == rental.Id && ri.ImageId == id))
+            {
+                _context.RentalImages.Add(new RentalImage
+                {
+                    RentalId = rental.Id,
+                    ImageId = id,
+                    Type = request.Type
+                });
+            }
+        }
+
+        await _context.SaveChangesAsync(ct);
+        return true;
     }
 }

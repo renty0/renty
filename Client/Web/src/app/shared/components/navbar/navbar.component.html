@@ -15,7 +15,6 @@
         </a>
       }
 
-      <!-- Management Dropdown -->
       @if (managementLinks().length > 0) {
         <button class="nav-link dropdown-toggle" [matMenuTriggerFor]="mgmtMenu">
           {{ 'nav.management' | translate }}
@@ -45,7 +44,6 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="nav-actions">
       <button
         class="action-btn lang-btn"
@@ -56,7 +54,6 @@
         <span class="lang-code">{{ isArabic ? 'EN' : 'العربية' }}</span>
       </button>
 
-      <!-- User Actions / Auth -->
       @if (isLoggedIn()) {
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -139,7 +136,6 @@
         </div>
       }
 
-      <!-- Mobile Menu Toggle -->
       <button class="mobile-toggle" (click)="toggleMobileMenu()">
         <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
       </button>
@@ -148,7 +144,6 @@
   @if (mobileMenuOpen()) {
     <div class="mobile-drawer animate-fade-in">
       <div class="container drawer-content">
-        <!-- Mobile Search -->
         <div class="mobile-search">
           <div class="search-input-wrapper">
             <mat-icon>search</mat-icon>

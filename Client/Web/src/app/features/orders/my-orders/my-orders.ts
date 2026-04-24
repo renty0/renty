@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 import { OrdersClient, OrderListDto, ApiResponse, GetOrdersResponse } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
@@ -24,6 +25,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
     MatIconModule,
     MatChipsModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
     HeaderSectionComponent
   ],
   templateUrl: './my-orders.html',

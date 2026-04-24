@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Chats;
 
-// ── DTOs ─────────────────────────────────────────────────────────────────────
-
 public record ChatListDto(
     Guid Id,
     string OtherUserFirstName,
@@ -17,8 +15,6 @@ public record ChatListDto(
 );
 
 public record ChatMessageDto(Guid Id, long SenderId, string Message, bool IsRead, DateTime CreatedAt);
-
-// ── CREATE CHAT ───────────────────────────────────────────────────────────────
 
 public record CreateChatCommand(long UserId) : IRequest<CreateChatResponse>;
 public record CreateChatResponse(bool Success, string? Error, Guid? ChatId);
@@ -43,8 +39,7 @@ public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Creat
         var u1 = Math.Min(_currentUser.Id.Value, request.UserId);
         var u2 = Math.Max(_currentUser.Id.Value, request.UserId);
 
-        // Check if chat already exists (unique constraint)
-        var existing = await _context.Chats
+    var existing = await _context.Chats
             .FirstOrDefaultAsync(c => c.User1Id == u1 && c.User2Id == u2, ct);
 
         if (existing != null) return new CreateChatResponse(true, null, existing.Id);
@@ -55,8 +50,6 @@ public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Creat
         return new CreateChatResponse(true, null, chat.Id);
     }
 }
-
-// ── GET CHATS ─────────────────────────────────────────────────────────────────
 
 public record GetChatsQuery : IRequest<GetChatsResponse>;
 public record GetChatsResponse(List<ChatListDto> Chats);
@@ -94,16 +87,9 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
     }
 }
 
-// ── POST CHAT MESSAGE ─────────────────────────────────────────────────────────
-
 public record PostChatMessageCommand(Guid ChatId, string Message) : IRequest<PostChatMessageResponse>;
 public record PostChatMessageResponse(bool Success, string? Error, Guid? MessageId, string? Message, DateTime? CreatedAt);
 
-/// <summary>
-/// Marker interface so the Application layer can push SignalR messages
-/// without taking a hard dependency on Microsoft.AspNetCore.SignalR.
-/// Implemented in Web by ChatHubNotifier.
-/// </summary>
 public interface IChatNotifier
 {
     Task SendMessageAsync(Guid chatId, object payload, CancellationToken ct);
@@ -118,7 +104,7 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
     public PostChatMessageCommandHandler(
         IApplicationDbContext context,
         IUser currentUser,
-        IChatNotifier? notifier = null)   // optional so unit tests don't need it
+        IChatNotifier? notifier = null)  
     {
         _context = context;
         _currentUser = currentUser;
@@ -146,8 +132,7 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
         _context.ChatMessages.Add(msg);
         await _context.SaveChangesAsync(ct);
 
-        // Push to everyone in the SignalR group for this chat (real-time delivery)
-        if (_notifier != null)
+    if (_notifier != null)
         {
             await _notifier.SendMessageAsync(request.ChatId, new
             {
@@ -162,8 +147,6 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
         return new PostChatMessageResponse(true, null, msg.Id, msg.Message, msg.CreatedAt);
     }
 }
-
-// ── GET CHAT MESSAGES ─────────────────────────────────────────────────────────
 
 public record GetChatMessagesQuery(Guid ChatId) : IRequest<GetChatMessagesResponse>;
 public record GetChatMessagesResponse(bool Found, string? Error, List<ChatMessageDto>? Messages);
@@ -194,8 +177,7 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
             .Select(m => new ChatMessageDto(m.Id, m.SenderId, m.Message, m.IsRead, m.CreatedAt))
             .ToListAsync(ct);
 
-        // Mark other user's messages as read
-        var unread = await _context.ChatMessages
+    var unread = await _context.ChatMessages
             .Where(m => m.ChatId == request.ChatId && m.SenderId != _currentUser.Id.Value && !m.IsRead)
             .ToListAsync(ct);
         foreach (var m in unread) m.IsRead = true;

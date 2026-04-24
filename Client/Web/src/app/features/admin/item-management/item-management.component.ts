@@ -1,49 +1,64 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { TranslateModule } from '@ngx-translate/core';
+import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
+import { AdminItemsClient, ReviewItemCommand } from '../../../core/api/api-client';
+import { ToastService } from '../../../shared/services/toast.service';
 import { HttpClient } from '@angular/common/http';
-
-export interface PendingItem {
-  id: string;
-  titleEn: string;
-  descEn: string;
-  ownerId: string;
-  createdAt: string;
-  status: string;
-}
 
 @Component({
   selector: 'app-item-management',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatCardModule,
+    MatChipsModule,
+    TranslateModule,
+    HeaderSectionComponent
+  ],
   templateUrl: './item-management.component.html',
   styleUrls: ['./item-management.component.scss']
 })
 export class ItemManagementComponent implements OnInit {
+  private itemsClient = inject(AdminItemsClient);
   private http = inject(HttpClient);
+  private toast = inject(ToastService);
 
-  items = signal<PendingItem[]>([]);
-  isLoading = signal(false);
+  items = signal<any[]>([]);
+  isLoading = signal(true);
+  isSaving = signal(false);
+
+  displayedColumns: string[] = ['title', 'date', 'actions'];
 
   ngOnInit() {
-    this.fetchPendingItems();
+    this.loadPendingItems();
   }
 
-  fetchPendingItems() {
+  loadPendingItems() {
     this.isLoading.set(true);
-    // In a real scenario, this would be /api/v1/admin/items?status=PendingApproval
-    // We mock the fetch assuming the items list endpoint supports status filtering
-    this.http.get<any>('/api/v1/items?status=PendingApproval').subscribe({
-      next: (res) => {
-        // assuming standard paginated response
-        this.items.set(res.items || res);
+    this.http.get<any[]>('/api/v1/admin/items/pending').subscribe({
+      next: (data) => {
+        this.items.set(data || []);
         this.isLoading.set(false);
       },
-      error: () => this.isLoading.set(false) // Handle gracefully
+      error: () => {
+        this.toast.showError('Failed to load pending items');
+        this.isLoading.set(false);
+      }
     });
   }
 
-  reviewItem(id: string, status: 'approved' | 'rejected') {
-    this.http.post(`/api/v1/admin/items/${id}/review`, { status, rejectionReason: status === 'rejected' ? 'Violates terms of use' : null }).subscribe({
+  reviewItem(id: string, decision: 'approved' | 'rejected') {
+    this.isSaving.set(true);
+    this.itemsClient.reviewItem(id, new ReviewItemCommand({ status: decision, rejectionReason: `${decision} by admin` })).subscribe({
       next: () => {
         // Remove from list
         this.items.update(list => list.filter(i => i.id !== id));

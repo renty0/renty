@@ -126,10 +126,6 @@ mat-dialog-actions {
   display: none !important;
 }
 
-::ng-deep .rent-form .mat-mdc-form-field-focus-overlay {
-  background: transparent !important;
-}
-
 ::ng-deep .rent-form .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
   border-color: rgba(25, 118, 210, 0.55) !important;
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);

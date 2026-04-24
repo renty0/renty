@@ -44,9 +44,9 @@ public class GetRenterDashboardQueryHandler : IRequestHandler<GetRenterDashboard
                 x.TotalAmount + (x.DeliveryFee ?? 0),
                 x.Status.ToString(),
                 x.RentableItem.TitleEn,
-                null, // Simplified
-                "Renter", // Simplified
-                "Owner", // Simplified
+                null,
+                "Renter",
+                "Owner",
                 x.Created
             ))
             .ToList();

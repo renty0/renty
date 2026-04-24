@@ -18,7 +18,6 @@ public class GetGapAnalysisSummaryQueryHandler : IRequestHandler<GetGapAnalysisS
 
     public async Task<GapAnalysisSummaryDto> Handle(GetGapAnalysisSummaryQuery request, CancellationToken cancellationToken)
     {
-        // Get the latest batch
         var latestBatch = await _context.GapAnalysisResults
             .OrderByDescending(r => r.CreatedAt)
             .Select(r => r.BatchId)
@@ -34,14 +33,8 @@ public class GetGapAnalysisSummaryQueryHandler : IRequestHandler<GetGapAnalysisS
             .ToListAsync(cancellationToken);
 
         var totalCategories = results.Count;
-        var criticalGaps = results.Where(r => r.GapStatus == "Critical Gap" || r.GapStatus == "High Gap").ToList(); // Adjust logic to match python classification if needed
-        // Python: <50 Low, <100 Mod, <200 High, >=200 Critical.
-        // Wait, Python gap score is > 1. Here existing C# logic was using small decimals?
-        // Python script: (Demand+1)/(Supply+1). If Demand=100, Supply=1, Ratio=~50.
-        // Existing C# logic: TotalQuantity / UniqueProducts. Similar ratio.
-        // Python Check: classify_gap_level -> score < 50 Low.
-        
-        // Let's rely on the GapStatus string from Python which is stored in DB.
+        var criticalGaps = results.Where(r => r.GapStatus == "Critical Gap" || r.GapStatus == "High Gap").ToList();
+
         var criticalCount = results.Count(r => r.GapStatus == "Critical Gap" || r.GapStatus == "High Gap");
         
         var mostSevere = results.OrderByDescending(r => r.GapScore).FirstOrDefault();

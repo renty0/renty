@@ -44,7 +44,6 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
                                      c.NameAr.Contains(request.SearchTerm));
         }
 
-        // Apply sorting
         bool isDescending = request.SortOrder?.ToLower() == "desc";
         switch (request.SortBy?.ToLower())
         {

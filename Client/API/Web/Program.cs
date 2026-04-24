@@ -86,8 +86,10 @@ app.MapSupportEndpoints();           // /api/v1/support/tickets
 app.MapChatEndpoints();              // /api/v1/chats
 app.MapNotificationEndpoints();      // /api/v1/notifications
 app.MapRecommendationV1Endpoints();  // /api/v1/recommendations
-app.MapAdminKpiEndpoints();          // /api/v1/admin/kpis, /admin/gap
-app.MapAdminFraudEndpoints();
+app.MapAdminUserEndpoints();
+app.MapAdminRoleEndpoints();
+app.MapAdminKpiEndpoints();
+app.MapGapAnalysisEndpoints();
 app.MapMediaEndpoints();             // /api/v1/media
 app.MapCategoryEndpoints();          // /api/v1/categories
 app.MapSubcategoryEndpoints();       // /api/v1/subcategories, /api/v1/categories/:id/subcategories

@@ -28,6 +28,7 @@ public class CustomExceptionHandler : IExceptionHandler
             return true;
         }
 
+        System.IO.File.WriteAllText("GlobalErrorDump.txt", exception.ToString());
         return false;
     }
 

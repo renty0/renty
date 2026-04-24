@@ -30,19 +30,16 @@ public class GetGapAnalysisTrendsQueryHandler : IRequestHandler<GetGapAnalysisTr
 
         foreach (var category in categoryList)
         {
-            // Current Month
             var currSupply = await _context.Products.CountAsync(p => p.Subcategory.ProductCategoryId == category.Id, cancellationToken);
             var currDemand = await _context.Sales
                 .Where(s => s.Product.Subcategory.ProductCategoryId == category.Id && s.OrderDate >= currentMonthStart)
                 .SumAsync(s => s.OrderQuantity, cancellationToken);
             var currScore = Math.Round((decimal)(currDemand + 1) / (currSupply + 1), 2);
 
-            // Previous Month
             var prevDemand = await _context.Sales
                 .Where(s => s.Product.Subcategory.ProductCategoryId == category.Id && s.OrderDate >= prevMonthStart && s.OrderDate < currentMonthStart)
                 .SumAsync(s => s.OrderQuantity, cancellationToken);
-            var prevScore = Math.Round((decimal)(prevDemand + 1) / (currSupply + 1), 2); // Assuming supply is relatively stable or using current supply
-
+            var prevScore = Math.Round((decimal)(prevDemand + 1) / (currSupply + 1), 2);
             var changePct = prevScore > 0 ? Math.Round((currScore - prevScore) / prevScore * 100, 2) : 0;
             
             var status = changePct > 10 ? "Worsening" : changePct < -10 ? "Improving" : "Stable";

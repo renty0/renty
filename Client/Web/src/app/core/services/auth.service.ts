@@ -20,10 +20,14 @@ export class AuthService {
   private readonly REFRESH_TOKEN_EXP_KEY = 'rtek';
   private readonly USER_DATA_KEY = 'udk';
   private readonly ROLES_KEY = 'urk';
+  private readonly PERMISSIONS_KEY = 'upk';
 
   isLoggedIn: WritableSignal<boolean>;
   private readonly rolesSignal = signal<string>('user');
   readonly roles = computed(() => this.rolesSignal());
+
+  private readonly permissionsSignal = signal<string[]>([]);
+  readonly permissions = computed(() => this.permissionsSignal());
 
   constructor() {
     this.isLoggedIn = signal(this.hasValidToken());
@@ -66,8 +70,13 @@ export class AuthService {
       if (rolesData) {
         this.rolesSignal.set(JSON.parse(rolesData));
       }
+      const permissionsData = this.getSecureCookie(this.PERMISSIONS_KEY);
+      if (permissionsData) {
+        this.permissionsSignal.set(JSON.parse(permissionsData));
+      }
     } catch {
       this.rolesSignal.set('user');
+      this.permissionsSignal.set([]);
     }
   }
 
@@ -87,6 +96,10 @@ export class AuthService {
       const roles = loginResponse.user.role || 'user';
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), expires);
       this.rolesSignal.set(roles);
+
+      const permissions = loginResponse.user.permissions || [];
+      this.setSecureCookie(this.PERMISSIONS_KEY, JSON.stringify(permissions), expires);
+      this.permissionsSignal.set(permissions);
     }
 
     this.isLoggedIn.set(true);
@@ -147,6 +160,10 @@ export class AuthService {
       const roles = user.role || 'user';
       this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), 7);
       this.rolesSignal.set(roles);
+
+      const permissions = user.permissions || [];
+      this.setSecureCookie(this.PERMISSIONS_KEY, JSON.stringify(permissions), 7);
+      this.permissionsSignal.set(permissions);
     }
   }
   getToken(): string | null {
@@ -214,7 +231,9 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_TOKEN_EXP_KEY, '/');
     this.cookieService.delete(this.USER_DATA_KEY, '/');
     this.cookieService.delete(this.ROLES_KEY, '/');
+    this.cookieService.delete(this.PERMISSIONS_KEY, '/');
     this.rolesSignal.set('user');
+    this.permissionsSignal.set([]);
     this.isLoggedIn.set(false);
   }
   logout(): void {
@@ -254,8 +273,8 @@ export class AuthService {
     return this.hasRole('SuperAdmin');
   }
 
-  hasPermission(permission: any): boolean {
+  hasPermission(permission: string): boolean {
     if (this.isSuperAdmin()) return true;
-    return false;
+    return this.permissions().includes(permission);
   }
 }

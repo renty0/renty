@@ -8,10 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { MessageService } from 'primeng/api';
-import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
-import { Preset } from './mytheme';
 import { CookieService } from 'ngx-cookie-service';
 import {
   API_BASE_URL,
@@ -32,6 +29,9 @@ import {
   SupportClient,
   VerificationsClient,
   AdminClient,
+  PaymentsClient,
+  DeliveryClient,
+  Gap_AnalysisClient
 } from './core/api/api-client';
 import { environment } from '../environments/environment';
 
@@ -43,13 +43,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideTranslateService({ fallbackLang: 'en' }),
-    providePrimeNG({
-      theme: {
-        preset: Preset,
-        options: { prefix: 'p', darkModeSelector: '.dark', cssLayer: false },
-      },
-    }),
-    MessageService,
     { provide: API_BASE_URL, useValue: environment.apiUrl },
     CategoriesClient,
     SubcategoriesClient,
@@ -69,5 +62,8 @@ export const appConfig: ApplicationConfig = {
     SupportClient,
     VerificationsClient,
     AdminClient,
+    PaymentsClient,
+    DeliveryClient,
+    Gap_AnalysisClient
   ],
 };

@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -63,6 +64,49 @@ public class ApplicationDbContextInitialiser
             }
         }
 
+        // Seed Permissions
+        var permissions = Enum.GetValues<PermissionType>();
+        foreach (var perm in permissions)
+        {
+            var value = perm.ToPermissionString();
+            if (!await _context.Permissions.AnyAsync(p => p.Value == value))
+            {
+                _context.Permissions.Add(new Permission
+                {
+                    Value = value,
+                    Name = perm.ToString(),
+                    Module = perm.GetModule(),
+                    Action = perm.ToString()
+                });
+            }
+        }
+        await _context.SaveChangesAsync();
+
+        // Assign all permissions to SuperAdmin role
+        var superAdminRole = await _roleManager.FindByNameAsync(SecurityRoles.SuperAdmin.ToString());
+        if (superAdminRole != null)
+        {
+            var existingPerms = await _context.RolePermissions
+                .Where(rp => rp.RoleId == superAdminRole.Id)
+                .Select(rp => rp.PermissionValue)
+                .ToListAsync();
+
+            foreach (var perm in permissions)
+            {
+                var value = perm.ToPermissionString();
+                if (!existingPerms.Contains(value))
+                {
+                    _context.RolePermissions.Add(new RolePermission
+                    {
+                        RoleId = superAdminRole.Id,
+                        RoleName = superAdminRole.Name!,
+                        PermissionValue = value
+                    });
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
         // Create super admin user
         var adminEmail = Environment.GetEnvironmentVariable("SEED_ADMIN_EMAIL") ?? "admin@rently.com";
         var adminPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "Admin@123!";
@@ -87,6 +131,8 @@ public class ApplicationDbContextInitialiser
             {
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.SuperAdmin.ToString());
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Admin.ToString());
+                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Owner.ToString());
+                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Renter.ToString());
                 _logger.LogInformation("Super Admin user created successfully.");
             }
             else

@@ -11,7 +11,6 @@
 
     <div class="form-container">
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <!-- Enhanced Steps Indicator -->
         <div class="steps-indicator">
           <div class="step-item" [class.active]="stepper.selectedIndex === 0"
             [class.completed]="stepper.selectedIndex > 0">
@@ -45,7 +44,6 @@
         </div>
 
         <mat-stepper linear #stepper class="register-stepper">
-          <!-- Step 1: Account Info -->
           <mat-step [stepControl]="accountInfoGroup" [editable]="true">
             <ng-template matStepLabel>{{ 'info.accountInfo' | translate }}</ng-template>
             <div class="step-content">
@@ -54,11 +52,11 @@
                 <p>{{ 'register.step1Desc' | translate }}</p>
               </div>
               <div class="inputs-grid">
-                <app-input [formGroup]="accountInfoGroup" controlName="email" label="labels.email" type="email"
+                <app-input [formGroup]="accountInfoGroup" controlName="email" label="email" type="email"
                   class="full-width" />
-                <app-input [formGroup]="accountInfoGroup" controlName="password" label="labels.password"
+                <app-input [formGroup]="accountInfoGroup" controlName="password" label="password"
                   type="password" />
-                <app-input [formGroup]="accountInfoGroup" controlName="confirmPassword" label="labels.confirmPassword"
+                <app-input [formGroup]="accountInfoGroup" controlName="confirmPassword" label="confirmPassword"
                   type="password" />
               </div>
               <div class="step-actions">
@@ -71,7 +69,6 @@
             </div>
           </mat-step>
 
-          <!-- Step 2: Profile Info -->
           <mat-step [stepControl]="profileInfoGroup" [editable]="true">
             <ng-template matStepLabel>{{ 'info.profileInfo' | translate }}</ng-template>
             <div class="step-content">
@@ -80,9 +77,9 @@
                 <p>{{ 'register.step2Desc' | translate }}</p>
               </div>
               <div class="inputs-grid">
-                <app-input [formGroup]="profileInfoGroup" controlName="firstName" label="labels.firstName"></app-input>
-                <app-input [formGroup]="profileInfoGroup" controlName="lastName" label="labels.lastName"></app-input>
-                <app-input [formGroup]="profileInfoGroup" controlName="phoneNumber" label="labels.phoneNumber"
+                <app-input [formGroup]="profileInfoGroup" controlName="firstName" label="firstName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="lastName" label="lastName"></app-input>
+                <app-input [formGroup]="profileInfoGroup" controlName="phoneNumber" label="phoneNumber"
                   type="phone" class="full-width"></app-input>
               </div>
               <div class="step-actions">
@@ -98,7 +95,6 @@
             </div>
           </mat-step>
 
-          <!-- Step 3: Additional Info -->
           <mat-step [stepControl]="additionalInfoGroup" [editable]="true">
             <ng-template matStepLabel>{{ 'labels.userType' | translate }}</ng-template>
             <div class="step-content">
@@ -130,11 +126,11 @@
               </div>
 
               <div class="inputs-grid">
-                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="labels.city"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="labels.country"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="address" label="labels.address"
+                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="address" label="address"
                   class="full-width"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="labels.bio" type="textarea"
+                <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="bio" type="textarea"
                   class="full-width"></app-input>
               </div>
 

@@ -48,15 +48,18 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
     private readonly IIdentityService _identityService;
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
+    private readonly IApplicationDbContext _context;
 
     public RegisterCommandHandler(
         IIdentityService identityService,
         ITokenService tokenService,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IApplicationDbContext context)
     {
         _identityService = identityService;
         _tokenService = tokenService;
         _emailSender = emailSender;
+        _context = context;
     }
 
     public async Task<RegisterResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -122,7 +125,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,
-            roles
+            roles,
+            new List<string>(), // New user has no specific permissions yet, just role permissions
+            user.Address,
+            user.City,
+            user.Country,
+            user.Bio,
+            user.PhoneNumber,
+            user.CreatedAt
         );
 
         // Send confirmation email

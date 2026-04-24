@@ -7,7 +7,9 @@ public enum TransactionType
     RentalEarnings, // Credit for owner after a successful rental
     Withdrawal,     // Debit when owner withdraws money
     Penalty,        // Debit when owner or renter is penalized
-    Refund          // Credit for a refund
+    Refund,         // Credit for a refund
+    RentalIncome,   // Alias for RentalEarnings
+    Adjustment      // Forfeited deposit or other adjustment
 }
 
 public class WalletTransaction

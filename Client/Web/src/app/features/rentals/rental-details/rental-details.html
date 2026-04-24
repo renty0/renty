@@ -10,7 +10,6 @@
     </div>
   } @else if (rental(); as r) {
     <div class="details-grid">
-      <!-- Left Column: Main Info -->
       <div class="main-info">
         <mat-card class="premium-card section-card">
           <mat-card-header>
@@ -22,7 +21,7 @@
               <div class="info-item">
                 <label>{{ 'rentals.details.item' | translate }}</label>
                 <div class="item-preview" [routerLink]="['/marketplace/product', r.itemId]">
-                  <img [src]="r.itemImage || 'assets/placeholder-product.png'" alt="Product">
+                  <img [src]="r.itemImageUrl || 'assets/placeholder-product.png'" alt="Product">
                   <span>{{ r.itemTitle }}</span>
                 </div>
               </div>
@@ -84,7 +83,46 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Review Section (Renter only) -->
+        <mat-card class="premium-card section-card photos-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>photo_library</mat-icon>
+            <mat-card-title>{{ 'rentals.details.condition_photos' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="photos-grid">
+              <div class="photo-type">
+                <h4>{{ 'rentals.details.handover_photos' | translate }}</h4>
+                <div class="photo-actions" *ngIf="isOwner() && r.status === 'Confirmed'">
+                  <input type="file" #handoverInput (change)="onPhotoSelected($event, 'Handover')" hidden>
+                  <button mat-stroked-button (click)="handoverInput.click()" [disabled]="isUploading()">
+                    <mat-icon>add_a_photo</mat-icon> {{ 'buttons.upload' | translate }}
+                  </button>
+                </div>
+                <div class="photo-list">
+                  @for (url of r.handoverImageUrls; track url) {
+                    <img [src]="url" class="rental-photo" alt="Handover">
+                  }
+                </div>
+              </div>
+
+              <div class="photo-type">
+                <h4>{{ 'rentals.details.return_photos' | translate }}</h4>
+                <div class="photo-actions" *ngIf="isOwner() && r.status === 'Active'">
+                  <input type="file" #returnInput (change)="onPhotoSelected($event, 'Return')" hidden>
+                  <button mat-stroked-button (click)="returnInput.click()" [disabled]="isUploading()">
+                    <mat-icon>add_a_photo</mat-icon> {{ 'buttons.upload' | translate }}
+                  </button>
+                </div>
+                <div class="photo-list">
+                  @for (url of r.returnImageUrls; track url) {
+                    <img [src]="url" class="rental-photo" alt="Return">
+                  }
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
         <mat-card class="action-card review-card" *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
           <mat-card-header>
             <mat-card-title>{{ 'rentals.details.review' | translate }}</mat-card-title>
@@ -117,7 +155,6 @@
         </mat-card>
       </div>
 
-      <!-- Right Column: Financials & Actions -->
       <div class="side-info">
         <mat-card class="premium-card financial-card">
           <mat-card-header>
@@ -147,8 +184,30 @@
               </div>
             </div>
 
+            @if (r.status?.toLowerCase() === 'confirmed' || r.status?.toLowerCase() === 'active') {
+              <div class="verification-card-section">
+                <mat-divider></mat-divider>
+                <div class="verification-content">
+                  @if (!isOwner()) {
+                    <div class="code-display">
+                      <label>{{ 'rentals.details.handoff_code' | translate }}</label>
+                      <div class="code-box">{{ r.handoffCode }}</div>
+                      <small>{{ 'rentals.details.give_to_owner' | translate }}</small>
+                    </div>
+                  } @else if (r.status?.toLowerCase() === 'confirmed' && !r.isHandoffVerified) {
+                    <div class="code-input">
+                      <label>{{ 'rentals.details.enter_code' | translate }}</label>
+                      <input matInput [(ngModel)]="handoffCodeInput" placeholder="EX: 123456" class="custom-input">
+                      <app-loading-button color="primary" [loading]="isActionLoading()" (click)="verifyHandoff()" [disabled]="!handoffCodeInput()">
+                        {{ 'rentals.actions.verify' | translate }}
+                      </app-loading-button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
             <div class="actions-section">
-              <!-- Owner Actions -->
               @if (r.status?.toLowerCase() === 'pending') {
                  <app-loading-button color="primary" class="w-full" (click)="confirmRental()" [loading]="isActionLoading()">
                     <mat-icon>check_circle</mat-icon>
@@ -168,7 +227,6 @@
                 </div>
               }
 
-              <!-- Renter Actions -->
               @if (r.status?.toLowerCase() === 'pending' || r.status?.toLowerCase() === 'confirmed') {
                 <app-loading-button variant="stroked" color="warn" class="w-full" (click)="cancelRental()" [loading]="isActionLoading()">
                   <mat-icon>cancel</mat-icon>

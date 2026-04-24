@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FavoritesClient, FavoriteItemDto } from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
 import { HeaderSectionComponent } from '../../shared/components/header-section/header-section.component';
+import { LoadingButtonComponent } from '../../shared/components/loading-button/loading-button.component';
 
 @Component({
   selector: 'app-favorites',
@@ -19,7 +20,8 @@ import { HeaderSectionComponent } from '../../shared/components/header-section/h
     MatProgressSpinnerModule,
     MatIconModule,
     HeaderSectionComponent,
-    RouterModule
+    RouterModule,
+    LoadingButtonComponent
   ],
   templateUrl: './favorites.html',
   styleUrl: './favorites.scss'
@@ -41,7 +43,6 @@ export class FavoritesComponent implements OnInit {
     this.isLoading.set(true);
     this.favoritesClient.getMyFavorites().subscribe({
       next: (res) => {
-        // ApiResponse wraps GetMyFavoritesResponse in .data
         this.favorites.set(res.data?.items || []);
         this.isLoading.set(false);
       },
@@ -55,24 +56,21 @@ export class FavoritesComponent implements OnInit {
 
   removeFavorite(id: string, event: Event) {
     event.stopPropagation();
-
-    // Optimistic UI updates
     const currentFavs = this.favorites();
     this.favorites.set(currentFavs.filter(f => f.id !== id));
 
     this.favoritesClient.removeFavorite(id).subscribe({
       next: (res) => {
         if (res.error) {
-           this.toast.showError(res.messages?.[0] || 'errors.unknownError');
-           this.favorites.set(currentFavs); // Rollback
+          this.toast.showError(res.messages?.[0] || 'errors.unknownError');
+          this.favorites.set(currentFavs);
         } else {
-           this.toast.showSuccess('favorites.removeSuccess');
+          this.toast.showSuccess('favorites.removeSuccess');
         }
       },
       error: (err) => {
-        console.error('Remove favorite failed', err);
         this.toast.showError('errors.unknownError');
-        this.favorites.set(currentFavs); // Rollback
+        this.favorites.set(currentFavs);
       }
     });
   }

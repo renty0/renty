@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Brands;
 
-// ── DTOs ─────────────────────────────────────────────────────────────────────
 
 public record BrandDto(int Id, string NameAr, string NameEn, string? DescAr, string? DescEn, Guid? LogoId, string? LogoUrl, int ItemCount);
 
-// ── GET ALL ───────────────────────────────────────────────────────────────────
 
 public record GetBrandsQuery(string? Search, int Page, int Limit) : IRequest<GetBrandsResponse>;
 public record GetBrandsResponse(List<BrandDto> Brands, int Total, int Page, int Pages);
@@ -57,7 +55,6 @@ public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, GetBrandsRe
     }
 }
 
-// ── GET BY ID ─────────────────────────────────────────────────────────────────
 
 public record GetBrandByIdQuery(int Id) : IRequest<GetBrandByIdResponse>;
 public record GetBrandByIdResponse(bool Found, string? Error, BrandDto? Brand);
@@ -95,7 +92,6 @@ public class GetBrandByIdQueryHandler : IRequestHandler<GetBrandByIdQuery, GetBr
     }
 }
 
-// ── CREATE ────────────────────────────────────────────────────────────────────
 
 public record CreateBrandCommand(string NameAr, string NameEn, string? DescAr, string? DescEn, Guid? LogoId) : IRequest<CreateBrandResponse>;
 public record CreateBrandResponse(bool Success, string? Error, BrandDto? Brand);
@@ -133,7 +129,6 @@ public class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, Cre
     }
 }
 
-// ── UPDATE ────────────────────────────────────────────────────────────────────
 
 public record UpdateBrandCommand(int Id, string NameAr, string NameEn, string? DescAr, string? DescEn, Guid? LogoId) : IRequest<UpdateBrandResponse>;
 public record UpdateBrandResponse(bool Success, string? Error, BrandDto? Brand);
@@ -159,7 +154,6 @@ public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, Upd
     }
 }
 
-// ── DELETE ────────────────────────────────────────────────────────────────────
 
 public record DeleteBrandCommand(int Id) : IRequest<DeleteBrandResponse>;
 public record DeleteBrandResponse(bool Success, string? Error);

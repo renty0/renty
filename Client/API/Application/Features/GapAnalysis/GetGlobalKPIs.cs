@@ -22,7 +22,6 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
 
     public async Task<GlobalKPIsDto> Handle(GetGlobalKPIsQuery request, CancellationToken cancellationToken)
     {
-        // 1. Basic Stats
         var totalRevenue = await _context.Sales
             .SumAsync(x => x.OrderQuantity * (x.Product.DiscountPrice ?? x.Product.ProductPrice), cancellationToken);
 
@@ -30,7 +29,6 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
         var totalCustomers = await _context.Customers.CountAsync(cancellationToken);
         var totalProducts = await _context.Products.CountAsync(cancellationToken);
 
-        // 2. Gap Stats
         var categories = await _context.ProductCategories
             .Select(c => new
             {
@@ -89,7 +87,7 @@ public class GetGlobalKPIsQueryHandler : IRequestHandler<GetGlobalKPIsQuery, Glo
             criticalGaps,
             Math.Round(totalOppLoss, 2),
             revenueTrend,
-            new List<CategoryGapAnalysisDto>(), // Simplified for metrics
+            new List<CategoryGapAnalysisDto>(),
             gapLevelDistribution,
             insights
         );

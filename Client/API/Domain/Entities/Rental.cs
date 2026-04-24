@@ -18,6 +18,8 @@ public class Rental
     public decimal DepositAmount { get; set; } = 0;
     public DepositStatus DepositStatus { get; set; } = DepositStatus.Held;
     public string? Notes { get; set; }
+    public string? HandoffCode { get; set; } = Guid.NewGuid().ToString("N")[..6].ToUpper();
+    public bool IsHandoffVerified { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
@@ -27,4 +29,5 @@ public class Rental
     public Order? Order { get; set; }
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<ItemVerification> Verifications { get; set; } = new List<ItemVerification>();
+    public ICollection<RentalImage> Images { get; set; } = new List<RentalImage>();
 }

@@ -1,135 +1,205 @@
+@use "../../../shared/styles" as *;
+
 .ticket-details-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 100px);
-  max-width: 900px;
+  height: calc(100vh - 120px);
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: $spacing-lg;
+  gap: $spacing-lg;
 
   .ticket-header {
     display: flex;
     align-items: center;
-    padding: 1rem;
-    border-radius: 20px;
-    margin-bottom: 1rem;
-    gap: 1rem;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-lg;
+    border-radius: $border-radius-xl;
+    @include glassmorphism(0.02);
+    border: 1px solid rgba($primary-color, 0.08);
 
-    .ticket-info {
-      flex: 1;
-      h3 { margin: 0; font-size: 1.2rem; }
-      .ticket-id { font-size: 0.8rem; opacity: 0.5; }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+
+      .back-btn {
+        color: $text-muted;
+        &:hover { background: rgba($primary-color, 0.05); color: $primary-color; }
+      }
+
+      .ticket-info {
+        .title-row {
+          display: flex;
+          align-items: baseline;
+          gap: $spacing-sm;
+
+          h3 { margin: 0; font-size: $font-size-lg; font-weight: $font-weight-bold; color: $text-dark; }
+          .ticket-id { font-family: 'JetBrains Mono', monospace; font-size: $font-size-xs; color: $primary-color; opacity: 0.6; }
+        }
+        .ticket-date { margin: 2px 0 0 0; font-size: $font-size-xs; color: $text-muted; }
+      }
     }
 
     .status-badge {
-      margin-inline-start: auto;
-
       .status-select {
-        width: 160px;
-        
-        ::ng-deep .mat-mdc-text-field-wrapper {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
-        }
+        width: 180px;
+        ::ng-deep .mdc-text-field--outlined { border-radius: $border-radius-lg; background: rgba($primary-color, 0.03); }
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        padding: $spacing-xs $spacing-md;
+        border-radius: $border-radius-xxl;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-bold;
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        &.primary { background: rgba($primary-color, 0.1); color: $primary-color; .dot { background: $primary-color; } }
+        &.warn { background: rgba($danger, 0.1); color: $danger; .dot { background: $danger; } }
+        &.accent { background: rgba($warning, 0.1); color: $warning; .dot { background: $warning; } }
+        &.success { background: rgba($success, 0.1); color: $success; .dot { background: $success; } }
+        &.secondary { background: rgba($text-muted, 0.1); color: $text-muted; .dot { background: $text-muted; } }
       }
     }
   }
 
   .status-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin-inline-end: 8px;
+    margin-inline-end: $spacing-xs;
     
-    &.open { background-color: var(--primary-color); }
-    &.resolved { background-color: var(--accent-color); }
-    &.closed { background-color: var(--warn-color); }
+    &.open { background: $primary-color; }
+    &.awaiting-support { background: $danger; }
+    &.awaiting-customer { background: $warning; }
+    &.resolved { background: $success; }
+    &.closed { background: $text-muted; }
   }
 
   .messages-container {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: $spacing-lg;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
+    gap: $spacing-lg;
+    @include glassmorphism(0.01);
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($primary-color, 0.04);
 
-    &::-webkit-scrollbar { width: 6px; }
-    &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-thumb { background: rgba($primary-color, 0.1); border-radius: 10px; }
 
     .message-wrapper {
       display: flex;
       width: 100%;
-
+      
       &.mine {
         justify-content: flex-end;
         .message-bubble {
-          background: rgba(var(--primary-rgb), 0.15);
+          background: $primary-color;
+          color: $white;
           border-bottom-right-radius: 4px;
+          box-shadow: 0 4px 15px rgba($primary-color, 0.2);
+          
+          .time { color: rgba($white, 0.7); }
         }
       }
 
       &:not(.mine) .message-bubble {
+        background: $white;
+        color: $text-dark;
         border-bottom-left-radius: 4px;
+        box-shadow: 0 4px 15px rgba($black, 0.05);
+        border: 1px solid rgba($black, 0.05);
+        
+        .time { color: $text-muted; }
+      }
+
+      .message-bubble {
+        max-width: 75%;
+        padding: $spacing-md $spacing-lg;
+        border-radius: $border-radius-lg;
+        position: relative;
+        
+        p { margin: 0; line-height: 1.6; font-size: $font-size-sm; white-space: pre-wrap; }
+        .time {
+          font-size: 10px;
+          display: block;
+          margin-top: 4px;
+          text-align: right;
+        }
       }
     }
+  }
 
-    .message-bubble {
-      max-width: 80%;
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      
-      p { margin: 0; line-height: 1.5; white-space: pre-wrap; }
-      .time {
-        font-size: 0.75rem;
-        opacity: 0.4;
-        display: block;
-        margin-top: 0.5rem;
-        text-align: right;
-      }
-    }
+  .input-area {
+    padding: $spacing-md;
+    border-radius: $border-radius-xl;
+    @include glassmorphism(0.05);
+    border: 1px solid rgba($primary-color, 0.1);
 
-    .loader-container {
+    .input-wrapper {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
+      align-items: flex-end;
+      gap: $spacing-md;
+      background: $white;
+      padding: 8px 12px;
+      border-radius: $border-radius-lg;
+      border: 1px solid rgba($black, 0.08);
+      transition: all 0.3s ease;
+
+      &:focus-within { border-color: $primary-color; box-shadow: 0 0 0 3px rgba($primary-color, 0.1); }
+
+      textarea {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 0;
+        resize: none;
+        min-height: 24px;
+        max-height: 120px;
+        font-family: inherit;
+        font-size: $font-size-sm;
+        background: transparent;
+      }
     }
-  }
-
-  .input-area, .closed-notice {
-    padding: 1rem;
-    border-radius: 20px;
-  }
-
-  .message-input {
-    width: 100%;
-    ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
   }
 
   .closed-notice {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    color: var(--warn-color);
-    opacity: 0.8;
-    p { margin: 0; }
-  }
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    @include flex-center;
+    gap: $spacing-lg;
+    background: rgba($text-muted, 0.05);
+    border: 1px dashed $text-muted;
+    color: $text-muted;
 
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    mat-icon { font-size: 32px; width: 32px; height: 32px; opacity: 0.5; }
+    .notice-text {
+      h4 { margin: 0; font-weight: $font-weight-bold; }
+      p { margin: 4px 0 0 0; font-size: $font-size-sm; }
+    }
   }
 }
 
-[dir='rtl'] {
-  .message-wrapper.mine {
-    justify-content: flex-start;
-  }
-  .message-wrapper:not(.mine) {
-    justify-content: flex-end;
+.skeleton-messages {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  
+  .skeleton-message {
+    @include skeleton-base;
+    height: 60px;
+    border-radius: $border-radius-lg;
+    width: 60%;
+    
+    &.right { align-self: flex-end; width: 50%; }
+    &.left { align-self: flex-start; }
   }
 }

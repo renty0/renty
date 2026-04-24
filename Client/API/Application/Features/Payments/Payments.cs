@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Payments;
 
-// ── CREATE PAYMENT ────────────────────────────────────────────────────────────
-
 public record CreatePaymentCommand(Guid OrderId, string Method, string? TransactionRef = null)
     : IRequest<CreatePaymentResponse>;
 
@@ -50,8 +48,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             return new CreatePaymentResponse(false, "Forbidden.", null, null, null);
         if (order.Status != OrderStatus.Pending)
             return new CreatePaymentResponse(false, "Order is not in pending status.", null, null, null);
-
-        // Parse method
         var methodMap = new Dictionary<string, PaymentMethod>(StringComparer.OrdinalIgnoreCase)
         {
             ["vodafone_cash"] = PaymentMethod.VodafoneCash,
@@ -63,8 +59,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
 
         var method = methodMap[request.Method];
         var transactionRef = request.TransactionRef ?? Guid.NewGuid().ToString("N")[..16].ToUpper();
-
-        // Simulate payment gateway — always succeed for now
         var payment = new Payment
         {
             OrderId = request.OrderId,
@@ -75,12 +69,8 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             CreatedAt = DateTime.UtcNow
         };
         _context.Payments.Add(payment);
-
-        // Update order status
         order.Status = OrderStatus.Paid;
         order.UpdatedAt = DateTime.UtcNow;
-
-        // Notify buyer: "Payment Confirmed"
         _context.Notifications.Add(new Notification
         {
             UserId = order.UserId,
@@ -88,8 +78,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             Message = $"Your payment of {payment.Amount:C} via {method} has been confirmed.",
             CreatedAt = DateTime.UtcNow
         });
-
-        // Kick off delivery: insert initial tracking entry
         _context.DeliveryTrackings.Add(new DeliveryTracking
         {
             OrderId = request.OrderId,
@@ -102,8 +90,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         return new CreatePaymentResponse(true, null, payment.Id, payment.Status.ToString(), payment.TransactionRef);
     }
 }
-
-// ── GET PAYMENT BY ORDER ──────────────────────────────────────────────────────
 
 public record GetPaymentByOrderQuery(Guid OrderId) : IRequest<GetPaymentByOrderResponse>;
 public record PaymentDto(Guid Id, decimal Amount, string Method, string Status, DateTime CreatedAt);

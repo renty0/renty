@@ -7,11 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Disputes;
 
-// ── RESOLVE DISPUTE ────────────────────────────────────────────────────────────
 
 public record ResolveDisputeCommand(
     Guid RentalId,
-    string ResolutionDecision, // "forfeit_deposit", "refund_renter", "split_deposit"
+    string ResolutionDecision,
     decimal OwnerCompensation,
     decimal RenterRefund,
     string Reason
@@ -26,14 +25,13 @@ public class ResolveDisputeCommandValidator : AbstractValidator<ResolveDisputeCo
         RuleFor(x => x.RentalId).NotEmpty();
         RuleFor(x => x.ResolutionDecision).NotEmpty();
         RuleFor(x => x.Reason).NotEmpty();
-        // Custom logic to ensure compensation + refund equals the max deposit would reside in the handler
     }
 }
 
 public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeCommand, ResolveDisputeResponse>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUser _currentUser; // the support agent / admin
+    private readonly IUser _currentUser;
 
     public ResolveDisputeCommandHandler(IApplicationDbContext context, IUser currentUser)
     {
@@ -61,7 +59,6 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
         if (rental.DepositStatus == DepositStatus.Returned || rental.DepositStatus == DepositStatus.Forfeited)
             return new ResolveDisputeResponse(false, "Deposit for this rental has already been processed.");
 
-        // Process Owner Compensation (Forfeiting deposit to owner)
         if (request.OwnerCompensation > 0)
         {
             ownerUser.WalletBalance += request.OwnerCompensation;
@@ -69,14 +66,13 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
             {
                 UserId = ownerUser.Id,
                 Amount = request.OwnerCompensation,
-                Type = TransactionType.Penalty, // The renter's penalty becomes owner's credit
+                Type = TransactionType.Penalty, 
                 Description = $"Dispute Resolution: Compensation for rental {rental.Id} - {request.Reason}",
                 RelatedRentalId = rental.Id,
                 CreatedAt = DateTimeOffset.UtcNow
             });
         }
 
-        // Process Renter Refund (If applicable)
         if (request.RenterRefund > 0)
         {
             renterUser.WalletBalance += request.RenterRefund;
@@ -92,7 +88,6 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
         }
 
         rental.DepositStatus = request.ResolutionDecision == "refund_renter" ? DepositStatus.Returned : DepositStatus.Forfeited;
-        // Optionally map this action to a System Log or update the Support Ticket status to closed
         
         await _context.SaveChangesAsync(ct);
         return new ResolveDisputeResponse(true, null);

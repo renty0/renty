@@ -65,6 +65,50 @@ public class GetFraudLogsQueryHandler : IRequestHandler<GetFraudLogsQuery, GetFr
             ))
             .ToListAsync(ct);
 
+        // ── LIVE RISK ANALYSIS (Inject real-time alerts if page 1) ────────────────
+        if (request.Page == 1 && string.IsNullOrEmpty(request.Decision))
+        {
+            // 1. Find Unverified Users with High-Value Pending Orders
+            var highValueRisks = await _context.Orders
+                .Include(o => o.User)
+                .Where(o => !o.User.IdVerified && (o.TotalAmount ?? 0) > 2000)
+                .OrderByDescending(o => o.CreatedAt)
+                .Take(3)
+                .Select(o => new FraudLogDto(
+                    Guid.Empty,
+                    new FraudUserDto(o.User.Id, o.User.FirstName, o.User.Email!),
+                    0.82,
+                    "Manual Review",
+                    "High-value order from unverified identity",
+                    "LIVE_RISK: Unverified_HighValue",
+                    o.CreatedAt
+                ))
+                .ToListAsync(ct);
+
+            // 2. High Velocity Check (Users with 3+ orders in last 24h)
+            var yesterday = DateTime.UtcNow.AddDays(-1);
+            var velocityRisks = await _context.Orders
+                .Include(o => o.User)
+                .Where(o => o.CreatedAt > yesterday)
+                .GroupBy(o => o.UserId)
+                .Where(g => g.Count() >= 3)
+                .Select(g => new { UserId = g.Key, Count = g.Count(), Latest = g.Max(x => x.CreatedAt) })
+                .Join(_context.Users, g => g.UserId, u => u.Id, (g, u) => new FraudLogDto(
+                    Guid.Empty,
+                    new FraudUserDto(u.Id, u.FirstName, u.Email!),
+                    0.65,
+                    "Alert",
+                    $"Account placed {g.Count} orders in 24h",
+                    "LIVE_RISK: High_Velocity",
+                    g.Latest
+                ))
+                .Take(3)
+                .ToListAsync(ct);
+
+            logs.InsertRange(0, highValueRisks);
+            logs.InsertRange(0, velocityRisks);
+        }
+
         return new GetFraudLogsResponse(logs, total, request.Page, pages);
     }
 }

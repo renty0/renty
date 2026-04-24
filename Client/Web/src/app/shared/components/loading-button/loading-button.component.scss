@@ -1,216 +1,385 @@
 @use '../../styles/index' as *;
 
-$primary: $primary-color;
-$primary-dark: $secondary-color;
-$text-dark: #00223c;
-$border-color: #e5e7eb;
-$bg-subtle: #f9fafb;
-
-:host {
-  display: inline-block;
-}
 
 .btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 18px;
-  min-height: 42px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.4;
+  gap: $spacing-sm;
+  font-weight: $font-weight-medium;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: $border-radius-sm;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all $transition-fast;
+  outline: none;
 
-  &.full-width {
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba($accent-color, 0.3);
+  }
+
+  &.btn-xs {
+    min-width: 56px;
+    height: 28px;
+    padding: 0 $spacing-xss;
+    font-size: $font-size-xs;
+  }
+
+  &.btn-sm {
+    min-width: 72px;
+    height: 34px;
+    padding: 0 $spacing-md;
+    font-size: $font-size-sm;
+  }
+
+  &.btn-md {
+    min-width: 88px;
+    height: 40px;
+    padding: 0 $spacing-lg;
+    font-size: $font-size-sm;
+  }
+
+  &.btn-lg {
+    min-width: 104px;
+    height: 48px;
+    padding: 0 $spacing-xl;
+    font-size: $font-size-md;
+  }
+
+  &.btn-xl {
+    min-width: 120px;
+    height: 56px;
+    padding: 0 $spacing-xxl;
+    font-size: $font-size-md;
+  }
+
+  &.btn-full-width {
     width: 100%;
     display: flex;
   }
 
-  &.loading {
-    cursor: wait;
-    pointer-events: none;
+  &.btn-rounded {
+    border-radius: $border-radius-full;
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  &.btn-icon-only {
+    min-width: auto;
+    padding: 0;
 
-  &.btn-primary {
-    background: $primary;
-    color: white;
-
-    ::ng-deep mat-icon {
-      color: white !important;
+    &.btn-xs {
+      width: 28px;
     }
 
-    &:hover:not(:disabled):not(.loading) {
-      background: $primary-dark;
+    &.btn-sm {
+      width: 34px;
     }
-  }
 
-  &.btn-accent {
-    background: $accent-color;
-    color: white;
+    &.btn-md {
+      width: 40px;
+    }
 
-    ::ng-deep mat-icon {
-      color: white !important;
+    &.btn-lg {
+      width: 48px;
+    }
+
+    &.btn-xl {
+      width: 56px;
     }
   }
 
-  &.btn-warn {
-    background: $danger;
-    color: white;
+  &.btn-filled {
+    box-shadow: $shadow-sm;
 
-    ::ng-deep mat-icon {
-      color: white !important;
+    &:hover:not(:disabled):not(.btn-loading) {
+      box-shadow: $shadow-md;
+      transform: translateY(-1px);
     }
-  }
 
-  &.btn-flat {
-    background: transparent;
+    &:active:not(:disabled):not(.btn-loading) {
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
 
     &.btn-primary {
-      color: $primary;
+      background-color: $primary-color;
+      border-color: $primary-color;
+      color: $white;
 
-      &:hover:not(:disabled):not(.loading) {
-        background-color: rgba($primary, 0.08);
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $primary-light;
+        border-color: $primary-light;
+      }
+    }
+
+    &.btn-secondary {
+      background-color: transparent;
+      border-color: $primary-color;
+      color: $primary-color;
+      box-shadow: none;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $gray-100;
+        box-shadow: none;
+      }
+    }
+
+    &.btn-accent {
+      background-color: $accent-color;
+      border-color: $accent-color;
+      color: $white;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $accent-light;
+        border-color: $accent-light;
+      }
+    }
+
+    &.btn-warn {
+      background-color: $danger;
+      border-color: $danger;
+      color: $white;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $danger;
+        border-color: $danger;
+      }
+    }
+
+    &.btn-success {
+      background-color: $success;
+      border-color: $success;
+      color: $white;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $success;
+        border-color: $success;
+      }
+    }
+
+    &.btn-info {
+      background-color: $info;
+      border-color: $info;
+      color: $white;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $info;
+        border-color: $info;
+      }
+    }
+  }
+
+  &.btn-outlined {
+    background-color: transparent;
+    box-shadow: none;
+
+    &:hover:not(:disabled):not(.btn-loading) {
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled):not(.btn-loading) {
+      transform: translateY(0);
+    }
+
+    &.btn-primary {
+      border-color: $primary-color;
+      color: $primary-color;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($primary-color, 0.1);
+      }
+    }
+
+    &.btn-secondary {
+      border-color: $gray-300;
+      color: $text-secondary;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $gray-50;
+        border-color: $gray-400;
+      }
+    }
+
+    &.btn-accent {
+      border-color: $accent-color;
+      color: $accent-color;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($accent-color, 0.15);
+      }
+    }
+
+    &.btn-warn {
+      border-color: $danger;
+      color: $danger;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($danger, 0.05);
+      }
+    }
+
+    &.btn-success {
+      border-color: $success;
+      color: $success;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($success, 0.05);
+      }
+    }
+
+    &.btn-info {
+      border-color: $info;
+      color: $info;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($info, 0.05);
+      }
+    }
+  }
+
+  &.btn-text {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    min-width: auto;
+
+    &.btn-primary {
+      color: $primary-color;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($primary-color, 0.05);
+      }
+    }
+
+    &.btn-secondary {
+      color: $text-secondary;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: $gray-50;
       }
     }
 
     &.btn-accent {
       color: $accent-color;
 
-      &:hover:not(:disabled):not(.loading) {
-        background-color: rgba($accent-color, 0.08);
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($accent-color, 0.15);
       }
     }
 
     &.btn-warn {
       color: $danger;
 
-      &:hover:not(:disabled):not(.loading) {
-        background-color: rgba($danger, 0.08);
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($danger, 0.05);
+      }
+    }
+
+    &.btn-success {
+      color: $success;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($success, 0.05);
+      }
+    }
+
+    &.btn-info {
+      color: $info;
+
+      &:hover:not(:disabled):not(.btn-loading) {
+        background-color: rgba($info, 0.05);
       }
     }
   }
 
-  &.btn-stroked {
-    background: white;
-    border: 1px solid $border-color;
-    color: $text-dark;
-
-    ::ng-deep mat-icon {
-      color: inherit !important;
-    }
-
-    &:hover:not(:disabled):not(.loading) {
-      background: $bg-subtle;
-      border-color: $primary;
-      color: $primary;
-    }
-
-    &.btn-primary {
-      border-color: $border-color;
-      color: $text-dark;
-
-      ::ng-deep mat-icon {
-        color: inherit !important;
-      }
-
-      &:hover:not(:disabled):not(.loading) {
-        background: $bg-subtle;
-        border-color: $primary;
-        color: $primary;
-      }
-    }
-
-    &.btn-accent {
-      border-color: $border-color;
-      color: $text-dark;
-
-      ::ng-deep mat-icon {
-        color: inherit !important;
-      }
-
-      &:hover:not(:disabled):not(.loading) {
-        background: rgba($accent-color, 0.08);
-        border-color: $accent-color;
-        color: $accent-color;
-      }
-    }
-
-    &.btn-warn {
-      border-color: $border-color;
-      color: $text-dark;
-
-      ::ng-deep mat-icon {
-        color: inherit !important;
-      }
-
-      &:hover:not(:disabled):not(.loading) {
-        background: rgba($danger, 0.08);
-        border-color: $danger;
-        color: $danger;
-      }
-    }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
   }
 
-  ::ng-deep mat-icon {
-    font-size: 18px !important;
-    width: 18px !important;
-    height: 18px !important;
-    color: inherit !important;
-  }
-
-  &.btn-sm {
-    padding: 4px 16px !important;
-    min-height: 0px;
-    min-width: 80px;
-    ::ng-deep mat-icon {
-      font-size: 16px !important;
-      width: 16px !important;
-      height: 16px !important;
-    }
+  &.btn-loading {
+    cursor: wait;
+    pointer-events: none;
   }
 }
 
-.spinner {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-.btn-stroked .spinner,
-.btn-flat .spinner {
-  border-color: rgba($primary, 0.3);
-  border-top-color: $primary;
-}
-
-.button-text {
-  display: flex;
-  justify-content: center;
+.btn-content {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: $spacing-xs;
+  transition: opacity $transition-fast;
 
-  &.invisible {
+  &.btn-content-hidden {
+    opacity: 0;
     visibility: hidden;
   }
 }
 
-@keyframes spin {
+.btn-text {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  &.btn-icon-start {
+    margin-inline-end: 4px;
+  }
+
+  &.btn-icon-end {
+    margin-inline-start: 4px;
+  }
+
+  &.mat-icon {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    @include flex-center;
+  }
+}
+
+.btn-spinner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+  opacity: 0.8;
+}
+
+// Size-specific spinner sizes
+.btn-xs .btn-spinner {
+  width: 12px;
+  height: 12px;
+  border-width: 1.5px;
+}
+
+.btn-sm .btn-spinner {
+  width: 14px;
+  height: 14px;
+  border-width: 1.5px;
+}
+
+.btn-lg .btn-spinner,
+.btn-xl .btn-spinner {
+  width: 22px;
+  height: 22px;
+  border-width: 2.5px;
+}
+
+@keyframes btn-spin {
   to {
     transform: rotate(360deg);
   }

@@ -14,6 +14,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RentModalComponent } from '../../rentals/rent-modal/rent-modal';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { PermissionService } from '../../../core/services/permission.service';
+import { PermissionType } from '../../../core/constants/permissions';
 
 
 @Component({
@@ -43,14 +45,25 @@ export class ProductDetailsComponent implements OnInit {
     public translate = inject(TranslateService);
     private router = inject(Router);
     private dialog = inject(MatDialog);
+    private permissionService = inject(PermissionService);
 
     item = signal<ItemDetailDto | null>(null);
     reviews = signal<ReviewDto[]>([]);
     relatedItems = signal<ItemListDto[]>([]);
     isLoading = signal(true);
     isFavorite = signal(false);
-    isAdmin = computed(() => this.authService.isAdmin());
     isLoggedIn = this.authService.isLoggedIn;
+    
+    canEdit = computed(() => {
+        if (this.isOwner()) return true;
+        return this.permissionService.hasPermission(PermissionType.Items_Edit);
+    });
+
+    canDelete = computed(() => {
+        if (this.isOwner()) return true;
+        return this.permissionService.hasPermission(PermissionType.Items_Delete);
+    });
+
     isOwner = computed(() => {
         const currentUserId = this.authService.getCurrentUserId();
         const itemOwnerId = this.item()?.owner?.id;

@@ -75,8 +75,6 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         string? logoUrl = null;
         if (category.LogoId.HasValue)
         {
-            // If the logo was changed, category.Logo might still be the old one.
-            // Let's fetch the actual logo to be sure.
             var logo = await _context.MediaFiles
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == category.LogoId, cancellationToken);

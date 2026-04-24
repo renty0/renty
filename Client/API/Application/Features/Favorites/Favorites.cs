@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Favorites;
 
-// ── DTOs ─────────────────────────────────────────────────────────────────────
-
 public record FavoriteItemDto(
     Guid Id,
     string Title,
@@ -16,8 +14,6 @@ public record FavoriteItemDto(
     string? PrimaryImage,
     string? City
 );
-
-// ── ADD FAVORITE ─────────────────────────────────────────────────────────────
 
 public record AddFavoriteCommand(Guid ItemId) : IRequest<AddFavoriteResponse>;
 public record AddFavoriteResponse(bool Success, string? Error);
@@ -64,8 +60,6 @@ public class AddFavoriteCommandHandler : IRequestHandler<AddFavoriteCommand, Add
     }
 }
 
-// ── REMOVE FAVORITE ───────────────────────────────────────────────────────────
-
 public record RemoveFavoriteCommand(Guid ItemId) : IRequest<RemoveFavoriteResponse>;
 public record RemoveFavoriteResponse(bool Success, string? Error);
 
@@ -96,8 +90,6 @@ public class RemoveFavoriteCommandHandler : IRequestHandler<RemoveFavoriteComman
         return new RemoveFavoriteResponse(true, null);
     }
 }
-
-// ── GET MY FAVORITES ──────────────────────────────────────────────────────────
 
 public record GetMyFavoritesQuery : IRequest<GetMyFavoritesResponse>;
 public record GetMyFavoritesResponse(bool Success, List<FavoriteItemDto>? Items, string? Error);

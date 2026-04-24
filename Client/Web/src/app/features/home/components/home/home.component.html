@@ -1,5 +1,4 @@
 <div class="home-page" (window:scroll)="onWindowScroll()">
-    <!-- Section 1: Hero -->
     <section class="hero-section">
         <div class="hero-bg" style="background-image: url('assets/images/hero_sports_egypt.png')"></div>
         <div class="hero-overlay"></div>
@@ -24,8 +23,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 2: Why Renty (Value Proposition) -->
     <section class="reveal">
         <div class="container">
             <div class="section-header">
@@ -58,8 +55,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 3: Categories -->
     <section class="bg-light">
         <div class="container">
             <div class="section-header flex-header reveal">
@@ -87,8 +82,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 4: Top Sports Destinations -->
     <section class="destinations-section">
         <div class="container">
             <div class="section-header reveal">
@@ -112,8 +105,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 5: Live Availability (Real-time Calendar) -->
     <section class="calendar-promo reveal">
         <div class="promo-grid container">
             <div class="promo-info">
@@ -157,8 +148,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 5: Security & Trusted Rental -->
     <section class="security-section bg-dark text-white">
         <div class="container security-grid reveal">
             <div class="huge-icon-wrapper">
@@ -183,8 +172,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Section 6: How It Works -->
     <section class="process-section reveal">
         <div class="container">
             <div class="section-header">
@@ -209,8 +196,6 @@
         </div>
 </div>
 </section>
-
-<!-- Section 7: Mobile Experience -->
 <section class="app-promo-section">
     <div class="container promo-inner reveal">
         <div class="promo-text">
@@ -229,8 +214,6 @@
         </div>
     </div>
 </section>
-
-<!-- Section 8: Final CTA & Footer -->
 <footer class="footer-section">
     <div class="container footer-grid">
         <div class="footer-brand">
@@ -251,7 +234,7 @@
             <p style="margin-bottom: 25px;">{{ 'home.footer.ctaDesc' | translate }}</p>
             <div class="newsletter-form">
                 <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate">
-                <app-loading-button variant="flat" color="accent">{{ 'buttons.subscribe' | translate
+                <app-loading-button variant="stroked" color="accent">{{ 'buttons.subscribe' | translate
                     }}</app-loading-button>
             </div>
         </div>

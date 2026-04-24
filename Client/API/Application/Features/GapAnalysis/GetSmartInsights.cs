@@ -20,7 +20,6 @@ public class GetSmartInsightsQueryHandler : IRequestHandler<GetSmartInsightsQuer
     {
         var insights = new List<SmartInsightDto>();
 
-        // 1. GAP Insight
         var categories = await _context.ProductCategories
             .Select(c => new
             {
@@ -42,7 +41,6 @@ public class GetSmartInsightsQueryHandler : IRequestHandler<GetSmartInsightsQuer
             ));
         }
 
-        // 2. REVENUE Insight
         var totalOppLoss = categories.Where(c => c.Demand > c.Supply)
             .Sum(c => (c.Demand - c.Supply) * (_context.Products.Where(p => p.Subcategory.ProductCategoryId == _context.ProductCategories.First(pc => pc.NameEn == c.CategoryName).Id).Average(p => (decimal?)p.ProductPrice) ?? 0m));
 
@@ -55,7 +53,6 @@ public class GetSmartInsightsQueryHandler : IRequestHandler<GetSmartInsightsQuer
             ));
         }
 
-        // 3. TREND Insight
         var now = DateTime.UtcNow;
         var prevMonthStart = new DateOnly(now.Year, now.Month, 1).AddMonths(-1);
         var curMonthStart = new DateOnly(now.Year, now.Month, 1);

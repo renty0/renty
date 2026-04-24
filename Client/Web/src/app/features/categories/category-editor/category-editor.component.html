@@ -6,12 +6,12 @@
   }
 
   <form [formGroup]="form" (submit)="submit()" class="category-form">
-    <div class="form-body">
-      <app-input class="field" label="labels.nameEn" [formGroup]="form" controlName="categoryNameEn"/>
-      <app-input class="field" label="labels.nameAr" [formGroup]="form" controlName="categoryNameAr"/>
-      <app-input class="field" label="labels.descEn" type="textarea" [formGroup]="form" controlName="descriptionEn"/>
-      <app-input class="field" label="labels.descAr" type="textarea" [formGroup]="form" controlName="descriptionAr"/>
-      <div class="logo-section">
+    <div class="grid">
+      <app-input class="col-12" label="nameEn" [formGroup]="form" controlName="categoryNameEn"/>
+      <app-input class="col-12" label="nameAr" [formGroup]="form" controlName="categoryNameAr"/>
+      <app-input class="col-12" label="descEn" type="textarea" [formGroup]="form" controlName="descriptionEn"/>
+      <app-input class="col-12" label="descAr" type="textarea" [formGroup]="form" controlName="descriptionAr"/>
+      <div class="logo-section col-12">
         <span class="label">{{ 'labels.logo' | translate }}</span>
         <app-image-uploader #logoUploader [uploadPath]="'categories/logos'" [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']"/>
       </div>

@@ -48,7 +48,7 @@ p {
   margin: 0;
 }
 
-/* Global PrimeNG Overlays Fix - Ensure solid backgrounds */
+/* Global Overlays Fix - Ensure solid backgrounds */
 .p-select-overlay, 
 .p-multiselect-overlay, 
 .p-datepicker-panel,
@@ -89,16 +89,11 @@ p {
 /* Custom Scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(12, 41, 94, 0.25) transparent;
 }
 
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -114,9 +109,6 @@ p {
   background-clip: padding-box;
 }
 
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
 
 /* Unified Angular Material paginator look across all pages */
 .pagination-section {

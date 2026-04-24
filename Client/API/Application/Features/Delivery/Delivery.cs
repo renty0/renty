@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Delivery;
 
-// ── GET DELIVERY ──────────────────────────────────────────────────────────────
-
 public record TrackingEntryDto(string Status, string? Location, DateTime UpdatedAt);
 
 public record GetDeliveryQuery(Guid OrderId) : IRequest<GetDeliveryResponse>;
@@ -28,9 +26,6 @@ public class GetDeliveryQueryHandler : IRequestHandler<GetDeliveryQuery, GetDeli
     {
         var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == request.OrderId, ct);
         if (order == null) return new GetDeliveryResponse(false, "Order not found.", null);
-
-        // Allow order owner OR admin/support (caller handled at endpoint level for admin routes)
-        // Simple check: if user is not the order owner, we still allow (admin already gated by policy)
         var tracking = await _context.DeliveryTrackings
             .Where(d => d.OrderId == request.OrderId)
             .OrderByDescending(d => d.UpdatedAt)
@@ -40,8 +35,6 @@ public class GetDeliveryQueryHandler : IRequestHandler<GetDeliveryQuery, GetDeli
         return new GetDeliveryResponse(true, null, tracking);
     }
 }
-
-// ── UPDATE DELIVERY (Admin) ───────────────────────────────────────────────────
 
 public record UpdateDeliveryCommand(Guid OrderId, string Status, string? Location = null)
     : IRequest<UpdateDeliveryResponse>;
@@ -68,8 +61,6 @@ public class UpdateDeliveryCommandHandler : IRequestHandler<UpdateDeliveryComman
             Location = request.Location,
             UpdatedAt = DateTime.UtcNow
         });
-
-        // When delivered: update order status + notify buyer
         if (status == DeliveryStatus.Delivered)
         {
             order.Status = OrderStatus.Delivered;

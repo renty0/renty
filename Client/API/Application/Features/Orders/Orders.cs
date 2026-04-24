@@ -7,18 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Orders;
 
-// ── DTOs ─────────────────────────────────────────────────────────────────────
-
 public record OrderItemInputDto(Guid ItemId, int Quantity);
-public record OrderListDto(Guid Id, decimal? TotalAmount, string Status, DateTime CreatedAt, int ItemCount);
-public record OrderItemDetailDto(Guid ItemId, string Title, int Quantity, decimal PriceAtTime, string? PrimaryImage);
+public record OrderListDto(Guid Id, decimal? TotalAmount, string Status, DateTime CreatedAt, int ItemCount, string? PrimaryImageUrl);
+public record OrderItemDetailDto(Guid ItemId, string Title, int Quantity, decimal PriceAtTime, string? PrimaryImageUrl);
 public record OrderDetailDto(
     Guid Id, decimal? TotalAmount, string Status, DateTime CreatedAt,
     List<OrderItemDetailDto> Items,
     string? PaymentStatus, string? DeliveryStatus
 );
-
-// ── CREATE ORDER ──────────────────────────────────────────────────────────────
 
 public record CreateOrderCommand(List<OrderItemInputDto> Items) : IRequest<CreateOrderResponse>;
 public record CreateOrderResponse(bool Success, string? Error, Guid? OrderId, decimal? TotalAmount, string Status = "pending");
@@ -40,11 +36,13 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IFraudDetectionService _fraudService;
 
-    public CreateOrderCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateOrderCommandHandler(IApplicationDbContext context, IUser currentUser, IFraudDetectionService fraudService)
     {
         _context = context;
         _currentUser = currentUser;
+        _fraudService = fraudService;
     }
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken ct)
@@ -52,13 +50,14 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
         if (_currentUser.Id == null)
             return new CreateOrderResponse(false, "Unauthorized.", null, null);
 
+        // Evaluate fraud potential before finishing
+        // (Simplified: we'll call it after save for velocity check)
+
         var itemIds = request.Items.Select(i => i.ItemId).ToList();
         var items = await _context.Items
             .Include(i => i.Pricing)
             .Where(i => itemIds.Contains(i.Id))
             .ToListAsync(ct);
-
-        // Validate all items available
         foreach (var i in request.Items)
         {
             var item = items.FirstOrDefault(x => x.Id == i.ItemId);
@@ -95,11 +94,13 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
 
         order.TotalAmount = total;
         await _context.SaveChangesAsync(ct);
+
+        // Run background fraud check
+        _ = _fraudService.EvaluateOrderAsync(order.Id);
+
         return new CreateOrderResponse(true, null, order.Id, total);
     }
 }
-
-// ── GET ORDERS ────────────────────────────────────────────────────────────────
 
 public record GetOrdersQuery : IRequest<GetOrdersResponse>;
 public record GetOrdersResponse(List<OrderListDto> Orders);
@@ -108,26 +109,40 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, GetOrdersRe
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public GetOrdersQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetOrdersQueryHandler(IApplicationDbContext context, IUser currentUser, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetOrdersResponse> Handle(GetOrdersQuery request, CancellationToken ct)
     {
+        var requestPath = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestPath != null ? $"{requestPath.Scheme}://{requestPath.Host}" : "";
+
         var orders = await _context.Orders
             .Where(o => o.UserId == _currentUser.Id!.Value)
             .OrderByDescending(o => o.CreatedAt)
-            .Select(o => new OrderListDto(o.Id, o.TotalAmount, o.Status.ToString(), o.CreatedAt, o.Items.Count))
+            .Include(o => o.Items).ThenInclude(oi => oi.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .ToListAsync(ct);
 
-        return new GetOrdersResponse(orders);
+        var dtos = orders.Select(o =>
+        {
+            var firstItem = o.Items.FirstOrDefault()?.Item;
+            var storagePath = firstItem?.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath 
+                             ?? firstItem?.Images.FirstOrDefault()?.Image?.StoragePath;
+            
+            var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+
+            return new OrderListDto(o.Id, o.TotalAmount, o.Status.ToString(), o.CreatedAt, o.Items.Count, fullUrl);
+        }).ToList();
+
+        return new GetOrdersResponse(dtos);
     }
 }
-
-// ── GET ORDER BY ID ───────────────────────────────────────────────────────────
 
 public record GetOrderByIdQuery(Guid OrderId) : IRequest<GetOrderByIdResponse>;
 public record GetOrderByIdResponse(bool Found, string? Error, OrderDetailDto? Order);
@@ -136,11 +151,13 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, GetOr
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public GetOrderByIdQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetOrderByIdQueryHandler(IApplicationDbContext context, IUser currentUser, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetOrderByIdResponse> Handle(GetOrderByIdQuery request, CancellationToken ct)
@@ -155,12 +172,19 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, GetOr
         if (order.UserId != _currentUser.Id!.Value)
             return new GetOrderByIdResponse(false, "Forbidden.", null);
 
+        var requestPath = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestPath != null ? $"{requestPath.Scheme}://{requestPath.Host}" : "";
+
         var dto = new OrderDetailDto(
             order.Id, order.TotalAmount, order.Status.ToString(), order.CreatedAt,
-            order.Items.Select(oi => new OrderItemDetailDto(
-                oi.ItemId, oi.Item.TitleEn, oi.Quantity, oi.PriceAtTime,
-                oi.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? oi.Item.Images.FirstOrDefault()?.Image?.StoragePath
-            )).ToList(),
+            order.Items.Select(oi => {
+                var storagePath = oi.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? oi.Item.Images.FirstOrDefault()?.Image?.StoragePath;
+                var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+                return new OrderItemDetailDto(
+                    oi.ItemId, oi.Item.TitleEn, oi.Quantity, oi.PriceAtTime,
+                    fullUrl
+                );
+            }).ToList(),
             order.Payments.OrderByDescending(p => p.CreatedAt).FirstOrDefault()?.Status.ToString(),
             order.DeliveryTrackings.OrderByDescending(d => d.UpdatedAt).FirstOrDefault()?.Status.ToString()
         );

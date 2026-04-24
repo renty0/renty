@@ -1,105 +1,310 @@
-<div class="item-detail-container">
-  <div *ngIf="isLoading()" class="loading-state">
-    <mat-spinner diameter="50"></mat-spinner>
-  </div>
-
-  <div *ngIf="!isLoading() && item()" class="item-grid">
-    <!-- Left Column: Image Gallery -->
-    <div class="gallery-column">
-      <div class="gallery-card">
-        <div class="main-image-container">
-          <img [src]="item()?.images?.[activeImageIndex()]?.imageUrl" class="main-image"
-            [alt]="lang === 'ar' ? item()?.titleAr : item()?.titleEn" />
-        </div>
-
-        <div class="thumbnails-container" *ngIf="(item()?.images?.length ?? 0) > 1">
-          <div *ngFor="let img of item()?.images; let i = index" class="thumbnail-item"
-            [class.active]="activeImageIndex() === i" (click)="setActiveImage(i)">
-            <img [src]="img.imageUrl" alt="Item image" />
-          </div>
-        </div>
+<div class="detail-page">
+  @if (isLoading()) {
+  <div class="skeleton-page">
+    <div class="detail-grid">
+      <div class="left-col">
+        <div class="sk-gallery"></div>
+        <div class="sk-title"></div>
+        <div class="sk-text"></div>
+        <div class="sk-text" style="width: 80%"></div>
+      </div>
+      <div>
+        <div class="sk-price"></div>
+        <div class="sk-text"></div>
+        <div class="sk-text"></div>
+        <div class="sk-btn"></div>
       </div>
     </div>
-
-    <!-- Right Column: Item Info -->
-    <div class="info-column">
-      <div class="info-stack">
-        <!-- Header Section -->
-        <header class="item-header">
-          <h1 class="item-title" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
-            {{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}
-          </h1>
-          <div class="price-condition-row">
-            <span class="price-badge">{{ dailyPrice }} EGP / {{ 'items.daily' | translate }}</span>
-            <span class="condition-badge">{{ item()?.condition | translate }}</span>
-          </div>
-        </header>
-
-        <!-- Stats Grid -->
-        <section class="attributes-card">
-          <div class="attr-grid">
-            <div class="attr-item">
-              <small class="attr-label">{{ 'items.category' | translate }}</small>
-              <div class="attr-value">
-                {{ lang === 'ar' ? item()?.category?.nameAr : item()?.category?.nameEn }}
-              </div>
-            </div>
-            <div class="attr-item" *ngIf="item()?.brand">
-              <small class="attr-label">{{ 'items.brand' | translate }}</small>
-              <div class="attr-value">
-                {{ lang === 'ar' ? item()?.brand?.nameAr : item()?.brand?.nameEn }}
-              </div>
-            </div>
-            <div class="attr-item">
-              <small class="attr-label">{{ 'items.city' | translate }}</small>
-              <div class="attr-value">{{ item()?.city }}</div>
-            </div>
-            <div class="attr-item">
-              <small class="attr-label">{{ 'items.createdAt' | translate }}</small>
-              <div class="attr-value">{{ item()?.createdAt | date: 'mediumDate' }}</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Description -->
-        <section class="description-section">
-          <h5 class="section-title">{{ 'items.description' | translate }}</h5>
-          <p class="description-text" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
-            {{ lang === 'ar' ? item()?.descAr : item()?.descEn }}
-          </p>
-        </section>
-
-        <!-- Owner Card -->
-        <section class="owner-card">
-          <div class="owner-info">
-            <div class="owner-avatar">
-              <img [src]="item()?.owner?.profileImageUrl || 'assets/images/default-avatar.png'" alt="Owner avatar" />
-            </div>
-            <div class="owner-details">
-              <small class="attr-label">{{ 'items.owner' | translate }}</small>
-              <div class="owner-name">{{ item()?.owner?.firstName }}</div>
-              <div class="owner-location">
-                <mat-icon>location_on</mat-icon>
-                {{ item()?.owner?.city }}
-              </div>
-            </div>
-            <button mat-flat-button color="accent" class="contact-btn">
-              {{ 'common.contact' | translate }}
+  </div>
+  }
+  @if (!isLoading() && item()) {
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a routerLink="/items">{{ 'nav.marketplace' | translate }}</a>
+    <mat-icon>chevron_right</mat-icon>
+    @if (item()?.category) {
+    <a [routerLink]="['/items']" [queryParams]="{categoryId: item()?.category?.id}">
+      {{ lang === 'ar' ? item()?.category?.nameAr : item()?.category?.nameEn }}
+    </a>
+    <mat-icon>chevron_right</mat-icon>
+    }
+    <span class="crumb-current">{{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}</span>
+  </nav>
+  <div class="detail-grid">
+    <div class="left-col">
+      <div class="gallery-card">
+        <div class="main-image-wrap">
+          <div class="overlay-actions">
+            <button (click)="addToFavorites()" [style.color]="isFavoriting() ? '#ff4081' : ''">
+              <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+            <button title="Share">
+              <mat-icon>share</mat-icon>
             </button>
           </div>
-        </section>
 
-        <!-- Action Buttons -->
-        <footer class="action-footer">
-          <button mat-raised-button color="primary" class="rent-btn">
-            {{ 'items.rentNow' | translate }}
-          </button>
-          <button mat-stroked-button color="warn" class="favorite-btn">
-            <mat-icon>favorite_border</mat-icon>
-            {{ 'items.addToFavorites' | translate }}
-          </button>
-        </footer>
+          <img [src]="item()?.images?.[activeImageIndex()]?.imageUrl || 'assets/images/placeholder.png'"
+            [alt]="lang === 'ar' ? item()?.titleAr : item()?.titleEn" />
+          @if ((item()?.images?.length ?? 0) > 1) {
+          <span class="img-counter">
+            <mat-icon
+              style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;">photo_library</mat-icon>
+            {{ activeImageIndex() + 1 }} / {{ item()?.images?.length }}
+          </span>
+          }
+        </div>
+
+        @if ((item()?.images?.length ?? 0) > 1) {
+        <div class="thumbnails">
+          @for (img of item()?.images; track img.imageUrl; let i = $index) {
+          <div class="thumb" [class.active]="activeImageIndex() === i" (click)="setActiveImage(i)">
+            <img [src]="img.imageUrl" alt="thumbnail" />
+          </div>
+          }
+        </div>
+        }
       </div>
+      <div class="reviews-section">
+        <div class="section-head">
+          <h2>{{ 'items.reviews' | translate }}</h2>
+          <span class="review-count">{{ reviewCount }} {{ 'items.reviews' | translate }}</span>
+        </div>
+        @if (reviewCount > 0) {
+        <div class="rating-overview">
+          <div class="big-score">
+            <div class="val">{{ avgRating | number: '1.1-1' }}</div>
+            <div class="stars">
+              @for (s of [1,2,3,4,5]; track s) {
+              <mat-icon>{{ s <= avgRating ? 'star' : (s - 0.5 <=avgRating ? 'star_half' : 'star_border' ) }}</mat-icon>
+                  }
+            </div>
+            <span class="total">{{ 'items.averageRating' | translate }}</span>
+          </div>
+
+          <div class="bars">
+            @for (star of [5,4,3,2,1]; track star) {
+            <div class="bar-item">
+              <span class="label">{{ star }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width.%]="getStarPercent(star)"></div>
+              </div>
+              <span class="bar-count">{{ getStarCount(star) }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+        @if (isLoadingReviews()) {
+        <div style="display: flex; justify-content: center; padding: 40px;">
+          <mat-progress-spinner diameter="40" mode="indeterminate" />
+        </div>
+        } @else if (reviews.length > 0) {
+        <div class="review-list">
+          @for (review of reviews; track review.id) {
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="av">
+                  @if (review.reviewer?.profileImageUrl) {
+                  <img [src]="review.reviewer?.profileImageUrl" [alt]="review.reviewer?.firstName" />
+                  } @else {
+                  <span>{{ (review.reviewer?.firstName ?? 'U')[0] }}</span>
+                  }
+                </div>
+                <div class="name-group">
+                  <span class="name">{{ review.reviewer?.firstName }}</span>
+                  <span class="date">{{ review.createdAt | date: 'longDate' }}</span>
+                </div>
+              </div>
+              <div class="rating-badge">
+                <mat-icon>star</mat-icon>
+                {{ review.rating }}
+              </div>
+            </div>
+            @if (review.comment) {
+            <p class="comment">{{ review.comment }}</p>
+            }
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="empty-reviews">
+          <mat-icon>rate_review</mat-icon>
+          <span>{{ 'items.noReviewsYet' | translate }}</span>
+        </div>
+        }
+        <div class="add-review-section">
+          <h3 class="title">{{ 'items.leaveReview' | translate }}</h3>
+
+          <div class="star-box">
+            @for (s of [1,2,3,4,5]; track s) {
+            <button type="button" class="star-btn" [class.active]="s <= selectedStar()"
+              [class.hovered]="s <= hoveredStar() && !selectedStar()" (mouseenter)="setHoveredStar(s)"
+              (mouseleave)="clearHoveredStar()" (click)="selectStar(s)" [attr.aria-label]="s + ' stars'">★</button>
+            }
+          </div>
+
+          <form [formGroup]="reviewForm" (submit)="submitReview()">
+            <app-input [formGroup]="reviewForm" controlName="comment" label="items.yourComment" type="textarea"
+              [rows]="4" [placeholder]="'items.reviewPlaceholder' | translate" [maxLength]="500" [required]="true" />
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+              <app-loading-button type="submit" color="primary" [loading]="isSubmittingReview()"
+                [disabled]="reviewForm.invalid || !selectedStar()" [title]="'items.submitReview' | translate">
+                {{ 'items.submitReview' | translate }}
+              </app-loading-button>
+            </div>
+          </form>
+        </div>
+      </div>
+      @if (similarItems().length > 0) {
+      <div class="similar-section">
+        <h2 class="head">{{ 'items.similarItems' | translate }}</h2>
+        <div class="similar-track">
+          @for (sim of similarItems(); track sim.id) {
+          <a [routerLink]="['/items', sim.id]" class="similar-item">
+            <div class="img">
+              <img [src]="sim.primaryImage || 'assets/images/placeholder.png'"
+                [alt]="lang === 'ar' ? sim.titleAr : sim.titleEn" />
+            </div>
+            <div class="info">
+              <div class="title">{{ lang === 'ar' ? sim.titleAr : sim.titleEn }}</div>
+              <div class="price">{{ sim.dailyPrice }} EGP</div>
+            </div>
+          </a>
+          }
+        </div>
+      </div>
+      }
+
     </div>
+    <aside class="sticky-sidebar">
+      <div class="info-card">
+        @if (item()?.condition) {
+        <div class="condition-badge">
+          <mat-icon>verified</mat-icon>
+          {{ item()?.condition | translate }}
+        </div>
+        }
+
+        <h1 class="item-title" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+          {{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}
+        </h1>
+        @if (reviewCount > 0) {
+        <div class="rating-row">
+          <div class="stars-inline">
+            @for (s of [1,2,3,4,5]; track s) {
+            <mat-icon>
+              {{ s <= avgRating ? 'star' : (s - 0.5 <=avgRating ? 'star_half' : 'star_border' ) }} </mat-icon>
+                }
+          </div>
+          <span class="review-count">{{ avgRating | number: '1.1-1' }} ({{ reviewCount }} {{ 'items.reviews' | translate
+            }})</span>
+        </div>
+        }
+        <div class="price-section">
+          <div class="price-main">
+            <span class="amount">{{ dailyPrice }}</span>
+            <span class="currency">EGP</span>
+            <span class="period">/ {{ 'items.day' | translate }}</span>
+          </div>
+
+          @if (weeklyPrice || monthlyPrice) {
+          <div class="price-alternatives">
+            @if (weeklyPrice) {
+            <div class="alt-item">
+              <span class="alt-label">{{ 'items.week' | translate }}</span>
+              <span class="alt-value">{{ weeklyPrice }} EGP</span>
+            </div>
+            }
+            @if (monthlyPrice) {
+            <div class="alt-item">
+              <span class="alt-label">{{ 'items.month' | translate }}</span>
+              <span class="alt-value">{{ monthlyPrice }} EGP</span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+
+        <mat-divider />
+        <div class="attr-grid">
+          @if (item()?.category) {
+          <div class="attr-cell">
+            <span class="attr-label">{{ 'items.category' | translate }}</span>
+            <span class="attr-value">{{ lang === 'ar' ? item()?.category?.nameAr : item()?.category?.nameEn }}</span>
+          </div>
+          }
+          @if (item()?.brand) {
+          <div class="attr-cell">
+            <span class="attr-label">{{ 'items.brand' | translate }}</span>
+            <span class="attr-value">{{ lang === 'ar' ? item()?.brand?.nameAr : item()?.brand?.nameEn }}</span>
+          </div>
+          }
+          @if (item()?.city) {
+          <div class="attr-cell">
+            <span class="attr-label">{{ 'items.city' | translate }}</span>
+            <span class="attr-value">{{ item()?.city }}</span>
+          </div>
+          }
+          @if (item()?.defaultDeposit) {
+          <div class="attr-cell">
+            <span class="attr-label">{{ 'items.deposit' | translate }}</span>
+            <span class="attr-value">{{ item()?.defaultDeposit }} EGP</span>
+          </div>
+          }
+        </div>
+        @if (item()?.descEn || item()?.descAr) {
+        <div class="desc-section">
+          <p class="section-label">{{ 'items.description' | translate }}</p>
+          <p class="desc-text" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+            {{ lang === 'ar' ? item()?.descAr : item()?.descEn }}
+          </p>
+        </div>
+        }
+
+        <mat-divider />
+        @if (item()?.owner) {
+        <div class="owner-card">
+          <div class="owner-avatar">
+            <img [src]="item()?.owner?.profileImageUrl || 'assets/images/default-avatar.png'"
+              [alt]="item()?.owner?.firstName" />
+          </div>
+          <div class="owner-info">
+            <div class="name">{{ item()?.owner?.firstName }}</div>
+            <div class="meta">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">location_on</mat-icon>
+              {{ item()?.owner?.city || 'Member' }}
+            </div>
+          </div>
+          <div class="owner-rating">
+            <span class="val">4.9</span>
+            <span class="lbl">{{ 'items.rating' | translate }}</span>
+          </div>
+        </div>
+        }
+        <div class="grid">
+          <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
+            <mat-icon>flash_on</mat-icon>
+            {{ 'items.rentNow' | translate }}
+          </app-loading-button>
+
+          <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
+            [title]="'common.chat' | translate">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            {{ 'common.chat' | translate }}
+          </app-loading-button>
+
+          <app-loading-button class="col-12 md:col-6" variant="stroked" [loading]="isFavoriting()" (clicked)="addToFavorites()"
+            [title]="'items.favorite' | translate">
+            <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ 'items.favorite' | translate }}
+          </app-loading-button>
+        </div>
+
+      </div>
+    </aside>
+
   </div>
+  }
+
 </div>

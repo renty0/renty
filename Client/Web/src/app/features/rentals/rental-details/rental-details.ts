@@ -15,6 +15,10 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { PermissionService } from '../../../core/services/permission.service';
+import { PermissionType } from '../../../core/constants/permissions';
 
 @Component({
   selector: 'app-rental-details',
@@ -43,7 +47,10 @@ export class RentalDetailsComponent implements OnInit {
   private reviewsClient = inject(ReviewsClient);
   private toast = inject(ToastService);
   private auth = inject(AuthService);
+  private http = inject(HttpClient);
   public translate = inject(TranslateService);
+  private permissionService = inject(PermissionService);
+  private baseUrl = environment.apiUrl;
 
   rentalId = signal('');
   isLoading = signal(true);
@@ -56,6 +63,9 @@ export class RentalDetailsComponent implements OnInit {
   reviewRating = signal(5);
   reviewComment = signal('');
   
+  handoffCodeInput = signal('');
+  isUploading = signal(false);
+  
   userId = computed(() => this.auth.getUserData()?.id);
   
   isOwner = computed(() => {
@@ -64,7 +74,7 @@ export class RentalDetailsComponent implements OnInit {
     return String((r as any).ownerId) === String(this.userId());
   });
 
-  isAdmin = computed(() => this.auth.isAdmin());
+  canManage = computed(() => this.permissionService.hasPermission(PermissionType.Rentals_Edit));
 
   ngOnInit() {
     this.rentalId.set(this.route.snapshot.paramMap.get('id') || '');
@@ -102,6 +112,47 @@ export class RentalDetailsComponent implements OnInit {
 
   cancelRental() {
     this.executeAction(() => this.rentalsClient.cancelRental(this.rentalId()));
+  }
+
+  verifyHandoff() {
+    if (!this.handoffCodeInput()) return;
+    this.isActionLoading.set(true);
+    this.http.post(`${this.baseUrl}/api/v1/rentals/${this.rentalId()}/verify-handoff`, {
+      rentalId: this.rentalId(),
+      code: this.handoffCodeInput()
+    }).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isActionLoading.set(false);
+      },
+      error: (err) => {
+        this.toast.showError(err.error?.message || 'rentals.error');
+        this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  onPhotoSelected(event: any, type: string) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.isUploading.set(true);
+    const formData = new FormData();
+    formData.append('File', file);
+    formData.append('Type', type);
+
+    this.http.post(`${this.baseUrl}/api/v1/rentals/${this.rentalId()}/photos`, formData).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isUploading.set(false);
+      },
+      error: () => {
+        this.toast.showError('errors.uploadFailed');
+        this.isUploading.set(false);
+      }
+    });
   }
 
   submitReview() {

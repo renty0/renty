@@ -19,7 +19,7 @@ public class GetDeadStockAnalysisQueryHandler : IRequestHandler<GetDeadStockAnal
     public async Task<List<DeadStockDto>> Handle(GetDeadStockAnalysisQuery request, CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        var thresholdDate = DateOnly.FromDateTime(now.AddDays(-90)); // 90 days of inactivity
+        var thresholdDate = DateOnly.FromDateTime(now.AddDays(-90));
 
         var deadStock = await _context.Products
             .Select(p => new
@@ -42,7 +42,7 @@ public class GetDeadStockAnalysisQueryHandler : IRequestHandler<GetDeadStockAnal
             (int)x.Id,
             x.ProductName,
             x.CategoryName,
-            1, // Assuming per product tracking
+            1, 
             x.ProductPrice,
             x.LastSaleDate == default ? 999 : DateOnly.FromDateTime(now).DayNumber - x.LastSaleDate.DayNumber,
             "Consider a discount campaign or bundling this item with high-demand products."

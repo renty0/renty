@@ -36,7 +36,7 @@ public class GetSalesTrendQueryHandler : IRequestHandler<GetSalesTrendQuery, Lis
                 .OrderBy(s => s.Period)
                 .ToList();
         }
-        else // default monthly
+        else 
         {
             return sales
                 .GroupBy(s => new { s.OrderDate.Year, s.OrderDate.Month })

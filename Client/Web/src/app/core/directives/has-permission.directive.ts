@@ -1,5 +1,5 @@
-import { Directive, inject, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { Directive, effect, inject, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { PermissionService } from '../services/permission.service';
 
 @Directive({
     selector: '[appHasPermission]',
@@ -8,12 +8,20 @@ import { AuthService } from '../services/auth.service';
 export class HasPermissionDirective implements OnInit, OnDestroy {
     private templateRef = inject(TemplateRef<unknown>);
     private viewContainer = inject(ViewContainerRef);
-    private authService = inject(AuthService);
+    private permissionService = inject(PermissionService);
 
-    private permission: any = null;
+    private permission: string | string[] | null = null;
     private isVisible = false;
 
-    @Input() set appHasPermission(permission: any) {
+    constructor() {
+        effect(() => {
+            // Trigger update when permissions signal changes
+            this.permissionService.permissions();
+            this.updateView();
+        });
+    }
+
+    @Input() set appHasPermission(permission: string | string[] | null) {
         this.permission = permission;
         this.updateView();
     }
@@ -39,12 +47,12 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
     }
 
     private checkAccess(): boolean {
-        if (this.authService.isSuperAdmin()) {
-            return true;
+        if (!this.permission) return true;
+        
+        if (Array.isArray(this.permission)) {
+            return this.permissionService.hasAnyPermission(this.permission);
         }
-        if (!this.permission) {
-            return true;
-        }
-        return this.authService.hasPermission(this.permission);
+        
+        return this.permissionService.hasPermission(this.permission);
     }
 }

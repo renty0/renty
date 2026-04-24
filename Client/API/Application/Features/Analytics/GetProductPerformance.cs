@@ -19,13 +19,11 @@ public class GetProductPerformanceQueryHandler : IRequestHandler<GetProductPerfo
 
     public async Task<ProductPerformanceDto> Handle(GetProductPerformanceQuery request, CancellationToken cancellationToken)
     {
-        // 1. Top Products (Calculated in DB)
         var topProducts = await _context.Sales
             .Select(s => new
             {
                 s.ProductId,
                 ProductName = s.Product != null ? s.Product.NameEn : "Unknown",
-                // Calculate line total in DB: Quantity * EffectivePrice
                 LineRevenue = s.OrderQuantity * (s.Product != null ? (s.Product.DiscountPrice ?? s.Product.ProductPrice) : 0),
                 s.OrderQuantity
             })
@@ -40,7 +38,6 @@ public class GetProductPerformanceQueryHandler : IRequestHandler<GetProductPerfo
             .Take(request.Top)
             .ToListAsync(cancellationToken);
 
-        // 2. Category Performance (Calculated in DB)
         var categoryStats = await _context.Sales
             .Select(s => new
             {

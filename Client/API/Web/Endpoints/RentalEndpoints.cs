@@ -61,17 +61,28 @@ public static class RentalEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
 
-        // PUT /rentals/:id/activate
-        g.MapPut("/{id:guid}/activate", async (Guid id, ISender sender) =>
+        // PUT /rentals/:id/verify-handoff
+        g.MapPut("/{id:guid}/verify-handoff", async (Guid id, [Microsoft.AspNetCore.Mvc.FromBody] string code, ISender sender) =>
         {
-            var r = await sender.Send(new ActivateRentalCommand(id));
+            var r = await sender.Send(new VerifyHandoffCommand(id, code));
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             return Api.Ok(new RentalStatusData(r.Status));
         })
-        .WithName("ActivateRental")
+        .WithName("VerifyHandoff")
         .Produces<ApiResponse<RentalStatusData>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(Policies.AdminAccess);
+        .RequireAuthorization(Policies.CanTransact);
+
+        // POST /rentals/:id/photos
+        g.MapPost("/{id:guid}/photos", async (Guid id, UploadRentalPhotosCommand cmd, ISender sender) =>
+        {
+            var success = await sender.Send(cmd with { RentalId = id });
+            return success ? Api.Ok(new { }) : Api.Fail("Failed to upload photos", 400);
+        })
+        .WithName("UploadRentalPhotos")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
 
         // PUT /rentals/:id/complete
         g.MapPut("/{id:guid}/complete", async (Guid id,

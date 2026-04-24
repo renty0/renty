@@ -4,6 +4,8 @@ public enum SupportTicketStatus
 {
     Open,
     InProgress,
+    AwaitingCustomer,
+    AwaitingSupport,
     Resolved,
     Closed
 }

@@ -14,8 +14,8 @@ public record CreateItemCommand(
     string? TitleEn,
     string? DescAr,
     string? DescEn,
-    string? Type,           // standard | premium
-    string? Condition,      // new, like_new, good, fair
+    string? Type,     
+    string? Condition,     
     decimal DefaultDeposit,
     string? Location,
     string? City,

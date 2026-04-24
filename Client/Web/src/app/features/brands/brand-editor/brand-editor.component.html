@@ -3,7 +3,7 @@
     <div class="grid">
       <app-input
         class="col-12"
-        label="labels.nameEn"
+        label="nameEn"
         [formGroup]="form"
         controlName="nameEn"
         icon="title"
@@ -11,7 +11,7 @@
 
       <app-input
         class="col-12"
-        label="labels.nameAr"
+        label="nameAr"
         [formGroup]="form"
         controlName="nameAr"
         icon="translate"
@@ -19,7 +19,7 @@
 
       <app-input
         class="col-12"
-        label="labels.descEn"
+        label="descEn"
         [formGroup]="form"
         controlName="descEn"
         type="textarea"
@@ -27,7 +27,7 @@
       />
       <app-input
         class="col-12"
-        label="labels.descAr"
+        label="descAr"
         [formGroup]="form"
         controlName="descAr"
         type="textarea"
@@ -53,7 +53,7 @@
       >
         {{ 'buttons.cancel' | translate }}
       </app-loading-button>
-      <app-loading-button variant="flat" color="primary" [loading]="isSaving" (clicked)="submit()">
+      <app-loading-button variant="stroked" color="primary" [loading]="isSaving" (clicked)="submit()">
         {{ (isEditMode ? 'buttons.save' : 'buttons.create') | translate }}
       </app-loading-button>
     </div>

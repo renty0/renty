@@ -22,9 +22,7 @@ public class GetAdminDashboardQueryHandler : IRequestHandler<GetAdminDashboardQu
     public async Task<AdminDashboardDto> Handle(GetAdminDashboardQuery request, CancellationToken cancellationToken)
     {
         var totalUsers = await _context.Customers.CountAsync(cancellationToken);
-        // This is a simplified count, in a real app we'd check roles/usertype in Identity
-        // But since we have Customer entity, let's use it for stats.
-        
+
         var totalItems = await _context.RentableItems.CountAsync(cancellationToken);
         var totalRentals = await _context.RentRequests.CountAsync(x => x.Status == RentRequestStatus.Active || x.Status == RentRequestStatus.Completed, cancellationToken);
         var totalRevenue = await _context.RentRequests
@@ -50,16 +48,16 @@ public class GetAdminDashboardQueryHandler : IRequestHandler<GetAdminDashboardQu
                 x.Status.ToString(),
                 x.RentableItem.TitleEn,
                 x.RentableItem.Images.OrderBy(i => i.DisplayOrder).Select(i => i.Image != null ? i.Image.StoragePath : null).FirstOrDefault(),
-                "User", // Simplified
-                "Owner", // Simplified
+                "User", 
+                "Owner", 
                 x.Created
             ))
             .ToListAsync(cancellationToken);
 
         return new AdminDashboardDto(
             totalUsers,
-            0, // Simplified
-            0, // Simplified
+            0, 
+            0, 
             totalItems,
             totalRentals,
             totalRevenue,

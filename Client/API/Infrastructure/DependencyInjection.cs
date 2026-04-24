@@ -112,6 +112,8 @@ public static class DependencyInjection
         services.AddScoped<ICalendarService, CalendarService>();
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IGapAnalysisService, GapAnalysisService>();
+        services.AddScoped<IFraudDetectionService, FraudDetectionService>();
+        services.AddScoped<IRoleService, RoleService>();
         services.AddHostedService<AnalysisSchedulerService>();
 
         return services;

@@ -47,7 +47,7 @@ export class AdminDashboardComponent implements OnInit {
         }
         this.isLoading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error.set('An error occurred while fetching dashboard data');
         this.isLoading.set(false);
         console.error('KPI Load Error:', err);

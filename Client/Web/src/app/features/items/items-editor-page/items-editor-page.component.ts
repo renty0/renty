@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, Input, Output, EventEmitter, computed, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -22,6 +22,7 @@ import { LocalizationService } from '../../../core/services/localization.service
   imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
   templateUrl: './items-editor-page.component.html',
   styleUrl: './items-editor-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemsEditorPageComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -33,6 +34,7 @@ export class ItemsEditorPageComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private localization = inject(LocalizationService);
+  private cdr = inject(ChangeDetectorRef);
 
   @Input('itemId') set setItemId(val: string | undefined | null) {
     if (val != null) {
@@ -50,8 +52,8 @@ export class ItemsEditorPageComponent implements OnInit {
   form!: FormGroup;
   isEditMode = false;
   itemId: string | null = null;
-  isLoading = false;
-  isSaving = false;
+  isLoading = signal(false);
+  isSaving = signal(false);
 
   subcategories = computed(() => {
     const catId = this.selectedCategoryId();
@@ -215,7 +217,7 @@ export class ItemsEditorPageComponent implements OnInit {
       .subscribe();
   }
   private loadItem(id: string) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.itemsClient
       .getItemById(id)
       .pipe(
@@ -270,23 +272,25 @@ export class ItemsEditorPageComponent implements OnInit {
           this.router.navigate(['/items']);
           return of(null);
         }),
-        finalize(() => (this.isLoading = false)),
+        finalize(() => { this.isLoading.set(false); this.cdr.markForCheck(); }),
       )
       .subscribe();
   }
   onSubmit() {
     if (this.form.invalid) return;
-    this.isSaving = true;
+    this.isSaving.set(true);
     if (this.isEditMode && this.itemId) this.updateItem();
     else this.createItem();
   }
   private buildImages(): CreateItemImageCommand[] {
-    return this.uploadedImages.map(
-      (img) => new CreateItemImageCommand({
-        imageId: img.mediaFileId || img.id?.toString(),
-        isPrimary: img.isPrimary
-      }),
-    );
+    return this.uploadedImages
+      .filter(img => img.mediaFileId || img.id)
+      .map(
+        (img) => new CreateItemImageCommand({
+          imageId: img.mediaFileId ?? img.id?.toString(),
+          isPrimary: img.isPrimary,
+        }),
+      );
   }
   private createItem() {
     const v = this.form.value;
@@ -327,7 +331,7 @@ export class ItemsEditorPageComponent implements OnInit {
           this.toast.showError('products.createFailed');
           return of(null);
         }),
-        finalize(() => (this.isSaving = false)),
+        finalize(() => { this.isSaving.set(false); this.cdr.markForCheck(); }),
       )
       .subscribe();
   }
@@ -374,7 +378,7 @@ export class ItemsEditorPageComponent implements OnInit {
           this.toast.showError('products.updateFailed');
           return of(null);
         }),
-        finalize(() => (this.isSaving = false)),
+        finalize(() => { this.isSaving.set(false); this.cdr.markForCheck(); }),
       )
       .subscribe();
   }

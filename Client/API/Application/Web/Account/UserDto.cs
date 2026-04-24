@@ -12,6 +12,7 @@ public record UserDto(
     bool IsEmailConfirmed,
     double Rating,
     IList<string> Roles,
+    IList<string> Permissions,
     string? Address = null,
     string? City = null,
     string? Country = null,

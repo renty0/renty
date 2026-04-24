@@ -15,65 +15,102 @@
     </div>
   </app-header-section>
 
-  <div class="ticket-content">
-    @if (isLoading()) {
-      <div class="loader-container">
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
-    } @else if (tickets().length > 0) {
+    <div class="ticket-content">
       <div class="table-container glass-card">
-        <table mat-table [dataSource]="tickets()">
+        <table mat-table [dataSource]="isLoading() ? $any(skeletonData) : tickets()">
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>{{ 'support.ticketId' | translate }}</th>
-            <td mat-cell *matCellDef="let ticket">#{{ ticket.id?.substring(0, 8) }}</td>
+            <td mat-cell *matCellDef="let ticket">
+              @if (isLoading()) {
+                <div class="skeleton skeleton-text id-skeleton"></div>
+              } @else {
+                <span class="ticket-id">#{{ ticket.id?.substring(0, 8) }}</span>
+              }
+            </td>
           </ng-container>
-
+ 
           <ng-container matColumnDef="user">
             <th mat-header-cell *matHeaderCellDef>{{ 'support.user' | translate }}</th>
             <td mat-cell *matCellDef="let ticket">
-              {{ ticket.userName || ('marketplace.anonymous' | translate) }}
+              @if (isLoading()) {
+                <div class="skeleton skeleton-text user-skeleton"></div>
+              } @else {
+                <div class="user-info">
+                  <div class="user-avatar">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                  <span>{{ ticket.userName || ('marketplace.anonymous' | translate) }}</span>
+                </div>
+              }
             </td>
           </ng-container>
-
+ 
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>{{ 'support.subject' | translate }}</th>
-            <td mat-cell *matCellDef="let ticket">{{ ticket.type }}</td>
+            <td mat-cell *matCellDef="let ticket">
+              @if (isLoading()) {
+                <div class="skeleton skeleton-text subject-skeleton"></div>
+              } @else {
+                <span class="ticket-type">{{ ticket.type }}</span>
+              }
+            </td>
           </ng-container>
-
+ 
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>{{ 'support.status' | translate }}</th>
             <td mat-cell *matCellDef="let ticket">
-              <mat-chip-set>
-                <mat-chip [color]="getStatusColor(ticket.status)" selected>
-                  {{ 'support.' + ticket.status?.toLowerCase() | translate }}
-                </mat-chip>
-              </mat-chip-set>
+              @if (isLoading()) {
+                <div class="skeleton skeleton-badge"></div>
+              } @else {
+                <mat-chip-set>
+                  <mat-chip [class]="'status-chip ' + getStatusColor(ticket.status)">
+                    {{ 'support.' + ($any(ticket.status)?.charAt(0).toLowerCase() + $any(ticket.status)?.slice(1)) | translate }}
+                  </mat-chip>
+                </mat-chip-set>
+              }
             </td>
           </ng-container>
-
+ 
           <ng-container matColumnDef="createdAt">
             <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
-            <td mat-cell *matCellDef="let ticket">{{ ticket.createdAt | date: 'short' }}</td>
+            <td mat-cell *matCellDef="let ticket">
+              @if (isLoading()) {
+                <div class="skeleton skeleton-text date-skeleton"></div>
+              } @else {
+                <span class="ticket-date">{{ ticket.createdAt | date: 'short' }}</span>
+              }
+            </td>
           </ng-container>
-
+ 
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let ticket">
-              <button mat-icon-button [routerLink]="[ticket.id]" color="primary">
-                <mat-icon>visibility</mat-icon>
-              </button>
+              @if (isLoading()) {
+                <div class="skeleton skeleton-actions"></div>
+              } @else {
+                <button mat-icon-button [routerLink]="[ticket.id]" class="view-btn">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              }
             </td>
           </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="ticket-row"></tr>
+ 
+          <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns()" class="ticket-row" 
+              [routerLink]="isLoading() ? null : [row.id]"></tr>
         </table>
+ 
+        @if (!isLoading() && tickets().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon-wrapper">
+              <mat-icon>confirmation_number</mat-icon>
+            </div>
+            <p>{{ 'support.noTickets' | translate }}</p>
+            <button mat-flat-button color="primary" routerLink="new">
+              {{ 'support.openTicket' | translate }}
+            </button>
+          </div>
+        }
       </div>
-    } @else {
-      <div class="empty-state">
-        <mat-icon>confirmation_number</mat-icon>
-        <p>{{ 'support.noTickets' | translate }}</p>
-      </div>
-    }
-  </div>
+    </div>
 </div>

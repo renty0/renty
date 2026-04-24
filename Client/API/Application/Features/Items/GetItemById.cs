@@ -39,7 +39,6 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
         if (item == null)
             return new GetItemByIdResponse(false, "Item not found.", null);
 
-        // Log user interaction (view) if authenticated
         if (_currentUser.Id.HasValue)
         {
             _context.UserInteractions.Add(new Domain.Entities.UserInteraction
@@ -79,13 +78,13 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
                     : item.Owner.ProfilePictureUrl),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
             item.Images.Select(img => new ItemImageDto(
-                img.Id, 
+                img.ImageId, 
                 img.Image != null 
                     ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{img.Image.StoragePath.TrimStart('/')}" : "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/'))
                     : "", 
                 img.IsPrimary)).ToList(),
-            0, // avg rating
-            0, // review count
+            0, 
+            0, 
             item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,
             item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameAr, item.Subcategory.NameEn) : null,
             item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameAr, item.Brand.NameEn) : null

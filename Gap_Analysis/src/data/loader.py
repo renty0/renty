@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import json
 
 
 def load_excel_sheets(file_path: str):
@@ -18,6 +19,19 @@ def load_excel_sheets(file_path: str):
     except Exception as e:
         print(f"Error: {e}")
         return {}
+
+
+def load_json_data(file_path: str):
+    """Load pre-summarized live data from JSON."""
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+
+    try:
+        df = pd.read_json(file_path)
+        return df
+    except Exception as e:
+        print(f"Error loading JSON: {e}")
+        return pd.DataFrame()
 
 
 def summarize_excel_sheets(datasets: dict):

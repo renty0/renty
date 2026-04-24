@@ -1,6 +1,6 @@
-
 import os
 import sys
+import argparse
 import pandas as pd
 from pathlib import Path
 
@@ -9,63 +9,40 @@ current_dir = Path(__file__).parent
 src_path = current_dir.parent / 'src'
 sys.path.append(str(src_path))
 
-from data.loader import load_excel_sheets
+from data.loader import load_excel_sheets, load_json_data
 from analysis.supply_demand import (compute_category_supply, compute_category_demand, merge_supply_demand)
 from analysis.gap_score import (compute_gap_score, normalize_gap_score, classify_gap_level)
 from visualization.dashboards.gap_builder import prepare_gap_summary, export_gap_summary
 
-def run_analysis():
-    print("Starting Gap Analysis Pipeline...")
+def run_analysis(live=False):
+    print(f"Starting Gap Analysis Pipeline (Mode: {'Live' if live else 'Static'})...")
     
-    # 1. Load Data
-    data_path = current_dir.parent / 'data' / 'processed' / 'Cleaned_data.xlsx'
-    print(f"Loading data from: {data_path}")
-    
-    datasets = load_excel_sheets(str(data_path))
-    if not datasets:
-        print("Failed to load datasets. Exiting.")
-        return
-
-    # Check required sheets
-    required_sheets = ['Sales Data', ' Product Lookup']
-    for sheet in required_sheets:
-        if sheet not in datasets:
-             print(f"Warning: Sheet {sheet} not found in {list(datasets.keys())}")
-
-    # Inspect keys to be safe
-    # print("Available sheets:", list(datasets.keys()))
-    
-    # Map to correct sheet names
-    sales_data = datasets.get('Sales Data')
-    
-    # We need to construct the full product view since we likely don't have a single 'Product_Details' sheet
-    # based on the available sheets list: [' Product Lookup', 'Product Subcategory', 'Product Category']
-    
-    # If Sales Data doesn't have CategoryName, we MUST merge.
-    if 'CategoryName' not in sales_data.columns:
-        print("Merging lookup tables...")
-        # Note the leading space in ' Product Lookup' based on the error log
-        product_lookup = datasets.get(' Product Lookup')
-        subcategories = datasets.get('Product Subcategory')
-        categories = datasets.get('Product Category')
+    if live:
+        # 1. Load Live JSON Data (Already summarized by API)
+        data_path = current_dir.parent / 'data' / 'live_data.json'
+        print(f"Loading live data from: {data_path}")
         
-        if product_lookup is None or subcategories is None or categories is None:
-            print("Error: Missing required lookup sheets for merging.")
-            print(f"Available: {list(datasets.keys())}")
+        gap_df = load_json_data(str(data_path))
+        if gap_df.empty:
+            print("Failed to load live data. Exiting.")
             return
 
-        # Merge products -> subcats -> cats
-        # Verify columns exist before merge (optional but good practice, assuming standard schema for now)
-        products_full = product_lookup.merge(subcategories, left_on='ProductSubcategoryKey', right_on='ProductSubcategoryKey', how='left')
-        products_full = products_full.merge(categories, left_on='ProductCategoryKey', right_on='ProductCategoryKey', how='left')
-        
-        # Merge sales -> products_full
-        sales_full = sales_data.merge(products_full[['ProductKey', 'CategoryName', 'SubcategoryName']], on='ProductKey', how='left')
+        # Rename columns to match analysis expectations
+        # The JSON has {category, supply, demand}
+        gap_df.columns = ['CategoryName', 'UniqueProducts', 'TotalQuantitySold']
     else:
-        sales_full = sales_data
+        # 1. Load Static Excel Data
+        data_path = current_dir.parent / 'data' / 'processed' / 'Cleaned_data.xlsx'
+        print(f"Loading static data from: {data_path}")
         
-        # For supply, we need a products listing.
-        # Create products_full from lookups
+        datasets = load_excel_sheets(str(data_path))
+        if not datasets:
+            print("Failed to load datasets. Exiting.")
+            return
+
+        sales_data = datasets.get('Sales Data')
+        
+        # Merge lookup tables if needed
         product_lookup = datasets.get(' Product Lookup')
         subcategories = datasets.get('Product Subcategory')
         categories = datasets.get('Product Category')
@@ -74,33 +51,42 @@ def run_analysis():
              products_full = product_lookup.merge(subcategories, left_on='ProductSubcategoryKey', right_on='ProductSubcategoryKey', how='left')
              products_full = products_full.merge(categories, left_on='ProductCategoryKey', right_on='ProductCategoryKey', how='left')
         else:
-             print("Warning: Could not create products_full, supply analysis might fail.")
-             products_full = pd.DataFrame() # Empty fallback
+             print("Warning: Missing required lookup sheets.")
+             return
 
-    # 2. Compute Supply & Demand
-    print("Computing Supply and Demand...")
-    supply = compute_category_supply(sales_full, products_full)
-    demand = compute_category_demand(sales_full)
-    
-    # 3. Merge and Compute Scores
+        # Merge sales -> products_full
+        sales_full = sales_data.merge(products_full[['ProductKey', 'CategoryName']], on='ProductKey', how='left')
+        
+        # 2. Compute Supply & Demand
+        print("Computing Supply and Demand...")
+        supply = compute_category_supply(sales_full, products_full)
+        demand = compute_category_demand(sales_full)
+        
+        # 3. Merge
+        gap_df = merge_supply_demand(supply, demand)
+
+    # 4. Compute Scores & Levels
     print("Calculating Gap Scores...")
-    merged = merge_supply_demand(supply, demand)
-    gap_df = compute_gap_score(merged)
+    gap_df = compute_gap_score(gap_df)
     gap_df = normalize_gap_score(gap_df)
     gap_df = classify_gap_level(gap_df)
     
-    # 4. Prepare Summary
+    # 5. Prepare Summary
     summary = prepare_gap_summary(gap_df)
     
-    # 5. Export
+    # 6. Export
     print("Exporting results...")
     csv_path, json_path = export_gap_summary(summary)
     
     print(f"Success! Results saved to:\nJSON: {json_path}\nCSV: {csv_path}")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Gap Analysis Pipeline")
+    parser.add_argument("--live", action="store_true", help="Run analysis on live exported data")
+    args = parser.parse_args()
+    
     try:
-        run_analysis()
+        run_analysis(live=args.live)
     except Exception as e:
         print(f"Error during analysis: {e}")
         import traceback

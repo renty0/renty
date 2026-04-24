@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,10 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SupportClient, TicketListDto, ApiResponse, GetTicketsResponse } from '../../../core/api/api-client';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { SupportClient } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
-import { finalize, tap } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-list',
@@ -29,40 +29,33 @@ import { finalize, tap } from 'rxjs';
   templateUrl: './ticket-list.html',
   styleUrl: './ticket-list.scss'
 })
-export class TicketListComponent implements OnInit {
-  private supportClient = inject(SupportClient);
-  private auth = inject(AuthService);
+export class TicketListComponent {
+  private readonly supportClient = inject(SupportClient);
+  private readonly auth = inject(AuthService);
 
-  isSupport = () => this.auth.isSupport();
-  tickets = signal<TicketListDto[]>([]);
-  isLoading = signal(true);
-  displayedColumns: string[] = ['id', 'type', 'status', 'createdAt', 'actions'];
+  isSupport = signal(this.auth.isSupport());
+  
+  ticketsResource = rxResource({
+    stream: () => this.supportClient.getSupportTickets()
+  });
 
-  ngOnInit() {
-    if (this.isSupport()) {
-      this.displayedColumns = ['id', 'user', 'type', 'status', 'createdAt', 'actions'];
-    }
-    this.loadTickets();
-  }
+  tickets = computed(() => this.ticketsResource.value()?.data?.tickets || []);
+  isLoading = computed(() => this.ticketsResource.isLoading());
+  
+  displayedColumns = computed(() => {
+    const base = ['id', 'type', 'status', 'createdAt', 'actions'];
+    return this.isSupport() ? ['id', 'user', 'type', 'status', 'createdAt', 'actions'] : base;
+  });
 
-  loadTickets() {
-    this.isLoading.set(true);
-    this.supportClient.getSupportTickets()
-      .pipe(
-        tap((res: ApiResponse<GetTicketsResponse>) => {
-          if (res.data?.tickets) {
-            this.tickets.set(res.data.tickets);
-          }
-        }),
-        finalize(() => this.isLoading.set(false))
-      ).subscribe();
-  }
+  skeletonData = [1, 2, 3, 4, 5];
 
   getStatusColor(status: string | undefined): string {
     switch (status?.toLowerCase()) {
       case 'open': return 'primary';
-      case 'resolved': return 'accent';
-      case 'closed': return 'warn';
+      case 'awaitingsupport': return 'warn';
+      case 'awaitingcustomer': return 'accent';
+      case 'resolved': return 'success';
+      case 'closed': return 'secondary';
       default: return '';
     }
   }

@@ -106,7 +106,7 @@ public static class AuthEndpoints
                 r.User == null ? null : new AuthLoginUser(
                     r.User.Id, r.User.FirstName, r.User.LastName,
                     r.User.Email, r.User.Roles?.FirstOrDefault(),
-                    r.User.ProfilePictureUrl));
+                    r.User.ProfilePictureUrl, r.User.Permissions));
 
             return Api.Ok(data);
         })

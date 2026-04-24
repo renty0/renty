@@ -42,7 +42,6 @@ public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Delet
         if (item.Status == NewItemStatus.Rented)
             return new DeleteItemResponse(false, "Cannot remove an item while it is rented.");
 
-        // Soft delete
         item.Status = NewItemStatus.Removed;
         item.UpdatedAt = DateTime.UtcNow;
 

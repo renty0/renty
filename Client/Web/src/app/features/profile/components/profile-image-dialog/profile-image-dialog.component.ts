@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { ImageUploaderComponent } from '../../../../shared/components/image-uploader/image-uploader.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,40 +11,39 @@ import { TranslateModule } from '@ngx-translate/core';
     standalone: true,
     imports: [
         CommonModule,
-        DialogModule,
-        ButtonModule,
         ImageUploaderComponent,
         ReactiveFormsModule,
-        TranslateModule
+        TranslateModule,
+        MatDialogModule,
+        MatButtonModule
     ],
     templateUrl: './profile-image-dialog.component.html',
     styleUrls: ['./profile-image-dialog.component.scss']
 })
 export class ProfileImageDialogComponent {
-    @Input() visible = false;
-    @Input() currentImageUrl: string | null = null;
-    @Output() visibleChange = new EventEmitter<boolean>();
-    @Output() imageSaved = new EventEmitter<string | null>();
-
     @ViewChild(ImageUploaderComponent) uploader!: ImageUploaderComponent;
 
     form = new FormGroup({
         imageId: new FormControl('')
     });
 
+    constructor(
+        public dialogRef: MatDialogRef<ProfileImageDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: { currentImageUrl: string | null }
+    ) {}
+
     close() {
-        this.visible = false;
-        this.visibleChange.emit(false);
+        this.dialogRef.close();
     }
 
     save() {
         const newImageId = this.form.get('imageId')?.value;
         if (newImageId) {
             const newUrl = this.uploader.imageUrl;
-            this.imageSaved.emit(newUrl);
+            this.dialogRef.close(newUrl);
         } else {
-            this.imageSaved.emit(this.uploader.imageUrl);
+            this.dialogRef.close(this.uploader.imageUrl);
         }
-        this.close();
     }
 }
+

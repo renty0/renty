@@ -2,6 +2,7 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Web.Account;
 
@@ -62,11 +63,13 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
 {
     private readonly IUser _currentUser;
     private readonly IIdentityService _identityService;
+    private readonly IApplicationDbContext _context;
 
-    public UpdateUserCommandHandler(IUser currentUser, IIdentityService identityService)
+    public UpdateUserCommandHandler(IUser currentUser, IIdentityService identityService, IApplicationDbContext context)
     {
         _currentUser = currentUser;
         _identityService = identityService;
+        _context = context;
     }
 
     public async Task<UpdateUserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -99,6 +102,14 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
 
         var roles = await _identityService.GetUserRolesAsync(user);
 
+        // Fetch granular permissions
+        var userRoles = await _identityService.GetUserRolesAsync(user);
+        var permissions = await _context.RolePermissions
+                .Where(rp => userRoles.Contains(rp.RoleName))
+                .Select(rp => rp.PermissionValue)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
         var userDto = new UserDto(
             user.Id,
             user.Email!,
@@ -111,10 +122,13 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             user.EmailConfirmed,
             user.Rating,
             roles,
+            permissions,
             user.Address,
             user.City,
             user.Country,
-            user.Bio
+            user.Bio,
+            user.PhoneNumber,
+            user.CreatedAt
         );
 
         return new UpdateUserResponse(true, "Profile updated successfully.", userDto);

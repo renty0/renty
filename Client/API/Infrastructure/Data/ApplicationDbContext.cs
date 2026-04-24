@@ -37,6 +37,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Favorite> Favorites => Set<Favorite>();
     public DbSet<SearchLog> SearchLogs => Set<SearchLog>();
     public DbSet<UserInteraction> UserInteractions => Set<UserInteraction>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     // Rentals, Orders, Payments, Delivery, Reviews, Verifications
     public DbSet<Rental> Rentals => Set<Rental>();
@@ -59,6 +61,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ItemRecommendation> ItemRecommendations => Set<ItemRecommendation>();
     public DbSet<KpiSnapshot> KpiSnapshots => Set<KpiSnapshot>();
     public DbSet<FraudLog> FraudLogs => Set<FraudLog>();
+    public DbSet<RentalImage> RentalImages => Set<RentalImage>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -428,18 +431,30 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
         });
 
-        builder.Entity<FraudLog>(entity =>
+        builder.Entity<Permission>(entity =>
         {
-            entity.ToTable("fraud_logs");
+            entity.ToTable("permissions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Value).IsRequired().HasMaxLength(150);
+            entity.HasIndex(e => e.Value).IsUnique();
+        });
+
+        builder.Entity<RolePermission>(entity =>
+        {
+            entity.ToTable("role_permissions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.PermissionValue).IsRequired().HasMaxLength(150);
+            entity.HasIndex(e => new { e.RoleId, e.PermissionValue }).IsUnique();
+        });
+        builder.Entity<RentalImage>(entity =>
+        {
+            entity.ToTable("rental_images");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.RiskScore).HasColumnName("risk_score");
-            entity.Property(e => e.Decision).HasColumnName("decision").HasMaxLength(20);
-            entity.Property(e => e.Reason).HasColumnName("reason");
-            entity.Property(e => e.FraudIndicators).HasColumnName("fraud_indicators");
-            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+            entity.Property(e => e.Type).HasConversion<int>();
+            entity.HasOne(e => e.Rental).WithMany(r => r.Images).HasForeignKey(e => e.RentalId);
+            entity.HasOne(e => e.Image).WithMany().HasForeignKey(e => e.ImageId);
         });
     }
 }

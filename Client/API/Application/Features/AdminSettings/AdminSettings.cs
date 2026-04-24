@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.AdminSettings;
 
-// ── GET SETTINGS ──────────────────────────────────────────────────────────────
-
 public record GetSettingsQuery : IRequest<GetSettingsResponse>;
 public record GetSettingsResponse(bool Success, string? Error, Dictionary<string, string>? Settings);
 
@@ -25,7 +23,6 @@ public class GetSettingsQueryHandler : IRequestHandler<GetSettingsQuery, GetSett
     }
 }
 
-// ── UPDATE SETTING ────────────────────────────────────────────────────────────
 
 public record UpdateSettingCommand(string Key, string Value, string? Description) : IRequest<UpdateSettingResponse>;
 public record UpdateSettingResponse(bool Success, string? Error);

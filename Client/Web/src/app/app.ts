@@ -1,4 +1,3 @@
-import { ToastModule } from 'primeng/toast';
 import { Component, computed, effect, inject, Renderer2, signal, WritableSignal } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -8,15 +7,16 @@ import translationsAR from '../../public/i18n/ar.json';
 import { LocalizationService } from './core/services/localization.service';
 import { ResponsiveService } from './core/services/responsive.service';
 import { AuthService } from './core/services/auth.service';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { NgxSonnerToaster } from 'ngx-sonner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ToastModule, ButtonModule, TooltipModule, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster],
   templateUrl: './app.html',
 })
 export class App {

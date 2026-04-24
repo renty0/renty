@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -25,22 +26,35 @@ namespace Infrastructure.Services
 
         public async Task RunAnalysisAsync()
         {
-            _logger.LogInformation("Starting Gap Analysis Pipeline...");
+            _logger.LogInformation("Starting Gap Analysis Pipeline with Real Data...");
 
-            // 1. Run Python Script
-            // When running locally, the API's working directory is typically:
-            //   <repo>\Client\API\Web
-            // Compute <repo> from that so we don't rely on machine-specific absolute paths.
+            // 1. Export Real Data from DB
             var currentDir = Directory.GetCurrentDirectory();
             var repoRoot = Path.GetFullPath(Path.Combine(currentDir, "..", "..", ".."));
+            var dataExportPath = Path.Combine(repoRoot, "Gap_Analysis", "data", "live_data.json");
 
+            var categories = await _context.ProductCategories.ToListAsync();
+            var items = await _context.Items.Include(i => i.Category).ToListAsync();
+            var orderItems = await _context.OrderItems.Include(oi => oi.Item).ThenInclude(i => i.Category).ToListAsync();
+
+            var liveData = categories.Select(c => new
+            {
+                category = c.NameEn,
+                supply = items.Count(i => i.CategoryId == c.Id),
+                demand = orderItems.Where(oi => oi.Item?.CategoryId == c.Id).Sum(oi => oi.Quantity)
+            }).ToList();
+
+            await File.WriteAllTextAsync(dataExportPath, JsonSerializer.Serialize(liveData));
+            _logger.LogInformation($"Live data exported to {dataExportPath}");
+
+            // 2. Run Python Script
             var scriptPath = Path.Combine(repoRoot, "Gap_Analysis", "scripts", "run_pipeline.py");
             var resultPath = Path.Combine(repoRoot, "Gap_Analysis", "results", "data", "gap_summary.json");
 
             var startInfo = new ProcessStartInfo
             {
                 FileName = "python",
-                Arguments = $"\"{scriptPath}\"",
+                Arguments = $"\"{scriptPath}\" --live",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -64,7 +78,7 @@ namespace Infrastructure.Services
                 _logger.LogInformation($"Python Output: {output}");
             }
 
-            // 2. Read Results
+            // 3. Read Results
             if (!File.Exists(resultPath))
             {
                 throw new FileNotFoundException($"Result file not found at {resultPath}");
@@ -75,30 +89,19 @@ namespace Infrastructure.Services
 
             if (results == null) return;
 
-            // 3. Save to DB
+            // 4. Save to DB (Latest Batch)
             var batchId = Guid.NewGuid();
-            var entities = new List<GapAnalysisResult>();
-
-            foreach (var item in results)
+            var entities = results.Select(item => new GapAnalysisResult
             {
-                entities.Add(new GapAnalysisResult
-                {
-                    Category = item.category,
-                    Supply = item.supply,
-                    Demand = item.demand,
-                    GapScore = item.gap_score,
-                    GapStatus = item.gap_status,
-                    NormalizedGap = item.normalized_gap,
-                    CreatedAt = DateTime.UtcNow,
-                    BatchId = batchId
-                });
-            }
-
-            // Optional: Clear old results if we only want latest on dashboard, 
-            // but requirements said "Gap Analysis Pipeline... Update the DB". 
-            // User also implied periodic runs. Keeping history is safer for "Analysis".
-            // However, for the dashboard to show "The Results", it likely queries the latest.
-            // I'll just append. The dashboard query can take the latest BatchId.
+                Category = item.category,
+                Supply = item.supply,
+                Demand = item.demand,
+                GapScore = item.gap_score,
+                GapStatus = item.gap_status,
+                NormalizedGap = item.normalized_gap,
+                CreatedAt = DateTime.UtcNow,
+                BatchId = batchId
+            }).ToList();
             
             await _context.GapAnalysisResults.AddRangeAsync(entities);
             await _context.SaveChangesAsync();

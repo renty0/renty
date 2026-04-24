@@ -1,64 +1,194 @@
-<div class="payment-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
-  <app-header-section
-    [title]="'payment.title' | translate"
-    [subtitle]="'payment.selectMethod' | translate"
-    icon="payment">
-  </app-header-section>
-
-  <div class="payment-content">
-    <mat-card class="payment-card glass-card">
-      <mat-card-header>
-        <mat-card-title>{{ 'payment.selectMethod' | translate }}</mat-card-title>
-      </mat-card-header>
-
-      <mat-card-content>
-        <mat-radio-group [(ngModel)]="selectedMethod" class="method-group">
-          @for (method of paymentMethods; track method.id) {
-            <mat-radio-button [value]="method.id" class="method-option">
-              <div class="method-content">
-                <mat-icon>{{ method.icon }}</mat-icon>
-                <span>{{ 'payment.methods.' + method.id | translate }}</span>
-              </div>
-            </mat-radio-button>
-          }
-        </mat-radio-group>
-
-        <div class="transaction-input">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ 'payment.transactionRef' | translate }}</mat-label>
-            <input matInput [(ngModel)]="transactionRef" placeholder="TXN-123456">
-            <mat-icon matSuffix>assignment</mat-icon>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-
-      <mat-card-actions>
-        <app-loading-button
-          [loading]="isProcessing()"
-          (click)="processPayment()"
-          class="pay-button">
-          <mat-icon>check_circle</mat-icon>
-          {{ 'payment.payNow' | translate }}
-        </app-loading-button>
-
-        <button mat-button [routerLink]="['/my-orders']">
-          {{ 'common.cancel' | translate }}
-        </button>
-      </mat-card-actions>
-    </mat-card>
-
-    <div class="payment-info">
-      <mat-card class="info-card glass-card">
-        <mat-icon class="info-icon">security</mat-icon>
-        <h3>Secure Payment</h3>
-        <p>Your transaction is protected with military-grade encryption. We do not store your financial data.</p>
-
-        <div class="logos">
-          <mat-icon>verified_user</mat-icon>
-          <mat-icon>lock</mat-icon>
-          <mat-icon>shield</mat-icon>
-        </div>
-      </mat-card>
+<div class="payment-container" [class.rtl]="translate.currentLang === 'ar'" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <div class="checkout-progress">
+    <div class="progress-step completed">
+      <div class="step-num"><mat-icon>check</mat-icon></div>
+      <span class="step-label">{{ 'checkout.summary' | translate }}</span>
+    </div>
+    <div class="progress-line filled"></div>
+    <div class="progress-step active">
+      <div class="step-num">2</div>
+      <span class="step-label">{{ 'payment.title' | translate }}</span>
+    </div>
+    <div class="progress-line"></div>
+    <div class="progress-step">
+      <div class="step-num">3</div>
+      <span class="step-label">{{ 'common.success' | translate }}</span>
     </div>
   </div>
+  @if (isLoadingOrder()) {
+    <div class="loading-state">
+      <mat-spinner diameter="52"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else {
+    <div class="payment-grid">
+      <div class="left-column">
+        <div class="section-card glass-card">
+          <div class="section-header">
+            <div class="section-icon">
+              <mat-icon>credit_score</mat-icon>
+            </div>
+            <div>
+              <h2 class="section-title">{{ 'payment.selectMethod' | translate }}</h2>
+              <p class="section-subtitle">{{ 'payment.selectMethodSub' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="methods-grid">
+            @for (method of paymentMethods; track method.id) {
+              <button
+                class="method-card"
+                [class.selected]="selectedMethod() === method.id"
+                [style.--method-color]="method.color"
+                (click)="selectMethod(method.id)">
+                <div class="method-glow"></div>
+                <div class="method-icon-wrap">
+                  <mat-icon>{{ method.icon }}</mat-icon>
+                </div>
+                <span class="method-name">{{ 'payment.methods.' + method.id | translate }}</span>
+                <div class="method-check" [class.visible]="selectedMethod() === method.id">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+              </button>
+            }
+          </div>
+        </div>
+        <div class="section-card glass-card instructions-card">
+          <div class="section-header">
+            <div class="section-icon accent">
+              <mat-icon>info_outline</mat-icon>
+            </div>
+            <div>
+              <h2 class="section-title">{{ 'payment.howToPay' | translate }}</h2>
+              <p class="section-subtitle">{{ 'payment.methods.' + selectedMethod() | translate }}</p>
+            </div>
+          </div>
+
+          @if (selectedMethodConfig.accountNumber) {
+            <div class="account-box">
+              <span class="account-label">{{ 'payment.accountNumber' | translate }}</span>
+              <div class="account-number">
+                <span>{{ selectedMethodConfig.accountNumber }}</span>
+                <mat-icon class="copy-icon">content_copy</mat-icon>
+              </div>
+            </div>
+          }
+
+          <ol class="steps-list">
+            @for (step of selectedMethodConfig.steps; track $index) {
+              <li class="step-item">
+                <div class="step-badge">{{ $index + 1 }}</div>
+                <span>{{ step | translate }}</span>
+              </li>
+            }
+          </ol>
+          <div class="txn-input">
+            <label class="txn-label">
+              <mat-icon>receipt_long</mat-icon>
+              {{ 'payment.transactionRef' | translate }}
+            </label>
+            <div class="txn-field-wrap">
+              <input
+                class="txn-field"
+                [(ngModel)]="selectedTransactionRef"
+                placeholder="TXN-XXXXXXXXXX"
+                autocomplete="off">
+              <mat-icon class="txn-suffix">tag</mat-icon>
+            </div>
+          </div>
+        </div>
+        <div class="trust-bar">
+          <div class="trust-item">
+            <mat-icon>verified_user</mat-icon>
+            <span>{{ 'payment.trust.ssl' | translate }}</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <mat-icon>lock</mat-icon>
+            <span>{{ 'payment.trust.encrypted' | translate }}</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <mat-icon>shield</mat-icon>
+            <span>{{ 'payment.trust.protected' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="summary-card glass-card sticky-summary">
+          <div class="summary-header">
+            <mat-icon>receipt_long</mat-icon>
+            <span>{{ 'checkout.summary' | translate }}</span>
+          </div>
+          @if (orderItems().length > 0) {
+            <div class="items-list">
+              @for (item of orderItems(); track item.itemId) {
+                <div class="summary-item">
+                  <div class="item-img">
+                    <img
+                      [src]="item.primaryImageUrl || 'assets/placeholder.png'"
+                      [alt]="item.title || 'Item'">
+                  </div>
+                  <div class="item-info">
+                    <p class="item-title">{{ item.title }}</p>
+                    <p class="item-qty">× {{ item.quantity }}</p>
+                  </div>
+                  <p class="item-price">{{ item.priceAtTime | currency:'EGP ' }}</p>
+                </div>
+              }
+            </div>
+            <mat-divider class="summary-divider"></mat-divider>
+          }
+          <div class="cost-rows">
+            <div class="cost-row">
+              <span>{{ 'checkout.subtotal' | translate }}</span>
+              <span>{{ orderTotal() | currency:'EGP ' }}</span>
+            </div>
+            <div class="cost-row">
+              <span>{{ 'checkout.delivery' | translate }}</span>
+              <span>{{ deliveryFee | currency:'EGP ' }}</span>
+            </div>
+          </div>
+
+          <mat-divider class="summary-divider"></mat-divider>
+
+          <div class="grand-total-row">
+            <span class="gt-label">{{ 'checkout.total' | translate }}</span>
+            <div class="gt-value">
+              <span class="gt-currency">EGP</span>
+              <span class="gt-amount">{{ grandTotal() | number:'1.2-2' }}</span>
+            </div>
+          </div>
+          @if (order()?.status) {
+            <div class="order-status-row">
+              <span class="status-label">{{ 'order_details.status' | translate }}</span>
+              <span class="status-badge status-{{ order()?.status?.toLowerCase() }}">
+                {{ 'order_details.statuses.' + order()?.status?.toLowerCase() | translate }}
+              </span>
+            </div>
+          }
+          <div class="pay-action">
+            <app-loading-button
+              [fullWidth]="true"
+              [loading]="isProcessing()"
+              color="primary"
+              (clicked)="processPayment()">
+              <mat-icon>lock</mat-icon>
+              {{ 'payment.payNow' | translate }} · EGP {{ grandTotal() | number:'1.2-2' }}
+            </app-loading-button>
+
+            <button mat-button class="back-btn" [routerLink]="['/my-orders']">
+              <mat-icon>arrow_back</mat-icon>
+              {{ 'buttons.back' | translate }}
+            </button>
+          </div>
+          <div class="mini-security">
+            <mat-icon>shield</mat-icon>
+            <span>{{ 'payment.trust.guarantee' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
 </div>

@@ -8,8 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrdersClient, OrderDetailDto, PaymentsClient, PaymentDto, DeliveryClient, TrackingEntryDto, ApiResponse } from '../../../core/api/api-client';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
+import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { forkJoin, catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
@@ -25,7 +27,9 @@ import { forkJoin, catchError, finalize, of, tap } from 'rxjs';
     MatDividerModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    HeaderSectionComponent
+    MatTooltipModule,
+    HeaderSectionComponent,
+    LoadingButtonComponent
   ],
   templateUrl: './order-details.html',
   styleUrl: './order-details.scss'
@@ -44,10 +48,12 @@ export class OrderDetailsComponent implements OnInit {
   isLoading = signal(true);
 
   ngOnInit() {
-    this.orderId.set(this.route.snapshot.paramMap.get('id') || '');
-    if (this.orderId()) {
-      this.loadAllData();
-    }
+    this.route.params.subscribe(params => {
+      this.orderId.set(params['id'] || '');
+      if (this.orderId()) {
+        this.loadAllData();
+      }
+    });
   }
 
   loadAllData() {

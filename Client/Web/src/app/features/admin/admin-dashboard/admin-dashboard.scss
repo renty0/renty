@@ -2,133 +2,191 @@
 @use "../../../shared/components-styles/tables.scss" as *;
 
 .admin-dashboard-container {
-  .loading-state,
   .error-state {
-    display: flex;
+    @include flex-center;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px;
+    padding: $spacing-3xl;
+    gap: $spacing-md;
     text-align: center;
-    gap: 16px;
+    color: $danger;
 
-    mat-progress-bar {
-      max-width: 300px;
-    }
+    mat-icon { font-size: 48px; width: 48px; height: 48px; }
   }
 
   .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    margin-top: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $spacing-xl;
+    margin-top: $spacing-xl;
   }
 
   .kpi-card {
-    border-radius: 20px;
+    border-radius: $border-radius-xl;
     overflow: hidden;
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+    position: relative;
+    border: 1px solid rgba($white, 0.05);
+    background: rgba($white, 0.01);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &:hover {
+    &.premium-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba($primary-color, 0.2);
+      box-shadow: $shadow-xl;
+
+      .card-glow { opacity: 0.15; }
+      .icon-container { transform: scale(1.1) rotate(5deg); }
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0.05;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+
+      &.revenue { background: radial-gradient(circle at top right, $success, transparent); }
+      &.users { background: radial-gradient(circle at top right, $primary-color, transparent); }
+      &.rentals { background: radial-gradient(circle at top right, $warning, transparent); }
+      &.items { background: radial-gradient(circle at top right, #9b59b6, transparent); }
+      &.fraud { background: radial-gradient(circle at top right, $danger, transparent); }
+      &.recommendation { background: radial-gradient(circle at top right, #1abc9c, transparent); }
     }
 
     mat-card-header {
-      padding: 16px;
-    }
-
-    mat-card-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-      background: linear-gradient(135deg, #fff 0%, #b3b3b3 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    mat-card-subtitle {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-secondary);
+      padding: $spacing-xl;
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
     }
 
     .icon-container {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 56px;
+      height: 56px;
+      border-radius: $border-radius-lg;
+      @include flex-center;
+      transition: transform 0.3s ease;
+      box-shadow: $shadow-md;
+
+      mat-icon { color: $white; font-size: 28px; width: 28px; height: 28px; }
+
+      &.revenue { background: linear-gradient(135deg, $success, #27ae60); }
+      &.users { background: linear-gradient(135deg, $primary-color, #2980b9); }
+      &.rentals { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+      &.items { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+      &.fraud { background: linear-gradient(135deg, $danger, #c0392b); }
+      &.recommendation { background: linear-gradient(135deg, #1abc9c, #16a085); }
+    }
+
+    .metric-info {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 16px;
+      flex-direction: column;
 
-      mat-icon {
-        color: #fff;
+      mat-card-title {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $text-dark;
+        margin: 0;
+        line-height: 1.2;
       }
 
-      &.revenue {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-      }
-      &.users {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-      }
-      &.rentals {
-        background: linear-gradient(135deg, #f1c40f, #e67e22);
-      }
-      &.items {
-        background: linear-gradient(135deg, #9b59b6, #8e44ad);
-      }
-      &.fraud {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-      }
-      &.recommendation {
-        background: linear-gradient(135deg, #1abc9c, #16a085);
+      mat-card-subtitle {
+        font-size: $font-size-xs;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: $text-muted;
+        margin: 4px 0 0 0;
+        font-weight: $font-weight-bold;
       }
     }
 
     mat-card-content {
-      padding: 0 24px 24px;
+      padding: 0 $spacing-xl $spacing-xl;
     }
 
     .trend {
       display: flex;
       align-items: center;
       gap: 4px;
-      font-weight: 500;
-      font-size: 0.85rem;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-xs;
 
-      mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
-
-      &.positive {
-        color: #2ecc71;
-      }
-      &.negative {
-        color: #e74c3c;
-      }
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      &.positive { color: $success; }
+      &.negative { color: $danger; }
     }
   }
 
   .dashboard-actions {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
+    margin-top: $spacing-3xl;
+    @include flex-center;
 
     button {
-      padding: 0 32px;
-      height: 48px;
-      border-radius: 24px;
-      font-weight: 600;
+      border-radius: $border-radius-xxl;
+      padding: $spacing-sm $spacing-2xl;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: $shadow-lg;
 
       mat-icon {
-        margin-right: 8px;
+        margin-inline-end: $spacing-xs;
+        &.refreshing { animation: spin 1s linear infinite; }
+      }
+    }
+  }
+}
+
+// Skeleton System
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@mixin skeleton-animation {
+  background: linear-gradient(90deg, 
+    rgba($primary-color, 0.02) 25%, 
+    rgba($primary-color, 0.05) 50%, 
+    rgba($primary-color, 0.02) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-card {
+  height: 100px;
+  @include flex-center;
+  padding: $spacing-xl;
+
+  .skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    width: 100%;
+
+    .skeleton-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: $border-radius-lg;
+      @include skeleton-animation;
+    }
+
+    .skeleton-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+
+      .skeleton-text {
+        height: 12px;
+        border-radius: $border-radius-sm;
+        @include skeleton-animation;
+        &.title { width: 60%; height: 20px; }
+        &.subtitle { width: 40%; }
       }
     }
   }

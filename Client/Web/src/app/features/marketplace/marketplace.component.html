@@ -1,5 +1,4 @@
 <div class="marketplace-container">
-  <!-- Hero/Header Section -->
   <div class="market-header">
     <div class="header-overlay">
       <div class="container">
@@ -8,7 +7,6 @@
           <h1>{{ 'marketplace.heroTitle' | translate }}</h1>
           <p>{{ 'marketplace.heroSubtitle' | translate }}</p>
 
-          <!-- Integrated Search Bar -->
           <div class="search-container">
             <div class="search-wrapper">
               <mat-icon class="search-icon">search</mat-icon>
@@ -32,7 +30,6 @@
     
   <div class="container main-content mt-5 mb-5">
     <div class="layout-grid">
-      <!-- Sidebar Filters -->
       <aside class="filters-sidebar">
         <div class="filters-card">
           <div class="card-header">
@@ -54,7 +51,6 @@
           </div>
 
           <div class="filters-body">
-            <!-- Category Filter -->
             <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
                 <mat-select
@@ -73,7 +69,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Subcategory Filter -->
             @if (selectedCategoryId() && subcategories().length > 0) {
               <div class="filter-group animate-in">
                 <mat-form-field appearance="outline" class="full-width custom-field">
@@ -94,7 +89,6 @@
               </div>
             }
 
-            <!-- City Filter -->
             <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
                 <mat-select
@@ -113,7 +107,6 @@
               </mat-form-field>
             </div>
 
-            <!-- Price Range -->
             <div class="filter-group">
               <label>
                 <mat-icon>payments</mat-icon>
@@ -142,7 +135,6 @@
               </div>
             </div>
 
-            <!-- Item Type -->
             <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
                 <mat-select
@@ -164,7 +156,6 @@
         </div>
       </aside>
 
-      <!-- Results Section -->
       <main class="results-area">
         <div class="results-header">
           <div class="results-count">

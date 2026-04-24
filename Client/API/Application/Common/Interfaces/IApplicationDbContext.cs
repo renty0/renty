@@ -31,6 +31,8 @@ public interface IApplicationDbContext
     DbSet<Favorite> Favorites { get; }
     DbSet<SearchLog> SearchLogs { get; }
     DbSet<UserInteraction> UserInteractions { get; }
+    DbSet<Permission> Permissions { get; }
+    DbSet<RolePermission> RolePermissions { get; }
 
     // Rentals, Orders, Payments, Delivery, Reviews, Verifications
     DbSet<Rental> Rentals { get; }
@@ -55,6 +57,7 @@ public interface IApplicationDbContext
 
     // Admin — Fraud
     DbSet<FraudLog> FraudLogs { get; }
+    DbSet<RentalImage> RentalImages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

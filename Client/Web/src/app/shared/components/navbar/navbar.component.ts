@@ -8,8 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { LocalizationService } from '../../../core/services/localization.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { ResponsiveService } from '../../../core/services/responsive.service';
 import { LoadingButtonComponent } from '../loading-button/loading-button.component';
+import { PermissionService } from '../../../core/services/permission.service';
+import { PermissionType } from '../../../core/constants/permissions';
+import { ResponsiveService } from '../../../core/services/responsive.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,13 +24,13 @@ export class NavbarComponent implements OnInit {
   private localizationService = inject(LocalizationService);
   private authService = inject(AuthService);
   private responsiveService = inject(ResponsiveService);
+  private permissionService = inject(PermissionService);
   private router = inject(Router);
 
   isLoggedIn = this.authService.isLoggedIn;
-  isAdmin = computed(() => this.authService.isAdmin());
-  isExpert = computed(() => this.authService.isExpert());
   userData = computed(() => this.authService.getUserData());
   isMobile = this.responsiveService.isMobile;
+  isExpert = computed(() => this.authService.isExpert());
 
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
@@ -61,26 +63,34 @@ export class NavbarComponent implements OnInit {
 
   managementLinks = computed(() => {
     const loggedIn = this.isLoggedIn();
-    const isAdmin = this.isAdmin();
-    const isSupport = this.authService.isSupport();
-
     if (!loggedIn) return [];
 
     const links = [];
+    const canViewSupport = this.permissionService.hasPermission(PermissionType.Complaints_View);
+    const canViewDashboard = this.permissionService.hasPermission(PermissionType.Dashboards_View);
+    const canViewUsers = this.permissionService.hasPermission(PermissionType.Users_View);
+    const canViewRoles = this.permissionService.hasPermission(PermissionType.Roles_View);
+    const canViewInventory = this.permissionService.hasPermission(PermissionType.Items_View);
 
-    if (isSupport || isAdmin) {
+    if (canViewSupport) {
       links.push({ path: '/support', labelKey: 'nav.support', icon: 'support_agent' });
     }
 
-    if (isAdmin) {
-      links.push({
-        path: '/admin/dashboard',
-        labelKey: 'nav.dashboard',
-        icon: 'dashboard',
-      });
+    if (canViewDashboard) {
+      links.push({ path: '/admin/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' });
       links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
       links.push({ path: '/admin/fraud', labelKey: 'nav.fraud', icon: 'security' });
+    }
+
+    if (canViewUsers) {
       links.push({ path: '/admin/users', labelKey: 'nav.userManagement', icon: 'people' });
+    }
+
+    if (canViewRoles) {
+      links.push({ path: '/admin/roles', labelKey: 'nav.roleManagement', icon: 'policy' });
+    }
+
+    if (canViewInventory) {
       links.push(...this.allNavLinks.filter((link) => link.adminOnly));
     }
 

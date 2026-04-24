@@ -1,92 +1,272 @@
-@use '../../../shared/styles' as *;
-@use '../../../shared/components-styles/tables.scss' as *;
+@use "../../../shared/styles" as *;
+
 .fraud-panel-container {
-  .error-state {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: $spacing-xl;
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-xl;
+    margin-bottom: $spacing-2xl;
+  }
+
+  .metric-card {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 60px;
-    text-align: center;
-    gap: 16px;
+    gap: $spacing-lg;
+    padding: $spacing-xl;
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+
+      &.primary {
+        background: rgba($primary-color, 0.1);
+        color: $primary-color;
+      }
+
+      &.warn {
+        background: rgba($danger, 0.1);
+        color: $danger;
+      }
+
+      &.accent {
+        background: rgba($accent-color, 0.1);
+        color: $accent-color;
+      }
+    }
+
+    .metric-content {
+      .label {
+        display: block;
+        font-size: 0.875rem;
+        color: rgba($text-primary, 0.6);
+        margin-bottom: 4px;
+      }
+
+      .value {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $text-primary;
+      }
+    }
+  }
+
+  .glass-card {
+    @include glassmorphism(0.02);
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($primary-color, 0.08);
+  }
+
+  .table-card {
+    padding: $spacing-lg;
+    margin-bottom: $spacing-2xl;
   }
 
   .table-container {
-    margin-top: 32px;
-    border-radius: 20px;
-    overflow: hidden;
-    padding: 0;
+    position: relative;
+    min-height: 400px;
 
     table {
       width: 100%;
       background: transparent;
+    }
 
-      th {
-        color: var(--text-secondary);
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-        background: rgba(255, 255, 255, 0.05);
-      }
+    .mat-mdc-header-cell {
+      color: rgba($text-primary, 0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
 
-      td {
-        padding: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
+    .log-row {
+      transition: background 0.2s;
 
-      tr:hover {
-        background: rgba(255, 255, 255, 0.02);
+      &:hover {
+        background: rgba($primary-color, 0.02);
       }
+    }
+  }
+
+  .date-cell {
+    display: flex;
+    flex-direction: column;
+
+    .main-date {
+      font-weight: 500;
+    }
+
+    .sub-date {
+      font-size: 0.75rem;
     }
   }
 
   .user-info {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
 
-    .name {
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
       font-weight: 600;
-      color: #fff;
     }
 
-    .email {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
+    .user-details {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .email {
+        font-size: 0.75rem;
+      }
     }
   }
 
-  .risk-badge {
-    font-weight: 800;
-    font-size: 1.1rem;
+  .risk-indicator {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    width: 120px;
+
+    .risk-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: rgba($primary-color, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+
+      .risk-bar {
+        height: 100%;
+        transition: width 0.3s;
+      }
+    }
+
+    .risk-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      min-width: 35px;
+    }
+  }
+
+  .decision-chip {
+    font-weight: 600;
+
+    &.warn {
+      background-color: rgba($danger, 0.1) !important;
+      color: $danger !important;
+    }
+
+    &.accent {
+      background-color: rgba($accent-color, 0.1) !important;
+      color: $accent-color !important;
+    }
+
+    &.primary {
+      background-color: rgba($primary-color, 0.1) !important;
+      color: $primary-color !important;
+    }
+
+    &.basic {
+      background-color: rgba($text-primary, 0.05) !important;
+      color: $text-primary !important;
+    }
   }
 
   .reason-text {
-    max-width: 300px;
+    font-size: 0.85rem;
+    color: rgba($text-primary, 0.7);
+    max-width: 200px;
     display: block;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-secondary);
-    font-style: italic;
-  }
-
-  .table-loading {
-    padding: 0;
-    mat-progress-bar {
-      height: 4px;
-    }
   }
 
   .empty-state {
-    padding: 40px;
-    text-align: center;
-    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-3xl;
+    color: rgba($text-primary, 0.4);
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: $spacing-md;
+    }
   }
 
-  mat-paginator {
-    background: transparent;
-    color: var(--text-secondary);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  .text-muted {
+    color: rgba($text-primary, 0.5);
+  }
+
+  // Skeleton Loaders
+  .skeleton-text {
+    height: 14px;
+    background: rgba($primary-color, 0.05);
+    border-radius: 4px;
+
+    &.short {
+      width: 80px;
+    }
+
+    &.name-skeleton {
+      width: 100px;
+    }
+
+    &.reason-skeleton {
+      width: 150px;
+    }
+  }
+
+  .skeleton-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba($primary-color, 0.05);
+  }
+
+  .user-info-skeleton {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  .skeleton-badge {
+    height: 24px;
+    width: 50px;
+    background: rgba($primary-color, 0.05);
+    border-radius: 12px;
+
+    &.large {
+      width: 80px;
+    }
   }
 }

@@ -60,6 +60,15 @@ public static class AccountEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status401Unauthorized)
         .RequireAuthorization();
 
+        group.MapGet("/permissions", async (ISender sender) =>
+        {
+            var result = await sender.Send(new Application.Features.AdminRoles.GetMyPermissionsQuery());
+            return Api.Ok(result);
+        })
+        .WithName("GetMyPermissions")
+        .Produces<ApiResponse<List<string>>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
         group.MapPut("/profile", async (UpdateUserCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);

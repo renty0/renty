@@ -6,8 +6,6 @@ namespace Application.Features.Notifications;
 
 public record NotificationDto(Guid Id, string Title, string Message, bool IsRead, DateTime CreatedAt);
 
-// ── GET NOTIFICATIONS ─────────────────────────────────────────────────────────
-
 public record GetNotificationsQuery : IRequest<GetNotificationsResponse>;
 public record GetNotificationsResponse(List<NotificationDto> Notifications, int UnreadCount);
 
@@ -33,8 +31,6 @@ public class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQuer
         return new GetNotificationsResponse(notifications, notifications.Count(n => !n.IsRead));
     }
 }
-
-// ── MARK READ ─────────────────────────────────────────────────────────────────
 
 public record MarkNotificationReadCommand(Guid NotificationId) : IRequest<MarkNotificationReadResponse>;
 public record MarkNotificationReadResponse(bool Success, string? Error);
@@ -62,8 +58,6 @@ public class MarkNotificationReadCommandHandler : IRequestHandler<MarkNotificati
         return new MarkNotificationReadResponse(true, null);
     }
 }
-
-// ── MARK ALL READ ─────────────────────────────────────────────────────────────
 
 public record MarkAllNotificationsReadCommand : IRequest<MarkAllNotificationsReadResponse>;
 public record MarkAllNotificationsReadResponse(bool Success, int Updated);

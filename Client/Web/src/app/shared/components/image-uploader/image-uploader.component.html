@@ -3,7 +3,6 @@
 
   <div class="drop-zone" (click)="triggerFileInput()">
     <div class="state-container">
-      <!-- Empty State -->
       @if (!selectedFile && !imageUrl && !isUploading) {
       <div class="state-content empty-state">
         <div class="icon-circle">
@@ -20,7 +19,6 @@
       </div>
       }
 
-      <!-- Uploading State -->
       @if (isUploading) {
       <div class="state-content uploading-state">
         <div class="preview-backdrop" *ngIf="previewUrl || imageUrl">
@@ -39,7 +37,6 @@
       </div>
       }
 
-      <!-- Success/Loaded State -->
       @if (imageUrl && !isUploading) {
       <div class="state-content success-state">
         <div class="image-wrapper">
@@ -66,7 +63,6 @@
       </div>
       }
 
-      <!-- Ready State (if auto-upload fails or is disabled) -->
       @if (selectedFile && !isUploading && !imageUrl) {
       <div class="state-content ready-state">
         <div class="preview-backdrop" *ngIf="previewUrl">
@@ -88,7 +84,6 @@
     </div>
   </div>
 
-  <!-- Error Message -->
   @if (hasError) {
   <div class="error-wrapper">
     <mat-icon>error_outline</mat-icon>

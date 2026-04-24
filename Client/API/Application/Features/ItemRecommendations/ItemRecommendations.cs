@@ -5,11 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ItemRecommendations;
 
-// ── DTOs ─────────────────────────────────────────────────────────────────────
 public record RecommendationItemDto(Guid Id, string Title, decimal? Price, string? Image, string? City);
 public record RecommendationEntryDto(Guid Id, RecommendationItemDto Item, double Score, string? Reason, string? Algorithm);
-
-// ── GET RECOMMENDATIONS ───────────────────────────────────────────────────────
 
 public record GetRecommendationsQuery : IRequest<GetRecommendationsResponse>;
 public record GetRecommendationsResponse(List<RecommendationEntryDto> Recommendations);
@@ -49,8 +46,6 @@ public class GetRecommendationsQueryHandler : IRequestHandler<GetRecommendations
         return new GetRecommendationsResponse(recs);
     }
 }
-
-// ── RECORD CLICK ─────────────────────────────────────────────────────────────
 
 public record RecordRecommendationClickCommand(Guid RecommendationId) : IRequest<RecordClickResponse>;
 public record RecordClickResponse(bool Success, string? Error);

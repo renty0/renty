@@ -2,52 +2,175 @@
 @use "../../../shared/components-styles/tables.scss" as *;
 
 .ticket-list-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: $spacing-xl;
+
   .ticket-content {
-    margin-top: 2rem;
+    margin-top: $spacing-2xl;
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 1rem;
+    @include glassmorphism(0.02);
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($primary-color, 0.08);
+    padding: $spacing-lg;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .table-container {
-    table {
-      width: 100%;
-      background: transparent;
-    }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
 
-    .mat-mdc-header-cell {
-      color: var(--primary-color);
-      font-weight: 600;
-    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba($primary-color, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    .ticket-row {
-      transition: background 0.3s ease;
-      cursor: pointer;
-      &:hover {
-        background: rgba(255, 255, 255, 0.05);
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: $primary-color;
       }
     }
   }
 
-  .loader-container,
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6rem;
-    opacity: 0.6;
+  .ticket-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: $font-weight-semibold;
+    color: $primary-color;
+    background: rgba($primary-color, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: $font-size-xs;
+  }
 
-    mat-icon {
-      font-size: 4rem;
-      width: 4rem;
-      height: 4rem;
-      margin-bottom: 1rem;
+  .ticket-row {
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($primary-color, 0.03) !important;
+
+      .view-btn {
+        transform: translateX(3px);
+        color: $primary-color;
+      }
     }
+  }
+
+  .status-chip {
+    min-width: 110px;
+    justify-content: center;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-xs;
+    border-radius: $border-radius-lg;
+    border: none;
+
+    &.primary {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+    }
+
+    &.warn {
+      background: rgba($danger, 0.1);
+      color: $danger;
+    }
+
+    &.accent {
+      background: rgba($warning, 0.1);
+      color: $warning;
+    }
+
+    &.success {
+      background: rgba($success, 0.1);
+      color: $success;
+    }
+
+    &.secondary {
+      background: rgba($text-muted, 0.1);
+      color: $text-muted;
+    }
+  }
+
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-3xl;
+    text-align: center;
+
+    .empty-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba($primary-color, 0.05);
+      @include flex-center;
+      margin-bottom: $spacing-xl;
+
+      mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: $primary-color;
+        opacity: 0.5;
+      }
+    }
+
+    h3 {
+      color: $text-dark;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-sm;
+    }
+
+    p {
+      color: $text-muted;
+      max-width: 300px;
+      margin-bottom: $spacing-xl;
+      line-height: 1.6;
+    }
+  }
+}
+
+.skeleton {
+  @include skeleton-base;
+
+  &.skeleton-text {
+    height: 14px;
+    border-radius: 4px;
+
+    &.id-skeleton {
+      width: 60px;
+    }
+
+    &.user-skeleton {
+      width: 120px;
+    }
+
+    &.subject-skeleton {
+      width: 180px;
+    }
+
+    &.date-skeleton {
+      width: 100px;
+    }
+  }
+
+  &.skeleton-badge {
+    width: 100px;
+    height: 28px;
+    border-radius: 14px;
+  }
+
+  &.skeleton-actions {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
   }
 }

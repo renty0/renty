@@ -4,6 +4,7 @@ using Application.Shared.Interfaces.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Web.Account;
@@ -38,17 +39,20 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IApplicationDbContext _context;
 
     public LoginCommandHandler(
         IIdentityService identityService,
         ITokenService tokenService,
         IEmailSender emailSender,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IApplicationDbContext context)
     {
         _identityService = identityService;
         _tokenService = tokenService;
         _emailSender = emailSender;
         _httpContextAccessor = httpContextAccessor;
+        _context = context;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -88,6 +92,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
         var roles = await _identityService.GetUserRolesAsync(user);
         
+        // Fetch permissions for these roles
+        var permissions = await _context.RolePermissions
+            .Where(rp => roles.Contains(rp.RoleName))
+            .Select(rp => rp.PermissionValue)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        
         await _identityService.UpdateLastLoginAsync(user);
 
         var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
@@ -108,13 +119,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,
-
             roles,
+            permissions,
             user.Address,
             user.City,
             user.Country,
             user.Bio,
-            user.PhoneNumber
+            user.PhoneNumber,
+            user.CreatedAt
         );
 
         return new LoginResponse(true, "Login successful.", tokenData, userDto);

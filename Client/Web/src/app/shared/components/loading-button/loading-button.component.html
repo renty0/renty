@@ -1,8 +1,32 @@
-<button [type]="type" [disabled]="isDisabled" [class]="'btn btn-' + color + ' btn-' + variant" [class.full-width]="fullWidth" [class.btn-sm]="size === 'sm'" [class.loading]="loading" (click)="handleClick()">
+<button [type]="type" [disabled]="isDisabled" [class]="buttonClasses" [attr.aria-busy]="loading"
+  [attr.aria-label]="ariaLabel || null" [matTooltip]="tooltip" [matTooltipPosition]="tooltipPosition"
+  [matTooltipDisabled]="!tooltip" matRipple [matRippleDisabled]="isDisabled" (click)="handleClick()">
+
   @if (loading) {
-    <span class="spinner"></span>
+  <span class="btn-spinner"></span>
   }
-  <span class="button-text" [class.invisible]="loading">
-    <ng-content></ng-content>
+
+  <span class="btn-content" [class.btn-content-hidden]="loading">
+    @if (iconPosition === 'start') {
+    @if (icon) {
+    <i [class]="icon" class="btn-icon btn-icon-start"></i>
+    } @else if (matIcon) {
+    <mat-icon class="btn-icon btn-icon-start">{{ matIcon }}</mat-icon>
+    }
+    }
+
+    @if (!iconOnly) {
+    <span class="btn-text">
+      <ng-content></ng-content>
+    </span>
+    }
+
+    @if (iconPosition === 'end') {
+    @if (icon) {
+    <i [class]="icon" class="btn-icon btn-icon-end"></i>
+    } @else if (matIcon) {
+    <mat-icon class="btn-icon btn-icon-end">{{ matIcon }}</mat-icon>
+    }
+    }
   </span>
 </button>

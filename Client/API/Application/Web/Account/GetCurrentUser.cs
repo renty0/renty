@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Web.Account;
@@ -18,12 +19,14 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
     private readonly IUser _currentUser;
     private readonly IIdentityService _identityService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IApplicationDbContext _context;
 
-    public GetCurrentUserQueryHandler(IUser currentUser, IIdentityService identityService, IHttpContextAccessor httpContextAccessor)
+    public GetCurrentUserQueryHandler(IUser currentUser, IIdentityService identityService, IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
     {
         _currentUser = currentUser;
         _identityService = identityService;
         _httpContextAccessor = httpContextAccessor;
+        _context = context;
     }
 
     public async Task<GetCurrentUserResponse> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
@@ -40,6 +43,14 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
         }
 
         var roles = await _identityService.GetUserRolesAsync(user);
+
+        // Fetch granular permissions
+        var userRoles = await _identityService.GetUserRolesAsync(user);
+        var permissions = await _context.RolePermissions
+                .Where(rp => userRoles.Contains(rp.RoleName))
+                .Select(rp => rp.PermissionValue)
+                .Distinct()
+                .ToListAsync(cancellationToken);
 
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
@@ -58,6 +69,7 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.EmailConfirmed,
             user.Rating,
             roles,
+            permissions,
             user.Address,
             user.City,
             user.Country,

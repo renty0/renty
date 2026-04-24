@@ -9,13 +9,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Items;
 
-// ── Reference DTOs ───────────────────────────────────────────────────────────────
-
 public record ItemCategoryRef(int Id, string NameAr, string NameEn);
 public record ItemSubcategoryRef(int Id, string NameAr, string NameEn);
 public record ItemBrandRef(int Id, string NameAr, string NameEn);
-
-// ── DTOs ─────────────────────────────────────────────────────────────────────
 
 public record ItemListDto(
     Guid Id,
@@ -65,8 +61,6 @@ public record ItemDetailDto(
     ItemBrandRef? Brand
 );
 
-// ── GET /items ────────────────────────────────────────────────────────────────
-
 public record GetItemsQuery(
     int? CategoryId = null,
     int? SubcategoryId = null,
@@ -75,8 +69,8 @@ public record GetItemsQuery(
     decimal? MaxPrice = null,
     string? Type = null,
     string? Condition = null,
-    string? Sort = null,       // price_asc | price_desc | newest | rating
-    string? Owner = null,      // "me" → returns caller's items regardless of status
+    string? Sort = null,       
+    string? Owner = null,  
     int Page = 1,
     int Limit = 20
 ) : IRequest<GetItemsResponse>;
@@ -114,14 +108,10 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
 
 
         if (isOwnerMe)
-        {
-            // My Items page: show all owner's items regardless of status
-            query = query.Where(i => i.OwnerId == _currentUser.Id!.Value);
+        {            query = query.Where(i => i.OwnerId == _currentUser.Id!.Value);
         }
         else
-        {
-            // Public catalog: only available items
-            query = query.Where(i => i.Status == NewItemStatus.Available);
+        {            query = query.Where(i => i.Status == NewItemStatus.Available);
         }
 
         if (request.City != null)
@@ -132,8 +122,6 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
 
         if (request.Condition != null)
             query = query.Where(i => i.Condition == request.Condition);
-
-        // Price filter — join on daily pricing
         if (request.MinPrice.HasValue || request.MaxPrice.HasValue)
         {
             query = query.Where(i => i.Pricing.Any(p =>
@@ -141,8 +129,6 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 (!request.MinPrice.HasValue || p.Price >= request.MinPrice.Value) &&
                 (!request.MaxPrice.HasValue || p.Price <= request.MaxPrice.Value)));
         }
-
-        // Projected with avg rating and review count (via rentals > reviews join)
         var projected = query.Select(i => new
         {
             Item = i,
@@ -151,7 +137,6 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
         });
 
-        // Sorting
         projected = request.Sort switch
         {
             "price_asc"  => projected.OrderBy(x => x.DailyPrice),
@@ -178,8 +163,8 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.DailyPrice,
                 x.Item.City,
                 x.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
-                0,   // avg rating
-                0,   // review count
+                0,  
+                0,  
                 x.Item.Type.ToString(),
                 x.Item.Condition,
                 x.Item.OwnerId,
