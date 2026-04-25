@@ -1,16 +1,14 @@
 import { inject, Injectable, signal, computed, effect, untracked } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AuthClient } from '../api/api-client';
 import { AuthService } from './auth.service';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionService {
-  private readonly http = inject(HttpClient);
+  private readonly authClient = inject(AuthClient);
   private readonly authService = inject(AuthService);
-  private readonly baseUrl = environment.apiUrl;
 
   private readonly permissionsSignal = signal<string[]>([]);
   readonly permissions = computed(() => {
@@ -29,8 +27,8 @@ export class PermissionService {
   }
 
   fetchPermissions(): Observable<string[]> {
-    return this.http.get<{ data: string[] }>(`${this.baseUrl}/api/account/permissions`).pipe(
-      map((res) => res.data || []),
+    return this.authClient.authMe().pipe(
+      map((res) => res?.data?.permissions || []),
       tap((perms) => this.permissionsSignal.set(perms)),
       catchError(() => {
         this.permissionsSignal.set([]);

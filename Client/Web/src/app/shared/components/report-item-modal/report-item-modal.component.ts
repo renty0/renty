@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { SupportClient, CreateTicketCommand } from '../../../core/api/api-client';
 
 @Component({
   selector: 'app-report-item-modal',
@@ -15,7 +15,7 @@ export class ReportItemModalComponent {
   @Input() itemTitle!: string;
   @Output() close = new EventEmitter<void>();
 
-  private http = inject(HttpClient);
+  private supportClient = inject(SupportClient);
 
   reason = signal<string>('');
   notes = signal<string>('');
@@ -27,14 +27,12 @@ export class ReportItemModalComponent {
     this.isSubmitting.set(true);
     this.errorMsg.set(null);
     
-    // In actual implementation, we might have a specific endpoint or use support tickets
-    const supportPayload = {
+    const cmd = new CreateTicketCommand({
       type: 'report_item',
-      subject: `Report Item: ${this.itemTitle} (${this.itemId})`,
-      message: `Reason: ${this.reason()}\nNotes: ${this.notes()}\nItem ID: ${this.itemId}`
-    };
+      message: `Subject: Report Item: ${this.itemTitle} (${this.itemId})\nReason: ${this.reason()}\nNotes: ${this.notes()}\nItem ID: ${this.itemId}`
+    });
 
-    this.http.post('/api/v1/support/tickets', supportPayload).subscribe({
+    this.supportClient.createSupportTicket(cmd).subscribe({
       next: () => {
         this.successMsg.set('Item successfully reported to the support team.');
         this.isSubmitting.set(false);

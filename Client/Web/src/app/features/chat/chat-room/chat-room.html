@@ -4,8 +4,28 @@
       <mat-spinner diameter="40"></mat-spinner>
     </div>
   } @else {
-    <div class="chat-header-bar">
-      <!-- Chat Partner Info could be here -->
+    <div class="chat-header">
+      <div class="user-info">
+        <img [src]="chatMetadata()?.otherUserProfileImage || 'assets/profile.webp'" class="avatar">
+        <div class="name-status">
+          <span class="name">{{ chatMetadata()?.otherUserFirstName }} {{ chatMetadata()?.otherUserLastName }}</span>
+          <span class="status online">{{ 'chat.activeNow' | translate }}</span>
+        </div>
+      </div>
+
+      @if (chatMetadata()?.itemId) {
+        <a [routerLink]="['/marketplace/product', chatMetadata()?.itemId]" class="product-context">
+          <div class="product-info">
+            <span class="product-name">{{ chatMetadata()?.itemTitle }}</span>
+            <span class="view-item">{{ 'chat.viewProduct' | translate }}</span>
+          </div>
+          <img [src]="chatMetadata()?.itemImage || 'assets/placeholder-product.png'" class="product-thumb">
+        </a>
+      }
+
+      <button mat-icon-button class="header-delete-btn" (click)="deleteCurrentChat()">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
     </div>
 
     <div class="messages-area" #scrollContainer>
@@ -32,26 +52,45 @@
       }
     </div>
 
-    <div class="chat-input-bar">
-      <div class="input-actions">
-        <button mat-icon-button type="button">
-          <mat-icon>image</mat-icon>
-        </button>
-        <button mat-icon-button type="button">
-          <mat-icon>mic</mat-icon>
-        </button>
-      </div>
-      
-      <div class="input-wrap">
-        <input type="text" 
-               [(ngModel)]="newMessage" 
-               (keyup.enter)="sendMessage()"
-               [placeholder]="'chat.typePlaceholder' | translate">
-      </div>
+    <div class="chat-input-area" [class.is-recording]="isRecording()">
+      @if (isRecording()) {
+        <div class="recording-overlay">
+          <div class="recording-status">
+            <div class="pulse-red"></div>
+            <span class="timer">{{ getFormattedTime(recordingTime()) }}</span>
+            <span class="status-text">{{ 'chat.recording' | translate }}</span>
+          </div>
+          <div class="recording-hint">
+            {{ 'chat.releaseToSend' | translate }}
+          </div>
+          <button mat-icon-button class="mic-active-btn" (mouseup)="stopRecording()">
+            <mat-icon>mic</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <div class="input-actions">
+          <input type="file" #imageInput hidden accept="image/*" (change)="onImageSelected($event)">
+          <button mat-icon-button type="button" class="action-btn" (click)="imageInput.click()">
+            <mat-icon>add_photo_alternate</mat-icon>
+          </button>
+          <button mat-icon-button type="button" class="action-btn" 
+                  (mousedown)="startRecording()">
+            <mat-icon>mic_none</mat-icon>
+          </button>
+        </div>
+        
+        <div class="input-field-wrap">
+          <input type="text" 
+                 [ngModel]="newMessage()" 
+                 (ngModelChange)="newMessage.set($event)"
+                 (keyup.enter)="sendMessage()"
+                 [placeholder]="'chat.typePlaceholder' | translate">
+        </div>
 
-      <button mat-icon-button color="primary" (click)="sendMessage()" [disabled]="!newMessage().trim() || isSending()">
-        <mat-icon>send</mat-icon>
-      </button>
+        <button mat-fab color="primary" class="send-btn" (click)="sendMessage()" [disabled]="!newMessage().trim() || isSending()">
+          <mat-icon>send</mat-icon>
+        </button>
+      }
     </div>
   }
 </div>

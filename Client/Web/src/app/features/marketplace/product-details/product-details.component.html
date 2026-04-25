@@ -95,7 +95,7 @@
                 <div class="owner-section glass-card p-3 border-round">
                     <h4 class="mb-3 font-semibold">{{ 'marketplace.owner' | translate }}</h4>
                     <div class="flex align-items-center gap-3">
-                        <img [src]="item()?.owner?.profileImageUrl || 'assets/default-avatar.png'" 
+                        <img [src]="item()?.owner?.profileImageUrl || 'assets/profile.webp'" 
                              class="owner-avatar border-circle" 
                              alt="Owner"
                              [routerLink]="['/user-profile', item()?.owner?.id]">

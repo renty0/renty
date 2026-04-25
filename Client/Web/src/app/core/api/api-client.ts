@@ -3783,7 +3783,7 @@ export class ChatClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createChat(cmd: CreateChatCommand): Observable<void> {
+    createChat(cmd: CreateChatCommand): Observable<ApiResponse<CreateChatResponse>> {
         let url_ = this.baseUrl + "/api/v1/chats";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3795,6 +3795,7 @@ export class ChatClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             })
         };
 
@@ -3805,23 +3806,26 @@ export class ChatClient {
                 try {
                     return this.processCreateChat(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<CreateChatResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<CreateChatResponse>>;
         }));
     }
 
-    protected processCreateChat(response: HttpResponseBase): Observable<void> {
+    protected processCreateChat(response: HttpResponseBase): Observable<ApiResponse<CreateChatResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = ApiResponse.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3831,7 +3835,7 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    getChats(): Observable<void> {
+    getChats(): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/chats";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3839,6 +3843,7 @@ export class ChatClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -3849,14 +3854,14 @@ export class ChatClient {
                 try {
                     return this.processGetChats(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
         }));
     }
 
-    protected processGetChats(response: HttpResponseBase): Observable<void> {
+    protected processGetChats(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3865,7 +3870,10 @@ export class ChatClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3875,7 +3883,7 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    postChatMessage(id: string, cmd: PostChatMessageCommand): Observable<void> {
+    postChatMessage(id: string, cmd: PostChatMessageCommand): Observable<ApiResponse<PostChatMessageResponse>> {
         let url_ = this.baseUrl + "/api/v1/chats/{id}/messages";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
@@ -3890,6 +3898,7 @@ export class ChatClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             })
         };
 
@@ -3900,23 +3909,26 @@ export class ChatClient {
                 try {
                     return this.processPostChatMessage(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<PostChatMessageResponse>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<PostChatMessageResponse>>;
         }));
     }
 
-    protected processPostChatMessage(response: HttpResponseBase): Observable<void> {
+    protected processPostChatMessage(response: HttpResponseBase): Observable<ApiResponse<PostChatMessageResponse>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = ApiResponse.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3926,8 +3938,59 @@ export class ChatClient {
         return _observableOf(null as any);
     }
 
-    getChatMessages(id: string): Observable<void> {
+    getChatMessages(id: string): Observable<ApiResponse<ChatMessageDto[]>> {
         let url_ = this.baseUrl + "/api/v1/chats/{id}/messages";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChatMessages(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChatMessages(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<ChatMessageDto[]>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<ChatMessageDto[]>>;
+        }));
+    }
+
+    protected processGetChatMessages(response: HttpResponseBase): Observable<ApiResponse<ChatMessageDto[]>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteChat(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/v1/chats/{id}";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -3940,12 +4003,12 @@ export class ChatClient {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetChatMessages(response_);
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteChat(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetChatMessages(response_ as any);
+                    return this.processDeleteChat(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -3954,7 +4017,7 @@ export class ChatClient {
         }));
     }
 
-    protected processGetChatMessages(response: HttpResponseBase): Observable<void> {
+    protected processDeleteChat(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6281,7 +6344,7 @@ export class Public_ProfileClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getPublicProfile(userId: number): Observable<void> {
+    getPublicProfile(userId: number): Observable<ApiResponse<PublicProfileDto>> {
         let url_ = this.baseUrl + "/api/v1/public-profile/{userId}";
         if (userId === undefined || userId === null)
             throw new globalThis.Error("The parameter 'userId' must be defined.");
@@ -6292,6 +6355,7 @@ export class Public_ProfileClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -6302,14 +6366,14 @@ export class Public_ProfileClient {
                 try {
                     return this.processGetPublicProfile(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<ApiResponse<PublicProfileDto>>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<ApiResponse<PublicProfileDto>>;
         }));
     }
 
-    protected processGetPublicProfile(response: HttpResponseBase): Observable<void> {
+    protected processGetPublicProfile(response: HttpResponseBase): Observable<ApiResponse<PublicProfileDto>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6318,7 +6382,10 @@ export class Public_ProfileClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -10744,6 +10811,54 @@ export interface IUpdateTicketStatusCommand {
     status?: string;
 }
 
+
+
+
+
+export class CreateChatResponse implements ICreateChatResponse {
+    success?: boolean;
+    error?: string | undefined;
+    chatId?: string | undefined;
+
+    constructor(data?: ICreateChatResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.error = _data["error"];
+            this.chatId = _data["chatId"];
+        }
+    }
+
+    static fromJS(data: any): CreateChatResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateChatResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["error"] = this.error;
+        data["chatId"] = this.chatId;
+        return data;
+    }
+}
+
+export interface ICreateChatResponse {
+    success?: boolean;
+    error?: string | undefined;
+    chatId?: string | undefined;
+}
+
 export class CreateChatCommand implements ICreateChatCommand {
     userId?: number;
     itemId?: string | undefined;
@@ -10782,6 +10897,77 @@ export class CreateChatCommand implements ICreateChatCommand {
 export interface ICreateChatCommand {
     userId?: number;
     itemId?: string | undefined;
+}
+
+
+
+
+
+export class PostChatMessageResponse implements IPostChatMessageResponse {
+    success?: boolean;
+    error?: string | undefined;
+    messageId?: string | undefined;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
+    createdAt?: Date | undefined;
+
+    constructor(data?: IPostChatMessageResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.error = _data["error"];
+            this.messageId = _data["messageId"];
+            this.message = _data["message"];
+            this.mediaUrl = _data["mediaUrl"];
+            this.messageType = _data["messageType"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): PostChatMessageResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChatMessageResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["error"] = this.error;
+        data["messageId"] = this.messageId;
+        data["message"] = this.message;
+        data["mediaUrl"] = this.mediaUrl;
+        data["messageType"] = this.messageType;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IPostChatMessageResponse {
+    success?: boolean;
+    error?: string | undefined;
+    messageId?: string | undefined;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
+    createdAt?: Date | undefined;
+}
+
+export enum MessageType {
+    Text = 0,
+    Image = 1,
+    Video = 2,
+    Audio = 3,
 }
 
 export class PostChatMessageCommand implements IPostChatMessageCommand {
@@ -10836,11 +11022,72 @@ export interface IPostChatMessageCommand {
     contextItemId?: string | undefined;
 }
 
-export enum MessageType {
-    Text = 0,
-    Image = 1,
-    Video = 2,
-    Audio = 3,
+
+
+
+
+export class ChatMessageDto implements IChatMessageDto {
+    id?: string;
+    senderId?: number;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
+    contextItemId?: string | undefined;
+    isRead?: boolean;
+    createdAt?: Date;
+
+    constructor(data?: IChatMessageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.senderId = _data["senderId"];
+            this.message = _data["message"];
+            this.mediaUrl = _data["mediaUrl"];
+            this.messageType = _data["messageType"];
+            this.contextItemId = _data["contextItemId"];
+            this.isRead = _data["isRead"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): ChatMessageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChatMessageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["senderId"] = this.senderId;
+        data["message"] = this.message;
+        data["mediaUrl"] = this.mediaUrl;
+        data["messageType"] = this.messageType;
+        data["contextItemId"] = this.contextItemId;
+        data["isRead"] = this.isRead;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IChatMessageDto {
+    id?: string;
+    senderId?: number;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
+    contextItemId?: string | undefined;
+    isRead?: boolean;
+    createdAt?: Date;
 }
 
 
@@ -12849,6 +13096,94 @@ export interface IUpdateBrandCommand {
     descAr?: string | undefined;
     descEn?: string | undefined;
     logoId?: string | undefined;
+}
+
+
+
+
+
+export class PublicProfileDto implements IPublicProfileDto {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    profilePictureUrl?: string | undefined;
+    bio?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    rating?: number;
+    totalRatings?: number;
+    joinedAt?: Date;
+    items?: ItemListDto[];
+
+    constructor(data?: IPublicProfileDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.profilePictureUrl = _data["profilePictureUrl"];
+            this.bio = _data["bio"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            this.rating = _data["rating"];
+            this.totalRatings = _data["totalRatings"];
+            this.joinedAt = _data["joinedAt"] ? new Date(_data["joinedAt"].toString()) : undefined as any;
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ItemListDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PublicProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PublicProfileDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["profilePictureUrl"] = this.profilePictureUrl;
+        data["bio"] = this.bio;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        data["rating"] = this.rating;
+        data["totalRatings"] = this.totalRatings;
+        data["joinedAt"] = this.joinedAt ? this.joinedAt.toISOString() : undefined as any;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IPublicProfileDto {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    profilePictureUrl?: string | undefined;
+    bio?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    rating?: number;
+    totalRatings?: number;
+    joinedAt?: Date;
+    items?: ItemListDto[];
 }
 
 export interface FileParameter {

@@ -1,7 +1,9 @@
+using Application.Common.Interfaces;
 using Application.Features.Chats;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Web.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Endpoints;
 
@@ -26,10 +28,10 @@ public static class ChatEndpoints
         g.MapGet("/", async (ISender sender) =>
         {
             var r = await sender.Send(new GetChatsQuery());
-            return Api.Ok(r.Chats);
+            return Api.Ok(r);
         })
         .WithName("GetChats")
-        .Produces<ApiResponse<List<ChatListDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetChatsResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization();
 
         // POST /chats/:id/messages
@@ -48,10 +50,19 @@ public static class ChatEndpoints
         {
             var r = await sender.Send(new GetChatMessagesQuery(id));
             if (!r.Found) return Api.Fail(r.Error ?? "Not found", 404);
-            return Api.Ok(r.Messages);
+            return Api.Ok(r);
         })
         .WithName("GetChatMessages")
-        .Produces<ApiResponse<List<ChatMessageDto>>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GetChatMessagesResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
+        g.MapDelete("/{id:guid}", async (Guid id, ISender sender) =>
+        {
+            var success = await sender.Send(new DeleteChatCommand(id));
+            return success ? Api.Ok("Chat deleted.") : Api.Fail("Failed to delete chat.");
+        })
+        .WithName("DeleteChat")
+        .Produces<ApiResponse<string>>(StatusCodes.Status200OK)
         .RequireAuthorization();
     }
 }

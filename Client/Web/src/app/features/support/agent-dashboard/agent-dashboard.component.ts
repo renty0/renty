@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { DisputesClient, ResolveDisputeCommand } from '../../../core/api/api-client';
 import { MatIconModule } from '@angular/material/icon';
 
 
@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './agent-dashboard.component.scss'
 })
 export class AgentDashboardComponent {
-  private http = inject(HttpClient);
+  private disputesClient = inject(DisputesClient);
 
   rentalId = signal<string>('');
   reason = signal<string>('');
@@ -31,22 +31,22 @@ export class AgentDashboardComponent {
     this.errorMsg.set(null);
     this.successMsg.set(null);
 
-    const payload = {
+    const cmd = new ResolveDisputeCommand({
       rentalId: this.rentalId(),
       resolutionDecision: this.resolutionType(),
       ownerCompensation: this.ownerCompensation(),
       renterRefund: this.renterRefund(),
       reason: this.reason()
-    };
+    });
 
-    this.http.post('/api/v1/support/disputes/resolve', payload).subscribe({
+    this.disputesClient.resolveDispute(cmd).subscribe({
       next: () => {
         this.successMsg.set('Dispute resolved successfully. Wallets updated.');
         this.isLoading.set(false);
         this.resetForm();
       },
       error: (err) => {
-        this.errorMsg.set(err.error?.title || err.error?.detail || 'Failed to resolve dispute.');
+        this.errorMsg.set(err.response?.title || err.response?.detail || 'Failed to resolve dispute.');
         this.isLoading.set(false);
       }
     });

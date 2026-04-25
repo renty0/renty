@@ -7,10 +7,15 @@ public class Chat
     public long User1Id { get; set; }
     public long User2Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+    public Guid? ItemId { get; set; }
+    
+    public bool DeletedByUser1 { get; set; } = false;
+    public bool DeletedByUser2 { get; set; } = false;
+    
     // Navigation
     public ApplicationUser User1 { get; set; } = null!;
     public ApplicationUser User2 { get; set; } = null!;
+    public Item? Item { get; set; }
     public ICollection<ChatMessage> Messages { get; set; } = new List<ChatMessage>();
 }
 

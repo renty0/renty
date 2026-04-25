@@ -364,10 +364,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.User1Id).HasColumnName("user1_id");
             entity.Property(e => e.User2Id).HasColumnName("user2_id");
+            entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-            entity.HasIndex(e => new { e.User1Id, e.User2Id }).IsUnique();
+            
+            entity.HasIndex(e => new { e.User1Id, e.User2Id, e.ItemId }).IsUnique();
+            
             entity.HasOne(e => e.User1).WithMany().HasForeignKey(e => e.User1Id).OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(e => e.User2).WithMany().HasForeignKey(e => e.User2Id).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Item).WithMany().HasForeignKey(e => e.ItemId).OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<ChatMessage>(entity =>

@@ -18,10 +18,6 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
-
-
 @Component({
     selector: 'app-product-details',
     standalone: true,
@@ -51,7 +47,6 @@ export class ProductDetailsComponent implements OnInit {
     private router = inject(Router);
     private readonly dialog = inject(MatDialog);
     private readonly permissionService = inject(PermissionService);
-    private readonly http = inject(HttpClient);
     private chatClient = inject(ChatClient);
 
     item = signal<ItemDetailDto | null>(null);
@@ -309,17 +304,22 @@ export class ProductDetailsComponent implements OnInit {
         const ownerId = this.item()?.owner?.id;
         if (!ownerId) return;
 
-        this.http.post<any>(`${environment.apiUrl}/api/v1/chats`, { userId: ownerId })
-            .subscribe({
-                next: (res: any) => {
-                    if (res?.data?.chatId || res?.chatId) {
-                        this.router.navigate(['/chats', res?.data?.chatId || res?.chatId]);
-                    }
-                },
-                error: (err: any) => {
-                    console.error('Failed to start chat', err);
-                    this.toast.showError('errors.generic');
+        const cmd = new CreateChatCommand({
+            userId: ownerId,
+            itemId: this.item()?.id as any
+        });
+
+        this.chatClient.createChat(cmd).subscribe({
+            next: (res: any) => {
+                const chatId = res?.data?.chatId || (res?.data as any)?.id;
+                if (chatId) {
+                    this.router.navigate(['/chats', chatId]);
                 }
-            });
+            },
+            error: (err: any) => {
+                console.error('Failed to start chat', err);
+                this.toast.showError('errors.generic');
+            }
+        });
     }
 }

@@ -15,12 +15,30 @@
             <a mat-list-item 
                [class.active]="activeChatId() === chat.id"
                (click)="selectChat(chat.id)">
-              <img [src]="chat.otherUserProfileImage || 'assets/default-avatar.png'" matListItemAvatar>
-              <span matListItemTitle>{{ chat.otherUserFirstName }} {{ chat.otherUserLastName || '' }}</span>
-              <span matListItemLine class="last-msg">{{ chat.lastMessage }}</span>
+              <img [src]="chat.otherUserProfileImage || 'assets/profile.webp'" matListItemAvatar>
+              <div class="chat-info-content">
+                <div class="user-row">
+                  <span class="user-name">{{ chat.otherUserFirstName }} {{ chat.otherUserLastName || '' }}</span>
+                  @if (chat.itemId) {
+                    <span class="item-tag">{{ chat.itemTitle }}</span>
+                  }
+                </div>
+                @if (chat.lastMessage && chat.lastMessage.length > 0) {
+                  <span class="last-msg">{{ chat.lastMessage }}</span>
+                }
+              </div>
+              
               @if ((chat.unreadCount ?? 0) > 0) {
-                <span matListItemMeta class="unread-badge">{{ chat.unreadCount }}</span>
+                <span class="unread-badge">{{ chat.unreadCount }}</span>
               }
+              
+              @if (chat.itemId) {
+                <img [src]="chat.itemImage || 'assets/placeholder-product.png'" class="mini-product-thumb">
+              }
+
+              <button mat-icon-button class="delete-chat-btn" (click)="deleteChat($event, chat.id)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
             </a>
           } @empty {
             <div class="empty-list">

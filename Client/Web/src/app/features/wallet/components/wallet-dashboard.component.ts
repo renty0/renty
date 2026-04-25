@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { WalletClient, RequestWithdrawalCommand } from '../../../core/api/api-client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -23,7 +23,7 @@ export interface WalletTransaction {
   styleUrl: './wallet-dashboard.component.scss'
 })
 export class WalletDashboardComponent implements OnInit {
-  private http = inject(HttpClient);
+  private walletClient = inject(WalletClient);
 
   balance = signal<number>(0);
   transactions = signal<WalletTransaction[]>([]);
@@ -44,17 +44,17 @@ export class WalletDashboardComponent implements OnInit {
   }
 
   fetchBalance() {
-    this.http.get<{ balance: number }>('/api/v1/wallet/balance').subscribe({
-      next: (res) => this.balance.set(res.balance),
+    this.walletClient.getWalletBalance().subscribe({
+      next: (res) => this.balance.set((res.data as any)?.balance || 0),
       error: (err) => console.error('Failed to load balance', err)
     });
   }
 
   fetchTransactions() {
     this.isLoading.set(true);
-    this.http.get<WalletTransaction[]>('/api/v1/wallet/transactions').subscribe({
+    this.walletClient.getWalletTransactions().subscribe({
       next: (res) => {
-        this.transactions.set(res);
+        this.transactions.set((res.data as any)?.transactions || []);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -80,12 +80,12 @@ export class WalletDashboardComponent implements OnInit {
     this.errorMsg.set(null);
     this.isSubmitting.set(true);
 
-    const payload = {
-      amount: this.withdrawAmount(),
+    const cmd = new RequestWithdrawalCommand({
+      amount: this.withdrawAmount() ?? 0,
       mobileWalletNumber: this.mobileWalletNumber()
-    };
+    });
 
-    this.http.post('/api/v1/wallet/withdraw', payload).subscribe({
+    this.walletClient.requestWithdrawal(cmd).subscribe({
       next: () => {
         this.successMsg.set('Withdrawal requested successfully.');
         this.isSubmitting.set(false);
@@ -94,7 +94,7 @@ export class WalletDashboardComponent implements OnInit {
         setTimeout(() => this.closeWithdraw(), 2000);
       },
       error: (err) => {
-        this.errorMsg.set(err.error?.title || err.error?.detail || 'Failed to submit withdrawal request.');
+        this.errorMsg.set(err.response?.title || err.response?.detail || 'Failed to submit withdrawal request.');
         this.isSubmitting.set(false);
       }
     });

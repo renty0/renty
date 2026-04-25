@@ -61,7 +61,7 @@ export class ProfileComponent {
   });
 
   profileImageUrl = computed(() => {
-    return this.profileForm.get('profilePictureUrl')?.value || 'assets/default-avatar.png';
+    return this.profileForm.get('profilePictureUrl')?.value || 'assets/profile.webp';
   });
 
   constructor() {

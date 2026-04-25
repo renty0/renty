@@ -52,8 +52,7 @@
     "title": "السوق",
     "heroTitle": "السوق",
     "allCategories": "كل الفئات",
-    "owner": "المالك",
-    "renter": "المستأجر",
+    
     "allSubcategories": "كل الفئات الفرعية",
     "heroSubtitle": "اكتشف منتجات فريدة من مجتمعنا",
     "products": "المنتجات",
@@ -192,6 +191,7 @@
     "deposit": "مبلغ الإيداع",
     "type": "النوع",
     "condition": "الحالة",
+    "reviews": "التقييمات",
     "location": "الموقع",
     "mapLocation": "موقع الخريطة",
     "category": "الفئة",
@@ -798,13 +798,18 @@
   },
   "chat": {
     "title": "الرسائل",
+    "activeNow": "نشط الأن",
     "noChats": "لا توجد محادثات بعد.",
     "typePlaceholder": "اكتب رسالة...",
-    "noMessages": "ابدأ محادثة الآن!",
+    "noMessages": "ابدأ محادثة الآن!",  
     "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",
-    "offline": "غير متصل"
+    "offline": "غير متصل",
+    "viewProduct": "عرض المنتج",
+    "recording": "جاري التسجيل...",
+    "releaseToSend": "اترك الزر للإرسال",
+    "deleteConfirmation": "هل أنت متأكد من حذف هذه المحادثة؟"
   },
   "notifications": {
     "title": "الإشعارات",

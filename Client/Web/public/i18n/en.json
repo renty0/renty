@@ -185,6 +185,7 @@
     "password": "Password",
     "deposit": "Deposit Amount",
     "type": "Type",
+    "reviews": "Reviews",
     "condition": "Condition",
     "location": "Location",
     "mapLocation": "Map Location",
@@ -800,13 +801,15 @@
   },
   "chat": {
     "title": "Messages",
+    "activeNow": "Active Now",
     "noChats": "No conversations yet.",
     "typePlaceholder": "Type a message...",
     "noMessages": "Start a conversation!",
     "selectToStart": "Select a chat to start messaging",
     "send": "Send",
     "online": "Online",
-    "offline": "Offline"
+    "offline": "Offline",
+    "viewProduct": "View Product"
   },
   "notifications": {
     "title": "Notifications",

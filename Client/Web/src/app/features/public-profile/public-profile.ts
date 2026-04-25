@@ -5,8 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Public_ProfileClient } from '../../core/api/api-client';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
@@ -27,7 +26,7 @@ import { finalize } from 'rxjs';
 })
 export class PublicProfileComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private http = inject(HttpClient);
+  private publicProfileClient = inject(Public_ProfileClient);
   public translate = inject(TranslateService);
 
   profile = signal<any>(null);
@@ -44,12 +43,10 @@ export class PublicProfileComponent implements OnInit {
 
   loadProfile(userId: number) {
     this.isLoading.set(true);
-    this.http.get<any>(`${environment.apiUrl}/api/v1/public-profile/${userId}`)
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (res: any) => this.profile.set(res?.data ?? res),
-        error: (err: any) => console.error('Failed to load profile', err)
-      });
+    this.publicProfileClient.getPublicProfile(userId).subscribe((res: any) => {
+      this.profile.set(res?.data);
+      this.isLoading.set(false);
+    });
   }
 
   getLocalizedTitle(item: any) {

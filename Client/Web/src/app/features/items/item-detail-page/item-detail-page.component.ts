@@ -21,8 +21,6 @@ import { LocalizationService } from '../../../core/services/localization.service
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 import { ToastService } from '../../../shared/services/toast.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-item-detail-page',
@@ -57,7 +55,6 @@ export class ItemDetailPageComponent implements OnInit {
     private readonly translate = inject(TranslateService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly http = inject(HttpClient);
 
     // ── State signals ──────────────────────────────────────────────
     item = signal<ItemDetailDto | null>(null);
@@ -194,9 +191,15 @@ export class ItemDetailPageComponent implements OnInit {
         const ownerId = this.item()?.owner?.id;
         if (!ownerId) return;
         this.isChatting.set(true);
-        this.http.post<any>(`${environment.apiUrl}/api/v1/chats`, { userId: ownerId }).pipe(
+        
+        const cmd = new CreateChatCommand({
+            userId: ownerId,
+            itemId: this.item()?.id as any
+        });
+
+        this.chatClient.createChat(cmd).pipe(
             tap((res: any) => {
-                const chatId = res?.data?.chatId || res?.data?.id || res?.chatId;
+                const chatId = res?.data?.chatId || (res?.data as any)?.id;
                 if (chatId) this.router.navigate(['/chats', chatId]);
                 else this.router.navigate(['/chats']);
             }),

@@ -293,6 +293,16 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<bool>("DeletedByUser1")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("DeletedByUser2")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("ItemId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("item_id");
+
                     b.Property<long>("User1Id")
                         .HasColumnType("bigint")
                         .HasColumnName("user1_id");
@@ -303,9 +313,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ItemId");
+
                     b.HasIndex("User2Id");
 
-                    b.HasIndex("User1Id", "User2Id")
+                    b.HasIndex("User1Id", "User2Id", "ItemId")
                         .IsUnique();
 
                     b.ToTable("chats", (string)null);
@@ -2446,6 +2458,11 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Chat", b =>
                 {
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Domain.Entities.ApplicationUser", "User1")
                         .WithMany()
                         .HasForeignKey("User1Id")
@@ -2457,6 +2474,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("User2Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Item");
 
                     b.Navigation("User1");
 

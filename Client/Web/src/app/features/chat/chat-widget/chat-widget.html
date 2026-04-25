@@ -3,7 +3,7 @@
     <div class="chat-window glass-card" [class.minimized]="chat.minimized">
       <div class="chat-header" (click)="toggleMinimize(chat.id)">
         <div class="user-info">
-          <img [src]="chat.image || 'assets/default-avatar.png'" alt="">
+          <img [src]="chat.image || 'assets/profile.webp'" alt="">
           <span class="name">{{ chat.name }}</span>
         </div>
         <div class="header-actions">

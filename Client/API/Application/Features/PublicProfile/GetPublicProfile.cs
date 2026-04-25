@@ -64,7 +64,9 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                 if (primaryImage?.Image != null)
                 {
                     var path = primaryImage.Image.StoragePath.Replace("\\", "/").TrimStart('/');
-                    imageUrl = !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{path}" : $"/{path}";
+                    imageUrl = !string.IsNullOrEmpty(baseUrl) 
+                        ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{path}" 
+                        : $"/api/v1/media/{path}";
                 }
 
                 var dailyPrice = i.Pricing.FirstOrDefault(p => p.PricingType == "daily")?.Price 
@@ -93,9 +95,9 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             user.Id,
             user.FirstName,
             user.LastName,
-            !string.IsNullOrEmpty(user.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 
-                ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" 
-                : user.ProfilePictureUrl,
+            !string.IsNullOrEmpty(user.ProfilePictureUrl)
+                ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{user.ProfilePictureUrl.TrimStart('/')}" : $"/api/v1/media/{user.ProfilePictureUrl.TrimStart('/')}")
+                : null,
             user.Bio,
             user.City,
             user.Country,

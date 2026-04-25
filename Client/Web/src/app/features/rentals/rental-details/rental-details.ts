@@ -10,13 +10,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand } from '../../../core/api/api-client';
+import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
 
@@ -45,12 +43,11 @@ export class RentalDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private rentalsClient = inject(RentalsClient);
   private reviewsClient = inject(ReviewsClient);
+  private mediaClient = inject(MediaClient);
   private toast = inject(ToastService);
   private auth = inject(AuthService);
-  private http = inject(HttpClient);
   public translate = inject(TranslateService);
   private permissionService = inject(PermissionService);
-  private baseUrl = environment.apiUrl;
 
   rentalId = signal('');
   isLoading = signal(true);
@@ -117,36 +114,45 @@ export class RentalDetailsComponent implements OnInit {
   verifyHandoff() {
     if (!this.handoffCodeInput()) return;
     this.isActionLoading.set(true);
-    this.http.post(`${this.baseUrl}/api/v1/rentals/${this.rentalId()}/verify-handoff`, {
-      rentalId: this.rentalId(),
-      code: this.handoffCodeInput()
-    }).subscribe({
+    this.rentalsClient.verifyHandoff(this.rentalId(), this.handoffCodeInput()).subscribe({
       next: () => {
         this.toast.showSuccess('common.success');
         this.loadRental();
         this.isActionLoading.set(false);
       },
       error: (err) => {
-        this.toast.showError(err.error?.message || 'rentals.error');
+        this.toast.showError(err.response?.message || 'rentals.error');
         this.isActionLoading.set(false);
       }
     });
   }
 
-  onPhotoSelected(event: any, type: string) {
+  onPhotoSelected(event: any, type: any) {
     const file = event.target.files[0];
     if (!file) return;
 
     this.isUploading.set(true);
-    const formData = new FormData();
-    formData.append('File', file);
-    formData.append('Type', type);
-
-    this.http.post(`${this.baseUrl}/api/v1/rentals/${this.rentalId()}/photos`, formData).subscribe({
-      next: () => {
-        this.toast.showSuccess('common.success');
-        this.loadRental();
-        this.isUploading.set(false);
+    const fileParam: FileParameter = { data: file, fileName: file.name };
+    this.mediaClient.uploadMedia(this.rentalId(), 'Rental', fileParam).subscribe({
+      next: (res) => {
+        if (res.data?.id) {
+           const cmd = new UploadRentalPhotosCommand({
+             rentalId: this.rentalId(),
+             imageIds: [res.data.id],
+             type: type
+           });
+           this.rentalsClient.uploadRentalPhotos(this.rentalId(), cmd).subscribe({
+             next: () => {
+               this.toast.showSuccess('common.success');
+               this.loadRental();
+               this.isUploading.set(false);
+             },
+             error: () => {
+               this.toast.showError('errors.uploadFailed');
+               this.isUploading.set(false);
+             }
+           });
+        }
       },
       error: () => {
         this.toast.showError('errors.uploadFailed');
