@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, ViewChild, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +27,7 @@ import { ToastService } from '../../../shared/services/toast.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     TranslateModule,
     MatTableModule,
     MatSortModule,
@@ -127,7 +129,7 @@ export class SubcategoryListComponent implements OnInit {
       });
   }
 
-  onSearchChange(event: any): void {
+  onSearchChange(event: string | Event): void {
     const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
     this.searchTerm.set(value);
     this.pageNumber.set(1);
@@ -233,7 +235,7 @@ export class SubcategoryListComponent implements OnInit {
   getLocalizedCatName(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
     return isAr
-      ? (row as any).categoryNameAr || (row as any).categoryNameEn || ''
-      : (row as any).categoryNameEn || (row as any).categoryNameAr || '';
+      ? row.categoryNameAr || row.categoryNameEn || ''
+      : row.categoryNameEn || row.categoryNameAr || '';
   }
 }

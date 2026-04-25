@@ -130,7 +130,7 @@ export class ItemsListComponent implements OnInit {
       .subscribe();
   }
 
-  onSearchChange(event: any): void {
+  onSearchChange(event: string | Event): void {
     const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
     this.searchTerm.set(value);
     this.pageNumber.set(1);

@@ -127,33 +127,7 @@
     font-style: italic;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-lg;
-
-    @include mobile {
-        grid-template-columns: 1fr;
-        gap: $spacing-md;
-    }
-}
-
-.col-span-full {
-    grid-column: 1 / -1;
-}
-
-.form-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: $spacing-lg;
-    padding-top: $spacing-lg;
-    border-top: 1px solid $gray-100;
-
-    app-loading-button {
-        min-width: 150px;
-    }
-}
+// Removed custom grid layout in favor of PrimeFlex grid classes in HTML
 
 // Dark mode adjustments (if needed, based on variables)
 :host-context(.dark) {

@@ -14,6 +14,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
@@ -39,6 +40,7 @@ import { InputComponent } from '../../../shared/components/input/input';
     MatIconModule,
     MatSelectModule,
     MatOptionModule,
+    MatProgressSpinnerModule,
     ImageUploaderComponent,
     LoadingButtonComponent,
     InputComponent,
@@ -108,7 +110,7 @@ export class SubcategoryEditorComponent implements OnInit {
         }),
         catchError((err) => {
           this.toast.showError('errors.failedToLoadCategories');
-          return of({ items: [] } as any);
+          return of({ data: [] });
         }),
         finalize(() => this.isLoadingCategories.set(false)),
       )

@@ -76,13 +76,13 @@ export class MyRentalsComponent implements OnInit {
 
   getStatusColor(status?: string): string {
     switch (status?.toLowerCase()) {
-      case 'pending': return 'warn';
-      case 'approved': return 'accent';
-      case 'active': return 'primary';
-      case 'completed': return 'success';
+      case 'pending': return 'bg-yellow-50 text-yellow-700 border-1 border-yellow-100';
+      case 'approved': return 'bg-indigo-50 text-indigo-700 border-1 border-indigo-100';
+      case 'active': return 'bg-primary-50 text-primary-700 border-1 border-primary-100';
+      case 'completed': return 'bg-green-50 text-green-700 border-1 border-green-100';
       case 'cancelled':
-      case 'rejected': return 'error';
-      default: return 'default';
+      case 'rejected': return 'bg-red-50 text-red-700 border-1 border-red-100';
+      default: return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
     }
   }
 }

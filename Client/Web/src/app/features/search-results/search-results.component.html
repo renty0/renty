@@ -25,38 +25,41 @@
                 </button>
             </div>
         } @else {
-            <div class="results-grid fadeIn">
+            <div class="grid results-grid fadeIn">
                 @for (item of items(); track item.id) {
-                    <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
-                        <div class="card-media">
-                            <img [src]="getItemImage(item)"
-                                 [alt]="getLocalizedTitle(item)"
-                                 (error)="onImageError($event)"
-                                 loading="lazy">
-                            <div class="card-badges">
-                                @if (item.type === 'premium') {
-                                    <span class="type-badge premium">{{ 'labels.types.premium' | translate }}</span>
-                                }
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="item-meta">
-                                <span class="category">{{ getLocalizedRefName(item.category) }}</span>
-                                <span class="location">
-                                    <mat-icon>location_on</mat-icon> {{ item.city }}
-                                </span>
-                            </div>
-                            <h3 class="item-title">{{ getLocalizedTitle(item) }}</h3>
-                            <div class="card-footer">
-                                <div class="price-info">
-                                    <span class="price">{{ item.dailyPrice }} <small>EGP</small></span>
-                                    <span class="period">/ {{ 'items.daily' | translate }}</span>
-                                </div>
-                                <button mat-flat-button class="view-btn">
-                                    {{ 'marketplace.viewDetails' | translate }}
-                                </button>
-                            </div>
-                        </div>
+                    <div class="col-12 sm:col-6 md:col-4 lg:col-3 p-3">
+                      <div class="product-card h-full shadow-1 hover:shadow-4 transition-all border-round overflow-hidden bg-white cursor-pointer" [routerLink]="['/marketplace/product', item.id]">
+                          <div class="card-media h-15rem relative">
+                              <img [src]="getItemImage(item)"
+                                   [alt]="getLocalizedTitle(item)"
+                                   (error)="onImageError($event)"
+                                   loading="lazy"
+                                   class="w-full h-full object-cover">
+                              <div class="card-badges absolute top-0 right-0 p-3">
+                                  @if (item.type === 'premium') {
+                                      <span class="type-badge premium bg-amber-500 text-white px-3 py-1 border-round text-xs font-bold">{{ 'labels.types.premium' | translate }}</span>
+                                  }
+                              </div>
+                          </div>
+                          <div class="card-content p-4 flex flex-column h-full">
+                              <div class="item-meta flex justify-content-between align-items-center mb-2">
+                                  <span class="category text-primary font-bold text-xs uppercase">{{ getLocalizedRefName(item.category) }}</span>
+                                  <span class="location flex align-items-center gap-1 text-500 text-xs">
+                                      <mat-icon class="text-sm">location_on</mat-icon> {{ item.city }}
+                                  </span>
+                              </div>
+                              <h3 class="item-title text-lg font-bold text-900 mb-4 line-height-2">{{ getLocalizedTitle(item) }}</h3>
+                              <div class="card-footer mt-auto flex justify-content-between align-items-center">
+                                  <div class="price-info flex flex-column">
+                                      <span class="price text-2xl font-black text-primary">{{ item.dailyPrice }} <small class="text-sm">EGP</small></span>
+                                      <span class="period text-xs text-500">/ {{ 'items.daily' | translate }}</span>
+                                  </div>
+                                  <button mat-flat-button class="view-btn py-1 px-3 border-round text-sm">
+                                      {{ 'marketplace.viewDetails' | translate }}
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
                     </div>
                 }
             </div>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -12,6 +13,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RentModalComponent } from '../../rentals/rent-modal/rent-modal';
+
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PermissionService } from '../../../core/services/permission.service';
@@ -30,6 +32,7 @@ import { PermissionType } from '../../../core/constants/permissions';
         MatProgressSpinnerModule,
         MatChipsModule,
         MatTabsModule,
+        MatDividerModule,
         MatDialogModule
     ],
     templateUrl: './product-details.component.html',
@@ -53,7 +56,7 @@ export class ProductDetailsComponent implements OnInit {
     isLoading = signal(true);
     isFavorite = signal(false);
     isLoggedIn = this.authService.isLoggedIn;
-    
+
     canEdit = computed(() => {
         if (this.isOwner()) return true;
         return this.permissionService.hasPermission(PermissionType.Items_Edit);
@@ -75,7 +78,7 @@ export class ProductDetailsComponent implements OnInit {
         const item = this.item();
         if (!item) return 0;
         return item.pricing?.find(p => p.pricingType === 'Daily')?.price ??
-               item.pricing?.[0]?.price ?? 0;
+            item.pricing?.[0]?.price ?? 0;
     });
 
     ngOnInit() {
@@ -275,12 +278,14 @@ export class ProductDetailsComponent implements OnInit {
         }
     }
 
-    getLocalizedName(item: any): string {
+    getLocalizedName(item: ItemDetailDto | ItemListDto | null): string {
+        if (!item) return '';
         const isAr = this.translate.currentLang === 'ar';
         return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
     }
 
-    getLocalizedDesc(item: any): string {
+    getLocalizedDesc(item: ItemDetailDto | null): string {
+        if (!item) return '';
         const isAr = this.translate.currentLang === 'ar';
         return isAr ? (item.descAr || item.descEn || '') : (item.descEn || item.descAr || '');
     }

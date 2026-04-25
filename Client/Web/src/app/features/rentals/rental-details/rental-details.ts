@@ -10,7 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-import { RentalsClient, RentalDetailDto, ReviewsClient } from '../../../core/api/api-client';
+import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
@@ -71,7 +71,7 @@ export class RentalDetailsComponent implements OnInit {
   isOwner = computed(() => {
     const r = this.rental();
     if (!r || !this.userId()) return false;
-    return String((r as any).ownerId) === String(this.userId());
+    return String(r.ownerId) === String(this.userId());
   });
 
   canManage = computed(() => this.permissionService.hasPermission(PermissionType.Rentals_Edit));
@@ -107,7 +107,7 @@ export class RentalDetailsComponent implements OnInit {
   }
 
   completeRental() {
-    this.executeAction(() => (this.rentalsClient as any).completeRental(this.rentalId(), this.isDamaged()));
+    this.executeAction(() => this.rentalsClient.completeRental(this.rentalId(), this.isDamaged()));
   }
 
   cancelRental() {
@@ -159,11 +159,11 @@ export class RentalDetailsComponent implements OnInit {
     if (this.reviewRating() < 1) return;
     
     this.isActionLoading.set(true);
-    this.reviewsClient.createReview(this.rentalId(), {
+    this.reviewsClient.createReview(this.rentalId(), new CreateReviewCommand({
       rentalId: this.rentalId(),
       rating: this.reviewRating(),
       comment: this.reviewComment()
-    } as any).subscribe({
+    })).subscribe({
       next: () => {
         this.toast.showSuccess('rentals.actions.review_success');
         this.loadRental();
@@ -201,13 +201,13 @@ export class RentalDetailsComponent implements OnInit {
 
   getStatusColor(status?: string): string {
     switch (status?.toLowerCase()) {
-      case 'pending': return 'warn';
-      case 'confirmed': return 'accent';
-      case 'active': return 'primary';
-      case 'completed': return 'success';
+      case 'pending': return 'bg-yellow-50 text-yellow-700 border-1 border-yellow-100';
+      case 'confirmed': return 'bg-indigo-50 text-indigo-700 border-1 border-indigo-100';
+      case 'active': return 'bg-primary-50 text-primary-700 border-1 border-primary-100';
+      case 'completed': return 'bg-green-50 text-green-700 border-1 border-green-100';
       case 'cancelled':
-      case 'rejected': return 'error';
-      default: return 'default';
+      case 'rejected': return 'bg-red-50 text-red-700 border-1 border-red-100';
+      default: return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
     }
   }
 }

@@ -86,12 +86,12 @@ export class SearchResultsComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  getLocalizedTitle(item: any): string {
+  getLocalizedTitle(item: ItemListDto): string {
     const isAr = this.translate.currentLang === 'ar';
     return isAr ? (item.titleAr || item.titleEn || '') : (item.titleEn || item.titleAr || '');
   }
 
-  getLocalizedRefName(ref: any): string {
+  getLocalizedRefName(ref: { nameAr?: string, nameEn?: string } | undefined | null): string {
     if (!ref) return '';
     const isAr = this.translate.currentLang === 'ar';
     return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');

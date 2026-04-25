@@ -8,10 +8,10 @@
   </div>
   }
 
-  <form [formGroup]="form" class="editor-grid">
-    <div class="column">
-      <div class="card">
-        <h3>{{ 'products.general' | translate }}</h3>
+  <form [formGroup]="form" class="grid editor-grid">
+    <div class="col-12 lg:col-8 column">
+      <div class="card mb-4 shadow-1 p-4 border-round bg-white">
+        <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.general' | translate }}</h3>
         <div class="field-group">
           <app-input label="nameEn" [formGroup]="form" controlName="titleEn" [required]="true" placeholder="placeholders.name" />
           <app-input label="nameAr" [formGroup]="form" controlName="titleAr" [required]="true" placeholder="placeholders.name" />
@@ -20,8 +20,8 @@
         </div>
       </div>
 
-      <div class="card">
-        <h3>{{ 'products.pricing' | translate }}</h3>
+      <div class="card mb-4 shadow-1 p-4 border-round bg-white">
+        <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.pricing' | translate }}</h3>
         <div class="field-row">
           <app-input label="dailyPrice" [formGroup]="form" controlName="dailyPrice" type="number" [required]="true" />
           <app-input label="deposit" [formGroup]="form" controlName="defaultDeposit" type="number" [required]="true" />
@@ -32,8 +32,8 @@
         </div>
       </div>
 
-      <div class="card">
-        <h3>{{ 'products.details' | translate }}</h3>
+      <div class="card mb-4 shadow-1 p-4 border-round bg-white">
+        <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.details' | translate }}</h3>
         <div class="field-row">
           <app-input label="type" [formGroup]="form" controlName="type" type="select" [options]="typeOptions" [translateOptions]="true" />
           <app-input label="condition" [formGroup]="form" controlName="condition" type="select" [options]="conditionOptions" [translateOptions]="true" />
@@ -49,14 +49,14 @@
       </div>
     </div>
 
-    <div class="column">
-      <div class="card">
-        <h3>{{ 'products.media' | translate }}</h3>
+    <div class="col-12 lg:col-4 column">
+      <div class="card mb-4 shadow-1 p-4 border-round bg-white">
+        <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.media' | translate }}</h3>
         <app-multi-image-uploader [images]="uploadedImages" (imagesChange)="uploadedImages = $event"/>
       </div>
 
-      <div class="card">
-        <h3>{{ 'products.organization' | translate }}</h3>
+      <div class="card mb-4 shadow-1 p-4 border-round bg-white">
+        <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.organization' | translate }}</h3>
         <app-input label="category" [formGroup]="form" controlName="categoryId" type="select" [options]="categories()" [required]="true" placeholder="placeholders.category" />
         <app-input class="m-2" label="subcategory" [formGroup]="form" controlName="subcategoryId" type="select" [options]="subcategories()" [required]="true" placeholder="placeholders.subcategory" />
         <app-input label="brand" [formGroup]="form" controlName="brandId" type="select" [options]="brands()" [required]="true" placeholder="placeholders.brand" />

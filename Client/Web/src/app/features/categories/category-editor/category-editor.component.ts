@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ViewChild, Input, Output, EventEmitter } fro
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ImageUploaderComponent } from '../../../shared/components/image-uploader/image-uploader.component';
@@ -18,6 +19,7 @@ import { InputComponent } from '../../../shared/components/input/input';
         ReactiveFormsModule,
         TranslateModule,
         MatIconModule,
+        MatProgressSpinnerModule,
         ImageUploaderComponent,
         LoadingButtonComponent,
         InputComponent
@@ -115,7 +117,7 @@ export class CategoryEditorComponent implements OnInit {
                 command.nameEn = this.form.value.categoryNameEn;
                 command.descAr = this.form.value.descriptionAr;
                 command.descEn = this.form.value.descriptionEn;
-                command.logoId = logoId ? (logoId as any) : undefined;
+                command.logoId = logoId ? logoId.toString() : undefined;
 
                 this.apiClient.updateCategory(this.categoryId, command)
                     .pipe(
@@ -143,7 +145,7 @@ export class CategoryEditorComponent implements OnInit {
                 command.nameEn = this.form.value.categoryNameEn;
                 command.descAr = this.form.value.descriptionAr;
                 command.descEn = this.form.value.descriptionEn;
-                command.logoId = logoId ? (logoId as any) : undefined;
+                command.logoId = logoId ? logoId.toString() : undefined;
 
                 this.apiClient.createCategory(command)
                     .pipe(

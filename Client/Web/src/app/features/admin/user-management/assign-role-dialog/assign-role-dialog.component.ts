@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -66,16 +67,20 @@ export class AssignRoleDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.adminClient.getAdminRoles().subscribe({
-      next: (res) => {
-        this.availableRoles.set(res.data || []);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Failed to load roles');
-        this.loading.set(false);
-      }
-    });
+    this.adminClient.getAdminRoles()
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (res) => {
+          if (!res.error) {
+            this.availableRoles.set(res.data || []);
+          } else {
+            this.error.set(res.messages?.[0] || 'Failed to load roles');
+          }
+        },
+        error: () => {
+          this.error.set('Failed to load roles');
+        }
+      });
   }
 
   hasRole(roleName: string): boolean {
@@ -99,19 +104,19 @@ export class AssignRoleDialogComponent implements OnInit {
       roles: this.selectedRoles()
     });
     
-    this.adminClient.assignUserRoles(this.data.user.id!, cmd).subscribe({
-      next: (res) => {
-        if (res.data?.succeeded) {
-          this.dialogRef.close(this.selectedRoles());
-        } else {
-          this.error.set(res.data?.errors?.[0] || 'Failed to assign roles');
-          this.saving.set(false);
+    this.adminClient.assignUserRoles(this.data.user.id!, cmd)
+      .pipe(finalize(() => this.saving.set(false)))
+      .subscribe({
+        next: (res) => {
+          if (!res.error && res.data?.succeeded !== false) {
+            this.dialogRef.close(this.selectedRoles());
+          } else {
+            this.error.set(res.data?.errors?.[0] || res.messages?.[0] || 'Failed to assign roles');
+          }
+        },
+        error: (err) => {
+          this.error.set(err.message || 'An error occurred');
         }
-      },
-      error: (err) => {
-        this.error.set(err.message || 'An error occurred');
-        this.saving.set(false);
-      }
-    });
+      });
   }
 }

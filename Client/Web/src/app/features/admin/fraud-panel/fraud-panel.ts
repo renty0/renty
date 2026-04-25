@@ -40,7 +40,7 @@ export class FraudPanelComponent {
   fraudResource = rxResource({
     params: () => ({ page: this.pageIndex() + 1, limit: this.pageSize() }),
     stream: ({ params }) => this.adminClient.getFraudLogs(params.page, params.limit).pipe(
-      map((response: any) => response?.data || { logs: [] as IFraudLogDto[], total: 0 })
+      map((response) => response.data || { logs: [] as IFraudLogDto[], total: 0 })
     )
   });
 

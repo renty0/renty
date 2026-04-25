@@ -12,15 +12,29 @@
         <p class="uploading-text" *ngIf="isUploading()">{{ 'profile.uploading' | translate }}</p>
     </div>
 
-    <form [formGroup]="profileForm" (submit)="onSubmit()" class="form-grid">
-        <app-input label="firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
-        <app-input label="lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
-        <app-input label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
-        <app-input label="address" [formGroup]="profileForm" controlName="address"></app-input>
-        <app-input label="city" [formGroup]="profileForm" controlName="city"></app-input>
-        <app-input label="country" [formGroup]="profileForm" controlName="country"></app-input>
-        <app-input label="bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
-        <div class="form-actions">
+    <form [formGroup]="profileForm" (submit)="onSubmit()" class="grid">
+        <div class="col-12 md:col-6">
+            <app-input label="firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
+        </div>
+        <div class="col-12 md:col-6">
+            <app-input label="lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
+        </div>
+        <div class="col-12">
+            <app-input label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
+        </div>
+        <div class="col-12 md:col-6">
+            <app-input label="address" [formGroup]="profileForm" controlName="address"></app-input>
+        </div>
+        <div class="col-12 md:col-6">
+            <app-input label="city" [formGroup]="profileForm" controlName="city"></app-input>
+        </div>
+        <div class="col-12">
+            <app-input label="country" [formGroup]="profileForm" controlName="country"></app-input>
+        </div>
+        <div class="col-12">
+            <app-input label="bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
+        </div>
+        <div class="col-12 flex justify-content-end mt-3">
             <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine"
                 type="submit" color="primary">
                 {{ 'profile.save' | translate }}

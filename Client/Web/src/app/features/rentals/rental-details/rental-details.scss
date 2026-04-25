@@ -5,9 +5,6 @@
 }
 
 .details-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
   margin-top: 2rem;
 }
 
@@ -88,9 +85,6 @@
 }
 
 .info-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
   padding: 1rem 0;
 }
 
@@ -296,8 +290,6 @@
 
 .photos-card {
   .photos-grid {
-    display: grid;
-    grid-template-columns: 1fr 2px 1fr;
     gap: 1.5rem;
 
     h4 {

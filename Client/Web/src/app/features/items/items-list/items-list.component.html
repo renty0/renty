@@ -98,51 +98,53 @@
     </mat-paginator>
   </mat-card>
   } @else {
-  <div class="cards-grid">
+  <div class="grid cards-grid">
     @for (item of dataSource(); track item.id) {
-    <mat-card class="entity-card" [routerLink]="['/items', item.id]">
-      <div class="card-content">
-        <div class="card-image">
-          @if (item.primaryImage) {
-          <img [src]="item.primaryImage" [alt]="getLocalizedTitle(item)" />
-          } @else {
-          <div class="placeholder">
-            <mat-icon>image_not_supported</mat-icon>
+    <div class="col-12 sm:col-6 md:col-4 lg:col-3 p-3">
+      <mat-card class="entity-card h-full shadow-1 hover:shadow-3 transition-all" [routerLink]="['/items', item.id]">
+        <div class="card-content">
+          <div class="card-image mb-3">
+            @if (item.primaryImage) {
+            <img [src]="item.primaryImage" [alt]="getLocalizedTitle(item)" class="w-full h-12rem border-round object-cover" />
+            } @else {
+            <div class="placeholder w-full h-12rem border-round bg-gray-100 flex align-items-center justify-content-center">
+              <mat-icon class="text-4xl text-400">image_not_supported</mat-icon>
+            </div>
+            }
           </div>
+          <div class="card-header-info mb-3">
+            @if (item.brand) {
+            <small class="sku-hint text-primary font-bold uppercase tracking-wider text-xs">{{ getLocalizedName(item.brand) }}</small>
+            }
+            <h3 class="text-lg font-bold text-900 m-0">{{ getLocalizedTitle(item) }}</h3>
+          </div>
+          <div class="price-tag mb-3">
+            <span class="text-xl font-black text-primary">{{ item.dailyPrice }} EGP <small class="text-sm font-medium text-600">{{ 'labels.perDay' | translate }}</small></span>
+          </div>
+          @if (item.subcategory || item.category) {
+          <p class="subcategory-info text-sm text-500 line-height-2 mb-4">
+            {{ getLocalizedName(item.subcategory)
+            }}{{ item.subcategory && item.category ? ' / ' : ''
+            }}{{ getLocalizedName(item.category) }}
+          </p>
           }
         </div>
-        <div class="card-header-info">
-          @if (item.brand) {
-          <small class="sku-hint">{{ getLocalizedName(item.brand) }}</small>
-          }
-          <h3>{{ getLocalizedTitle(item) }}</h3>
+        <div class="card-actions mt-auto flex gap-2 border-top-1 border-100 pt-3">
+          <app-loading-button (click)="$event.stopPropagation()" color="accent" variant="stroked" size="sm" class="flex-1"
+            [routerLink]="['/items', item.id]">
+            <mat-icon>visibility</mat-icon>
+          </app-loading-button>
+          <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm" class="flex-1"
+            (clicked)="editItem(item.id!)">
+            <mat-icon>edit</mat-icon>
+          </app-loading-button>
+          <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+            (clicked)="deleteItem(item.id!)">
+            <mat-icon>delete</mat-icon>
+          </app-loading-button>
         </div>
-        <div class="price-tag">
-          <span>{{ item.dailyPrice }} EGP <small>{{ 'labels.perDay' | translate }}</small></span>
-        </div>
-        @if (item.subcategory || item.category) {
-        <p class="subcategory-info">
-          {{ getLocalizedName(item.subcategory)
-          }}{{ item.subcategory && item.category ? ' / ' : ''
-          }}{{ getLocalizedName(item.category) }}
-        </p>
-        }
-      </div>
-      <div class="card-actions">
-        <app-loading-button (click)="$event.stopPropagation()" color="accent" variant="stroked" size="sm"
-          [routerLink]="['/items', item.id]">
-          <mat-icon>visibility</mat-icon>
-        </app-loading-button>
-        <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"
-          (clicked)="editItem(item.id!)">
-          <mat-icon>edit</mat-icon>
-        </app-loading-button>
-        <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm"
-          (clicked)="deleteItem(item.id!)">
-          <mat-icon>delete</mat-icon>
-        </app-loading-button>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
     }
   </div>
   <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"

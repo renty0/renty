@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SupportClient, CreateTicketCommand, ApiResponse, SupportCreateTicketData } from '../../../core/api/api-client';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { ToastService } from '../../../shared/services/toast.service';
+
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
 
@@ -38,8 +39,8 @@ import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
 })
 export class CreateTicketComponent {
   private readonly supportClient = inject(SupportClient);
-  private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   ticketType = signal('Issue');
   message = signal('');
@@ -64,7 +65,7 @@ export class CreateTicketComponent {
         });
 
         return this.supportClient.createSupportTicket(command).pipe(
-          tap((res) => {
+          tap((res: ApiResponse<SupportCreateTicketData>) => {
             if (res.data) {
               this.toast.showSuccess('support.create_success');
               this.router.navigate(['/support', res.data.ticketId]);
@@ -82,7 +83,9 @@ export class CreateTicketComponent {
   }
 
   submit() {
-    if (!this.message().trim() || this.isSubmitting()) return;
+    if (!this.message().trim() || this.isSubmitting()) {
+      return;
+    }
     this.submitSubject.next();
   }
 }

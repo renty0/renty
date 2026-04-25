@@ -9,49 +9,51 @@
       <mat-spinner diameter="50"></mat-spinner>
     </div>
   } @else if (rental(); as r) {
-    <div class="details-grid">
-      <div class="main-info">
-        <mat-card class="premium-card section-card">
-          <mat-card-header>
-            <mat-icon mat-card-avatar>info</mat-icon>
-            <mat-card-title>{{ 'rentals.details.rental_info' | translate }}</mat-card-title>
+    <div class="grid details-grid">
+      <div class="col-12 lg:col-8 main-info">
+        <mat-card class="premium-card section-card mb-4 shadow-1">
+          <mat-card-header class="mb-3">
+            <mat-icon mat-card-avatar class="text-primary">info</mat-icon>
+            <mat-card-title class="font-bold">{{ 'rentals.details.rental_info' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="info-row">
-              <div class="info-item">
-                <label>{{ 'rentals.details.item' | translate }}</label>
-                <div class="item-preview" [routerLink]="['/marketplace/product', r.itemId]">
-                  <img [src]="r.itemImageUrl || 'assets/placeholder-product.png'" alt="Product">
-                  <span>{{ r.itemTitle }}</span>
+            <div class="info-row flex flex-column md:flex-row gap-4 mb-4">
+              <div class="info-item flex-1">
+                <label class="block text-sm text-500 mb-2">{{ 'rentals.details.item' | translate }}</label>
+                <div class="item-preview flex align-items-center gap-3 p-2 border-round surface-50 cursor-pointer hover:surface-100 transition-all" 
+                     [routerLink]="['/marketplace/product', r.itemId]">
+                  <img [src]="r.itemImageUrl || 'assets/placeholder-product.png'" alt="Product" 
+                       class="w-4rem h-4rem border-round object-cover shadow-1">
+                  <span class="font-bold text-900">{{ r.itemTitle }}</span>
                 </div>
               </div>
               <div class="info-item">
-                <label>{{ 'rentals.details.status' | translate }}</label>
+                <label class="block text-sm text-500 mb-2">{{ 'rentals.details.status' | translate }}</label>
                 <span class="status-badge" [class]="getStatusColor(r.status)">
                   {{ 'rentals.status.' + r.status?.toLowerCase() | translate }}
                 </span>
               </div>
             </div>
 
-            <mat-divider></mat-divider>
+            <mat-divider class="mb-4"></mat-divider>
 
             <div class="info-row">
               <div class="info-item">
-                <label>{{ 'rentals.details.dates' | translate }}</label>
-                <div class="date-range">
-                  <div class="date-box">
-                    <mat-icon>calendar_today</mat-icon>
-                    <div class="date-text">
-                      <small>Start</small>
-                      <span>{{ r.startDate | date:'mediumDate' }}</span>
+                <label class="block text-sm text-500 mb-3">{{ 'rentals.details.dates' | translate }}</label>
+                <div class="date-range flex align-items-center gap-4 bg-gray-50 p-4 border-round">
+                  <div class="date-box flex align-items-center gap-3">
+                    <mat-icon class="text-primary">calendar_today</mat-icon>
+                    <div class="date-text flex flex-column">
+                      <small class="text-400 uppercase font-bold">Start</small>
+                      <span class="text-lg font-bold">{{ r.startDate | date:'mediumDate' }}</span>
                     </div>
                   </div>
-                  <mat-icon class="arrow">arrow_forward</mat-icon>
-                  <div class="date-box">
-                    <mat-icon>event</mat-icon>
-                    <div class="date-text">
-                      <small>End</small>
-                      <span>{{ r.endDate | date:'mediumDate' }}</span>
+                  <mat-icon class="arrow text-300">arrow_forward</mat-icon>
+                  <div class="date-box flex align-items-center gap-3">
+                    <mat-icon class="text-primary">event</mat-icon>
+                    <div class="date-text flex flex-column">
+                      <small class="text-400 uppercase font-bold">End</small>
+                      <span class="text-lg font-bold">{{ r.endDate | date:'mediumDate' }}</span>
                     </div>
                   </div>
                 </div>
@@ -60,62 +62,66 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="premium-card section-card">
-          <mat-card-header>
-            <mat-icon mat-card-avatar>people</mat-icon>
-            <mat-card-title>{{ 'rentals.details.parties' | translate }}</mat-card-title>
+        <mat-card class="premium-card section-card mb-4 shadow-1">
+          <mat-card-header class="mb-3">
+            <mat-icon mat-card-avatar class="text-primary">people</mat-icon>
+            <mat-card-title class="font-bold">{{ 'rentals.details.parties' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="info-row">
-              <div class="info-item">
-                <label>{{ 'rentals.details.owner' | translate }}</label>
-                <div class="user-info">
-                  <mat-icon>person</mat-icon>
-                  <span>{{ r.ownerFirstName }}</span>
-                  <small>{{ r.ownerCity }}</small>
+            <div class="info-row flex flex-column md:flex-row gap-4">
+              <div class="info-item flex-1">
+                <label class="block text-sm text-500 mb-2">{{ 'rentals.details.owner' | translate }}</label>
+                <div class="user-info flex align-items-center gap-3">
+                  <div class="avatar w-2rem h-2rem bg-primary-100 text-primary border-circle flex align-items-center justify-content-center">
+                    <mat-icon class="text-base">person</mat-icon>
+                  </div>
+                  <div class="flex flex-column">
+                    <span class="font-bold">{{ r.ownerFirstName }}</span>
+                    <small class="text-500">{{ r.ownerCity }}</small>
+                  </div>
                 </div>
               </div>
               <div class="info-item">
-                <label>{{ 'rentals.details.createdAt' | translate }}</label>
-                <span>{{ r.createdAt | date:'medium' }}</span>
+                <label class="block text-sm text-500 mb-2">{{ 'rentals.details.createdAt' | translate }}</label>
+                <span class="text-900">{{ r.createdAt | date:'medium' }}</span>
               </div>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="premium-card section-card photos-card">
-          <mat-card-header>
-            <mat-icon mat-card-avatar>photo_library</mat-icon>
-            <mat-card-title>{{ 'rentals.details.condition_photos' | translate }}</mat-card-title>
+        <mat-card class="premium-card section-card photos-card mb-4 shadow-1">
+          <mat-card-header class="mb-3">
+            <mat-icon mat-card-avatar class="text-primary">photo_library</mat-icon>
+            <mat-card-title class="font-bold">{{ 'rentals.details.condition_photos' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="photos-grid">
-              <div class="photo-type">
-                <h4>{{ 'rentals.details.handover_photos' | translate }}</h4>
-                <div class="photo-actions" *ngIf="isOwner() && r.status === 'Confirmed'">
+            <div class="grid photos-grid">
+              <div class="col-12 md:col-6 photo-type">
+                <h4 class="mb-3 text-700">{{ 'rentals.details.handover_photos' | translate }}</h4>
+                <div class="photo-actions mb-3" *ngIf="isOwner() && r.status === 'Confirmed'">
                   <input type="file" #handoverInput (change)="onPhotoSelected($event, 'Handover')" hidden>
-                  <button mat-stroked-button (click)="handoverInput.click()" [disabled]="isUploading()">
+                  <button mat-stroked-button (click)="handoverInput.click()" [disabled]="isUploading()" class="w-full">
                     <mat-icon>add_a_photo</mat-icon> {{ 'buttons.upload' | translate }}
                   </button>
                 </div>
-                <div class="photo-list">
+                <div class="photo-list flex flex-wrap gap-2">
                   @for (url of r.handoverImageUrls; track url) {
-                    <img [src]="url" class="rental-photo" alt="Handover">
+                    <img [src]="url" class="rental-photo w-5rem h-5rem border-round object-cover shadow-1" alt="Handover">
                   }
                 </div>
               </div>
 
-              <div class="photo-type">
-                <h4>{{ 'rentals.details.return_photos' | translate }}</h4>
-                <div class="photo-actions" *ngIf="isOwner() && r.status === 'Active'">
+              <div class="col-12 md:col-6 photo-type">
+                <h4 class="mb-3 text-700">{{ 'rentals.details.return_photos' | translate }}</h4>
+                <div class="photo-actions mb-3" *ngIf="isOwner() && r.status === 'Active'">
                   <input type="file" #returnInput (change)="onPhotoSelected($event, 'Return')" hidden>
-                  <button mat-stroked-button (click)="returnInput.click()" [disabled]="isUploading()">
+                  <button mat-stroked-button (click)="returnInput.click()" [disabled]="isUploading()" class="w-full">
                     <mat-icon>add_a_photo</mat-icon> {{ 'buttons.upload' | translate }}
                   </button>
                 </div>
-                <div class="photo-list">
+                <div class="photo-list flex flex-wrap gap-2">
                   @for (url of r.returnImageUrls; track url) {
-                    <img [src]="url" class="rental-photo" alt="Return">
+                    <img [src]="url" class="rental-photo w-5rem h-5rem border-round object-cover shadow-1" alt="Return">
                   }
                 </div>
               </div>
@@ -123,30 +129,32 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="action-card review-card" *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
-          <mat-card-header>
-            <mat-card-title>{{ 'rentals.details.review' | translate }}</mat-card-title>
+        <mat-card class="action-card review-card shadow-1 border-primary-50 p-3" *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
+          <mat-card-header class="mb-3">
+            <mat-card-title class="font-bold">{{ 'rentals.details.review' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="rating-container">
-              <label>{{ 'rentals.details.rating' | translate }}</label>
-              <div class="stars">
+            <div class="rating-container mb-4">
+              <label class="block text-sm text-500 mb-2">{{ 'rentals.details.rating' | translate }}</label>
+              <div class="stars flex gap-1">
                 <button mat-icon-button *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)"
-                        [color]="reviewRating() >= s ? 'accent' : ''" type="button">
+                        [color]="reviewRating() >= s ? 'accent' : ''" type="button" class="w-2rem h-2rem">
                   <mat-icon>{{ reviewRating() >= s ? 'star' : 'star_border' }}</mat-icon>
                 </button>
               </div>
             </div>
 
             <div class="comment-container">
-              <label>{{ 'rentals.details.comment' | translate }}</label>
-              <textarea matInput [ngModel]="reviewComment()" (ngModelChange)="reviewComment.set($event)" rows="3" class="custom-textarea"></textarea>
+              <label class="block text-sm text-500 mb-2">{{ 'rentals.details.comment' | translate }}</label>
+              <textarea matInput [ngModel]="reviewComment()" (ngModelChange)="reviewComment.set($event)" 
+                        rows="3" class="custom-textarea w-full p-3 border-round surface-50 border-1 border-200 outline-none focus:border-primary transition-all"></textarea>
             </div>
           </mat-card-content>
-          <mat-card-actions>
+          <mat-card-actions class="p-3">
             <app-loading-button
               [loading]="isActionLoading()"
               color="primary"
+              class="w-full"
               (click)="submitReview()">
               <mat-icon>send</mat-icon>
               {{ 'rentals.details.submitReview' | translate }}
@@ -155,50 +163,52 @@
         </mat-card>
       </div>
 
-      <div class="side-info">
-        <mat-card class="premium-card financial-card">
-          <mat-card-header>
-            <mat-icon mat-card-avatar>payments</mat-icon>
-            <mat-card-title>{{ 'rentals.details.financials' | translate }}</mat-card-title>
+      <div class="col-12 lg:col-4 side-info">
+        <mat-card class="premium-card financial-card shadow-1 mb-4">
+          <mat-card-header class="mb-3">
+            <mat-icon mat-card-avatar class="text-primary">payments</mat-icon>
+            <mat-card-title class="font-bold">{{ 'rentals.details.financials' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="price-list">
-              <div class="price-row">
-                <span>{{ 'rentals.details.price' | translate }}</span>
-                <span class="value">{{ r.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
+            <div class="price-list flex flex-column gap-3">
+              <div class="price-row flex justify-content-between">
+                <span class="text-600">{{ 'rentals.details.price' | translate }}</span>
+                <span class="value font-bold">{{ r.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
-              <div class="price-row">
-                <span>{{ 'rentals.details.deposit' | translate }}</span>
-                <span class="value">{{ r.depositAmount | currency:'EGP ':'symbol':'1.0-2' }}</span>
+              <div class="price-row flex justify-content-between">
+                <span class="text-600">{{ 'rentals.details.deposit' | translate }}</span>
+                <span class="value font-bold">{{ r.depositAmount | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
               @if (r.lateFee && r.lateFee > 0) {
-                <div class="price-row warn">
+                <div class="price-row warn flex justify-content-between text-red-500">
                   <span>{{ 'rentals.details.lateFee' | translate }}</span>
-                  <span class="value">+{{ r.lateFee | currency:'EGP ':'symbol':'1.0-2' }}</span>
+                  <span class="value font-bold">+{{ r.lateFee | currency:'EGP ':'symbol':'1.0-2' }}</span>
                 </div>
               }
               <mat-divider></mat-divider>
-              <div class="price-row total">
-                <span>{{ 'rentals.details.total' | translate }}</span>
-                <span class="value">{{ (r.rentalPrice || 0) + (r.depositAmount || 0) + (r.lateFee || 0) | currency:'EGP ':'symbol':'1.0-2' }}</span>
+              <div class="price-row total flex justify-content-between text-xl font-bold py-2">
+                <span class="text-900">{{ 'rentals.details.total' | translate }}</span>
+                <span class="value text-primary">{{ (r.rentalPrice || 0) + (r.depositAmount || 0) + (r.lateFee || 0) | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
             </div>
 
             @if (r.status?.toLowerCase() === 'confirmed' || r.status?.toLowerCase() === 'active') {
-              <div class="verification-card-section">
-                <mat-divider></mat-divider>
+              <div class="verification-card-section mt-4 pt-4 border-top-1 border-200">
                 <div class="verification-content">
                   @if (!isOwner()) {
-                    <div class="code-display">
-                      <label>{{ 'rentals.details.handoff_code' | translate }}</label>
-                      <div class="code-box">{{ r.handoffCode }}</div>
-                      <small>{{ 'rentals.details.give_to_owner' | translate }}</small>
+                    <div class="code-display flex flex-column align-items-center text-center">
+                      <label class="text-sm text-500 mb-2">{{ 'rentals.details.handoff_code' | translate }}</label>
+                      <div class="code-box text-3xl font-bold tracking-widest bg-primary-50 text-primary p-3 border-round border-2 border-dashed border-primary-200 w-full">
+                        {{ r.handoffCode }}
+                      </div>
+                      <small class="mt-2 text-400">{{ 'rentals.details.give_to_owner' | translate }}</small>
                     </div>
                   } @else if (r.status?.toLowerCase() === 'confirmed' && !r.isHandoffVerified) {
-                    <div class="code-input">
-                      <label>{{ 'rentals.details.enter_code' | translate }}</label>
-                      <input matInput [(ngModel)]="handoffCodeInput" placeholder="EX: 123456" class="custom-input">
-                      <app-loading-button color="primary" [loading]="isActionLoading()" (click)="verifyHandoff()" [disabled]="!handoffCodeInput()">
+                    <div class="code-input flex flex-column gap-3">
+                      <label class="text-sm text-500">{{ 'rentals.details.enter_code' | translate }}</label>
+                      <input matInput [(ngModel)]="handoffCodeInput" placeholder="EX: 123456" 
+                             class="custom-input p-3 border-round border-1 border-200 text-center font-bold text-xl outline-none focus:border-primary">
+                      <app-loading-button color="primary" class="w-full" [loading]="isActionLoading()" (click)="verifyHandoff()" [disabled]="!handoffCodeInput()">
                         {{ 'rentals.actions.verify' | translate }}
                       </app-loading-button>
                     </div>
@@ -207,20 +217,20 @@
               </div>
             }
 
-            <div class="actions-section">
+            <div class="actions-section flex flex-column gap-3 mt-4 pt-4 border-top-1 border-200">
               @if (r.status?.toLowerCase() === 'pending') {
-                 <app-loading-button color="primary" class="w-full" (click)="confirmRental()" [loading]="isActionLoading()">
+                 <app-loading-button color="primary" class="w-full py-2" (click)="confirmRental()" [loading]="isActionLoading()">
                     <mat-icon>check_circle</mat-icon>
                     {{ 'rentals.actions.confirm' | translate }}
                  </app-loading-button>
               }
 
               @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
-                <div class="completion-box">
-                  <mat-checkbox [(ngModel)]="isDamaged" color="warn">
+                <div class="completion-box flex flex-column gap-3">
+                  <mat-checkbox [(ngModel)]="isDamaged" color="warn" class="font-medium">
                     {{ 'rentals.actions.damaged' | translate }}
                   </mat-checkbox>
-                  <app-loading-button color="accent" class="w-full" (click)="completeRental()" [loading]="isActionLoading()">
+                  <app-loading-button color="accent" class="w-full py-2" (click)="completeRental()" [loading]="isActionLoading()">
                     <mat-icon>assignment_turned_in</mat-icon>
                     {{ 'rentals.actions.complete' | translate }}
                   </app-loading-button>
@@ -228,7 +238,7 @@
               }
 
               @if (r.status?.toLowerCase() === 'pending' || r.status?.toLowerCase() === 'confirmed') {
-                <app-loading-button variant="stroked" color="warn" class="w-full" (click)="cancelRental()" [loading]="isActionLoading()">
+                <app-loading-button variant="stroked" color="warn" class="w-full py-2" (click)="cancelRental()" [loading]="isActionLoading()">
                   <mat-icon>cancel</mat-icon>
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
@@ -238,13 +248,13 @@
         </mat-card>
 
         @if (r.notes) {
-          <mat-card class="premium-card section-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar>notes</mat-icon>
-              <mat-card-title>{{ 'rentals.details.notes' | translate }}</mat-card-title>
+          <mat-card class="premium-card section-card shadow-1">
+            <mat-card-header class="mb-3">
+              <mat-icon mat-card-avatar class="text-primary">notes</mat-icon>
+              <mat-card-title class="font-bold">{{ 'rentals.details.notes' | translate }}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <p class="notes-text">{{ r.notes }}</p>
+              <p class="notes-text text-600 line-height-3">{{ r.notes }}</p>
             </mat-card-content>
           </mat-card>
         }

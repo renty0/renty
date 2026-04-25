@@ -53,15 +53,7 @@
 }
 
 .product-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
     margin-bottom: 80px;
-
-    @include mobile {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
 }
 
 .product-gallery {
@@ -344,9 +336,7 @@
     }
 
     .related-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 25px;
+        margin-bottom: 2rem;
     }
 
     .related-card {

@@ -165,7 +165,7 @@ export class ResetPassword {
           return of(null);
         }),
       )
-      .subscribe((res: any) => {
+      .subscribe((res) => {
         if (res && res.error) {
           this.toastService.showError(
             res.messages?.[0] || this.translate.instant('resetPassword.errorDesc'),

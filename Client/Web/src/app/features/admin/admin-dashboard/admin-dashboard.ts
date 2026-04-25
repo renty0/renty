@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,20 +39,20 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.adminClient.getAdminLatestKpi().subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.kpi.set(response.data);
-        } else {
-          this.error.set(response?.error || 'Failed to load KPI data');
+    this.adminClient.getAdminLatestKpi()
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          if (!response.error && response.data) {
+            this.kpi.set(response.data);
+          } else {
+            this.error.set(response.messages?.[0] || 'Failed to load KPI data');
+          }
+        },
+        error: (err) => {
+          this.error.set('An error occurred while fetching dashboard data');
+          console.error('KPI Load Error:', err);
         }
-        this.isLoading.set(false);
-      },
-      error: (err: any) => {
-        this.error.set('An error occurred while fetching dashboard data');
-        this.isLoading.set(false);
-        console.error('KPI Load Error:', err);
-      }
-    });
+      });
   }
 }

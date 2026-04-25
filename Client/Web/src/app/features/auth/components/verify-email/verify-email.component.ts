@@ -22,7 +22,7 @@ import { emailValidator } from '../../../../validators/email.validator';
     LoadingButtonComponent,
   ],
   templateUrl: './verify-email.component.html',
-  styleUrl: './verify-email.component.scss',
+  styleUrl: '../login/login.scss',
 })
 export class VerifyEmailComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -77,7 +77,7 @@ export class VerifyEmailComponent implements OnInit {
             );
           }
         },
-        error: (error: any) => {
+        error: (error: { error?: { messages?: string[] } }) => {
           this.toast.showError(
             error?.error?.messages?.[0] ?? this.translate.instant('verifyEmail.failed')
           );

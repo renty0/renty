@@ -47,14 +47,10 @@
 }
 
 .actions-cell {
-    display: flex;
     gap: 8px;
-    justify-content: flex-start;
 }
 
 .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
 }
 

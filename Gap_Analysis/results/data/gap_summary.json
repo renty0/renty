@@ -5,7 +5,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -14,16 +14,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Camping & Outdoors",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -32,7 +23,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -41,7 +32,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -50,7 +41,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -59,7 +50,7 @@
     "demand": 3,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -68,7 +59,7 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
   },
   {
@@ -77,7 +68,16 @@
     "demand": 0,
     "gap_score": 1.0,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": 0.0
+  },
+  {
+    "category": "Camping & Outdoors",
+    "supply": 1,
+    "demand": 0,
+    "gap_score": 0.5,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0,
+    "gap_pct": -50.0
   }
 ]

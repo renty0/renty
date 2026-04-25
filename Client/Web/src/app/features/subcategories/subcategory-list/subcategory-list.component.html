@@ -81,30 +81,32 @@
         </mat-paginator>
     </mat-card>
     } @else {
-    <div class="cards-grid">
+    <div class="grid cards-grid">
         @for (subcategory of dataSource(); track subcategory.id) {
-        <mat-card class="entity-card" (click)="editSubcategory(subcategory.id!)">
-            <div class="card-image">
-                <img [src]="getLogoUrl(subcategory.logoUrl)"
-                    [alt]="getLocalizedName(subcategory)">
-                <div class="category-badge">{{ getLocalizedCatName(subcategory) }}</div>
-            </div>
-            <div class="card-content">
-                <h3>{{ getLocalizedName(subcategory) }}</h3>
-                <p>{{ getLocalizedDesc(subcategory) | slice:0:100 }}{{ getLocalizedDesc(subcategory).length > 100 ?
-                    '...' : '' }}</p>
-            </div>
-            <div class="card-actions">
-                <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm"
-                    (clicked)="editSubcategory(subcategory.id!)">
-                    <mat-icon>edit</mat-icon>
-                </app-loading-button>
-                <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm"
-                    (clicked)="deleteSubcategory(subcategory.id!)">
-                    <mat-icon>delete</mat-icon>
-                </app-loading-button>
-            </div>
-        </mat-card>
+        <div class="col-12 sm:col-6 md:col-4 lg:col-3 p-3">
+          <mat-card class="entity-card h-full shadow-1 hover:shadow-3 transition-all cursor-pointer" (click)="editSubcategory(subcategory.id!)">
+              <div class="card-image mb-3 relative overflow-hidden border-round">
+                  <img [src]="getLogoUrl(subcategory.logoUrl)"
+                      [alt]="getLocalizedName(subcategory)" class="w-full h-10rem object-cover">
+                  <div class="category-badge absolute top-0 right-0 bg-primary text-white px-3 py-1 m-2 border-round text-xs font-bold">{{ getLocalizedCatName(subcategory) }}</div>
+              </div>
+              <div class="card-content flex-1">
+                  <h3 class="text-xl font-bold mb-2 text-900">{{ getLocalizedName(subcategory) }}</h3>
+                  <p class="text-600 text-sm line-height-3">{{ getLocalizedDesc(subcategory) | slice:0:100 }}{{ getLocalizedDesc(subcategory).length > 100 ?
+                      '...' : '' }}</p>
+              </div>
+              <div class="card-actions mt-auto flex gap-2 border-top-1 border-100 pt-3">
+                  <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm" class="flex-1"
+                      (clicked)="editSubcategory(subcategory.id!)">
+                      <mat-icon>edit</mat-icon>
+                  </app-loading-button>
+                  <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+                      (clicked)="deleteSubcategory(subcategory.id!)">
+                      <mat-icon>delete</mat-icon>
+                  </app-loading-button>
+              </div>
+          </mat-card>
+        </div>
         }
     </div>
     <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"

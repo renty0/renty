@@ -117,8 +117,8 @@ export class RoleManagementComponent {
     ).subscribe();
   }
 
-  onSearch(event: any): void {
-    const value = typeof event === 'string' ? event : event?.target?.value || '';
+  onSearch(event: Event | string): void {
+    const value = typeof event === 'string' ? event : (event.target as HTMLInputElement)?.value || '';
     this.searchSubject.next(value);
   }
 
@@ -127,7 +127,13 @@ export class RoleManagementComponent {
     
     this.selectedRole.set(role);
     this.rolesClient.getRoleDetails(role.id).subscribe({
-      next: (response) => this.selectedRolePermissions.set(response.data?.permissions || []),
+      next: (response) => {
+        if (!response.error) {
+          this.selectedRolePermissions.set(response.data?.permissions || []);
+        } else {
+          this.toast.showError(response.messages?.[0] || 'Failed to load permissions for role');
+        }
+      },
       error: () => this.toast.showError('Failed to load permissions for role')
     });
   }

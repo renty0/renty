@@ -527,6 +527,12 @@
   },
   "profile": {
     "title": "ملفي الشخصي",
+    "personalInfo": "المعلومات الشخصية",
+    "bio": "السيرة الذاتية",
+    "locationInfo": "معلومات الموقع",
+    "address": "العنوان",
+    "city": "المدينة",
+    "country": "الدولة",
     "imageAlt": "صورة الملف الشخصي",
     "updatePhoto": "تحديث الصورة",
     "uploadNewPhoto": "رفع صورة جديدة",

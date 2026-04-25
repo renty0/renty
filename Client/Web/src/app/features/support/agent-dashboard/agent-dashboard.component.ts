@@ -2,18 +2,19 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-agent-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './agent-dashboard.component.html',
-  styleUrls: ['./agent-dashboard.component.scss']
+  styleUrl: './agent-dashboard.component.scss'
 })
 export class AgentDashboardComponent {
   private http = inject(HttpClient);
 
-  // Hardcoded for demo: we just assume the agent is resolving a specific rental ID
   rentalId = signal<string>('');
   reason = signal<string>('');
   resolutionType = signal<'forfeit_deposit' | 'refund_renter' | 'split_deposit'>('split_deposit');

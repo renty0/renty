@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -45,22 +46,24 @@ export class SystemSettingsComponent implements OnInit {
 
   loadSettings() {
     this.isLoading.set(true);
-    this.settingsClient.getAdminSettings().subscribe({
-      next: (res: any) => {
-        const settings = res?.data || res;
-        if (settings['PlatformCommission']) {
-          this.commissionRate.set(Math.round(parseFloat(settings['PlatformCommission']) * 100));
-        }
-        if (settings['MaintenanceMode']) {
-          this.maintenanceMode.set(settings['MaintenanceMode'] === 'true');
-        }
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        this.toast.showError('Failed to load system settings');
-        this.isLoading.set(false);
-      }
-    });
+    this.settingsClient.getAdminSettings()
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          if (!res.error) {
+            const settings = (res.data as unknown as Record<string, string>) || {};
+            if (settings['PlatformCommission']) {
+              this.commissionRate.set(Math.round(parseFloat(settings['PlatformCommission']) * 100));
+            }
+            if (settings['MaintenanceMode']) {
+              this.maintenanceMode.set(settings['MaintenanceMode'] === 'true');
+            }
+          } else {
+            this.toast.showError(res.messages?.[0] || 'Failed to load system settings');
+          }
+        },
+        error: () => this.toast.showError('Failed to load system settings')
+      });
   }
 
   updateCommission() {
@@ -74,16 +77,18 @@ export class SystemSettingsComponent implements OnInit {
   private saveSetting(key: string, value: string, description: string) {
     this.isSaving.set(true);
     const cmd = new UpdateSettingCommand({ key, value, description });
-    this.settingsClient.updateAdminSetting(cmd).subscribe({
-      next: () => {
-        this.toast.showSuccess(`${key} updated successfully`);
-        this.isSaving.set(false);
-        this.loadSettings();
-      },
-      error: () => {
-        this.toast.showError(`Failed to update ${key}`);
-        this.isSaving.set(false);
-      }
-    });
+    this.settingsClient.updateAdminSetting(cmd)
+      .pipe(finalize(() => this.isSaving.set(false)))
+      .subscribe({
+        next: (res) => {
+          if (!res.error) {
+            this.toast.showSuccess(`${key} updated successfully`);
+            this.loadSettings();
+          } else {
+            this.toast.showError(res.messages?.[0] || `Failed to update ${key}`);
+          }
+        },
+        error: () => this.toast.showError(`Failed to update ${key}`)
+      });
   }
 }

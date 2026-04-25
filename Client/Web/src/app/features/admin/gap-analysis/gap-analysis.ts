@@ -10,7 +10,7 @@ import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminClient, IGapDto, Gap_AnalysisClient } from '../../../core/api/api-client';
 import { TranslateModule } from '@ngx-translate/core';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
-import { map } from 'rxjs';
+import { map, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-gap-analysis',
@@ -36,7 +36,7 @@ export class GapAnalysisComponent {
 
   gapsResource = rxResource({
     stream: () => this.adminClient.getAdminGapAnalysis(20, 'all').pipe(
-      map((response: any) => (response?.data?.gaps as IGapDto[]) || [])
+      map((response) => (response.data?.gaps as IGapDto[]) || [])
     )
   });
 
@@ -57,15 +57,15 @@ export class GapAnalysisComponent {
   triggerAnalysis() {
     this.isRefreshing.set(true);
     this.gapAnalysisClient.triggerGapAnalysis()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isRefreshing.set(false))
+      )
       .subscribe({
         next: () => {
           this.gapsResource.reload();
-          this.isRefreshing.set(false);
         },
-        error: () => {
-          this.isRefreshing.set(false);
-        }
+        error: () => {}
       });
   }
 

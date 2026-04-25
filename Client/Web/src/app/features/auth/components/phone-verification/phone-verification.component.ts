@@ -1,57 +1,81 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ToastService } from '../../../../shared/services/toast.service';
+
+import { IdentityClient, RequestPhoneVerificationCommand, ConfirmPhoneVerificationCommand } from '../../../../core/api/api-client';
+import { finalize, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-phone-verification',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './phone-verification.component.html',
-  styleUrls: ['./phone-verification.component.scss']
+  styleUrl: '../login/login.scss'
 })
 export class PhoneVerificationComponent {
-  private http = inject(HttpClient);
+  private identityClient = inject(IdentityClient);
   private router = inject(Router);
+  private toast = inject(ToastService);
+
+  step = signal<1 | 2>(1);
+  isLoading = signal(false);
+  successMsg = signal<string | null>(null);
+  errorMsg = signal<string | null>(null);
 
   phone = signal('');
   otp = signal('');
-  step = signal<1 | 2>(1); // 1: request, 2: verify
-  isLoading = signal(false);
-  errorMsg = signal<string | null>(null);
-  successMsg = signal<string | null>(null);
 
   requestVerification() {
+    if (!this.phone() || this.isLoading()) {
+      return;
+    }
+
     this.isLoading.set(true);
-    this.errorMsg.set(null);
-    this.http.post<{ simulatedOtp: string }>('/api/v1/user/phone/request', { phoneNumber: this.phone() })
-      .subscribe({
-        next: (res) => {
+    const command = new RequestPhoneVerificationCommand({ phoneNumber: this.phone() });
+
+    this.identityClient.requestPhoneVerification(command)
+      .pipe(
+        finalize(() => this.isLoading.set(false)),
+        catchError(() => {
+          this.toast.showError('Failed to request OTP');
+          return of(null);
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.error) {
+          this.toast.showError(res.messages?.[0] || 'Failed to request OTP');
+        } else if (res) {
           this.step.set(2);
-          this.successMsg.set(`For simulation purposes, your OTP is: ${res.simulatedOtp}`);
-          this.isLoading.set(false);
-        },
-        error: (err) => {
-          this.errorMsg.set(err.error?.title || 'Failed to request OTP');
-          this.isLoading.set(false);
+          this.successMsg.set(res.messages?.[0] || 'OTP Sent successfully!');
+          this.toast.showSuccess('OTP Sent successfully!');
         }
       });
   }
 
   verifyOtp() {
+    if (this.otp().length !== 4 || this.isLoading()) {
+      return;
+    }
+
     this.isLoading.set(true);
-    this.errorMsg.set(null);
-    this.http.post('/api/v1/user/phone/confirm', { code: this.otp() })
-      .subscribe({
-        next: () => {
-          this.successMsg.set('Phone verified successfully!');
-          this.isLoading.set(false);
-          setTimeout(() => this.router.navigate(['/items']), 1500);
-        },
-        error: (err) => {
-          this.errorMsg.set(err.error?.title || 'Invalid OTP');
-          this.isLoading.set(false);
+    const command = new ConfirmPhoneVerificationCommand({ code: this.otp() });
+
+    this.identityClient.confirmPhoneVerification(command)
+      .pipe(
+        finalize(() => this.isLoading.set(false)),
+        catchError(() => {
+          this.toast.showError('Invalid OTP');
+          return of(null);
+        })
+      )
+      .subscribe((res) => {
+        if (res && res.error) {
+          this.toast.showError(res.messages?.[0] || 'Invalid OTP');
+        } else if (res) {
+          this.toast.showSuccess('Phone verified successfully!');
+          setTimeout(() => this.router.navigate(['/profile']), 1500);
         }
       });
   }

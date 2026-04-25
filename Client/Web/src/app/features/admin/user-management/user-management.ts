@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -71,22 +72,22 @@ export class UserManagementComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.adminClient.getAdminUsers(this.pageIndex() + 1, this.pageSize(), this.searchTerm() ?? undefined).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.users.set(response.data.users || []);
-          this.totalUsers.set(response.data.total || 0);
-        } else {
-          this.error.set(response?.error || 'Failed to load users');
-        }
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        this.error.set('An error occurred while fetching users');
-        this.isLoading.set(false);
-        console.error('User Load Error:', err);
-      },
-    });
+    this.adminClient.getAdminUsers(this.pageIndex() + 1, this.pageSize(), this.searchTerm() ?? undefined)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          if (!response.error && response.data) {
+            this.users.set(response.data.users || []);
+            this.totalUsers.set(response.data.total || 0);
+          } else {
+            this.error.set(response.messages?.[0] || 'Failed to load users');
+          }
+        },
+        error: (err) => {
+          this.error.set('An error occurred while fetching users');
+          console.error('User Load Error:', err);
+        },
+      });
   }
 
   addUser(): void {
@@ -111,18 +112,18 @@ export class UserManagementComponent implements OnInit {
     if (user.id === undefined) return;
 
     const newStatus = !user.isActive;
-    const command = UpdateUserStatusCommand.fromJS({
+    const command = new UpdateUserStatusCommand({
       userId: user.id,
       isActive: newStatus,
     });
 
     this.adminClient.updateUserStatus(user.id, command).subscribe({
-      next: (response: any) => {
-        if (response && response.success) {
+      next: (response) => {
+        if (!response.error) {
           user.isActive = newStatus;
           this.toast.showSuccess(`User ${newStatus ? 'activated' : 'deactivated'} successfully`);
         } else {
-          this.toast.showError(response?.error || 'Failed to update user status');
+          this.toast.showError(response.messages?.[0] || 'Failed to update user status');
         }
       },
       error: (err) => {

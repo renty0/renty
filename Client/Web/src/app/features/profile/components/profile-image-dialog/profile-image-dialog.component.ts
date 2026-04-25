@@ -2,6 +2,8 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 import { ImageUploaderComponent } from '../../../../shared/components/image-uploader/image-uploader.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,10 +17,11 @@ import { TranslateModule } from '@ngx-translate/core';
         ReactiveFormsModule,
         TranslateModule,
         MatDialogModule,
-        MatButtonModule
+        MatButtonModule,
+        MatIconModule
     ],
     templateUrl: './profile-image-dialog.component.html',
-    styleUrls: ['./profile-image-dialog.component.scss']
+    styleUrl: './profile-image-dialog.component.scss'
 })
 export class ProfileImageDialogComponent {
     @ViewChild(ImageUploaderComponent) uploader!: ImageUploaderComponent;

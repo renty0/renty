@@ -51,12 +51,12 @@ export class TicketListComponent {
 
   getStatusColor(status: string | undefined): string {
     switch (status?.toLowerCase()) {
-      case 'open': return 'primary';
-      case 'awaitingsupport': return 'warn';
-      case 'awaitingcustomer': return 'accent';
-      case 'resolved': return 'success';
-      case 'closed': return 'secondary';
-      default: return '';
+      case 'open': return 'bg-blue-50 text-blue-700 border-1 border-blue-100';
+      case 'awaitingsupport': return 'bg-yellow-50 text-yellow-700 border-1 border-yellow-100';
+      case 'awaitingcustomer': return 'bg-indigo-50 text-indigo-700 border-1 border-indigo-100';
+      case 'resolved': return 'bg-green-50 text-green-700 border-1 border-green-100';
+      case 'closed': return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
+      default: return 'bg-gray-50 text-gray-400 border-1 border-gray-100';
     }
   }
 }

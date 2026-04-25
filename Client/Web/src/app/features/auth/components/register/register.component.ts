@@ -148,7 +148,7 @@ export class RegisterComponent implements OnInit {
           this.toast.showError(response.messages?.[0] || this.translate.instant('register.failed'));
         }
       },
-      error: (error: any) => {
+      error: (error: { error?: { messages?: string[] }; message?: string }) => {
         const msg = error?.error?.messages?.[0] ?? error?.message ?? this.translate.instant('login.serverError');
         this.toast.showError(msg);
       }

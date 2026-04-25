@@ -1,7 +1,11 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface WalletTransaction {
   id: string;
@@ -14,9 +18,9 @@ export interface WalletTransaction {
 @Component({
   selector: 'app-wallet-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, CurrencyPipe],
+  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './wallet-dashboard.component.html',
-  styleUrls: ['./wallet-dashboard.component.scss']
+  styleUrl: './wallet-dashboard.component.scss'
 })
 export class WalletDashboardComponent implements OnInit {
   private http = inject(HttpClient);

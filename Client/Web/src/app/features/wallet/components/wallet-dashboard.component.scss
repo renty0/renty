@@ -21,8 +21,7 @@
   padding: 0;
 
   .transaction-item {
-    display: flex;
-    justify-content: space-between;
+    // Display flex now handled by PrimeFlex in HTML
     align-items: center;
     padding: 1.5rem;
     border-bottom: 1px solid #eee;

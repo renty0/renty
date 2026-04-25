@@ -127,11 +127,11 @@ export class ItemDetailPageComponent implements OnInit {
     loadItem(id: string): void {
         this.isLoading.set(true);
         this.itemsClient.getItemById(id).pipe(
-            tap((res: any) => {
-                const data = res?.data?.item ?? res?.data;
+            tap((res) => {
+                const data = res?.data;
                 if (!res?.error && data) {
                     this.item.set(data);
-                    const primaryIdx = data.images?.findIndex((img: any) => img.isPrimary) ?? 0;
+                    const primaryIdx = data.images?.findIndex((img) => img.isPrimary) ?? 0;
                     this.activeImageIndex.set(primaryIdx >= 0 ? primaryIdx : 0);
                     this.loadSimilarItems(data.category?.id, id);
                 } else {
@@ -146,7 +146,7 @@ export class ItemDetailPageComponent implements OnInit {
     loadReviews(itemId: string): void {
         this.isLoadingReviews.set(true);
         this.reviewsClient.getItemReviews(itemId).pipe(
-            tap((res: any) => {
+            tap((res) => {
                 const data = res?.data;
                 if (!res?.error && data) this.reviewsData.set(data);
             }),
@@ -159,9 +159,9 @@ export class ItemDetailPageComponent implements OnInit {
         if (!categoryId) return;
         this.isLoadingSimilar.set(true);
         this.itemsClient.getItems(1, 8, categoryId).pipe(
-            tap((res: any) => {
+            tap((res) => {
                 const items: ItemListDto[] = res?.data ?? [];
-                this.similarItems.set(items.filter((it: any) => it.id !== excludeId).slice(0, 6));
+                this.similarItems.set(items.filter((it) => it.id !== excludeId).slice(0, 6));
             }),
             catchError(() => of(null)),
             finalize(() => { this.isLoadingSimilar.set(false); this.cdr.markForCheck(); })
@@ -193,8 +193,8 @@ export class ItemDetailPageComponent implements OnInit {
         this.isChatting.set(true);
         const cmd = new CreateChatCommand({ userId: ownerId });
         this.chatClient.createChat(cmd).pipe(
-            tap((res: any) => {
-                const chatId = res?.data?.chatId ?? res?.data?.id;
+            tap((res) => {
+                const chatId = (res?.data as any)?.chatId || (res?.data as any)?.id;
                 if (chatId) this.router.navigate(['/chat'], { queryParams: { id: chatId } });
                 else this.router.navigate(['/chat']);
             }),
@@ -219,7 +219,7 @@ export class ItemDetailPageComponent implements OnInit {
         });
 
         this.reviewsClient.createReview(itemId, cmd).pipe(
-            tap((res: any) => {
+            tap((res) => {
                 if (!res?.error) {
                     this.showToast('items.reviewSubmitted');
                     this.reviewForm.reset();

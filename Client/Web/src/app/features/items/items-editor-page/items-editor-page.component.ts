@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InputComponent } from '../../../shared/components/input/input';
 import { MultiImageUploaderComponent, UploadedImage } from '../../../shared/components/multi-image-uploader/multi-image-uploader.component';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
@@ -19,7 +20,7 @@ import { LocalizationService } from '../../../core/services/localization.service
 @Component({
   selector: 'app-items-editor-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
   templateUrl: './items-editor-page.component.html',
   styleUrl: './items-editor-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

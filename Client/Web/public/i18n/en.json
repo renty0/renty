@@ -524,6 +524,13 @@
   },
   "profile": {
     "title": "My Profile",
+    "personalInfo": "Personal Info",
+    "bio": "Bio",
+    "locationInfo": "Location Info",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    
     "imageAlt": "Profile Picture",
     "updatePhoto": "Update Photo",
     "uploadNewPhoto": "Upload New Photo",

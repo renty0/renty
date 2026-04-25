@@ -12,6 +12,7 @@ import { LoadingButtonComponent } from '../loading-button/loading-button.compone
 import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
 import { ResponsiveService } from '../../../core/services/responsive.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,6 +32,8 @@ export class NavbarComponent implements OnInit {
   userData = computed(() => this.authService.getUserData());
   isMobile = this.responsiveService.isMobile;
   isExpert = computed(() => this.authService.isExpert());
+  themeService = inject(ThemeService);
+  isDarkMode = this.themeService.isDarkMode;
 
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
@@ -121,6 +124,10 @@ export class NavbarComponent implements OnInit {
 
   get isArabic(): boolean {
     return this.localizationService.language() === 'ar';
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   logout() {

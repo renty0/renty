@@ -3,23 +3,27 @@
     <h2>Phone Verification</h2>
     <p>Verify your phone number to start renting items.</p>
 
-    <div *ngIf="errorMsg()" class="alert alert-error">{{ errorMsg() }}</div>
-    <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
+    @if (errorMsg()) { <div class="alert alert-error">{{ errorMsg() }}</div> }
+    @if (successMsg()) { <div class="alert alert-success">{{ successMsg() }}</div> }
 
-    <div *ngIf="step() === 1" class="form-group">
-      <label>Phone Number</label>
-      <input type="tel" [(ngModel)]="phone" placeholder="+201012345678" [disabled]="isLoading()" />
-      <button class="btn btn-primary mt-3" (click)="requestVerification()" [disabled]="isLoading() || !phone()">
-        {{ isLoading() ? 'Sending...' : 'Send OTP' }}
-      </button>
-    </div>
+    @if (step() === 1) {
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" [ngModel]="phone()" (ngModelChange)="phone.set($event)" placeholder="+201012345678" [disabled]="isLoading()" />
+        <button class="btn btn-primary mt-3" (click)="requestVerification()" [disabled]="isLoading() || !phone()">
+          {{ isLoading() ? 'Sending...' : 'Send OTP' }}
+        </button>
+      </div>
+    }
 
-    <div *ngIf="step() === 2" class="form-group">
-      <label>Enter 4-digit OTP</label>
-      <input type="text" [(ngModel)]="otp" placeholder="1234" maxlength="4" [disabled]="isLoading()" />
-      <button class="btn btn-primary mt-3" (click)="verifyOtp()" [disabled]="isLoading() || otp().length !== 4">
-        {{ isLoading() ? 'Verifying...' : 'Verify' }}
-      </button>
-    </div>
+    @if (step() === 2) {
+      <div class="form-group">
+        <label>Enter 4-digit OTP</label>
+        <input type="text" [ngModel]="otp()" (ngModelChange)="otp.set($event)" placeholder="1234" maxlength="4" [disabled]="isLoading()" />
+        <button class="btn btn-primary mt-3" (click)="verifyOtp()" [disabled]="isLoading() || otp().length !== 4">
+          {{ isLoading() ? 'Verifying...' : 'Verify' }}
+        </button>
+      </div>
+    }
   </div>
 </div>

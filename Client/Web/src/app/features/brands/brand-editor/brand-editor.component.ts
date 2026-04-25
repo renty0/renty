@@ -151,7 +151,7 @@ export class BrandEditorComponent implements OnInit {
           nameEn: this.form.value.nameEn,
           descAr: this.form.value.descAr,
           descEn: this.form.value.descEn,
-          logoId: logoId as any,
+          logoId: logoId || undefined,
         });
 
         this.apiClient

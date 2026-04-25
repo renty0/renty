@@ -13,8 +13,8 @@
             <span class="current">{{ getLocalizedName(item()) }}</span>
         </div>
 
-        <div class="product-main-grid">
-            <div class="product-gallery">
+        <div class="grid product-main-grid">
+            <div class="col-12 lg:col-7 product-gallery">
                 <div class="main-image-wrapper">
                     <img [src]="selectedImage() || 'assets/placeholder-product.png'"
                          [alt]="getLocalizedName(item())"
@@ -28,60 +28,60 @@
                     }
                 </div>
 
-                <div class="thumbnail-list">
+                <div class="thumbnail-list flex gap-2 mt-3 overflow-x-auto">
                     @for (img of item()?.images; track img.imageUrl) {
-                    <div class="thumbnail-item" [class.active]="selectedImage() === img.imageUrl"
+                    <div class="thumbnail-item flex-shrink-0" [class.active]="selectedImage() === img.imageUrl"
                         (click)="selectedImage.set(img.imageUrl)">
-                        <img [src]="img.imageUrl" [alt]="'Thumbnail'">
+                        <img [src]="img.imageUrl" [alt]="'Thumbnail'" class="w-full h-full border-round">
                     </div>
                     }
                 </div>
             </div>
 
-            <div class="product-info">
-                <div class="category-brand">
+            <div class="col-12 lg:col-5 product-info">
+                <div class="category-brand mb-3">
                     <span class="tag">{{ getLocalizedRefName(item()?.category) }}</span>
                     @if (item()?.brand) {
-                    <span class="brand-link">{{ getLocalizedRefName(item()?.brand) }}</span>
+                    <span class="brand-link ml-2">{{ getLocalizedRefName(item()?.brand) }}</span>
                     }
                 </div>
 
-                <h1 class="product-title">{{ getLocalizedName(item()) }}</h1>
+                <h1 class="product-title mb-4">{{ getLocalizedName(item()) }}</h1>
 
-                <div class="price-display">
+                <div class="price-display mb-4">
                     <span class="amount">{{ displayPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
                     <span class="per-day">/ {{ 'marketplace.day' | translate }}</span>
                 </div>
 
-                <div class="short-desc">
+                <div class="short-desc mb-4">
                     {{ getLocalizedDesc(item()) }}
                 </div>
 
-                <div class="availability-status" [class.available]="item()?.status === 'Available'">
+                <div class="availability-status mb-4 flex align-items-center gap-2" [class.available]="item()?.status === 'Available'">
                     <mat-icon>{{ item()?.status === 'Available' ? 'check_circle' : 'error' }}</mat-icon>
                     <span>{{ item()?.status === 'Available' ? ('marketplace.available' | translate) : ('marketplace.unavailable' | translate) }}</span>
                 </div>
 
-                <div class="action-buttons">
-                    <button mat-flat-button color="primary" class="rent-btn" [disabled]="item()?.status !== 'Available'" (click)="openRentModal()">
+                <div class="action-buttons flex flex-column gap-3 mt-4">
+                    <button mat-flat-button color="primary" class="rent-btn py-3" [disabled]="item()?.status !== 'Available'" (click)="openRentModal()">
                         <mat-icon>calendar_today</mat-icon>
                         {{ 'marketplace.rentNow' | translate }}
                     </button>
-                    <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button" [disabled]="item()?.status !== 'Available'">
+                    <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3" [disabled]="item()?.status !== 'Available'">
                         <mat-icon>shopping_cart</mat-icon>
                         {{ 'marketplace.buyNow' | translate }}
                     </button>
 
                     @if (canEdit() || canDelete()) {
-                    <div class="admin-actions">
+                    <div class="admin-actions flex gap-2 mt-2">
                         @if (canEdit()) {
-                        <button mat-stroked-button color="primary" (click)="editItem()">
+                        <button mat-stroked-button color="primary" class="flex-1" (click)="editItem()">
                             <mat-icon>edit</mat-icon>
                             {{ 'marketplace.editItem' | translate }}
                         </button>
                         }
                         @if (canDelete()) {
-                        <button mat-stroked-button color="warn" (click)="deleteItem()">
+                        <button mat-stroked-button color="warn" class="flex-1" (click)="deleteItem()">
                             <mat-icon>delete</mat-icon>
                             {{ 'marketplace.deleteItem' | translate }}
                         </button>
@@ -92,27 +92,27 @@
             </div>
         </div>
 
-        <div class="product-extra-info">
+        <div class="product-extra-info mt-5">
             <mat-tab-group animationDuration="300ms">
                 <mat-tab [label]="'labels.description' | translate">
-                    <div class="tab-content description-tab">
+                    <div class="tab-content description-tab p-4">
                         <p>{{ getLocalizedDesc(item()) }}</p>
                     </div>
                 </mat-tab>
                 <mat-tab [label]="('marketplace.reviews' | translate) + ' (' + reviews().length + ')'">
-                    <div class="tab-content reviews-tab">
+                    <div class="tab-content reviews-tab p-4">
                         @if (reviews().length > 0) {
                             <div class="reviews-list">
                                 @for (review of reviews(); track review.id) {
-                                <div class="review-card">
-                                    <div class="review-header">
+                                <div class="review-card mb-3 p-3 border-round surface-100">
+                                    <div class="review-header flex justify-content-between mb-2">
                                         <div class="user-info">
-                                            <span class="user-name">{{ review.reviewer?.firstName || ('marketplace.anonymous' | translate) }}</span>
-                                            <span class="review-date">{{ review.createdAt | date:'shortDate' }}</span>
+                                            <span class="user-name font-bold">{{ review.reviewer?.firstName || ('marketplace.anonymous' | translate) }}</span>
+                                            <span class="review-date ml-2 text-sm text-500">{{ review.createdAt | date:'shortDate' }}</span>
                                         </div>
                                         <div class="rating-stars">
                                             @for (star of [1,2,3,4,5]; track star) {
-                                            <mat-icon [class.filled]="star <= (review.rating || 0)">star</mat-icon>
+                                            <mat-icon [class.filled]="star <= (review.rating || 0)" class="text-yellow-500">star</mat-icon>
                                             }
                                         </div>
                                     </div>
@@ -121,9 +121,9 @@
                                 }
                             </div>
                         } @else {
-                            <div class="no-reviews">
-                                <mat-icon>rate_review</mat-icon>
-                                <p>{{ 'marketplace.noReviewsYet' | translate }}</p>
+                            <div class="no-reviews flex flex-column align-items-center py-5">
+                                <mat-icon class="text-400 text-5xl mb-3">rate_review</mat-icon>
+                                <p class="text-600">{{ 'marketplace.noReviewsYet' | translate }}</p>
                             </div>
                         }
                     </div>
@@ -132,18 +132,19 @@
         </div>
 
         @if (relatedItems().length > 0) {
-        <div class="related-items-section">
-            <h2 class="section-title">{{ 'marketplace.relatedProducts' | translate }}</h2>
-            <div class="related-grid">
+        <div class="related-items-section mt-5">
+            <h2 class="section-title mb-4 font-bold">{{ 'marketplace.relatedProducts' | translate }}</h2>
+            <div class="grid related-grid">
                 @for (rItem of relatedItems(); track rItem.id) {
-                <div class="related-card" [routerLink]="['/marketplace/product', rItem.id]">
-
-                    <div class="card-img">
-                        <img [src]="rItem.primaryImage || 'assets/placeholder-product.png'" [alt]="getLocalizedName(rItem)">
-                    </div>
-                    <div class="card-info">
-                        <h3>{{ getLocalizedName(rItem) }}</h3>
-                        <p class="price">{{ rItem.dailyPrice | currency:'EGP ' }}</p>
+                <div class="col-12 sm:col-6 md:col-4 lg:col-3">
+                    <div class="related-card border-round overflow-hidden shadow-1 hover:shadow-2 transition-all" [routerLink]="['/marketplace/product', rItem.id]">
+                        <div class="card-img aspect-ratio-1">
+                            <img [src]="rItem.primaryImage || 'assets/placeholder-product.png'" [alt]="getLocalizedName(rItem)" class="w-full h-full object-cover">
+                        </div>
+                        <div class="card-info p-3">
+                            <h3 class="text-base font-semibold mb-1">{{ getLocalizedName(rItem) }}</h3>
+                            <p class="price text-primary font-bold">{{ rItem.dailyPrice | currency:'EGP ' }}</p>
+                        </div>
                     </div>
                 </div>
                 }
