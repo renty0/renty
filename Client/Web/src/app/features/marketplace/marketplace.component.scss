@@ -20,8 +20,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80')
-      center/cover;
+    background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80') center/cover;
     opacity: 0.2;
     z-index: 0;
   }
@@ -103,6 +102,7 @@
       font-size: 1.1rem;
       padding: 12px 0;
       outline: none;
+      background-color: transparent;
 
       &::placeholder {
         color: #dbe4ef;
@@ -322,6 +322,7 @@
         font-weight: 800;
         color: #1e293b;
       }
+
       .count {
         color: #64748b;
         font-weight: 500;
@@ -330,11 +331,13 @@
 
     .sort-select {
       width: 200px;
+
       ::ng-deep .mat-mdc-text-field-wrapper {
         background: #f8fafc !important;
         border: 1px solid #dbe3ee !important;
         border-radius: 12px !important;
       }
+
       ::ng-deep .mdc-notched-outline {
         display: none !important;
       }
@@ -436,6 +439,7 @@
       .wishlist-btn {
         background: rgba(255, 255, 255, 0.9);
         color: #64748b;
+
         &:hover {
           color: #ef4444;
           background: white;

@@ -52,6 +52,8 @@
     "title": "السوق",
     "heroTitle": "السوق",
     "allCategories": "كل الفئات",
+    "owner": "المالك",
+    "renter": "المستأجر",
     "allSubcategories": "كل الفئات الفرعية",
     "heroSubtitle": "اكتشف منتجات فريدة من مجتمعنا",
     "products": "المنتجات",
@@ -526,7 +528,7 @@
     "uploadFailedWithName": "فشل رفع الملف {{fileName}}"
   },
   "profile": {
-    "title": "ملفي الشخصي",
+    "title": "الملف الشخصي",
     "personalInfo": "المعلومات الشخصية",
     "bio": "السيرة الذاتية",
     "locationInfo": "معلومات الموقع",
@@ -537,7 +539,14 @@
     "updatePhoto": "تحديث الصورة",
     "uploadNewPhoto": "رفع صورة جديدة",
     "save": "حفظ التغييرات",
-    "uploading": "جاري الرفع..."
+    "uploading": "جاري الرفع...",
+    "rating": "التقييم",
+    "reviews": "التقييمات",
+    "listings": "المنتجات",
+    "sendMessage": "إرسال رسالة",
+    "about": "حول",
+    "joined": "انضم في",
+    "noListings": "لم يتم العثور على منتجات نشطة."
   },
   "items": {
     "daily": "يومي",
@@ -790,7 +799,9 @@
   "chat": {
     "title": "الرسائل",
     "noChats": "لا توجد محادثات بعد.",
-    "placeholder": "اكتب رسالة...",
+    "typePlaceholder": "اكتب رسالة...",
+    "noMessages": "ابدأ محادثة الآن!",
+    "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",
     "offline": "غير متصل"

@@ -89,6 +89,32 @@
                     </div>
                     }
                 </div>
+
+                <mat-divider class="my-4"></mat-divider>
+
+                <div class="owner-section glass-card p-3 border-round">
+                    <h4 class="mb-3 font-semibold">{{ 'marketplace.owner' | translate }}</h4>
+                    <div class="flex align-items-center gap-3">
+                        <img [src]="item()?.owner?.profileImageUrl || 'assets/default-avatar.png'" 
+                             class="owner-avatar border-circle" 
+                             alt="Owner"
+                             [routerLink]="['/user-profile', item()?.owner?.id]">
+                        <div class="owner-info flex-1">
+                            <h5 class="m-0 font-bold clickable" [routerLink]="['/user-profile', item()?.owner?.id]">
+                                {{ item()?.owner?.firstName }} {{ item()?.owner?.lastName }}
+                            </h5>
+                            <div class="rating flex align-items-center gap-1 text-sm text-600">
+                                <mat-icon class="text-yellow-500 scale-75">star</mat-icon>
+                                <span>{{ item()?.owner?.rating || 0 | number:'1.1-1' }} ({{ item()?.owner?.totalRatings || 0 }} {{ 'labels.reviews' | translate }})</span>
+                            </div>
+                        </div>
+                        @if (!isOwner()) {
+                            <button mat-icon-button color="primary" (click)="startChat()" [title]="'profile.sendMessage' | translate">
+                                <mat-icon>chat</mat-icon>
+                            </button>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
 

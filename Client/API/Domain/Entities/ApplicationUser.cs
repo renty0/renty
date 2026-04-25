@@ -29,5 +29,6 @@ public class ApplicationUser : IdentityUser<long>
     // Navigation properties
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     public virtual ICollection<RentableItem> OwnedItems { get; set; } = new List<RentableItem>();
+    public virtual ICollection<Item> Items { get; set; } = new List<Item>();
     public virtual ICollection<RentRequest> RentRequestsAsRenter { get; set; } = new List<RentRequest>();
 }

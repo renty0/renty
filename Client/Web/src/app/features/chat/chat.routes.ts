@@ -5,11 +5,8 @@ export const CHAT_ROUTES: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
+    loadComponent: () => import('./chat-layout/chat-layout').then(m => m.ChatLayoutComponent),
     children: [
-      {
-        path: '',
-        loadComponent: () => import('./chat-list/chat-list').then(m => m.ChatListComponent)
-      },
       {
         path: ':id',
         loadComponent: () => import('./chat-room/chat-room').then(m => m.ChatRoomComponent)

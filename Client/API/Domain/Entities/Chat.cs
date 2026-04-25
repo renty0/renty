@@ -20,7 +20,10 @@ public class ChatMessage
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid ChatId { get; set; }
     public long SenderId { get; set; }
-    public string Message { get; set; } = string.Empty;
+    public string? Message { get; set; }
+    public string? MediaUrl { get; set; }
+    public Domain.Enums.MessageType MessageType { get; set; } = Domain.Enums.MessageType.Text;
+    public Guid? ContextItemId { get; set; } // Optional item context
     public bool IsRead { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

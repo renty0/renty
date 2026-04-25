@@ -21,6 +21,8 @@ import { LocalizationService } from '../../../core/services/localization.service
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 import { ToastService } from '../../../shared/services/toast.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-item-detail-page',
@@ -55,6 +57,7 @@ export class ItemDetailPageComponent implements OnInit {
     private readonly translate = inject(TranslateService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly http = inject(HttpClient);
 
     // ── State signals ──────────────────────────────────────────────
     item = signal<ItemDetailDto | null>(null);
@@ -191,12 +194,11 @@ export class ItemDetailPageComponent implements OnInit {
         const ownerId = this.item()?.owner?.id;
         if (!ownerId) return;
         this.isChatting.set(true);
-        const cmd = new CreateChatCommand({ userId: ownerId });
-        this.chatClient.createChat(cmd).pipe(
-            tap((res) => {
-                const chatId = (res?.data as any)?.chatId || (res?.data as any)?.id;
-                if (chatId) this.router.navigate(['/chat'], { queryParams: { id: chatId } });
-                else this.router.navigate(['/chat']);
+        this.http.post<any>(`${environment.apiUrl}/api/v1/chats`, { userId: ownerId }).pipe(
+            tap((res: any) => {
+                const chatId = res?.data?.chatId || res?.data?.id || res?.chatId;
+                if (chatId) this.router.navigate(['/chats', chatId]);
+                else this.router.navigate(['/chats']);
             }),
             catchError(() => { this.showToast('common.errorOccurred'); return of(null); }),
             finalize(() => { this.isChatting.set(false); this.cdr.markForCheck(); })

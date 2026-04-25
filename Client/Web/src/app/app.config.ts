@@ -31,7 +31,8 @@ import {
   AdminClient,
   PaymentsClient,
   DeliveryClient,
-  Gap_AnalysisClient
+  Gap_AnalysisClient,
+  Public_ProfileClient,
 } from './core/api/api-client';
 import { environment } from '../environments/environment';
 
@@ -64,6 +65,7 @@ export const appConfig: ApplicationConfig = {
     AdminClient,
     PaymentsClient,
     DeliveryClient,
-    Gap_AnalysisClient
+    Gap_AnalysisClient,
+    Public_ProfileClient
   ],
 };

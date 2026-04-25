@@ -112,7 +112,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.SubcategoryId).HasColumnName("subcategory_id");
             entity.Property(e => e.BrandId).HasColumnName("brand_id");
-            entity.HasOne(e => e.Owner).WithMany().HasForeignKey(e => e.OwnerId);
+            entity.HasOne(e => e.Owner).WithMany(u => u.Items).HasForeignKey(e => e.OwnerId);
             entity.HasOne(e => e.Category).WithMany().HasForeignKey(e => e.CategoryId).IsRequired(false);
             entity.HasOne(e => e.Subcategory).WithMany().HasForeignKey(e => e.SubcategoryId).IsRequired(false);
             entity.HasOne(e => e.Brand).WithMany(b => b.Items).HasForeignKey(e => e.BrandId).IsRequired(false);
@@ -379,6 +379,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.SenderId).HasColumnName("sender_id");
             entity.Property(e => e.Message).HasColumnName("message");
             entity.Property(e => e.IsRead).HasColumnName("is_read");
+            entity.Property(e => e.ContextItemId).HasColumnName("context_item_id");
+            entity.Property(e => e.MediaUrl).HasColumnName("media_url");
+            entity.Property(e => e.MessageType).HasColumnName("message_type").HasConversion<int>();
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.HasOne(e => e.Chat).WithMany(c => c.Messages).HasForeignKey(e => e.ChatId);
             entity.HasOne(e => e.Sender).WithMany().HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Restrict);

@@ -8,7 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ItemsClient, ItemDetailDto, ItemListDto, FavoritesClient, ReviewsClient, ReviewDto } from '../../../core/api/api-client';
+import { ItemsClient, ItemDetailDto, ItemListDto, FavoritesClient, ReviewsClient, ReviewDto, ChatClient, CreateChatCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -18,6 +18,8 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -47,8 +49,10 @@ export class ProductDetailsComponent implements OnInit {
     private authService = inject(AuthService);
     public translate = inject(TranslateService);
     private router = inject(Router);
-    private dialog = inject(MatDialog);
-    private permissionService = inject(PermissionService);
+    private readonly dialog = inject(MatDialog);
+    private readonly permissionService = inject(PermissionService);
+    private readonly http = inject(HttpClient);
+    private chatClient = inject(ChatClient);
 
     item = signal<ItemDetailDto | null>(null);
     reviews = signal<ReviewDto[]>([]);
@@ -294,5 +298,28 @@ export class ProductDetailsComponent implements OnInit {
         if (!ref) return '';
         const isAr = this.translate.currentLang === 'ar';
         return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
+    }
+
+    startChat() {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        const ownerId = this.item()?.owner?.id;
+        if (!ownerId) return;
+
+        this.http.post<any>(`${environment.apiUrl}/api/v1/chats`, { userId: ownerId })
+            .subscribe({
+                next: (res: any) => {
+                    if (res?.data?.chatId || res?.chatId) {
+                        this.router.navigate(['/chats', res?.data?.chatId || res?.chatId]);
+                    }
+                },
+                error: (err: any) => {
+                    console.error('Failed to start chat', err);
+                    this.toast.showError('errors.generic');
+                }
+            });
     }
 }

@@ -264,7 +264,7 @@
 
         <mat-divider />
         @if (item()?.owner) {
-        <div class="owner-card">
+        <div class="owner-card" [routerLink]="['/user-profile', item()?.owner?.id]">
           <div class="owner-avatar">
             <img [src]="item()?.owner?.profileImageUrl || 'assets/images/default-avatar.png'"
               [alt]="item()?.owner?.firstName" />

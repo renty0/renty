@@ -4,16 +4,16 @@
         <div class="hero-overlay"></div>
         <div class="hero-content container">
             <h1 class="hero-title reveal active">{{ 'home.hero.title' | translate }}<span>.</span></h1>
-            <p class="hero-subtitle reveal active" style="transition-delay: 0.2s">{{ 'home.hero.subtitle' | translate }}
+            <p class="hero-subtitle reveal active">{{ 'home.hero.subtitle' | translate }}
             </p>
 
-            <div class="hero-search-bar reveal active" style="transition-delay: 0.4s">
+            <div class="hero-search-bar reveal active">
                 <mat-icon>search</mat-icon>
                 <input type="text" [placeholder]="'home.hero.searchPlaceholder' | translate">
                 <app-loading-button color="accent">{{ 'buttons.search' | translate }}</app-loading-button>
             </div>
 
-            <div class="hero-stats reveal active" style="transition-delay: 0.6s">
+            <div class="hero-stats reveal active">
                 @for (stat of stats(); track stat.labelKey) {
                 <div class="stat-item">
                     <span class="stat-value">{{ stat.value }}</span>
@@ -32,31 +32,31 @@
             </div>
             <div class="grid features-grid">
                 <div class="col-12 md:col-4 p-3">
-                  <div class="feature-card h-full">
-                    <div class="icon-box primary mb-4">
-                        <mat-icon>verified_user</mat-icon>
+                    <div class="feature-card h-full">
+                        <div class="icon-box primary mb-4">
+                            <mat-icon>verified_user</mat-icon>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{{ 'home.features.trustTitle' | translate }}</h3>
+                        <p class="text-600">{{ 'home.features.trustDesc' | translate }}</p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">{{ 'home.features.trustTitle' | translate }}</h3>
-                    <p class="text-600">{{ 'home.features.trustDesc' | translate }}</p>
-                  </div>
                 </div>
                 <div class="col-12 md:col-4 p-3">
-                  <div class="feature-card h-full">
-                    <div class="icon-box accent mb-4">
-                        <mat-icon>monetization_on</mat-icon>
+                    <div class="feature-card h-full">
+                        <div class="icon-box accent mb-4">
+                            <mat-icon>monetization_on</mat-icon>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{{ 'home.features.valueTitle' | translate }}</h3>
+                        <p class="text-600">{{ 'home.features.valueDesc' | translate }}</p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">{{ 'home.features.valueTitle' | translate }}</h3>
-                    <p class="text-600">{{ 'home.features.valueDesc' | translate }}</p>
-                  </div>
                 </div>
                 <div class="col-12 md:col-4 p-3">
-                  <div class="feature-card h-full">
-                    <div class="icon-box success mb-4">
-                        <mat-icon>speed</mat-icon>
+                    <div class="feature-card h-full">
+                        <div class="icon-box success mb-4">
+                            <mat-icon>speed</mat-icon>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{{ 'home.features.speedTitle' | translate }}</h3>
+                        <p class="text-600">{{ 'home.features.speedDesc' | translate }}</p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">{{ 'home.features.speedTitle' | translate }}</h3>
-                    <p class="text-600">{{ 'home.features.speedDesc' | translate }}</p>
-                  </div>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
             <div class="section-header flex-header reveal">
                 <div>
                     <span class="badge">{{ 'home.categories.title' | translate }}</span>
-                    <h2 style="color: white;">{{ 'home.categories.subtitle' | translate }}</h2>
+                    <h2>{{ 'home.categories.subtitle' | translate }}</h2>
                 </div>
                 <a routerLink="/marketplace" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
@@ -76,15 +76,16 @@
 
             <div class="grid categories-grid">
                 @for (cat of categories(); track cat.id; let i = $index) {
-                <div class="col-12 sm:col-6 md:col-4 lg:col-2 p-2">
-                  <div class="category-card reveal h-full border-round overflow-hidden" [style.background-image]="'url(' + cat.image + ')'"
-                      [style.transition-delay]="(i * 0.1) + 's'">
-                      <div class="cat-overlay"></div>
-                      <div class="cat-content flex flex-column align-items-center justify-content-center h-full p-4 relative z-1">
-                          <mat-icon class="text-3xl mb-2">{{ cat.icon }}</mat-icon>
-                          <h3 class="text-lg font-bold text-center m-0">{{ cat.nameKey | translate }}</h3>
-                      </div>
-                  </div>
+                <div class="col-12 sm:col-6 md:col-4 lg:col-2 h-full">
+                    <div class="category-card reveal h-full border-round overflow-hidden"
+                        [style.background-image]="'url(' + cat.image + ')'" [style.transition-delay]="(i * 0.1) + 's'">
+                        <div class="cat-overlay"></div>
+                        <div
+                            class="cat-content flex flex-column align-items-center justify-content-center h-full relative z-1">
+                            <mat-icon class="text-3xl mb-2">{{ cat.icon }}</mat-icon>
+                            <h3 class="text-lg font-bold text-center m-0">{{ cat.nameKey | translate }}</h3>
+                        </div>
+                    </div>
                 </div>
                 }
             </div>
@@ -97,20 +98,20 @@
                 <h2>{{ 'home.destinations.title' | translate }}</h2>
                 <p>{{ 'home.destinations.subtitle' | translate }}</p>
             </div>
-            <div class="grid destinations-grid">
+            <div class="grid">
                 @for (dest of topDestinations(); track dest.nameKey) {
-                <div class="col-12 md:col-4 p-3">
-                  <div class="destination-card reveal h-full border-round overflow-hidden shadow-1 hover:shadow-3 transition-all">
-                      <div class="dest-image h-15rem" [style.background-image]="'url(' + dest.image + ')'"
-                           style="background-size: cover; background-position: center;">
-                          <div class="dest-overlay flex align-items-end h-full p-4">
-                              <div class="dest-info text-white relative z-1">
-                                  <h3 class="text-xl font-bold mb-1">{{ dest.nameKey | translate }}</h3>
-                                  <p class="text-sm opacity-80 line-height-2">{{ dest.descKey | translate }}</p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                <div class="col-12 md:col-3">
+                    <div
+                        class="destination-card reveal border-rounded overflow-hidden shadow-1 hover:shadow-3 transition-all">
+                        <div class="dest-image" [style.background-image]="'url(' + dest.image + ')'">
+                            <div class="dest-overlay flex align-items-end h-full">
+                                <div class="dest-info text-white relative z-1">
+                                    <h3 class="text-xl font-bold pb-1">{{ dest.nameKey | translate }}</h3>
+                                    <p class="text-sm opacity-80 line-height-2">{{ dest.descKey | translate }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 }
             </div>
@@ -123,9 +124,12 @@
                 <h2 class="text-4xl font-bold mb-4">{{ 'home.calendar.title' | translate }}</h2>
                 <p class="text-xl text-600 mb-5">{{ 'home.calendar.desc' | translate }}</p>
                 <ul class="check-list flex flex-column gap-3 mb-5">
-                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{ 'home.calendar.check1' | translate }}</li>
-                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{ 'home.calendar.check2' | translate }}</li>
-                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{ 'home.calendar.check3' | translate }}</li>
+                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{
+                        'home.calendar.check1' | translate }}</li>
+                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{
+                        'home.calendar.check2' | translate }}</li>
+                    <li class="flex align-items-center gap-3"><mat-icon class="text-success">check_circle</mat-icon> {{
+                        'home.calendar.check3' | translate }}</li>
                 </ul>
                 <app-loading-button variant="stroked" color="primary">{{ 'buttons.learnMore' | translate
                     }}</app-loading-button>
@@ -135,10 +139,14 @@
                     <div class="calendar-header flex justify-content-between align-items-center mb-4">
                         <span class="font-bold text-xl">{{ calendarLabel() }}</span>
                         <div class="flex gap-2">
-                            <button type="button" class="cal-nav w-2rem h-2rem border-circle border-none bg-gray-100 flex align-items-center justify-content-center cursor-pointer hover:bg-gray-200 transition-all" (click)="prevMonth()" aria-label="Previous month">
+                            <button type="button"
+                                class="cal-nav w-2rem h-2rem border-circle border-none bg-gray-100 flex align-items-center justify-content-center cursor-pointer hover:bg-gray-200 transition-all"
+                                (click)="prevMonth()" aria-label="Previous month">
                                 <mat-icon class="text-base">chevron_left</mat-icon>
                             </button>
-                            <button type="button" class="cal-nav w-2rem h-2rem border-circle border-none bg-gray-100 flex align-items-center justify-content-center cursor-pointer hover:bg-gray-200 transition-all" (click)="nextMonth()" aria-label="Next month">
+                            <button type="button"
+                                class="cal-nav w-2rem h-2rem border-circle border-none bg-gray-100 flex align-items-center justify-content-center cursor-pointer hover:bg-gray-200 transition-all"
+                                (click)="nextMonth()" aria-label="Next month">
                                 <mat-icon class="text-base">chevron_right</mat-icon>
                             </button>
                         </div>
@@ -151,12 +159,13 @@
                     <div class="calendar-days grid">
                         @for (cell of calendarCells(); track cell.dayNumber) {
                         <div class="col p-1">
-                          <button type="button" class="day-cell w-full aspect-ratio-1 border-none bg-transparent flex align-items-center justify-content-center border-round cursor-pointer hover:bg-gray-100 transition-all" 
-                              [class.empty]="!cell.date" [class.today]="cell.isToday"
-                              [class.selected]="cell.isSelected" (click)="selectCalendarCell(cell)"
-                              [disabled]="!cell.date">
-                              {{ cell.dayNumber ?? '' }}
-                          </button>
+                            <button type="button"
+                                class="day-cell w-full aspect-ratio-1 border-none bg-transparent flex align-items-center justify-content-center border-round cursor-pointer hover:bg-gray-100 transition-all"
+                                [class.empty]="!cell.date" [class.today]="cell.isToday"
+                                [class.selected]="cell.isSelected" (click)="selectCalendarCell(cell)"
+                                [disabled]="!cell.date">
+                                {{ cell.dayNumber ?? '' }}
+                            </button>
                         </div>
                         }
                     </div>
@@ -167,10 +176,10 @@
     <section class="security-section bg-dark text-white py-8">
         <div class="grid container security-grid reveal align-items-center">
             <div class="col-12 md:col-4 huge-icon-wrapper flex justify-content-center">
-                <mat-icon class="huge-icon text-primary" style="font-size: 10rem; width: 10rem; height: 10rem;">gpp_good</mat-icon>
+                <mat-icon class="huge-icon text-primary">gpp_good</mat-icon>
             </div>
             <div class="col-12 md:col-8 security-content">
-                <span class="badge mb-4" style="background: rgba(255,255,255,0.1); color: white;">
+                <span class="badge mb-4">
                     {{ 'home.security.badgeLabel' | translate }}
                 </span>
                 <h2 class="text-4xl font-bold mb-4">{{ 'home.security.title' | translate }}</h2>
@@ -198,74 +207,84 @@
             <div class="grid process-steps py-5">
                 @for (step of steps(); track step.titleKey; let i = $index) {
                 <div class="col-12 md:col-4 p-3">
-                  <div class="process-item flex flex-column align-items-center text-center">
-                    <div class="process-icon-wrapper relative mb-4">
-                        <div class="step-num absolute -top-2 -right-2 bg-primary text-white w-2rem h-2rem border-circle flex align-items-center justify-content-center font-bold">{{ i + 1 }}</div>
-                        <mat-icon class="text-5xl" style="width: 3rem; height: 3rem;">{{ step.icon }}</mat-icon>
+                    <div class="process-item flex flex-column align-items-center text-center">
+                        <div class="process-icon-wrapper relative mb-4">
+                            <div
+                                class="step-num absolute -top-2 -right-2 bg-primary text-white w-2rem h-2rem border-circle flex align-items-center justify-content-center font-bold">
+                                {{ i + 1 }}</div>
+                            <mat-icon class="text-5xl">{{ step.icon }}</mat-icon>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{{ step.titleKey | translate }}</h3>
+                        <p class="text-600">{{ step.descKey | translate }}</p>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">{{ step.titleKey | translate }}</h3>
-                    <p class="text-600">{{ step.descKey | translate }}</p>
-                  </div>
                 </div>
                 }
             </div>
-</div>
-</section>
-<section class="app-promo-section">
-    <div class="container promo-inner reveal py-8">
-        <div class="grid align-items-center">
-          <div class="col-12 lg:col-6 promo-text">
-              <span class="badge mb-4" style="background: rgba(255,255,255,0.1); color: white;">
-                  {{ 'home.app.badge' | translate }}
-              </span>
-              <h2 class="text-4xl font-bold mb-4">{{ 'home.app.title' | translate }}</h2>
-              <p class="text-xl opacity-80 mb-5">{{ 'home.app.desc' | translate }}</p>
-              <div class="app-buttons flex gap-3">
-                  <button class="store-btn border-1 border-white-alpha-20 bg-white-alpha-10 text-white px-4 py-2 border-round hover:bg-white-alpha-20 transition-all">{{ 'home.app.appStore' | translate }}</button>
-                  <button class="store-btn border-1 border-white-alpha-20 bg-white-alpha-10 text-white px-4 py-2 border-round hover:bg-white-alpha-20 transition-all">{{ 'home.app.googlePlay' | translate }}</button>
-              </div>
-          </div>
-          <div class="col-12 lg:col-6 promo-mockup flex justify-content-center">
-              <img src="assets/images/app_mockup.png" alt="App Mockup" class="floating-mock w-full max-w-25rem">
-          </div>
         </div>
-    </div>
-</section>
-<footer class="footer-section">
-    <div class="container footer-grid grid py-6">
-        <div class="col-12 md:col-4 footer-brand mb-5">
-            <div class="footer-logo-text text-2xl font-black mb-3">RENTY</div>
-            <p class="text-500 line-height-3">{{ 'home.footer.about' | translate }}</p>
-        </div>
-        <div class="col-12 md:col-3 footer-links mb-5">
-            <h3 class="text-lg font-bold mb-4">{{ 'home.footer.quickLinks' | translate }}</h3>
-            <ul class="list-none p-0 flex flex-column gap-3">
-                <li><a routerLink="/" class="text-500 hover:text-primary transition-all text-none">{{ 'home.footer.home' | translate }}</a></li>
-                <li><a routerLink="/marketplace" class="text-500 hover:text-primary transition-all text-none">{{ 'home.footer.market' | translate }}</a></li>
-                <li><a routerLink="/register" class="text-500 hover:text-primary transition-all text-none">{{ 'home.footer.join' | translate }}</a></li>
-                <li><a routerLink="/support" class="text-500 hover:text-primary transition-all text-none">{{ 'nav.support' | translate }}</a></li>
-            </ul>
-        </div>
-        <div class="col-12 md:col-5 footer-cta">
-            <h3 class="text-lg font-bold mb-4">{{ 'home.footer.ctaTitle' | translate }}</h3>
-            <p class="text-500 mb-4">{{ 'home.footer.ctaDesc' | translate }}</p>
-            <div class="newsletter-form flex gap-2">
-                <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate" 
-                       class="flex-1 p-3 border-round border-1 border-200 outline-none focus:border-primary">
-                <app-loading-button variant="stroked" color="accent">{{ 'buttons.subscribe' | translate
-                    }}</app-loading-button>
+    </section>
+    <section class="app-promo-section">
+        <div class="container promo-inner reveal py-8">
+            <div class="grid align-items-center">
+                <div class="col-12 lg:col-6 promo-text">
+                    <span class="badge mb-4">
+                        {{ 'home.app.badge' | translate }}
+                    </span>
+                    <h2 class="text-4xl font-bold mb-4">{{ 'home.app.title' | translate }}</h2>
+                    <p class="text-xl opacity-80 mb-5">{{ 'home.app.desc' | translate }}</p>
+                    <div class="app-buttons flex gap-3">
+                        <button
+                            class="store-btn border-1 border-white-alpha-20 bg-white-alpha-10 text-white px-4 py-2 border-round hover:bg-white-alpha-20 transition-all">{{
+                            'home.app.appStore' | translate }}</button>
+                        <button
+                            class="store-btn border-1 border-white-alpha-20 bg-white-alpha-10 text-white px-4 py-2 border-round hover:bg-white-alpha-20 transition-all">{{
+                            'home.app.googlePlay' | translate }}</button>
+                    </div>
+                </div>
+                <div class="col-12 lg:col-6 promo-mockup flex justify-content-center">
+                    <img src="assets/images/app_mockup.png" alt="App Mockup" class="floating-mock w-full max-w-25rem">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="footer-bottom container">
-        <p>{{ 'home.footer.copyright' | translate }}</p>
-        <div class="flex gap-4">
-            <a (click)="showTerms.set(true)" class="nav-link" style="font-size: 0.8rem; opacity: 0.7; cursor: pointer;">
-                {{ 'home.footer.terms' | translate }}
-            </a>
+    </section>
+    <footer class="footer-section">
+        <div class="container footer-grid grid py-6">
+            <div class="col-12 md:col-4 footer-brand mb-5">
+                <div class="footer-logo-text text-2xl font-black mb-3">RENTY</div>
+                <p class="text-500 line-height-3">{{ 'home.footer.about' | translate }}</p>
+            </div>
+            <div class="col-12 md:col-3 footer-links mb-5">
+                <h3 class="text-lg font-bold mb-4">{{ 'home.footer.quickLinks' | translate }}</h3>
+                <ul class="list-none p-0 flex flex-column gap-3">
+                    <li><a routerLink="/" class="text-500 hover:text-primary transition-all text-none">{{
+                            'home.footer.home' | translate }}</a></li>
+                    <li><a routerLink="/marketplace" class="text-500 hover:text-primary transition-all text-none">{{
+                            'home.footer.market' | translate }}</a></li>
+                    <li><a routerLink="/register" class="text-500 hover:text-primary transition-all text-none">{{
+                            'home.footer.join' | translate }}</a></li>
+                    <li><a routerLink="/support" class="text-500 hover:text-primary transition-all text-none">{{
+                            'nav.support' | translate }}</a></li>
+                </ul>
+            </div>
+            <div class="col-12 md:col-5 footer-cta">
+                <h3 class="text-lg font-bold mb-4">{{ 'home.footer.ctaTitle' | translate }}</h3>
+                <p class="text-500 mb-4">{{ 'home.footer.ctaDesc' | translate }}</p>
+                <div class="newsletter-form flex gap-2">
+                    <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate"
+                        class="flex-1 p-3 border-round border-1 border-200 outline-none focus:border-primary">
+                    <app-loading-button variant="stroked" color="accent">{{ 'buttons.subscribe' | translate
+                        }}</app-loading-button>
+                </div>
+            </div>
         </div>
-    </div>
-</footer>
+        <div class="footer-bottom container">
+            <p>{{ 'home.footer.copyright' | translate }}</p>
+            <div class="flex gap-4">
+                <a (click)="showTerms.set(true)" class="nav-link">
+                    {{ 'home.footer.terms' | translate }}
+                </a>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <app-terms-and-conditions [visible]="showTerms()" (closeDialog)="showTerms.set(false)"></app-terms-and-conditions>

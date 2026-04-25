@@ -1,0 +1,84 @@
+<div class="profile-container">
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+  }
+
+  @if (profile(); as p) {
+    <div class="profile-header">
+      <div class="cover-photo"></div>
+      <div class="profile-info-card glass-card">
+        <div class="avatar-wrap">
+          <img [src]="p.profilePictureUrl || 'assets/default-avatar.png'" alt="Avatar">
+          @if (p.rating > 4.5) {
+            <div class="pro-badge">PRO</div>
+          }
+        </div>
+        
+        <div class="main-info">
+          <h1>{{ p.firstName }} {{ p.lastName }}</h1>
+          <p class="location"><mat-icon>location_on</mat-icon> {{ p.city }}, {{ p.country }}</p>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="val">{{ p.rating | number:'1.1-1' }}</span>
+              <span class="lbl">{{ 'profile.rating' | translate }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="val">{{ p.totalRatings }}</span>
+              <span class="lbl">{{ 'profile.reviews' | translate }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="val">{{ p.items?.length || 0 }}</span>
+              <span class="lbl">{{ 'profile.listings' | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" [routerLink]="['/chats', p.id]">
+            <mat-icon>chat</mat-icon> {{ 'profile.sendMessage' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-content">
+      <mat-tab-group class="custom-tabs">
+        <mat-tab [label]="'profile.listings' | translate">
+          <div class="listings-grid mt-4">
+            @for (item of p.items; track item.id) {
+              <a [routerLink]="['/marketplace', item.id]" class="product-card glass-card">
+                <div class="card-img">
+                  <img [src]="item.primaryImage || 'assets/placeholder.png'" alt="">
+                </div>
+                <div class="card-body">
+                  <h3>{{ getLocalizedTitle(item) }}</h3>
+                  <div class="price-row">
+                    <span class="price">{{ item.dailyPrice | currency }}</span>
+                    <span class="period">/ day</span>
+                  </div>
+                </div>
+              </a>
+            } @empty {
+              <div class="empty-state">
+                <mat-icon>inventory_2</mat-icon>
+                <p>{{ 'profile.noListings' | translate }}</p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+        
+        <mat-tab [label]="'profile.about' | translate">
+          <div class="about-section glass-card mt-4">
+            <h3>{{ 'profile.bio' | translate }}</h3>
+            <p>{{ p.bio || 'No bio provided.' }}</p>
+            <div class="meta-info">
+              <p><strong>{{ 'profile.joined' | translate }}:</strong> {{ p.joinedAt | date:'mediumDate' }}</p>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  }
+</div>

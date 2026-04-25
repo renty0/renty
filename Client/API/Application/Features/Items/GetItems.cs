@@ -34,7 +34,7 @@ public record ItemPricingDto(string PricingType, decimal Price);
 
 public record ItemImageDto(Guid Id, string ImageUrl, bool IsPrimary);
 
-public record OwnerDto(long Id, string FirstName, string? City, string? ProfileImageUrl);
+public record OwnerDto(long Id, string FirstName, string LastName, string? City, string? ProfileImageUrl, double Rating, int TotalRatings);
 
 public record ItemDetailDto(
     Guid Id,

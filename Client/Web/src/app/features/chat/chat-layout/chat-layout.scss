@@ -1,0 +1,77 @@
+.messenger-container {
+  display: flex;
+  height: calc(100vh - 64px);
+  background: #f0f2f5;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 360px;
+  background: white;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    width: 80px;
+    h2, .last-msg, span[matListItemTitle] { display: none; }
+  }
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  h2 { margin: 0; font-size: 24px; font-weight: 800; }
+}
+
+.chat-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.active {
+  background: rgba(var(--primary-rgb), 0.08) !important;
+  border-left: 4px solid var(--primary-color);
+}
+
+.last-msg {
+  font-size: 13px;
+  color: #65676b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread-badge {
+  background: #f02849;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.content-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.no-chat-selected {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f0f2f5;
+  color: #8e8e8e;
+  z-index: 1;
+
+  mat-icon { font-size: 80px; width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.2; }
+}
+
+::v-deep .mat-mdc-list-item-avatar {
+  border-radius: 50% !important;
+}

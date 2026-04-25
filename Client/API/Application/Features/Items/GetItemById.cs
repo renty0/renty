@@ -72,10 +72,13 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             new OwnerDto(
                 item.OwnerId,
                 item.Owner.FirstName, 
+                item.Owner.LastName,
                 item.Owner.City, 
                 !string.IsNullOrEmpty(item.Owner.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 
                     ? $"{baseUrl.TrimEnd('/')}/{item.Owner.ProfilePictureUrl.TrimStart('/')}" 
-                    : item.Owner.ProfilePictureUrl),
+                    : item.Owner.ProfilePictureUrl,
+                item.Owner.Rating,
+                item.Owner.TotalRatings),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
             item.Images.Select(img => new ItemImageDto(
                 img.ImageId, 

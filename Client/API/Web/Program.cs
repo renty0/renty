@@ -94,6 +94,7 @@ app.MapMediaEndpoints();             // /api/v1/media
 app.MapCategoryEndpoints();          // /api/v1/categories
 app.MapSubcategoryEndpoints();       // /api/v1/subcategories, /api/v1/categories/:id/subcategories
 app.MapBrandEndpoints();             // /api/v1/brands
+app.MapPublicProfileEndpoints();      // /api/v1/public-profile
 
 
 

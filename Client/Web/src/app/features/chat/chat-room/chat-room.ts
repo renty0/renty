@@ -1,16 +1,14 @@
-import { Component, inject, OnInit, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, ElementRef, AfterViewChecked, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ChatClient, ChatMessageDto, ApiResponse, GetChatMessagesResponse, PostChatMessageCommand, ChatMessageData } from '../../../core/api/api-client';
+import { ChatClient, PostChatMessageCommand } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
+import { ChatSignalrService } from '../../../core/services/chat-signalr.service';
 import { finalize, tap } from 'rxjs';
 
 @Component({
@@ -21,11 +19,8 @@ import { finalize, tap } from 'rxjs';
     RouterModule,
     TranslateModule,
     FormsModule,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './chat-room.html',
@@ -37,21 +32,37 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private route = inject(ActivatedRoute);
   private chatClient = inject(ChatClient);
   private auth = inject(AuthService);
+  private chatSignalr = inject(ChatSignalrService);
   
   chatId = signal('');
-  messages = signal<ChatMessageDto[]>([]);
+  messages = signal<any[]>([]);
   newMessage = signal('');
   isLoading = signal(true);
   isSending = signal(false);
   currentUserId = signal<number | null>(null);
 
-  ngOnInit() {
-    this.chatId.set(this.route.snapshot.paramMap.get('id') || '');
-    this.currentUserId.set(this.auth.getCurrentUserId());
+  constructor() {
+    effect(() => {
+      const msg = this.chatSignalr.newMessage();
+      if (msg && msg.chatId === this.chatId()) {
+        if (!this.messages().find(m => m.id === msg.id)) {
+           this.messages.update(msgs => [...msgs, msg]);
+           setTimeout(() => this.scrollToBottom(), 100);
+        }
+      }
+    });
+  }
 
-    if (this.chatId()) {
-      this.loadMessages();
-    }
+  ngOnInit() {
+    this.currentUserId.set(this.auth.getCurrentUserId());
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.chatId.set(id);
+        this.loadMessages();
+        this.chatSignalr.joinChat(id);
+      }
+    });
   }
 
   ngAfterViewChecked() {
@@ -60,11 +71,11 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   loadMessages() {
     this.isLoading.set(true);
-    this.chatClient.getChatMessages(this.chatId())
+    (this.chatClient.getChatMessages(this.chatId()) as any)
       .pipe(
-        tap((res: ApiResponse<GetChatMessagesResponse>) => {
-          if (res.data?.messages) {
-            this.messages.set(res.data.messages);
+        tap((res: any) => {
+          if (res) {
+            this.messages.set(res);
           }
         }),
         finalize(() => {
@@ -78,23 +89,22 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     if (!this.newMessage().trim() || this.isSending()) return;
 
     this.isSending.set(true);
-    const command = new PostChatMessageCommand({
-      chatId: this.chatId(),
-      message: this.newMessage()
-    });
-
-    this.chatClient.postChatMessage(this.chatId(), command)
+    this.chatClient.postChatMessage(this.chatId(), new PostChatMessageCommand({ chatId: this.chatId(), message: this.newMessage() }))
       .pipe(
-        tap((res: ApiResponse<ChatMessageData>) => {
-          if (!res.error && res.data) {
-            const newMsg = new ChatMessageDto({
-              id: res.data.messageId,
-              message: res.data.message,
-              createdAt: res.data.createdAt,
-              senderId: this.currentUserId() || 0, // Fallback if local ID unknown
-              isRead: false
-            });
-            this.messages.update(msgs => [...msgs, newMsg]);
+        tap((res: any) => {
+          if (res && res.data) {
+            // Message will be added via SignalR effect if it broadcasts to caller too, 
+            // but usually we add it manually for better UX
+            const sentMsg = res.data;
+            if (!this.messages().find(m => m.id === sentMsg.messageId)) {
+                this.messages.update(msgs => [...msgs, {
+                    id: sentMsg.messageId,
+                    message: sentMsg.message,
+                    senderId: this.currentUserId(),
+                    createdAt: sentMsg.createdAt,
+                    messageType: sentMsg.messageType
+                }]);
+            }
             this.newMessage.set('');
           }
         }),

@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +10,26 @@ namespace Application.Features.Chats;
 public record ChatListDto(
     Guid Id,
     string OtherUserFirstName,
+    string OtherUserLastName,
     string? OtherUserProfileImage,
     string? LastMessage,
-    int UnreadCount
+    MessageType LastMessageType,
+    int UnreadCount,
+    DateTime? LastMessageAt
 );
 
-public record ChatMessageDto(Guid Id, long SenderId, string Message, bool IsRead, DateTime CreatedAt);
+public record ChatMessageDto(
+    Guid Id, 
+    long SenderId, 
+    string? Message, 
+    string? MediaUrl,
+    MessageType MessageType,
+    Guid? ContextItemId,
+    bool IsRead, 
+    DateTime CreatedAt
+);
 
-public record CreateChatCommand(long UserId) : IRequest<CreateChatResponse>;
+public record CreateChatCommand(long UserId, Guid? ItemId = null) : IRequest<CreateChatResponse>;
 public record CreateChatResponse(bool Success, string? Error, Guid? ChatId);
 
 public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, CreateChatResponse>
@@ -39,7 +52,7 @@ public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Creat
         var u1 = Math.Min(_currentUser.Id.Value, request.UserId);
         var u2 = Math.Max(_currentUser.Id.Value, request.UserId);
 
-    var existing = await _context.Chats
+        var existing = await _context.Chats
             .FirstOrDefaultAsync(c => c.User1Id == u1 && c.User2Id == u2, ct);
 
         if (existing != null) return new CreateChatResponse(true, null, existing.Id);
@@ -67,28 +80,57 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
 
     public async Task<GetChatsResponse> Handle(GetChatsQuery request, CancellationToken ct)
     {
+        if (_currentUser.Id == null) return new GetChatsResponse(new List<ChatListDto>());
+        
         var uid = _currentUser.Id!.Value;
         var chats = await _context.Chats
             .Include(c => c.User1)
             .Include(c => c.User2)
             .Include(c => c.Messages)
             .Where(c => c.User1Id == uid || c.User2Id == uid)
-            .OrderByDescending(c => c.Messages.Max(m => (DateTime?)m.CreatedAt))
-            .Select(c => new ChatListDto(
+            .Select(c => new
+            {
                 c.Id,
-                c.User1Id == uid ? c.User2.FirstName : c.User1.FirstName,
-                c.User1Id == uid ? c.User2.ProfilePictureUrl : c.User1.ProfilePictureUrl,
-                c.Messages.OrderByDescending(m => m.CreatedAt).Select(m => m.Message).FirstOrDefault(),
-                c.Messages.Count(m => !m.IsRead && m.SenderId != uid)
-            ))
+                OtherUser = c.User1Id == uid ? c.User2 : c.User1,
+                LastMsg = c.Messages.OrderByDescending(m => m.CreatedAt).FirstOrDefault(),
+                UnreadCount = c.Messages.Count(m => !m.IsRead && m.SenderId != uid)
+            })
             .ToListAsync(ct);
 
-        return new GetChatsResponse(chats);
+        var result = chats.Select(c => new ChatListDto(
+            c.Id,
+            c.OtherUser.FirstName,
+            c.OtherUser.LastName,
+            c.OtherUser.ProfilePictureUrl,
+            c.LastMsg?.Message ?? (c.LastMsg?.MessageType != MessageType.Text ? $"[{c.LastMsg?.MessageType}]" : null),
+            c.LastMsg?.MessageType ?? MessageType.Text,
+            c.UnreadCount,
+            c.LastMsg?.CreatedAt
+        ))
+        .OrderByDescending(c => c.LastMessageAt)
+        .ToList();
+
+        return new GetChatsResponse(result);
     }
 }
 
-public record PostChatMessageCommand(Guid ChatId, string Message) : IRequest<PostChatMessageResponse>;
-public record PostChatMessageResponse(bool Success, string? Error, Guid? MessageId, string? Message, DateTime? CreatedAt);
+public record PostChatMessageCommand(
+    Guid ChatId, 
+    string? Message = null, 
+    string? MediaUrl = null, 
+    MessageType MessageType = MessageType.Text,
+    Guid? ContextItemId = null
+) : IRequest<PostChatMessageResponse>;
+
+public record PostChatMessageResponse(
+    bool Success, 
+    string? Error, 
+    Guid? MessageId, 
+    string? Message, 
+    string? MediaUrl,
+    MessageType MessageType,
+    DateTime? CreatedAt
+);
 
 public interface IChatNotifier
 {
@@ -113,38 +155,44 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
 
     public async Task<PostChatMessageResponse> Handle(PostChatMessageCommand request, CancellationToken ct)
     {
-        if (_currentUser.Id == null) return new PostChatMessageResponse(false, "Unauthorized.", null, null, null);
+        if (_currentUser.Id == null) return new PostChatMessageResponse(false, "Unauthorized.", null, null, null, MessageType.Text, null);
 
         var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == request.ChatId, ct);
-        if (chat == null) return new PostChatMessageResponse(false, "Chat not found.", null, null, null);
+        if (chat == null) return new PostChatMessageResponse(false, "Chat not found.", null, null, null, MessageType.Text, null);
 
         if (chat.User1Id != _currentUser.Id.Value && chat.User2Id != _currentUser.Id.Value)
-            return new PostChatMessageResponse(false, "Forbidden.", null, null, null);
+            return new PostChatMessageResponse(false, "Forbidden.", null, null, null, MessageType.Text, null);
 
         var msg = new ChatMessage
         {
             ChatId = request.ChatId,
             SenderId = _currentUser.Id.Value,
             Message = request.Message,
+            MediaUrl = request.MediaUrl,
+            MessageType = request.MessageType,
+            ContextItemId = request.ContextItemId,
             IsRead = false,
             CreatedAt = DateTime.UtcNow
         };
         _context.ChatMessages.Add(msg);
         await _context.SaveChangesAsync(ct);
 
-    if (_notifier != null)
+        if (_notifier != null)
         {
             await _notifier.SendMessageAsync(request.ChatId, new
             {
-                messageId  = msg.Id,
-                chatId     = msg.ChatId,
-                senderId   = msg.SenderId,
-                message    = msg.Message,
-                createdAt  = msg.CreatedAt
+                id = msg.Id,
+                chatId = msg.ChatId,
+                senderId = msg.SenderId,
+                message = msg.Message,
+                mediaUrl = msg.MediaUrl,
+                messageType = msg.MessageType,
+                contextItemId = msg.ContextItemId,
+                createdAt = msg.CreatedAt
             }, ct);
         }
 
-        return new PostChatMessageResponse(true, null, msg.Id, msg.Message, msg.CreatedAt);
+        return new PostChatMessageResponse(true, null, msg.Id, msg.Message, msg.MediaUrl, msg.MessageType, msg.CreatedAt);
     }
 }
 
@@ -174,12 +222,21 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
         var messages = await _context.ChatMessages
             .Where(m => m.ChatId == request.ChatId)
             .OrderBy(m => m.CreatedAt)
-            .Select(m => new ChatMessageDto(m.Id, m.SenderId, m.Message, m.IsRead, m.CreatedAt))
+            .Select(m => new ChatMessageDto(
+                m.Id, 
+                m.SenderId, 
+                m.Message, 
+                m.MediaUrl,
+                m.MessageType,
+                m.ContextItemId,
+                m.IsRead, 
+                m.CreatedAt))
             .ToListAsync(ct);
 
-    var unread = await _context.ChatMessages
+        var unread = await _context.ChatMessages
             .Where(m => m.ChatId == request.ChatId && m.SenderId != _currentUser.Id.Value && !m.IsRead)
             .ToListAsync(ct);
+            
         foreach (var m in unread) m.IsRead = true;
         if (unread.Any()) await _context.SaveChangesAsync(ct);
 

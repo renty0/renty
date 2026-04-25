@@ -1,0 +1,45 @@
+<div class="messenger-container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>{{ 'chat.title' | translate }}</h2>
+    </div>
+    
+    <div class="chat-list-scroll">
+      @if (isLoading()) {
+        <div class="loading-sidebar">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+      } @else {
+        <mat-nav-list>
+          @for (chat of chats(); track chat.id) {
+            <a mat-list-item 
+               [class.active]="activeChatId() === chat.id"
+               (click)="selectChat(chat.id)">
+              <img [src]="chat.otherUserProfileImage || 'assets/default-avatar.png'" matListItemAvatar>
+              <span matListItemTitle>{{ chat.otherUserFirstName }} {{ chat.otherUserLastName || '' }}</span>
+              <span matListItemLine class="last-msg">{{ chat.lastMessage }}</span>
+              @if ((chat.unreadCount ?? 0) > 0) {
+                <span matListItemMeta class="unread-badge">{{ chat.unreadCount }}</span>
+              }
+            </a>
+          } @empty {
+            <div class="empty-list">
+              <p>{{ 'chat.noChats' | translate }}</p>
+            </div>
+          }
+        </mat-nav-list>
+      }
+    </div>
+  </div>
+
+  <div class="content-area">
+    <router-outlet></router-outlet>
+    
+    @if (!activeChatId()) {
+      <div class="no-chat-selected">
+        <mat-icon>chat</mat-icon>
+        <h3>{{ 'chat.selectToStart' | translate }}</h3>
+      </div>
+    }
+  </div>
+</div>

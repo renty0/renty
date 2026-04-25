@@ -323,6 +323,10 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("chat_id");
 
+                    b.Property<Guid?>("ContextItemId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("context_item_id");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -331,10 +335,17 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_read");
 
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("media_url");
+
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("message");
+
+                    b.Property<int>("MessageType")
+                        .HasColumnType("integer")
+                        .HasColumnName("message_type");
 
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint")
@@ -2540,7 +2551,7 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("Domain.Entities.ApplicationUser", "Owner")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3064,6 +3075,8 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Items");
+
                     b.Navigation("OwnedItems");
 
                     b.Navigation("RefreshTokens");

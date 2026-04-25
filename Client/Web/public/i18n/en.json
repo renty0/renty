@@ -45,6 +45,8 @@
   "marketplace": {
     "title": "Marketplace",
     "heroTitle": "Marketplace",
+    "owner": "Owner",
+    "renter": "Renter",
     "allCategories": "All Categories",
     "allSubcategories": "All Subcategories",
     "heroSubtitle": "Discover unique products from our community",
@@ -530,12 +532,18 @@
     "address": "Address",
     "city": "City",
     "country": "Country",
-    
     "imageAlt": "Profile Picture",
     "updatePhoto": "Update Photo",
     "uploadNewPhoto": "Upload New Photo",
     "save": "Save Changes",
-    "uploading": "Uploading..."
+    "uploading": "Uploading...",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "listings": "Listings",
+    "sendMessage": "Send Message",
+    "about": "About",
+    "joined": "Joined",
+    "noListings": "No active listings found."
   },
   "items": {
     "daily": "Daily",
@@ -793,7 +801,9 @@
   "chat": {
     "title": "Messages",
     "noChats": "No conversations yet.",
-    "placeholder": "Type a message...",
+    "typePlaceholder": "Type a message...",
+    "noMessages": "Start a conversation!",
+    "selectToStart": "Select a chat to start messaging",
     "send": "Send",
     "online": "Online",
     "offline": "Offline"

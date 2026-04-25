@@ -31,6 +31,10 @@ export const routes: Routes = [
   ...OrdersRoutes,
   ...ProfileRoutes,
   {
+    path: 'user-profile/:id',
+    loadComponent: () => import('./features/public-profile/public-profile').then(m => m.PublicProfileComponent)
+  },
+  {
     path: 'wallet',
     children: WalletRoutes
   },
