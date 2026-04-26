@@ -42,6 +42,8 @@ export class NavbarComponent implements OnInit {
 
   private allNavLinks = [
     { path: '/', labelKey: 'nav.home', icon: 'home', public: true },
+    { path: '/about', labelKey: 'nav.about', icon: 'info', public: true },
+    { path: '/contact', labelKey: 'nav.contact', icon: 'contact_support', public: true },
     { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
     { path: '/categories', labelKey: 'nav.categories', icon: 'category', adminOnly: true },
     {

@@ -3,7 +3,7 @@
 @use '../../../../shared/styles/mixins' as *;
 
 .home-page {
-  font-family: $font-family-primary;
+  color: $text-primary;
   overflow-x: hidden;
 
   .container {
@@ -91,7 +91,8 @@
   // Section 1: Hero
   .hero-section {
     position: relative;
-    height: 100vh;
+    height: calc(100vh - 64px);
+    padding: 0 !important;
     display: flex;
     align-items: center;
     overflow: hidden;

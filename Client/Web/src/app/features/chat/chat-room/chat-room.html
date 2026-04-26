@@ -1,5 +1,5 @@
 <div class="chat-room-container">
-  @if (isLoading()) {
+  @if (isLoading() && messages().length === 0) {
     <div class="loading-state">
       <mat-spinner diameter="40"></mat-spinner>
     </div>
@@ -35,13 +35,21 @@
             @if (msg.messageType === 0) {
               <p class="text">{{ msg.message }}</p>
             } @else if (msg.messageType === 1) {
-              <img [src]="msg.mediaUrl" class="media-img" alt="Image">
+              <img [src]="msg.mediaUrl" class="media-img" alt="Image" (click)="openPreview(msg.mediaUrl)" [style.opacity]="msg.isOptimistic ? 0.6 : 1">
+              @if (msg.message) {
+                <p class="text mt-2">{{ msg.message }}</p>
+              }
             } @else if (msg.messageType === 2) {
               <video [src]="msg.mediaUrl" controls class="media-video"></video>
             } @else if (msg.messageType === 3) {
               <audio [src]="msg.mediaUrl" controls class="media-audio"></audio>
             }
-            <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+            <span class="time">
+              {{ msg.createdAt | date:'shortTime' }}
+              @if (msg.isOptimistic) {
+                <mat-icon style="font-size: 12px; width: 12px; height: 12px; margin-left: 4px;">schedule</mat-icon>
+              }
+            </span>
           </div>
         </div>
       } @empty {
@@ -51,6 +59,19 @@
         </div>
       }
     </div>
+
+    @if (selectedImages().length > 0) {
+      <div class="image-queue-strip">
+        @for (img of selectedImages(); track img.previewUrl; let i = $index) {
+          <div class="queued-img-wrapper fade-in-up">
+            <img [src]="img.previewUrl" alt="Queued Image">
+            <button class="remove-btn" (click)="removeQueuedImage(i)">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">close</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
 
     <div class="chat-input-area" [class.is-recording]="isRecording()">
       @if (isRecording()) {
@@ -69,7 +90,7 @@
         </div>
       } @else {
         <div class="input-actions">
-          <input type="file" #imageInput hidden accept="image/*" (change)="onImageSelected($event)">
+          <input type="file" #imageInput hidden accept="image/*" multiple (change)="onImagesSelected($event)">
           <button mat-icon-button type="button" class="action-btn" (click)="imageInput.click()">
             <mat-icon>add_photo_alternate</mat-icon>
           </button>
@@ -87,10 +108,23 @@
                  [placeholder]="'chat.typePlaceholder' | translate">
         </div>
 
-        <button mat-fab color="primary" class="send-btn" (click)="sendMessage()" [disabled]="!newMessage().trim() || isSending()">
-          <mat-icon>send</mat-icon>
+        <button mat-fab color="primary" class="send-btn" (click)="sendMessage()" [disabled]="(!newMessage().trim() && selectedImages().length === 0) || isSending()">
+          @if (isSending()) {
+            <mat-spinner diameter="20" style="margin: 0 auto;"></mat-spinner>
+          } @else {
+            <mat-icon>send</mat-icon>
+          }
         </button>
       }
     </div>
   }
 </div>
+
+@if (previewImage()) {
+  <div class="image-preview-modal fade-in" (click)="closePreview()">
+    <button mat-icon-button class="close-preview-btn" (click)="closePreview()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img [src]="previewImage()" alt="Preview" (click)="$event.stopPropagation()">
+  </div>
+}

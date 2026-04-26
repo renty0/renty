@@ -84,6 +84,8 @@
   },
   "nav": {
     "home": "Home",
+    "about": "About Us",
+    "contact": "Contact Us",
     "marketplace": "Marketplace",
     "management": "Management",
     "profile": "Profile",
@@ -190,6 +192,8 @@
     "location": "Location",
     "mapLocation": "Map Location",
     "category": "Category",
+    "message": "Message",
+    "subject": "Subject",
     "subcategory": "Subcategory",
     "brand": "Brand",
     "confirmPassword": "Confirm Password",
@@ -862,5 +866,64 @@
     "section3Body": "A security deposit may be required for certain items. Payments are processed securely through our payment partners. Refunds are subject to our cancellation policy.",
     "section4Title": "4. Prohibited Use",
     "section4Body": "You agree not to use the platform for any unlawful purposes, to misrepresent the condition of items, or to engage in fraudulent transactions."
+  },
+  "about": {
+    "badge": "Our Story",
+    "title1": "Redefining",
+    "title2": "Equipment Sharing",
+    "subtitle": "We believe in a world where access to high-quality tools and equipment is easier and more sustainable. Our platform connects owners with renters, creating value for everyone.",
+    "stats": {
+      "users": "Active Users",
+      "items": "Items Available",
+      "rentals": "Successful Rentals",
+      "rating": "Average Rating"
+    },
+    "values": {
+      "badge": "Our Values",
+      "title": "What Drives Us",
+      "subtitle": "Our core principles shape everything we do.",
+      "trust": "Trust & Security",
+      "trustDesc": "We provide a secure environment that guarantees the rights of both owner and renter through ID verification and a transparent rating system.",
+      "sustainability": "Sustainability",
+      "sustainabilityDesc": "We reduce overconsumption by encouraging a culture of sharing and reusing resources.",
+      "community": "Community",
+      "communityDesc": "We build a collaborative community that exchanges benefits and expertise, making equipment access easier for everyone."
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "subtitle": "Join thousands of users and start renting or listing today.",
+      "signUp": "Sign Up Now",
+      "browse": "Browse Items"
+    }
+  },
+  "contact": {
+    "badge": "Support",
+    "title1": "We are here",
+    "title2": "to help",
+    "subtitle": "Have a question or inquiry? Our team is always ready to assist you and ensure you get the best experience possible.",
+    "info": {
+      "title": "Contact Information",
+      "subtitle": "Reach out to us through the following channels:",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "addressValue": "Cairo, Egypt",
+      "follow": "Follow Us"
+    },
+    "form": {
+      "title": "Send a Message",
+      "subtitle": "Please fill out the form below and we will reply shortly.",
+      "name": "Name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "subject": "Subject",
+      "subjectPlaceholder": "Reason for contacting",
+      "message": "Message",
+      "messagePlaceholder": "How can we help you?",
+      "send": "Send Message",
+      "sendShort": "Send",
+      "success": "Your message has been sent successfully. We will contact you soon."
+    }
   }
 }

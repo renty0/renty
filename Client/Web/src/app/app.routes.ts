@@ -89,6 +89,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'about',
+    loadComponent: () => import('./features/public/about-us/about-us.component').then(m => m.AboutUsComponent)
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./features/public/contact-us/contact-us.component').then(m => m.ContactUsComponent)
+  },
+  {
     path: '',
     component: HomeComponent,
   },

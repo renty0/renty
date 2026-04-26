@@ -1,8 +1,85 @@
 .rent-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 6px 0 2px;
+  gap: 24px;
+  padding: 12px 0;
+}
+
+.product-context {
+  display: flex;
+  gap: 16px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
+
+  .product-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    .product-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .owner-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #64748b;
+      font-size: 0.85rem;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .full-width {
@@ -12,73 +89,72 @@
 .date-range {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
 .date-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 
-  .field-title {
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: #64748b;
-    letter-spacing: 0.2px;
-    margin-left: 2px;
-  }
-}
-
-.item-summary {
-  margin-bottom: 2px;
-  padding: 12px 14px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  
-  p {
-    margin: 0;
-    color: #0f172a;
-    font-size: 1.02rem;
+  .field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 2px;
   }
 }
 
 .price-breakdown {
-  margin-top: 4px;
-  padding: 14px 16px;
+  padding: 20px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 
   .price-row {
     display: flex;
     justify-content: space-between;
-    color: #475569;
-    font-size: 1rem;
-    line-height: 1.4;
+    align-items: center;
+    color: #64748b;
+    font-size: 0.95rem;
+
+    .amount {
+      color: #0f172a;
+      font-weight: 600;
+    }
 
     &.total {
       margin-top: 4px;
-      padding-top: 10px;
-      border-top: 1px dashed #d5dee9;
       color: var(--primary-color, #1976d2);
-      font-weight: 700;
-      font-size: 1.15rem;
+      font-weight: 800;
+      font-size: 1.2rem;
+
+      .total-amount {
+        color: var(--primary-color, #1976d2);
+      }
     }
+  }
+
+  .price-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 4px 0;
   }
 }
 
 h2[mat-dialog-title] {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
-  padding: 4px 0 2px;
-  color: var(--primary-color, #1976d2);
-  font-size: 2rem;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 1.25rem;
   font-weight: 700;
 
   mat-icon {
@@ -87,82 +163,59 @@ h2[mat-dialog-title] {
 }
 
 mat-dialog-content {
-  min-width: 560px;
-  max-width: 680px;
-  padding: 14px 28px 8px !important;
+  min-width: 500px;
+  max-width: 600px;
+  padding: 24px !important;
 }
 
 mat-dialog-actions {
-  padding: 14px 28px 20px !important;
-  gap: 10px;
+  padding: 16px 24px !important;
+  border-top: 1px solid #e2e8f0;
+  gap: 12px;
 
-  button[mat-button] {
-    height: 44px;
-    min-width: 96px;
-    border-radius: 10px;
-    font-size: 1.02rem;
+  .cancel-btn {
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 12px;
     font-weight: 600;
+    color: #64748b;
   }
 }
 
-// Form field look and spacing
-::ng-deep .rent-form .mat-mdc-form-field {
-  margin-bottom: 2px;
+// Global material field overrides for this form
+::ng-deep .rent-form {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: #cbd5e1 !important;
+    }
+  }
+
+  .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+    border-color: var(--primary-color, #1976d2) !important;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;
+  }
+
+  .mdc-notched-outline {
+    display: none !important;
+  }
 }
 
-::ng-deep .rent-form .mat-mdc-text-field-wrapper {
-  background: #ffffff !important;
-  border: 1px solid #d9e2ee !important;
-  border-radius: 12px !important;
-  min-height: 52px;
-}
-
-::ng-deep .rent-form .mat-mdc-form-field-infix {
-  min-height: auto !important;
-  padding: 12px 12px !important;
-}
-
-::ng-deep .rent-form .mdc-notched-outline {
-  display: none !important;
-}
-
-::ng-deep .rent-form .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
-  border-color: rgba(25, 118, 210, 0.55) !important;
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
-}
-
-::ng-deep .rent-form .mat-mdc-select-arrow,
-::ng-deep .rent-form .mat-datepicker-toggle-default-icon {
-  color: #64748b;
-}
-
-// Pricing type dropdown panel background and options
-::ng-deep .mat-mdc-select-panel.rent-pricing-panel {
-  background: #ffffff !important;
-  border: 1px solid #dbe3ee !important;
-  border-radius: 12px !important;
-  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.16) !important;
-  padding: 6px !important;
-}
-
-::ng-deep .mat-mdc-select-panel.rent-pricing-panel .mat-mdc-option {
-  min-height: 40px !important;
-  border-radius: 8px !important;
-}
-
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   mat-dialog-content {
-    min-width: unset;
-    width: 100%;
-    max-width: 100%;
-    padding: 10px 14px 6px !important;
+    min-width: 100%;
+    padding: 16px !important;
   }
 
   .date-range {
     grid-template-columns: 1fr;
-  }
-
-  mat-dialog-actions {
-    padding: 10px 14px 14px !important;
   }
 }

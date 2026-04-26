@@ -1,0 +1,116 @@
+<div class="contact-page" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
+      <div class="badge fade-in-up" style="animation-delay: 0.1s;">{{ 'contact.badge' | translate }}</div>
+      <h1 class="hero-title fade-in-up" style="animation-delay: 0.2s;">
+        {{ 'contact.title1' | translate }} <br>
+        <span>{{ 'contact.title2' | translate }}</span>
+      </h1>
+      <p class="hero-subtitle fade-in-up" style="animation-delay: 0.3s; margin: 0 auto 50px;">
+        {{ 'contact.subtitle' | translate }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Contact Info Side -->
+        <div class="contact-info-wrapper fade-in-up" style="animation-delay: 0.4s;">
+          <div class="info-card glass-card">
+            <h2>{{ 'contact.info.title' | translate }}</h2>
+            <p class="subtitle">{{ 'contact.info.subtitle' | translate }}</p>
+
+            <div class="info-items">
+              <div class="info-item">
+                <div class="icon-box primary">
+                  <mat-icon>email</mat-icon>
+                </div>
+                <div class="details">
+                  <h4>{{ 'contact.info.email' | translate }}</h4>
+                  <p>support&#64;renty.com</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <div class="icon-box accent">
+                  <mat-icon>phone</mat-icon>
+                </div>
+                <div class="details">
+                  <h4>{{ 'contact.info.phone' | translate }}</h4>
+                  <p dir="ltr">+20 123 456 7890</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <div class="icon-box success">
+                  <mat-icon>location_on</mat-icon>
+                </div>
+                <div class="details">
+                  <h4>{{ 'contact.info.address' | translate }}</h4>
+                  <p>{{ 'contact.info.addressValue' | translate }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="social-links mt-4">
+              <h4>{{ 'contact.info.follow' | translate }}</h4>
+              <div class="links-row">
+                <a href="#" class="social-btn"><mat-icon>facebook</mat-icon></a>
+                <a href="#" class="social-btn"><mat-icon>camera_alt</mat-icon></a>
+                <a href="#" class="social-btn"><mat-icon>alternate_email</mat-icon></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form Side -->
+        <div class="contact-form-wrapper fade-in-up" style="animation-delay: 0.5s;">
+          <div class="form-card glass-card">
+            <h2>{{ 'contact.form.title' | translate }}</h2>
+            <p class="subtitle mb-4">{{ 'contact.form.subtitle' | translate }}</p>
+
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+              <div class="grid formgrid">
+                <div class="col-12 md:col-6 field">
+                  <app-input controlName="name" [formGroup]="contactForm" label="name"
+                    [placeholder]="'contact.form.namePlaceholder' | translate">
+                  </app-input>
+                </div>
+                <div class="col-12 md:col-6 field">
+                  <app-input controlName="email" [formGroup]="contactForm" type="email" label="email"
+                    [placeholder]="'contact.form.emailPlaceholder' | translate">
+                  </app-input>
+                </div>
+                <div class="col-12 field mt-3">
+                  <app-input controlName="subject" [formGroup]="contactForm" label="subject"
+                    [placeholder]="'contact.form.subjectPlaceholder' | translate">
+                  </app-input>
+                </div>
+                <div class="col-12 field mt-3">
+                  <app-input controlName="message" [formGroup]="contactForm" type="textarea" [rows]="5" label="message"
+                    [placeholder]="'contact.form.messagePlaceholder' | translate">
+                  </app-input>
+                </div>
+              </div>
+
+              <div class="form-actions mt-4">
+                <app-loading-button type="submit" color="primary" class="w-full" [loading]="isSubmitting()"
+                  [disabled]="contactForm.invalid" [title]="'contact.form.send' | translate">
+                  <mat-icon>send</mat-icon>
+                  {{ 'contact.form.sendShort' | translate }}
+                </app-loading-button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>

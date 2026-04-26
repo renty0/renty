@@ -5,6 +5,7 @@
   .bell-btn {
     color: var(--text-color, #333);
     transition: all 0.2s ease;
+    overflow: visible;
     
     &:hover {
       background-color: var(--surface-hover, rgba(0,0,0,0.05));
@@ -15,6 +16,11 @@
     position: absolute;
     top: calc(100% + 8px);
     right: -10px; // align slightly better
+
+    :host-context([dir="rtl"]) & {
+      right: auto;
+      left: -10px;
+    }
     width: 360px;
     max-height: 480px;
     background-color: var(--surface-card, #fff);
@@ -163,6 +169,11 @@
             background-color: var(--surface-ground, #f0f0f0);
             color: var(--text-color, #555);
 
+            :host-context([dir="rtl"]) & {
+              margin-right: 0;
+              margin-left: 12px;
+            }
+
             :host-context(body.dark-mode) & {
               background-color: #333;
               color: #ccc;
@@ -220,6 +231,11 @@
             line-height: 32px;
             margin-left: 8px;
             color: var(--text-secondary-color, #888);
+            
+            :host-context([dir="rtl"]) & {
+              margin-left: 0;
+              margin-right: 8px;
+            }
             
             mat-icon {
               font-size: 20px;

@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NotificationsClient, NotificationDto } from '../../../core/api/api-client';
 import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-notification-dropdown',
@@ -32,6 +33,7 @@ export class NotificationDropdownComponent implements OnInit {
   private signalrService = inject(NotificationSignalrService);
   private router = inject(Router);
   private eRef = inject(ElementRef);
+  private toastService = inject(ToastService);
 
   isOpen = signal(false);
   isLoading = signal(false);
@@ -58,6 +60,9 @@ export class NotificationDropdownComponent implements OnInit {
           return [dto, ...current];
         });
         this.updateUnreadCount();
+        
+        // Show toaster notification
+        this.toastService.showInfo(`${newNotif.title} - ${newNotif.message}`);
       }
     }, { allowSignalWrites: true });
   }

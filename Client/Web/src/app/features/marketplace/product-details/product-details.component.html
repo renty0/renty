@@ -63,11 +63,11 @@
                 </div>
 
                 <div class="action-buttons flex flex-column gap-3 mt-4">
-                    <button mat-flat-button color="primary" class="rent-btn py-3" [disabled]="item()?.status !== 'Available'" (click)="openRentModal()">
+                    <app-loading-button [color]="'primary'" customClass="rent-btn py-3 w-full" [disabled]="item()?.status !== 'Available'" (clicked)="openRentModal()">
                         <mat-icon>calendar_today</mat-icon>
                         {{ 'marketplace.rentNow' | translate }}
-                    </button>
-                    <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3" [disabled]="item()?.status !== 'Available'">
+                    </app-loading-button>
+                    <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3 w-full" [disabled]="item()?.status !== 'Available'">
                         <mat-icon>shopping_cart</mat-icon>
                         {{ 'marketplace.buyNow' | translate }}
                     </button>

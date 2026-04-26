@@ -1,0 +1,94 @@
+<div class="about-page" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
+      <div class="badge fade-in-up" style="animation-delay: 0.1s;">{{ 'about.badge' | translate }}</div>
+      <h1 class="hero-title fade-in-up" style="animation-delay: 0.2s;">
+        {{ 'about.title1' | translate }} <br>
+        <span>{{ 'about.title2' | translate }}</span>
+      </h1>
+      <p class="hero-subtitle fade-in-up" style="animation-delay: 0.3s; margin: 0 auto 50px;">
+        {{ 'about.subtitle' | translate }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid glass-card">
+        <div class="stat-item">
+          <mat-icon class="text-primary">group</mat-icon>
+          <div class="stat-value">10K+</div>
+          <div class="stat-label">{{ 'about.stats.users' | translate }}</div>
+        </div>
+        <div class="stat-item">
+          <mat-icon class="text-accent">inventory_2</mat-icon>
+          <div class="stat-value">5K+</div>
+          <div class="stat-label">{{ 'about.stats.items' | translate }}</div>
+        </div>
+        <div class="stat-item">
+          <mat-icon class="text-success">handshake</mat-icon>
+          <div class="stat-value">20K+</div>
+          <div class="stat-label">{{ 'about.stats.rentals' | translate }}</div>
+        </div>
+        <div class="stat-item">
+          <mat-icon class="text-warn">star</mat-icon>
+          <div class="stat-value">4.9</div>
+          <div class="stat-label">{{ 'about.stats.rating' | translate }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Values -->
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="badge">{{ 'about.values.badge' | translate }}</div>
+        <h2>{{ 'about.values.title' | translate }}</h2>
+        <p>{{ 'about.values.subtitle' | translate }}</p>
+      </div>
+
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="icon-box primary">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <h3>{{ 'about.values.trust' | translate }}</h3>
+          <p>{{ 'about.values.trustDesc' | translate }}</p>
+        </div>
+
+        <div class="value-card">
+          <div class="icon-box accent">
+            <mat-icon>eco</mat-icon>
+          </div>
+          <h3>{{ 'about.values.sustainability' | translate }}</h3>
+          <p>{{ 'about.values.sustainabilityDesc' | translate }}</p>
+        </div>
+
+        <div class="value-card">
+          <div class="icon-box success">
+            <mat-icon>people</mat-icon>
+          </div>
+          <h3>{{ 'about.values.community' | translate }}</h3>
+          <p>{{ 'about.values.communityDesc' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>{{ 'about.cta.title' | translate }}</h2>
+      <p>{{ 'about.cta.subtitle' | translate }}</p>
+      <div class="cta-actions mt-5">
+        <a routerLink="/register" class="btn-primary-custom">{{ 'about.cta.signUp' | translate }}</a>
+        <a routerLink="/marketplace" class="btn-outline-custom ml-3">{{ 'about.cta.browse' | translate }}</a>
+      </div>
+    </div>
+  </section>
+</div>

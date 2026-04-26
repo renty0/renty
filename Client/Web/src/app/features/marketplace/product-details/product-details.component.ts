@@ -18,6 +18,8 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
+import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+
 @Component({
     selector: 'app-product-details',
     standalone: true,
@@ -31,7 +33,8 @@ import { PermissionType } from '../../../core/constants/permissions';
         MatChipsModule,
         MatTabsModule,
         MatDividerModule,
-        MatDialogModule
+        MatDialogModule,
+        LoadingButtonComponent
     ],
     templateUrl: './product-details.component.html',
     styleUrl: './product-details.component.scss'

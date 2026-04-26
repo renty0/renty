@@ -9,11 +9,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChatClient, MediaClient, PostChatMessageCommand, FileParameter } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
 import { ChatSignalrService } from '../../../core/services/chat-signalr.service';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { catchError, finalize, of, tap, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
+export interface QueuedImage {
+  file: File;
+  previewUrl: string;
+}
 
 @Component({
   selector: 'app-chat-room',
@@ -51,12 +56,20 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   isSending = signal(false);
   currentUserId = signal<number | null>(null);
 
+  selectedImages = signal<QueuedImage[]>([]);
+  previewImage = signal<string | null>(null);
+
   constructor() {
     effect(() => {
       const msg = this.chatSignalr.newMessage();
       if (msg && msg.chatId === this.chatId()) {
-        if (!this.messages().find(m => m.id === msg.id)) {
-           this.messages.update(msgs => [...msgs, msg]);
+        // Prevent duplicating optimistic messages
+        if (!this.messages().find(m => m.id === msg.id && !m.isOptimistic)) {
+           this.messages.update(msgs => {
+             // Remove optimistic message if real one arrived
+             const filtered = msgs.filter(m => !(m.isOptimistic && m.message === msg.message && m.mediaUrl === msg.mediaUrl));
+             return [...filtered, msg];
+           });
            setTimeout(() => this.scrollToBottom(), 100);
         }
       }
@@ -106,11 +119,40 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private audioChunks: any[] = [];
   private recordingInterval: any;
 
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.uploadFile(file, 1); // 1 = Image
+  onImagesSelected(event: any) {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const newImages: QueuedImage[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+          newImages.push({
+            file,
+            previewUrl: URL.createObjectURL(file)
+          });
+        }
+      }
+      this.selectedImages.update(imgs => [...imgs, ...newImages]);
+      // Reset input
+      event.target.value = '';
     }
+  }
+
+  removeQueuedImage(index: number) {
+    this.selectedImages.update(imgs => {
+      const copy = [...imgs];
+      URL.revokeObjectURL(copy[index].previewUrl); // Free memory
+      copy.splice(index, 1);
+      return copy;
+    });
+  }
+
+  openPreview(url: string) {
+    this.previewImage.set(url);
+  }
+
+  closePreview() {
+    this.previewImage.set(null);
   }
 
   startRecording() {
@@ -129,7 +171,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
         clearInterval(this.recordingInterval);
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
         const file = new File([audioBlob], 'voice-message.wav', { type: 'audio/wav' });
-        this.uploadFile(file, 3); // 3 = Audio
+        this.uploadAudioAndSend(file);
         stream.getTracks().forEach(track => track.stop());
       };
       
@@ -157,24 +199,44 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
-  private uploadFile(file: File, type: number) {
-    this.isLoading.set(true);
+  private uploadAudioAndSend(file: File) {
+    this.isSending.set(true);
     const fileParam: FileParameter = { data: file, fileName: file.name };
+    
+    // Add optimistic message
+    const optimisticId = `temp_${Date.now()}`;
+    const localUrl = URL.createObjectURL(file);
+    
+    this.messages.update(msgs => [...msgs, {
+      id: optimisticId,
+      message: null,
+      mediaUrl: localUrl,
+      senderId: this.currentUserId(),
+      createdAt: new Date().toISOString(),
+      messageType: 3, // Audio
+      isOptimistic: true
+    }]);
+    setTimeout(() => this.scrollToBottom(), 50);
+
     this.mediaClient.uploadMedia(undefined, undefined, fileParam)
       .pipe(
         tap((res: any) => {
           if (res && res.data) {
-             this.sendMediaMessage(res.data.url!, type);
+             this.sendMediaMessage(res.data.url!, 3, undefined, optimisticId);
           }
         }),
-        finalize(() => this.isLoading.set(false))
+        catchError(err => {
+          this.removeOptimisticMessage(optimisticId);
+          return of(null);
+        }),
+        finalize(() => this.isSending.set(false))
       ).subscribe();
   }
 
-  private sendMediaMessage(url: string, type: number) {
+  private sendMediaMessage(url: string, type: number, text?: string, optimisticId?: string) {
     const cmd = new PostChatMessageCommand({
       chatId: this.chatId() as any,
-      message: undefined,
+      message: text,
       mediaUrl: url,
       messageType: type as any
     });
@@ -184,55 +246,122 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
         tap((res: any) => {
           const data = res?.data;
           if (data && data.success) {
-            this.messages.update(msgs => [...msgs, {
+            // Replace optimistic message
+            if (optimisticId) {
+              this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
+                ...m,
                 id: data.messageId,
-                message: null,
-                mediaUrl: url,
-                senderId: this.currentUserId(),
-                createdAt: data.createdAt,
-                messageType: type
-            }]);
+                isOptimistic: false
+              } : m));
+            } else {
+              this.messages.update(msgs => [...msgs, {
+                  id: data.messageId,
+                  message: text,
+                  mediaUrl: url,
+                  senderId: this.currentUserId(),
+                  createdAt: data.createdAt,
+                  messageType: type
+              }]);
+            }
             setTimeout(() => this.scrollToBottom(), 50);
+          } else if (optimisticId) {
+            this.removeOptimisticMessage(optimisticId);
           }
+        }),
+        catchError(err => {
+          if (optimisticId) this.removeOptimisticMessage(optimisticId);
+          return of(null);
         })
       ).subscribe();
   }
 
-  sendMessage() {
-    if (!this.newMessage().trim() || this.isSending()) return;
+  async sendMessage() {
+    const textMsg = this.newMessage().trim();
+    const imgs = this.selectedImages();
+    
+    if (!textMsg && imgs.length === 0) return;
+    if (this.isSending()) return;
 
     this.isSending.set(true);
-    const cmd = new PostChatMessageCommand({
-      chatId: this.chatId() as any,
-      message: this.newMessage(),
-      messageType: 0 as any // Text
-    });
+    
+    // Copy the items to send
+    const imagesToSend = [...imgs];
+    const messageToSend = textMsg;
+    
+    // Clear the inputs immediately for better UX
+    this.newMessage.set('');
+    this.selectedImages.set([]);
 
-    this.chatClient.postChatMessage(this.chatId() as any, cmd)
-      .pipe(
-        tap((res: any) => {
-          const data = res?.data;
-          if (data && data.success) {
-            const sentMsg = data;
-            if (!this.messages().find(m => m.id === sentMsg.messageId)) {
-                this.messages.update(msgs => [...msgs, {
-                    id: sentMsg.messageId,
-                    message: sentMsg.message,
-                    senderId: this.currentUserId(),
-                    createdAt: sentMsg.createdAt,
-                    messageType: sentMsg.messageType
-                }]);
-            }
-            this.newMessage.set('');
-            setTimeout(() => this.scrollToBottom(), 50);
+    try {
+      if (imagesToSend.length > 0) {
+        // Send images
+        for (let i = 0; i < imagesToSend.length; i++) {
+          const queuedImg = imagesToSend[i];
+          const isFirstImage = i === 0;
+          const caption = isFirstImage && messageToSend ? messageToSend : undefined;
+          
+          // Add optimistic image message
+          const optimisticId = `temp_${Date.now()}_${i}`;
+          this.messages.update(msgs => [...msgs, {
+            id: optimisticId,
+            message: caption,
+            mediaUrl: queuedImg.previewUrl,
+            senderId: this.currentUserId(),
+            createdAt: new Date().toISOString(),
+            messageType: 1, // Image
+            isOptimistic: true
+          }]);
+          setTimeout(() => this.scrollToBottom(), 50);
+
+          // Upload
+          const fileParam: FileParameter = { data: queuedImg.file, fileName: queuedImg.file.name };
+          const uploadRes = await firstValueFrom(this.mediaClient.uploadMedia(undefined, undefined, fileParam));
+          
+          if (uploadRes?.data?.url) {
+            this.sendMediaMessage(uploadRes.data.url, 1, caption, optimisticId);
+          } else {
+            this.removeOptimisticMessage(optimisticId);
           }
-        }),
-        catchError(err => {
-            console.error('Failed to send message', err);
-            return of(null);
-        }),
-        finalize(() => this.isSending.set(false))
-      ).subscribe();
+        }
+      } else if (messageToSend) {
+        // Send text only
+        const optimisticId = `temp_${Date.now()}`;
+        this.messages.update(msgs => [...msgs, {
+          id: optimisticId,
+          message: messageToSend,
+          senderId: this.currentUserId(),
+          createdAt: new Date().toISOString(),
+          messageType: 0, // Text
+          isOptimistic: true
+        }]);
+        setTimeout(() => this.scrollToBottom(), 50);
+
+        const cmd = new PostChatMessageCommand({
+          chatId: this.chatId() as any,
+          message: messageToSend,
+          messageType: 0 as any
+        });
+
+        const res = await firstValueFrom(this.chatClient.postChatMessage(this.chatId() as any, cmd));
+        if (res?.data?.success) {
+          this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
+            ...m,
+            id: res.data!.messageId,
+            isOptimistic: false
+          } : m));
+        } else {
+          this.removeOptimisticMessage(optimisticId);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to send message', err);
+    } finally {
+      this.isSending.set(false);
+    }
+  }
+
+  private removeOptimisticMessage(id: string) {
+    this.messages.update(msgs => msgs.filter(m => m.id !== id));
   }
 
   deleteCurrentChat() {
