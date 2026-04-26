@@ -74,9 +74,10 @@ public static class RentalEndpoints
         .RequireAuthorization(Policies.CanTransact);
 
         // POST /rentals/:id/photos
-        g.MapPost("/{id:guid}/photos", async (Guid id, UploadRentalPhotosCommand cmd, ISender sender) =>
+        g.MapPost("/{id:guid}/photos", async (Guid id, UploadRentalPhotosBody body, ISender sender) =>
         {
-            var success = await sender.Send(cmd with { RentalId = id });
+            var cmd = new UploadRentalPhotosCommand(id, body.ImageIds, body.Type);
+            var success = await sender.Send(cmd);
             return success ? Api.Ok(new { }) : Api.Fail("Failed to upload photos", 400);
         })
         .WithName("UploadRentalPhotos")

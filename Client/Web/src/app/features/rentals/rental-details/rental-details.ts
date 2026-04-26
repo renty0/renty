@@ -1,22 +1,21 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosCommand } from '../../../core/api/api-client';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosCommand, ChatClient, CreateChatCommand, RentalImageType } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { PermissionService } from '../../../core/services/permission.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
-import { PermissionService } from '../../../core/services/permission.service';
-import { PermissionType } from '../../../core/constants/permissions';
 
 @Component({
   selector: 'app-rental-details',
@@ -28,11 +27,11 @@ import { PermissionType } from '../../../core/constants/permissions';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule,
     MatDividerModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     FormsModule,
+    MatTooltipModule,
     HeaderSectionComponent,
     LoadingButtonComponent
   ],
@@ -41,117 +40,135 @@ import { PermissionType } from '../../../core/constants/permissions';
 })
 export class RentalDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private rentalsClient = inject(RentalsClient);
   private reviewsClient = inject(ReviewsClient);
   private mediaClient = inject(MediaClient);
-  private toast = inject(ToastService);
+  private chatClient = inject(ChatClient);
   private auth = inject(AuthService);
-  public translate = inject(TranslateService);
+  private toast = inject(ToastService);
   private permissionService = inject(PermissionService);
 
-  rentalId = signal('');
   isLoading = signal(true);
   isActionLoading = signal(false);
   rental = signal<RentalDetailDto | null>(null);
-  
-  isDamaged = signal(false); // For completion action
 
-  // Review fields
+  isDamaged = signal(false);
+
   reviewRating = signal(5);
   reviewComment = signal('');
-  
+
   handoffCodeInput = signal('');
   isUploading = signal(false);
-  
+
   userId = computed(() => this.auth.getUserData()?.id);
-  
+
   isOwner = computed(() => {
     const r = this.rental();
     if (!r || !this.userId()) return false;
     return String(r.ownerId) === String(this.userId());
   });
 
-  canManage = computed(() => this.permissionService.hasPermission(PermissionType.Rentals_Edit));
+  // Renter = logged-in user who is NOT the owner and NOT an admin
+  isRenter = computed(() => !this.isOwner() && !this.isAdmin());
+
+  isAdmin = computed(() => this.auth.isAdmin());
+
+  canManage = computed(() => this.isAdmin());
+
+  rentalId = computed(() => this.route.snapshot.paramMap.get('id') ?? '');
 
   ngOnInit() {
-    this.rentalId.set(this.route.snapshot.paramMap.get('id') || '');
-    if (this.rentalId()) {
-      this.loadRental();
-    }
+    this.loadRental();
   }
 
   loadRental() {
     this.isLoading.set(true);
     this.rentalsClient.getRentalById(this.rentalId()).subscribe({
       next: (res) => {
-        if (res.data) {
-          this.rental.set(res.data);
-        } else {
-          this.toast.showError('errors.fetchFailed');
-        }
+        if (res.data) this.rental.set(res.data);
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load rental', err);
+      error: () => {
         this.toast.showError('errors.fetchFailed');
         this.isLoading.set(false);
       }
     });
   }
 
-  confirmRental() {
-    this.executeAction(() => this.rentalsClient.confirmRental(this.rentalId()));
+  getStatusColor(status?: string): string {
+    switch (status?.toLowerCase()) {
+      case 'pending':   return 'status-pending';
+      case 'confirmed': return 'status-confirmed';
+      case 'active':    return 'status-active';
+      case 'completed': return 'status-completed';
+      case 'cancelled':
+      case 'rejected':  return 'status-cancelled';
+      case 'overdue':   return 'status-overdue';
+      default:          return 'status-default';
+    }
   }
 
-  completeRental() {
-    this.executeAction(() => this.rentalsClient.completeRental(this.rentalId(), this.isDamaged()));
+  confirmRental() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.confirmRental(this.rentalId()).subscribe({
+      next: () => { this.toast.showSuccess('common.success'); this.loadRental(); this.isActionLoading.set(false); },
+      error: () => { this.toast.showError('errors.generic'); this.isActionLoading.set(false); }
+    });
   }
 
   cancelRental() {
-    this.executeAction(() => this.rentalsClient.cancelRental(this.rentalId()));
+    this.isActionLoading.set(true);
+    this.rentalsClient.cancelRental(this.rentalId()).subscribe({
+      next: () => { this.toast.showSuccess('common.success'); this.loadRental(); this.isActionLoading.set(false); },
+      error: () => { this.toast.showError('errors.generic'); this.isActionLoading.set(false); }
+    });
+  }
+
+  completeRental() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.completeRental(this.rentalId(), this.isDamaged()).subscribe({
+      next: () => { this.toast.showSuccess('common.success'); this.loadRental(); this.isActionLoading.set(false); },
+      error: () => { this.toast.showError('errors.generic'); this.isActionLoading.set(false); }
+    });
   }
 
   verifyHandoff() {
     if (!this.handoffCodeInput()) return;
     this.isActionLoading.set(true);
     this.rentalsClient.verifyHandoff(this.rentalId(), this.handoffCodeInput()).subscribe({
-      next: () => {
-        this.toast.showSuccess('common.success');
-        this.loadRental();
-        this.isActionLoading.set(false);
-      },
-      error: (err) => {
-        this.toast.showError(err.response?.message || 'rentals.error');
-        this.isActionLoading.set(false);
-      }
+      next: () => { this.toast.showSuccess('common.success'); this.loadRental(); this.isActionLoading.set(false); },
+      error: () => { this.toast.showError('errors.generic'); this.isActionLoading.set(false); }
     });
   }
 
-  onPhotoSelected(event: any, type: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.isUploading.set(true);
+  onPhotoSelected(event: Event, typeStr: 'Handover' | 'Return') {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
     const fileParam: FileParameter = { data: file, fileName: file.name };
+    const type = typeStr === 'Handover' ? RentalImageType.Handover : RentalImageType.Return;
+    
+    this.isUploading.set(true);
     this.mediaClient.uploadMedia(this.rentalId(), 'Rental', fileParam).subscribe({
       next: (res) => {
         if (res.data?.id) {
-           const cmd = new UploadRentalPhotosCommand({
-             rentalId: this.rentalId(),
-             imageIds: [res.data.id],
-             type: type
-           });
-           this.rentalsClient.uploadRentalPhotos(this.rentalId(), cmd).subscribe({
-             next: () => {
-               this.toast.showSuccess('common.success');
-               this.loadRental();
-               this.isUploading.set(false);
-             },
-             error: () => {
-               this.toast.showError('errors.uploadFailed');
-               this.isUploading.set(false);
-             }
-           });
+          const cmd = new UploadRentalPhotosCommand({
+            rentalId: this.rentalId(),
+            imageIds: [res.data.id],
+            type: type
+          });
+          this.rentalsClient.uploadRentalPhotos(this.rentalId(), cmd).subscribe({
+            next: () => {
+              this.toast.showSuccess('common.success');
+              this.loadRental();
+              this.isUploading.set(false);
+            },
+            error: () => {
+              this.toast.showError('errors.uploadFailed');
+              this.isUploading.set(false);
+            }
+          });
         }
       },
       error: () => {
@@ -161,59 +178,50 @@ export class RentalDetailsComponent implements OnInit {
     });
   }
 
+  setRating(value: number) {
+    this.reviewRating.set(value);
+  }
+
   submitReview() {
     if (this.reviewRating() < 1) return;
-    
+
     this.isActionLoading.set(true);
     this.reviewsClient.createReview(this.rentalId(), new CreateReviewCommand({
       rentalId: this.rentalId(),
       rating: this.reviewRating(),
       comment: this.reviewComment()
     })).subscribe({
-      next: () => {
-        this.toast.showSuccess('rentals.actions.review_success');
-        this.loadRental();
-        this.isActionLoading.set(false);
-      },
-      error: () => {
-        this.toast.showError('rentals.actions.review_error');
-        this.isActionLoading.set(false);
-      }
+      next: () => { this.toast.showSuccess('common.success'); this.loadRental(); this.isActionLoading.set(false); },
+      error: () => { this.toast.showError('errors.generic'); this.isActionLoading.set(false); }
     });
   }
 
-  setRating(rating: number) {
-    this.reviewRating.set(rating);
-  }
+  startChat() {
+    const r = this.rental();
+    if (!r) return;
 
-  private executeAction(action: () => any) {
+    const targetUserId = r.ownerId;
+    if (!targetUserId) return;
+
+    const cmd = new CreateChatCommand({
+      userId: targetUserId,
+      itemId: r.itemId as any
+    });
+
     this.isActionLoading.set(true);
-    action().subscribe({
+    this.chatClient.createChat(cmd).subscribe({
       next: (res: any) => {
-        if (!res.error) {
-          this.toast.showSuccess('rentals.actions.success');
-          this.loadRental();
-        } else {
-          this.toast.showError(res.messages?.[0] || 'rentals.error');
+        const chatId = res?.data?.chatId || (res?.data as any)?.id;
+        if (chatId) {
+          this.router.navigate(['/chats', chatId]);
         }
         this.isActionLoading.set(false);
       },
-      error: () => {
-        this.toast.showError('rentals.error');
+      error: (err: any) => {
+        console.error('Failed to start chat', err);
+        this.toast.showError('errors.generic');
         this.isActionLoading.set(false);
       }
     });
-  }
-
-  getStatusColor(status?: string): string {
-    switch (status?.toLowerCase()) {
-      case 'pending': return 'bg-yellow-50 text-yellow-700 border-1 border-yellow-100';
-      case 'confirmed': return 'bg-indigo-50 text-indigo-700 border-1 border-indigo-100';
-      case 'active': return 'bg-primary-50 text-primary-700 border-1 border-primary-100';
-      case 'completed': return 'bg-green-50 text-green-700 border-1 border-green-100';
-      case 'cancelled':
-      case 'rejected': return 'bg-red-50 text-red-700 border-1 border-red-100';
-      default: return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
-    }
   }
 }

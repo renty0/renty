@@ -557,6 +557,9 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
 }
 
 
+/// <summary>Body-only DTO for the POST /rentals/:id/photos endpoint.</summary>
+public record UploadRentalPhotosBody(List<Guid> ImageIds, RentalImageType Type);
+
 public record UploadRentalPhotosCommand(Guid RentalId, List<Guid> ImageIds, RentalImageType Type) : IRequest<bool>;
 
 public class UploadRentalPhotosCommandHandler : IRequestHandler<UploadRentalPhotosCommand, bool>

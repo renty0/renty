@@ -38,8 +38,14 @@ export class NotificationDropdownComponent implements OnInit {
   isOpen = signal(false);
   isLoading = signal(false);
   notifications = signal<NotificationDto[]>([]);
-  
   unreadCount = signal(0);
+
+  /** How many items are currently visible in the dropdown */
+  private visibleCount = signal(5);
+  readonly PAGE_SIZE = 5;
+
+  visibleNotifications = () => this.notifications().slice(0, this.visibleCount());
+  hasMore = () => this.visibleCount() < this.notifications().length;
 
   constructor() {
     effect(() => {
@@ -80,6 +86,25 @@ export class NotificationDropdownComponent implements OnInit {
 
   toggleDropdown() {
     this.isOpen.update(v => !v);
+    if (this.isOpen()) {
+      // Reset visible count each time dropdown opens
+      this.visibleCount.set(this.PAGE_SIZE);
+    }
+  }
+
+  /** Called when the dropdown body scrolls — load more if near bottom */
+  onBodyScroll(event: Event) {
+    const el = event.target as HTMLElement;
+    const threshold = 40; // px from bottom
+    if (el.scrollHeight - el.scrollTop - el.clientHeight <= threshold) {
+      this.loadMore();
+    }
+  }
+
+  loadMore() {
+    if (this.hasMore()) {
+      this.visibleCount.update(v => v + this.PAGE_SIZE);
+    }
   }
 
   loadNotifications() {

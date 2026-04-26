@@ -318,7 +318,9 @@
     "monthly": "Monthly",
     "list": {
       "title": "My Rentals",
+      "subtitle": "Track and manage your active and past rentals",
       "empty": "You have no rentals yet.",
+      "empty_sub": "Browse the marketplace and rent something today!",
       "item": "Item",
       "dates": "Rental Dates",
       "amount": "Total Amount",
@@ -328,15 +330,20 @@
     "status": {
       "pending": "Pending",
       "approved": "Approved",
+      "confirmed": "Confirmed",
       "active": "Active",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "overdue": "Overdue",
+      "rejected": "Rejected"
     },
     "details": {
       "title": "Rental Details",
       "subtitle": "Overview of your rental transaction",
       "item": "Item",
+      "rental_info": "Rental Info",
       "dates": "Rental Dates",
+      "chat_now": "Chat Now",
       "status": "Current Status",
       "financials": "Financial Summary",
       "price": "Rental Price",
@@ -359,11 +366,13 @@
       "return_photos": "Return Photos (Owner)"
     },
     "actions": {
+      "title": "Actions",
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
       "damaged": "Forfeit Deposit",
-      "verify": "Verify & Start Rental"
+      "verify": "Verify & Start Rental",
+      "no_actions": "No actions available for this rental."
     }
   },
   "validation": {

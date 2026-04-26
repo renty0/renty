@@ -303,7 +303,6 @@ export class ProductDetailsComponent implements OnInit {
             panelClass: 'rent-modal-container'
         }).afterClosed().subscribe(result => {
             if (result) {
-                // Optionally navigate to rentals page
                 this.router.navigate(['/my-rentals']);
             }
         });
