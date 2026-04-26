@@ -7,6 +7,10 @@ public class Notification
     public long UserId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
+    /// <summary>chat | rental | item | system | support</summary>
+    public string Type { get; set; } = "system";
+    /// <summary>Frontend route to navigate to when clicked, e.g. /chats/abc</summary>
+    public string? ActionUrl { get; set; }
     public bool IsRead { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

@@ -13,11 +13,12 @@ import { PermissionService } from '../../../core/services/permission.service';
 import { PermissionType } from '../../../core/constants/permissions';
 import { ResponsiveService } from '../../../core/services/responsive.service';
 import { ThemeService } from '../../../core/services/theme.service';
+import { NotificationDropdownComponent } from '../notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, LoadingButtonComponent ],
+  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, LoadingButtonComponent, NotificationDropdownComponent ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })

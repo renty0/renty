@@ -32,11 +32,13 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public ResolveDisputeCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public ResolveDisputeCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<ResolveDisputeResponse> Handle(ResolveDisputeCommand request, CancellationToken ct)
@@ -90,6 +92,24 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
         rental.DepositStatus = request.ResolutionDecision == "refund_renter" ? DepositStatus.Returned : DepositStatus.Forfeited;
         
         await _context.SaveChangesAsync(ct);
+
+        // Notify both parties
+        await _notifier.SendToUserAsync(
+            ownerUser.Id,
+            "Dispute Resolved",
+            $"The dispute for '{rental.Item.TitleEn}' has been resolved. Compensation: {request.OwnerCompensation:C}",
+            "rental",
+            $"/my-rentals/{rental.Id}",
+            ct);
+
+        await _notifier.SendToUserAsync(
+            renterUser.Id,
+            "Dispute Resolved",
+            $"The dispute for '{rental.Item.TitleEn}' has been resolved. Refund: {request.RenterRefund:C}",
+            "rental",
+            $"/my-rentals/{rental.Id}",
+            ct);
+
         return new ResolveDisputeResponse(true, null);
     }
 }

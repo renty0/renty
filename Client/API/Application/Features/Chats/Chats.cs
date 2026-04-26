@@ -162,17 +162,20 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
     private readonly IChatNotifier? _notifier;
+    private readonly INotificationSender _notificationSender;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public PostChatMessageCommandHandler(
         IApplicationDbContext context,
         IUser currentUser,
         IHttpContextAccessor httpContextAccessor,
+        INotificationSender notificationSender,
         IChatNotifier? notifier = null)  
     {
         _context = context;
         _currentUser = currentUser;
         _notifier = notifier;
+        _notificationSender = notificationSender;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -218,6 +221,19 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
                 createdAt = msg.CreatedAt
             }, ct);
         }
+
+        // Send System Notification to recipient
+        var recipientId = chat.User1Id == _currentUser.Id.Value ? chat.User2Id : chat.User1Id;
+        var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+        var senderName = sender?.FirstName ?? "Someone";
+        
+        await _notificationSender.SendToUserAsync(
+            recipientId,
+            "New Message",
+            $"{senderName} sent you a message: {msg.Message ?? "[Media]"}",
+            "chat",
+            $"/chats/{chat.Id}",
+            ct);
 
         return new PostChatMessageResponse(true, null, msg.Id, msg.Message, mediaUrl, msg.MessageType, msg.CreatedAt);
     }

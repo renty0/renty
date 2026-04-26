@@ -72,6 +72,13 @@
                         {{ 'marketplace.buyNow' | translate }}
                     </button>
 
+                    @if (item()?.status === 'Rented') {
+                    <button mat-flat-button [color]="isReminded() ? 'warn' : 'accent'" class="remind-btn py-3" (click)="toggleReminder()">
+                        <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+                        {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+                    </button>
+                    }
+
                     @if (canEdit() || canDelete()) {
                     <div class="admin-actions flex gap-2 mt-2">
                         @if (canEdit()) {

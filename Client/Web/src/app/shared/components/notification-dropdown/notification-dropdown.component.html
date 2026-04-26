@@ -1,0 +1,66 @@
+<div class="notification-wrapper">
+  <!-- Bell Icon -->
+  <button mat-icon-button class="bell-btn" (click)="toggleDropdown()">
+    <mat-icon [matBadge]="unreadCount()" matBadgeColor="warn" [matBadgeHidden]="unreadCount() === 0">
+      notifications
+    </mat-icon>
+  </button>
+
+  <!-- Dropdown -->
+  @if (isOpen()) {
+    <div class="notification-dropdown" @dropdownAnimation>
+      <div class="dropdown-header">
+        <span class="title">Notifications</span>
+        @if (unreadCount() > 0) {
+          <button mat-button color="primary" class="mark-all-btn" (click)="markAllAsRead($event)">
+            Mark all read
+          </button>
+        }
+      </div>
+
+      <div class="dropdown-body">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+        } @else if (notifications().length === 0) {
+          <div class="empty-state">
+            <mat-icon>notifications_off</mat-icon>
+            <p>No notifications yet</p>
+          </div>
+        } @else {
+          <div class="notification-list">
+            @for (notif of notifications(); track notif.id) {
+              <div 
+                class="notification-item" 
+                [class.unread]="!notif.isRead"
+                [class.clickable]="!!notif.actionUrl"
+                (click)="onNotificationClick(notif)">
+                
+                <div class="icon-wrapper" [ngClass]="notif.type || 'system'">
+                  <mat-icon>{{ getIconForType(notif.type) }}</mat-icon>
+                </div>
+                
+                <div class="content-wrapper">
+                  <div class="notif-title">{{ notif.title }}</div>
+                  <div class="notif-message">{{ notif.message }}</div>
+                  <div class="notif-time">{{ getTimeAgo(notif.createdAt) }}</div>
+                </div>
+
+                @if (!notif.isRead) {
+                  <button mat-icon-button class="read-btn" (click)="markAsRead(notif, $event)" title="Mark as read">
+                    <mat-icon>check_circle_outline</mat-icon>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      
+      <div class="dropdown-footer">
+        <a routerLink="/notifications" (click)="isOpen.set(false)">See all notifications</a>
+      </div>
+    </div>
+  }
+</div>

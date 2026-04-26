@@ -22,6 +22,7 @@ public static class DependencyInjection
         // ── Real-Time (SignalR) ────────────────────────────────────────────────
         services.AddSignalR();
         services.AddScoped<IChatNotifier, ChatHubNotifier>();
+        services.AddScoped<Application.Common.Interfaces.INotificationSender, NotificationSender>();
 
         // ── Authorization Policies ────────────────────────────────────────────
         services.AddAuthorization(options =>

@@ -63,6 +63,7 @@ export class ItemDetailPageComponent implements OnInit {
     isFavoriting = signal(false);
     isRenting = signal(false);
     isChatting = signal(false);
+    isReminded = signal(false);
 
     // ── Reviews ────────────────────────────────────────────────────
     reviewsData = signal<GetItemReviewsResponse | null>(null);
@@ -134,6 +135,7 @@ export class ItemDetailPageComponent implements OnInit {
                     const primaryIdx = data.images?.findIndex((img) => img.isPrimary) ?? 0;
                     this.activeImageIndex.set(primaryIdx >= 0 ? primaryIdx : 0);
                     this.loadSimilarItems(data.category?.id, id);
+                    this.checkReminderStatus(id);
                 } else {
                     this.router.navigate(['/items']);
                 }
@@ -178,6 +180,36 @@ export class ItemDetailPageComponent implements OnInit {
             tap(() => this.showToast('items.addedToFavorites')),
             catchError(() => { this.showToast('common.errorOccurred'); return of(null); }),
             finalize(() => { this.isFavoriting.set(false); this.cdr.markForCheck(); })
+        ).subscribe();
+    }
+
+    checkReminderStatus(id: string): void {
+        this.itemsClient.getItemReminderStatus(id).pipe(
+            tap((res) => {
+                if (res?.data) this.isReminded.set(res.data.isReminded || false);
+            }),
+            catchError(() => of(null)),
+            finalize(() => this.cdr.markForCheck())
+        ).subscribe();
+    }
+
+    toggleReminder(): void {
+        const id = this.item()?.id;
+        if (!id) return;
+        
+        const action = this.isReminded() 
+            ? this.itemsClient.removeItemReminder(id) 
+            : this.itemsClient.addItemReminder(id);
+            
+        action.pipe(
+            tap((res) => {
+                if (!res?.error) {
+                    this.isReminded.set(!this.isReminded());
+                    this.showToast(this.isReminded() ? 'marketplace.reminderAdded' : 'marketplace.reminderRemoved');
+                }
+            }),
+            catchError(() => { this.showToast('common.errorOccurred'); return of(null); }),
+            finalize(() => this.cdr.markForCheck())
         ).subscribe();
     }
 

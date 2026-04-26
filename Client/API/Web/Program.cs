@@ -98,8 +98,9 @@ app.MapPublicProfileEndpoints();      // /api/v1/public-profile
 
 
 
-// ── SignalR Hub ──────────────────────────────────────────────────────────────
+// ── SignalR Hubs ──────────────────────────────────────────────────────────────
 app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 // Health check
 app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))

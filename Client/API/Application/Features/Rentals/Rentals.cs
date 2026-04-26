@@ -278,11 +278,13 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public ConfirmRentalCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public ConfirmRentalCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<RentalActionResponse> Handle(ConfirmRentalCommand request, CancellationToken ct)
@@ -300,15 +302,16 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
         rental.Status = RentalStatus.Confirmed;
         rental.UpdatedAt = DateTime.UtcNow;
 
-        _context.Notifications.Add(new Notification
-        {
-            UserId = rental.UserId,
-            Title = "Rental Confirmed",
-            Message = $"Your rental request for '{rental.Item.TitleEn}' has been confirmed by the owner.",
-            CreatedAt = DateTime.UtcNow
-        });
-
         await _context.SaveChangesAsync(ct);
+
+        await _notifier.SendToUserAsync(
+            rental.UserId,
+            "Rental Confirmed",
+            $"Your rental request for '{rental.Item.TitleEn}' has been confirmed by the owner.",
+            "rental",
+            $"/my-rentals/{rental.Id}",
+            ct);
+
         return new RentalActionResponse(true, null, rental.Status.ToString());
     }
 }
@@ -320,11 +323,13 @@ public class VerifyHandoffCommandHandler : IRequestHandler<VerifyHandoffCommand,
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public VerifyHandoffCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public VerifyHandoffCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<RentalActionResponse> Handle(VerifyHandoffCommand request, CancellationToken ct)
@@ -354,6 +359,15 @@ public class VerifyHandoffCommandHandler : IRequestHandler<VerifyHandoffCommand,
         rental.Item.Status = NewItemStatus.Rented;
 
         await _context.SaveChangesAsync(ct);
+
+        await _notifier.SendToUserAsync(
+            rental.UserId,
+            "Rental Started",
+            $"Your rental for '{rental.Item.TitleEn}' is now active. Enjoy!",
+            "rental",
+            $"/my-rentals/{rental.Id}",
+            ct);
+
         return new RentalActionResponse(true, null, rental.Status.ToString());
     }
 }
@@ -367,11 +381,13 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public CompleteRentalCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CompleteRentalCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<CompleteRentalResponse> Handle(CompleteRentalCommand request, CancellationToken ct)
@@ -424,11 +440,7 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
                 CreatedAt = DateTimeOffset.UtcNow
             });
 
-            if (rental.DepositStatus == DepositStatus.Returned)
-            {
-                
-            }
-            else if (rental.DepositStatus == DepositStatus.Forfeited)
+            if (rental.DepositStatus == DepositStatus.Forfeited)
             {
                 var penaltyToOwner = rental.DepositAmount * 0.8m;
                 owner.WalletBalance += penaltyToOwner;
@@ -443,17 +455,52 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
             }
         }
 
-        _context.Notifications.Add(new Notification
-        {
-            UserId = rental.UserId,
-            Title = "Rental Completed",
-            Message = rental.LateFee > 0
-                ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {rental.LateFee:C}. Status: {rental.DepositStatus}."
-                : $"Your rental for '{rental.Item.TitleEn}' is complete. Thank you!",
-            CreatedAt = DateTime.UtcNow
-        });
-
         await _context.SaveChangesAsync(ct);
+
+        // Notify renter
+        var renterMsg = lateFee > 0
+            ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {lateFee:C}. Deposit: {rental.DepositStatus}."
+            : $"Your rental for '{rental.Item.TitleEn}' is complete. Thank you!";
+        await _notifier.SendToUserAsync(rental.UserId, "Rental Completed", renterMsg, "rental", $"/my-rentals/{rental.Id}", ct);
+
+        // Notify favorited users
+        var favUserIds = await _context.Favorites
+            .Where(f => f.ItemId == rental.ItemId && f.UserId != rental.Item.OwnerId)
+            .Select(f => f.UserId)
+            .ToListAsync(ct);
+
+        // Notify reminded users
+        var reminderUserIds = await _context.ItemReminders
+            .Where(r => r.ItemId == rental.ItemId)
+            .Select(r => r.UserId)
+            .ToListAsync(ct);
+
+        var itemUrl = $"/marketplace/{rental.ItemId}";
+        var itemTitle = rental.Item.TitleEn;
+
+        var allNotifyIds = favUserIds.Union(reminderUserIds).Distinct()
+            .Where(uid => uid != rental.UserId && uid != rental.Item.OwnerId)
+            .ToList();
+
+        if (allNotifyIds.Any())
+        {
+            await _notifier.SendToUsersAsync(
+                allNotifyIds,
+                "Item Available",
+                $"'{itemTitle}' is now available for rent again!",
+                "item",
+                itemUrl,
+                ct);
+        }
+
+        // Remove reminders for this item (already notified)
+        var reminders = await _context.ItemReminders.Where(r => r.ItemId == rental.ItemId).ToListAsync(ct);
+        if (reminders.Any())
+        {
+            _context.ItemReminders.RemoveRange(reminders);
+            await _context.SaveChangesAsync(ct);
+        }
+
         return new CompleteRentalResponse(true, null, rental.Id, rental.Status.ToString(), rental.LateFee, rental.DepositStatus.ToString());
     }
 }
@@ -465,11 +512,13 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public CancelRentalCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CancelRentalCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<RentalActionResponse> Handle(CancelRentalCommand request, CancellationToken ct)
@@ -494,6 +543,15 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
         }
 
         await _context.SaveChangesAsync(ct);
+
+        await _notifier.SendToUserAsync(
+            rental.Item.OwnerId,
+            "Rental Cancelled",
+            $"The rental request for '{rental.Item.TitleEn}' was cancelled by the renter.",
+            "rental",
+            $"/my-rentals/{rental.Id}",
+            ct);
+
         return new RentalActionResponse(true, null, "Rental cancelled");
     }
 }

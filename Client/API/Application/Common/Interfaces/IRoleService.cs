@@ -21,6 +21,7 @@ public interface IRoleService
     Task<Result> AddUserToRoleAsync(long userId, string roleName);
     Task<Result> RemoveUserFromRoleAsync(long userId, string roleName);
     Task<Result> SetUserRolesAsync(long userId, List<string> roleNames);
+    Task<List<long>> GetUserIdsInRoleAsync(string roleName);
     Task<List<PermissionMetadataDto>> GetAllPermissionsAsync();
 }
 

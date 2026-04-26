@@ -97,5 +97,35 @@ public static class ItemEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
+
+        // Reminders
+        g.MapPost("/{id:guid}/remind", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new AddReminderCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(r);
+        })
+        .WithName("AddItemReminder")
+        .Produces<ApiResponse<ReminderResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
+        g.MapDelete("/{id:guid}/remind", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new RemoveReminderCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(r);
+        })
+        .WithName("RemoveItemReminder")
+        .Produces<ApiResponse<ReminderResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
+        g.MapGet("/{id:guid}/remind", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new GetReminderStatusQuery(id));
+            return Api.Ok(r);
+        })
+        .WithName("GetItemReminderStatus")
+        .Produces<ApiResponse<ReminderStatusResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
     }
 }

@@ -288,6 +288,13 @@
             {{ 'items.rentNow' | translate }}
           </app-loading-button>
 
+          @if (item()?.status === 'Rented') {
+          <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
+            <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+            {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+          </app-loading-button>
+          }
+
           <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
             [title]="'common.chat' | translate">
             <mat-icon>chat_bubble_outline</mat-icon>

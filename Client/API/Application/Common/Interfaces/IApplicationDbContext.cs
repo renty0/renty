@@ -52,6 +52,7 @@ public interface IApplicationDbContext
     DbSet<Chat> Chats { get; }
     DbSet<ChatMessage> ChatMessages { get; }
     DbSet<Notification> Notifications { get; }
+    DbSet<ItemReminder> ItemReminders { get; }
     DbSet<ItemRecommendation> ItemRecommendations { get; }
     DbSet<KpiSnapshot> KpiSnapshots { get; }
 

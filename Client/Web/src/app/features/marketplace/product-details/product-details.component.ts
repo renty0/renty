@@ -54,6 +54,7 @@ export class ProductDetailsComponent implements OnInit {
     relatedItems = signal<ItemListDto[]>([]);
     isLoading = signal(true);
     isFavorite = signal(false);
+    isReminded = signal(false);
     isLoggedIn = this.authService.isLoggedIn;
 
     canEdit = computed(() => {
@@ -110,6 +111,7 @@ export class ProductDetailsComponent implements OnInit {
                         this.loadReviews(id);
                         if (this.isLoggedIn()) {
                             this.checkIfFavorite(id);
+                            this.checkReminderStatus(id);
                         }
                     }
                 }),
@@ -174,6 +176,45 @@ export class ProductDetailsComponent implements OnInit {
                 })
             )
             .subscribe();
+    }
+
+    checkReminderStatus(id: string) {
+        this.itemsClient.getItemReminderStatus(id)
+            .pipe(
+                tap(res => {
+                    if (res.data) {
+                        this.isReminded.set(res.data.isReminded || false);
+                    }
+                })
+            )
+            .subscribe();
+    }
+
+    toggleReminder() {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return;
+        }
+
+        const id = this.item()?.id;
+        if (!id) return;
+
+        const action = this.isReminded()
+            ? this.itemsClient.removeItemReminder(id)
+            : this.itemsClient.addItemReminder(id);
+
+        action.pipe(
+            tap(res => {
+                if (!res.error) {
+                    this.isReminded.set(!this.isReminded());
+                    this.toast.showSuccess(this.isReminded() ? 'marketplace.reminderAdded' : 'marketplace.reminderRemoved');
+                }
+            }),
+            catchError(err => {
+                this.toast.showError('errors.generic');
+                return of(null);
+            })
+        ).subscribe();
     }
 
     toggleFavorite() {

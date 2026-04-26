@@ -55,6 +55,8 @@
       </button>
 
       @if (isLoggedIn()) {
+        <app-notification-dropdown></app-notification-dropdown>
+        
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
         </button>

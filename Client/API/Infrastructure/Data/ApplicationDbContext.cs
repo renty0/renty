@@ -58,6 +58,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Chat> Chats => Set<Chat>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<ItemReminder> ItemReminders => Set<ItemReminder>();
     public DbSet<ItemRecommendation> ItemRecommendations => Set<ItemRecommendation>();
     public DbSet<KpiSnapshot> KpiSnapshots => Set<KpiSnapshot>();
     public DbSet<FraudLog> FraudLogs => Set<FraudLog>();
@@ -399,9 +400,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(200);
             entity.Property(e => e.Message).HasColumnName("message");
+            entity.Property(e => e.Type).HasColumnName("type").HasMaxLength(50);
+            entity.Property(e => e.ActionUrl).HasColumnName("action_url").HasMaxLength(500);
             entity.Property(e => e.IsRead).HasColumnName("is_read");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+        });
+
+        builder.Entity<ItemReminder>(entity =>
+        {
+            entity.ToTable("item_reminders");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.HasIndex(e => new { e.UserId, e.ItemId }).IsUnique();
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+            entity.HasOne(e => e.Item).WithMany().HasForeignKey(e => e.ItemId).OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<ItemRecommendation>(entity =>

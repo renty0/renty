@@ -30,11 +30,15 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
+    private readonly IRoleService _roleService;
 
-    public CreateTicketCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateTicketCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier, IRoleService roleService)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
+        _roleService = roleService;
     }
 
     public async Task<CreateTicketResponse> Handle(CreateTicketCommand request, CancellationToken ct)
@@ -64,6 +68,20 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
         });
 
         await _context.SaveChangesAsync(ct);
+
+        // Notify Support Agents
+        var agents = await _roleService.GetUserIdsInRoleAsync(SecurityRoles.Support.ToString());
+        var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+        var userName = sender?.FirstName ?? "A user";
+        
+        await _notifier.SendToUsersAsync(
+            agents,
+            "New Support Ticket",
+            $"{userName} opened a new '{ticketType}' ticket.",
+            "support",
+            $"/support/tickets/{ticket.Id}",
+            ct);
+
         return new CreateTicketResponse(true, null, ticket.Id);
     }
 }
@@ -161,11 +179,15 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
+    private readonly IRoleService _roleService;
 
-    public PostSupportMessageCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public PostSupportMessageCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier, IRoleService roleService)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
+        _roleService = roleService;
     }
 
     public async Task<PostSupportMessageResponse> Handle(PostSupportMessageCommand request, CancellationToken ct)
@@ -196,6 +218,31 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
 
         ticket.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync(ct);
+
+        if (request.IsSupportAgent)
+        {
+            // Notify the user who opened the ticket
+            await _notifier.SendToUserAsync(
+                ticket.UserId,
+                "Support Reply",
+                "A support agent has replied to your ticket.",
+                "support",
+                $"/support/tickets/{ticket.Id}",
+                ct);
+        }
+        else
+        {
+            // Notify support agents
+            var agents = await _roleService.GetUserIdsInRoleAsync(SecurityRoles.Support.ToString());
+            await _notifier.SendToUsersAsync(
+                agents,
+                "New Ticket Message",
+                $"New message on ticket #{ticket.Id.ToString().Substring(0, 8)}",
+                "support",
+                $"/support/tickets/{ticket.Id}",
+                ct);
+        }
+
         return new PostSupportMessageResponse(true, null, msg.Id, msg.Message, msg.CreatedAt);
     }
 }

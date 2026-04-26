@@ -151,6 +151,12 @@ public class RoleService : IRoleService
         return addResult.ToApplicationResult();
     }
 
+    public async Task<List<long>> GetUserIdsInRoleAsync(string roleName)
+    {
+        var users = await _userManager.GetUsersInRoleAsync(roleName);
+        return users.Select(u => u.Id).ToList();
+    }
+
     public async Task<List<PermissionMetadataDto>> GetAllPermissionsAsync()
     {
         var result = new List<PermissionMetadataDto>();
