@@ -74,17 +74,14 @@
                 </a>
             </div>
 
-            <div class="grid categories-grid">
+            <div class="categories-grid">
                 @for (cat of categories(); track cat.id; let i = $index) {
-                <div class="col-12 sm:col-6 md:col-4 lg:col-2 h-full">
-                    <div class="category-card reveal h-full border-round overflow-hidden"
-                        [style.background-image]="'url(' + cat.image + ')'" [style.transition-delay]="(i * 0.1) + 's'">
-                        <div class="cat-overlay"></div>
-                        <div
-                            class="cat-content flex flex-column align-items-center justify-content-center h-full relative z-1">
-                            <mat-icon class="text-3xl mb-2">{{ cat.icon }}</mat-icon>
-                            <h3 class="text-lg font-bold text-center m-0">{{ cat.nameKey | translate }}</h3>
-                        </div>
+                <div class="category-card reveal"
+                    [style.background-image]="'url(' + cat.image + ')'" [style.transition-delay]="(i * 0.1) + 's'">
+                    <div class="cat-overlay"></div>
+                    <div class="cat-content">
+                        <mat-icon>{{ cat.icon }}</mat-icon>
+                        <h3>{{ cat.nameKey | translate }}</h3>
                     </div>
                 </div>
                 }
@@ -98,18 +95,14 @@
                 <h2>{{ 'home.destinations.title' | translate }}</h2>
                 <p>{{ 'home.destinations.subtitle' | translate }}</p>
             </div>
-            <div class="grid">
+            <div class="destinations-grid">
                 @for (dest of topDestinations(); track dest.nameKey) {
-                <div class="col-12 md:col-3">
-                    <div
-                        class="destination-card reveal border-rounded overflow-hidden shadow-1 hover:shadow-3 transition-all">
-                        <div class="dest-image" [style.background-image]="'url(' + dest.image + ')'">
-                            <div class="dest-overlay flex align-items-end h-full">
-                                <div class="dest-info text-white relative z-1">
-                                    <h3 class="text-xl font-bold pb-1">{{ dest.nameKey | translate }}</h3>
-                                    <p class="text-sm opacity-80 line-height-2">{{ dest.descKey | translate }}</p>
-                                </div>
-                            </div>
+                <div class="destination-card reveal">
+                    <div class="dest-image" [style.background-image]="'url(' + dest.image + ')'"></div>
+                    <div class="dest-overlay">
+                        <div class="dest-info">
+                            <h3>{{ dest.nameKey | translate }}</h3>
+                            <p>{{ dest.descKey | translate }}</p>
                         </div>
                     </div>
                 </div>
@@ -204,20 +197,21 @@
                 <h2>{{ 'home.steps.title' | translate }}</h2>
                 <p>{{ 'home.steps.subtitle' | translate }}</p>
             </div>
-            <div class="grid process-steps py-5">
-                @for (step of steps(); track step.titleKey; let i = $index) {
-                <div class="col-12 md:col-4 p-3">
-                    <div class="process-item flex flex-column align-items-center text-center">
-                        <div class="process-icon-wrapper relative mb-4">
-                            <div
-                                class="step-num absolute -top-2 -right-2 bg-primary text-white w-2rem h-2rem border-circle flex align-items-center justify-content-center font-bold">
-                                {{ i + 1 }}</div>
-                            <mat-icon class="text-5xl">{{ step.icon }}</mat-icon>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">{{ step.titleKey | translate }}</h3>
-                        <p class="text-600">{{ step.descKey | translate }}</p>
+            <div class="process-steps">
+                @for (step of steps(); track step.titleKey; let i = $index; let last = $last) {
+                <div class="process-item">
+                    <div class="process-icon-wrapper">
+                        <div class="step-num">{{ i + 1 }}</div>
+                        <mat-icon>{{ step.icon }}</mat-icon>
                     </div>
+                    <h3>{{ step.titleKey | translate }}</h3>
+                    <p>{{ step.descKey | translate }}</p>
                 </div>
+                @if (!last) {
+                <div class="process-connector">
+                    <mat-icon>arrow_forward</mat-icon>
+                </div>
+                }
                 }
             </div>
         </div>
@@ -247,38 +241,35 @@
         </div>
     </section>
     <footer class="footer-section">
-        <div class="container footer-grid grid py-6">
-            <div class="col-12 md:col-4 footer-brand mb-5">
-                <div class="footer-logo-text text-2xl font-black mb-3">RENTY</div>
-                <p class="text-500 line-height-3">{{ 'home.footer.about' | translate }}</p>
-            </div>
-            <div class="col-12 md:col-3 footer-links mb-5">
-                <h3 class="text-lg font-bold mb-4">{{ 'home.footer.quickLinks' | translate }}</h3>
-                <ul class="list-none p-0 flex flex-column gap-3">
-                    <li><a routerLink="/" class="text-500 hover:text-primary transition-all text-none">{{
-                            'home.footer.home' | translate }}</a></li>
-                    <li><a routerLink="/marketplace" class="text-500 hover:text-primary transition-all text-none">{{
-                            'home.footer.market' | translate }}</a></li>
-                    <li><a routerLink="/register" class="text-500 hover:text-primary transition-all text-none">{{
-                            'home.footer.join' | translate }}</a></li>
-                    <li><a routerLink="/support" class="text-500 hover:text-primary transition-all text-none">{{
-                            'nav.support' | translate }}</a></li>
-                </ul>
-            </div>
-            <div class="col-12 md:col-5 footer-cta">
-                <h3 class="text-lg font-bold mb-4">{{ 'home.footer.ctaTitle' | translate }}</h3>
-                <p class="text-500 mb-4">{{ 'home.footer.ctaDesc' | translate }}</p>
-                <div class="newsletter-form flex gap-2">
-                    <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate"
-                        class="flex-1 p-3 border-round border-1 border-200 outline-none focus:border-primary">
-                    <app-loading-button variant="stroked" color="accent">{{ 'buttons.subscribe' | translate
-                        }}</app-loading-button>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo-text">RENTY</div>
+                    <p>{{ 'home.footer.about' | translate }}</p>
+                </div>
+                <div class="footer-links">
+                    <h3>{{ 'home.footer.quickLinks' | translate }}</h3>
+                    <ul>
+                        <li><a routerLink="/">{{ 'home.footer.home' | translate }}</a></li>
+                        <li><a routerLink="/marketplace">{{ 'home.footer.market' | translate }}</a></li>
+                        <li><a routerLink="/register">{{ 'home.footer.join' | translate }}</a></li>
+                        <li><a routerLink="/support">{{ 'nav.support' | translate }}</a></li>
+                    </ul>
+                </div>
+                <div class="footer-cta">
+                    <h3>{{ 'home.footer.ctaTitle' | translate }}</h3>
+                    <p>{{ 'home.footer.ctaDesc' | translate }}</p>
+                    <div class="newsletter-form">
+                        <input type="email" [placeholder]="'home.footer.emailPlaceholder' | translate">
+                        <app-loading-button variant="stroked" color="accent">{{ 'buttons.subscribe' | translate
+                            }}</app-loading-button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="footer-bottom container">
             <p>{{ 'home.footer.copyright' | translate }}</p>
-            <div class="flex gap-4">
+            <div class="footer-bottom-links">
                 <a (click)="showTerms.set(true)" class="nav-link">
                     {{ 'home.footer.terms' | translate }}
                 </a>

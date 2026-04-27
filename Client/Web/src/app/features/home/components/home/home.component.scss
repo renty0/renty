@@ -13,7 +13,7 @@
   }
 
   .bg-light {
-    background-color: $secondary-color;
+    background-color: $gray-50;
   }
 
   .bg-dark {
@@ -92,10 +92,17 @@
   .hero-section {
     position: relative;
     height: calc(100vh - 64px);
+    min-height: 600px;
     padding: 0 !important;
     display: flex;
     align-items: center;
     overflow: hidden;
+
+    @media (max-width: $breakpoint-md) {
+      height: auto;
+      min-height: auto;
+      padding: 80px 0 60px !important;
+    }
 
     .hero-bg {
       position: absolute;
@@ -132,15 +139,25 @@
       z-index: 1;
 
       .hero-title {
-        font-size: 5rem;
+        font-size: 4.5rem;
         font-weight: 800;
-        line-height: 1;
+        line-height: 1.05;
         margin-bottom: $spacing-lg;
         max-width: 900px;
         letter-spacing: -2px;
 
+        @media (max-width: $breakpoint-lg) {
+          font-size: 3.5rem;
+        }
+
         @media (max-width: $breakpoint-md) {
-          font-size: 3rem;
+          font-size: 2.5rem;
+          letter-spacing: -1px;
+          margin-bottom: $spacing-md;
+        }
+
+        @media (max-width: $breakpoint-sm) {
+          font-size: 2.2rem;
         }
 
         span {
@@ -157,16 +174,27 @@
             height: 8px;
             background: rgba($accent-color, 0.3);
             z-index: -1;
+
+            @media (max-width: $breakpoint-md) {
+              bottom: 4px;
+              height: 5px;
+            }
           }
         }
       }
 
       .hero-subtitle {
-        font-size: 1.25rem;
-        margin-bottom: 50px;
+        font-size: 1.15rem;
+        margin-bottom: 40px;
         opacity: 0.9;
         max-width: 650px;
         line-height: 1.6;
+
+        @media (max-width: $breakpoint-md) {
+          font-size: 0.95rem;
+          margin-bottom: 28px;
+          line-height: 1.5;
+        }
       }
 
       .hero-search-bar {
@@ -176,10 +204,38 @@
         display: flex;
         align-items: center;
         max-width: 700px;
-        margin-bottom: 60px;
+        margin-bottom: 40px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         transition: all 0.3s;
+
+        @media (max-width: $breakpoint-md) {
+          margin-bottom: 28px;
+        }
+
+        @media (max-width: $breakpoint-sm) {
+          flex-direction: column;
+          border-radius: 16px;
+          padding: 12px;
+          gap: 8px;
+
+          input {
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+          }
+
+          mat-icon {
+            display: none;
+          }
+
+          ::ng-deep app-loading-button {
+            width: 100%;
+            .btn {
+              width: 100%;
+            }
+          }
+        }
 
         &:focus-within {
           background: rgba(255, 255, 255, 0.15);
@@ -220,12 +276,15 @@
       }
 
       .hero-stats {
-        display: flex;
-        gap: 60px;
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        gap: 50px;
 
         @media (max-width: $breakpoint-md) {
-          flex-wrap: wrap;
-          gap: $spacing-xl;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px 40px;
+          justify-items: center;
+          text-align: center;
         }
 
         .stat-item {
@@ -233,17 +292,25 @@
           flex-direction: column;
 
           .stat-value {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
             line-height: 1;
             margin-bottom: 4px;
+
+            @media (max-width: $breakpoint-md) {
+              font-size: 1.8rem;
+            }
           }
 
           .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0.6;
+
+            @media (max-width: $breakpoint-md) {
+              font-size: 0.7rem;
+            }
           }
         }
       }
@@ -342,8 +409,24 @@
 
   // Section 3: Categories
   .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+
+    @media (max-width: $breakpoint-xl) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $breakpoint-xs) {
+      grid-template-columns: 1fr;
+    }
+
     .category-card {
-      height: 350px;
+      height: 300px;
       border-radius: 24px;
       background-size: cover;
       background-position: center;
@@ -352,7 +435,7 @@
       cursor: pointer;
       display: flex;
       align-items: flex-end;
-      padding: 30px;
+      padding: 24px;
       color: $white;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -369,14 +452,14 @@
       }
 
       &:hover {
-        transform: scale(1.02);
+        transform: scale(1.03);
 
         .cat-overlay {
-          background: rgba(0, 0, 0, 0.45);
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.15) 100%);
         }
 
         .cat-content h3 {
-          transform: translateY(-8px);
+          transform: translateY(-6px);
         }
 
         .cat-content mat-icon {
@@ -390,11 +473,8 @@
 
       .cat-overlay {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 100%);
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.15) 100%);
         z-index: 0;
         transition: background 0.3s;
       }
@@ -404,122 +484,77 @@
         z-index: 2;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        align-items: center;
+        justify-content: center;
         width: 100%;
+        height: 100%;
+        gap: 10px;
+        text-align: center;
 
         mat-icon {
           font-size: 42px;
           width: 42px;
           height: 42px;
-          opacity: 0.85;
+          opacity: 0.9;
           transition: transform 0.3s;
         }
 
         h3 {
-          font-size: 1.9rem;
+          font-size: 1.2rem;
           font-weight: 800;
           margin: 0;
-          line-height: 1;
+          line-height: 1.2;
           transition: transform 0.3s;
         }
-      }
-    }
-
-    height: 350px;
-    border-radius: 24px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    display: flex;
-    align-items: flex-end;
-    padding: 30px;
-    color: $white;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-
-    &:hover {
-      transform: scale(1.02);
-
-      .cat-overlay {
-        background: rgba(0, 0, 0, 0.35);
-      }
-
-      .cat-content h3 {
-        transform: translateY(-5px);
-      }
-
-      .cat-content mat-icon {
-        transform: scale(1.2);
-      }
-    }
-
-    .cat-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 100%);
-      z-index: 1;
-      transition: all 0.5s;
-    }
-
-    .cat-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-
-      mat-icon {
-        font-size: 40px;
-        width: 40px;
-        height: 40px;
-        opacity: 0.8;
-        transition: transform 0.4s;
-      }
-
-      h3 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        margin: 0;
-        line-height: 1;
-        transition: transform 0.4s;
       }
     }
   }
 }
 
-// Section 4: Top Sports Destinations
+// Section 4: Top Sports Destinations — clean version
 .destinations-section {
   background: #f8fafc;
-  overflow: hidden;
-  height: 30rem;
+  overflow: visible;
+
+  .destinations-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
 
   .destination-card {
-    height: 30rem;
-    border-radius: 30px;
+    height: 380px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
     cursor: pointer;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s;
 
     &:hover {
       transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 
       .dest-image {
         transform: scale(1.08);
       }
 
       .dest-overlay {
-        background: rgba(0, 0, 0, 0.45);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.1) 100%);
       }
     }
 
     .dest-image {
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      inset: 0;
       background-size: cover;
       background-position: center;
       transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -528,81 +563,29 @@
     .dest-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.35);
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 100%);
       display: flex;
       align-items: flex-end;
-      padding: 15px;
+      padding: 28px;
       transition: background 0.3s;
+    }
 
-      .dest-info {
-        color: $white;
+    .dest-info {
+      color: $white;
 
-        h3 {
-          font-size: 2.2rem;
-          font-weight: 800;
-          margin-bottom: 6px;
-          letter-spacing: -1px;
-          transition: transform 0.3s;
-        }
-
-        p {
-          font-size: 1.1rem;
-          opacity: 0.9;
-          margin: 0;
-        }
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: -0.5px;
       }
-    }
-  }
 
-  height: 400px;
-  border-radius: 30px;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-
-  &:hover {
-    .dest-image {
-      transform: scale(1.05);
-    }
-
-    .dest-overlay {
-      background: rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  .dest-image {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .dest-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: flex-end;
-    padding: 10px;
-    transition: background 0.4s;
-  }
-
-  .dest-info {
-    color: $white;
-
-    h3 {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      letter-spacing: -1px;
-    }
-
-    p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin: 0;
+      p {
+        font-size: 0.95rem;
+        opacity: 0.85;
+        margin: 0;
+        line-height: 1.5;
+      }
     }
   }
 }
@@ -610,8 +593,12 @@
 // Section 4: Calendar Promo
 .calendar-promo {
   .promo-grid {
-    gap: 100px;
+    gap: 60px;
     align-items: center;
+
+    @media (max-width: $breakpoint-md) {
+      gap: 40px;
+    }
   }
 
   .promo-info {
@@ -667,20 +654,31 @@
 
     .mock-calendar {
       background: $white;
-      border-radius: 30px;
-      padding: 40px;
+      border-radius: 24px;
+      padding: 32px;
       box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
       border: 1px solid $gray-100;
+      overflow: hidden;
+
+      @media (max-width: $breakpoint-sm) {
+        padding: 16px;
+        border-radius: 18px;
+      }
 
       .calendar-header {
-        padding-bottom: 25px;
+        padding-bottom: 20px;
         border-bottom: 1px solid $gray-100;
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-weight: 800;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: $primary-color;
+
+        @media (max-width: $breakpoint-sm) {
+          font-size: 1rem;
+          padding-bottom: 14px;
+        }
 
         .cal-nav {
           appearance: none;
@@ -703,31 +701,48 @@
       .calendar-days {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 15px;
-        padding-top: 30px;
+        gap: 10px;
+        padding-top: 20px;
+
+        @media (max-width: $breakpoint-sm) {
+          gap: 4px;
+          padding-top: 12px;
+        }
 
         .weekday {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           font-weight: 700;
           color: $gray-500;
           text-align: center;
           text-transform: uppercase;
-          letter-spacing: 0.8px;
-          padding-bottom: 8px;
+          letter-spacing: 0.5px;
+          padding-bottom: 6px;
+
+          @media (max-width: $breakpoint-sm) {
+            font-size: 0.65rem;
+            letter-spacing: 0;
+          }
         }
 
         .day-cell {
-          height: 44px;
-          border-radius: 12px;
+          height: 40px;
+          border-radius: 10px;
           border: 1px solid $gray-100;
           background: #f8fafc;
           transition: all 0.2s;
           cursor: pointer;
-          font-weight: 800;
+          font-weight: 700;
+          font-size: 0.9rem;
           color: $gray-800;
           display: flex;
           align-items: center;
           justify-content: center;
+
+          @media (max-width: $breakpoint-sm) {
+            height: 34px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+          }
 
           &.empty {
             cursor: default;
@@ -832,22 +847,31 @@
 
 // Section 6: Process
 .process-steps {
-  gap: 40px;
-  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  padding: 40px 0;
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
 
   .process-item {
     text-align: center;
     flex: 1;
-    position: relative;
-    z-index: 2;
+    max-width: 320px;
+    padding: 0 20px;
 
     .process-icon-wrapper {
       width: 100px;
       height: 100px;
-      margin: 0 auto 30px;
+      margin: 0 auto 24px;
       position: relative;
       background: $white;
-      border-radius: 30px;
+      border-radius: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -886,7 +910,7 @@
     }
 
     h3 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
       margin-bottom: 12px;
       color: $primary-color;
@@ -899,19 +923,22 @@
     }
   }
 
-  .process-arrow {
-    color: $gray-200;
-    padding-top: 35px;
+  .process-connector {
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    color: $accent-color;
+    opacity: 0.5;
 
     mat-icon {
-      font-size: 30px;
-      width: 30px;
-      height: 30px;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
     }
 
-    @media (max-width: $breakpoint-lg) {
+    @media (max-width: $breakpoint-md) {
       transform: rotate(90deg);
-      padding: 0;
+      padding-top: 0;
     }
   }
 }
@@ -1016,18 +1043,32 @@
 .footer-section {
   background: #0f172a;
   color: $gray-400;
-  padding-top: 100px;
+  padding-top: 80px;
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 2fr;
-    gap: 100px;
-    padding-bottom: 80px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    grid-template-columns: 1.2fr 0.8fr 1.5fr;
+    gap: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
     @media (max-width: $breakpoint-lg) {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: $breakpoint-sm) {
       grid-template-columns: 1fr;
-      gap: 60px;
+      gap: 40px;
+    }
+  }
+
+  .footer-brand {
+    p {
+      color: $gray-400;
+      line-height: 1.7;
+      font-size: 0.95rem;
+      max-width: 320px;
     }
   }
 
@@ -1035,86 +1076,112 @@
     font-size: 1.8rem;
     font-weight: 800;
     color: $white;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .footer-cta {
+    p {
+      color: $gray-400;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
   }
 
   h3 {
     color: $white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
   }
 
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 
-    li {
-      margin-bottom: 14px;
+    li a {
+      color: $gray-400;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 0.95rem;
 
-      a {
-        color: inherit;
-        text-decoration: none;
-        transition: all 0.3s;
-
-        &:hover {
-          color: $white;
-          padding-left: 5px;
-        }
+      &:hover {
+        color: $accent-color;
+        padding-left: 5px;
       }
     }
   }
 
   .newsletter-form {
     display: flex;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 8px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    @media (max-width: $breakpoint-md) {
+      flex-direction: column;
+      padding: 8px;
+    }
 
     input {
       flex: 1;
       border: none;
-      padding-left: 15px;
+      padding: 12px 16px;
       color: $white;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      min-width: 0;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
 
       &:focus {
         outline: none;
+        background: rgba(255, 255, 255, 0.1);
       }
     }
 
     ::ng-deep app-loading-button .btn {
       border-radius: 10px;
+      white-space: nowrap;
     }
   }
 
   .footer-bottom {
-    padding: 40px 20px;
+    padding: 30px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     p {
-      opacity: 0.7;
+      opacity: 0.5;
+      margin: 0;
     }
 
     a {
-      color: $gray-200;
-      opacity: 0.9;
+      color: $gray-400;
       text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s;
 
       &:hover {
         color: $white;
-        opacity: 1;
       }
     }
 
-    @media (max-width: $breakpoint-md) {
+    @media (max-width: $breakpoint-sm) {
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
+      text-align: center;
     }
   }
 }
