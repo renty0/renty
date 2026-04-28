@@ -116,7 +116,8 @@
     "chats": "Chats",
     "notifications": "Notifications",
     "favorites": "My Favorites",
-    "postProduct": "Post Your Product"
+    "postProduct": "Post Your Product",
+    "wallet": "Wallet"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",

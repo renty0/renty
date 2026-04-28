@@ -120,7 +120,8 @@
     "chats": "الرسائل",
     "notifications": "الإشعارات",
     "favorites": "مفضلاتي",
-    "postProduct": "اعرض منتجك"
+    "postProduct": "اعرض منتجك",
+    "wallet": "المحفظة"
   },
   "register": {
     "welcomeMessage": "انضم إلى رنتي اليوم",

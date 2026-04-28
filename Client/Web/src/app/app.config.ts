@@ -11,30 +11,8 @@ import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideTranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import {
-  API_BASE_URL,
-  CategoriesClient,
-  SubcategoriesClient,
-  RecommendationsClient,
-  AuthClient,
-  MediaClient,
-  BrandsClient,
-  ItemsClient,
-  SearchClient,
-  ReviewsClient,
-  FavoritesClient,
-  OrdersClient,
-  RentalsClient,
-  ChatClient,
-  NotificationsClient,
-  SupportClient,
-  VerificationsClient,
-  AdminClient,
-  PaymentsClient,
-  DeliveryClient,
-  Gap_AnalysisClient,
-  Public_ProfileClient,
-} from './core/api/api-client';
+import { API_BASE_URL } from './core/api/api-client';
+import { PROVIDE_API_CLIENTS } from './core/api/api-providers';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -47,27 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideNativeDateAdapter(),
     provideTranslateService({ fallbackLang: 'en' }),
     { provide: API_BASE_URL, useValue: environment.apiUrl },
-    CategoriesClient,
-    SubcategoriesClient,
-    RecommendationsClient,
-    AuthClient,
-    MediaClient,
-    BrandsClient,
     CookieService,
-    ItemsClient,
-    SearchClient,
-    ReviewsClient,
-    FavoritesClient,
-    OrdersClient,
-    RentalsClient,
-    ChatClient,
-    NotificationsClient,
-    SupportClient,
-    VerificationsClient,
-    AdminClient,
-    PaymentsClient,
-    DeliveryClient,
-    Gap_AnalysisClient,
-    Public_ProfileClient
+    ...PROVIDE_API_CLIENTS
   ],
 };

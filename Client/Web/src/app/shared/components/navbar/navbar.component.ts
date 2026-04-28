@@ -100,6 +100,10 @@ export class NavbarComponent implements OnInit {
       links.push(...this.allNavLinks.filter((link) => link.adminOnly));
     }
 
+    if (this.isExpert()) {
+      links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });
+    }
+
     return links;
   });
 

@@ -116,6 +116,10 @@
                 <mat-icon class="text-warn">favorite</mat-icon>
                 <span>{{ 'nav.favorites' | translate }}</span>
               </button>
+              <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
+                <mat-icon color="primary">account_balance_wallet</mat-icon>
+                <span>{{ 'nav.wallet' | translate }}</span>
+              </button>
               <button mat-menu-item routerLink="/dashboard" (click)="closeMobileMenu()">
                 <mat-icon>dashboard</mat-icon>
                 <span>{{ 'nav.dashboard' | translate }}</span>
@@ -247,6 +251,10 @@
           <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
             <mat-icon>person</mat-icon>
             {{ 'nav.profile' | translate }}
+          </a>
+          <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">
+            <mat-icon>account_balance_wallet</mat-icon>
+            {{ 'nav.wallet' | translate }}
           </a>
           @if (isExpert()) {
             <a routerLink="/expert/assigned" class="mobile-link" (click)="closeMobileMenu()">
