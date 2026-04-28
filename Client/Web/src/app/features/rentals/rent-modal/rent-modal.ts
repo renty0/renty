@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { RentalsClient, CreateRentalCommand, ItemDetailDto } from '../../../core/api/api-client';
@@ -27,6 +29,7 @@ import { LoadingButtonComponent } from '../../../shared/components/loading-butto
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatIconModule,
     TranslateModule,
     LoadingButtonComponent
@@ -39,6 +42,7 @@ export class RentModalComponent implements OnInit {
   private rentalsClient = inject(RentalsClient);
   private toast = inject(ToastService);
   private dialogRef = inject(MatDialogRef<RentModalComponent>);
+  private router = inject(Router);
   public data = inject<{ item: ItemDetailDto }>(MAT_DIALOG_DATA);
 
   rentForm!: FormGroup;
@@ -57,7 +61,8 @@ export class RentModalComponent implements OnInit {
     this.rentForm = this.fb.group({
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
-      pricingType: [this.availablePricingTypes()[0] || 'daily', Validators.required]
+      pricingType: [this.availablePricingTypes()[0] || 'daily', Validators.required],
+      requiresExpert: [false]
     });
 
     this.rentForm.valueChanges.subscribe(() => {
@@ -113,6 +118,9 @@ export class RentModalComponent implements OnInit {
         } else {
           this.toast.showSuccess('rentals.success');
           this.dialogRef.close(true);
+          if (res.data?.orderId) {
+            this.router.navigate(['/checkout', res.data.orderId, 'payment']);
+          }
         }
       },
       error: (err) => {

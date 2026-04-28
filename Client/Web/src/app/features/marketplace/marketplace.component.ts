@@ -13,6 +13,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import {
   ItemsClient,
@@ -24,6 +26,7 @@ import {
   SearchClient,
 } from '../../core/api/api-client';
 import { ToastService } from '../../shared/services/toast.service';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.constants';
 
@@ -45,6 +48,9 @@ import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.cons
     MatExpansionModule,
     MatChipsModule,
     MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ProductCardComponent
   ],
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.scss'
@@ -82,6 +88,9 @@ export class MarketplaceComponent implements OnInit {
   minPrice = signal<number | undefined>(undefined);
   maxPrice = signal<number | undefined>(undefined);
   selectedType = signal<string | undefined>(undefined);
+  startDate = signal<Date | undefined>(undefined);
+  endDate = signal<Date | undefined>(undefined);
+  minRating = signal<number | undefined>(undefined);
   sortBy = signal<string>('newest');
 
   // Pagination
@@ -99,6 +108,9 @@ export class MarketplaceComponent implements OnInit {
       this.minPrice();
       this.maxPrice();
       this.selectedType();
+      this.startDate();
+      this.endDate();
+      this.minRating();
       this.sortBy();
       untracked(() => this.pageNumber.set(1));
     }, { allowSignalWrites: true });
@@ -199,6 +211,10 @@ export class MarketplaceComponent implements OnInit {
         sort = 'price';
         sortOrder = 'desc';
         break;
+      case 'rating':
+        sort = 'rating';
+        sortOrder = 'desc';
+        break;
       case 'newest':
       default:
         sort = 'createdAt';
@@ -214,6 +230,9 @@ export class MarketplaceComponent implements OnInit {
       this.selectedCity() ?? undefined,
       this.minPrice() ?? undefined,
       this.maxPrice() ?? undefined,
+      this.startDate() ?? undefined,
+      this.endDate() ?? undefined,
+      this.minRating() ?? undefined,
       this.selectedType() ?? undefined,
       undefined,              // condition
       sort,
@@ -248,6 +267,9 @@ export class MarketplaceComponent implements OnInit {
     this.minPrice.set(undefined);
     this.maxPrice.set(undefined);
     this.selectedType.set(undefined);
+    this.startDate.set(undefined);
+    this.endDate.set(undefined);
+    this.minRating.set(undefined);
     this.sortBy.set('newest');
   }
 

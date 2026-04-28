@@ -108,6 +108,9 @@ export class ItemsListComponent implements OnInit {
         undefined, // city
         undefined, // minPrice
         undefined, // maxPrice
+        undefined, // startDate
+        undefined, // endDate
+        undefined, // minRating
         undefined, // type
         undefined, // condition
         this.sortBy() ?? undefined,

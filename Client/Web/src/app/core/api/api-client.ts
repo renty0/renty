@@ -616,7 +616,7 @@ export class ItemsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponse<ItemListDto[]>> {
+    getItems(page: number, limit: number, categoryId?: number | null | undefined, subcategoryId?: number | null | undefined, city?: string | null | undefined, minPrice?: number | null | undefined, maxPrice?: number | null | undefined, startDate?: Date | null | undefined, endDate?: Date | null | undefined, minRating?: number | null | undefined, type?: string | null | undefined, condition?: string | null | undefined, sort?: string | null | undefined, sortOrder?: string | null | undefined, owner?: string | null | undefined): Observable<ApiResponse<ItemListDto[]>> {
         let url_ = this.baseUrl + "/api/v1/items?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -636,6 +636,12 @@ export class ItemsClient {
             url_ += "minPrice=" + encodeURIComponent("" + minPrice) + "&";
         if (maxPrice !== undefined && maxPrice !== null)
             url_ += "maxPrice=" + encodeURIComponent("" + maxPrice) + "&";
+        if (startDate !== undefined && startDate !== null)
+            url_ += "startDate=" + encodeURIComponent(startDate ? "" + startDate.toISOString() : "") + "&";
+        if (endDate !== undefined && endDate !== null)
+            url_ += "endDate=" + encodeURIComponent(endDate ? "" + endDate.toISOString() : "") + "&";
+        if (minRating !== undefined && minRating !== null)
+            url_ += "minRating=" + encodeURIComponent("" + minRating) + "&";
         if (type !== undefined && type !== null)
             url_ += "type=" + encodeURIComponent("" + type) + "&";
         if (condition !== undefined && condition !== null)
@@ -1061,6 +1067,57 @@ export class ItemsClient {
     }
 
     protected processGetItemReminderStatus(response: HttpResponseBase): Observable<ApiResponse<ReminderStatusResponse>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getItemAvailability(id: string): Observable<ApiResponse<BookedRangeDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/items/{id}/availability";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetItemAvailability(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetItemAvailability(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<BookedRangeDto[]>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<BookedRangeDto[]>>;
+        }));
+    }
+
+    protected processGetItemAvailability(response: HttpResponseBase): Observable<ApiResponse<BookedRangeDto[]>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3135,14 +3192,14 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    uploadRentalPhotos(id: string, cmd: UploadRentalPhotosCommand): Observable<ApiResponse<null>> {
+    uploadRentalPhotos(id: string, body: UploadRentalPhotosBody): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/photos";
         if (id === undefined || id === null)
             throw new globalThis.Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(cmd);
+        const content_ = JSON.stringify(body);
 
         let options_ : any = {
             body: content_,
@@ -7327,6 +7384,8 @@ export class ItemListDto implements IItemListDto {
     type?: string;
     condition?: string | undefined;
     ownerId?: number | undefined;
+    isForSale?: boolean;
+    salePrice?: number | undefined;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -7353,6 +7412,8 @@ export class ItemListDto implements IItemListDto {
             this.type = _data["type"];
             this.condition = _data["condition"];
             this.ownerId = _data["ownerId"];
+            this.isForSale = _data["isForSale"];
+            this.salePrice = _data["salePrice"];
             this.category = _data["category"] ? ItemCategoryRef.fromJS(_data["category"]) : undefined as any;
             this.subcategory = _data["subcategory"] ? ItemSubcategoryRef.fromJS(_data["subcategory"]) : undefined as any;
             this.brand = _data["brand"] ? ItemBrandRef.fromJS(_data["brand"]) : undefined as any;
@@ -7379,6 +7440,8 @@ export class ItemListDto implements IItemListDto {
         data["type"] = this.type;
         data["condition"] = this.condition;
         data["ownerId"] = this.ownerId;
+        data["isForSale"] = this.isForSale;
+        data["salePrice"] = this.salePrice;
         data["category"] = this.category ? this.category.toJSON() : undefined as any;
         data["subcategory"] = this.subcategory ? this.subcategory.toJSON() : undefined as any;
         data["brand"] = this.brand ? this.brand.toJSON() : undefined as any;
@@ -7398,6 +7461,8 @@ export interface IItemListDto {
     type?: string;
     condition?: string | undefined;
     ownerId?: number | undefined;
+    isForSale?: boolean;
+    salePrice?: number | undefined;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -7785,6 +7850,8 @@ export class ItemDetailDto implements IItemDetailDto {
     city?: string | undefined;
     lat?: number | undefined;
     lng?: number | undefined;
+    isForSale?: boolean;
+    salePrice?: number | undefined;
     createdAt?: Date;
     owner?: OwnerDto;
     pricing?: ItemPricingDto[];
@@ -7819,6 +7886,8 @@ export class ItemDetailDto implements IItemDetailDto {
             this.city = _data["city"];
             this.lat = _data["lat"];
             this.lng = _data["lng"];
+            this.isForSale = _data["isForSale"];
+            this.salePrice = _data["salePrice"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
             this.owner = _data["owner"] ? OwnerDto.fromJS(_data["owner"]) : undefined as any;
             if (Array.isArray(_data["pricing"])) {
@@ -7861,6 +7930,8 @@ export class ItemDetailDto implements IItemDetailDto {
         data["city"] = this.city;
         data["lat"] = this.lat;
         data["lng"] = this.lng;
+        data["isForSale"] = this.isForSale;
+        data["salePrice"] = this.salePrice;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         data["owner"] = this.owner ? this.owner.toJSON() : undefined as any;
         if (Array.isArray(this.pricing)) {
@@ -7896,6 +7967,8 @@ export interface IItemDetailDto {
     city?: string | undefined;
     lat?: number | undefined;
     lng?: number | undefined;
+    isForSale?: boolean;
+    salePrice?: number | undefined;
     createdAt?: Date;
     owner?: OwnerDto;
     pricing?: ItemPricingDto[];
@@ -8253,6 +8326,50 @@ export class ReminderStatusResponse implements IReminderStatusResponse {
 
 export interface IReminderStatusResponse {
     isReminded?: boolean;
+}
+
+
+
+
+
+export class BookedRangeDto implements IBookedRangeDto {
+    start?: Date;
+    end?: Date;
+
+    constructor(data?: IBookedRangeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : undefined as any;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): BookedRangeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new BookedRangeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["start"] = this.start ? this.start.toISOString() : undefined as any;
+        data["end"] = this.end ? this.end.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IBookedRangeDto {
+    start?: Date;
+    end?: Date;
 }
 
 
@@ -9915,12 +10032,11 @@ export interface IRentalStatusData {
     status?: string | undefined;
 }
 
-export class UploadRentalPhotosCommand implements IUploadRentalPhotosCommand {
-    rentalId?: string;
+export class UploadRentalPhotosBody implements IUploadRentalPhotosBody {
     imageIds?: string[];
     type?: RentalImageType;
 
-    constructor(data?: IUploadRentalPhotosCommand) {
+    constructor(data?: IUploadRentalPhotosBody) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9931,7 +10047,6 @@ export class UploadRentalPhotosCommand implements IUploadRentalPhotosCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.rentalId = _data["rentalId"];
             if (Array.isArray(_data["imageIds"])) {
                 this.imageIds = [] as any;
                 for (let item of _data["imageIds"])
@@ -9941,16 +10056,15 @@ export class UploadRentalPhotosCommand implements IUploadRentalPhotosCommand {
         }
     }
 
-    static fromJS(data: any): UploadRentalPhotosCommand {
+    static fromJS(data: any): UploadRentalPhotosBody {
         data = typeof data === 'object' ? data : {};
-        let result = new UploadRentalPhotosCommand();
+        let result = new UploadRentalPhotosBody();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["rentalId"] = this.rentalId;
         if (Array.isArray(this.imageIds)) {
             data["imageIds"] = [];
             for (let item of this.imageIds)
@@ -9961,8 +10075,7 @@ export class UploadRentalPhotosCommand implements IUploadRentalPhotosCommand {
     }
 }
 
-export interface IUploadRentalPhotosCommand {
-    rentalId?: string;
+export interface IUploadRentalPhotosBody {
     imageIds?: string[];
     type?: RentalImageType;
 }

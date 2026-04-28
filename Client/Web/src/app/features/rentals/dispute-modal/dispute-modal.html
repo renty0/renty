@@ -1,0 +1,53 @@
+<div class="dispute-modal-container">
+  <!-- Custom Header -->
+  <div class="modal-header">
+    <div class="icon-container">
+      <mat-icon color="warn">gavel</mat-icon>
+    </div>
+    <div class="header-text">
+      <h2 class="title">{{ 'rentals.disputes.title' | translate }}</h2>
+      <p class="subtitle">{{ 'rentals.disputes.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <mat-dialog-content class="mat-typography custom-scroll">
+    <div class="warning-alert mb-4">
+      <mat-icon class="warning-icon">info</mat-icon>
+      <div class="warning-text">
+        <strong>{{ 'rentals.disputes.warningTitle' | translate }}</strong>
+        <p>{{ 'rentals.disputes.warningText' | translate }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="disputeForm" class="flex flex-column gap-3 mt-2">
+      <app-input label="rentals.disputes.reasonType" [formGroup]="disputeForm" controlName="reasonType" type="select"
+        [options]="disputeReasonOptions" [translateOptions]="true" [translateLabel]="true" [required]="true" />
+
+      <app-input label="rentals.disputes.description" [formGroup]="disputeForm" controlName="description" type="textarea"
+        placeholder="rentals.disputes.descriptionPlaceholder" [translateLabel]="true" [required]="true" [rows]="4" />
+
+      <div class="photos-section mt-3 w-full">
+        <h4 class="section-title">
+          <mat-icon>add_a_photo</mat-icon>
+          {{ 'rentals.disputes.uploadPhotos' | translate }}
+        </h4>
+        <p class="section-desc mb-3">{{ 'rentals.disputes.uploadPhotosHint' | translate }}</p>
+        <app-multi-image-uploader class="w-full" [images]="uploadedPhotos()" (imagesChange)="uploadedPhotos.set($event)" />
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="modal-actions">
+    <button mat-stroked-button class="cancel-btn" (click)="onCancel()" [disabled]="isSubmitting()">
+      {{ 'buttons.cancel' | translate }}
+    </button>
+    <app-loading-button
+      [loading]="isSubmitting()"
+      [disabled]="disputeForm.invalid || isSubmitting()"
+      (clicked)="onSubmit()"
+      color="warn">
+      <mat-icon>gavel</mat-icon>
+      {{ 'rentals.disputes.submit' | translate }}
+    </app-loading-button>
+  </mat-dialog-actions>
+</div>

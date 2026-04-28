@@ -133,8 +133,17 @@ export class ProductDetailsComponent implements OnInit {
             1, 5,
             undefined,       // categoryId
             subcategoryId,   // subcategoryId
-            undefined, undefined, undefined, undefined, undefined,
-            'newest', 'desc', undefined
+            undefined,       // city
+            undefined,       // minPrice
+            undefined,       // maxPrice
+            undefined,       // startDate
+            undefined,       // endDate
+            undefined,       // minRating
+            undefined,       // type
+            undefined,       // condition
+            'newest',        // sort
+            'desc',          // sortOrder
+            undefined        // owner
         )
             .pipe(
                 tap(res => {

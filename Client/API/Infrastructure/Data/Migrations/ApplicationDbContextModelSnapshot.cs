@@ -680,6 +680,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("desc_en");
 
+                    b.Property<bool>("IsForSale")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal?>("Lat")
                         .HasPrecision(10, 7)
                         .HasColumnType("numeric(10,7)")
@@ -698,6 +701,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint")
                         .HasColumnName("owner_id");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Status")
                         .IsRequired()

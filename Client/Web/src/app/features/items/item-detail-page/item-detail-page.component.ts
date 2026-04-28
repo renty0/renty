@@ -15,8 +15,11 @@ import { catchError, finalize, of, tap } from 'rxjs';
 
 import {
     ItemsClient, ItemDetailDto, FavoritesClient, ReviewsClient, ChatClient,
-    GetItemReviewsResponse, ReviewDto, ItemListDto, CreateChatCommand, CreateReviewCommand
+    GetItemReviewsResponse, ReviewDto, ItemListDto, CreateChatCommand, CreateReviewCommand,
+    BookedRangeDto
 } from '../../../core/api/api-client';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { LocalizationService } from '../../../core/services/localization.service';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
@@ -35,6 +38,8 @@ import { ToastService } from '../../../shared/services/toast.service';
         MatProgressSpinnerModule,
         MatTooltipModule,
         MatDividerModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
         LoadingButtonComponent,
         InputComponent,
     ],
@@ -64,6 +69,8 @@ export class ItemDetailPageComponent implements OnInit {
     isRenting = signal(false);
     isChatting = signal(false);
     isReminded = signal(false);
+    bookedDates = signal<BookedRangeDto[]>([]);
+    isLoadingAvailability = signal(false);
 
     // ── Reviews ────────────────────────────────────────────────────
     reviewsData = signal<GetItemReviewsResponse | null>(null);
@@ -119,6 +126,7 @@ export class ItemDetailPageComponent implements OnInit {
                     this.activeImageIndex.set(0);
                     this.loadItem(id);
                     this.loadReviews(id);
+                    this.loadAvailability(id);
                 } else {
                     this.router.navigate(['/items']);
                 }
@@ -154,6 +162,17 @@ export class ItemDetailPageComponent implements OnInit {
             }),
             catchError(() => of(null)),
             finalize(() => { this.isLoadingReviews.set(false); this.cdr.markForCheck(); })
+        ).subscribe();
+    }
+
+    loadAvailability(itemId: string): void {
+        this.isLoadingAvailability.set(true);
+        this.itemsClient.getItemAvailability(itemId).pipe(
+            tap((res) => {
+                this.bookedDates.set(res?.data || []);
+            }),
+            catchError(() => of(null)),
+            finalize(() => { this.isLoadingAvailability.set(false); this.cdr.markForCheck(); })
         ).subscribe();
     }
 
@@ -218,6 +237,26 @@ export class ItemDetailPageComponent implements OnInit {
         if (!item?.id) return;
         this.router.navigate(['/rentals', 'new'], { queryParams: { itemId: item.id } });
     }
+
+    buyItem(): void {
+        const item = this.item();
+        if (!item?.id) return;
+        // For now, redirect to chat to negotiate or a simple buy-now flow
+        this.startChat();
+        this.showToast('items.buyRequestSent');
+    }
+    
+    dateFilter = (d: Date | null): boolean => {
+        if (!d) return false;
+        const time = d.getTime();
+        // Check if d is within any booked range
+        return !this.bookedDates().some(range => {
+            if (!range.start || !range.end) return false;
+            const start = new Date(range.start).getTime();
+            const end = new Date(range.end).getTime();
+            return time >= start && time <= end;
+        });
+    };
 
     startChat(): void {
         const ownerId = this.item()?.owner?.id;

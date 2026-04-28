@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,12 +11,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosCommand, ChatClient, CreateChatCommand, RentalImageType } from '../../../core/api/api-client';
+import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosBody, ChatClient, CreateChatCommand, RentalImageType } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { PermissionService } from '../../../core/services/permission.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+import { DisputeModalComponent } from '../dispute-modal/dispute-modal';
 
 @Component({
   selector: 'app-rental-details',
@@ -48,6 +50,7 @@ export class RentalDetailsComponent implements OnInit {
   private auth = inject(AuthService);
   private toast = inject(ToastService);
   private permissionService = inject(PermissionService);
+  private dialog = inject(MatDialog);
 
   isLoading = signal(true);
   isActionLoading = signal(false);
@@ -153,8 +156,7 @@ export class RentalDetailsComponent implements OnInit {
     this.mediaClient.uploadMedia(this.rentalId(), 'Rental', fileParam).subscribe({
       next: (res) => {
         if (res.data?.id) {
-          const cmd = new UploadRentalPhotosCommand({
-            rentalId: this.rentalId(),
+          const cmd = new UploadRentalPhotosBody({
             imageIds: [res.data.id],
             type: type
           });
@@ -221,6 +223,21 @@ export class RentalDetailsComponent implements OnInit {
         console.error('Failed to start chat', err);
         this.toast.showError('errors.generic');
         this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  openDispute() {
+    const dialogRef = this.dialog.open(DisputeModalComponent, {
+      width: '500px',
+      data: { rentalId: this.rentalId() },
+      panelClass: 'glass-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // If dispute was opened, reload the rental to update status
+        this.loadRental();
       }
     });
   }

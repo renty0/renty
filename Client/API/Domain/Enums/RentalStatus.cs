@@ -7,5 +7,6 @@ public enum RentalStatus
     Active,
     Completed,
     Cancelled,
-    Overdue
+    Overdue,
+    Rejected
 }

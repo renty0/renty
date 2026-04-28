@@ -66,6 +66,7 @@
     "sortNewest": "Newest",
     "sortPriceLow": "Price: Low to High",
     "sortPriceHigh": "Price: High to Low",
+    "sortTopRated": "Top Rated",
     "searchResults": "Search Results",
     "resultsFor": "Results for",
     "rentNow": "Rent Now",
@@ -79,6 +80,10 @@
     "deleteItem": "Delete Item",
     "day": "day",
     "available": "Available",
+    "booked": "Booked",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "availability": "Availability",
     "unavailable": "Unavailable",
     "anonymous": "Anonymous"
   },
@@ -110,7 +115,8 @@
     "myOrders": "My Orders",
     "chats": "Chats",
     "notifications": "Notifications",
-    "favorites": "My Favorites"
+    "favorites": "My Favorites",
+    "postProduct": "Post Your Product"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -370,9 +376,30 @@
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
+      "dispute": "Dispute",
       "damaged": "Forfeit Deposit",
       "verify": "Verify & Start Rental",
       "no_actions": "No actions available for this rental."
+    },
+    "disputes": {
+      "title": "Dispute Rental",
+      "subtitle": "Report an issue with this rental",
+      "dispute": "Dispute",
+      "uploadPhotos": "Upload Photos",
+      "submit": "Submit Dispute",
+      "description": "Description",
+      "descriptionPlaceholder": "Please provide as much detail as possible...",
+      "reasonType": "Dispute Type",
+      "warningTitle": "Important Notice",
+      "warningText": "Opening a dispute will freeze all transaction processes until our support team reviews the case and makes a decision.",
+      "uploadPhotosHint": "Provide clear photos showing the issue.",
+      "success": "Dispute submitted successfully.",
+      "reasons": {
+        "broken": "Broken",
+        "not_as_described": "Not as Described",
+        "late_return": "Late Return",
+        "other": "Other"
+      }
     }
   },
   "validation": {
@@ -491,6 +518,18 @@
       "cities": "Cities Covered",
       "users": "Active Users",
       "rating": "User Rating"
+    },
+    "suggested": {
+      "title": "Suggested for You",
+      "subtitle": "Based on your interests and activity"
+    },
+    "popular": {
+      "title": "Popular Equipment",
+      "subtitle": "The most rented items in your area"
+    },
+    "newest": {
+      "title": "Newly Added",
+      "subtitle": "Fresh gear just arrived on Renty"
     }
   },
   "subcategories": {
@@ -584,6 +623,8 @@
     "rentNow": "Rent Now",
     "favorite": "Favorite",
     "addedToFavorites": "Added to favorites",
+    "buyNow": "Buy Now",
+    "buyRequestSent": "Buy request sent! Owner will contact you soon.",
     "similarItems": "Similar Items"
   },
   "expert": {

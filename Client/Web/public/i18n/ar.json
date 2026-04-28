@@ -52,7 +52,6 @@
     "title": "السوق",
     "heroTitle": "السوق",
     "allCategories": "كل الفئات",
-    
     "allSubcategories": "كل الفئات الفرعية",
     "heroSubtitle": "اكتشف منتجات فريدة من مجتمعنا",
     "products": "المنتجات",
@@ -71,6 +70,7 @@
     "sortNewest": "الأحدث",
     "sortPriceLow": "السعر: من الأقل إلى الأعلى",
     "sortPriceHigh": "السعر: من الأعلى إلى الأقل",
+    "sortTopRated": "الأعلى تقييماً",
     "searchResults": "نتائج البحث",
     "resultsFor": "نتائج لـ",
     "rentNow": "استأجر الآن",
@@ -84,6 +84,10 @@
     "deleteItem": "حذف المنتج",
     "day": "يوم",
     "available": "متاح",
+    "booked": "محجوز",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "availability": "التوفر",
     "unavailable": "غير متاح",
     "anonymous": "مجهول"
   },
@@ -115,7 +119,8 @@
     "myOrders": "طلباتي",
     "chats": "الرسائل",
     "notifications": "الإشعارات",
-    "favorites": "مفضلاتي"
+    "favorites": "مفضلاتي",
+    "postProduct": "اعرض منتجك"
   },
   "register": {
     "welcomeMessage": "انضم إلى رنتي اليوم",
@@ -375,9 +380,30 @@
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
+      "dispute": "نزاع",
       "damaged": "مصادرة التأمين",
       "verify": "التحقق وبدء الإيجار",
       "no_actions": "لا توجد إجراءات متاحة لهذا الإيجار."
+    },
+    "disputes": {
+      "title": "نزاع على الإيجار",
+      "subtitle": "أبلغ عن مشكلة في هذا الإيجار",
+      "dispute": "نزاع",
+      "uploadPhotos": "رفع الصور",
+      "submit": "إرسال النزاع",
+      "description": "الوصف",
+      "descriptionPlaceholder": "يرجى كتابة أكبر قدر ممكن من التفاصيل...",
+      "reasonType": "نوع النزاع",
+      "warningTitle": "تنبيه هام",
+      "warningText": "فتح نزاع سيؤدي إلى تجميد جميع المعاملات الخاصة بهذا الإيجار حتى يقوم فريق الدعم بمراجعة المشكلة واتخاذ قرار.",
+      "uploadPhotosHint": "يرجى تقديم صور واضحة تظهر المشكلة بوضوح.",
+      "success": "تم إرسال النزاع بنجاح.",
+      "reasons": {
+        "broken": "مكسور",
+        "not_as_described": "ليس كما هو موصوف",
+        "late_return": "إرجاع متأخر",
+        "other": "أخرى"
+      }
     }
   },
   "validation": {
@@ -496,6 +522,18 @@
       "cities": "مدن مغطاة",
       "users": "مستخدم نشط",
       "rating": "تقييم المستخدمين"
+    },
+    "suggested": {
+      "title": "مقترح لك",
+      "subtitle": "بناءً على اهتماماتك ونشاطك"
+    },
+    "popular": {
+      "title": "الأكثر شيوعاً",
+      "subtitle": "السلع الأكثر تأجيراً في منطقتك"
+    },
+    "newest": {
+      "title": "أضيف حديثاً",
+      "subtitle": "أحدث المعدات التي وصلت إلى رنتي"
     }
   },
   "subcategories": {
@@ -586,6 +624,8 @@
     "rentNow": "استأجر الآن",
     "favorite": "المفضلة",
     "addedToFavorites": "تمت الإضافة للمفضلة",
+    "buyNow": "اشترِ الآن",
+    "buyRequestSent": "تم إرسال طلب الشراء! سيتواصل معك المالك قريباً.",
     "similarItems": "منتجات مشابهة"
   },
   "expert": {
@@ -814,7 +854,7 @@
     "activeNow": "نشط الأن",
     "noChats": "لا توجد محادثات بعد.",
     "typePlaceholder": "اكتب رسالة...",
-    "noMessages": "ابدأ محادثة الآن!",  
+    "noMessages": "ابدأ محادثة الآن!",
     "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",

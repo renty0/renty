@@ -65,31 +65,34 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
         if (!user.IsActive)
         {
-            return new LoginResponse(false, "Account is deactivated.", null, null);
+            return new LoginResponse(false, "Account is suspended. Please contact support.", null, null);
         }
 
-        if (!user.EmailConfirmed)
+        if (await _identityService.IsLockedOutAsync(user))
         {
-            try
-            {
-                var token = await _identityService.GenerateEmailConfirmationTokenAsync(user);
-                var body = Application.Shared.Utilities.EmailTemplates.GetEmailConfirmationTemplate(token);
-                await _emailSender.SendEmailAsync(user.Email!, "Confirm Your Email - Rently", body);
-            }
-            catch (Exception)
-            {
-                // In a real app, we should log this
-            }
-            
-            return new LoginResponse(false, "EmailNotConfirmed", null, null);
+            return new LoginResponse(false, "Account locked due to multiple failed attempts. Please try again later.", null, null);
         }
 
         var isValidPassword = await _identityService.ValidatePasswordAsync(user, request.Password);
         if (!isValidPassword)
         {
+            await _identityService.IncrementAccessFailedCountAsync(user);
+            
+            // Re-check lockout status after incrementing
+            if (await _identityService.IsLockedOutAsync(user))
+            {
+                return new LoginResponse(false, "Account locked due to multiple failed attempts. Please try again later.", null, null);
+            }
+
             return new LoginResponse(false, "Invalid email or password.", null, null);
         }
 
+        // Reset failed attempts on successful password validation
+        await _identityService.ResetAccessFailedCountAsync(user);
+
+        // Note: We now allow login even if email is not confirmed, 
+        // but we will block rentals later in the CreateRental command.
+        
         var roles = await _identityService.GetUserRolesAsync(user);
         
         // Fetch permissions for these roles

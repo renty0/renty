@@ -87,6 +87,12 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
         if (_currentUser.Id == null)
             return new CreateRentalResponse(false, "Unauthorized.", null, null, null, null);
 
+        var user = await _context.Users.FindAsync(new object[] { _currentUser.Id.Value }, ct);
+        if (user == null || !user.EmailConfirmed)
+        {
+            return new CreateRentalResponse(false, "Please confirm your email address before renting items.", null, null, null, null);
+        }
+
         var item = await _context.Items
             .Include(i => i.Pricing)
             .FirstOrDefaultAsync(i => i.Id == request.ItemId, ct);

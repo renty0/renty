@@ -54,9 +54,32 @@
         <span class="lang-code">{{ isArabic ? 'EN' : 'العربية' }}</span>
       </button>
 
+      <!-- Common Action Icons (Notification & Chat) -->
       @if (isLoggedIn()) {
         <app-notification-dropdown></app-notification-dropdown>
         
+        <button
+          mat-icon-button
+          routerLink="/chats"
+          class="user-btn"
+          [title]="'nav.chats' | translate"
+        >
+          <mat-icon>chat</mat-icon>
+        </button>
+      }
+
+      <!-- Authentication Specific Actions -->
+      @if (isLoggedIn()) {
+        <button
+          mat-stroked-button
+          color="accent"
+          routerLink="/items/new"
+          class="post-btn sm-hidden"
+        >
+          <mat-icon>add_a_photo</mat-icon>
+          <span>{{ 'nav.postProduct' | translate }}</span>
+        </button>
+
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
         </button>
@@ -131,6 +154,18 @@
         </mat-menu>
       } @else {
         <div class="auth-buttons sm-hidden">
+          <button
+            mat-stroked-button
+            color="accent"
+            routerLink="/items/new"
+            class="post-btn sm-hidden"
+          >
+            <mat-icon>add_a_photo</mat-icon>
+            <span>{{ 'nav.postProduct' | translate }}</span>
+          </button>
+
+          <div class="divider sm-hidden"></div>
+
           <a routerLink="/login" class="nav-link login-link">{{ 'nav.login' | translate }}</a>
           <app-loading-button color="accent" size="sm" routerLink="/register">
             {{ 'nav.register' | translate }}
@@ -158,6 +193,15 @@
             />
           </div>
         </div>
+
+        <a
+          routerLink="/items/new"
+          class="mobile-link highlight-link"
+          (click)="closeMobileMenu()"
+        >
+          <mat-icon>add_a_photo</mat-icon>
+          {{ 'nav.postProduct' | translate }}
+        </a>
 
         @for (link of filteredNavLinks(); track link.path) {
           <a

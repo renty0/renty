@@ -68,6 +68,8 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.City,
             item.Lat,
             item.Lng,
+            item.IsForSale,
+            item.SalePrice,
             item.CreatedAt,
             new OwnerDto(
                 item.OwnerId,
@@ -86,8 +88,8 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
                     ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{img.Image.StoragePath.TrimStart('/')}" : "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/'))
                     : "", 
                 img.IsPrimary)).ToList(),
-            0, 
-            0, 
+            await _context.Reviews.Where(r => r.Rental.ItemId == item.Id).AverageAsync(r => (double?)r.Rating, ct) ?? 0, 
+            await _context.Reviews.CountAsync(r => r.Rental.ItemId == item.Id, ct), 
             item.Category    != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,
             item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameAr, item.Subcategory.NameEn) : null,
             item.Brand       != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameAr, item.Brand.NameEn) : null

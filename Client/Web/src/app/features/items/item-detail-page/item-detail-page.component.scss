@@ -367,6 +367,61 @@
     }
   }
 
+  .availability-section {
+    margin-bottom: $spacing-md;
+    .section-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: $gray-400;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+
+    .calendar-wrapper {
+      background: $white;
+      border-radius: $border-radius-xl;
+      border: 1px solid rgba($black, 0.05);
+      padding: $spacing-sm;
+      
+      ::ng-deep .mat-calendar {
+        width: 100%;
+        height: auto;
+      }
+
+      ::ng-deep .mat-calendar-body-cell-content {
+        border-radius: 8px;
+      }
+
+      .calendar-legend {
+        display: flex;
+        gap: 16px;
+        padding: 12px;
+        border-top: 1px solid rgba($black, 0.03);
+        margin-top: 8px;
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          font-weight: 700;
+          color: $gray-500;
+          text-transform: uppercase;
+
+          .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            
+            &.available { background: $gray-100; }
+            &.booked { background: #ef4444; opacity: 0.2; }
+          }
+        }
+      }
+    }
+  }
+
   .desc-section {
     .section-label {
       font-size: 10px;

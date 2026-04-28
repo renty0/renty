@@ -76,8 +76,8 @@
 
             <div class="categories-grid">
                 @for (cat of categories(); track cat.id; let i = $index) {
-                <div class="category-card reveal"
-                    [style.background-image]="'url(' + cat.image + ')'" [style.transition-delay]="(i * 0.1) + 's'">
+                <div class="category-card reveal" [style.background-image]="'url(' + cat.image + ')'"
+                    [style.transition-delay]="(i * 0.1) + 's'">
                     <div class="cat-overlay"></div>
                     <div class="cat-content">
                         <mat-icon>{{ cat.icon }}</mat-icon>
@@ -88,6 +88,82 @@
             </div>
         </div>
     </section>
+
+    <!-- Suggested Products -->
+    @if (suggestedItems().length > 0) {
+    <section class="products-carousel reveal">
+        <div class="container">
+            <div class="section-header flex-header">
+                <div>
+                    <span class="badge">{{ 'home.suggested.title' | translate }}</span>
+                    <h2>{{ 'home.suggested.subtitle' | translate }}</h2>
+                </div>
+                <a routerLink="/marketplace" class="text-link">
+                    {{ 'buttons.viewAll' | translate }}
+                    <mat-icon>arrow_forward</mat-icon>
+                </a>
+            </div>
+            <div class="grid">
+                @for (item of suggestedItems(); track item.id) {
+                <div class="col-12 md:col-6 lg:col-3 p-2">
+                    <app-product-card [item]="item"></app-product-card>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    }
+
+    <!-- Popular Products -->
+    @if (popularItems().length > 0) {
+    <section class="products-carousel bg-light reveal">
+        <div class="container">
+            <div class="section-header flex-header">
+                <div>
+                    <span class="badge">{{ 'home.popular.title' | translate }}</span>
+                    <h2>{{ 'home.popular.subtitle' | translate }}</h2>
+                </div>
+                <a routerLink="/marketplace" [queryParams]="{sort: 'popular'}" class="text-link">
+                    {{ 'buttons.viewAll' | translate }}
+                    <mat-icon>arrow_forward</mat-icon>
+                </a>
+            </div>
+            <div class="grid">
+                @for (item of popularItems(); track item.id) {
+                <div class="col-12 md:col-6 lg:col-3 p-2">
+                    <app-product-card [item]="item"></app-product-card>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    }
+
+    <!-- New Products -->
+    @if (newItems().length > 0) {
+    <section class="products-carousel reveal">
+        <div class="container">
+            <div class="section-header flex-header">
+                <div>
+                    <span class="badge">{{ 'home.newest.title' | translate }}</span>
+                    <h2>{{ 'home.newest.subtitle' | translate }}</h2>
+                </div>
+                <a routerLink="/marketplace" [queryParams]="{sort: 'newest'}" class="text-link">
+                    {{ 'buttons.viewAll' | translate }}
+                    <mat-icon>arrow_forward</mat-icon>
+                </a>
+            </div>
+            <div class="grid">
+                @for (item of newItems(); track item.id) {
+                <div class="col-12 md:col-6 lg:col-3 p-2">
+                    <app-product-card [item]="item"></app-product-card>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    }
+
     <section class="destinations-section">
         <div class="container">
             <div class="section-header reveal">
@@ -111,7 +187,7 @@
         </div>
     </section>
     <section class="calendar-promo reveal py-8">
-        <div class="grid promo-grid container align-items-center">
+        <div class="grid container align-items-center">
             <div class="col-12 lg:col-6 promo-info">
                 <span class="badge mb-4">{{ 'home.calendar.badge' | translate }}</span>
                 <h2 class="text-4xl font-bold mb-4">{{ 'home.calendar.title' | translate }}</h2>
@@ -167,7 +243,7 @@
         </div>
     </section>
     <section class="security-section bg-dark text-white py-8">
-        <div class="grid container security-grid reveal align-items-center">
+        <div class="grid container reveal align-items-center">
             <div class="col-12 md:col-4 huge-icon-wrapper flex justify-content-center">
                 <mat-icon class="huge-icon text-primary">gpp_good</mat-icon>
             </div>
@@ -217,7 +293,7 @@
         </div>
     </section>
     <section class="app-promo-section">
-        <div class="container promo-inner reveal py-8">
+        <div class="container reveal py-8">
             <div class="grid align-items-center">
                 <div class="col-12 lg:col-6 promo-text">
                     <span class="badge mb-4">

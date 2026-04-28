@@ -25,6 +25,8 @@ public record ItemListDto(
     string Type,
     string? Condition,
     long? OwnerId,
+    bool IsForSale,
+    decimal? SalePrice,
     ItemCategoryRef? Category,
     ItemSubcategoryRef? Subcategory,
     ItemBrandRef? Brand
@@ -50,6 +52,8 @@ public record ItemDetailDto(
     string? City,
     decimal? Lat,
     decimal? Lng,
+    bool IsForSale,
+    decimal? SalePrice,
     DateTime CreatedAt,
     OwnerDto Owner,
     List<ItemPricingDto> Pricing,
@@ -67,6 +71,9 @@ public record GetItemsQuery(
     string? City = null,
     decimal? MinPrice = null,
     decimal? MaxPrice = null,
+    DateTime? StartDate = null,
+    DateTime? EndDate = null,
+    int? MinRating = null,
     string? Type = null,
     string? Condition = null,
     string? Sort = null,       
@@ -129,19 +136,43 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 (!request.MinPrice.HasValue || p.Price >= request.MinPrice.Value) &&
                 (!request.MaxPrice.HasValue || p.Price <= request.MaxPrice.Value)));
         }
+
+        if (request.StartDate.HasValue && request.EndDate.HasValue)
+        {
+            var start = request.StartDate.Value;
+            var end = request.EndDate.Value;
+
+            // Exclude items that have overlapping rentals that are not cancelled or rejected
+            query = query.Where(i => !_context.Rentals.Any(r =>
+                r.ItemId == i.Id &&
+                r.Status != RentalStatus.Cancelled &&
+                r.Status != RentalStatus.Rejected &&
+                ((start >= r.StartDate && start < r.EndDate) ||
+                 (end > r.StartDate && end <= r.EndDate) ||
+                 (r.StartDate >= start && r.StartDate < end))));
+        }
+
+        if (request.MinRating.HasValue)
+        {
+            query = query.Where(i => _context.Reviews.Where(r => r.Rental.ItemId == i.Id).Average(r => (double?)r.Rating) >= (double)request.MinRating.Value);
+        }
         var projected = query.Select(i => new
         {
             Item = i,
             DailyPrice = i.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
             PrimaryImage = i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
                 ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
+            AvgRating = _context.Reviews.Where(r => r.Rental.ItemId == i.Id).Average(r => (double?)r.Rating) ?? 0,
+            ReviewCount = _context.Reviews.Count(r => r.Rental.ItemId == i.Id)
         });
 
         projected = request.Sort switch
         {
             "price_asc"  => projected.OrderBy(x => x.DailyPrice),
             "price_desc" => projected.OrderByDescending(x => x.DailyPrice),
+            "rating"     => projected.OrderByDescending(x => x.AvgRating),
             "newest"     => projected.OrderByDescending(x => x.Item.CreatedAt),
+            "popular"    => projected.OrderByDescending(x => x.Item.Favorites.Count),
             _            => projected.OrderByDescending(x => x.Item.CreatedAt)
         };
 
@@ -163,11 +194,13 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.DailyPrice,
                 x.Item.City,
                 x.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
-                0,  
-                0,  
+                x.AvgRating,  
+                x.ReviewCount,  
                 x.Item.Type.ToString(),
                 x.Item.Condition,
                 x.Item.OwnerId,
+                x.Item.IsForSale,
+                x.Item.SalePrice,
                 x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
                 x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
                 x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null

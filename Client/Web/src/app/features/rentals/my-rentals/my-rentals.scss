@@ -1,5 +1,5 @@
 .my-rentals-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem 2rem;
 }
@@ -10,7 +10,6 @@
   gap: 1.5rem;
 }
 
-// ─── RENTAL CARD ───
 .rental-card {
   border-radius: 16px;
   border: 1px solid #f1f5f9;
@@ -96,9 +95,18 @@
     height: 12px;
     background: #f1f5f9;
     border-radius: 6px;
-    &.w-8 { width: 80%; }
-    &.w-6 { width: 60%; }
-    &.w-full { width: 100%; }
+
+    &.w-8 {
+      width: 80%;
+    }
+
+    &.w-6 {
+      width: 60%;
+    }
+
+    &.w-full {
+      width: 100%;
+    }
   }
 }
 
@@ -109,8 +117,13 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 // ─── EMPTY STATE ───
@@ -140,7 +153,10 @@
 // ─── CHIPS ───
 .filters-container {
   padding-bottom: 4px;
-  &::-webkit-scrollbar { height: 0; }
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
 }
 
 .premium-chips {
@@ -148,7 +164,7 @@
     --mdc-chip-elevated-container-color: white;
     --mdc-chip-label-text-color: #64748b;
     border: 1px solid #e2e8f0;
-    
+
     &.mat-mdc-chip-selected {
       --mdc-chip-elevated-container-color: var(--primary-color);
       --mdc-chip-label-text-color: white;
@@ -159,14 +175,28 @@
 
 // Dark mode adjustments
 :host-context(body.dark-mode) {
-  .rental-card, .rental-skeleton-card, .empty-state-card {
+
+  .rental-card,
+  .rental-skeleton-card,
+  .empty-state-card {
     background: #1e293b;
     border-color: #334155;
   }
-  .item-title { color: #f1f5f9; }
-  .skeleton-img, .skeleton-line { background: #334155; }
+
+  .item-title {
+    color: #f1f5f9;
+  }
+
+  .skeleton-img,
+  .skeleton-line {
+    background: #334155;
+  }
+
   .shimmer {
     background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
   }
-  .empty-icon-wrap { background: #0f172a; }
+
+  .empty-icon-wrap {
+    background: #0f172a;
+  }
 }

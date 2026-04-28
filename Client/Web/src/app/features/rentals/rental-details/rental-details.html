@@ -327,6 +327,15 @@
                 }
               }
 
+              <!-- Dispute Action -->
+              @if ((isRenter() || isOwner()) && (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'overdue' || r.status?.toLowerCase() === 'disputed' || r.status?.toLowerCase() === 'confirmed')) {
+                <mat-divider class="my-1"></mat-divider>
+                <button mat-stroked-button color="warn" class="w-full" (click)="openDispute()">
+                  <mat-icon>gavel</mat-icon>
+                  {{ 'rentals.actions.dispute' | translate }}
+                </button>
+              }
+
               <!-- Empty state -->
               @if (r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'cancelled' || r.status?.toLowerCase() === 'rejected') {
               <div class="actions-empty flex flex-column align-items-center text-center gap-2 py-2">

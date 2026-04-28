@@ -89,6 +89,8 @@ public class GetPendingItemsQueryHandler : IRequestHandler<GetPendingItemsQuery,
             x.Item.Type.ToString(),
             x.Item.Condition,
             x.Item.OwnerId,
+            x.Item.IsForSale,
+            x.Item.SalePrice,
             x.Item.Category != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
             x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
             x.Item.Brand != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null

@@ -80,11 +80,13 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                     dailyPrice,
                     i.City,
                     imageUrl,
-                    0,
-                    0,
+                    0, // AvgRating
+                    0, // ReviewCount
                     i.Type.ToString(),
                     i.Condition,
                     i.OwnerId,
+                    i.IsForSale,
+                    i.SalePrice,
                     i.Category != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
                     i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
                     i.Brand != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null

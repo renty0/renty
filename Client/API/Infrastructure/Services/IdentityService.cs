@@ -103,6 +103,21 @@ public class IdentityService : IIdentityService
     {
         return await _userManager.VerifyTwoFactorTokenAsync(user, "Email", token);
     }
+    
+    public async Task<bool> IsLockedOutAsync(ApplicationUser user)
+    {
+        return await _userManager.IsLockedOutAsync(user);
+    }
+
+    public async Task IncrementAccessFailedCountAsync(ApplicationUser user)
+    {
+        await _userManager.AccessFailedAsync(user);
+    }
+
+    public async Task ResetAccessFailedCountAsync(ApplicationUser user)
+    {
+        await _userManager.ResetAccessFailedCountAsync(user);
+    }
 }
 
 public static class IdentityResultExtensions

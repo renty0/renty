@@ -1,4 +1,4 @@
-﻿{
+{
   "x-generator": "NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
@@ -495,34 +495,37 @@
             "x-position": 7
           },
           {
-            "name": "type",
+            "name": "startDate",
             "in": "query",
             "schema": {
               "type": "string",
+              "format": "date-time",
               "nullable": true
             },
             "x-position": 8
           },
           {
-            "name": "condition",
+            "name": "endDate",
             "in": "query",
             "schema": {
               "type": "string",
+              "format": "date-time",
               "nullable": true
             },
             "x-position": 9
           },
           {
-            "name": "sort",
+            "name": "minRating",
             "in": "query",
             "schema": {
-              "type": "string",
+              "type": "integer",
+              "format": "int32",
               "nullable": true
             },
             "x-position": 10
           },
           {
-            "name": "sortOrder",
+            "name": "type",
             "in": "query",
             "schema": {
               "type": "string",
@@ -531,13 +534,40 @@
             "x-position": 11
           },
           {
-            "name": "owner",
+            "name": "condition",
             "in": "query",
             "schema": {
               "type": "string",
               "nullable": true
             },
             "x-position": 12
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 13
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 14
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 15
           }
         ],
         "responses": {
@@ -741,6 +771,145 @@
             "JWT": []
           }
         ]
+      }
+    },
+    "/api/v1/items/{id}/remind": {
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "AddItemReminder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfReminderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "RemoveItemReminder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfReminderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "GetItemReminderStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfReminderStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/items/{id}/availability": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "GetItemAvailability",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfListOfBookedRangeDto"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/search": {
@@ -1573,6 +1742,31 @@
         ]
       }
     },
+    "/api/v1/admin/items/pending": {
+      "get": {
+        "tags": [
+          "AdminItems"
+        ],
+        "operationId": "GetPendingItems",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfListOfItemListDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/v1/admin/items/{id}/review": {
       "post": {
         "tags": [
@@ -2002,11 +2196,11 @@
           }
         ],
         "requestBody": {
-          "x-name": "cmd",
+          "x-name": "body",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UploadRentalPhotosCommand"
+                "$ref": "#/components/schemas/UploadRentalPhotosBody"
               }
             }
           },
@@ -2615,17 +2809,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfChatCreateData"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                  "$ref": "#/components/schemas/ApiResponseOfCreateChatResponse"
                 }
               }
             }
@@ -2697,17 +2881,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfChatMessageData"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                  "$ref": "#/components/schemas/ApiResponseOfPostChatMessageResponse"
                 }
               }
             }
@@ -2746,13 +2920,40 @@
                 }
               }
             }
-          },
-          "404": {
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/chats/{id}": {
+      "delete": {
+        "tags": [
+          "Chat"
+        ],
+        "operationId": "DeleteChat",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                  "$ref": "#/components/schemas/ApiResponseOfString"
                 }
               }
             }
@@ -4680,6 +4881,38 @@
           }
         ]
       }
+    },
+    "/api/v1/public-profile/{userId}": {
+      "get": {
+        "tags": [
+          "Public Profile"
+        ],
+        "operationId": "GetPublicProfile",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfPublicProfileDto"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5414,6 +5647,14 @@
             "format": "int64",
             "nullable": true
           },
+          "isForSale": {
+            "type": "boolean"
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "category": {
             "nullable": true,
             "oneOf": [
@@ -5762,6 +6003,14 @@
             "format": "decimal",
             "nullable": true
           },
+          "isForSale": {
+            "type": "boolean"
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -5826,6 +6075,9 @@
           "firstName": {
             "type": "string"
           },
+          "lastName": {
+            "type": "string"
+          },
           "city": {
             "type": "string",
             "nullable": true
@@ -5833,6 +6085,14 @@
           "profileImageUrl": {
             "type": "string",
             "nullable": true
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRatings": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -5947,6 +6207,200 @@
             "items": {
               "$ref": "#/components/schemas/CreateItemImageCommand"
             }
+          }
+        }
+      },
+      "ApiResponseOfReminderResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReminderResponse"
+              }
+            ]
+          },
+          "error": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "successCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "ReminderResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "isReminded": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiResponseOfReminderStatusResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReminderStatusResponse"
+              }
+            ]
+          },
+          "error": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "successCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "ReminderStatusResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isReminded": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ApiResponseOfListOfBookedRangeDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/BookedRangeDto"
+            }
+          },
+          "error": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "successCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "BookedRangeDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -7354,14 +7808,10 @@
           }
         }
       },
-      "UploadRentalPhotosCommand": {
+      "UploadRentalPhotosBody": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "rentalId": {
-            "type": "string",
-            "format": "guid"
-          },
           "imageIds": {
             "type": "array",
             "items": {
@@ -8389,7 +8839,7 @@
           }
         }
       },
-      "ApiResponseOfChatCreateData": {
+      "ApiResponseOfCreateChatResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8397,7 +8847,7 @@
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ChatCreateData"
+                "$ref": "#/components/schemas/CreateChatResponse"
               }
             ]
           },
@@ -8441,10 +8891,17 @@
           }
         }
       },
-      "ChatCreateData": {
+      "CreateChatResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
           "chatId": {
             "type": "string",
             "format": "guid",
@@ -8459,6 +8916,11 @@
           "userId": {
             "type": "integer",
             "format": "int64"
+          },
+          "itemId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },
@@ -8537,6 +8999,9 @@
           "otherUserFirstName": {
             "type": "string"
           },
+          "otherUserLastName": {
+            "type": "string"
+          },
           "otherUserProfileImage": {
             "type": "string",
             "nullable": true
@@ -8545,13 +9010,50 @@
             "type": "string",
             "nullable": true
           },
+          "lastMessageType": {
+            "$ref": "#/components/schemas/MessageType"
+          },
           "unreadCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "lastMessageAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "itemId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "itemTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemImage": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
-      "ApiResponseOfChatMessageData": {
+      "MessageType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Text",
+          "Image",
+          "Video",
+          "Audio"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "ApiResponseOfPostChatMessageResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8559,7 +9061,7 @@
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ChatMessageData"
+                "$ref": "#/components/schemas/PostChatMessageResponse"
               }
             ]
           },
@@ -8603,10 +9105,17 @@
           }
         }
       },
-      "ChatMessageData": {
+      "PostChatMessageResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
           "messageId": {
             "type": "string",
             "format": "guid",
@@ -8615,6 +9124,13 @@
           "message": {
             "type": "string",
             "nullable": true
+          },
+          "mediaUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "$ref": "#/components/schemas/MessageType"
           },
           "createdAt": {
             "type": "string",
@@ -8632,7 +9148,20 @@
             "format": "guid"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "mediaUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "$ref": "#/components/schemas/MessageType"
+          },
+          "contextItemId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },
@@ -8705,6 +9234,14 @@
             "items": {
               "$ref": "#/components/schemas/ChatMessageDto"
             }
+          },
+          "chatMetadata": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ChatListDto"
+              }
+            ]
           }
         }
       },
@@ -8721,7 +9258,20 @@
             "format": "int64"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "mediaUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "$ref": "#/components/schemas/MessageType"
+          },
+          "contextItemId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           },
           "isRead": {
             "type": "boolean"
@@ -8729,6 +9279,54 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ApiResponseOfString": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "successCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -8813,6 +9411,13 @@
           },
           "message": {
             "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "actionUrl": {
+            "type": "string",
+            "nullable": true
           },
           "isRead": {
             "type": "boolean"
@@ -10635,6 +11240,108 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          }
+        }
+      },
+      "ApiResponseOfPublicProfileDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PublicProfileDto"
+              }
+            ]
+          },
+          "error": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "successCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "PublicProfileDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "profilePictureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRatings": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "joinedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemListDto"
+            }
           }
         }
       }

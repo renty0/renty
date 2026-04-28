@@ -30,6 +30,9 @@ public class Item
     /// <summary>FK → brands.id (optional)</summary>
     public int? BrandId { get; set; }
 
+    public bool IsForSale { get; set; } = false;
+    public decimal? SalePrice { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

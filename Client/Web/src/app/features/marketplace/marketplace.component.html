@@ -10,13 +10,8 @@
           <div class="search-container">
             <div class="search-wrapper">
               <mat-icon class="search-icon">search</mat-icon>
-              <input
-                type="text"
-                [placeholder]="'marketplace.searchPlaceholder' | translate"
-                [ngModel]="searchTerm()"
-                (ngModelChange)="searchTerm.set($event)"
-                (keyup.enter)="loadItems()"
-              />
+              <input type="text" [placeholder]="'marketplace.searchPlaceholder' | translate" [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)" (keyup.enter)="loadItems()" />
               <button class="search-btn" (click)="loadItems()">
                 {{ 'buttons.search' | translate }}
               </button>
@@ -27,7 +22,7 @@
     </div>
   </div>
 
-    
+
   <div class="container main-content mt-5 mb-5">
     <div class="grid">
       <aside class="col-12 lg:col-3 filters-sidebar">
@@ -36,16 +31,19 @@
             <div class="title-row">
               <h3><mat-icon>tune</mat-icon> {{ 'marketplace.filters' | translate }}</h3>
               @if (
-                searchTerm() ||
-                selectedCategoryId() ||
-                selectedCity() ||
-                minPrice() ||
-                maxPrice() ||
-                selectedType()
+              searchTerm() ||
+              selectedCategoryId() ||
+              selectedCity() ||
+              minPrice() ||
+              maxPrice() ||
+              selectedType() ||
+              startDate() ||
+              endDate() ||
+              minRating()
               ) {
-                <button mat-button color="warn" (click)="onFilterReset()" class="clear-btn">
-                  {{ 'marketplace.clearFilters' | translate }}
-                </button>
+              <button mat-button color="warn" (click)="onFilterReset()" class="clear-btn">
+                {{ 'marketplace.clearFilters' | translate }}
+              </button>
               }
             </div>
           </div>
@@ -53,55 +51,43 @@
           <div class="filters-body">
             <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
-                <mat-select
-                  panelClass="marketplace-select-panel"
-                  [placeholder]="'marketplace.category' | translate"
-                  [ngModel]="selectedCategoryId()"
-                  (ngModelChange)="selectedCategoryId.set($event)"
-                >
+                <mat-select panelClass="marketplace-select-panel" [placeholder]="'marketplace.category' | translate"
+                  [ngModel]="selectedCategoryId()" (ngModelChange)="selectedCategoryId.set($event)">
                   <mat-option disabled class="list-header-option">
                     {{ 'marketplace.category' | translate }}
                   </mat-option>
                   @for (cat of categories(); track cat.id) {
-                    <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
+                  <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
             </div>
 
             @if (selectedCategoryId() && subcategories().length > 0) {
-              <div class="filter-group animate-in">
-                <mat-form-field appearance="outline" class="full-width custom-field">
-                  <mat-select
-                    panelClass="marketplace-select-panel"
-                    [placeholder]="'marketplace.subcategory' | translate"
-                    [ngModel]="selectedSubcategoryId()"
-                    (ngModelChange)="selectedSubcategoryId.set($event)"
-                  >
-                    <mat-option disabled class="list-header-option">
-                      {{ 'marketplace.subcategory' | translate }}
-                    </mat-option>
-                    @for (sub of subcategories(); track sub.id) {
-                      <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
+            <div class="filter-group animate-in">
+              <mat-form-field appearance="outline" class="full-width custom-field">
+                <mat-select panelClass="marketplace-select-panel" [placeholder]="'marketplace.subcategory' | translate"
+                  [ngModel]="selectedSubcategoryId()" (ngModelChange)="selectedSubcategoryId.set($event)">
+                  <mat-option disabled class="list-header-option">
+                    {{ 'marketplace.subcategory' | translate }}
+                  </mat-option>
+                  @for (sub of subcategories(); track sub.id) {
+                  <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
             }
 
             <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
-                <mat-select
-                  panelClass="marketplace-select-panel"
-                  [placeholder]="'items.city' | translate"
-                  [ngModel]="selectedCity()"
-                  (ngModelChange)="selectedCity.set($event)"
-                >
+                <mat-select panelClass="marketplace-select-panel" [placeholder]="'items.city' | translate"
+                  [ngModel]="selectedCity()" (ngModelChange)="selectedCity.set($event)">
                   <mat-option disabled class="list-header-option">
                     {{ 'items.city' | translate }}
                   </mat-option>
                   @for (gov of governorates; track gov.code) {
-                    <mat-option [value]="gov.code">{{ gov.name | translate }}</mat-option>
+                  <mat-option [value]="gov.code">{{ gov.name | translate }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -115,39 +101,61 @@
               <div class="price-range-container">
                 <div class="price-field">
                   <span class="currency-label">EGP</span>
-                  <input
-                    type="number"
-                    [placeholder]="'marketplace.minPrice' | translate"
-                    [ngModel]="minPrice()"
-                    (ngModelChange)="minPrice.set($event)"
-                  />
+                  <input type="number" [placeholder]="'marketplace.minPrice' | translate" [ngModel]="minPrice()"
+                    (ngModelChange)="minPrice.set($event)" />
                 </div>
                 <div class="price-separator"></div>
                 <div class="price-field">
                   <span class="currency-label">EGP</span>
-                  <input
-                    type="number"
-                    [placeholder]="'marketplace.maxPrice' | translate"
-                    [ngModel]="maxPrice()"
-                    (ngModelChange)="maxPrice.set($event)"
-                  />
+                  <input type="number" [placeholder]="'marketplace.maxPrice' | translate" [ngModel]="maxPrice()"
+                    (ngModelChange)="maxPrice.set($event)" />
                 </div>
               </div>
             </div>
 
             <div class="filter-group">
+              <label>
+                <mat-icon>calendar_today</mat-icon>
+                {{ 'marketplace.availability' | translate }}
+              </label>
+              <mat-form-field appearance="outline" class="full-width custom-field date-range-field">
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate [placeholder]="'marketplace.startDate' | translate" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)">
+                  <input matEndDate [placeholder]="'marketplace.endDate' | translate" [ngModel]="endDate()" (ngModelChange)="endDate.set($event)">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="filter-group">
+              <label>
+                <mat-icon>star_outline</mat-icon>
+                {{ 'items.rating' | translate }}
+              </label>
+              <div class="rating-filter">
+                @for (r of [4, 3, 2, 1]; track r) {
+                  <button type="button" class="rating-opt" [class.active]="minRating() === r" (click)="minRating.set(minRating() === r ? undefined : r)">
+                    <div class="stars">
+                      @for (s of [1,2,3,4,5]; track s) {
+                        <mat-icon>{{ s <= r ? 'star' : 'star_border' }}</mat-icon>
+                      }
+                    </div>
+                    <span>& Up</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="filter-group">
               <mat-form-field appearance="outline" class="full-width custom-field">
-                <mat-select
-                  panelClass="marketplace-select-panel"
-                  [placeholder]="'labels.type' | translate"
-                  [ngModel]="selectedType()"
-                  (ngModelChange)="selectedType.set($event)"
-                >
+                <mat-select panelClass="marketplace-select-panel" [placeholder]="'labels.type' | translate"
+                  [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
                   <mat-option disabled class="list-header-option">
                     {{ 'labels.type' | translate }}
                   </mat-option>
                   @for (type of itemTypes; track type.key) {
-                    <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
+                  <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -169,91 +177,49 @@
                 <mat-option value="newest">{{ 'marketplace.sortNewest' | translate }}</mat-option>
                 <mat-option value="price_low">{{
                   'marketplace.sortPriceLow' | translate
-                }}</mat-option>
+                  }}</mat-option>
                 <mat-option value="price_high">{{
                   'marketplace.sortPriceHigh' | translate
-                }}</mat-option>
+                  }}</mat-option>
+                <mat-option value="rating">{{
+                  'marketplace.sortTopRated' | translate
+                  }}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
 
         @if (isLoadingItems()) {
-          <div class="loading-state">
-            <mat-spinner diameter="50"></mat-spinner>
-            <p>{{ 'common.loading' | translate }}</p>
-          </div>
+        <div class="loading-state">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>{{ 'common.loading' | translate }}</p>
+        </div>
         } @else if (items().length === 0) {
-          <div class="empty-state">
-            <div class="empty-icon">
-              <mat-icon>search_off</mat-icon>
-            </div>
-            <h3>{{ 'errors.noProductsFound' | translate }}</h3>
-            <p>{{ 'errors.tryAdjustingFilters' | translate }}</p>
-            <button mat-flat-button color="primary" (click)="onFilterReset()">
-              {{ 'marketplace.clearFilters' | translate }}
-            </button>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <mat-icon>search_off</mat-icon>
           </div>
+          <h3>{{ 'errors.noProductsFound' | translate }}</h3>
+          <p>{{ 'errors.tryAdjustingFilters' | translate }}</p>
+          <button mat-flat-button color="primary" (click)="onFilterReset()">
+            {{ 'marketplace.clearFilters' | translate }}
+          </button>
+        </div>
         } @else {
-          <div class="grid">
-            @for (item of items(); track item.id) {
-              <div class="col-12 md:col-6 lg:col-4 p-2">
-                <div class="product-card" [routerLink]="['/marketplace/product', item.id]">
-                  <div class="card-media">
-                    <img
-                      [src]="item.primaryImage || 'assets/images/placeholder.webp'"
-                      [alt]="getLocalizedTitle(item)"
-                      loading="lazy"
-                    />
-                    <div class="card-badges">
-                      @if (item.type === 'premium') {
-                        <span class="type-badge premium">{{
-                          'labels.types.premium' | translate
-                        }}</span>
-                      }
-                      @if (item.avgRating && item.avgRating > 0) {
-                        <span class="rating-badge">
-                          <mat-icon>star</mat-icon> {{ item.avgRating | number: '1.1-1' }}
-                        </span>
-                      }
-                    </div>
-                    <div class="card-actions">
-                      <button mat-icon-button class="wishlist-btn" (click)="$event.stopPropagation()">
-                        <mat-icon>favorite_border</mat-icon>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-content">
-                    <div class="item-meta">
-                      <span class="category">{{ getLocalizedRefName(item.category) }}</span>
-                      <span class="location"> <mat-icon>location_on</mat-icon> {{ item.city }} </span>
-                    </div>
-                    <h3 class="item-title">{{ getLocalizedTitle(item) }}</h3>
-                    <div class="card-footer">
-                      <div class="price-info">
-                        <span class="price">{{ item.dailyPrice }} <small>EGP</small></span>
-                        <span class="period">/ {{ 'items.daily' | translate }}</span>
-                      </div>
-                      <button mat-flat-button class="view-btn">
-                        {{ 'marketplace.viewDetails' | translate }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
+        <div class="grid">
+          @for (item of items(); track item.id) {
+          <div class="col-12 md:col-6 lg:col-4 p-2">
+            <app-product-card [item]="item"></app-product-card>
 
-          <div class="pagination-section">
-            <mat-paginator
-              [length]="totalCount()"
-              [pageSize]="pageSize()"
-              [pageSizeOptions]="[12, 24, 48, 96]"
-              (page)="onPageChange($event)"
-              aria-label="Select page"
-            >
-            </mat-paginator>
           </div>
+          }
+        </div>
+
+        <div class="pagination-section">
+          <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageSizeOptions]="[12, 24, 48, 96]"
+            (page)="onPageChange($event)" aria-label="Select page">
+          </mat-paginator>
+        </div>
         }
       </main>
     </div>

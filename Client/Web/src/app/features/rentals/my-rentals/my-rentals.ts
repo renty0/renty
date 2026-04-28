@@ -81,6 +81,7 @@ export class MyRentalsComponent implements OnInit {
       case 'cancelled':
       case 'rejected':  return 'bg-red-50 text-red-700 border-1 border-red-100';
       case 'overdue':   return 'bg-orange-50 text-orange-700 border-1 border-orange-100';
+      case 'disputed':  return 'bg-purple-50 text-purple-700 border-1 border-purple-100';
       default:          return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
     }
   }

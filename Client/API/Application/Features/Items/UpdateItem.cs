@@ -205,6 +205,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
                 item.Id, item.TitleAr, item.TitleEn, item.DescAr, item.DescEn,
                 item.Type.ToString(), item.Status.ToString(), item.Condition,
                 item.DefaultDeposit, item.Location, item.City, item.Lat, item.Lng,
+                item.IsForSale, item.SalePrice,
                 item.CreatedAt,
                 new OwnerDto(
                     item.OwnerId, 
@@ -217,7 +218,9 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
                 item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
                 item.Images.Select(img => new ItemImageDto(img.ImageId, img.Image?.StoragePath ?? "", img.IsPrimary)).ToList(),
                 0, 0,
-                null, null, null  
+                item.Category != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,
+                item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameAr, item.Subcategory.NameEn) : null,
+                item.Brand != null ? new ItemBrandRef(item.Brand.Id, item.Brand.NameAr, item.Brand.NameEn) : null
             );
 
             return new UpdateItemResponse(true, null, dto);

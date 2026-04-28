@@ -5,6 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
 import { TermsAndConditionsComponent } from '../../../auth/components/terms-and-conditions/terms-and-conditions.component';
+import { ProductCardComponent, ProductCardItem } from '../../../../shared/components/product-card/product-card.component';
+import { ItemsClient, ItemListDto, RecommendationsClient } from '../../../../core/api/api-client';
+import { catchError, forkJoin, of, tap } from 'rxjs';
 
 type CalendarCell = {
     date: Date | null;
@@ -22,16 +25,25 @@ type CalendarCell = {
         TranslateModule,
         MatIconModule,
         LoadingButtonComponent,
-        TermsAndConditionsComponent
+        TermsAndConditionsComponent,
+        ProductCardComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, AfterViewInit {
     private el = inject(ElementRef);
+    private itemsClient = inject(ItemsClient);
+    private recommendationsClient = inject(RecommendationsClient);
 
     isScrolled = signal(false);
     showTerms = signal(false);
+
+    // Product Signals
+    suggestedItems = signal<ProductCardItem[]>([]);
+    popularItems = signal<ProductCardItem[]>([]);
+    newItems = signal<ProductCardItem[]>([]);
+    isLoadingProducts = signal(false);
 
     private readonly today = new Date();
     calendarMonth = signal(new Date(this.today.getFullYear(), this.today.getMonth(), 1));
@@ -77,6 +89,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.onWindowScroll();
+        this.loadProducts();
+    }
+
+    loadProducts(): void {
+        this.isLoadingProducts.set(true);
+
+        forkJoin({
+            suggested: this.recommendationsClient.getRecommendationsV1().pipe(catchError(() => of({ data: { recommendations: [] } }))),
+            popular: this.itemsClient.getItems(1, 4, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'popular', 'desc', undefined).pipe(catchError(() => of({ data: [] }))),
+            newItems: this.itemsClient.getItems(1, 4, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'newest', 'desc', undefined).pipe(catchError(() => of({ data: [] })))
+        }).subscribe({
+            next: (res) => {
+                const suggested = res.suggested.data?.recommendations?.map(r => r.item as ProductCardItem) || [];
+                this.suggestedItems.set(suggested.slice(0, 4));
+                this.popularItems.set(res.popular.data || []);
+                this.newItems.set(res.newItems.data || []);
+                this.isLoadingProducts.set(false);
+                
+                // Re-init reveal to catch new elements
+                setTimeout(() => this.initScrollReveal(), 100);
+            },
+            error: () => this.isLoadingProducts.set(false)
+        });
     }
 
     ngAfterViewInit(): void {

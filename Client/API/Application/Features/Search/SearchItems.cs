@@ -63,10 +63,12 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
                 i.City,
                 i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
                     ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
-                0, 0,
+                0, 0, // AvgRating, ReviewCount
                 i.Type.ToString(),
                 i.Condition,
                 (long?)i.OwnerId,
+                i.IsForSale,
+                i.SalePrice,
                 i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
                 i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
                 i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null

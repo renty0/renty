@@ -231,6 +231,7 @@
 
           ::ng-deep app-loading-button {
             width: 100%;
+
             .btn {
               width: 100%;
             }
@@ -404,6 +405,31 @@
       font-size: 20px;
       width: 20px;
       height: 20px;
+    }
+  }
+
+  // New Products Sections
+  .products-carousel {
+    padding: 80px 0;
+
+    @media (max-width: $breakpoint-md) {
+      padding: 50px 0;
+    }
+
+    &.bg-light {
+      background-color: #f8fafc;
+    }
+
+    .section-header {
+      margin-bottom: 50px;
+
+      @media (max-width: $breakpoint-md) {
+        margin-bottom: 30px;
+      }
+    }
+
+    .grid {
+      margin: 0 -10px;
     }
   }
 
@@ -592,14 +618,6 @@
 
 // Section 4: Calendar Promo
 .calendar-promo {
-  .promo-grid {
-    gap: 60px;
-    align-items: center;
-
-    @media (max-width: $breakpoint-md) {
-      gap: 40px;
-    }
-  }
 
   .promo-info {
     h2 {
@@ -776,11 +794,6 @@
 
 .security-section {
 
-  .security-grid {
-    gap: 100px;
-    align-items: center;
-  }
-
   .huge-icon-wrapper {
     position: relative;
     display: flex;
@@ -949,20 +962,6 @@
   color: $white;
   overflow: hidden;
   padding: 0;
-
-  .promo-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 100px;
-
-    @media (max-width: $breakpoint-md) {
-      grid-template-columns: 1fr;
-      padding: 100px $spacing-lg 0;
-      text-align: center;
-      gap: 60px;
-    }
-  }
 
   .promo-text {
     padding: 100px 0;

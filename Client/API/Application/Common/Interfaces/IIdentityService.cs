@@ -18,4 +18,7 @@ public interface IIdentityService
     Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
     Task<Result> ResetPasswordAsync(ApplicationUser user, string token, string newPassword);
     Task<bool> VerifyPasswordResetTokenAsync(ApplicationUser user, string token);
+    Task<bool> IsLockedOutAsync(ApplicationUser user);
+    Task IncrementAccessFailedCountAsync(ApplicationUser user);
+    Task ResetAccessFailedCountAsync(ApplicationUser user);
 }

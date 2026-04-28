@@ -20,6 +20,9 @@ public static class ItemEndpoints
             [Microsoft.AspNetCore.Mvc.FromQuery] string? city,
             [Microsoft.AspNetCore.Mvc.FromQuery] decimal? minPrice,
             [Microsoft.AspNetCore.Mvc.FromQuery] decimal? maxPrice,
+            [Microsoft.AspNetCore.Mvc.FromQuery] DateTime? startDate,
+            [Microsoft.AspNetCore.Mvc.FromQuery] DateTime? endDate,
+            [Microsoft.AspNetCore.Mvc.FromQuery] int? minRating,
             [Microsoft.AspNetCore.Mvc.FromQuery] string? type,
             [Microsoft.AspNetCore.Mvc.FromQuery] string? condition,
             [Microsoft.AspNetCore.Mvc.FromQuery] string? sort,
@@ -33,6 +36,9 @@ public static class ItemEndpoints
                 City:          city,
                 MinPrice:      minPrice,
                 MaxPrice:      maxPrice,
+                StartDate:     startDate,
+                EndDate:       endDate,
+                MinRating:     minRating,
                 Type:          type,
                 Condition:     condition,
                 Sort:          sort,
@@ -127,5 +133,13 @@ public static class ItemEndpoints
         .WithName("GetItemReminderStatus")
         .Produces<ApiResponse<ReminderStatusResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization();
+        g.MapGet("/{id:guid}/availability", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new GetItemAvailabilityQuery(id));
+            return Api.Ok(r);
+        })
+        .WithName("GetItemAvailability")
+        .Produces<ApiResponse<List<BookedRangeDto>>>(StatusCodes.Status200OK)
+        .AllowAnonymous();
     }
 }
