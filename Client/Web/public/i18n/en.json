@@ -596,7 +596,10 @@
     "sendMessage": "Send Message",
     "about": "About",
     "joined": "Joined",
-    "noListings": "No active listings found."
+    "noListings": "No active listings found.",
+    "ownerRating": "Owner Rating",
+    "renterRating": "Renter Rating",
+    "noReviews": "No reviews found."
   },
   "items": {
     "daily": "Daily",
@@ -975,5 +978,40 @@
       "sendShort": "Send",
       "success": "Your message has been sent successfully. We will contact you soon."
     }
+  },
+  "cancellationPolicy": {
+    "title": "Cancellation Policy",
+    "subtitle": "Please read the cancellation terms before confirming your rental.",
+    "freeTier": {
+      "label": "Free Cancellation",
+      "description": "Cancel up to 24 hours before the rental start date for a full refund."
+    },
+    "partialTier": {
+      "label": "Partial Refund",
+      "description": "Cancellations made between 24 and 2 hours before the start date are eligible for a 50% refund."
+    },
+    "noRefund": {
+      "label": "No Refund",
+      "description": "Cancellations made less than 2 hours before the start date are non-refundable."
+    },
+    "depositNote": "The security deposit is fully refunded once the item is returned in its original condition.",
+    "agreeLabel": "I have read and agree to the cancellation policy."
+  },
+  "wallet": {
+    "title": "My Wallet",
+    "subtitle": "Manage your earnings and withdraw funds to your mobile wallet.",
+    "available_balance": "Available Balance",
+    "total_earnings": "Total Earnings",
+    "withdraw_funds": "Withdraw Funds",
+    "transaction_history": "Transaction History",
+    "no_transactions": "You have no wallet transactions yet.",
+    "request_withdrawal": "Request Withdrawal",
+    "amount": "Amount",
+    "mobile_number": "Mobile Wallet Number (Vodafone Cash, etc.)",
+    "cancel": "Cancel",
+    "confirm_withdrawal": "Confirm Withdrawal",
+    "processing": "Processing...",
+    "success_message": "Withdrawal requested successfully.",
+    "error_message": "Failed to submit withdrawal request."
   }
 }

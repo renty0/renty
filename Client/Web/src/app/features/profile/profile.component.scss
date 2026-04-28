@@ -140,3 +140,145 @@
         }
     }
 }
+
+// ── Wrapper & Tabs ────────────────────────────────────────────
+.profile-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+// ── Ratings Row ───────────────────────────────────────────────
+.ratings-row {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+
+    .rating-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(108, 92, 231, 0.08);
+        border: 1px solid rgba(108, 92, 231, 0.15);
+        border-radius: 40px;
+        padding: 10px 20px;
+
+        &.renter {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.15);
+        }
+
+        mat-icon.star {
+            color: #6c5ce7;
+            &.renter { color: #f59e0b; }
+        }
+
+        .rating-val {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2d3436;
+            line-height: 1;
+        }
+
+        .rating-lbl {
+            display: block;
+            font-size: 11px;
+            color: #b2bec3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    }
+}
+
+// ── Reviews Section ───────────────────────────────────────────
+.reviews-section {
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .review-card {
+        background: $white;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid $gray-200;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+
+        .reviewer-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+
+            .reviewer-avatar img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid $gray-200;
+            }
+
+            .reviewer-info {
+                flex: 1;
+
+                h4 {
+                    margin: 0 0 4px;
+                    font-size: 16px;
+                    color: #2d3436;
+                    font-weight: 600;
+                }
+
+                .review-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 12px;
+
+                    .role-badge {
+                        background: rgba(108, 92, 231, 0.1);
+                        color: #6c5ce7;
+                        padding: 2px 10px;
+                        border-radius: 12px;
+                        font-weight: 600;
+
+                        &.owner {
+                            background: rgba(245, 158, 11, 0.1);
+                            color: #d97706;
+                        }
+                    }
+
+                    .date { color: #b2bec3; }
+                }
+            }
+
+            .rating-badge {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                background: #fffbea;
+                color: #d97706;
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-weight: 700;
+                font-size: 15px;
+
+                mat-icon { font-size: 18px; width: 18px; height: 18px; }
+            }
+        }
+
+        .review-comment {
+            margin: 0;
+            color: #636e72;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+    }
+
+    .empty-reviews {
+        text-align: center;
+        padding: 80px 0;
+        color: #b2bec3;
+        mat-icon { font-size: 56px; width: 56px; height: 56px; display: block; margin: 0 auto 12px; }
+    }
+}

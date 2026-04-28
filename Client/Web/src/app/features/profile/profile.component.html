@@ -1,44 +1,108 @@
-<div class="profile-card">
-    <div class="profile-header">
-        <h2>{{ 'profile.title' | translate }}</h2>
+<div class="profile-wrapper">
+  <mat-tab-group class="profile-tabs" animationDuration="200ms">
 
-        <div class="image-container group">
-            <img [src]="profileImageUrl()" [alt]="'profile.imageAlt' | translate" class="profile-image">
+    <!-- ── Tab 1: Profile Info ─────────────────────────────────── -->
+    <mat-tab [label]="'profile.personalInfo' | translate">
+      <div class="profile-card mt-4">
+        <div class="profile-header">
+          <h2>{{ 'profile.title' | translate }}</h2>
 
-            <div class="camera-button" (click)="openImageDialog()" title="{{'profile.updatePhoto' | translate}}">
-                <mat-icon>camera_alt</mat-icon>
+          <!-- Rating Summary -->
+          <div class="ratings-row">
+            <div class="rating-pill">
+              <mat-icon class="star">star</mat-icon>
+              <div>
+                <span class="rating-val">{{ ownerRating() | number:'1.1-1' }}</span>
+                <span class="rating-lbl">{{ 'profile.ownerRating' | translate }}</span>
+              </div>
             </div>
-        </div>
-        <p class="uploading-text" *ngIf="isUploading()">{{ 'profile.uploading' | translate }}</p>
-    </div>
+            <div class="rating-pill renter">
+              <mat-icon class="star renter">star</mat-icon>
+              <div>
+                <span class="rating-val">{{ renterRating() | number:'1.1-1' }}</span>
+                <span class="rating-lbl">{{ 'profile.renterRating' | translate }}</span>
+              </div>
+            </div>
+          </div>
 
-    <form [formGroup]="profileForm" (submit)="onSubmit()" class="grid">
-        <div class="col-12 md:col-6">
+          <div class="image-container group">
+            <img [src]="profileImageUrl()" [alt]="'profile.imageAlt' | translate" class="profile-image">
+            <div class="camera-button" (click)="openImageDialog()" title="{{'profile.updatePhoto' | translate}}">
+              <mat-icon>camera_alt</mat-icon>
+            </div>
+          </div>
+          <p class="uploading-text" *ngIf="isUploading()">{{ 'profile.uploading' | translate }}</p>
+        </div>
+
+        <form [formGroup]="profileForm" (submit)="onSubmit()" class="grid">
+          <div class="col-12 md:col-6">
             <app-input label="firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
-        </div>
-        <div class="col-12 md:col-6">
+          </div>
+          <div class="col-12 md:col-6">
             <app-input label="lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
-        </div>
-        <div class="col-12">
+          </div>
+          <div class="col-12">
             <app-input label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
-        </div>
-        <div class="col-12 md:col-6">
+          </div>
+          <div class="col-12 md:col-6">
             <app-input label="address" [formGroup]="profileForm" controlName="address"></app-input>
-        </div>
-        <div class="col-12 md:col-6">
+          </div>
+          <div class="col-12 md:col-6">
             <app-input label="city" [formGroup]="profileForm" controlName="city"></app-input>
-        </div>
-        <div class="col-12">
+          </div>
+          <div class="col-12">
             <app-input label="country" [formGroup]="profileForm" controlName="country"></app-input>
-        </div>
-        <div class="col-12">
+          </div>
+          <div class="col-12">
             <app-input label="bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
-        </div>
-        <div class="col-12 flex justify-content-end mt-3">
+          </div>
+          <div class="col-12 flex justify-content-end mt-3">
             <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine"
-                type="submit" color="primary">
-                {{ 'profile.save' | translate }}
+              type="submit" color="primary">
+              {{ 'profile.save' | translate }}
             </app-loading-button>
-        </div>
-    </form>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- ── Tab 2: Reviews ─────────────────────────────────────── -->
+    <mat-tab [label]="'profile.reviews' | translate">
+      <div class="reviews-section mt-4">
+        @if (mockReviews().length > 0) {
+          <div class="reviews-list">
+            @for (review of mockReviews(); track review.id) {
+              <div class="review-card">
+                <div class="reviewer-header">
+                  <div class="reviewer-avatar">
+                    <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
+                  </div>
+                  <div class="reviewer-info">
+                    <h4>{{ review.reviewerName }}</h4>
+                    <div class="review-meta">
+                      <span class="role-badge" [class.owner]="review.role === 'owner'">
+                        {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
+                      </span>
+                      <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+                  <div class="rating-badge">
+                    <mat-icon>star</mat-icon>
+                    <span>{{ review.rating }}</span>
+                  </div>
+                </div>
+                <p class="review-comment">{{ review.comment }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-reviews">
+            <mat-icon>rate_review</mat-icon>
+            <p>{{ 'profile.noReviews' | translate }}</p>
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
 </div>

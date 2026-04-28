@@ -1,11 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WalletClient, RequestWithdrawalCommand } from '../../../core/api/api-client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface WalletTransaction {
   id: string;
@@ -18,16 +17,23 @@ export interface WalletTransaction {
 @Component({
   selector: 'app-wallet-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule, TranslateModule],
   templateUrl: './wallet-dashboard.component.html',
   styleUrl: './wallet-dashboard.component.scss'
 })
 export class WalletDashboardComponent implements OnInit {
   private walletClient = inject(WalletClient);
+  private translate = inject(TranslateService);
 
   balance = signal<number>(0);
   transactions = signal<WalletTransaction[]>([]);
   
+  totalEarnings = computed(() => {
+    return this.transactions()
+      .filter(t => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0);
+  });
+
   // Withdrawal Modal State
   showWithdrawForm = signal(false);
   withdrawAmount = signal<number | null>(null);
@@ -87,14 +93,15 @@ export class WalletDashboardComponent implements OnInit {
 
     this.walletClient.requestWithdrawal(cmd).subscribe({
       next: () => {
-        this.successMsg.set('Withdrawal requested successfully.');
+        this.successMsg.set(this.translate.instant('wallet.success_message'));
         this.isSubmitting.set(false);
         this.fetchBalance();
         this.fetchTransactions();
         setTimeout(() => this.closeWithdraw(), 2000);
       },
       error: (err) => {
-        this.errorMsg.set(err.response?.title || err.response?.detail || 'Failed to submit withdrawal request.');
+        const msg = err.response?.title || err.response?.detail || this.translate.instant('wallet.error_message');
+        this.errorMsg.set(msg);
         this.isSubmitting.set(false);
       }
     });

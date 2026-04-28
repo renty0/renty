@@ -48,6 +48,7 @@ export class RentModalComponent implements OnInit {
   rentForm!: FormGroup;
   minDate = new Date();
   isSubmitting = signal(false);
+  policyExpanded = signal(false);
 
   availablePricingTypes = computed(() => {
     return this.data.item.pricing?.map(p => p.pricingType) || [];

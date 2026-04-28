@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthClient, AuthLoginUser, UpdateUserCommand } from '../../core/api/api-client';
 import { InputComponent } from '../../shared/components/input/input';
@@ -26,6 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
     InputComponent,
     TranslateModule,
     LoadingButtonComponent
@@ -48,6 +50,38 @@ export class ProfileComponent {
   
   editingField = signal<string | null>(null);
   savingField = signal<string | null>(null);
+
+  // MOCK DATA until backend exposes per-role ratings and reviews
+  mockReviews = signal<any[]>([
+    {
+      id: '1',
+      reviewerName: 'Ahmed Ali',
+      reviewerImage: 'assets/profile.webp',
+      rating: 5,
+      comment: 'Great person to deal with. The item was exactly as described and in perfect condition.',
+      createdAt: new Date(Date.now() - 86400000 * 2),
+      role: 'owner'
+    },
+    {
+      id: '2',
+      reviewerName: 'Sara Kamel',
+      reviewerImage: '',
+      rating: 4,
+      comment: 'Very smooth transaction. Was a bit late for pickup but overall great.',
+      createdAt: new Date(Date.now() - 86400000 * 10),
+      role: 'renter'
+    }
+  ]);
+
+  ownerRating = computed(() => {
+    const u = this.currentUser();
+    return u?.ownerRating || 4.8;
+  });
+
+  renterRating = computed(() => {
+    const u = this.currentUser();
+    return u?.renterRating || 4.5;
+  });
 
   profileForm = this.fb.group({
     firstName: ['', Validators.required],

@@ -90,8 +90,53 @@
         <span class="total-amount">{{ totalAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
       </div>
     </div>
+
+    <!-- Cancellation Policy -->
+    <div class="policy-section mt-4">
+      <button type="button" class="policy-toggle" (click)="policyExpanded.set(!policyExpanded())">
+        <mat-icon>policy</mat-icon>
+        <span>{{ 'cancellationPolicy.title' | translate }}</span>
+        <mat-icon class="chevron" [class.rotated]="policyExpanded()">expand_more</mat-icon>
+      </button>
+
+      @if (policyExpanded()) {
+        <div class="policy-body">
+          <p class="policy-subtitle">{{ 'cancellationPolicy.subtitle' | translate }}</p>
+
+          <div class="policy-tiers">
+            <div class="tier free">
+              <mat-icon>check_circle</mat-icon>
+              <div>
+                <strong>{{ 'cancellationPolicy.freeTier.label' | translate }}</strong>
+                <p>{{ 'cancellationPolicy.freeTier.description' | translate }}</p>
+              </div>
+            </div>
+            <div class="tier partial">
+              <mat-icon>info</mat-icon>
+              <div>
+                <strong>{{ 'cancellationPolicy.partialTier.label' | translate }}</strong>
+                <p>{{ 'cancellationPolicy.partialTier.description' | translate }}</p>
+              </div>
+            </div>
+            <div class="tier no-refund">
+              <mat-icon>cancel</mat-icon>
+              <div>
+                <strong>{{ 'cancellationPolicy.noRefund.label' | translate }}</strong>
+                <p>{{ 'cancellationPolicy.noRefund.description' | translate }}</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="deposit-note">
+            <mat-icon>lock</mat-icon>
+            {{ 'cancellationPolicy.depositNote' | translate }}
+          </p>
+        </div>
+      }
+    </div>
   </form>
 </mat-dialog-content>
+
 
 <mat-dialog-actions align="end">
   <button mat-button class="cancel-btn" (click)="onCancel()">{{ 'buttons.cancel' | translate }}</button>
@@ -104,3 +149,4 @@
     {{ 'rentals.submit' | translate }}
   </app-loading-button>
 </mat-dialog-actions>
+

@@ -21,12 +21,12 @@
           <p class="location"><mat-icon>location_on</mat-icon> {{ p.city }}, {{ p.country }}</p>
           <div class="stats">
             <div class="stat-item">
-              <span class="val">{{ p.rating | number:'1.1-1' }}</span>
-              <span class="lbl">{{ 'profile.rating' | translate }}</span>
+              <span class="val"><mat-icon class="star-icon">star</mat-icon> {{ ownerRating() | number:'1.1-1' }}</span>
+              <span class="lbl">{{ 'profile.ownerRating' | translate }}</span>
             </div>
             <div class="stat-item">
-              <span class="val">{{ p.totalRatings }}</span>
-              <span class="lbl">{{ 'profile.reviews' | translate }}</span>
+              <span class="val"><mat-icon class="star-icon">star</mat-icon> {{ renterRating() | number:'1.1-1' }}</span>
+              <span class="lbl">{{ 'profile.renterRating' | translate }}</span>
             </div>
             <div class="stat-item">
               <span class="val">{{ p.items?.length || 0 }}</span>
@@ -64,6 +64,43 @@
               <div class="empty-state">
                 <mat-icon>inventory_2</mat-icon>
                 <p>{{ 'profile.noListings' | translate }}</p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+
+        <mat-tab [label]="'profile.reviews' | translate">
+          <div class="reviews-section mt-4">
+            @if (mockReviews().length > 0) {
+              <div class="reviews-list">
+                @for (review of mockReviews(); track review.id) {
+                  <div class="review-card glass-card">
+                    <div class="reviewer-header">
+                      <div class="reviewer-avatar">
+                        <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
+                      </div>
+                      <div class="reviewer-info">
+                        <h4>{{ review.reviewerName }}</h4>
+                        <div class="review-meta">
+                          <span class="role-badge" [class.owner]="review.role === 'owner'">
+                            {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
+                          </span>
+                          <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
+                        </div>
+                      </div>
+                      <div class="rating-badge">
+                        <mat-icon>star</mat-icon>
+                        <span>{{ review.rating }}</span>
+                      </div>
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <mat-icon>rate_review</mat-icon>
+                <p>{{ 'profile.noReviews' | translate }}</p>
               </div>
             }
           </div>

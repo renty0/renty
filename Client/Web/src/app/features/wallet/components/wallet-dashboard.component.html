@@ -1,67 +1,114 @@
 <div class="wallet-container">
-  <div class="header-section flex flex-column md:flex-row justify-content-between align-items-start gap-4">
+  <div class="header-section">
     <div class="title-info">
-      <h1>My Wallet</h1>
-      <p class="text-muted">Manage your earnings and withdraw funds to your mobile wallet.</p>
-    </div>
-    
-    <div class="balance-card">
-      <p class="label">{{ 'wallet.available_balance' | translate }}</p>
-      <h2>{{ balance() | currency:'EGP ' }}</h2>
-      <button class="btn btn-primary mt-3" (click)="openWithdraw()" [disabled]="balance() <= 0">
-        {{ 'wallet.withdraw_funds' | translate }}
-      </button>
+      <h1>{{ 'wallet.title' | translate }}</h1>
+      <p class="text-muted">{{ 'wallet.subtitle' | translate }}</p>
     </div>
   </div>
 
-  <div class="transactions-section mt-5">
-    <h3>Transaction History</h3>
-    
+  <div class="stats-grid">
+    <div class="stat-card balance">
+      <div class="icon-wrap">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="details">
+        <span class="label">{{ 'wallet.available_balance' | translate }}</span>
+        <h2>{{ balance() | currency:'EGP ' }}</h2>
+      </div>
+      <button class="withdraw-btn" (click)="openWithdraw()" [disabled]="balance() <= 0">
+        <mat-icon>payments</mat-icon>
+        {{ 'wallet.withdraw_funds' | translate }}
+      </button>
+    </div>
+
+    <div class="stat-card earnings">
+      <div class="icon-wrap">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+      <div class="details">
+        <span class="label">{{ 'wallet.total_earnings' | translate }}</span>
+        <h2>{{ totalEarnings() | currency:'EGP ' }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="transactions-section">
+    <div class="section-header">
+      <mat-icon>history</mat-icon>
+      <h3>{{ 'wallet.transaction_history' | translate }}</h3>
+    </div>
+
     <div *ngIf="isLoading()" class="flex justify-content-center p-5">
       <mat-spinner diameter="40"></mat-spinner>
     </div>
 
     <div *ngIf="!isLoading() && transactions().length === 0" class="empty-state">
-      You have no wallet transactions yet.
+      <mat-icon>receipt_long</mat-icon>
+      <p>{{ 'wallet.no_transactions' | translate }}</p>
     </div>
 
-    <ul class="transaction-list" *ngIf="!isLoading() && transactions().length > 0">
-      <li *ngFor="let t of transactions()" class="transaction-item flex justify-content-between align-items-center">
-        <div class="info">
-          <p class="type">{{ t.type }}</p>
-          <p class="desc">{{ t.description }}</p>
-          <p class="date">{{ t.createdAt | date:'medium' }}</p>
-        </div>
-        <div class="amount" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
-          {{ t.amount > 0 ? '+' : '' }}{{ t.amount | currency:'EGP ' }}
-        </div>
-      </li>
-    </ul>
+    <div class="transaction-list-wrap" *ngIf="!isLoading() && transactions().length > 0">
+      <ul class="transaction-list">
+        <li *ngFor="let t of transactions()" class="transaction-item">
+          <div class="icon-box" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
+            <mat-icon>{{ t.amount > 0 ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+          </div>
+          <div class="info">
+            <p class="type">{{ t.type }}</p>
+            <p class="desc">{{ t.description }}</p>
+            <p class="date">{{ t.createdAt | date:'medium' }}</p>
+          </div>
+          <div class="amount" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
+            {{ t.amount > 0 ? '+' : '' }}{{ t.amount | currency:'EGP ' }}
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div class="modal-overlay" *ngIf="showWithdrawForm()">
-    <div class="modal-content">
-      <h2>Request Withdrawal</h2>
+  <!-- Withdrawal Modal -->
+  <div class="modal-overlay" *ngIf="showWithdrawForm()" (click)="$event.target === overlay && closeWithdraw()" #overlay>
+    <div class="modal-content glass-card">
+      <div class="modal-header">
+        <h2>{{ 'wallet.request_withdrawal' | translate }}</h2>
+        <button class="close-btn" (click)="closeWithdraw()"><mat-icon>close</mat-icon></button>
+      </div>
+
       <div *ngIf="errorMsg()" class="alert alert-error">{{ errorMsg() }}</div>
       <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
 
-      <div class="form-group mt-3">
-        <label>Amount (EGP)</label>
-        <input type="number" [ngModel]="withdrawAmount()" (ngModelChange)="withdrawAmount.set($event)" 
-               placeholder="e.g. 500" [max]="balance()" />
+      <div class="form-body">
+        <div class="form-group">
+          <label>{{ 'wallet.amount' | translate }} (EGP)</label>
+          <div class="input-wrap">
+            <mat-icon>attach_money</mat-icon>
+            <input type="number" [ngModel]="withdrawAmount()" (ngModelChange)="withdrawAmount.set($event)"
+              placeholder="e.g. 500" [max]="balance()" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{ 'wallet.mobile_number' | translate }}</label>
+          <div class="input-wrap">
+            <mat-icon>phone_iphone</mat-icon>
+            <input type="tel" [ngModel]="mobileWalletNumber()" (ngModelChange)="mobileWalletNumber.set($event)"
+              placeholder="+201012345678" />
+          </div>
+        </div>
       </div>
 
-      <div class="form-group mt-3">
-        <label>Vodafone Cash / Mobile Wallet Number</label>
-        <input type="tel" [ngModel]="mobileWalletNumber()" (ngModelChange)="mobileWalletNumber.set($event)" 
-               placeholder="+201012345678" />
-      </div>
-
-      <div class="modal-actions mt-5">
-        <button class="btn btn-secondary" (click)="closeWithdraw()" [disabled]="isSubmitting()">Cancel</button>
-        <button class="btn btn-primary" (click)="requestWithdrawal()" 
-                [disabled]="isSubmitting() || !withdrawAmount() || !mobileWalletNumber()">
-          {{ isSubmitting() ? 'Processing...' : 'Confirm Withdrawal' }}
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeWithdraw()" [disabled]="isSubmitting()">
+          {{ 'wallet.cancel' | translate }}
+        </button>
+        <button class="btn-confirm" (click)="requestWithdrawal()"
+          [disabled]="isSubmitting() || !withdrawAmount() || !mobileWalletNumber()">
+          @if (isSubmitting()) {
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ 'wallet.processing' | translate }}</span>
+          } @else {
+          <span>{{ 'wallet.confirm_withdrawal' | translate }}</span>
+          }
         </button>
       </div>
     </div>
