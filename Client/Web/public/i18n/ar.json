@@ -30,6 +30,10 @@
     "loadingMap": "جاري تحميل الخريطة...",
     "noCoordinates": "لا توجد إحداثيات محددة لهذا الموقع",
     "coordinatesCopied": "تم نسخ الإحداثيات",
+    "addTag": "إضافة وسم",
+    "language": "اللغة",
+    "not_applicable": "غير متاح",
+    "retry": "إعادة المحاولة",
     "view": {
       "list": "عرض القائمة",
       "cards": "عرض البطاقات"
@@ -89,7 +93,11 @@
     "endDate": "تاريخ الانتهاء",
     "availability": "التوفر",
     "unavailable": "غير متاح",
-    "anonymous": "مجهول"
+    "anonymous": "مجهول",
+    "owner": "المالك",
+    "renter": "المستأجر",
+    "remindMe": "ذكرني",
+    "removeReminder": "إزالة التذكير"
   },
   "nav": {
     "home": "الرئيسية",
@@ -228,6 +236,7 @@
     "parentCategory": "الفئة الأب",
     "date": "التاريخ",
     "actions": "الإجراءات",
+    "items": "العناصر",
     "image": "صورة",
     "sku": "المعرف الفريد (SKU)",
     "perDay": "/ يوم",
@@ -264,6 +273,7 @@
     "back": "السابق",
     "replace": "استبدال",
     "search": "بحث",
+    "view": "عرض",
     "viewAll": "عرض الكل",
     "learnMore": "معرفة المزيد",
     "subscribe": "اشترك",
@@ -346,7 +356,8 @@
       "completed": "مكتمل",
       "cancelled": "ملغي",
       "overdue": "متأخر",
-      "rejected": "مرفوض"
+      "rejected": "مرفوض",
+      "disputed": "متنازع عليه"
     },
     "details": {
       "title": "تفاصيل الإيجار",
@@ -405,7 +416,10 @@
         "late_return": "إرجاع متأخر",
         "other": "أخرى"
       }
-    }
+    },
+    "config": "الإعدادات",
+    "paymentDetails": "تفاصيل الدفع",
+    "requiresExpert": "يتطلب فحص خبير"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -541,6 +555,9 @@
     "title": "الفئات الفرعية",
     "search": "بحث في الفئات الفرعية...",
     "createButton": "فئة فرعية جديدة",
+    "actions": {
+      "delete": "حذف الفئة الفرعية"
+    },
     "messages": {
       "createSuccess": "تم إنشاء الفئة الفرعية بنجاح",
       "updateSuccess": "تم تحديث الفئة الفرعية بنجاح",
@@ -855,10 +872,12 @@
   },
   "chat": {
     "title": "الرسائل",
+    "subtitle": "محادثاتك",
     "activeNow": "نشط الأن",
     "noChats": "لا توجد محادثات بعد.",
     "typePlaceholder": "اكتب رسالة...",
     "noMessages": "ابدأ محادثة الآن!",
+    "no_messages": "لا توجد رسائل بعد.",
     "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",
@@ -905,6 +924,7 @@
     "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "adminAccessDenied": "تم الرفض: صلاحيات المدير مطلوبة",
     "noProductsFound": "لم يتم العثور على منتجات",
+    "productNotFound": "المنتج غير موجود",
     "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه."
   },
   "terms": {
@@ -1013,5 +1033,17 @@
     "processing": "جاري المعالجة...",
     "success_message": "تم طلب السحب بنجاح.",
     "error_message": "فشل تقديم طلب السحب."
+  },
+  "nameAr": "الاسم (العربية)",
+  "nameEn": "الاسم (الإنجليزية)",
+  "descAr": "الوصف (العربية)",
+  "descEn": "الوصف (الإنجليزية)",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "parentCategory": "الفئة الأب",
+  "dashboard": {
+    "media": {
+      "selectImage": "اختر صورة"
+    }
   }
 }

@@ -11,6 +11,12 @@
     }
 }
 
+// ── Wrapper & Tabs ────────────────────────────────────────────
+.profile-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .profile-card {
     background: $white;
     border-radius: $border-radius-xl;
@@ -35,55 +41,37 @@
     margin-bottom: $spacing-xl;
     position: relative;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -#{$spacing-lg};
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 4px;
-        background: $primary-color;
-        border-radius: $border-radius-full;
-        opacity: 0.2;
-    }
-
     h2 {
         font-size: $font-size-xxl;
         font-weight: $font-weight-bold;
         color: $gray-900;
         margin-bottom: $spacing-sm;
-
         @include text-gradient;
         background-clip: text;
     }
 }
 
+// ── Profile Image ─────────────────────────────────────────────
 .image-container {
     position: relative;
     width: 140px;
     height: 140px;
     margin-bottom: $spacing-md;
 
-    ::ng-deep .p-image {
+    .profile-image {
+        border-radius: $border-radius-full;
         width: 100%;
         height: 100%;
-
-        img {
-            border-radius: $border-radius-full;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 4px solid $white;
-            box-shadow: 0 0 0 2px $gray-200;
-            transition: $transition-base;
-        }
+        object-fit: cover;
+        border: 4px solid $white;
+        box-shadow: 0 0 0 2px $gray-200;
+        transition: $transition-base;
     }
 
     &:hover {
-        ::ng-deep .p-image img {
+        .profile-image {
             border-color: $gray-100;
-            box-shadow: 0 0 0 4px $primary-light; // Highlight effect
+            box-shadow: 0 0 0 4px $primary-light;
         }
 
         .camera-button {
@@ -110,9 +98,11 @@
     transition: all $transition-fast;
     z-index: 10;
 
-    i {
+    mat-icon {
         color: $white;
         font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
     }
 
     &:hover {
@@ -127,31 +117,13 @@
     font-style: italic;
 }
 
-// Removed custom grid layout in favor of PrimeFlex grid classes in HTML
-
-// Dark mode adjustments (if needed, based on variables)
-:host-context(.dark) {
-    .profile-card {
-        background: $gray-800;
-        border-color: $gray-700;
-
-        h2 {
-            color: $white;
-        }
-    }
-}
-
-// ── Wrapper & Tabs ────────────────────────────────────────────
-.profile-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
 // ── Ratings Row ───────────────────────────────────────────────
 .ratings-row {
     display: flex;
     gap: 16px;
     margin: 16px 0;
+    flex-wrap: wrap;
+    justify-content: center;
 
     .rating-pill {
         display: flex;
@@ -187,6 +159,43 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+    }
+}
+
+// ── Form Grid Layout ──────────────────────────────────────────
+form.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+
+    .col-12 {
+        grid-column: 1 / -1;
+    }
+
+    .md\:col-6 {
+        grid-column: span 1;
+
+        @include mobile {
+            grid-column: 1 / -1;
+        }
+    }
+
+    // Button row
+    .flex {
+        display: flex;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+
+    .mt-3 {
+        margin-top: $spacing-md;
     }
 }
 
@@ -281,4 +290,21 @@
         color: #b2bec3;
         mat-icon { font-size: 56px; width: 56px; height: 56px; display: block; margin: 0 auto 12px; }
     }
-}
+}
+
+// ── Dark mode adjustments ─────────────────────────────────────
+:host-context(.dark) {
+    .profile-card {
+        background: $gray-800;
+        border-color: $gray-700;
+
+        h2 {
+            color: $white;
+        }
+    }
+}
+
+// ── Utility overrides ─────────────────────────────────────────
+.mt-4 {
+    margin-top: $spacing-lg;
+}

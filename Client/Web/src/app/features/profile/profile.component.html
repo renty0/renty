@@ -35,19 +35,19 @@
         </div>
 
         <form [formGroup]="profileForm" (submit)="onSubmit()" class="grid">
-          <div class="col-12 md:col-6">
+          <div class="md:col-6">
             <app-input label="firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
           </div>
-          <div class="col-12 md:col-6">
+          <div class="md:col-6">
             <app-input label="lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
           </div>
           <div class="col-12">
             <app-input label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
           </div>
-          <div class="col-12 md:col-6">
+          <div class="md:col-6">
             <app-input label="address" [formGroup]="profileForm" controlName="address"></app-input>
           </div>
-          <div class="col-12 md:col-6">
+          <div class="md:col-6">
             <app-input label="city" [formGroup]="profileForm" controlName="city"></app-input>
           </div>
           <div class="col-12">

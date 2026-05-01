@@ -30,6 +30,10 @@
     "loadingMap": "Loading Map...",
     "noCoordinates": "No coordinates set for this location",
     "coordinatesCopied": "Coordinates copied to clipboard",
+    "addTag": "Add Tag",
+    "language": "Language",
+    "not_applicable": "N/A",
+    "retry": "Retry",
     "view": {
       "list": "List view",
       "cards": "Cards view"
@@ -85,7 +89,9 @@
     "endDate": "End Date",
     "availability": "Availability",
     "unavailable": "Unavailable",
-    "anonymous": "Anonymous"
+    "anonymous": "Anonymous",
+    "remindMe": "Remind Me",
+    "removeReminder": "Remove Reminder"
   },
   "nav": {
     "home": "Home",
@@ -224,6 +230,7 @@
     "price": "Price",
     "date": "Date",
     "actions": "Actions",
+    "items": "Items",
     "image": "Image",
     "sku": "SKU",
     "perDay": "/ day",
@@ -260,6 +267,7 @@
     "back": "Back",
     "search": "Search",
     "replace": "Replace",
+    "view": "View",
     "viewAll": "View All",
     "learnMore": "Learn More",
     "subscribe": "Subscribe",
@@ -342,7 +350,8 @@
       "completed": "Completed",
       "cancelled": "Cancelled",
       "overdue": "Overdue",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "disputed": "Disputed"
     },
     "details": {
       "title": "Rental Details",
@@ -401,7 +410,10 @@
         "late_return": "Late Return",
         "other": "Other"
       }
-    }
+    },
+    "config": "Configuration",
+    "paymentDetails": "Payment Details",
+    "requiresExpert": "Requires Expert Verification"
   },
   "validation": {
     "required": "This field is required",
@@ -859,15 +871,20 @@
   },
   "chat": {
     "title": "Messages",
+    "subtitle": "Your conversations",
     "activeNow": "Active Now",
     "noChats": "No conversations yet.",
     "typePlaceholder": "Type a message...",
     "noMessages": "Start a conversation!",
+    "no_messages": "No messages yet.",
     "selectToStart": "Select a chat to start messaging",
     "send": "Send",
     "online": "Online",
     "offline": "Offline",
-    "viewProduct": "View Product"
+    "viewProduct": "View Product",
+    "recording": "Recording...",
+    "releaseToSend": "Release to send",
+    "deleteConfirmation": "Are you sure you want to delete this conversation?"
   },
   "notifications": {
     "title": "Notifications",
@@ -906,6 +923,7 @@
     "generic": "Something went wrong. Please try again.",
     "adminAccessDenied": "Access denied: Admin permissions required",
     "noProductsFound": "No products found",
+    "productNotFound": "Product not found",
     "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for."
   },
   "terms": {
@@ -1014,5 +1032,17 @@
     "processing": "Processing...",
     "success_message": "Withdrawal requested successfully.",
     "error_message": "Failed to submit withdrawal request."
+  },
+  "nameAr": "Name (Arabic)",
+  "nameEn": "Name (English)",
+  "descAr": "Description (Arabic)",
+  "descEn": "Description (English)",
+  "email": "Email",
+  "password": "Password",
+  "parentCategory": "Parent Category",
+  "dashboard": {
+    "media": {
+      "selectImage": "Select Image"
+    }
   }
 }

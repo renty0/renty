@@ -8,11 +8,12 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: #ffffff;
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid #e5e7eb;
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   }
 
   .notification-item {
@@ -20,27 +21,28 @@
     transition: background 0.3s ease;
 
     &.unread {
-      background: rgba(var(--primary-rgb), 0.05);
-      
+      background: rgba(12, 41, 94, 0.06);
+
       .notif-title {
         font-weight: 700;
-        color: white;
+        color: #111827;
       }
     }
 
     .notif-title {
       font-size: 1.1rem;
       margin-bottom: 0.2rem;
+      color: #1f2937;
     }
 
     .notif-body {
-      opacity: 0.7;
+      color: #4b5563;
       margin-bottom: 0.2rem;
     }
 
     .notif-time {
       font-size: 0.8rem;
-      opacity: 0.4;
+      color: #9ca3af;
     }
   }
 
@@ -50,7 +52,7 @@
     align-items: center;
     justify-content: center;
     padding: 6rem;
-    opacity: 0.6;
+    color: #9ca3af;
 
     mat-icon {
       font-size: 4rem;
