@@ -17,11 +17,6 @@ class AppColor {
   static const Color thirdColor = Color(0xff183458); // $secondary-color-light
   static const Color fourthColor = Color(0xff2563eb); // $accent-color
 
-  // Accent Colors
-  static const Color goldAccent = Color(0xffffd700); // $accent-gold
-  static const Color bronzeAccent = Color(
-    0xff1a365d,
-  ); // mapping to primary temporarily
 
   // Extra Tones
   static const Color earthBrown = Color(0xff2e2e2e); // $harvard-dark-gray
@@ -58,7 +53,6 @@ class AppColors {
   static const Color warmBeige = Color(0xfff5f5f5);
 
   // Accent colors
-  static const Color goldAccent = Color(0xffffd700);
   static const Color bronzeAccent = Color(0xff2563eb);
   static const Color earthBrown = Color(0xff2e2e2e);
 

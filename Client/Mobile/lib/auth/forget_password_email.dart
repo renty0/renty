@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/core/services/api_service.dart';
 import 'package:renty/component/button.dart';
 import 'package:renty/component/textformfield.dart';
-import 'package:renty/component/crud.dart';
 import 'package:renty/auth/forget_password_otp.dart';
 import '../core/functions/checkinternet.dart';
 import '../core/middleware/internet_middleware.dart';
@@ -17,9 +20,9 @@ class ForgetPasswordEmailPage extends StatefulWidget {
 }
 
 class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
-  TextEditingController emailController = TextEditingController();
-  final Crud _crud = Crud();
+  final emailController = TextEditingController();
   bool isLoading = false;
+  String? errorMessage;
 
   @override
   void dispose() {
@@ -27,28 +30,105 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
     super.dispose();
   }
 
+  String _parseApiError(ApiException e) {
+    try {
+      if (e.message != null && e.message!.isNotEmpty) {
+        final body = jsonDecode(e.message!);
+        if (body is Map) {
+          final messages = body['messages'];
+          if (messages is List && messages.isNotEmpty) {
+            return messages.first.toString();
+          }
+          if (body['error'] is String) return body['error'];
+        }
+      }
+    } catch (_) {}
+    switch (e.code) {
+      case 404:
+        return 'No account found with this email address.';
+      case 429:
+        return 'Too many attempts. Please wait a few minutes.';
+      default:
+        return 'Failed to send reset code. Please try again.';
+    }
+  }
+
   Future<void> sendResetOTP() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ForgetPasswordOTPPage(
-          email: emailController.text.isNotEmpty
-              ? emailController.text
-              : "test@renty.com",
-        ),
-      ),
-    );
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      setState(() => errorMessage = 'Please enter your email');
+      return;
+    }
+    if (!GetUtils.isEmail(email)) {
+      setState(() => errorMessage = 'Please enter a valid email address');
+      return;
+    }
+
+    // Check internet BEFORE calling API
+    bool hasInternet = await checkInternet();
+    if (!hasInternet) {
+      if (mounted) showNoInternetDialog(context);
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final command = ForgotPasswordCommand(email: email);
+      final response = await ApiService.auth.authForgotPassword(command);
+
+      if (!mounted) return;
+
+      if (response != null && response.error != true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ForgetPasswordOTPPage(email: email),
+          ),
+        );
+      } else {
+        final messages = response?.messages ?? [];
+        setState(() {
+          isLoading = false;
+          errorMessage = messages.isNotEmpty
+              ? messages.first
+              : 'Failed to send reset code. Please try again.';
+        });
+      }
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = _parseApiError(e);
+      });
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage =
+            'Connection error. Please check your internet and try again.';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: AppColor.backgroundcolor,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: AppColor.primaryColor,
+        foregroundColor: isDark ? Colors.white : AppColor.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -66,88 +146,71 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Header Icon
                   Container(
                     width: 100,
                     height: 100,
                     margin: EdgeInsets.only(bottom: 20, top: 20),
                     decoration: BoxDecoration(
-                      color: AppColor.primaryColor.withOpacity(0.1),
+                      color: AppColor.primaryColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.lock_reset,
                       size: 50,
-                      color: AppColor.primaryColor,
+                      color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor,
                     ),
                   ),
-
                   SizedBox(height: 20),
-
                   Text(
                     "Forgot Password",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: AppColor.primaryColor,
+                      color: isDark ? Colors.white : AppColor.primaryColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
-
                   SizedBox(height: 10),
-
                   Text(
                     "Enter your email to receive a reset code",
                     style: TextStyle(
-                      fontSize: 16,
-                      color: AppColor.grey,
-                      height: 1.5,
-                    ),
+                        fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey, height: 1.5),
                     textAlign: TextAlign.center,
                   ),
-
+                  if (errorMessage != null) ...[
+                    SizedBox(height: 16),
+                    _buildErrorBanner(errorMessage!),
+                  ],
                   SizedBox(height: 40),
-
                   Text(
                     "Email",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColor.primaryColor,
+                      color: isDark ? Colors.white : AppColor.primaryColor,
                     ),
                   ),
-
                   SizedBox(height: 10),
-
                   CustomTextForm(
                     hintText: "Enter your email",
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
-
                   SizedBox(height: 30),
-
                   Button(
                     title: "Send Reset Code",
                     isLoading: isLoading,
                     onpressed: sendResetOTP,
                   ),
-
                   Spacer(),
-
-                  // Back to login
                   Padding(
                     padding: EdgeInsets.only(bottom: 20, top: 20),
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: () => Navigator.pop(context),
                       child: Text(
                         "Back to Login",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColor.primaryColor,
-                        ),
+                        style:
+                            TextStyle(fontSize: 16, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor),
                       ),
                     ),
                   ),
@@ -156,6 +219,43 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(String message) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Color(0xFFFEF2F2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Color(0xFFFECACA)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 1),
+            child:
+                Icon(Icons.error_outline, color: Color(0xFFDC2626), size: 20),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(message,
+                style: TextStyle(
+                    color: Color(0xFFDC2626),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4)),
+          ),
+          GestureDetector(
+            onTap: () => setState(() => errorMessage = null),
+            child: Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.close, color: Color(0xFFDC2626), size: 18),
+            ),
+          ),
+        ],
       ),
     );
   }

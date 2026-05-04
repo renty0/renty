@@ -12,19 +12,19 @@ Future<bool> alertExitApp(BuildContext context) async {
     barrierDismissible: false,
     builder: (BuildContext dialogContext) {
       return Dialog(
-        backgroundColor: isDark ? Color(0xFF2C2520) : AppColor.cardBackground,
+        backgroundColor: isDark ? const Color(0xFF1E293B) : AppColor.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
         child: Container(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: isDark
-                  ? [Color(0xFF2C2520), Color(0xFF1A1614)]
+                  ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
                   : [Colors.white, AppColor.backgroundcolor.withOpacity(0.5)],
             ),
           ),
@@ -33,24 +33,26 @@ Future<bool> alertExitApp(BuildContext context) async {
             children: [
               // Icon with gradient background
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      AppColor.primaryColor.withOpacity(0.2),
-                      AppColor.secondColor.withOpacity(0.2),
-                    ],
+                    colors: isDark 
+                        ? [AppColor.fourthColor.withOpacity(0.3), AppColor.primaryColor.withOpacity(0.3)]
+                        : [
+                            AppColor.primaryColor.withOpacity(0.2),
+                            AppColor.secondColor.withOpacity(0.2),
+                          ],
                   ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.exit_to_app_rounded,
                   size: 48,
-                  color: AppColor.primaryColor,
+                  color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor,
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Title
               Text(
@@ -58,12 +60,12 @@ Future<bool> alertExitApp(BuildContext context) async {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.primaryColor,
+                  color: isDark ? Colors.white : AppColor.primaryColor,
                   fontFamily: 'PlayfairDisplay',
                 ),
               ),
 
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Message
               Text(
@@ -71,7 +73,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: isDark ? AppColor.backgroundcolor : AppColor.grey,
+                  color: isDark ? Colors.white70 : AppColor.grey,
                   height: 1.5,
                 ),
               ),
@@ -88,9 +90,9 @@ Future<bool> alertExitApp(BuildContext context) async {
                         Navigator.of(dialogContext).pop(false);
                       },
                       style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         side: BorderSide(
-                          color: AppColor.primaryColor,
+                          color: isDark ? Colors.white54 : AppColor.primaryColor,
                           width: 2,
                         ),
                         shape: RoundedRectangleBorder(
@@ -102,7 +104,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: AppColor.primaryColor,
+                          color: isDark ? Colors.white : AppColor.primaryColor,
                         ),
                       ),
                     ),
@@ -134,7 +136,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                           Navigator.of(dialogContext).pop(true);
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
@@ -170,15 +172,19 @@ Future<bool> alertExitApp(BuildContext context) async {
 
 /// Show exit confirmation dialog using GetX (Alternative method)
 Future<bool> alertExitAppGetX() {
+  final isDark = Get.isDarkMode;
   return Get.defaultDialog<bool>(
     title: "Exit App",
     titleStyle: TextStyle(
-      color: AppColor.primaryColor,
+      color: isDark ? Colors.white : AppColor.primaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 20,
     ),
     middleText: "Are you sure you want to exit?",
-    backgroundColor: AppColor.cardBackground,
+    middleTextStyle: TextStyle(
+      color: isDark ? Colors.white70 : AppColor.darkText,
+    ),
+    backgroundColor: isDark ? const Color(0xFF1E293B) : AppColor.cardBackground,
     radius: 20,
     actions: [
       OutlinedButton(
@@ -186,14 +192,14 @@ Future<bool> alertExitAppGetX() {
           Get.back(result: false);
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: AppColor.primaryColor),
+          side: BorderSide(color: isDark ? Colors.white54 : AppColor.primaryColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
         child: Text(
           "Cancel",
-          style: TextStyle(color: AppColor.primaryColor),
+          style: TextStyle(color: isDark ? Colors.white : AppColor.primaryColor),
         ),
       ),
       ElevatedButton(
@@ -201,12 +207,13 @@ Future<bool> alertExitAppGetX() {
           Get.back(result: true);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColor.primaryColor,
+          backgroundColor: isDark ? AppColor.fourthColor : AppColor.primaryColor,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text("Exit"),
+        child: const Text("Exit"),
       ),
     ],
   ).then((value) {

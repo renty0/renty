@@ -2,6 +2,20 @@ import 'package:renty/auth/login.dart';
 import 'package:renty/auth/register.dart';
 import 'package:renty/pages/change_password_screen.dart';
 import 'package:renty/pages/main_container.dart';
+import 'package:renty/pages/item_detail_page.dart';
+import 'package:renty/pages/my_rentals_page.dart';
+import 'package:renty/pages/my_orders_page.dart';
+import 'package:renty/pages/my_items_page.dart';
+import 'package:renty/pages/create_item_page.dart';
+import 'package:renty/pages/notifications_page.dart';
+import 'package:renty/pages/favorites_page.dart';
+import 'package:renty/pages/chat_list_page.dart';
+import 'package:renty/pages/expert_assigned_page.dart';
+import 'package:renty/pages/verification_history_page.dart';
+import 'package:renty/pages/wallet_page.dart';
+import 'package:renty/pages/support_tickets_page.dart';
+import 'package:renty/pages/create_ticket_page.dart';
+import 'package:renty/pages/ticket_detail_page.dart';
 import 'package:renty/onboarding/onboarding.dart';
 import 'package:get/get.dart';
 import 'auth/email_verification_notification.dart';
@@ -13,19 +27,38 @@ import 'auth/reset_password.dart';
 List<GetPage<dynamic>>? routes = [
   // Onboarding route
   GetPage(name: "/onboarding", page: () => const OnBoarding()),
+
   // Auth routes
   GetPage(name: "/login", page: () => const login()),
   GetPage(name: "/register", page: () => const register()),
 
-  // Main container with bottom navigation - starts at Home (index 2)
+  // Main container with bottom navigation (Chat = 0, Marketplace = 1, Home = 2, Search = 3, Profile = 4)
   GetPage(name: "/main", page: () => const MainContainer(initialIndex: 2)),
   GetPage(
     name: "/home",
     page: () => const MainContainer(initialIndex: 2),
-  ), // Alias for backwards compatibility
-  // Direct page access
+  ),
+  GetPage(
+    name: "/marketplace",
+    page: () => const MainContainer(initialIndex: 1),
+  ),
+  GetPage(
+    name: "/search",
+    page: () => const MainContainer(initialIndex: 3),
+  ),
+  GetPage(
+    name: "/profile",
+    page: () => const MainContainer(initialIndex: 4),
+  ),
 
-  // Add to your routes list
+  // Item detail
+  GetPage(
+    name: "/item-detail",
+    page: () => const ItemDetailPage(),
+    transition: Transition.cupertino,
+  ),
+
+  // Email verification
   GetPage(
     name: "/email-verification",
     page: () => EmailVerificationNotification(email: ''),
@@ -35,7 +68,7 @@ List<GetPage<dynamic>>? routes = [
     page: () => OTPVerificationPage(email: ''),
   ),
 
-  // Add to your routes list
+  // Forgot password flow
   GetPage(
     name: "/forget-password-email",
     page: () => ForgetPasswordEmailPage(),
@@ -49,12 +82,79 @@ List<GetPage<dynamic>>? routes = [
     page: () => ResetPasswordPage(email: '', verificationCode: ''),
   ),
 
-  GetPage(
-    name: "/cart",
-    page: () => MainContainer(initialIndex: 3),
-  ), // Cart is index 3
-  // Cart route
-  GetPage(name: "/cart", page: () => MainContainer(initialIndex: 3)),
-
+  // Change password
   GetPage(name: "/change-password", page: () => ChangePasswordScreen()),
+
+  // Phase 2: Rentals & Orders
+  GetPage(
+    name: "/my-rentals",
+    page: () => const MyRentalsPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/my-orders",
+    page: () => const MyOrdersPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/my-items",
+    page: () => const MyItemsPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/create-item",
+    page: () => const CreateItemPage(),
+    transition: Transition.cupertino,
+  ),
+
+  // Phase 3: Communication & Engagement
+  GetPage(
+    name: "/notifications",
+    page: () => const NotificationsPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/favorites",
+    page: () => const FavoritesPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/chat-list",
+    page: () => const ChatListPage(),
+    transition: Transition.cupertino,
+  ),
+
+  // Phase 5: Expert / Verification & Wallet
+  GetPage(
+    name: "/expert-assigned",
+    page: () => const ExpertAssignedPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/verification-history",
+    page: () => const VerificationHistoryPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/wallet",
+    page: () => const WalletPage(),
+    transition: Transition.cupertino,
+  ),
+
+  // Support
+  GetPage(
+    name: "/support",
+    page: () => const SupportTicketsPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/support/new",
+    page: () => const CreateTicketPage(),
+    transition: Transition.cupertino,
+  ),
+  GetPage(
+    name: "/support/detail",
+    page: () => const TicketDetailPage(),
+    transition: Transition.cupertino,
+  ),
 ];

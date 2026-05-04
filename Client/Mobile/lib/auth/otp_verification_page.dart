@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/core/services/api_service.dart';
 import 'package:renty/component/button.dart';
-import 'package:renty/component/crud.dart';
 import '../core/functions/checkinternet.dart';
 import '../core/middleware/internet_middleware.dart';
 
@@ -18,7 +19,6 @@ class OTPVerificationPage extends StatefulWidget {
 
 class _OTPVerificationPageState extends State<OTPVerificationPage> {
   final TextEditingController _otpController = TextEditingController();
-  final Crud _crud = Crud();
   bool _isLoading = false;
   bool _isResending = false;
   int _resendCountdown = 60;
@@ -59,24 +59,83 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       return;
     }
 
-    // UI test mode: accept any 6-digit code
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Email verified successfully!"),
-        backgroundColor: AppColor.successColor,
-      ),
-    );
+    // Check internet
+    bool hasInternet = await checkInternet();
+    if (!hasInternet) {
+      if (mounted) showNoInternetDialog(context);
+      return;
+    }
 
-    Future.delayed(Duration(milliseconds: 500), () {
-      Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+    setState(() {
+      _isLoading = true;
     });
+
+    try {
+      final command = ConfirmEmailCommand(
+        email: widget.email,
+        code: _otpController.text,
+      );
+
+      final response = await ApiService.auth.authVerifyEmail(command);
+
+      if (!mounted) return;
+
+      if (response != null && response.error != true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text('Email verified successfully!'),
+            ]),
+            backgroundColor: AppColor.successColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+
+        Future.delayed(Duration(milliseconds: 500), () {
+          if (mounted) {
+            Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid verification code. Please try again.'),
+            backgroundColor: Color(0xFFDC2626),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Verification failed. Please try again.'),
+          backgroundColor: Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _resendOTP() async {
-    // CHECK INTERNET
+    // Check internet
     bool hasInternet = await checkInternet();
     if (!hasInternet) {
-      showNoInternetDialog(context);
+      if (mounted) showNoInternetDialog(context);
       return;
     }
 
@@ -84,40 +143,60 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       _isResending = true;
     });
 
-    var response = await _crud.postRequest(AppLink.resendOTP, {
-      "email": widget.email,
-      "type": "signup",
-    });
+    try {
+      final command = SendEmailConfirmationCommand(email: widget.email);
+      final response = await ApiService.auth.authSendVerification(command);
 
-    setState(() {
-      _isResending = false;
-    });
+      if (!mounted) return;
 
-    if (response["status"] == "success") {
-      // Reset countdown
-      setState(() {
-        _canResend = false;
-        _resendCountdown = 60;
-      });
-      _startCountdown();
+      if (response != null && response.error != true) {
+        setState(() {
+          _canResend = false;
+          _resendCountdown = 60;
+        });
+        _startCountdown();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Verification code resent successfully!"),
-          backgroundColor: AppColor.successColor,
-        ),
-      );
-    } else {
-      String errorMessage = response["message"] ?? "Failed to resend code";
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColor.backgroundcolor2,
-          content: Text(
-            errorMessage,
-            style: TextStyle(color: AppColor.warningColor),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text('Verification code resent!'),
+            ]),
+            backgroundColor: AppColor.successColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to resend code. Please try again.'),
+            backgroundColor: Color(0xFFDC2626),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to resend code. Please try again.'),
+          backgroundColor: Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isResending = false;
+        });
+      }
     }
   }
 

@@ -1,0 +1,4830 @@
+Select a definition
+
+v1
+Renty API
+ v1 
+OAS 3.0
+/swagger/v1/swagger.json
+Renty - Rental Marketplace API
+
+Servers
+
+https://renty.runasp.net
+
+Authorize
+Auth
+
+
+POST
+/api/v1/auth/register
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string",
+  "password": "string",
+  "confirmPassword": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "userType": 1,
+  "address": "string",
+  "city": "string",
+  "country": "string",
+  "bio": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "message": "string",
+    "userId": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/verify-email
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string",
+  "code": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "message": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/send-verification
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/forgot-password
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/reset-password
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string",
+  "token": "string",
+  "newPassword": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/verify-reset-code
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string",
+  "token": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/login
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "email": "string",
+  "password": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "accessToken": "string",
+    "refreshToken": "string",
+    "refreshTokenExpiresAt": "2026-04-19T19:53:53.028Z",
+    "user": {
+      "id": 0,
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string",
+      "role": "string",
+      "profileImageUrl": "string"
+    }
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+401	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/auth/refresh
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "accessToken": "string",
+  "refreshToken": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "accessToken": "string",
+    "refreshToken": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+401	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/auth/me
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phone": "string",
+    "city": "string",
+    "role": "string",
+    "profileImageUrl": "string",
+    "isVerified": true,
+    "createdAt": "2026-04-19T19:53:53.041Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/auth/me
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "address": "string",
+  "city": "string",
+  "country": "string",
+  "bio": "string",
+  "profilePictureUrl": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Items
+
+
+GET
+/api/v1/items
+
+Parameters
+Try it out
+Name	Description
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+categoryId
+integer($int32)
+(query)
+categoryId
+subcategoryId
+integer($int32)
+(query)
+subcategoryId
+city
+string
+(query)
+city
+minPrice
+number($decimal)
+(query)
+minPrice
+maxPrice
+number($decimal)
+(query)
+maxPrice
+type
+string
+(query)
+type
+condition
+string
+(query)
+condition
+sort
+string
+(query)
+sort
+sortOrder
+string
+(query)
+sortOrder
+owner
+string
+(query)
+owner
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "id": "string",
+      "titleAr": "string",
+      "titleEn": "string",
+      "dailyPrice": 0,
+      "city": "string",
+      "primaryImage": "string",
+      "avgRating": 0,
+      "reviewCount": 0,
+      "type": "string",
+      "condition": "string",
+      "category": {
+        "id": 0,
+        "nameAr": "string",
+        "nameEn": "string"
+      },
+      "subcategory": {
+        "id": 0,
+        "nameAr": "string",
+        "nameEn": "string"
+      },
+      "brand": {
+        "id": 0,
+        "nameAr": "string",
+        "nameEn": "string"
+      }
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/items
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "titleAr": "string",
+  "titleEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "type": "string",
+  "condition": "string",
+  "defaultDeposit": 0,
+  "location": "string",
+  "city": "string",
+  "lat": 0,
+  "lng": 0,
+  "categoryId": 0,
+  "subcategoryId": 0,
+  "brandId": 0,
+  "pricing": [
+    {
+      "price": 0,
+      "pricingType": "string"
+    }
+  ],
+  "images": [
+    {
+      "imageId": "string",
+      "isPrimary": true
+    }
+  ]
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/items/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "titleAr": "string",
+    "titleEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "type": "string",
+    "status": "string",
+    "condition": "string",
+    "defaultDeposit": 0,
+    "location": "string",
+    "city": "string",
+    "lat": 0,
+    "lng": 0,
+    "createdAt": "2026-04-19T19:53:53.084Z",
+    "owner": {
+      "firstName": "string",
+      "city": "string",
+      "profileImageUrl": "string"
+    },
+    "pricing": [
+      {
+        "pricingType": "string",
+        "price": 0
+      }
+    ],
+    "images": [
+      {
+        "id": "string",
+        "imageUrl": "string",
+        "isPrimary": true
+      }
+    ],
+    "avgRating": 0,
+    "reviewCount": 0,
+    "category": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    },
+    "subcategory": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    },
+    "brand": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    }
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/items/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "itemId": "string",
+  "titleAr": "string",
+  "titleEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "type": "string",
+  "condition": "string",
+  "defaultDeposit": 0,
+  "location": "string",
+  "city": "string",
+  "lat": 0,
+  "lng": 0,
+  "categoryId": 0,
+  "subcategoryId": 0,
+  "brandId": 0,
+  "pricing": [
+    {
+      "price": 0,
+      "pricingType": "string"
+    }
+  ],
+  "images": [
+    {
+      "imageId": "string",
+      "isPrimary": true
+    }
+  ]
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "titleAr": "string",
+    "titleEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "type": "string",
+    "status": "string",
+    "condition": "string",
+    "defaultDeposit": 0,
+    "location": "string",
+    "city": "string",
+    "lat": 0,
+    "lng": 0,
+    "createdAt": "2026-04-19T19:53:53.096Z",
+    "owner": {
+      "firstName": "string",
+      "city": "string",
+      "profileImageUrl": "string"
+    },
+    "pricing": [
+      {
+        "pricingType": "string",
+        "price": 0
+      }
+    ],
+    "images": [
+      {
+        "id": "string",
+        "imageUrl": "string",
+        "isPrimary": true
+      }
+    ],
+    "avgRating": 0,
+    "reviewCount": 0,
+    "category": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    },
+    "subcategory": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    },
+    "brand": {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string"
+    }
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+DELETE
+/api/v1/items/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Search
+
+
+GET
+/api/v1/search
+
+Parameters
+Try it out
+Name	Description
+q *
+string
+(query)
+q
+categoryId
+integer($int32)
+(query)
+categoryId
+city
+string
+(query)
+city
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "items": [
+      {
+        "id": "string",
+        "titleAr": "string",
+        "titleEn": "string",
+        "dailyPrice": 0,
+        "city": "string",
+        "primaryImage": "string",
+        "avgRating": 0,
+        "reviewCount": 0,
+        "type": "string",
+        "condition": "string",
+        "category": {
+          "id": 0,
+          "nameAr": "string",
+          "nameEn": "string"
+        },
+        "subcategory": {
+          "id": 0,
+          "nameAr": "string",
+          "nameEn": "string"
+        },
+        "brand": {
+          "id": 0,
+          "nameAr": "string",
+          "nameEn": "string"
+        }
+      }
+    ],
+    "total": 0,
+    "page": 0,
+    "pages": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Favorites
+
+
+POST
+/api/v1/items/{id}/favorite
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+DELETE
+/api/v1/items/{id}/favorite
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/users/me/favorites
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "success": true,
+    "items": [
+      {
+        "id": "string",
+        "title": "string",
+        "dailyPrice": 0,
+        "primaryImage": "string",
+        "city": "string"
+      }
+    ],
+    "error": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Delivery
+
+
+GET
+/api/v1/orders/{id}/delivery
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "status": "string",
+      "location": "string",
+      "updatedAt": "2026-04-19T19:53:53.137Z"
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/orders/{id}/delivery
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "orderId": "string",
+  "status": "string",
+  "location": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Reviews
+
+
+POST
+/api/v1/rentals/{id}/review
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "rentalId": "string",
+  "rating": 0,
+  "comment": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "reviewId": "string",
+    "rating": 0,
+    "comment": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/items/{id}/reviews
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "reviews": [
+      {
+        "id": "string",
+        "rating": 0,
+        "comment": "string",
+        "reviewer": {
+          "firstName": "string",
+          "profileImageUrl": "string"
+        },
+        "createdAt": "2026-04-19T19:53:53.166Z"
+      }
+    ],
+    "avgRating": 0,
+    "totalReviews": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Verifications
+
+
+POST
+/api/v1/items/{id}/verify
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "itemId": "string",
+  "rentalId": "string",
+  "checkType": "string",
+  "status": "string",
+  "notes": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "verificationId": "string",
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/items/{id}/verifications
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "success": true,
+    "error": "string",
+    "verifications": [
+      {
+        "id": "string",
+        "checkType": "string",
+        "status": "string",
+        "notes": "string",
+        "expertFirstName": "string",
+        "createdAt": "2026-04-19T19:53:53.182Z"
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/expert/assigned
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "assignments": [
+      {
+        "verificationId": "string",
+        "itemTitleAr": "string",
+        "itemTitleEn": "string",
+        "itemImage": "string",
+        "rentalStartDate": "2026-04-19T19:53:53.187Z",
+        "rentalEndDate": "2026-04-19T19:53:53.187Z",
+        "checkType": "string",
+        "createdAt": "2026-04-19T19:53:53.187Z"
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Admin
+
+
+GET
+/api/v1/admin/fraud
+
+
+Parameters
+Try it out
+Name	Description
+decision
+string
+(query)
+decision
+minRisk
+number($double)
+(query)
+minRisk
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/admin/users
+
+
+Parameters
+Try it out
+Name	Description
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/admin/users/{id}/status
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int64)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "userId": 0,
+  "isActive": true
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/admin/kpis
+
+
+Parameters
+Try it out
+Name	Description
+period
+string
+(query)
+period
+from
+string($date-time)
+(query)
+from
+to
+string($date-time)
+(query)
+to
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/admin/kpis/latest
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/admin/gap
+
+
+Parameters
+Try it out
+Name	Description
+period
+string
+(query)
+period
+limit *
+integer($int32)
+(query)
+limit
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Subcategories
+
+
+GET
+/api/v1/categories/{categoryId}/subcategories
+
+Parameters
+Try it out
+Name	Description
+categoryId *
+integer($int32)
+(path)
+categoryId
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+sortBy
+string
+(query)
+sortBy
+sortOrder
+string
+(query)
+sortOrder
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string",
+      "descAr": "string",
+      "descEn": "string",
+      "logoId": "string",
+      "logoUrl": "string",
+      "categoryId": 0,
+      "categoryNameAr": "string",
+      "categoryNameEn": "string",
+      "productCount": 0,
+      "created": "2026-04-19T19:53:53.252Z",
+      "lastModified": "2026-04-19T19:53:53.252Z"
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/subcategories
+
+Parameters
+Try it out
+Name	Description
+categoryId
+integer($int32)
+(query)
+categoryId
+search
+string
+(query)
+search
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+sortBy
+string
+(query)
+sortBy
+sortOrder
+string
+(query)
+sortOrder
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string",
+      "descAr": "string",
+      "descEn": "string",
+      "logoId": "string",
+      "logoUrl": "string",
+      "categoryId": 0,
+      "categoryNameAr": "string",
+      "categoryNameEn": "string",
+      "productCount": 0,
+      "created": "2026-04-19T19:53:53.265Z",
+      "lastModified": "2026-04-19T19:53:53.265Z"
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/subcategories
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "categoryId": 0,
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "categoryId": 0,
+    "categoryNameAr": "string",
+    "categoryNameEn": "string",
+    "productCount": 0,
+    "created": "2026-04-19T19:53:53.274Z",
+    "lastModified": "2026-04-19T19:53:53.274Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/subcategories/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "categoryId": 0,
+    "categoryNameAr": "string",
+    "categoryNameEn": "string",
+    "productCount": 0,
+    "created": "2026-04-19T19:53:53.281Z",
+    "lastModified": "2026-04-19T19:53:53.281Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/subcategories/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "id": 0,
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "categoryId": 0,
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "categoryId": 0,
+    "categoryNameAr": "string",
+    "categoryNameEn": "string",
+    "productCount": 0,
+    "created": "2026-04-19T19:53:53.294Z",
+    "lastModified": "2026-04-19T19:53:53.294Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+DELETE
+/api/v1/subcategories/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Rentals
+
+
+POST
+/api/v1/rentals
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "itemId": "string",
+  "startDate": "2026-04-19T19:53:53.308Z",
+  "endDate": "2026-04-19T19:53:53.308Z",
+  "pricingType": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "rentalId": "string",
+    "orderId": "string",
+    "rentalPrice": 0,
+    "depositAmount": 0,
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/rentals
+
+
+Parameters
+Try it out
+Name	Description
+status
+string
+(query)
+status
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "rentals": [
+      {
+        "id": "string",
+        "itemTitle": "string",
+        "itemImage": "string",
+        "startDate": "2026-04-19T19:53:53.318Z",
+        "endDate": "2026-04-19T19:53:53.318Z",
+        "rentalPrice": 0,
+        "status": "string",
+        "depositStatus": "string"
+      }
+    ],
+    "total": 0,
+    "page": 0,
+    "pages": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/rentals/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "itemId": "string",
+    "itemTitle": "string",
+    "itemImage": "string",
+    "ownerFirstName": "string",
+    "ownerCity": "string",
+    "startDate": "2026-04-19T19:53:53.323Z",
+    "endDate": "2026-04-19T19:53:53.323Z",
+    "actualReturnDate": "2026-04-19T19:53:53.323Z",
+    "rentalPrice": 0,
+    "depositAmount": 0,
+    "lateFee": 0,
+    "status": "string",
+    "depositStatus": "string",
+    "notes": "string",
+    "createdAt": "2026-04-19T19:53:53.323Z",
+    "hasReview": true
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/rentals/{id}/confirm
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/rentals/{id}/activate
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/rentals/{id}/complete
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+damaged *
+boolean
+(query)
+
+--
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "rentalId": "string",
+    "status": "string",
+    "lateFee": 0,
+    "depositStatus": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/rentals/{id}/cancel
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Orders
+
+
+POST
+/api/v1/orders
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "items": [
+    {
+      "itemId": "string",
+      "quantity": 0
+    }
+  ]
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "orderId": "string",
+    "totalAmount": 0,
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/orders
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "orders": [
+      {
+        "id": "string",
+        "totalAmount": 0,
+        "status": "string",
+        "createdAt": "2026-04-19T19:53:53.363Z",
+        "itemCount": 0
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/orders/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "totalAmount": 0,
+    "status": "string",
+    "createdAt": "2026-04-19T19:53:53.367Z",
+    "items": [
+      {
+        "itemId": "string",
+        "title": "string",
+        "quantity": 0,
+        "priceAtTime": 0,
+        "primaryImage": "string"
+      }
+    ],
+    "paymentStatus": "string",
+    "deliveryStatus": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Payments
+
+
+POST
+/api/v1/payments
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "orderId": "string",
+  "method": "string",
+  "transactionRef": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "paymentId": "string",
+    "status": "string",
+    "transactionRef": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/payments/{orderId}
+
+
+Parameters
+Try it out
+Name	Description
+orderId *
+string($guid)
+(path)
+orderId
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "amount": 0,
+    "method": "string",
+    "status": "string",
+    "createdAt": "2026-04-19T19:53:53.383Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Support
+
+
+POST
+/api/v1/support/tickets
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "type": "string",
+  "message": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "ticketId": "string",
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/support/tickets
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "tickets": [
+      {
+        "id": "string",
+        "type": "string",
+        "status": "string",
+        "createdAt": "2026-04-19T19:53:53.398Z",
+        "lastMessage": "string"
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/support/tickets/{id}/messages
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "ticketId": "string",
+  "message": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "messageId": "string",
+    "message": "string",
+    "createdAt": "2026-04-19T19:53:53.408Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/support/tickets/{id}/status
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "ticketId": "string",
+  "status": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "ticketId": "string",
+    "status": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Chat
+
+
+POST
+/api/v1/chats
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "userId": 0
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "chatId": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/chats
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "chats": [
+      {
+        "id": "string",
+        "otherUserFirstName": "string",
+        "otherUserProfileImage": "string",
+        "lastMessage": "string",
+        "unreadCount": 0
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/chats/{id}/messages
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "chatId": "string",
+  "message": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "messageId": "string",
+    "message": "string",
+    "createdAt": "2026-04-19T19:53:53.444Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/chats/{id}/messages
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "found": true,
+    "error": "string",
+    "messages": [
+      {
+        "id": "string",
+        "senderId": 0,
+        "message": "string",
+        "isRead": true,
+        "createdAt": "2026-04-19T19:53:53.451Z"
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Notifications
+
+
+GET
+/api/v1/notifications
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "notifications": [
+      {
+        "id": "string",
+        "title": "string",
+        "message": "string",
+        "isRead": true,
+        "createdAt": "2026-04-19T19:53:53.456Z"
+      }
+    ],
+    "unreadCount": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/notifications/read-all
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "message": "string",
+    "updated": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/notifications/{id}/read
+
+
+Recommendations
+
+
+GET
+/api/v1/recommendations
+
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "recommendations": [
+      {
+        "id": "string",
+        "item": {
+          "id": "string",
+          "title": "string",
+          "price": 0,
+          "image": "string",
+          "city": "string"
+        },
+        "score": 0,
+        "reason": "string",
+        "algorithm": "string"
+      }
+    ]
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/recommendations/{id}/click
+
+
+Parameters
+Try it out
+Name	Description
+id *
+string($guid)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Media
+
+
+POST
+/api/v1/media
+
+
+Parameters
+Try it out
+Name	Description
+entityId
+string($guid)
+(query)
+entityId
+entityType
+string
+(query)
+entityType
+Request body
+
+multipart/form-data
+file
+string($binary)
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": "string",
+    "url": "string",
+    "fileName": "string",
+    "extension": "string",
+    "contentType": "string",
+    "fileType": "string",
+    "sizeBytes": 0,
+    "width": 0,
+    "height": 0,
+    "createdAt": "2026-04-19T19:53:53.490Z",
+    "entityId": "string",
+    "entityType": "string"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Categories
+
+
+GET
+/api/v1/categories
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+sortBy
+string
+(query)
+sortBy
+sortOrder
+string
+(query)
+sortOrder
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string",
+      "descAr": "string",
+      "descEn": "string",
+      "logoId": "string",
+      "logoUrl": "string",
+      "subcategoryCount": 0,
+      "created": "2026-04-19T19:53:53.504Z",
+      "lastModified": "2026-04-19T19:53:53.504Z"
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/categories
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "subcategoryCount": 0,
+    "created": "2026-04-19T19:53:53.512Z",
+    "lastModified": "2026-04-19T19:53:53.512Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/categories/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "subcategoryCount": 0,
+    "created": "2026-04-19T19:53:53.518Z",
+    "lastModified": "2026-04-19T19:53:53.518Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/categories/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "id": 0,
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "subcategoryCount": 0,
+    "created": "2026-04-19T19:53:53.530Z",
+    "lastModified": "2026-04-19T19:53:53.530Z"
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+DELETE
+/api/v1/categories/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+Brands
+
+
+GET
+/api/v1/brands
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+page *
+integer($int32)
+(query)
+page
+limit *
+integer($int32)
+(query)
+limit
+sortBy
+string
+(query)
+sortBy
+sortOrder
+string
+(query)
+sortOrder
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": [
+    {
+      "id": 0,
+      "nameAr": "string",
+      "nameEn": "string",
+      "descAr": "string",
+      "descEn": "string",
+      "logoId": "string",
+      "logoUrl": "string",
+      "itemCount": 0
+    }
+  ],
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+POST
+/api/v1/brands
+
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+201	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "itemCount": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+GET
+/api/v1/brands/{id}
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "itemCount": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+PUT
+/api/v1/brands/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "id": 0,
+  "nameAr": "string",
+  "nameEn": "string",
+  "descAr": "string",
+  "descEn": "string",
+  "logoId": "string"
+}
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": {
+    "id": 0,
+    "nameAr": "string",
+    "nameEn": "string",
+    "descAr": "string",
+    "descEn": "string",
+    "logoId": "string",
+    "logoUrl": "string",
+    "itemCount": 0
+  },
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+400	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+
+DELETE
+/api/v1/brands/{id}
+
+
+Parameters
+Try it out
+Name	Description
+id *
+integer($int32)
+(path)
+id
+Responses
+Code	Description	Links
+200	
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}
+No links
+404	
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "data": "string",
+  "error": true,
+  "errorCode": [
+    0
+  ],
+  "messages": [
+    "string"
+  ],
+  "total": 0,
+  "page": 0,
+  "pages": 0,
+  "successCode": 0
+}

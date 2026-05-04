@@ -1,9 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/core/services/api_service.dart';
 import 'package:renty/component/button.dart';
-import 'package:renty/component/crud.dart';
 import 'package:renty/auth/reset_password.dart';
 import '../core/functions/checkinternet.dart';
 import '../core/middleware/internet_middleware.dart';
@@ -12,7 +14,7 @@ class ForgetPasswordOTPPage extends StatefulWidget {
   final String email;
 
   const ForgetPasswordOTPPage({Key? key, required this.email})
-    : super(key: key);
+      : super(key: key);
 
   @override
   _ForgetPasswordOTPPageState createState() => _ForgetPasswordOTPPageState();
@@ -20,11 +22,11 @@ class ForgetPasswordOTPPage extends StatefulWidget {
 
 class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
   final TextEditingController _otpController = TextEditingController();
-  final Crud _crud = Crud();
   bool _isLoading = false;
   bool _isResending = false;
   int _resendCountdown = 60;
   bool _canResend = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -47,31 +49,162 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
     });
   }
 
+  String _parseApiError(ApiException e) {
+    try {
+      if (e.message != null && e.message!.isNotEmpty) {
+        final body = jsonDecode(e.message!);
+        if (body is Map) {
+          final messages = body['messages'];
+          if (messages is List && messages.isNotEmpty) {
+            return messages.first.toString();
+          }
+          if (body['error'] is String) return body['error'];
+        }
+      }
+    } catch (_) {}
+    switch (e.code) {
+      case 400:
+        return 'Invalid or expired verification code.';
+      case 404:
+        return 'No reset request found. Please request a new code.';
+      case 429:
+        return 'Too many attempts. Please wait a few minutes.';
+      default:
+        return 'Verification failed. Please try again.';
+    }
+  }
+
   Future<void> _verifyOTP() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ResetPasswordPage(
-          email: widget.email,
-          verificationCode: "dummy_token",
-        ),
-      ),
-    );
+    final code = _otpController.text.trim();
+    if (code.length < 6) {
+      setState(() => _errorMessage = 'Please enter the full 6-digit code');
+      return;
+    }
+
+    // Check internet
+    bool hasInternet = await checkInternet();
+    if (!hasInternet) {
+      if (mounted) showNoInternetDialog(context);
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final command = VerifyResetTokenCommand(
+        email: widget.email,
+        token: code,
+      );
+      final response = await ApiService.auth.authVerifyResetCode(command);
+
+      if (!mounted) return;
+
+      if (response != null && response.error != true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResetPasswordPage(
+              email: widget.email,
+              verificationCode: code,
+            ),
+          ),
+        );
+      } else {
+        final messages = response?.messages ?? [];
+        setState(() {
+          _isLoading = false;
+          _errorMessage = messages.isNotEmpty
+              ? messages.first
+              : 'Invalid verification code. Please try again.';
+        });
+      }
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = _parseApiError(e);
+      });
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage =
+            'Connection error. Please check your internet and try again.';
+      });
+    }
   }
 
   Future<void> _resendOTP() async {
-    setState(() {
-      _canResend = false;
-      _resendCountdown = 60;
-    });
-    _startCountdown();
+    bool hasInternet = await checkInternet();
+    if (!hasInternet) {
+      if (mounted) showNoInternetDialog(context);
+      return;
+    }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Verification code resent!"),
-        backgroundColor: AppColor.successColor,
-      ),
-    );
+    setState(() {
+      _isResending = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final command = ForgotPasswordCommand(email: widget.email);
+      final response = await ApiService.auth.authForgotPassword(command);
+
+      if (!mounted) return;
+
+      if (response != null && response.error != true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text("Verification code resent!"),
+            ]),
+            backgroundColor: AppColor.successColor,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to resend code. Please try again."),
+            backgroundColor: Color(0xFFDC2626),
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to resend code. Please try again."),
+          backgroundColor: Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isResending = false;
+          _canResend = false;
+          _resendCountdown = 60;
+        });
+        _startCountdown();
+      }
+    }
   }
 
   @override
@@ -85,12 +218,12 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColor.backgroundcolor,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: AppColor.primaryColor,
+        foregroundColor: isDark ? Colors.white : AppColor.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -108,57 +241,43 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header Icon
                 Container(
                   width: 80,
                   height: 80,
                   margin: EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: AppColor.primaryColor.withOpacity(0.1),
+                    color: AppColor.primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.phonelink_lock,
-                    size: 40,
-                    color: AppColor.primaryColor,
-                  ),
+                  child: Icon(Icons.phonelink_lock,
+                      size: 40, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor),
                 ),
-
                 SizedBox(height: 10),
-
-                // Title
                 Text(
                   "Enter Verification Code",
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.primaryColor,
-                  ),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColor.primaryColor),
                 ),
-
                 SizedBox(height: 8),
-
-                // Description
-                Text(
-                  "We've sent a 6-digit code to",
-                  style: TextStyle(fontSize: 16, color: AppColor.grey),
-                ),
-
+                Text("We've sent a 6-digit code to",
+                    style: TextStyle(fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey)),
                 SizedBox(height: 4),
+                Text(widget.email,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : AppColor.primaryColor)),
 
-                // Email
-                Text(
-                  widget.email,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.primaryColor,
-                  ),
-                ),
+                // Error message
+                if (_errorMessage != null) ...[
+                  SizedBox(height: 16),
+                  _buildErrorBanner(_errorMessage!),
+                ],
 
                 SizedBox(height: 40),
 
-                // OTP Input Field
                 PinCodeTextField(
                   appContext: context,
                   length: 6,
@@ -169,50 +288,46 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                     borderRadius: BorderRadius.circular(12),
                     fieldHeight: 60,
                     fieldWidth: 50,
-                    activeFillColor: isDark ? Color(0xFF2C2520) : Colors.white,
+                    activeFillColor:
+                        isDark ? const Color(0xFF1E293B) : Colors.white,
                     activeColor: AppColor.primaryColor,
                     selectedColor: AppColor.secondColor,
-                    selectedFillColor: isDark
-                        ? Color(0xFF2C2520)
-                        : Colors.white,
-                    inactiveColor: AppColor.borderGray,
-                    inactiveFillColor: isDark
-                        ? Color(0xFF2C2520)
-                        : Colors.white,
+                    selectedFillColor:
+                        isDark ? const Color(0xFF1E293B) : Colors.white,
+                    inactiveColor: isDark ? const Color(0xFF334155) : AppColor.borderGray,
+                    inactiveFillColor:
+                        isDark ? const Color(0xFF1E293B) : Colors.white,
                   ),
                   animationDuration: Duration(milliseconds: 300),
                   backgroundColor: Colors.transparent,
                   enableActiveFill: true,
                   keyboardType: TextInputType.number,
-                  onCompleted: (v) {
-                    _verifyOTP();
+                  onCompleted: (v) => _verifyOTP(),
+                  onChanged: (value) {
+                    // Clear error when user starts typing
+                    if (_errorMessage != null) {
+                      setState(() => _errorMessage = null);
+                    }
                   },
-                  onChanged: (value) {},
                 ),
 
                 SizedBox(height: 30),
 
-                // Verify Button
                 Button(
-                  title: "Verify",
-                  isLoading: _isLoading,
-                  onpressed: _verifyOTP,
-                ),
+                    title: "Verify",
+                    isLoading: _isLoading,
+                    onpressed: _verifyOTP),
 
                 SizedBox(height: 40),
 
-                // Resend Code Section
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     children: [
-                      Text(
-                        "Didn't receive the code?",
-                        style: TextStyle(fontSize: 14, color: AppColor.grey),
-                      ),
-
+                      Text("Didn't receive the code?",
+                          style:
+                              TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColor.grey)),
                       SizedBox(height: 8),
-
                       if (_canResend)
                         TextButton(
                           onPressed: _isResending ? null : _resendOTP,
@@ -223,41 +338,71 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColor.primaryColor,
-                                    ),
+                                        AppColor.primaryColor),
                                   ),
                                 )
-                              : Text(
-                                  "Resend Code",
+                              : Text("Resend Code",
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.primaryColor,
-                                  ),
-                                ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor)),
                         )
                       else
                         Text(
                           "Resend code in $_resendCountdown seconds",
                           style: TextStyle(
-                            fontSize: 14,
-                            color: AppColor.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
+                              fontSize: 14,
+                              color: isDark ? Colors.white70 : AppColor.grey,
+                              fontWeight: FontWeight.w500),
                         ),
                     ],
                   ),
                 ),
-
                 SizedBox(
-                  height: MediaQuery.of(context).viewInsets.bottom > 0
-                      ? 100
-                      : 20,
-                ),
+                    height: MediaQuery.of(context).viewInsets.bottom > 0
+                        ? 100
+                        : 20),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(String message) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Color(0xFFFEF2F2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Color(0xFFFECACA)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 1),
+            child:
+                Icon(Icons.error_outline, color: Color(0xFFDC2626), size: 20),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(message,
+                style: TextStyle(
+                    color: Color(0xFFDC2626),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4)),
+          ),
+          GestureDetector(
+            onTap: () => setState(() => _errorMessage = null),
+            child: Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.close, color: Color(0xFFDC2626), size: 18),
+            ),
+          ),
+        ],
       ),
     );
   }

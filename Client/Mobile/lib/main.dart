@@ -33,7 +33,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale = const Locale('en');
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode _themeMode = ThemeMode.light;
 
   @override
   void initState() {
@@ -42,6 +42,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _loadUserPreferences() {
+    String? userId = sharedPref.getString("user_id");
+    if (userId != null && userId.isNotEmpty) {
+      LanguageManager.setCurrentUser(userId);
+      ThemeManager.setCurrentUser(userId);
+      FavoritesManager.setCurrentUser(userId);
+    }
+
     // Load saved language
     final languageCode = LanguageManager.getCurrentLanguageCode();
     _locale = Locale(languageCode);
@@ -73,10 +80,6 @@ class _MyAppState extends State<MyApp> {
 
     // If user is logged in, go to home
     if (userId != null && userId.isNotEmpty) {
-      // Initialize user-specific settings
-      LanguageManager.setCurrentUser(userId);
-      ThemeManager.setCurrentUser(userId);
-      FavoritesManager.setCurrentUser(userId);
       return "/main";
     }
 

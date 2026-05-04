@@ -34,16 +34,23 @@ class _CustomTextFormState extends State<CustomTextForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : AppColor.darkText;
+    final bgColor = isDark ? const Color(0xFF1E293B) : Colors.white;
+    final hintColor = isDark ? Colors.white54 : AppColor.lightText;
+    final borderColor = isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1);
+
     return TextFormField(
       controller: widget.controller,
       obscureText: _isObscured,
       keyboardType: widget.keyboardType,
       maxLines: widget.maxLines,
-      cursorColor: AppColor.primaryColor,
+      style: TextStyle(color: textColor),
+      cursorColor: AppColor.fourthColor,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: const TextStyle(
-          color: AppColor.backgroundcolor2,
+        hintStyle: TextStyle(
+          color: hintColor,
           fontSize: 14,
         ),
         contentPadding: const EdgeInsets.symmetric(
@@ -51,10 +58,14 @@ class _CustomTextFormState extends State<CustomTextForm> {
           vertical: 16,
         ),
         filled: true,
-        fillColor: AppColor.backgroundcolor2,
+        fillColor: bgColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: borderColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

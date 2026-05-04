@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/core/services/api_service.dart';
 import 'package:renty/component/button.dart';
-import 'package:renty/component/crud.dart';
 import 'package:renty/auth/otp_verification_page.dart';
 import '../core/functions/checkinternet.dart';
 import '../core/middleware/internet_middleware.dart';
@@ -20,14 +21,13 @@ class EmailVerificationNotification extends StatefulWidget {
 
 class _EmailVerificationNotificationState
     extends State<EmailVerificationNotification> {
-  final Crud _crud = Crud();
   bool _isResending = false;
 
   Future<void> _resendVerificationCode() async {
-    // CHECK INTERNET
+    // Check internet
     bool hasInternet = await checkInternet();
     if (!hasInternet) {
-      showNoInternetDialog(context);
+      if (mounted) showNoInternetDialog(context);
       return;
     }
 
@@ -35,33 +35,54 @@ class _EmailVerificationNotificationState
       _isResending = true;
     });
 
-    var response = await _crud.postRequest(AppLink.resendOTP, {
-      "email": widget.email,
-      "type": "signup",
-    });
+    try {
+      final command = SendEmailConfirmationCommand(email: widget.email);
+      final response = await ApiService.auth.authSendVerification(command);
 
-    setState(() {
-      _isResending = false;
-    });
+      if (!mounted) return;
 
-    if (response["status"] == "success") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Verification code resent successfully!'),
-          backgroundColor: AppColor.successColor,
-        ),
-      );
-    } else {
-      String errorMessage = response["message"] ?? "Failed to resend code";
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColor.backgroundcolor2,
-          content: Text(
-            errorMessage,
-            style: TextStyle(color: AppColor.warningColor),
+      if (response != null && response.error != true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(children: [
+              Icon(Icons.check_circle, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text('Verification code resent successfully!'),
+            ]),
+            backgroundColor: AppColor.successColor,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to resend code. Please try again.'),
+            backgroundColor: Color(0xFFDC2626),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to resend code. Please try again.'),
+          backgroundColor: Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isResending = false;
+        });
+      }
     }
   }
 
@@ -177,7 +198,7 @@ class _EmailVerificationNotificationState
                     _buildInstruction(
                       icon: Icons.schedule_outlined,
                       text: "Code expires in 30 minutes",
-                      color: AppColor.goldAccent,
+                      color:  Color(0xFF1A1A1A),
                     ),
                     SizedBox(height: 12),
                     _buildInstruction(

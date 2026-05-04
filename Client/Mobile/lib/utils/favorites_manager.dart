@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:renty/component/crud.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/api/lib/api.dart';
+import 'package:renty/core/services/api_service.dart';
 
+/// Manages favorites with local caching + server sync.
+/// Migrated from old Crud/AppLink to generated OpenAPI FavoritesApi.
 class FavoritesManager {
   static const String _favoritesKeyPrefix = 'favorites_user_';
   static SharedPreferences? _prefs;
   static String? _currentUserId;
   static bool _initialized = false;
-  static Crud _crud = Crud();
 
   static Future<void> initialize() async {
     try {
@@ -46,19 +47,13 @@ class FavoritesManager {
     if (_currentUserId == null) return;
 
     try {
-      var response = await _crud.postRequest(
-        AppLink.getFavorites,
-        {"customer_id": _currentUserId!},
-      );
-
-      if (response["status"] == "success" && response["data"] != null) {
-        List<String> serverFavoriteIds = [];
-
-        if (response["data"]["favorites"] != null) {
-          for (var fav in response["data"]["favorites"]) {
-            serverFavoriteIds.add(fav['product_id'].toString());
-          }
-        }
+      final response = await ApiService.favorites.getMyFavorites();
+      if (response != null && response.data != null) {
+        final favItems = response.data!.items ?? [];
+        List<String> serverFavoriteIds = favItems
+            .where((item) => item.id != null)
+            .map((item) => item.id!)
+            .toList();
 
         // Update local storage
         final favoritesJson = jsonEncode(serverFavoriteIds);
@@ -109,74 +104,74 @@ class FavoritesManager {
     }
   }
 
-  // Add to favorites (with DB sync)
+  // Add to favorites (with server sync)
   static Future<bool> addToFavorites(String productId) async {
     await _ensureInitialized();
     if (_prefs == null || _currentUserId == null) return false;
 
     try {
       // Add to server first
-      var response = await _crud.postRequest(
-        AppLink.addFavorite,
-        {
-          "customer_id": _currentUserId!,
-          "product_id": productId,
-        },
-      );
-
-      if (response["status"] == "success") {
-        // Update local storage
-        final favorites = getFavoriteIdsSync();
-        if (!favorites.contains(productId)) {
-          favorites.add(productId);
-          final favoritesJson = jsonEncode(favorites);
-          bool result = await _prefs!.setString(_getUserFavoritesKey(), favoritesJson);
-          print('Added to favorites: $productId, success: $result');
-          return result;
-        }
-        return true;
+      await ApiService.favorites.addFavorite(productId);
+    } on ApiException catch (e) {
+      // 400 "Already in favorites" — treat as success
+      if (e.code == 400) {
+        // Already in favorites — that's fine, continue to update local
       } else {
-        print('Server error adding favorite: ${response["message"]}');
+        print('Error adding to favorites: $e');
         return false;
       }
     } catch (e) {
       print('Error adding to favorites: $e');
       return false;
     }
+
+    // Update local storage
+    try {
+      final favorites = getFavoriteIdsSync();
+      if (!favorites.contains(productId)) {
+        favorites.add(productId);
+        final favoritesJson = jsonEncode(favorites);
+        return await _prefs!.setString(_getUserFavoritesKey(), favoritesJson);
+      }
+      return true;
+    } catch (e) {
+      print('Error updating local favorites: $e');
+      return false;
+    }
   }
 
-  // Remove from favorites (with DB sync)
+  // Remove from favorites (with server sync)
   static Future<bool> removeFromFavorites(String productId) async {
     await _ensureInitialized();
     if (_prefs == null || _currentUserId == null) return false;
 
     try {
       // Remove from server first
-      var response = await _crud.postRequest(
-        AppLink.removeFavorite,
-        {
-          "customer_id": _currentUserId!,
-          "product_id": productId,
-        },
-      );
-
-      if (response["status"] == "success") {
-        // Update local storage
-        final favorites = getFavoriteIdsSync();
-        if (favorites.contains(productId)) {
-          favorites.remove(productId);
-          final favoritesJson = jsonEncode(favorites);
-          bool result = await _prefs!.setString(_getUserFavoritesKey(), favoritesJson);
-          print('Removed from favorites: $productId, success: $result');
-          return result;
-        }
-        return true;
+      await ApiService.favorites.removeFavorite(productId);
+    } on ApiException catch (e) {
+      // 404 "Not found" — treat as success (already removed)
+      if (e.code == 404 || e.code == 400) {
+        // Not in favorites — that's fine, continue to update local
       } else {
-        print('Server error removing favorite: ${response["message"]}');
+        print('Error removing from favorites: $e');
         return false;
       }
     } catch (e) {
       print('Error removing from favorites: $e');
+      return false;
+    }
+
+    // Update local storage
+    try {
+      final favorites = getFavoriteIdsSync();
+      if (favorites.contains(productId)) {
+        favorites.remove(productId);
+        final favoritesJson = jsonEncode(favorites);
+        return await _prefs!.setString(_getUserFavoritesKey(), favoritesJson);
+      }
+      return true;
+    } catch (e) {
+      print('Error updating local favorites: $e');
       return false;
     }
   }
@@ -197,7 +192,7 @@ class FavoritesManager {
     }
   }
 
-  // Toggle favorite status (with DB sync)
+  // Toggle favorite status (with server sync)
   static Future<bool> toggleFavorite(String productId) async {
     await _ensureInitialized();
     if (_prefs == null || _currentUserId == null) return false;
@@ -223,7 +218,7 @@ class FavoritesManager {
     return favorites.length;
   }
 
-  // Clear all favorites (with DB sync)
+  // Clear all favorites (with server sync)
   static Future<bool> clearAllFavorites() async {
     await _ensureInitialized();
     if (_prefs == null || _currentUserId == null) return false;
@@ -233,13 +228,11 @@ class FavoritesManager {
       final favorites = getFavoriteIdsSync();
 
       for (String productId in favorites) {
-        await _crud.postRequest(
-          AppLink.removeFavorite,
-          {
-            "customer_id": _currentUserId!,
-            "product_id": productId,
-          },
-        );
+        try {
+          await ApiService.favorites.removeFavorite(productId);
+        } catch (_) {
+          // Continue even if one fails
+        }
       }
 
       // Clear local storage

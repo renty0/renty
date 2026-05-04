@@ -1,9 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/constant/linkapi.dart';
+import 'package:renty/core/services/api_service.dart';
 import 'package:renty/component/button.dart';
 import 'package:renty/component/textformfield.dart';
-import 'package:renty/component/crud.dart';
 import '../core/functions/checkinternet.dart';
 import '../core/middleware/internet_middleware.dart';
 
@@ -22,10 +24,10 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  final Crud _crud = Crud();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   bool isLoading = false;
+  String? errorMessage;
 
   @override
   void dispose() {
@@ -34,28 +36,177 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
-  Future<void> resetPassword() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Password reset successfully!"),
-        backgroundColor: AppColor.successColor,
-      ),
-    );
+  String _parseApiError(ApiException e) {
+    try {
+      if (e.message != null && e.message!.isNotEmpty) {
+        final body = jsonDecode(e.message!);
+        if (body is Map) {
+          final messages = body['messages'];
+          if (messages is List && messages.isNotEmpty) {
+            return messages.first.toString();
+          }
+          if (body['error'] is String) return body['error'];
+        }
+      }
+    } catch (_) {}
+    switch (e.code) {
+      case 400:
+        return 'Invalid or expired reset token. Please request a new code.';
+      case 422:
+        return 'Password does not meet requirements. Please try again.';
+      case 429:
+        return 'Too many attempts. Please wait a few minutes.';
+      default:
+        return 'Failed to reset password. Please try again.';
+    }
+  }
 
-    Future.delayed(Duration(milliseconds: 1000), () {
-      Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+  Future<void> resetPassword() async {
+    final newPass = newPasswordController.text.trim();
+    final confirmPass = confirmPasswordController.text.trim();
+
+    if (newPass.isEmpty || confirmPass.isEmpty) {
+      setState(() => errorMessage = 'Please fill in all fields');
+      return;
+    }
+    if (newPass.length < 6) {
+      setState(() => errorMessage = 'Password must be at least 6 characters');
+      return;
+    }
+    if (newPass != confirmPass) {
+      setState(() => errorMessage = 'Passwords do not match');
+      return;
+    }
+
+    // Check internet
+    bool hasInternet = await checkInternet();
+    if (!hasInternet) {
+      if (mounted) showNoInternetDialog(context);
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
     });
+
+    try {
+      final command = ResetPasswordCommand(
+        email: widget.email,
+        token: widget.verificationCode,
+        newPassword: newPass,
+      );
+      final response = await ApiService.auth.authResetPassword(command);
+
+      if (!mounted) return;
+
+      if (response != null && response.error != true) {
+        // Show success dialog
+        _showSuccessDialog();
+      } else {
+        final messages = response?.messages ?? [];
+        setState(() {
+          isLoading = false;
+          errorMessage = messages.isNotEmpty
+              ? messages.first
+              : 'Failed to reset password. Please try again.';
+        });
+      }
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = _parseApiError(e);
+      });
+    } on SocketException catch (_) {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+      showNoInternetDialog(context);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage =
+            'Connection error. Please check your internet and try again.';
+      });
+    }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: AppColor.successColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.check_circle,
+                      color: AppColor.successColor, size: 40),
+                ),
+                SizedBox(height: 16),
+                Text("Password Reset!",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primaryColor)),
+                SizedBox(height: 8),
+                Text(
+                  "Your password has been reset successfully.\nPlease login with your new password.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 14, color: AppColor.grey, height: 1.5),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/login", (route) => false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: AppColor.primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text("Go to Login",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: AppColor.backgroundcolor,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: AppColor.primaryColor,
+        foregroundColor: isDark ? Colors.white : AppColor.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -73,114 +224,84 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Header Icon
                   Container(
                     width: 100,
                     height: 100,
                     margin: EdgeInsets.only(bottom: 20, top: 20),
                     decoration: BoxDecoration(
-                      color: AppColor.successColor.withOpacity(0.1),
+                      color: AppColor.successColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.lock_open,
-                      size: 50,
-                      color: AppColor.successColor,
-                    ),
+                    child: Icon(Icons.lock_open,
+                        size: 50, color: AppColor.successColor),
                   ),
-
                   SizedBox(height: 20),
-
                   Text(
                     "Create New Password",
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.primaryColor,
-                    ),
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : AppColor.primaryColor),
                     textAlign: TextAlign.center,
                   ),
-
                   SizedBox(height: 10),
-
                   Text(
                     "Enter your new password below",
                     style: TextStyle(
-                      fontSize: 16,
-                      color: AppColor.grey,
-                      height: 1.5,
-                    ),
+                        fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey, height: 1.5),
                     textAlign: TextAlign.center,
                   ),
-
+                  if (errorMessage != null) ...[
+                    SizedBox(height: 16),
+                    _buildErrorBanner(errorMessage!),
+                  ],
                   SizedBox(height: 40),
-
                   Text(
                     "New Password",
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.primaryColor,
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : AppColor.primaryColor),
                   ),
-
                   SizedBox(height: 10),
-
                   CustomTextForm(
                     hintText: "Enter new password",
                     controller: newPasswordController,
                     obscureText: true,
                     isPassword: true,
                   ),
-
                   SizedBox(height: 20),
-
                   Text(
                     "Confirm Password",
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.primaryColor,
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : AppColor.primaryColor),
                   ),
-
                   SizedBox(height: 10),
-
                   CustomTextForm(
                     hintText: "Confirm new password",
                     controller: confirmPasswordController,
                     obscureText: true,
                     isPassword: true,
                   ),
-
                   SizedBox(height: 30),
-
                   Button(
                     title: "Reset Password",
                     isLoading: isLoading,
                     onpressed: resetPassword,
                   ),
-
                   Spacer(),
-
-                  // Back to login
                   Padding(
                     padding: EdgeInsets.only(bottom: 20, top: 20),
                     child: TextButton(
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          "/login",
-                          (route) => false,
-                        );
+                            context, "/login", (route) => false);
                       },
-                      child: Text(
-                        "Back to Login",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColor.primaryColor,
-                        ),
-                      ),
+                      child: Text("Back to Login",
+                          style: TextStyle(
+                              fontSize: 16, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor)),
                     ),
                   ),
                 ],
@@ -188,6 +309,43 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(String message) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Color(0xFFFEF2F2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Color(0xFFFECACA)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 1),
+            child:
+                Icon(Icons.error_outline, color: Color(0xFFDC2626), size: 20),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(message,
+                style: TextStyle(
+                    color: Color(0xFFDC2626),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4)),
+          ),
+          GestureDetector(
+            onTap: () => setState(() => errorMessage = null),
+            child: Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Icon(Icons.close, color: Color(0xFFDC2626), size: 18),
+            ),
+          ),
+        ],
       ),
     );
   }

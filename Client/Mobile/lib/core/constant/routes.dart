@@ -40,6 +40,21 @@ class AppRoute {
   static const String emailVerification = "/email-verification";
   static const String otpVerification = "/otp-verification";
 
+  // Phase 2: Rentals & Orders
+  static const String myRentals = "/my-rentals";
+  static const String rentalDetail = "/rental-detail";
+  static const String createRental = "/create-rental";
+  static const String myOrders = "/my-orders";
+  static const String orderDetail = "/order-detail";
 
+  // Phase 3: Communication & Engagement
+  static const String notifications = "/notifications";
+  static const String favorites = "/favorites";
+  static const String chatList = "/chat-list";
+  static const String chatRoom = "/chat-room";
 
+  // Phase 5: Expert / Verification & Wallet
+  static const String expertAssigned = "/expert-assigned";
+  static const String verificationHistory = "/verification-history";
+  static const String wallet = "/wallet";
 }

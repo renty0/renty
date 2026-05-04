@@ -85,7 +85,7 @@ class HelpSupportUtils {
               icon: Icons.email_outlined,
               title: 'Email Support',
               subtitle: 'Get help via email',
-              color: AppColor.goldAccent,
+              color:   Color(0xFF1A1A1A),
               onTap: () {
                 Navigator.pop(context);
                 _sendSupportEmail(context);
@@ -192,7 +192,7 @@ class HelpSupportUtils {
                 icon: Icons.description_outlined,
                 title: 'Submit Bug Report Form',
                 subtitle: 'Fill out our online form',
-                color: AppColor.goldAccent,
+                color: Color(0xFF1A1A1A),
                 onTap: () {
                   Navigator.pop(context);
                   _launchURL(context, BUG_REPORT_URL);
