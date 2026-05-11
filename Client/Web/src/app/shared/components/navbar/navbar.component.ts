@@ -107,6 +107,16 @@ export class NavbarComponent implements OnInit {
     return links;
   });
 
+  // Separate Super Admin dropdown — only visible to SuperAdmin users
+  superAdminLinks = computed(() => {
+    if (!this.isLoggedIn() || !this.authService.isSuperAdmin()) return [];
+    return [
+      { path: '/super-admin/dashboard', labelKey: 'nav.saDashboard', icon: 'shield' },
+      { path: '/super-admin/staff', labelKey: 'nav.staffManagement', icon: 'badge' },
+      { path: '/super-admin/overrides', labelKey: 'nav.overrides', icon: 'warning' },
+    ];
+  });
+
   onSearch() {
     const term = this.searchTerm().trim();
     if (term) {

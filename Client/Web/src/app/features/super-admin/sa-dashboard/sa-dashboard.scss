@@ -1,0 +1,293 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.sa-dashboard-container {
+  .error-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-3xl;
+    gap: $spacing-md;
+    text-align: center;
+    color: $danger;
+
+    mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $spacing-xl;
+    margin-top: $spacing-xl;
+  }
+
+  .kpi-card {
+    border-radius: $border-radius-xl;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba($white, 0.05);
+    background: rgba($white, 0.01);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.premium-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba($primary-color, 0.2);
+      box-shadow: $shadow-xl;
+
+      .card-glow { opacity: 0.15; }
+      .icon-container { transform: scale(1.1) rotate(5deg); }
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0.05;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+
+      &.revenue { background: radial-gradient(circle at top right, $success, transparent); }
+      &.users { background: radial-gradient(circle at top right, $primary-color, transparent); }
+      &.rentals { background: radial-gradient(circle at top right, $warning, transparent); }
+      &.items { background: radial-gradient(circle at top right, #9b59b6, transparent); }
+      &.fraud { background: radial-gradient(circle at top right, $danger, transparent); }
+      &.recommendation { background: radial-gradient(circle at top right, #1abc9c, transparent); }
+    }
+
+    mat-card-header {
+      padding: $spacing-xl;
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+    }
+
+    .icon-container {
+      width: 56px;
+      height: 56px;
+      border-radius: $border-radius-lg;
+      @include flex-center;
+      transition: transform 0.3s ease;
+      box-shadow: $shadow-md;
+
+      mat-icon { color: $white; font-size: 28px; width: 28px; height: 28px; }
+
+      &.revenue { background: linear-gradient(135deg, $success, #27ae60); }
+      &.users { background: linear-gradient(135deg, $primary-color, #2980b9); }
+      &.rentals { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+      &.items { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+      &.fraud { background: linear-gradient(135deg, $danger, #c0392b); }
+      &.recommendation { background: linear-gradient(135deg, #1abc9c, #16a085); }
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+
+      mat-card-title {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $text-dark;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      mat-card-subtitle {
+        font-size: $font-size-xs;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: $text-muted;
+        margin: 4px 0 0 0;
+        font-weight: $font-weight-bold;
+      }
+    }
+
+    mat-card-content {
+      padding: 0 $spacing-xl $spacing-xl;
+    }
+
+    .trend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-xs;
+
+      mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      &.positive { color: $success; }
+      &.negative { color: $danger; }
+    }
+  }
+
+  // Staff Overview Section
+  .staff-section {
+    margin-top: $spacing-3xl;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-dark;
+    margin-bottom: $spacing-xl;
+
+    mat-icon {
+      color: $primary-color;
+    }
+  }
+
+  .staff-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-xl;
+
+    @include tablet {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .staff-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba($white, 0.05);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  .staff-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    flex-shrink: 0;
+
+    mat-icon { color: $white; font-size: 26px; width: 26px; height: 26px; }
+
+    &.admins { background: linear-gradient(135deg, $primary-color, #2980b9); }
+    &.support { background: linear-gradient(135deg, $accent-color, $accent-dark); }
+    &.experts { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+  }
+
+  .staff-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .staff-count {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: $text-dark;
+    line-height: 1.1;
+  }
+
+  .staff-label {
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $text-muted;
+    font-weight: $font-weight-bold;
+  }
+
+  // Quick Actions
+  .quick-actions {
+    margin-top: $spacing-3xl;
+  }
+
+  .actions-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    button {
+      border-radius: $border-radius-xxl;
+      padding: $spacing-sm $spacing-xl;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      mat-icon { margin-inline-end: $spacing-xs; }
+    }
+  }
+
+  .dashboard-actions {
+    margin-top: $spacing-3xl;
+    @include flex-center;
+
+    button {
+      border-radius: $border-radius-xxl;
+      padding: $spacing-sm $spacing-2xl;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: $shadow-lg;
+
+      mat-icon {
+        margin-inline-end: $spacing-xs;
+        &.refreshing { animation: spin 1s linear infinite; }
+      }
+    }
+  }
+}
+
+// Skeleton
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@mixin skeleton-animation {
+  background: linear-gradient(90deg,
+    rgba($primary-color, 0.02) 25%,
+    rgba($primary-color, 0.05) 50%,
+    rgba($primary-color, 0.02) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-card {
+  height: 100px;
+  @include flex-center;
+  padding: $spacing-xl;
+
+  .skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    width: 100%;
+
+    .skeleton-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: $border-radius-lg;
+      @include skeleton-animation;
+    }
+
+    .skeleton-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+
+      .skeleton-text {
+        height: 12px;
+        border-radius: $border-radius-sm;
+        @include skeleton-animation;
+        &.title { width: 60%; height: 20px; }
+        &.subtitle { width: 40%; }
+      }
+    }
+  }
+}

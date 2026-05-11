@@ -1,0 +1,188 @@
+@use "../../../shared/styles" as *;
+
+.overrides-container {
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: $spacing-xl;
+    margin-top: $spacing-xl;
+
+    @include tablet {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .action-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba($white, 0.05);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: $shadow-xl;
+      border-color: rgba($primary-color, 0.15);
+
+      .action-arrow { opacity: 1; transform: translateX(4px); }
+    }
+  }
+
+  .action-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    flex-shrink: 0;
+    box-shadow: $shadow-md;
+
+    mat-icon { color: $white; font-size: 28px; width: 28px; height: 28px; }
+  }
+
+  .action-info {
+    flex: 1;
+
+    h3 {
+      font-size: $font-size-md;
+      font-weight: $font-weight-bold;
+      color: $text-dark;
+      margin: 0 0 4px;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin: 0;
+    }
+  }
+
+  .action-arrow {
+    color: $text-muted;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+  }
+
+  // Override Form
+  .override-form-card {
+    max-width: 600px;
+    margin: $spacing-xl auto 0;
+    padding: $spacing-2xl;
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($white, 0.05);
+  }
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-2xl;
+    padding-bottom: $spacing-xl;
+    border-bottom: 1px solid rgba($white, 0.05);
+
+    .form-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: $border-radius-lg;
+      @include flex-center;
+      flex-shrink: 0;
+
+      mat-icon { color: $white; font-size: 24px; width: 24px; height: 24px; }
+    }
+
+    h2 {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $text-dark;
+      margin: 0 0 4px;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin: 0;
+    }
+  }
+
+  .form-body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  .form-field {
+    label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-bold;
+      color: $text-secondary;
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  .override-input,
+  .override-textarea {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    border: 2px solid $gray-200;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-md;
+    font-family: inherit;
+    color: $text-dark;
+    background: $gray-50;
+    transition: $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+  }
+
+  .override-textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .warning-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-xs;
+    padding: $spacing-md;
+    background: rgba($warning, 0.08);
+    border: 1px solid rgba($warning, 0.2);
+    border-radius: $border-radius-md;
+    color: $warning;
+    font-size: $font-size-sm;
+
+    mat-icon { font-size: 20px; width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-md;
+    margin-top: $spacing-2xl;
+    padding-top: $spacing-xl;
+    border-top: 1px solid rgba($white, 0.05);
+
+    button {
+      border-radius: $border-radius-xxl;
+      padding: $spacing-sm $spacing-xl;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}

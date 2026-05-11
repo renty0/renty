@@ -29,6 +29,21 @@
           }
         </mat-menu>
       }
+
+      @if (superAdminLinks().length > 0) {
+        <button class="nav-link dropdown-toggle sa-trigger" [matMenuTriggerFor]="saMenu">
+          {{ 'nav.superAdmin' | translate }}
+          <mat-icon class="dropdown-icon">expand_more</mat-icon>
+        </button>
+        <mat-menu #saMenu="matMenu" class="premium-menu sa-menu">
+          @for (link of superAdminLinks(); track link.path) {
+            <button mat-menu-item [routerLink]="link.path">
+              <mat-icon>{{ link.icon }}</mat-icon>
+              <span>{{ link.labelKey | translate }}</span>
+            </button>
+          }
+        </mat-menu>
+      }
     </nav>
 
     <div class="nav-search sm-hidden">
@@ -224,6 +239,18 @@
           <div class="drawer-section">
             <span class="section-label">{{ 'nav.management' | translate }}</span>
             @for (link of managementLinks(); track link.path) {
+              <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
+                <mat-icon>{{ link.icon }}</mat-icon>
+                {{ link.labelKey | translate }}
+              </a>
+            }
+          </div>
+        }
+
+        @if (superAdminLinks().length > 0) {
+          <div class="drawer-section sa-section">
+            <span class="section-label sa-label">{{ 'nav.superAdmin' | translate }}</span>
+            @for (link of superAdminLinks(); track link.path) {
               <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
                 <mat-icon>{{ link.icon }}</mat-icon>
                 {{ link.labelKey | translate }}

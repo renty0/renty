@@ -1,69 +1,87 @@
-<div class="agent-container">
-  <h2>Support Agent Workspace</h2>
-  <p class="text-muted">Resolve disputes and handle item damages here. Changes reflect immediately in user wallets.</p>
+<div class="data-container">
+  <app-header-section
+    [title]="'support.agent.title' | translate"
+    [subtitle]="'support.agent.subtitle' | translate"
+    [showButton]="false"
+    [showSearch]="false">
+  </app-header-section>
 
-  <div *ngIf="errorMsg()" class="alert alert-error mb-3">{{ errorMsg() }}</div>
-  <div *ngIf="successMsg()" class="alert alert-success mb-3">{{ successMsg() }}</div>
-
-  <div class="dispute-form surface-card p-4 border-round shadow-1">
-    <h3 class="mb-4">Dispute Resolution</h3>
-    
-    <div class="grid">
-      <div class="col-12 md:col-6">
-        <div class="form-group">
-          <label class="block mb-2 font-medium">Rental ID</label>
-          <input type="text" class="w-full p-2 border-round border-1 border-300"
-                 [ngModel]="rentalId()" (ngModelChange)="rentalId.set($event)" 
-                 placeholder="Enter Rental UUID" [disabled]="isLoading()" />
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6">
-        <div class="form-group">
-          <label class="block mb-2 font-medium">Resolution Action</label>
-          <select class="w-full p-2 border-round border-1 border-300"
-                  [ngModel]="resolutionType()" (ngModelChange)="resolutionType.set($event)" 
-                  [disabled]="isLoading()">
-            <option value="split_deposit">Split Deposit (Partial forfeit & partial refund)</option>
-            <option value="forfeit_deposit">Forfeit Entire Deposit (To Owner)</option>
-            <option value="refund_renter">Refund Entire Deposit (To Renter)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6" *ngIf="resolutionType() === 'split_deposit' || resolutionType() === 'forfeit_deposit'">
-        <div class="form-group">
-          <label class="block mb-2 font-medium">Amount to Owner (Penalty for Renter)</label>
-          <input type="number" class="w-full p-2 border-round border-1 border-300"
-                 [ngModel]="ownerCompensation()" (ngModelChange)="ownerCompensation.set($event)" 
-                 min="0" placeholder="EGP" [disabled]="isLoading()" />
-        </div>
-      </div>
-
-      <div class="col-12 md:col-6" *ngIf="resolutionType() === 'split_deposit' || resolutionType() === 'refund_renter'">
-        <div class="form-group">
-          <label class="block mb-2 font-medium">Amount to Refund Renter</label>
-          <input type="number" class="w-full p-2 border-round border-1 border-300"
-                 [ngModel]="renterRefund()" (ngModelChange)="renterRefund.set($event)" 
-                 min="0" placeholder="EGP" [disabled]="isLoading()" />
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="form-group">
-          <label class="block mb-2 font-medium">Internal Reason & Log</label>
-          <textarea class="w-full p-2 border-round border-1 border-300"
-                    [ngModel]="reason()" (ngModelChange)="reason.set($event)" 
-                    placeholder="Explain the support decision..." [disabled]="isLoading()" rows="4"></textarea>
-        </div>
-      </div>
-
-      <div class="col-12 flex justify-content-end mt-4">
-        <button class="btn btn-primary px-5 py-2 border-round" (click)="resolveDispute()" 
-                [disabled]="isLoading() || !rentalId() || !reason()">
-          {{ isLoading() ? 'Processing...' : 'Execute Resolution' }}
-        </button>
-      </div>
+  @if (errorMsg()) {
+    <div class="alert-banner error">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMsg() }}</span>
+      <button mat-icon-button (click)="errorMsg.set(null)"><mat-icon>close</mat-icon></button>
     </div>
-  </div>
+  }
+  @if (successMsg()) {
+    <div class="alert-banner success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMsg() }}</span>
+      <button mat-icon-button (click)="successMsg.set(null)"><mat-icon>close</mat-icon></button>
+    </div>
+  }
+
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="card-header-icon">gavel</mat-icon>
+      <mat-card-title>{{ 'support.agent.disputeResolution' | translate }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'support.agent.rentalId' | translate }}</mat-label>
+          <input matInput [ngModel]="rentalId()" (ngModelChange)="rentalId.set($event)"
+                 [placeholder]="'support.agent.rentalIdPlaceholder' | translate" [disabled]="isLoading()">
+          <mat-icon matPrefix>receipt_long</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'support.agent.resolutionAction' | translate }}</mat-label>
+          <mat-select [ngModel]="resolutionType()" (ngModelChange)="resolutionType.set($event)" [disabled]="isLoading()">
+            <mat-option value="split_deposit">{{ 'support.agent.splitDeposit' | translate }}</mat-option>
+            <mat-option value="forfeit_deposit">{{ 'support.agent.forfeitDeposit' | translate }}</mat-option>
+            <mat-option value="refund_renter">{{ 'support.agent.refundRenter' | translate }}</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>balance</mat-icon>
+        </mat-form-field>
+
+        @if (resolutionType() === 'split_deposit' || resolutionType() === 'forfeit_deposit') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'support.agent.amountToOwner' | translate }}</mat-label>
+            <input matInput type="number" [ngModel]="ownerCompensation()" (ngModelChange)="ownerCompensation.set($event)"
+                   min="0" placeholder="EGP" [disabled]="isLoading()">
+            <mat-icon matPrefix>person</mat-icon>
+            <span matTextSuffix>EGP</span>
+          </mat-form-field>
+        }
+
+        @if (resolutionType() === 'split_deposit' || resolutionType() === 'refund_renter') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'support.agent.amountToRefund' | translate }}</mat-label>
+            <input matInput type="number" [ngModel]="renterRefund()" (ngModelChange)="renterRefund.set($event)"
+                   min="0" placeholder="EGP" [disabled]="isLoading()">
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <span matTextSuffix>EGP</span>
+          </mat-form-field>
+        }
+
+        <mat-form-field appearance="outline" class="full-width span-full">
+          <mat-label>{{ 'support.agent.internalReason' | translate }}</mat-label>
+          <textarea matInput [ngModel]="reason()" (ngModelChange)="reason.set($event)"
+                    [placeholder]="'support.agent.reasonPlaceholder' | translate"
+                    [disabled]="isLoading()" rows="4"></textarea>
+          <mat-icon matPrefix>notes</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="resolveDispute()"
+              [disabled]="isLoading() || !rentalId() || !reason()" class="execute-btn">
+        <mat-icon>{{ isLoading() ? 'hourglass_top' : 'gavel' }}</mat-icon>
+        {{ isLoading() ? ('support.agent.processing' | translate) : ('support.agent.executeResolution' | translate) }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>

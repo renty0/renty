@@ -1,0 +1,73 @@
+<div class="data-container overrides-container">
+  <app-header-section
+    [title]="'superAdmin.overridesTitle' | translate"
+    [subtitle]="'superAdmin.overridesSubtitle' | translate"
+    [showSearch]="false"
+    [showButton]="false">
+  </app-header-section>
+
+  @if (!activeAction()) {
+    <!-- Action Cards Grid -->
+    <div class="actions-grid">
+      @for (action of actions; track action.key) {
+        <mat-card class="action-card" (click)="selectAction(action)">
+          <div class="action-icon" [style.background]="action.gradient">
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </div>
+          <div class="action-info">
+            <h3>{{ action.titleKey | translate }}</h3>
+            <p>{{ action.descKey | translate }}</p>
+          </div>
+          <mat-icon class="action-arrow">chevron_right</mat-icon>
+        </mat-card>
+      }
+    </div>
+  } @else {
+    <!-- Override Form -->
+    <mat-card class="override-form-card">
+      <div class="form-header">
+        <div class="form-icon" [style.background]="activeAction()!.gradient">
+          <mat-icon>{{ activeAction()!.icon }}</mat-icon>
+        </div>
+        <div>
+          <h2>{{ activeAction()!.titleKey | translate }}</h2>
+          <p>{{ activeAction()!.descKey | translate }}</p>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <div class="form-field">
+          <label>{{ 'superAdmin.override.referenceId' | translate }}</label>
+          <input class="override-input" [(ngModel)]="referenceId"
+                 [placeholder]="'superAdmin.override.referenceIdPlaceholder' | translate">
+        </div>
+
+        <div class="form-field">
+          <label>{{ 'superAdmin.override.justification' | translate }}</label>
+          <textarea class="override-textarea" [(ngModel)]="justification" rows="4"
+                    [placeholder]="'superAdmin.override.justificationPlaceholder' | translate"></textarea>
+        </div>
+
+        <div class="warning-notice">
+          <mat-icon>warning</mat-icon>
+          <span>{{ 'superAdmin.override.warning' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button (click)="cancelAction()">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button mat-flat-button color="warn" (click)="executeOverride()"
+                [disabled]="isExecuting() || !referenceId || !justification">
+          @if (isExecuting()) {
+            <mat-icon class="spinning">sync</mat-icon>
+          } @else {
+            <mat-icon>bolt</mat-icon>
+          }
+          {{ 'superAdmin.override.execute' | translate }}
+        </button>
+      </div>
+    </mat-card>
+  }
+</div>

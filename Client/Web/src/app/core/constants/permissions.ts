@@ -49,4 +49,13 @@ export const PermissionType = {
   
   // Payment
   Payment_Manage: 'Permissions.Payment.Manage',
+
+  // Staff (SuperAdmin only)
+  Staff_View: 'Permissions.Staff.View',
+  Staff_Create: 'Permissions.Staff.Create',
+  Staff_Edit: 'Permissions.Staff.Update',
+  Staff_Delete: 'Permissions.Staff.Delete',
+
+  // Overrides (SuperAdmin only)
+  Overrides_Execute: 'Permissions.Overrides.Execute',
 } as const;

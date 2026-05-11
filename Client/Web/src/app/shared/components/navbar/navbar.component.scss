@@ -585,3 +585,22 @@
     display: none !important;
   }
 }
+
+// Super Admin dropdown trigger — distinct from Management
+.sa-trigger {
+  color: $accent-color !important;
+  font-weight: 600 !important;
+
+  &::after {
+    background: $accent-color !important;
+  }
+}
+
+// Super Admin section in mobile drawer
+.sa-section {
+  border-top-color: rgba($accent-color, 0.2) !important;
+
+  .sa-label {
+    color: $accent-color !important;
+  }
+}

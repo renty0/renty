@@ -70,7 +70,7 @@
                 </div>
                 <a routerLink="/marketplace" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
-                    <mat-icon>arrow_forward</mat-icon>
+                    <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
                 </a>
             </div>
 
@@ -100,7 +100,7 @@
                 </div>
                 <a routerLink="/marketplace" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
-                    <mat-icon>arrow_forward</mat-icon>
+                    <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
                 </a>
             </div>
             <div class="grid">
@@ -125,7 +125,7 @@
                 </div>
                 <a routerLink="/marketplace" [queryParams]="{sort: 'popular'}" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
-                    <mat-icon>arrow_forward</mat-icon>
+                    <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
                 </a>
             </div>
             <div class="grid">
@@ -150,7 +150,7 @@
                 </div>
                 <a routerLink="/marketplace" [queryParams]="{sort: 'newest'}" class="text-link">
                     {{ 'buttons.viewAll' | translate }}
-                    <mat-icon>arrow_forward</mat-icon>
+                    <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
                 </a>
             </div>
             <div class="grid">
@@ -285,7 +285,7 @@
                 </div>
                 @if (!last) {
                 <div class="process-connector">
-                    <mat-icon>arrow_forward</mat-icon>
+                    <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
                 </div>
                 }
                 }
@@ -346,8 +346,11 @@
         <div class="footer-bottom container">
             <p>{{ 'home.footer.copyright' | translate }}</p>
             <div class="footer-bottom-links">
-                <a (click)="showTerms.set(true)" class="nav-link">
+                <a routerLink="/terms" class="nav-link">
                     {{ 'home.footer.terms' | translate }}
+                </a>
+                <a routerLink="/privacy" class="nav-link">
+                    {{ 'home.footer.privacy' | translate }}
                 </a>
             </div>
         </div>

@@ -1,0 +1,75 @@
+<div class="legal-page">
+  <div class="legal-hero">
+    <div class="container">
+      <mat-icon class="hero-icon">gavel</mat-icon>
+      <h1>{{ 'legal.terms.title' | translate }}</h1>
+      <p class="hero-sub">{{ 'legal.terms.subtitle' | translate }}</p>
+      <span class="last-updated">{{ 'legal.lastUpdated' | translate }}: {{ lastUpdated }}</span>
+    </div>
+  </div>
+
+  <div class="container legal-content">
+    <nav class="toc-sidebar">
+      <h3>{{ 'legal.tableOfContents' | translate }}</h3>
+      <ul>
+        <li><a href="/terms#section1">{{ 'legal.terms.s1Title' | translate }}</a></li>
+        <li><a href="/terms#section2">{{ 'legal.terms.s2Title' | translate }}</a></li>
+        <li><a href="/terms#section3">{{ 'legal.terms.s3Title' | translate }}</a></li>
+        <li><a href="/terms#section4">{{ 'legal.terms.s4Title' | translate }}</a></li>
+        <li><a href="/terms#section5">{{ 'legal.terms.s5Title' | translate }}</a></li>
+        <li><a href="/terms#section6">{{ 'legal.terms.s6Title' | translate }}</a></li>
+        <li><a href="/terms#section7">{{ 'legal.terms.s7Title' | translate }}</a></li>
+        <li><a href="/terms#section8">{{ 'legal.terms.s8Title' | translate }}</a></li>
+      </ul>
+    </nav>
+
+    <article class="legal-body">
+      <p class="intro-text">{{ 'legal.terms.intro' | translate }}</p>
+
+      <section id="section1" class="legal-section">
+        <h2>{{ 'legal.terms.s1Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s1Body' | translate }}</p>
+      </section>
+
+      <section id="section2" class="legal-section">
+        <h2>{{ 'legal.terms.s2Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s2Body' | translate }}</p>
+      </section>
+
+      <section id="section3" class="legal-section">
+        <h2>{{ 'legal.terms.s3Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s3Body' | translate }}</p>
+      </section>
+
+      <section id="section4" class="legal-section">
+        <h2>{{ 'legal.terms.s4Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s4Body' | translate }}</p>
+      </section>
+
+      <section id="section5" class="legal-section">
+        <h2>{{ 'legal.terms.s5Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s5Body' | translate }}</p>
+      </section>
+
+      <section id="section6" class="legal-section">
+        <h2>{{ 'legal.terms.s6Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s6Body' | translate }}</p>
+      </section>
+
+      <section id="section7" class="legal-section">
+        <h2>{{ 'legal.terms.s7Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s7Body' | translate }}</p>
+      </section>
+
+      <section id="section8" class="legal-section">
+        <h2>{{ 'legal.terms.s8Title' | translate }}</h2>
+        <p>{{ 'legal.terms.s8Body' | translate }}</p>
+      </section>
+
+      <div class="legal-footer-note">
+        <mat-icon>info</mat-icon>
+        <p>{{ 'legal.contactNote' | translate }} <a routerLink="/contact">{{ 'support.title' | translate }}</a></p>
+      </div>
+    </article>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+@use "../../../shared/styles" as *;
+@use "../../../shared/components-styles/tables.scss" as *;
+
+.error-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-3xl;
+  gap: $spacing-md;
+  text-align: center;
+  color: $danger;
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+}
+
+.staff-tabs {
+  margin-bottom: $spacing-xl;
+
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    font-size: $font-size-xxs;
+    font-weight: $font-weight-bold;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    margin-inline-start: $spacing-xs;
+  }
+}

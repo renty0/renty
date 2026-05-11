@@ -18,6 +18,7 @@ import { NOTIFICATIONS_ROUTES } from './features/notifications/notifications.rou
 import { SUPPORT_ROUTES } from './features/support/support.routes';
 import { EXPERT_ROUTES } from './features/expert/expert.routes';
 import { ADMIN_ROUTES } from './features/admin/admin.routes';
+import { SUPER_ADMIN_ROUTES } from './features/super-admin/super-admin.routes';
 import { WalletRoutes } from './features/wallet/wallet.routes';
 import { ProfileRoutes } from './features/profile/profile.routes';
 
@@ -59,6 +60,10 @@ export const routes: Routes = [
     children: ADMIN_ROUTES
   },
   {
+    path: 'super-admin',
+    children: SUPER_ADMIN_ROUTES
+  },
+  {
     path: 'my-rentals',
     loadComponent: () => import('./features/rentals/my-rentals/my-rentals').then(m => m.MyRentalsComponent),
     canActivate: [AuthGuard]
@@ -95,6 +100,14 @@ export const routes: Routes = [
   {
     path: 'contact',
     loadComponent: () => import('./features/public/contact-us/contact-us.component').then(m => m.ContactUsComponent)
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./features/public/terms-page/terms-page.component').then(m => m.TermsPageComponent)
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./features/public/privacy-page/privacy-page.component').then(m => m.PrivacyPageComponent)
   },
   {
     path: '',
