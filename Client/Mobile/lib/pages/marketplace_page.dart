@@ -336,6 +336,9 @@ class _FilterButton extends StatelessWidget {
     final maxCtrl = TextEditingController(
       text: controller.maxPrice.value?.toStringAsFixed(0) ?? '',
     );
+    final cityCtrl = TextEditingController(
+      text: controller.selectedCity.value,
+    );
 
     showModalBottomSheet(
       context: context,
@@ -344,192 +347,265 @@ class _FilterButton extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(2),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        maxChildSize: 0.92,
+        minChildSize: 0.5,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          padding: EdgeInsets.fromLTRB(
+            24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Filters',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: isDark ? Colors.white : AppColor.primaryColor,
+              const SizedBox(height: 20),
+              Text(
+                'Filters',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.white : AppColor.primaryColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Condition
-            Text('Condition', style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white70 : AppColor.darkText,
-            )),
-            const SizedBox(height: 8),
-            Obx(() => Wrap(
-                  spacing: 8,
-                  children: [{'label': 'New', 'value': 'new'}, {'label': 'Used', 'value': 'used'}, {'label': 'Like New', 'value': 'like_new'}].map((c) {
-                    final selected = controller.selectedCondition.value == c['value'];
-                    return ChoiceChip(
-                      label: Text(c['label']!),
-                      selected: selected,
-                      onSelected: (_) {
-                        controller.selectedCondition.value = selected ? '' : c['value']!;
+              // ── City ──
+              _filterLabel('City', isDark),
+              const SizedBox(height: 8),
+              TextField(
+                controller: cityCtrl,
+                style: TextStyle(color: isDark ? Colors.white : AppColor.darkText),
+                decoration: InputDecoration(
+                  hintText: 'e.g. Cairo, Alexandria',
+                  hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400]),
+                  prefixIcon: Icon(Icons.location_city_rounded,
+                      size: 20, color: isDark ? Colors.white38 : Colors.grey[500]),
+                  filled: true,
+                  fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // ── Condition ──
+              _filterLabel('Condition', isDark),
+              const SizedBox(height: 8),
+              Obx(() => Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      {'label': 'New', 'value': 'new'},
+                      {'label': 'Like New', 'value': 'like_new'},
+                      {'label': 'Good', 'value': 'good'},
+                      {'label': 'Used', 'value': 'used'},
+                      {'label': 'Fair', 'value': 'fair'},
+                    ].map((c) {
+                      final selected = controller.selectedCondition.value == c['value'];
+                      return ChoiceChip(
+                        label: Text(c['label']!),
+                        selected: selected,
+                        onSelected: (_) {
+                          controller.selectedCondition.value = selected ? '' : c['value']!;
+                        },
+                        selectedColor: AppColor.fourthColor,
+                        labelStyle: TextStyle(
+                          color: selected ? Colors.white : (isDark ? Colors.white70 : AppColor.mediumText),
+                          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                          fontSize: 13,
+                        ),
+                        backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                        side: BorderSide.none,
+                      );
+                    }).toList(),
+                  )),
+              const SizedBox(height: 20),
+
+              // ── Type ──
+              _filterLabel('Listing Type', isDark),
+              const SizedBox(height: 8),
+              Obx(() => Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      {'label': 'For Rent', 'value': 'rent'},
+                      {'label': 'For Sale', 'value': 'sell'},
+                      {'label': 'Both', 'value': 'both'},
+                    ].map((t) {
+                      final selected = controller.selectedType.value == t['value'];
+                      return ChoiceChip(
+                        label: Text(t['label']!),
+                        selected: selected,
+                        onSelected: (_) {
+                          controller.selectedType.value = selected ? '' : t['value']!;
+                        },
+                        selectedColor: AppColor.fourthColor,
+                        labelStyle: TextStyle(
+                          color: selected ? Colors.white : (isDark ? Colors.white70 : AppColor.mediumText),
+                          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                          fontSize: 13,
+                        ),
+                        backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                        side: BorderSide.none,
+                      );
+                    }).toList(),
+                  )),
+              const SizedBox(height: 20),
+
+              // ── Price Range ──
+              _filterLabel('Price Range (EGP)', isDark),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: minCtrl,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: isDark ? Colors.white : AppColor.darkText),
+                      decoration: InputDecoration(
+                        hintText: 'Min',
+                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400]),
+                        filled: true,
+                        fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('–', style: TextStyle(color: Colors.grey[500], fontSize: 20)),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: maxCtrl,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: isDark ? Colors.white : AppColor.darkText),
+                      decoration: InputDecoration(
+                        hintText: 'Max',
+                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400]),
+                        filled: true,
+                        fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+
+              // ── Active filter count ──
+              Obx(() {
+                int count = 0;
+                if (controller.selectedCondition.value.isNotEmpty) count++;
+                if (controller.selectedType.value.isNotEmpty) count++;
+                if (controller.minPrice.value != null) count++;
+                if (controller.maxPrice.value != null) count++;
+                if (controller.selectedCity.value.isNotEmpty) count++;
+                if (controller.selectedCategoryId.value != null) count++;
+                if (count > 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      '$count filter${count > 1 ? 's' : ''} active',
+                      style: TextStyle(
+                        color: AppColor.fourthColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
+
+              // Action buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        controller.clearFilters();
+                        Navigator.pop(context);
                       },
-                      selectedColor: AppColor.fourthColor,
-                      labelStyle: TextStyle(
-                        color: selected ? Colors.white : (isDark ? Colors.white70 : AppColor.mediumText),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        side: BorderSide(color: AppColor.fourthColor),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                      side: BorderSide.none,
-                    );
-                  }).toList(),
-                )),
-            const SizedBox(height: 16),
-
-            // Type
-            Text('Type', style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white70 : AppColor.darkText,
-            )),
-            const SizedBox(height: 8),
-            Obx(() => Wrap(
-                  spacing: 8,
-                  children: [{'label': 'Standard', 'value': 'standard'}, {'label': 'Premium', 'value': 'premium'}].map((t) {
-                    final selected = controller.selectedType.value == t['value'];
-                    return ChoiceChip(
-                      label: Text(t['label']!),
-                      selected: selected,
-                      onSelected: (_) {
-                        controller.selectedType.value = selected ? '' : t['value']!;
+                      child: Text('Clear All', style: TextStyle(color: AppColor.fourthColor)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.selectedCity.value = cityCtrl.text.trim();
+                        if (minCtrl.text.isNotEmpty) {
+                          controller.minPrice.value = double.tryParse(minCtrl.text);
+                        } else {
+                          controller.minPrice.value = null;
+                        }
+                        if (maxCtrl.text.isNotEmpty) {
+                          controller.maxPrice.value = double.tryParse(maxCtrl.text);
+                        } else {
+                          controller.maxPrice.value = null;
+                        }
+                        controller.applyFilters();
+                        Navigator.pop(context);
                       },
-                      selectedColor: AppColor.fourthColor,
-                      labelStyle: TextStyle(
-                        color: selected ? Colors.white : (isDark ? Colors.white70 : AppColor.mediumText),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.fourthColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
                       ),
-                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                      side: BorderSide.none,
-                    );
-                  }).toList(),
-                )),
-            const SizedBox(height: 16),
-
-            // Price Range
-            Text('Price Range (EGP)', style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white70 : AppColor.darkText,
-            )),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: minCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Min',
-                      filled: true,
-                      fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.w700)),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('–', style: TextStyle(color: Colors.grey[500], fontSize: 20)),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: maxCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Max',
-                      filled: true,
-                      fillColor: isDark ? Colors.grey[800] : Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      controller.clearFilters();
-                      Navigator.pop(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: BorderSide(color: AppColor.fourthColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text('Clear All', style: TextStyle(color: AppColor.fourthColor)),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (minCtrl.text.isNotEmpty) {
-                        controller.minPrice.value = double.tryParse(minCtrl.text);
-                      } else {
-                        controller.minPrice.value = null;
-                      }
-                      if (maxCtrl.text.isNotEmpty) {
-                        controller.maxPrice.value = double.tryParse(maxCtrl.text);
-                      } else {
-                        controller.maxPrice.value = null;
-                      }
-                      controller.applyFilters();
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.fourthColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.w700)),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _filterLabel(String text, bool isDark) {
+    return Text(text, style: TextStyle(
+      fontWeight: FontWeight.w600,
+      color: isDark ? Colors.white70 : AppColor.darkText,
+    ));
   }
 }
 

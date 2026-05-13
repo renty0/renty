@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/pages/chat_room_page.dart';
 
 class ItemDetailController extends GetxController {
   final isLoading = true.obs;
@@ -14,6 +15,10 @@ class ItemDetailController extends GetxController {
   final isFavorite = false.obs;
   final isFavoriteLoading = false.obs;
   final errorMessage = ''.obs;
+  final similarItems = <ItemListDto>[].obs;
+  final isLoadingSimilar = false.obs;
+  final isChatting = false.obs;
+  final ownerId = Rxn<int>();
 
   String? itemId;
 
@@ -24,19 +29,103 @@ class ItemDetailController extends GetxController {
     _checkFavorite();
   }
 
+  /// Star distribution: count of reviews per star level (1–5)
+  int getStarCount(int star) {
+    return reviews.where((r) => (r.rating ?? 0).round() == star).length;
+  }
+
+  double getStarPercent(int star) {
+    if (totalReviews.value == 0) return 0;
+    return (getStarCount(star) / totalReviews.value) * 100;
+  }
+
   Future<void> _fetchItemDetail() async {
     isLoading.value = true;
     errorMessage.value = '';
     try {
+      // Single API call — extract ownerId from raw JSON, then parse typed DTO
+      final rawResponse = await ApiService.items.getItemByIdWithHttpInfo(itemId!);
+      if (rawResponse.statusCode == 200 && rawResponse.body.isNotEmpty) {
+        final body = jsonDecode(rawResponse.body);
+        final data = body['data'];
+        if (data != null) {
+          // ownerId lives inside owner.id (Web's OwnerDto has id but mobile's doesn't)
+          final owner = data['owner'];
+          if (owner != null && owner['id'] != null) {
+            ownerId.value = owner['id'] is int
+                ? owner['id']
+                : int.tryParse(owner['id'].toString());
+          }
+        }
+      }
       final response = await ApiService.items.getItemById(itemId!);
       if (response != null && response.data != null) {
         item.value = response.data!;
+        _loadSimilarItems();
       }
     } catch (e) {
       errorMessage.value = 'Failed to load item details';
       print('ItemDetailController error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _loadSimilarItems() async {
+    final categoryId = item.value?.category?.id;
+    if (categoryId == null) return;
+    isLoadingSimilar.value = true;
+    try {
+      final response = await ApiService.items.getItems(1, 8, categoryId: categoryId);
+      if (response != null && response.data != null) {
+        final items = response.data!
+            .where((it) => it.id != itemId)
+            .take(6)
+            .toList();
+        similarItems.assignAll(items);
+      }
+    } catch (e) {
+      print('Error loading similar items: $e');
+    } finally {
+      isLoadingSimilar.value = false;
+    }
+  }
+
+  Future<void> startChat() async {
+    if (ownerId.value == null) {
+      _showSnackbar(
+        icon: Icons.error_outline,
+        message: 'Owner information not available',
+        color: Colors.grey[700]!,
+      );
+      return;
+    }
+    if (isChatting.value) return;
+    isChatting.value = true;
+    try {
+      final cmd = CreateChatCommand(userId: ownerId.value);
+      final response = await ApiService.chat.createChat(cmd);
+      final chatId = response?.data?.chatId;
+      if (chatId != null) {
+        Get.to(() => ChatRoomPage(
+          chatId: chatId,
+          otherUserName: item.value?.owner?.firstName ?? 'Owner',
+        ));
+      } else {
+        _showSnackbar(
+          icon: Icons.chat,
+          message: 'Chat started',
+          color: AppColor.fourthColor,
+        );
+      }
+    } catch (e) {
+      _showSnackbar(
+        icon: Icons.error_outline,
+        message: 'Failed to start chat',
+        color: Color(0xFFDC2626),
+      );
+    } finally {
+      isChatting.value = false;
     }
   }
 

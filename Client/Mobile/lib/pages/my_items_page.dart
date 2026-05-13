@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/pages/edit_item_page.dart';
 
 /// Displays items owned by the currently logged-in user.
 /// Mirrors the Web's /my-items route (ItemsListComponent with ownerMode='me').
@@ -81,6 +82,38 @@ class _MyItemsPageState extends State<MyItemsPage> {
       _page++;
     });
     _loadItems();
+  }
+
+  Future<void> _deleteItem(ItemListDto item) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Item'),
+        content: Text('Are you sure you want to delete "${item.titleEn ?? item.titleAr ?? 'this item'}"? This cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || item.id == null) return;
+
+    try {
+      await ApiService.items.deleteItem(item.id!);
+      if (!mounted) return;
+      setState(() => _items.remove(item));
+      Get.snackbar('Deleted', 'Item has been deleted.',
+          backgroundColor: Colors.green.withValues(alpha: 0.9), colorText: Colors.white);
+    } on ApiException catch (e) {
+      Get.snackbar('Error', 'Failed to delete: ${e.message ?? e.code}',
+          backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete item.',
+          backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
+    }
   }
 
   String _formatCondition(String raw) {
@@ -321,6 +354,17 @@ class _MyItemsPageState extends State<MyItemsPage> {
               item: _items[index],
               isDark: isDark,
               formatCondition: _formatCondition,
+              onDelete: _deleteItem,
+              onEdit: (item) async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => EditItemPage(itemId: item.id!)),
+                );
+                if (result == true) {
+                  _page = 1;
+                  _loadItems(reset: true);
+                }
+              },
             );
           },
         ),
@@ -335,11 +379,15 @@ class _MyItemCard extends StatelessWidget {
   final ItemListDto item;
   final bool isDark;
   final String Function(String) formatCondition;
+  final void Function(ItemListDto) onDelete;
+  final void Function(ItemListDto) onEdit;
 
   const _MyItemCard({
     required this.item,
     required this.isDark,
     required this.formatCondition,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -518,75 +566,18 @@ class _MyItemCard extends StatelessWidget {
                     // Action button row
                     Row(
                       children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 30,
-                            child: OutlinedButton.icon(
-                              onPressed: () => Get.toNamed(
-                                '/item-detail',
-                                arguments: {'itemId': item.id},
-                              ),
-                              icon: const Icon(Icons.visibility_outlined,
-                                  size: 14),
-                              label: const Text('View'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: AppColor.fourthColor,
-                                side: BorderSide(
-                                  color:
-                                      AppColor.fourthColor.withOpacity(0.4),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                textStyle: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: SizedBox(
-                            height: 30,
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                Get.snackbar(
-                                  'Coming Soon',
-                                  'Edit functionality is under development.',
-                                  backgroundColor:
-                                      AppColor.primaryColor.withOpacity(0.9),
-                                  colorText: Colors.white,
-                                );
-                              },
-                              icon:
-                                  const Icon(Icons.edit_outlined, size: 14),
-                              label: const Text('Edit'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: isDark
-                                    ? Colors.white60
-                                    : AppColor.mediumText,
-                                side: BorderSide(
-                                  color: isDark
-                                      ? Colors.white24
-                                      : Colors.grey[300]!,
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                textStyle: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        _actionBtn('View', Icons.visibility_outlined,
+                            AppColor.fourthColor, AppColor.fourthColor.withValues(alpha: 0.4),
+                            () => Get.toNamed('/item-detail', arguments: {'itemId': item.id})),
+                        const SizedBox(width: 4),
+                        _actionBtn('Edit', Icons.edit_outlined,
+                            isDark ? Colors.white60 : AppColor.mediumText,
+                            isDark ? Colors.white24 : Colors.grey[300]!,
+                            () => onEdit(item)),
+                        const SizedBox(width: 4),
+                        _actionBtn('Delete', Icons.delete_outline,
+                            Colors.red[400]!, Colors.red.withValues(alpha: 0.4),
+                            () => onDelete(item)),
                       ],
                     ),
                   ],
@@ -594,6 +585,26 @@ class _MyItemCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _actionBtn(String label, IconData icon, Color fg, Color border, VoidCallback onTap) {
+    return Expanded(
+      child: SizedBox(
+        height: 28,
+        child: OutlinedButton.icon(
+          onPressed: onTap,
+          icon: Icon(icon, size: 12),
+          label: Text(label),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: fg,
+            side: BorderSide(color: border),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
         ),
       ),
     );

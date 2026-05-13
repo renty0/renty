@@ -7,6 +7,7 @@ import 'package:renty/pages/my_rentals_page.dart';
 import 'package:renty/pages/my_orders_page.dart';
 import 'package:renty/pages/my_items_page.dart';
 import 'package:renty/pages/create_item_page.dart';
+import 'package:renty/pages/edit_profile_page.dart';
 import 'package:renty/pages/notifications_page.dart';
 import 'package:renty/pages/favorites_page.dart';
 import 'package:renty/pages/chat_list_page.dart';
@@ -84,6 +85,13 @@ List<GetPage<dynamic>>? routes = [
 
   // Change password
   GetPage(name: "/change-password", page: () => ChangePasswordScreen()),
+
+  // Edit profile
+  GetPage(
+    name: "/edit-profile",
+    page: () => const EditProfilePage(),
+    transition: Transition.cupertino,
+  ),
 
   // Phase 2: Rentals & Orders
   GetPage(

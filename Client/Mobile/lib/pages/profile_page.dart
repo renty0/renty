@@ -4,6 +4,7 @@ import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/services/ProfileService.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/main.dart';
+import 'package:renty/pages/edit_profile_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final Map<String, dynamic>? userProfile;
@@ -100,6 +101,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           // ── User Avatar & Name ──
                           _buildUserHeader(isDark, textColor, subtextColor),
+                          const SizedBox(height: 12),
+
+                          // ── Edit Profile Button ──
+                          SizedBox(
+                            width: 160,
+                            height: 38,
+                            child: OutlinedButton.icon(
+                              onPressed: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                                );
+                                if (result == true) _loadProfile();
+                              },
+                              icon: const Icon(Icons.edit_outlined, size: 16),
+                              label: const Text('Edit Profile'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColor.fourthColor,
+                                side: BorderSide(color: AppColor.fourthColor.withValues(alpha: 0.5)),
+                                textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 28),
 
                           // ── Quick Actions ──
@@ -212,41 +237,60 @@ class _ProfilePageState extends State<ProfilePage> {
         sharedPref.getString('user_email') ??
         '';
     final initials = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U';
+    final profileImageUrl = _profile?['profilePictureUrl'] as String?;
 
     return Column(
       children: [
-        // Avatar circle with initials (no profile image upload)
+        // Avatar circle — shows profile image if available, otherwise initials
         Container(
           width: 88,
           height: 88,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColor.fourthColor,
-                AppColor.primaryColor,
-              ],
-            ),
+            gradient: profileImageUrl == null
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColor.fourthColor,
+                      AppColor.primaryColor,
+                    ],
+                  )
+                : null,
             boxShadow: [
               BoxShadow(
-                color: AppColor.fourthColor.withOpacity(0.3),
+                color: AppColor.fourthColor.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
             ],
           ),
-          child: Center(
-            child: Text(
-              initials,
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          child: profileImageUrl != null
+              ? ClipOval(
+                  child: Image.network(
+                    profileImageUrl,
+                    fit: BoxFit.cover,
+                    width: 88,
+                    height: 88,
+                    errorBuilder: (_, __, ___) => Center(
+                      child: Text(initials,
+                          style: const TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white)),
+                    ),
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    initials,
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
         ),
         const SizedBox(height: 14),
         Text(
