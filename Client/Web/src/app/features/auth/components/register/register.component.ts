@@ -8,15 +8,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { finalize } from 'rxjs';
-import { InputComponent } from '../../../../shared/components/input/input';
+import { InputComponent, SelectOption } from '../../../../shared/components/input/input';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { emailValidator } from '../../../../validators/email.validator';
 import { passwordValidator } from '../../../../validators/password.validator';
 import { phoneValidator } from '../../../../validators/phone.validator';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
-import { ApiResponse, AuthRegisterData, UserType } from '../../../../core/api/api-client';
+import { ApiResponse, AuthRegisterData } from '../../../../core/api/api-client';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 import { AuthService } from '../../../../core/services/auth.service';
+import { EGYPT_GOVERNORATES } from '../../../../features/items/items-editor-page/items-editor.constants';
 
 @Component({
   selector: 'app-register',
@@ -53,29 +54,13 @@ export class RegisterComponent implements OnInit {
   additionalInfoGroup!: FormGroup;
   registerForm!: FormGroup;
 
-  userTypeOptions = [
-    {
-      name: 'Renter',
-      code: UserType.Renter,
-      icon: 'shopping_basket',
-      titleKey: 'register.roles.renterTitle',
-      descKey: 'register.roles.renterDesc'
-    },
-    {
-      name: 'Owner',
-      code: UserType.Owner,
-      icon: 'storefront',
-      titleKey: 'register.roles.ownerTitle',
-      descKey: 'register.roles.ownerDesc'
-    },
-    {
-      name: 'Both',
-      code: UserType.Both,
-      icon: 'diversity_3',
-      titleKey: 'register.roles.memberTitle',
-      descKey: 'register.roles.memberDesc'
-    }
+  countryOptions: SelectOption[] = [
+    { name: 'countries.egypt', code: 'egypt' }
   ];
+
+  egyptianCities: SelectOption[] = EGYPT_GOVERNORATES;
+
+
 
   ngOnInit() {
     this.accountInfoGroup = this.fb.group({
@@ -91,11 +76,10 @@ export class RegisterComponent implements OnInit {
     });
 
     this.additionalInfoGroup = this.fb.group({
-      userType: [UserType.Renter, [Validators.required]],
       bio: [''],
       address: [''],
-      city: [''],
-      country: [''],
+      city: ['cairo', [Validators.required]],
+      country: [{ value: 'egypt', disabled: true }, [Validators.required]],
       acceptTerms: [false, [Validators.requiredTrue]],
     });
 
@@ -129,10 +113,9 @@ export class RegisterComponent implements OnInit {
       lastName: this.profileInfoGroup.value.lastName,
       phoneNumber: this.profileInfoGroup.value.phoneNumber || undefined,
       address: this.additionalInfoGroup.value.address || undefined,
-      city: this.additionalInfoGroup.value.city || undefined,
-      country: this.additionalInfoGroup.value.country || undefined,
-      bio: this.additionalInfoGroup.value.bio || undefined,
-      userType: this.additionalInfoGroup.value.userType
+      city: this.additionalInfoGroup.get('city')?.value || undefined,
+      country: 'Egypt',
+      bio: this.additionalInfoGroup.value.bio || undefined
     };
 
     this.authService.register(payload).pipe(

@@ -15,7 +15,7 @@ public static class AdminRoleEndpoints
     {
         var group = app.MapGroup("/api/v1/admin")
             .WithTags("Admin")
-            .RequireAuthorization(Policies.SuperAdminOnly);
+            .RequireAuthorization(Policies.AdminAccess);
 
         // GET /admin/roles
         group.MapGet("/roles", async (ISender sender) =>

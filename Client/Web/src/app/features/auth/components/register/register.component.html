@@ -39,14 +39,14 @@
             <div class="step-icon-wrapper">
               <mat-icon>settings_suggest</mat-icon>
             </div>
-            <span class="step-label">{{ 'labels.userType' | translate }}</span>
+            <span class="step-label">{{ 'info.additionalInfo' | translate }}</span>
           </div>
         </div>
 
         <mat-stepper linear #stepper class="register-stepper">
           <mat-step [stepControl]="accountInfoGroup" [editable]="true">
             <ng-template matStepLabel>{{ 'info.accountInfo' | translate }}</ng-template>
-            <div class="step-content">
+            <div class="mx-1">
               <div class="step-header">
                 <h2>{{ 'info.accountInfo' | translate }}</h2>
                 <p>{{ 'register.step1Desc' | translate }}</p>
@@ -71,7 +71,7 @@
 
           <mat-step [stepControl]="profileInfoGroup" [editable]="true">
             <ng-template matStepLabel>{{ 'info.profileInfo' | translate }}</ng-template>
-            <div class="step-content">
+            <div class="mx-1">
               <div class="step-header">
                 <h2>{{ 'info.profileInfo' | translate }}</h2>
                 <p>{{ 'register.step2Desc' | translate }}</p>
@@ -96,29 +96,11 @@
           </mat-step>
 
           <mat-step [stepControl]="additionalInfoGroup" [editable]="true">
-            <ng-template matStepLabel>{{ 'labels.userType' | translate }}</ng-template>
-            <div class="step-content">
+            <ng-template matStepLabel>{{ 'info.additionalInfo' | translate }}</ng-template>
+            <div class="mx-1">
               <div class="step-header">
                 <h2>{{ 'register.step3Title' | translate }}</h2>
                 <p>{{ 'register.step3Desc' | translate }}</p>
-              </div>
-
-              <div class="role-selection-grid">
-                @for (option of userTypeOptions; track option.code) {
-                <div class="role-card" [class.selected]="additionalInfoGroup.get('userType')?.value === option.code"
-                  (click)="additionalInfoGroup.get('userType')?.setValue(option.code)">
-                  <div class="role-icon">
-                    <mat-icon>{{ option.icon }}</mat-icon>
-                  </div>
-                  <div class="role-info">
-                    <h3>{{ option.titleKey | translate }}</h3>
-                    <p>{{ option.descKey | translate }}</p>
-                  </div>
-                  <div class="role-check">
-                    <mat-icon>check_circle</mat-icon>
-                  </div>
-                </div>
-                }
               </div>
 
               <div class="divider">
@@ -126,8 +108,10 @@
               </div>
 
               <div class="inputs-grid">
-                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city"></app-input>
-                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city" type="select"
+                  [options]="egyptianCities" [translateOptions]="true"></app-input>
+                <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country" type="select"
+                  [options]="countryOptions" [translateOptions]="true"></app-input>
                 <app-input [formGroup]="additionalInfoGroup" controlName="address" label="address"
                   class="full-width"></app-input>
                 <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="bio" type="textarea"

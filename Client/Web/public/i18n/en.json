@@ -154,6 +154,9 @@
       "memberDesc": "Full access to rent items and list your own."
     }
   },
+  "countries": {
+    "egypt": "Egypt"
+  },
   "login": {
     "welcomeBack": "Welcome Back!",
     "signInSubtitle": "Sign in to your account",
@@ -316,6 +319,7 @@
     "organization": "Organization"
   },
   "info": {
+    "additionalInfo": "Additional Information",
     "accountInfo": "Account Info",
     "profileInfo": "Profile Info"
   },
@@ -616,7 +620,11 @@
     "noListings": "No active listings found.",
     "ownerRating": "Owner Rating",
     "renterRating": "Renter Rating",
-    "noReviews": "No reviews found."
+    "noReviews": "No reviews found.",
+    "deleteAccount": "Delete Account",
+    "deleteConfirmTitle": "Delete Account?",
+    "deleteConfirmMessage": "Are you sure you want to delete your account? This action is permanent and cannot be undone.",
+    "deleteSuccess": "Your account has been deleted successfully."
   },
   "items": {
     "daily": "Daily",
@@ -914,7 +922,11 @@
     "title": "Notifications",
     "noNotifications": "You're all caught up!",
     "markAllRead": "Mark all as read",
-    "unread": "Unread"
+    "unread": "Unread",
+    "markAsRead": "Mark as read",
+    "empty": "No notifications yet",
+    "seeAll": "See all notifications",
+    "more": "more"
   },
   "checkout": {
     "title": "Checkout",
@@ -1003,7 +1015,7 @@
       "email": "Email",
       "phone": "Phone",
       "address": "Address",
-      "addressValue": "Cairo, Egypt",
+      "addressValue": "Alexandria, Egypt",
       "follow": "Follow Us"
     },
     "form": {

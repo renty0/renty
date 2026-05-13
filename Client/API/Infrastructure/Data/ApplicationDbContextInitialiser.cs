@@ -122,8 +122,7 @@ public class ApplicationDbContextInitialiser
                 LastName = "Admin",
                 EmailConfirmed = true,
                 IsActive = true,
-                IsVerified = true,
-                UserType = Domain.Enums.UserType.Both
+                IsVerified = true
             };
 
             var result = await _userManager.CreateAsync(adminUser, adminPassword);
@@ -131,8 +130,6 @@ public class ApplicationDbContextInitialiser
             {
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.SuperAdmin.ToString());
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Admin.ToString());
-                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Owner.ToString());
-                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Renter.ToString());
                 _logger.LogInformation("Super Admin user created successfully.");
             }
             else

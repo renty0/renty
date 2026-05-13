@@ -7,7 +7,7 @@ public record UserDto(
     string LastName,
     string FullName,
     string? ProfilePictureUrl,
-    string UserType,
+    string Role,
     bool IsVerified,
     bool IsEmailConfirmed,
     double Rating,

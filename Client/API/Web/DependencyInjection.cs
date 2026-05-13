@@ -59,11 +59,11 @@ public static class DependencyInjection
 
             // Any authenticated role (all users, EXCLUDES experts for transactional ops)
             options.AddPolicy(Policies.CanTransact, p =>
-                p.RequireRole(Roles.Renter, Roles.Owner, Roles.Admin, Roles.SuperAdmin));
+                p.RequireRole(Roles.User, Roles.Admin, Roles.SuperAdmin));
 
             // Non-expert authenticated user (renter/owner/admin/support/super_admin)
             options.AddPolicy(Policies.NonExpert, p =>
-                p.RequireRole(Roles.Renter, Roles.Owner, Roles.Admin, Roles.Support, Roles.SuperAdmin));
+                p.RequireRole(Roles.User, Roles.Admin, Roles.Support, Roles.SuperAdmin));
         });
 
         // Configure CORS

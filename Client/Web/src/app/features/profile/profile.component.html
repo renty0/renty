@@ -1,13 +1,11 @@
 <div class="profile-wrapper">
   <mat-tab-group class="profile-tabs" animationDuration="200ms">
 
-    <!-- ── Tab 1: Profile Info ─────────────────────────────────── -->
     <mat-tab [label]="'profile.personalInfo' | translate">
       <div class="profile-card mt-4">
         <div class="profile-header">
           <h2>{{ 'profile.title' | translate }}</h2>
 
-          <!-- Rating Summary -->
           <div class="ratings-row">
             <div class="rating-pill">
               <mat-icon class="star">star</mat-icon>
@@ -34,72 +32,96 @@
           <p class="uploading-text" *ngIf="isUploading()">{{ 'profile.uploading' | translate }}</p>
         </div>
 
-        <form [formGroup]="profileForm" (submit)="onSubmit()" class="grid">
-          <div class="md:col-6">
-            <app-input label="firstName" [formGroup]="profileForm" controlName="firstName"></app-input>
+        <form [formGroup]="profileForm" (submit)="onSubmit()" class="profile-form">
+          <div class="form-section grid">
+            <div class="section-title col-12">
+              <mat-icon>person</mat-icon>
+              <span>{{ 'info.accountInfo' | translate }}</span>
+            </div>
+            <app-input class="col-12 md:col-6" label="firstName" [formGroup]="profileForm" controlName="firstName" />
+            <app-input class="col-12 md:col-6" label="lastName" [formGroup]="profileForm" controlName="lastName" />
+            <app-input class="col-12" label="email" [formGroup]="profileForm" controlName="email" type="email"
+              [readonly]="true" />
           </div>
-          <div class="md:col-6">
-            <app-input label="lastName" [formGroup]="profileForm" controlName="lastName"></app-input>
+
+          <div class="form-section grid">
+            <div class="section-title col-12">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ 'register.locationAbout' | translate }}</span>
+            </div>
+            <app-input class="col-12 md:col-6" label="country" [formGroup]="profileForm" controlName="country"
+              type="select" [options]="countryOptions" [translateOptions]="true" />
+            <app-input class="col-12 md:col-6" label="city" [formGroup]="profileForm" controlName="city" type="select"
+              [options]="egyptianCities" [translateOptions]="true" />
+            <app-input class="col-12" label="address" [formGroup]="profileForm" controlName="address" />
           </div>
-          <div class="col-12">
-            <app-input label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true"></app-input>
+
+          <div class="form-section grid">
+            <div class="section-title col-12">
+              <mat-icon>info</mat-icon>
+              <span>{{ 'profile.bio' | translate }}</span>
+            </div>
+            <app-input class="col-12" label="bio" [formGroup]="profileForm" controlName="bio" type="textarea" />
           </div>
-          <div class="md:col-6">
-            <app-input label="address" [formGroup]="profileForm" controlName="address"></app-input>
-          </div>
-          <div class="md:col-6">
-            <app-input label="city" [formGroup]="profileForm" controlName="city"></app-input>
-          </div>
-          <div class="col-12">
-            <app-input label="country" [formGroup]="profileForm" controlName="country"></app-input>
-          </div>
-          <div class="col-12">
-            <app-input label="bio" [formGroup]="profileForm" controlName="bio" type="textarea"></app-input>
-          </div>
-          <div class="col-12 flex justify-content-end mt-3">
+
+          <div class="col-12 flex justify-content-end">
             <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine"
               type="submit" color="primary">
+              <mat-icon>save</mat-icon>
               {{ 'profile.save' | translate }}
             </app-loading-button>
           </div>
         </form>
+
+        <div class="danger-zone">
+          <div class="divider"></div>
+          <div class="flex justify-content-between align-items-center">
+            <div class="danger-info">
+              <h3>{{ 'profile.deleteAccount' | translate }}</h3>
+              <p>{{ 'profile.deleteConfirmMessage' | translate }}</p>
+            </div>
+            <button mat-button color="warn" class="delete-btn" (click)="deleteAccount()" [disabled]="isLoading()">
+              <mat-icon>delete_forever</mat-icon>
+              {{ 'profile.deleteAccount' | translate }}
+            </button>
+          </div>
+        </div>
       </div>
     </mat-tab>
 
-    <!-- ── Tab 2: Reviews ─────────────────────────────────────── -->
     <mat-tab [label]="'profile.reviews' | translate">
       <div class="reviews-section mt-4">
         @if (mockReviews().length > 0) {
-          <div class="reviews-list">
-            @for (review of mockReviews(); track review.id) {
-              <div class="review-card">
-                <div class="reviewer-header">
-                  <div class="reviewer-avatar">
-                    <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
-                  </div>
-                  <div class="reviewer-info">
-                    <h4>{{ review.reviewerName }}</h4>
-                    <div class="review-meta">
-                      <span class="role-badge" [class.owner]="review.role === 'owner'">
-                        {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
-                      </span>
-                      <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
-                    </div>
-                  </div>
-                  <div class="rating-badge">
-                    <mat-icon>star</mat-icon>
-                    <span>{{ review.rating }}</span>
-                  </div>
-                </div>
-                <p class="review-comment">{{ review.comment }}</p>
+        <div class="reviews-list">
+          @for (review of mockReviews(); track review.id) {
+          <div class="review-card">
+            <div class="reviewer-header">
+              <div class="reviewer-avatar">
+                <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
               </div>
-            }
+              <div class="reviewer-info">
+                <h4>{{ review.reviewerName }}</h4>
+                <div class="review-meta">
+                  <span class="role-badge" [class.owner]="review.role === 'owner'">
+                    {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
+                  </span>
+                  <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
+                </div>
+              </div>
+              <div class="rating-badge">
+                <mat-icon>star</mat-icon>
+                <span>{{ review.rating }}</span>
+              </div>
+            </div>
+            <p class="review-comment">{{ review.comment }}</p>
           </div>
+          }
+        </div>
         } @else {
-          <div class="empty-reviews">
-            <mat-icon>rate_review</mat-icon>
-            <p>{{ 'profile.noReviews' | translate }}</p>
-          </div>
+        <div class="empty-reviews">
+          <mat-icon>rate_review</mat-icon>
+          <p>{{ 'profile.noReviews' | translate }}</p>
+        </div>
         }
       </div>
     </mat-tab>

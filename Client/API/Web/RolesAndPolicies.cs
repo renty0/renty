@@ -4,8 +4,7 @@ namespace Web;
 
 public static class Roles
 {
-    public const string Renter     = Domain.Constants.Roles.Renter;
-    public const string Owner      = Domain.Constants.Roles.Owner;
+    public const string User       = Domain.Constants.Roles.User;
     public const string Admin      = Domain.Constants.Roles.Admin;
     public const string Support    = Domain.Constants.Roles.Support;
     public const string SuperAdmin = Domain.Constants.Roles.SuperAdmin;

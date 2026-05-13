@@ -154,5 +154,17 @@ public static class AuthEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization();
+
+        // DELETE /auth/me
+        group.MapDelete("/me", async (ISender sender) =>
+        {
+            var r = await sender.Send(new DeleteUserCommand());
+            if (!r.Success) return Api.Fail(r.Message ?? "Bad request");
+            return Api.Ok(r);
+        })
+        .WithName("AuthDeleteMe")
+        .Produces<ApiResponse<DeleteUserResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization();
     }
 }

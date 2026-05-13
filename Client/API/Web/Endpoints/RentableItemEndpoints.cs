@@ -55,7 +55,7 @@ public static class RentableItemEndpoints
         .WithName("CreateRentableItem")
         .Produces<ApiResponse<object>>(StatusCodes.Status201Created)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(policy => policy.RequireRole("Owner", "SuperAdmin", "Admin"));
+        .RequireAuthorization(policy => policy.RequireRole("User", "SuperAdmin", "Admin"));
 
         group.MapPut("/{id:long}", async (long id, UpdateRentableItemCommand command, ISender sender) =>
         {

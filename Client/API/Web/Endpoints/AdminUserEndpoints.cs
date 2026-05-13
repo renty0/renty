@@ -52,7 +52,7 @@ public static class AdminUserEndpoints
         })
         .WithName("CreateAdminUser")
         .Produces<ApiResponse<CreateAdminUserResponse>>(StatusCodes.Status200OK)
-        .RequireAuthorization(Policies.SuperAdminOnly);
+        .RequireAuthorization(Policies.AdminAccess);
 
         // PUT /admin/users/:id/status
         group.MapPut("/users/{id:long}/status", async (long id, UpdateUserStatusCommand cmd, ISender sender) =>
@@ -64,7 +64,7 @@ public static class AdminUserEndpoints
         .WithName("UpdateUserStatus")
         .Produces<ApiResponse<UpdateUserStatusResponse>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
-        .RequireAuthorization(Policies.SuperAdminOnly);
+        .RequireAuthorization(Policies.AdminAccess);
 
         // PUT /admin/users/:id/roles
         group.MapPut("/users/{id:long}/roles", async (long id, AssignUserRolesCommand cmd, ISender sender) =>
@@ -76,6 +76,6 @@ public static class AdminUserEndpoints
         .WithName("AssignUserRoles")
         .Produces<ApiResponse<Application.Common.Models.Result>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
-        .RequireAuthorization(Policies.SuperAdminOnly);
+        .RequireAuthorization(Policies.AdminAccess);
     }
 }

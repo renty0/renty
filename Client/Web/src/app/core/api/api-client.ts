@@ -603,6 +603,61 @@ export class AuthClient {
         }
         return _observableOf(null as any);
     }
+
+    authDeleteMe(): Observable<ApiResponse<DeleteUserResponse>> {
+        let url_ = this.baseUrl + "/api/v1/auth/me";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthDeleteMe(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthDeleteMe(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<DeleteUserResponse>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<DeleteUserResponse>>;
+        }));
+    }
+
+    protected processAuthDeleteMe(response: HttpResponseBase): Observable<ApiResponse<DeleteUserResponse>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -6664,7 +6719,6 @@ export class RegisterCommand implements IRegisterCommand {
     firstName?: string;
     lastName?: string;
     phoneNumber?: string | undefined;
-    userType?: UserType;
     address?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
@@ -6686,7 +6740,6 @@ export class RegisterCommand implements IRegisterCommand {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.phoneNumber = _data["phoneNumber"];
-            this.userType = _data["userType"];
             this.address = _data["address"];
             this.city = _data["city"];
             this.country = _data["country"];
@@ -6708,7 +6761,6 @@ export class RegisterCommand implements IRegisterCommand {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["phoneNumber"] = this.phoneNumber;
-        data["userType"] = this.userType;
         data["address"] = this.address;
         data["city"] = this.city;
         data["country"] = this.country;
@@ -6723,17 +6775,10 @@ export interface IRegisterCommand {
     firstName?: string;
     lastName?: string;
     phoneNumber?: string | undefined;
-    userType?: UserType;
     address?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
     bio?: string | undefined;
-}
-
-export enum UserType {
-    Owner = 1,
-    Renter = 2,
-    Both = 3,
 }
 
 
@@ -7366,6 +7411,50 @@ export interface IUpdateUserCommand {
     country?: string | undefined;
     bio?: string | undefined;
     profilePictureUrl?: string | undefined;
+}
+
+
+
+
+
+export class DeleteUserResponse implements IDeleteUserResponse {
+    success?: boolean;
+    message?: string | undefined;
+
+    constructor(data?: IDeleteUserResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): DeleteUserResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteUserResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["message"] = this.message;
+        return data;
+    }
+}
+
+export interface IDeleteUserResponse {
+    success?: boolean;
+    message?: string | undefined;
 }
 
 

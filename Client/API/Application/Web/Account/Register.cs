@@ -3,7 +3,6 @@ using Application.Common.Models;
 using Application.Shared.Interfaces.Services;
 using Domain.Constants;
 using Domain.Entities;
-using Domain.Enums;
 using FluentValidation;
 using MediatR;
 
@@ -16,7 +15,6 @@ public record RegisterCommand : IRequest<RegisterResponse>
     public string FirstName { get; init; } = string.Empty;
     public string LastName { get; init; } = string.Empty;
     public string? PhoneNumber { get; init; }
-    public UserType UserType { get; init; } = UserType.Renter;
     public string? Address { get; init; }
     public string? City { get; init; }
     public string? Country { get; init; }
@@ -39,7 +37,6 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 
         RuleFor(x => x.FirstName).NotEmpty().WithMessage("First name is required.");
         RuleFor(x => x.LastName).NotEmpty().WithMessage("Last name is required.");
-        RuleFor(x => x.UserType).IsInEnum().WithMessage("Invalid user type.");
     }
 }
 
@@ -77,7 +74,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             FirstName = request.FirstName,
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
-            UserType = request.UserType,
             Address = request.Address,
             City = request.City,
             Country = request.Country,
@@ -93,22 +89,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             return new RegisterResponse(false, string.Join(", ", createResult.Errors), null, null);
         }
 
-        // Assign role based on user type
-        var roleName = request.UserType switch
-        {
-            UserType.Owner => Roles.Owner,
-            UserType.Renter => Roles.Renter,
-            UserType.Both => Roles.Owner, // Both gets Owner role (can do everything)
-            _ => Roles.Renter
-        };
-
-        await _identityService.AddToRoleAsync(user, roleName);
-
-        // If user type is Both, also add Renter role
-        if (request.UserType == UserType.Both)
-        {
-            await _identityService.AddToRoleAsync(user, Roles.Renter);
-        }
+        // All new users automatically get the "User" role — no Owner/Renter distinction
+        await _identityService.AddToRoleAsync(user, Roles.User);
 
         var roles = await _identityService.GetUserRolesAsync(user);
 
@@ -121,12 +103,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             user.LastName,
             user.FullName,
             user.ProfilePictureUrl,
-            user.UserType.ToString(),
+            roles.FirstOrDefault() ?? Roles.User,
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,
             roles,
-            new List<string>(), // New user has no specific permissions yet, just role permissions
+            new List<string>(),
             user.Address,
             user.City,
             user.Country,
@@ -142,10 +124,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             var body = Application.Shared.Utilities.EmailTemplates.GetEmailConfirmationTemplate(token);
             await _emailSender.SendEmailAsync(user.Email!, "Confirm Your Email - Rently", body);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Log error but don't fail registration
-            // Maybe we should have a logger here
         }
 
         return new RegisterResponse(true, "Registration successful.", tokenData, userDto);

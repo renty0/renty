@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, effect, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -13,7 +14,7 @@ import { ToastService } from '../../services/toast.service';
 @Component({
   selector: 'app-notification-dropdown',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule],
+  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './notification-dropdown.component.html',
   styleUrl: './notification-dropdown.component.scss',
   animations: [

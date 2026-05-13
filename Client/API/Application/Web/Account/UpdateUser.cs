@@ -117,7 +117,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             user.LastName,
             user.FullName,
             user.ProfilePictureUrl,
-            user.UserType.ToString(),
+            roles.FirstOrDefault() ?? Domain.Constants.Roles.User,
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,

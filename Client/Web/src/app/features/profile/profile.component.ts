@@ -9,10 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../core/services/auth.service';
-import { AuthClient, AuthLoginUser, UpdateUserCommand } from '../../core/api/api-client';
-import { InputComponent } from '../../shared/components/input/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { AuthClient, AuthLoginUser, UpdateUserCommand, DeleteUserResponse } from '../../core/api/api-client';
+import { InputComponent, SelectOption } from '../../shared/components/input/input';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.constants';
 import { ProfileImageDialogComponent } from './components/profile-image-dialog/profile-image-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import { LoadingButtonComponent } from '../../shared/components/loading-button/loading-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -43,13 +45,20 @@ export class ProfileComponent {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
+  private translate = inject(TranslateService);
 
   currentUser = signal<any | null>(null);
   isLoading = signal(false);
   isUploading = signal(false);
-  
+
   editingField = signal<string | null>(null);
   savingField = signal<string | null>(null);
+
+  countryOptions: SelectOption[] = [
+    { name: 'countries.egypt', code: 'egypt' }
+  ];
+
+  egyptianCities: SelectOption[] = EGYPT_GOVERNORATES;
 
   // MOCK DATA until backend exposes per-role ratings and reviews
   mockReviews = signal<any[]>([
@@ -112,8 +121,8 @@ export class ProfileComponent {
         email: user.email,
         profilePictureUrl: user.profilePictureUrl,
         address: user.address,
-        city: user.city,
-        country: user.country,
+        city: user.city?.toLowerCase() || 'cairo',
+        country: user.country?.toLowerCase() || 'egypt',
         bio: user.bio,
       });
     }
@@ -153,7 +162,7 @@ export class ProfileComponent {
 
   onSubmit() {
     if (this.profileForm.invalid) return;
-    
+
     this.isLoading.set(true);
     const formVals = this.profileForm.getRawValue();
     const command = new UpdateUserCommand({
@@ -174,7 +183,7 @@ export class ProfileComponent {
           this.toastService.showSuccess('profile.updated');
           this.isLoading.set(false);
           this.profileForm.markAsPristine();
-          
+
           const currentUserObj = this.currentUser();
           const updatedUser = { ...currentUserObj, ...command };
           this.currentUser.set(updatedUser as AuthLoginUser);
@@ -192,7 +201,7 @@ export class ProfileComponent {
     if (control?.invalid) return;
 
     this.savingField.set(field);
-    
+
     const formVals = this.profileForm.getRawValue();
     const command = new UpdateUserCommand({
       firstName: formVals.firstName || undefined,
@@ -212,7 +221,7 @@ export class ProfileComponent {
           this.toastService.showSuccess('profile.updated');
           this.savingField.set(null);
           this.editingField.set(null);
-          
+
           // Update currentUser signal and localStorage
           const currentUserObj = this.currentUser();
           const updatedUser = { ...currentUserObj, ...command };
@@ -224,6 +233,37 @@ export class ProfileComponent {
           this.savingField.set(null);
         }
       });
+    deleteAccount() {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: this.translate.instant('profile.deleteConfirmTitle'),
+          message: this.translate.instant('profile.deleteConfirmMessage'),
+          confirmText: this.translate.instant('common.delete'),
+          cancelText: this.translate.instant('common.cancel'),
+          color: 'warn'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.isLoading.set(true);
+          this.authClient.authDeleteMe()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => {
+                this.toastService.showSuccess('profile.deleteSuccess');
+                this.authService.logout();
+                this.router.navigate(['/auth/login']);
+                this.isLoading.set(false);
+              },
+              error: () => {
+                this.toastService.showError('error.updateFailed');
+                this.isLoading.set(false);
+              }
+            });
+        }
+      });
+    }
   }
-}
 

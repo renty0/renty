@@ -20,7 +20,6 @@ public class ApplicationUser : IdentityUser<long>
     public bool PhoneVerified { get; set; } = false;
     public double FraudScore { get; set; } = 0.0;
     public decimal WalletBalance { get; set; } = 0.0m;
-    public UserType UserType { get; set; } = UserType.Renter;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? LastLoginAt { get; set; }
 

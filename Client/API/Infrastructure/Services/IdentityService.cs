@@ -118,6 +118,12 @@ public class IdentityService : IIdentityService
     {
         await _userManager.ResetAccessFailedCountAsync(user);
     }
+
+    public async Task<Result> DeleteUserAsync(ApplicationUser user)
+    {
+        var result = await _userManager.DeleteAsync(user);
+        return result.ToApplicationResult();
+    }
 }
 
 public static class IdentityResultExtensions

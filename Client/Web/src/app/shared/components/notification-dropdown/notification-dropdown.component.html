@@ -10,10 +10,10 @@
   @if (isOpen()) {
     <div class="notification-dropdown" @dropdownAnimation>
       <div class="dropdown-header">
-        <span class="title">Notifications</span>
+        <span class="title">{{ 'notifications.title' | translate }}</span>
         @if (unreadCount() > 0) {
           <button mat-button color="primary" class="mark-all-btn" (click)="markAllAsRead($event)">
-            Mark all read
+            {{ 'notifications.markAllRead' | translate }}
           </button>
         }
       </div>
@@ -26,7 +26,7 @@
         } @else if (notifications().length === 0) {
           <div class="empty-state">
             <mat-icon>notifications_off</mat-icon>
-            <p>No notifications yet</p>
+            <p>{{ 'notifications.empty' | translate }}</p>
           </div>
         } @else {
           <div class="notification-list">
@@ -48,7 +48,7 @@
                 </div>
 
                 @if (!notif.isRead) {
-                  <button mat-icon-button class="read-btn" (click)="markAsRead(notif, $event)" title="Mark as read">
+                  <button mat-icon-button class="read-btn" (click)="markAsRead(notif, $event)" [title]="'notifications.markAsRead' | translate">
                     <mat-icon>check_circle_outline</mat-icon>
                   </button>
                 }
@@ -59,7 +59,7 @@
             @if (hasMore()) {
               <div class="load-more-indicator" (click)="loadMore()">
                 <mat-icon>expand_more</mat-icon>
-                <span>{{ notifications().length - visibleNotifications().length }} more</span>
+                <span>{{ notifications().length - visibleNotifications().length }} {{ 'notifications.more' | translate }}</span>
               </div>
             }
           </div>
@@ -67,7 +67,7 @@
       </div>
       
       <div class="dropdown-footer">
-        <a routerLink="/notifications" (click)="isOpen.set(false)">See all notifications</a>
+        <a routerLink="/notifications" (click)="isOpen.set(false)">{{ 'notifications.seeAll' | translate }}</a>
       </div>
     </div>
   }

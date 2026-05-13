@@ -118,5 +118,15 @@ public static class AccountEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .AllowAnonymous();
+
+        group.MapDelete("/", async (ISender sender) =>
+        {
+            var result = await sender.Send(new DeleteUserCommand());
+            return result.Success ? Api.Ok(result) : Api.Fail(result.Message ?? "Failed to delete account");
+        })
+        .WithName("DeleteAccount")
+        .Produces<ApiResponse<DeleteUserResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization();
     }
 }

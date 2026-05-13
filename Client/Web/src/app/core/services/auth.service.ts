@@ -130,7 +130,6 @@ export class AuthService {
     city?: string;
     country?: string;
     bio?: string;
-    userType: any;
   }): Observable<ApiResponse<AuthRegisterData>> {
     const command = new RegisterCommand({
       email: payload.email,
@@ -142,7 +141,6 @@ export class AuthService {
       city: payload.city || undefined,
       country: payload.country || undefined,
       bio: payload.bio || undefined,
-      userType: payload.userType,
     });
 
     return this.authClient.authRegister(command);

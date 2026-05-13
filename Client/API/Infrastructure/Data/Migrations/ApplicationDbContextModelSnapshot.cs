@@ -162,9 +162,6 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("numeric");
 

@@ -160,6 +160,9 @@
       "memberDesc": "وصول كامل لتأجير السلع وعرض سلعك الخاصة."
     }
   },
+  "countries": {
+    "egypt": "مصر"
+  },
   "login": {
     "welcomeBack": "مرحباً بك مجدداً!",
     "signInSubtitle": "سجل الدخول إلى حسابك",
@@ -322,6 +325,7 @@
     "organization": "التنظيم"
   },
   "info": {
+    "additionalInfo": "معلومات إضافية",
     "accountInfo": "معلومات الحساب",
     "profileInfo": "معلومات الملف الشخصي"
   },
@@ -622,7 +626,11 @@
     "noListings": "لم يتم العثور على منتجات نشطة.",
     "ownerRating": "تقييم كمؤجر",
     "renterRating": "تقييم كمستأجر",
-    "noReviews": "لا توجد تقييمات بعد."
+    "noReviews": "لا توجد تقييمات بعد.",
+    "deleteAccount": "حذف الحساب",
+    "deleteConfirmTitle": "حذف الحساب؟",
+    "deleteConfirmMessage": "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء نهائي ولا يمكن التراجع عنه.",
+    "deleteSuccess": "تم حذف حسابك بنجاح."
   },
   "items": {
     "daily": "يومي",
@@ -914,6 +922,10 @@
     "title": "الإشعارات",
     "noNotifications": "كل شيء محدث!",
     "markAllRead": "تحديد الكل كمقروء",
+    "markAsRead": "تحديد كمقروء",
+    "empty": "لا توجد تنبيهات بعد",
+    "seeAll": "مشاهدة كل الإشعارات",
+    "more": "إضافية",
     "unread": "غير مقروء"
   },
   "checkout": {
@@ -1003,7 +1015,7 @@
       "email": "البريد الإلكتروني",
       "phone": "رقم الهاتف",
       "address": "العنوان",
-      "addressValue": "القاهرة، مصر",
+      "addressValue": "الأسكندرية، مصر",
       "follow": "تابعنا"
     },
     "form": {

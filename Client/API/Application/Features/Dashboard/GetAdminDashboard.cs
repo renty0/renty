@@ -32,7 +32,7 @@ public class GetAdminDashboardQueryHandler : IRequestHandler<GetAdminDashboardQu
         var recentUsers = await _context.Customers
             .OrderByDescending(x => x.Created)
             .Take(5)
-            .Select(x => new RecentUserDto(x.Id, x.EmailAddress ?? "", x.FullName, "Customer", x.Created))
+            .Select(x => new RecentUserDto(x.Id, x.EmailAddress ?? "", x.FullName, "User", x.Created))
             .ToListAsync(cancellationToken);
 
         var recentRentals = await _context.RentRequests
@@ -56,8 +56,6 @@ public class GetAdminDashboardQueryHandler : IRequestHandler<GetAdminDashboardQu
 
         return new AdminDashboardDto(
             totalUsers,
-            0, 
-            0, 
             totalItems,
             totalRentals,
             totalRevenue,

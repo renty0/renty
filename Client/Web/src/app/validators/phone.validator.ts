@@ -10,6 +10,6 @@ export function phoneValidator(): ValidatorFn {
 
     return egyptianPhoneRegex.test(value)
       ? null
-      : { invalidEgyptianPhone: true };
+      : { invalidPhone: true };
   };
 }

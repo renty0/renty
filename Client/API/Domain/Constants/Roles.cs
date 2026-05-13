@@ -2,8 +2,7 @@ namespace Domain.Constants;
 
 public static class Roles
 {
-    public const string Renter     = "Renter";
-    public const string Owner      = "Owner";
+    public const string User       = "User";
     public const string Admin      = "Admin";
     public const string Support    = "Support";
     public const string SuperAdmin = "SuperAdmin";

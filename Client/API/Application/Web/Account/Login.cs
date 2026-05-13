@@ -118,7 +118,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             !string.IsNullOrEmpty(user.ProfilePictureUrl) && !string.IsNullOrEmpty(baseUrl) 
                 ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" 
                 : user.ProfilePictureUrl,
-            user.UserType.ToString(),
+            roles.FirstOrDefault() ?? Domain.Constants.Roles.User,
             user.IsVerified,
             user.EmailConfirmed,
             user.Rating,

@@ -136,8 +136,7 @@ public class CreateAdminUserCommandHandler : IRequestHandler<CreateAdminUserComm
             EmailConfirmed = true,
             IsActive = true,
             IsVerified = true,
-            CreatedAt = DateTimeOffset.UtcNow,
-            UserType = Domain.Enums.UserType.Both
+            CreatedAt = DateTimeOffset.UtcNow
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);

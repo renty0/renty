@@ -21,4 +21,5 @@ public interface IIdentityService
     Task<bool> IsLockedOutAsync(ApplicationUser user);
     Task IncrementAccessFailedCountAsync(ApplicationUser user);
     Task ResetAccessFailedCountAsync(ApplicationUser user);
+    Task<Result> DeleteUserAsync(ApplicationUser user);
 }

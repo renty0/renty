@@ -8,16 +8,16 @@ public enum PermissionType
 {
     // Items
     [EnumMember(Value = "Permissions.Items.View")]
-    [Permission("Items", "View", Roles.Admin, Roles.Owner, Roles.Renter, Roles.Support)]
+    [Permission("Items", "View", Roles.Admin, Roles.User, Roles.Support)]
     ItemsView,
     [EnumMember(Value = "Permissions.Items.Create")]
-    [Permission("Items", "Create", Roles.Owner)]
+    [Permission("Items", "Create", Roles.User)]
     ItemsCreate,
     [EnumMember(Value = "Permissions.Items.Update")]
-    [Permission("Items", "Update", Roles.Owner, Roles.Admin)]
+    [Permission("Items", "Update", Roles.User, Roles.Admin)]
     ItemsUpdate,
     [EnumMember(Value = "Permissions.Items.Delete")]
-    [Permission("Items", "Delete", Roles.Owner, Roles.Admin)]
+    [Permission("Items", "Delete", Roles.User, Roles.Admin)]
     ItemsDelete,
     [EnumMember(Value = "Permissions.Items.Verify")]
     [Permission("Items", "Verify", Roles.Admin, Roles.Support)]
@@ -25,18 +25,18 @@ public enum PermissionType
 
     // Rentals
     [EnumMember(Value = "Permissions.Rentals.View")]
-    [Permission("Rentals", "View", Roles.Admin, Roles.Owner, Roles.Renter, Roles.Support)]
+    [Permission("Rentals", "View", Roles.Admin, Roles.User, Roles.Support)]
     RentalsView,
     [EnumMember(Value = "Permissions.Rentals.Approve")]
-    [Permission("Rentals", "Approve", Roles.Owner)]
+    [Permission("Rentals", "Approve", Roles.User)]
     RentalsApprove,
     [EnumMember(Value = "Permissions.Rentals.Complete")]
-    [Permission("Rentals", "Complete", Roles.Owner, Roles.Renter)]
+    [Permission("Rentals", "Complete", Roles.User)]
     RentalsComplete,
 
     // Orders
     [EnumMember(Value = "Permissions.Orders.View")]
-    [Permission("Orders", "View", Roles.Admin, Roles.Owner, Roles.Renter, Roles.Support)]
+    [Permission("Orders", "View", Roles.Admin, Roles.User, Roles.Support)]
     OrdersView,
     [EnumMember(Value = "Permissions.Orders.Manage")]
     [Permission("Orders", "Manage", Roles.Admin, Roles.Support)]
@@ -72,7 +72,7 @@ public enum PermissionType
 
     // Wallet & Payments
     [EnumMember(Value = "Permissions.Wallet.View")]
-    [Permission("Wallet", "View", Roles.Admin, Roles.Owner, Roles.Renter)]
+    [Permission("Wallet", "View", Roles.Admin, Roles.User)]
     WalletView,
     [EnumMember(Value = "Permissions.Payment.Manage")]
     [Permission("Payment", "Manage", Roles.Admin)]
