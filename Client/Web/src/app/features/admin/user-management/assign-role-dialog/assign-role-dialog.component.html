@@ -1,0 +1,67 @@
+<div class="dialog-header">
+  <div class="header-content">
+    <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+    <div class="header-text">
+      <h2>{{ 'superAdmin.roles' | translate }}</h2>
+      <p>{{ data.user.firstName }} {{ data.user.lastName }}</p>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  @if (loading()) {
+  <div class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  } @else {
+  <div class="roles-container fade-in">
+    <p class="instruction-text">{{ 'superAdmin.manageStaffDesc' | translate }}</p>
+
+    @for (role of availableRoles(); track role.id) {
+    <div class="role-item" [class.selected]="hasRole(role.name!)" (click)="toggleRole(role.name!)">
+
+      <div class="role-visual">
+        <div class="role-dot" [class]="role.name?.toLowerCase()"></div>
+      </div>
+
+      <div class="role-info">
+        <span class="role-name">{{ role.name }}</span>
+        <span class="role-desc">{{ 'roles.' + role.name?.toLowerCase() | translate }}</span>
+      </div>
+
+      <mat-checkbox [checked]="hasRole(role.name!)" (click)="$event.stopPropagation()" (change)="toggleRole(role.name!)"
+        color="primary">
+      </mat-checkbox>
+    </div>
+    }
+
+    @if (availableRoles().length === 0) {
+    <div class="no-data-msg">
+      <mat-icon>info</mat-icon>
+      <span>No roles available to assign.</span>
+    </div>
+    }
+
+    @if (error()) {
+    <div class="error-message fade-in">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
+    }
+  </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button mat-dialog-close [disabled]="saving()">
+    {{ 'common.cancel' | translate }}
+  </button>
+  <app-loading-button 
+    [loading]="saving()" 
+    [disabled]="loading() || saving()" 
+    (clicked)="save()"
+    matIcon="save"
+    variant="filled"
+    color="primary">
+    {{ 'common.save' | translate }}
+  </app-loading-button>
+</mat-dialog-actions>

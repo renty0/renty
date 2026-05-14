@@ -13,11 +13,12 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NgxSonnerToaster } from 'ngx-sonner';
 import { ChatWidgetComponent } from './features/chat/chat-widget/chat-widget';
+import { SupportHubComponent } from './shared/components/support-hub/support-hub';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster, ChatWidgetComponent],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster, ChatWidgetComponent, SupportHubComponent],
   templateUrl: './app.html',
 })
 export class App {

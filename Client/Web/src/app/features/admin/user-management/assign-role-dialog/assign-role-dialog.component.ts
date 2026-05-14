@@ -6,6 +6,9 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
 import { AdminClient, AssignUserRolesCommand, IAdminUserDto, RoleDto } from '../../../../core/api/api-client';
 
 @Component({
@@ -17,39 +20,13 @@ import { AdminClient, AssignUserRolesCommand, IAdminUserDto, RoleDto } from '../
     MatDialogModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule,
+    TranslateModule,
+    LoadingButtonComponent
   ],
-  template: `
-    <h2 mat-dialog-title>Assign Roles to {{ data.user.firstName }}</h2>
-    <mat-dialog-content>
-      <div class="flex flex-col gap-4 py-4 min-w-[300px]">
-        <div *ngIf="loading()" class="flex justify-center p-4">
-          <mat-spinner diameter="32"></mat-spinner>
-        </div>
-        
-        <div *ngIf="!loading()" class="flex flex-col gap-3">
-          <p class="text-surface-500 mb-2">Select roles for this user:</p>
-          <div *ngFor="let role of availableRoles()" class="flex items-center">
-            <mat-checkbox 
-              [checked]="hasRole(role.name!)"
-              (change)="toggleRole(role.name!)">
-              {{ role.name }}
-            </mat-checkbox>
-          </div>
-          <div *ngIf="availableRoles().length === 0" class="text-surface-500 italic">
-            No roles available to assign.
-          </div>
-        </div>
-        <div *ngIf="error()" class="text-red-500 text-sm mt-2">
-          {{ error() }}
-        </div>
-      </div>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" [disabled]="loading() || saving()" (click)="save()">Save</button>
-    </mat-dialog-actions>
-  `
+  templateUrl: './assign-role-dialog.component.html',
+  styleUrl: './assign-role-dialog.component.scss'
 })
 export class AssignRoleDialogComponent implements OnInit {
   availableRoles = signal<RoleDto[]>([]);

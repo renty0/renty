@@ -6,7 +6,7 @@
 }
 
 .legal-hero {
-  background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 15%) 100%);
+  background: linear-gradient(135deg, $primary-color 0%, color-mix(in srgb, $primary-color, black 15%) 100%);
   color: $white;
   padding: 80px 0 60px;
   text-align: center;

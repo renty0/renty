@@ -50,6 +50,7 @@ export class ProfileComponent {
   currentUser = signal<any | null>(null);
   isLoading = signal(false);
   isUploading = signal(false);
+  activeTab: 'personal' | 'reviews' = 'personal';
 
   editingField = signal<string | null>(null);
   savingField = signal<string | null>(null);
@@ -233,37 +234,38 @@ export class ProfileComponent {
           this.savingField.set(null);
         }
       });
-    deleteAccount() {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '400px',
-        data: {
-          title: this.translate.instant('profile.deleteConfirmTitle'),
-          message: this.translate.instant('profile.deleteConfirmMessage'),
-          confirmText: this.translate.instant('common.delete'),
-          cancelText: this.translate.instant('common.cancel'),
-          color: 'warn'
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.isLoading.set(true);
-          this.authClient.authDeleteMe()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-              next: () => {
-                this.toastService.showSuccess('profile.deleteSuccess');
-                this.authService.logout();
-                this.router.navigate(['/auth/login']);
-                this.isLoading.set(false);
-              },
-              error: () => {
-                this.toastService.showError('error.updateFailed');
-                this.isLoading.set(false);
-              }
-            });
-        }
-      });
-    }
   }
+  deleteAccount() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: this.translate.instant('profile.deleteConfirmTitle'),
+        message: this.translate.instant('profile.deleteConfirmMessage'),
+        confirmText: this.translate.instant('common.delete'),
+        cancelText: this.translate.instant('common.cancel'),
+        color: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading.set(true);
+        this.authClient.authDeleteMe()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => {
+              this.toastService.showSuccess('profile.deleteSuccess');
+              this.authService.logout();
+              this.router.navigate(['/auth/login']);
+              this.isLoading.set(false);
+            },
+            error: () => {
+              this.toastService.showError('error.updateFailed');
+              this.isLoading.set(false);
+            }
+          });
+      }
+    });
+  }
+}
 

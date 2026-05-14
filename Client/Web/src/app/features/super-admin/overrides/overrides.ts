@@ -1,15 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AdminClient, UpdateUserStatusCommand } from '../../../core/api/api-client';
 import { finalize } from 'rxjs';
+import { InputComponent } from '../../../shared/components/input/input';
+import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 
 interface OverrideAction {
   key: string;
@@ -25,26 +27,32 @@ interface OverrideAction {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
     TranslateModule,
     HeaderSectionComponent,
+    InputComponent,
+    LoadingButtonComponent
   ],
   templateUrl: './overrides.html',
   styleUrl: './overrides.scss'
 })
 export class OverridesComponent {
+  private fb = inject(FormBuilder);
   private toast = inject(ToastService);
   private adminClient = inject(AdminClient);
   private translate = inject(TranslateService);
 
   activeAction = signal<OverrideAction | null>(null);
-  referenceId = '';
-  justification = '';
   isExecuting = signal(false);
+
+  overrideForm: FormGroup = this.fb.group({
+    referenceId: ['', Validators.required],
+    justification: ['', [Validators.required, Validators.minLength(10)]]
+  });
 
   actions: OverrideAction[] = [
     {
@@ -83,19 +91,17 @@ export class OverridesComponent {
 
   selectAction(action: OverrideAction): void {
     this.activeAction.set(action);
-    this.referenceId = '';
-    this.justification = '';
+    this.overrideForm.reset();
   }
 
   cancelAction(): void {
     this.activeAction.set(null);
-    this.referenceId = '';
-    this.justification = '';
+    this.overrideForm.reset();
   }
 
   executeOverride(): void {
-    if (!this.referenceId || !this.justification) {
-      this.toast.showError(this.translate.instant('superAdmin.override.fieldsRequired'));
+    if (this.overrideForm.invalid) {
+      this.overrideForm.markAllAsTouched();
       return;
     }
 
@@ -103,10 +109,11 @@ export class OverridesComponent {
     if (!action) return;
 
     this.isExecuting.set(true);
+    const { referenceId, justification } = this.overrideForm.value;
 
     // For now, only unsuspend-user has a real API endpoint
     if (action.key === 'unsuspend-user') {
-      const userId = parseInt(this.referenceId, 10);
+      const userId = parseInt(referenceId, 10);
       if (isNaN(userId)) {
         this.toast.showError(this.translate.instant('superAdmin.override.invalidId'));
         this.isExecuting.set(false);
@@ -132,7 +139,7 @@ export class OverridesComponent {
       setTimeout(() => {
         this.isExecuting.set(false);
         this.toast.showSuccess(this.translate.instant('superAdmin.override.success'));
-        console.log('Override executed:', { action: action.key, referenceId: this.referenceId, justification: this.justification });
+        console.log('Override executed:', { action: action.key, referenceId, justification });
         this.cancelAction();
       }, 1000);
     }

@@ -36,6 +36,15 @@ export class NavbarComponent implements OnInit {
   themeService = inject(ThemeService);
   isDarkMode = this.themeService.isDarkMode;
 
+  // Permissions Signals
+  canViewWallet = computed(() => this.permissionService.hasPermission(PermissionType.Wallet_View));
+  canViewOrders = computed(() => this.permissionService.hasPermission(PermissionType.Orders_View));
+  canViewRentals = computed(() => this.permissionService.hasPermission(PermissionType.Rentals_View));
+  canViewItems = computed(() => this.permissionService.hasPermission(PermissionType.Items_View));
+  canViewSupport = computed(() => this.permissionService.hasPermission(PermissionType.Complaints_View));
+  canViewDashboard = computed(() => this.permissionService.hasPermission(PermissionType.Dashboards_View));
+  canPostItems = computed(() => this.permissionService.hasPermission(PermissionType.Items_Create));
+
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
   searchTerm = signal('');
@@ -45,15 +54,10 @@ export class NavbarComponent implements OnInit {
     { path: '/about', labelKey: 'nav.about', icon: 'info', public: true },
     { path: '/contact', labelKey: 'nav.contact', icon: 'contact_support', public: true },
     { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
-    { path: '/categories', labelKey: 'nav.categories', icon: 'category', adminOnly: true },
-    {
-      path: '/subcategories',
-      labelKey: 'nav.subcategories',
-      icon: 'account_tree',
-      adminOnly: true,
-    },
-    { path: '/brands', labelKey: 'nav.brands', icon: 'branding_watermark', adminOnly: true },
-    { path: '/items', labelKey: 'nav.products', icon: 'inventory_2', adminOnly: true },
+    { path: '/categories', labelKey: 'nav.categories', icon: 'category', permission: PermissionType.Items_View },
+    { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', permission: PermissionType.Items_View },
+    { path: '/brands', labelKey: 'nav.brands', icon: 'branding_watermark', permission: PermissionType.Items_View },
+    { path: '/items', labelKey: 'nav.products', icon: 'inventory_2', permission: PermissionType.Items_View },
   ];
 
   filteredNavLinks = computed(() => {
@@ -61,7 +65,7 @@ export class NavbarComponent implements OnInit {
 
     return this.allNavLinks.filter((link) => {
       if (link.public) return true;
-      if (link.adminOnly) return false; // Admin links moved to dropdown
+      if (link.permission) return false; // Permissions moved to management dropdown
       if (link.authRequired) return loggedIn;
       return true;
     });
@@ -72,34 +76,35 @@ export class NavbarComponent implements OnInit {
     if (!loggedIn) return [];
 
     const links = [];
-    const canViewSupport = this.permissionService.hasPermission(PermissionType.Complaints_View);
-    const canViewDashboard = this.permissionService.hasPermission(PermissionType.Dashboards_View);
-    const canViewUsers = this.permissionService.hasPermission(PermissionType.Users_View);
-    const canViewRoles = this.permissionService.hasPermission(PermissionType.Roles_View);
-    const canViewInventory = this.permissionService.hasPermission(PermissionType.Items_View);
-
-    if (canViewSupport) {
+    
+    // Support
+    if (this.permissionService.hasPermission(PermissionType.Complaints_View)) {
       links.push({ path: '/support', labelKey: 'nav.support', icon: 'support_agent' });
     }
 
-    if (canViewDashboard) {
+    // Dashboards
+    if (this.permissionService.hasPermission(PermissionType.Dashboards_View)) {
       links.push({ path: '/admin/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' });
       links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
       links.push({ path: '/admin/fraud', labelKey: 'nav.fraud', icon: 'security' });
     }
 
-    if (canViewUsers) {
+    // User Management
+    if (this.permissionService.hasPermission(PermissionType.Users_View)) {
       links.push({ path: '/admin/users', labelKey: 'nav.userManagement', icon: 'people' });
     }
 
-    if (canViewRoles) {
+    // Role Management
+    if (this.permissionService.hasPermission(PermissionType.Roles_View)) {
       links.push({ path: '/admin/roles', labelKey: 'nav.roleManagement', icon: 'policy' });
     }
 
-    if (canViewInventory) {
-      links.push(...this.allNavLinks.filter((link) => link.adminOnly));
+    // Catalog/Inventory Management
+    if (this.permissionService.hasPermission(PermissionType.Items_View)) {
+      links.push(...this.allNavLinks.filter((link) => link.permission === PermissionType.Items_View));
     }
 
+    // Expert Actions
     if (this.isExpert()) {
       links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });
     }
@@ -109,12 +114,23 @@ export class NavbarComponent implements OnInit {
 
   // Separate Super Admin dropdown — only visible to SuperAdmin users
   superAdminLinks = computed(() => {
-    if (!this.isLoggedIn() || !this.authService.isSuperAdmin()) return [];
-    return [
-      { path: '/super-admin/dashboard', labelKey: 'nav.saDashboard', icon: 'shield' },
-      { path: '/super-admin/staff', labelKey: 'nav.staffManagement', icon: 'badge' },
-      { path: '/super-admin/overrides', labelKey: 'nav.overrides', icon: 'warning' },
-    ];
+    if (!this.isLoggedIn()) return [];
+    
+    const links = [];
+    
+    if (this.permissionService.hasPermission(PermissionType.Dashboards_View) && this.authService.isSuperAdmin()) {
+      links.push({ path: '/super-admin/dashboard', labelKey: 'nav.saDashboard', icon: 'shield' });
+    }
+
+    if (this.permissionService.hasPermission(PermissionType.Staff_View)) {
+      links.push({ path: '/super-admin/staff', labelKey: 'nav.staffManagement', icon: 'badge' });
+    }
+
+    if (this.permissionService.hasPermission(PermissionType.Overrides_Execute)) {
+      links.push({ path: '/super-admin/overrides', labelKey: 'nav.overrides', icon: 'warning' });
+    }
+
+    return links;
   });
 
   onSearch() {

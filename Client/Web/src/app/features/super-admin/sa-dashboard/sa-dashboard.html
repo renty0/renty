@@ -1,4 +1,4 @@
-<div class="data-container sa-dashboard-container">
+<div class="sa-dashboard-container">
   <app-header-section
     [title]="'superAdmin.dashboardTitle' | translate"
     [subtitle]="'superAdmin.dashboardSubtitle' | translate"
@@ -7,19 +7,19 @@
   </app-header-section>
 
   @if (error()) {
-    <div class="error-state">
-      <mat-icon color="warn">error</mat-icon>
+    <div class="error-state fade-in">
+      <mat-icon>error_outline</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-stroked-button color="primary" (click)="loadKpi()">
+      <button mat-flat-button color="primary" (click)="loadKpi()">
         {{ 'common.retry' | translate }}
       </button>
     </div>
   } @else {
-    <!-- KPI Cards -->
+    <!-- KPI Metrics -->
     <div class="kpi-grid">
       @if (isLoading()) {
         @for (i of [1,2,3,4,5,6]; track i) {
-          <mat-card class="kpi-card skeleton-card">
+          <div class="skeleton-card">
             <div class="skeleton-header">
               <div class="skeleton-avatar"></div>
               <div class="skeleton-text-group">
@@ -27,14 +27,14 @@
                 <div class="skeleton-text subtitle"></div>
               </div>
             </div>
-          </mat-card>
+          </div>
         }
       } @else if (kpi(); as data) {
         <!-- Revenue -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow revenue"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container revenue">
+            <div class="icon-container revenue">
               <mat-icon>payments</mat-icon>
             </div>
             <div class="metric-info">
@@ -42,61 +42,73 @@
               <mat-card-subtitle>{{ 'superAdmin.totalRevenue' | translate }}</mat-card-subtitle>
             </div>
           </mat-card-header>
+          <mat-card-content>
+            <div class="trend positive">
+              <mat-icon>trending_up</mat-icon>
+              <span>+12.5% {{ 'superAdmin.vsLastMonth' | translate }}</span>
+            </div>
+          </mat-card-content>
         </mat-card>
 
         <!-- Active Users -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow users"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container users">
+            <div class="icon-container users">
               <mat-icon>group</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.activeUsers }}</mat-card-title>
+              <mat-card-title>{{ data.activeUsers | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.activeUsers' | translate }}</mat-card-subtitle>
             </div>
           </mat-card-header>
           <mat-card-content>
             <div class="trend positive">
-              <mat-icon>trending_up</mat-icon>
+              <mat-icon>person_add</mat-icon>
               <span>+{{ data.newUsers }} {{ 'superAdmin.newThisPeriod' | translate }}</span>
             </div>
           </mat-card-content>
         </mat-card>
 
         <!-- Rentals -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow rentals"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container rentals">
+            <div class="icon-container rentals">
               <mat-icon>autorenew</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.rentals }}</mat-card-title>
+              <mat-card-title>{{ data.rentals | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.totalRentals' | translate }}</mat-card-subtitle>
             </div>
           </mat-card-header>
+          <mat-card-content>
+            <div class="trend positive">
+              <mat-icon>check_circle</mat-icon>
+              <span>98% {{ 'superAdmin.completionRate' | translate }}</span>
+            </div>
+          </mat-card-content>
         </mat-card>
 
         <!-- Items -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow items"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container items">
+            <div class="icon-container items">
               <mat-icon>inventory_2</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.totalItems }}</mat-card-title>
+              <mat-card-title>{{ data.totalItems | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.activeItems' | translate }}</mat-card-subtitle>
             </div>
           </mat-card-header>
         </mat-card>
 
         <!-- Fraud Rate -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow fraud"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container fraud">
+            <div class="icon-container fraud">
               <mat-icon>security</mat-icon>
             </div>
             <div class="metric-info">
@@ -104,13 +116,19 @@
               <mat-card-subtitle>{{ 'superAdmin.fraudRate' | translate }}</mat-card-subtitle>
             </div>
           </mat-card-header>
+          <mat-card-content>
+            <div class="trend negative">
+              <mat-icon>warning</mat-icon>
+              <span>{{ 'superAdmin.needsAttention' | translate }}</span>
+            </div>
+          </mat-card-content>
         </mat-card>
 
         <!-- Recommendation CTR -->
-        <mat-card class="kpi-card premium-card">
+        <mat-card class="kpi-card fade-in">
           <div class="card-glow recommendation"></div>
           <mat-card-header>
-            <div mat-card-avatar class="icon-container recommendation">
+            <div class="icon-container recommendation">
               <mat-icon>ads_click</mat-icon>
             </div>
             <div class="metric-info">
@@ -122,14 +140,14 @@
       }
     </div>
 
-    <!-- Staff Overview -->
+    <!-- Staff Section -->
     <div class="staff-section">
       <h3 class="section-title">
-        <mat-icon>people</mat-icon>
+        <mat-icon>badge</mat-icon>
         {{ 'superAdmin.staffOverview' | translate }}
       </h3>
       <div class="staff-grid">
-        <mat-card class="staff-card" routerLink="/super-admin/staff">
+        <div class="staff-card" routerLink="/super-admin/staff">
           <div class="staff-icon admins">
             <mat-icon>admin_panel_settings</mat-icon>
           </div>
@@ -137,9 +155,9 @@
             <span class="staff-count">{{ staffCounts().admins }}</span>
             <span class="staff-label">{{ 'superAdmin.admins' | translate }}</span>
           </div>
-        </mat-card>
+        </div>
 
-        <mat-card class="staff-card" routerLink="/super-admin/staff">
+        <div class="staff-card" routerLink="/super-admin/staff">
           <div class="staff-icon support">
             <mat-icon>headset_mic</mat-icon>
           </div>
@@ -147,9 +165,9 @@
             <span class="staff-count">{{ staffCounts().support }}</span>
             <span class="staff-label">{{ 'superAdmin.supportAgents' | translate }}</span>
           </div>
-        </mat-card>
+        </div>
 
-        <mat-card class="staff-card" routerLink="/super-admin/staff">
+        <div class="staff-card" routerLink="/super-admin/staff">
           <div class="staff-icon experts">
             <mat-icon>verified</mat-icon>
           </div>
@@ -157,7 +175,7 @@
             <span class="staff-count">{{ staffCounts().experts }}</span>
             <span class="staff-label">{{ 'superAdmin.experts' | translate }}</span>
           </div>
-        </mat-card>
+        </div>
       </div>
     </div>
 
@@ -168,22 +186,37 @@
         {{ 'superAdmin.quickActions' | translate }}
       </h3>
       <div class="actions-grid">
-        <button mat-flat-button color="primary" routerLink="/super-admin/staff">
-          <mat-icon>person_add</mat-icon>
-          {{ 'superAdmin.manageStaff' | translate }}
-        </button>
-        <button mat-flat-button color="primary" routerLink="/admin/users">
-          <mat-icon>people</mat-icon>
-          {{ 'superAdmin.manageUsers' | translate }}
-        </button>
-        <button mat-flat-button color="primary" routerLink="/admin/settings">
-          <mat-icon>settings</mat-icon>
-          {{ 'superAdmin.systemSettings' | translate }}
-        </button>
-        <button mat-flat-button color="warn" routerLink="/super-admin/overrides">
-          <mat-icon>warning</mat-icon>
-          {{ 'superAdmin.overrides' | translate }}
-        </button>
+        <div class="action-card" routerLink="/super-admin/staff">
+          <div class="action-icon">
+            <mat-icon>person_add</mat-icon>
+          </div>
+          <h4>{{ 'superAdmin.manageStaff' | translate }}</h4>
+          <p>{{ 'superAdmin.manageStaffDesc' | translate }}</p>
+        </div>
+
+        <div class="action-card" routerLink="/admin/users">
+          <div class="action-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <h4>{{ 'superAdmin.manageUsers' | translate }}</h4>
+          <p>{{ 'superAdmin.manageUsersDesc' | translate }}</p>
+        </div>
+
+        <div class="action-card" routerLink="/admin/settings">
+          <div class="action-icon">
+            <mat-icon>settings_suggest</mat-icon>
+          </div>
+          <h4>{{ 'superAdmin.systemSettings' | translate }}</h4>
+          <p>{{ 'superAdmin.systemSettingsDesc' | translate }}</p>
+        </div>
+
+        <div class="action-card" routerLink="/super-admin/overrides">
+          <div class="action-icon warn">
+            <mat-icon>admin_panel_settings</mat-icon>
+          </div>
+          <h4>{{ 'superAdmin.overrides' | translate }}</h4>
+          <p>{{ 'superAdmin.overridesDesc' | translate }}</p>
+        </div>
       </div>
     </div>
 

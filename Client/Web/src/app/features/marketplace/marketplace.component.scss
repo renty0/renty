@@ -225,21 +225,14 @@
             border-radius: 12px !important;
             transition: all 0.3s ease;
             min-height: 46px;
-
             &:hover {
               background-color: #f1f5f9 !important;
             }
           }
-
           &.mat-focused .mat-mdc-text-field-wrapper {
             background-color: white !important;
             box-shadow: 0 0 0 2px rgba($primary-color, 0.1) !important;
           }
-
-          .mat-mdc-form-field-infix {
-            padding: 10px 12px !important;
-          }
-
           .mdc-notched-outline {
             display: none !important;
           }

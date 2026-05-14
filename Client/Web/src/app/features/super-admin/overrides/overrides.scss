@@ -1,9 +1,17 @@
 @use "../../../shared/styles" as *;
 
 .overrides-container {
+  padding: $spacing-xl;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @include mobile {
+    padding: $spacing-md;
+  }
+
   .actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: $spacing-xl;
     margin-top: $spacing-xl;
 
@@ -15,85 +23,109 @@
   .action-card {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: $spacing-lg;
     padding: $spacing-xl;
-    border-radius: $border-radius-xl;
+    border-radius: $border-radius-2xl;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba($white, 0.05);
+    transition: all $transition-base;
+    border: 1px solid rgba($primary-color, 0.05);
+    background: $white;
 
     &:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
       box-shadow: $shadow-xl;
       border-color: rgba($primary-color, 0.15);
 
-      .action-arrow { opacity: 1; transform: translateX(4px); }
+      .action-arrow {
+        opacity: 1;
+        transform: translateX(4px);
+        color: $primary-color;
+      }
     }
   }
 
   .action-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: $border-radius-lg;
+    width: 60px;
+    height: 60px;
+    border-radius: $border-radius-xl;
     @include flex-center;
     flex-shrink: 0;
     box-shadow: $shadow-md;
+    transition: transform 0.3s ease;
 
-    mat-icon { color: $white; font-size: 28px; width: 28px; height: 28px; }
+    mat-icon {
+      color: $white;
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+    }
   }
 
   .action-info {
     flex: 1;
 
     h3 {
-      font-size: $font-size-md;
+      font-size: $font-size-lg;
       font-weight: $font-weight-bold;
       color: $text-dark;
       margin: 0 0 4px;
+      line-height: 1.2;
     }
 
     p {
       font-size: $font-size-sm;
       color: $text-muted;
       margin: 0;
+      line-height: 1.4;
     }
   }
 
   .action-arrow {
-    color: $text-muted;
+    color: $gray-300;
     opacity: 0.5;
     transition: all 0.3s ease;
   }
 
   // Override Form
   .override-form-card {
-    max-width: 600px;
     margin: $spacing-xl auto 0;
     padding: $spacing-2xl;
-    border-radius: $border-radius-xl;
-    border: 1px solid rgba($white, 0.05);
+    border-radius: $border-radius-2xl;
+    border: 1px solid rgba($primary-color, 0.05);
+    background: $white;
+    box-shadow: $shadow-lg;
+
+    @include mobile {
+      padding: $spacing-xl;
+    }
   }
 
   .form-header {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: $spacing-lg;
     margin-bottom: $spacing-2xl;
     padding-bottom: $spacing-xl;
-    border-bottom: 1px solid rgba($white, 0.05);
+    border-bottom: 1px solid $gray-100;
 
     .form-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: $border-radius-lg;
+      width: 56px;
+      height: 56px;
+      border-radius: $border-radius-xl;
       @include flex-center;
       flex-shrink: 0;
+      box-shadow: $shadow-sm;
 
-      mat-icon { color: $white; font-size: 24px; width: 24px; height: 24px; }
+      mat-icon {
+        color: $white;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
     }
 
     h2 {
-      font-size: $font-size-lg;
+      font-size: $font-size-xl;
       font-weight: $font-weight-bold;
       color: $text-dark;
       margin: 0 0 4px;
@@ -112,69 +144,39 @@
     gap: $spacing-xl;
   }
 
-  .form-field {
-    label {
-      display: block;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-bold;
-      color: $text-secondary;
-      margin-bottom: $spacing-xs;
-    }
-  }
-
-  .override-input,
-  .override-textarea {
-    width: 100%;
-    padding: $spacing-sm $spacing-md;
-    border: 2px solid $gray-200;
-    border-radius: $border-radius-lg;
-    font-size: $font-size-md;
-    font-family: inherit;
-    color: $text-dark;
-    background: $gray-50;
-    transition: $transition-fast;
-
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
-    }
-  }
-
-  .override-textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-
   .warning-notice {
     display: flex;
     align-items: flex-start;
-    gap: $spacing-xs;
-    padding: $spacing-md;
-    background: rgba($warning, 0.08);
-    border: 1px solid rgba($warning, 0.2);
-    border-radius: $border-radius-md;
-    color: $warning;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    background: rgba($danger, 0.04);
+    border: 1px solid rgba($danger, 0.1);
+    border-radius: $border-radius-xl;
+    color: $danger;
     font-size: $font-size-sm;
+    line-height: 1.5;
+    margin-top: $spacing-md;
 
-    mat-icon { font-size: 20px; width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; }
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    span {
+      font-weight: $font-weight-medium;
+    }
   }
 
   .form-actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: $spacing-md;
     margin-top: $spacing-2xl;
     padding-top: $spacing-xl;
-    border-top: 1px solid rgba($white, 0.05);
-
-    button {
-      border-radius: $border-radius-xxl;
-      padding: $spacing-sm $spacing-xl;
-      font-weight: $font-weight-bold;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    border-top: 1px solid $gray-100;
   }
 
   .spinning {
@@ -182,7 +184,12 @@
   }
 
   @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
 }

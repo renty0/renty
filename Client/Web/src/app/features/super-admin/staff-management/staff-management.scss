@@ -1,6 +1,35 @@
 @use "../../../shared/styles" as *;
 @use "../../../shared/components-styles/tables.scss" as *;
 
+@mixin skeleton-animation {
+  background: linear-gradient(90deg,
+      rgba($primary-color, 0.02) 25%,
+      rgba($primary-color, 0.05) 50%,
+      rgba($primary-color, 0.02) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.data-container {
+  padding: $spacing-xl;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @include mobile {
+    padding: $spacing-md;
+  }
+}
+
 .error-state {
   @include flex-center;
   flex-direction: column;
@@ -9,24 +38,298 @@
   text-align: center;
   color: $danger;
 
-  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
 }
 
+// Modern Tabs
 .staff-tabs {
   margin-bottom: $spacing-xl;
+
+  ::ng-deep {
+    .mat-mdc-tab-header {
+      border-bottom: none;
+    }
+
+    .mat-mdc-tab-labels {
+      gap: $spacing-sm;
+    }
+
+    .mat-mdc-tab {
+      height: 44px;
+      border-radius: $border-radius-lg;
+      transition: all $transition-base;
+      opacity: 0.7;
+
+      &:hover {
+        background: rgba($primary-light, 0.05);
+        opacity: 1;
+      }
+
+      &.mdc-tab--active {
+        background: rgba($primary-color, 0.1);
+        opacity: 1;
+
+        .mdc-tab__text-label {
+          color: $primary-color;
+          font-weight: $font-weight-bold;
+        }
+      }
+
+      .mdc-tab-indicator__content {
+        display: none; // Hide the underline
+      }
+    }
+  }
 
   .tab-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 22px;
-    height: 22px;
+    min-width: 20px;
+    height: 20px;
     padding: 0 6px;
-    border-radius: 11px;
+    border-radius: $border-radius-sm;
     font-size: $font-size-xxs;
     font-weight: $font-weight-bold;
     background: rgba($primary-color, 0.1);
     color: $primary-color;
     margin-inline-start: $spacing-xs;
+    transition: all 0.3s ease;
+  }
+
+  .mat-mdc-tab--active .tab-count {
+    background: $primary-color;
+    color: $white;
+  }
+}
+
+// Table Card
+.table-card {
+  border-radius: $border-radius-2xl;
+  border: 1px solid rgba($primary-color, 0.05);
+  background: $white;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+}
+
+// User Cell
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    color: $white;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-sm;
+    box-shadow: $shadow-sm;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .full-name {
+      font-weight: $font-weight-bold;
+      color: $text-dark;
+    }
+
+    .verified-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: $primary-light;
+      margin-inline-start: 4px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.email-text {
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+// Role Badges
+.role-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.role-badge {
+  padding: 4px 10px;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-xxs;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: $gray-100;
+  color: $gray-600;
+
+  &.superadmin {
+    background: rgba($danger, 0.1);
+    color: $danger;
+  }
+
+  &.admin {
+    background: rgba($primary-light, 0.1);
+    color: $primary-light;
+  }
+
+  &.support {
+    background: rgba($info, 0.1);
+    color: $info;
+  }
+
+  &.expert {
+    background: rgba($success, 0.1);
+    color: $success;
+  }
+}
+
+// Status Indicators
+.status-active {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $success;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+}
+
+.status-inactive {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $gray-400;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+}
+
+// Actions
+.actions-cell {
+  display: flex;
+  gap: $spacing-xs;
+
+  button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    transition: all 0.2s ease;
+    background: transparent;
+    color: $gray-500;
+    border: 1px solid transparent;
+
+    &:hover:not(:disabled) {
+      background: rgba($primary-color, 0.05);
+      color: $primary-color;
+      border-color: rgba($primary-color, 0.1);
+    }
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+// No Data
+.no-data {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-3xl;
+  text-align: center;
+  color: $gray-400;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: $spacing-md;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0;
+    color: $text-dark;
+    font-weight: $font-weight-bold;
+  }
+
+  p {
+    margin: $spacing-xs 0 0;
+  }
+}
+
+// Skeletons
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: $border-radius-lg;
+  @include skeleton-animation;
+}
+
+.skeleton-text {
+  height: 12px;
+  border-radius: $border-radius-sm;
+  @include skeleton-animation;
+
+  &.name-skeleton {
+    width: 120px;
+    margin-inline-start: $spacing-md;
+  }
+
+  &.email-skeleton {
+    width: 180px;
+  }
+}
+
+.skeleton-badge {
+  width: 80px;
+  height: 24px;
+  border-radius: $border-radius-sm;
+  @include skeleton-animation;
+}
+
+.skeleton-toggle {
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  @include skeleton-animation;
+}
+
+.skeleton-actions {
+  width: 36px;
+  height: 36px;
+  border-radius: $border-radius-lg;
+  @include skeleton-animation;
+}
+
+// Paginator Override
+::ng-deep {
+  .mat-mdc-paginator {
+    background: transparent;
+    border-top: 1px solid rgba($primary-color, 0.05);
   }
 }

@@ -42,17 +42,19 @@ export class CreateTicketComponent {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
 
-  ticketType = signal('Issue');
+  ticketType = signal('General');
   message = signal('');
   isSubmitting = signal(false);
 
   private readonly submitSubject = new Subject<void>();
 
   types = [
-    { value: 'Issue', label: 'support.issue' },
-    { value: 'Feedback', label: 'support.feedback' },
-    { value: 'Inquiry', label: 'support.inquiry' },
-    { value: 'Other', label: 'support.other' }
+    { value: 'General', label: 'support.types.general' },
+    { value: 'Billing', label: 'support.types.billing' },
+    { value: 'Rental', label: 'support.types.rental' },
+    { value: 'Payment', label: 'support.types.payment' },
+    { value: 'Technical', label: 'support.types.technical' },
+    { value: 'Other', label: 'support.types.other' }
   ];
 
   constructor() {

@@ -81,19 +81,19 @@
         >
           <mat-icon>chat</mat-icon>
         </button>
-      }
 
       <!-- Authentication Specific Actions -->
-      @if (isLoggedIn()) {
-        <button
-          mat-stroked-button
-          color="accent"
-          routerLink="/items/new"
-          class="post-btn sm-hidden"
-        >
-          <mat-icon>add_a_photo</mat-icon>
-          <span>{{ 'nav.postProduct' | translate }}</span>
-        </button>
+        @if (canPostItems()) {
+          <button
+            mat-stroked-button
+            color="accent"
+            routerLink="/items/new"
+            class="post-btn sm-hidden"
+          >
+            <mat-icon>add_a_photo</mat-icon>
+            <span>{{ 'nav.postProduct' | translate }}</span>
+          </button>
+        }
 
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -115,30 +115,34 @@
             </div>
 
             <div class="section-group grid-layout">
-              <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
-                <mat-icon>shopping_bag</mat-icon>
-                <span>{{ 'nav.myOrders' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
-                <mat-icon>receipt_long</mat-icon>
-                <span>{{ 'nav.myRentals' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
-                <mat-icon>inventory_2</mat-icon>
-                <span>{{ 'nav.myItems' | translate }}</span>
-              </button>
+              @if (canViewOrders()) {
+                <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
+                  <mat-icon>shopping_bag</mat-icon>
+                  <span>{{ 'nav.myOrders' | translate }}</span>
+                </button>
+              }
+              @if (canViewRentals()) {
+                <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+                  <mat-icon>receipt_long</mat-icon>
+                  <span>{{ 'nav.myRentals' | translate }}</span>
+                </button>
+              }
+              @if (canViewItems()) {
+                <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
+                  <mat-icon>inventory_2</mat-icon>
+                  <span>{{ 'nav.myItems' | translate }}</span>
+                </button>
+              }
               <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
                 <mat-icon class="text-warn">favorite</mat-icon>
                 <span>{{ 'nav.favorites' | translate }}</span>
               </button>
-              <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
-                <mat-icon color="primary">account_balance_wallet</mat-icon>
-                <span>{{ 'nav.wallet' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/dashboard" (click)="closeMobileMenu()">
-                <mat-icon>dashboard</mat-icon>
-                <span>{{ 'nav.dashboard' | translate }}</span>
-              </button>
+              @if (canViewWallet()) {
+                <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
+                  <mat-icon color="primary">account_balance_wallet</mat-icon>
+                  <span>{{ 'nav.wallet' | translate }}</span>
+                </button>
+              }
               @if (isExpert()) {
                 <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
                   <mat-icon color="accent">fact_check</mat-icon>
@@ -158,10 +162,12 @@
                 <mat-icon>notifications</mat-icon>
                 <span>{{ 'nav.notifications' | translate }}</span>
               </button>
-              <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
-                <mat-icon>support_agent</mat-icon>
-                <span>{{ 'nav.support' | translate }}</span>
-              </button>
+              @if (canViewSupport()) {
+                <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
+                  <mat-icon>support_agent</mat-icon>
+                  <span>{{ 'nav.support' | translate }}</span>
+                </button>
+              }
             </div>
           </div>
 
@@ -173,15 +179,17 @@
         </mat-menu>
       } @else {
         <div class="auth-buttons sm-hidden">
-          <button
-            mat-stroked-button
-            color="accent"
-            routerLink="/items/new"
-            class="post-btn sm-hidden"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            <span>{{ 'nav.postProduct' | translate }}</span>
-          </button>
+          @if (canPostItems()) {
+            <button
+              mat-stroked-button
+              color="accent"
+              routerLink="/items/new"
+              class="post-btn sm-hidden"
+            >
+              <mat-icon>add_a_photo</mat-icon>
+              <span>{{ 'nav.postProduct' | translate }}</span>
+            </button>
+          }
 
           <div class="divider sm-hidden"></div>
 
@@ -213,14 +221,16 @@
           </div>
         </div>
 
-        <a
-          routerLink="/items/new"
-          class="mobile-link highlight-link"
-          (click)="closeMobileMenu()"
-        >
-          <mat-icon>add_a_photo</mat-icon>
-          {{ 'nav.postProduct' | translate }}
-        </a>
+        @if (canPostItems()) {
+          <a
+            routerLink="/items/new"
+            class="mobile-link highlight-link"
+            (click)="closeMobileMenu()"
+          >
+            <mat-icon>add_a_photo</mat-icon>
+            {{ 'nav.postProduct' | translate }}
+          </a>
+        }
 
         @for (link of filteredNavLinks(); track link.path) {
           <a
@@ -267,22 +277,28 @@
         </button>
 
         @if (isLoggedIn()) {
-          <a routerLink="/my-rentals" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>receipt_long</mat-icon>
-            {{ 'nav.myRentals' | translate }}
-          </a>
-          <a routerLink="/my-orders" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>shopping_bag</mat-icon>
-            {{ 'nav.myOrders' | translate }}
-          </a>
+          @if (canViewRentals()) {
+            <a routerLink="/my-rentals" class="mobile-link" (click)="closeMobileMenu()">
+              <mat-icon>receipt_long</mat-icon>
+              {{ 'nav.myRentals' | translate }}
+            </a>
+          }
+          @if (canViewOrders()) {
+            <a routerLink="/my-orders" class="mobile-link" (click)="closeMobileMenu()">
+              <mat-icon>shopping_bag</mat-icon>
+              {{ 'nav.myOrders' | translate }}
+            </a>
+          }
           <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
             <mat-icon>person</mat-icon>
             {{ 'nav.profile' | translate }}
           </a>
-          <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>account_balance_wallet</mat-icon>
-            {{ 'nav.wallet' | translate }}
-          </a>
+          @if (canViewWallet()) {
+            <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">
+              <mat-icon>account_balance_wallet</mat-icon>
+              {{ 'nav.wallet' | translate }}
+            </a>
+          }
           @if (isExpert()) {
             <a routerLink="/expert/assigned" class="mobile-link" (click)="closeMobileMenu()">
               <mat-icon color="accent">fact_check</mat-icon>
@@ -297,10 +313,12 @@
             <mat-icon>notifications</mat-icon>
             {{ 'nav.notifications' | translate }}
           </a>
-          <a routerLink="/support" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>support_agent</mat-icon>
-            {{ 'nav.support' | translate }}
-          </a>
+          @if (canViewSupport()) {
+            <a routerLink="/support" class="mobile-link" (click)="closeMobileMenu()">
+              <mat-icon>support_agent</mat-icon>
+              {{ 'nav.support' | translate }}
+            </a>
+          }
           <button class="mobile-link logout-link" (click)="logout()">
             <mat-icon>logout</mat-icon>
             {{ 'nav.logout' | translate }}

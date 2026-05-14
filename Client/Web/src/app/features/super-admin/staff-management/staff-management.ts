@@ -15,8 +15,6 @@ import { AdminClient, IAdminUserDto, UpdateUserStatusCommand } from '../../../co
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
-import { PermissionService } from '../../../core/services/permission.service';
-import { PermissionType } from '../../../core/constants/permissions';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { CreateUserDialogComponent } from '../../admin/user-management/create-user-dialog/create-user-dialog';
 
@@ -46,7 +44,6 @@ export class StaffManagementComponent implements OnInit {
   private authService = inject(AuthService);
   private toast = inject(ToastService);
   private dialog = inject(MatDialog);
-  private permissionService = inject(PermissionService);
   private translate = inject(TranslateService);
 
   allUsers = signal<IAdminUserDto[]>([]);
@@ -166,7 +163,7 @@ export class StaffManagementComponent implements OnInit {
   editRoles(user: IAdminUserDto): void {
     import('../../admin/user-management/assign-role-dialog/assign-role-dialog.component').then(m => {
       const dialogRef = this.dialog.open(m.AssignRoleDialogComponent, {
-        width: '400px',
+
         data: { user }
       });
 
