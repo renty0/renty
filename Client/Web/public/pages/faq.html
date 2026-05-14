@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الأسئلة الشائعة – رنتي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0c295e;
+      --navy-md: #1a365d;
+      --navy-dk: #153149;
+      --accent:  #0ea5e9;
+      --gold:    #ffd900;
+      --bg:      #f0f9ff;
+      --white:   #ffffff;
+      --gray:    #6b7280;
+      --success: #059669;
+      --danger:  #dc2626;
+      --radius:  16px;
+      --shadow:  0 4px 24px rgba(12,41,94,.09);
+      --shadow-lg: 0 8px 40px rgba(12,41,94,.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Alexandria', sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: fixed;
+      top: 0; right: 0; left: 0;
+      z-index: 999;
+      background: rgba(12,41,94,.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,217,0,.14);
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+    }
+    .nav-logo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 4px; align-items: center; }
+    .nav-links a {
+      color: rgba(255,255,255,.82);
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.12); }
+    .nav-links a.active { color: var(--navy); background: var(--gold); }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      background: var(--navy-dk);
+      padding: 12px 5vw 18px;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255,217,0,.15);
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      color: rgba(255,255,255,.82);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: background .2s;
+    }
+    .nav-mobile a.active { color: var(--navy); background: var(--gold); }
+    .nav-mobile a:hover { background: rgba(255,255,255,.1); color: var(--white); }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-dk) 0%, var(--navy) 50%, #1e4080 100%);
+      padding: 140px 5vw 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 55% at 50% 80%, rgba(14,165,233,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 60px;
+      background: var(--bg);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,217,0,.15);
+      border: 1px solid rgba(255,217,0,.35);
+      color: var(--gold);
+      font-size: .82rem;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 22px;
+    }
+    .hero-icon {
+      font-size: 3.6rem;
+      display: block;
+      margin-bottom: 18px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: clamp(.9rem, 2vw, 1.05rem);
+      color: rgba(255,255,255,.75);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ─── MAIN WRAP ─── */
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 52px 5vw 100px;
+    }
+
+    /* ─── SEARCH ─── */
+    .search-box {
+      position: relative;
+      margin-bottom: 32px;
+      animation: fadeUp .5s .15s ease both;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 16px 54px 16px 20px;
+      font-family: 'Alexandria', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy);
+      background: var(--white);
+      border: 2px solid rgba(12,41,94,.18);
+      border-radius: var(--radius);
+      outline: none;
+      box-shadow: var(--shadow);
+      transition: border-color .2s, box-shadow .2s;
+      direction: rtl;
+    }
+    .search-box input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(14,165,233,.12);
+    }
+    .search-box input::placeholder { color: var(--gray); font-weight: 400; }
+    .search-icon {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+    .result-count {
+      text-align: center;
+      font-size: .82rem;
+      color: var(--gray);
+      font-weight: 600;
+      margin-top: 10px;
+      min-height: 20px;
+      transition: opacity .2s;
+    }
+
+    /* ─── CATEGORY TABS ─── */
+    .tabs-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 32px;
+      animation: fadeUp .5s .2s ease both;
+    }
+    .tabs-wrap::-webkit-scrollbar { display: none; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding-bottom: 4px;
+      min-width: max-content;
+    }
+    .tab-btn {
+      font-family: 'Alexandria', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 50px;
+      border: 2px solid rgba(12,41,94,.15);
+      background: var(--white);
+      color: var(--navy-md);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tab-btn.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(12,41,94,.25);
+    }
+
+    /* ─── CATEGORY GROUP ─── */
+    .faq-group {
+      margin-bottom: 36px;
+      animation: fadeUp .45s ease both;
+    }
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .group-icon { font-size: 1.3rem; }
+    .group-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .group-bar {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to left, transparent, rgba(12,41,94,.15));
+      border-radius: 2px;
+    }
+
+    /* ─── ACCORDION ─── */
+    .accordion-item {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 10px;
+      border: 1px solid rgba(12,41,94,.06);
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .accordion-item:hover { box-shadow: var(--shadow-lg); }
+    .accordion-item.open {
+      border-right: 4px solid var(--navy);
+    }
+
+    .acc-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .acc-q-text {
+      font-size: .93rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .accordion-item.open .acc-q-text { color: var(--navy); }
+
+    .acc-chevron {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .75rem;
+      color: var(--gray);
+      flex-shrink: 0;
+      transition: transform .35s ease, background .2s, color .2s;
+    }
+    .accordion-item.open .acc-chevron {
+      transform: rotate(180deg);
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .acc-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .38s cubic-bezier(.4,0,.2,1);
+    }
+    .acc-answer-inner {
+      padding: 0 20px 18px;
+      font-size: .88rem;
+      color: #374151;
+      line-height: 1.8;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
+    }
+    .acc-answer-inner ol {
+      padding-right: 18px;
+      margin-top: 6px;
+    }
+    .acc-answer-inner ol li { margin-bottom: 5px; }
+
+    /* hidden state */
+    .accordion-item.hidden { display: none; }
+    .faq-group.hidden { display: none; }
+
+    /* ─── NO RESULTS ─── */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+    }
+    .no-results .nr-icon { font-size: 3rem; margin-bottom: 14px; }
+    .no-results p { font-size: .95rem; font-weight: 600; }
+
+    /* ─── CONTACT CTA ─── */
+    .contact-cta {
+      background: linear-gradient(135deg, var(--navy-dk) 0%, #1e4080 100%);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      color: var(--white);
+      margin-top: 56px;
+      animation: fadeUp .5s .5s ease both;
+      opacity: 0;
+    }
+    .contact-cta.visible { opacity: 1; }
+    .cta-emoji { font-size: 2.4rem; margin-bottom: 14px; }
+    .contact-cta h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+    .contact-cta p { font-size: .88rem; color: rgba(255,255,255,.72); margin-bottom: 24px; line-height: 1.7; }
+    .cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .btn-support {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Alexandria', sans-serif;
+      font-size: .95rem;
+      font-weight: 800;
+      padding: 13px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-support:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,217,0,.4); }
+    .cta-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      text-align: right;
+    }
+    .cta-meta span { font-size: .8rem; color: rgba(255,255,255,.65); }
+    .cta-meta a { color: var(--gold); font-size: .88rem; font-weight: 700; }
+    .cta-meta strong { color: var(--white); font-size: .82rem; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #0a0f15;
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      padding: 36px 5vw 24px;
+      font-size: .82rem;
+    }
+    .footer-logo {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      margin-bottom: 18px;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,.6);
+      text-decoration: none;
+      font-size: .82rem;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,.08); margin: 14px 0; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .faq-group:nth-child(1) { animation-delay: .25s; }
+    .faq-group:nth-child(2) { animation-delay: .3s; }
+    .faq-group:nth-child(3) { animation-delay: .35s; }
+    .faq-group:nth-child(4) { animation-delay: .4s; }
+    .faq-group:nth-child(5) { animation-delay: .45s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero { padding: 120px 5vw 70px; }
+      .wrap { padding: 40px 4vw 80px; }
+      .contact-cta { padding: 28px 20px; }
+      .cta-actions { flex-direction: column; align-items: center; }
+      .cta-meta { align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav>
+  <a class="nav-logo" href="#">رنتي<span>.</span></a>
+  <div class="nav-links">
+    <a href="#">من نحن</a>
+    <a href="#">الشروط والأحكام</a>
+    <a href="#">الخصوصية</a>
+    <a href="#" class="active">الأسئلة الشائعة</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="القائمة">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="#">من نحن</a>
+  <a href="#">الشروط والأحكام</a>
+  <a href="#">الخصوصية</a>
+  <a href="#" class="active">الأسئلة الشائعة</a>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-badge">💬 مركز المساعدة</div>
+  <span class="hero-icon">💬</span>
+  <h1>الأسئلة الشائعة</h1>
+  <p>كل ما تحتاج معرفته عن رنتي في مكان واحد — إجابات واضحة وسريعة.</p>
+</section>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="wrap">
+
+  <!-- SEARCH -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="ابحث عن سؤالك..." autocomplete="off" />
+    <div class="result-count" id="resultCount"></div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="tabs-wrap">
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-cat="all">الكل</button>
+      <button class="tab-btn" data-cat="register">البدء والتسجيل</button>
+      <button class="tab-btn" data-cat="rental">التأجير والحجز</button>
+      <button class="tab-btn" data-cat="payment">الدفع والأسعار</button>
+      <button class="tab-btn" data-cat="experts">الخبراء والجودة</button>
+      <button class="tab-btn" data-cat="disputes">النزاعات والمشكلات</button>
+      <button class="tab-btn" data-cat="account">الحساب والملف الشخصي</button>
+    </div>
+  </div>
+
+  <!-- NO RESULTS -->
+  <div class="no-results" id="noResults">
+    <div class="nr-icon">🔎</div>
+    <p>لم نجد نتائج مطابقة لبحثك.</p>
+    <p style="font-size:.82rem;margin-top:6px;color:#9ca3af;">جرّب كلمة مختلفة أو تواصل مع فريق الدعم.</p>
+  </div>
+
+  <!-- ══ GROUP 1: البدء والتسجيل ══ -->
+  <div class="faq-group" data-category="register">
+    <div class="group-header">
+      <span class="group-title">البدء والتسجيل</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="register">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف أسجّل في رنتي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">أنشئ حسابًا مجانيًا بإدخال اسمك، بريدك الإلكتروني، وكلمة مرور. ستتلقّى رسالة تفعيل على بريدك، ثم اختر نوع حسابك: <strong>مستأجر</strong> أو <strong>مالك</strong> أو <strong>عضو</strong> (كلاهما).</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="register">
+      <div class="acc-question">
+        <span class="acc-q-text">ما الفرق بين المالك والمستأجر والعضو؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">
+          <strong>المالك</strong> يعرض معداته للتأجير ويكسب دخلًا إضافيًا.<br>
+          <strong>المستأجر</strong> يتصفّح المعدات المتاحة ويستأجرها.<br>
+          <strong>العضو</strong> لديه صلاحيات كليهما — يمكنه التأجير والاستئجار في آنٍ واحد.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="register">
+      <div class="acc-question">
+        <span class="acc-q-text">هل التسجيل مجاني؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم، التسجيل وإنشاء الحساب مجاني تمامًا. رنتي تحصل على عمولة بسيطة <strong>عند اكتمال عملية التأجير فقط</strong> — لا رسوم شهرية أو اشتراكات.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="register">
+      <div class="acc-question">
+        <span class="acc-q-text">ما الحد الأدنى للسن للاستخدام؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">يجب أن يكون عمرك <strong>18 عامًا</strong> على الأقل لاستخدام منصة رنتي. الحسابات التي تخالف هذا الشرط تُحذف فور اكتشافها.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="register">
+      <div class="acc-question">
+        <span class="acc-q-text">هل يمكنني استخدام رنتي في أي محافظة مصرية؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم، رنتي متاحة في جميع المحافظات الـ27 في مصر. الكثافة الأعلى حاليًا في <strong>القاهرة، الجيزة، الإسكندرية، والبحر الأحمر</strong> — وتتوسع المنصة باستمرار.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GROUP 2: التأجير والحجز ══ -->
+  <div class="faq-group" data-category="rental">
+    <div class="group-header">
+      <span class="group-title">التأجير والحجز</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="rental">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف تسير عملية الإيجار خطوة بخطوة؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">
+          <ol>
+            <li>ابحث عن المعدة المناسبة وتصفّح الخيارات.</li>
+            <li>اختر تواريخ الإيجار وراجع الأسعار والتفاصيل.</li>
+            <li>أرسل طلب الإيجار للمالك.</li>
+            <li>يوافق المالك على الطلب خلال 48 ساعة.</li>
+            <li>ادفع بأمان عبر المنصة.</li>
+            <li>استلم المعدة (توصيل أو استلام مباشر حسب الاتفاق).</li>
+            <li>استخدم المعدة وأرجعها في الموعد المحدد.</li>
+            <li>قيّم التجربة وساعد المجتمع!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="rental">
+      <div class="acc-question">
+        <span class="acc-q-text">ماذا يحدث إذا لم يردّ المالك على طلبي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">إذا لم يردّ المالك خلال <strong>48 ساعة</strong> من إرسال الطلب، يُلغى الطلب تلقائيًا ويُردّ إليك المبلغ المحجوز كاملًا دون أي خصومات.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="rental">
+      <div class="acc-question">
+        <span class="acc-q-text">هل يمكنني تمديد فترة الإيجار؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم! أرسل طلب تمديد من صفحة تفاصيل الإيجار. عند موافقة المالك، يُحسب فرق السعر تلقائيًا ويُضاف للدفع، شريطة ألّا يكون هناك حجز آخر على نفس المعدة في الفترة المطلوبة.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="rental">
+      <div class="acc-question">
+        <span class="acc-q-text">هل يمكنني إلغاء الحجز؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم، يمكن الإلغاء وفق سياسة الإلغاء التي اختارها المالك عند نشر المعدة: <strong>مرنة</strong> (استرداد كامل قبل 24 ساعة)، <strong>معتدلة</strong> (استرداد جزئي)، أو <strong>صارمة</strong>. راجع صفحة الشروط والأحكام للتفاصيل الكاملة.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="rental">
+      <div class="acc-question">
+        <span class="acc-q-text">ما هو مبلغ التأمين (الوديعة)؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">يحدد المالك مبلغ التأمين لكل منتج بناءً على قيمته. يُحجز المبلغ عند الدفع ويُردّ خلال <strong>5 أيام عمل</strong> بعد تأكيد إرجاع المعدة بحالة جيدة.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GROUP 3: الدفع والأسعار ══ -->
+  <div class="faq-group" data-category="payment">
+    <div class="group-header">
+      <span class="group-title">الدفع والأسعار</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="payment">
+      <div class="acc-question">
+        <span class="acc-q-text">ما طرق الدفع المتاحة؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">
+          ندعم طرق الدفع الأكثر شيوعًا في مصر:<br><br>
+          💚 <strong>Vodafone Cash</strong> &nbsp;|&nbsp; 🟠 <strong>Fawry</strong> &nbsp;|&nbsp; 🔵 <strong>Paymob</strong><br>
+          💳 <strong>بطاقات الائتمان والخصم</strong> &nbsp;|&nbsp; 🏦 <strong>التحويل البنكي</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="payment">
+      <div class="acc-question">
+        <span class="acc-q-text">متى يُخصم المبلغ من حسابي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">يُحجز المبلغ <strong>فور موافقتك على الحجز</strong>، لكنه لا يُحوَّل للمالك إلا بعد تأكيد استلام المعدة وبدء فترة الإيجار فعليًا — لضمان حقوق الطرفين.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="payment">
+      <div class="acc-question">
+        <span class="acc-q-text">هل توجد رسوم خفية؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">لا على الإطلاق. جميع التكاليف تظهر بوضوح <strong>قبل تأكيد الحجز</strong>: سعر الإيجار، مبلغ التأمين، رسوم الخبير (إن طُلبت)، ورسوم الخدمة. ما تراه هو ما تدفعه.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="payment">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف يحصل المالك على أمواله؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">بعد تأكيد اكتمال الإيجار وإرجاع المعدة بحالة جيدة، تُحوَّل الأموال للمالك خلال <strong>3-5 أيام عمل</strong> عبر طريقة الدفع المسجَّلة في حسابه.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="payment">
+      <div class="acc-question">
+        <span class="acc-q-text">هل الدفع آمن؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم تمامًا. جميع المعاملات مشفّرة بتقنية SSL ومعالَجة عبر بوابات دفع معتمدة. <strong>لا نحتفظ ببيانات بطاقاتك</strong> على خوادمنا.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GROUP 4: الخبراء والجودة ══ -->
+  <div class="faq-group" data-category="experts">
+    <div class="group-header">
+      <span class="group-title">الخبراء والجودة</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="experts">
+      <div class="acc-question">
+        <span class="acc-q-text">من هم خبراء رنتي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">خبراء رنتي متخصصون <strong>معتمدون من قِبَل المنصة</strong>، لديهم خبرة موثَّقة في تقييم المعدات الرياضية (بادل، رياضات مائية، دراجات، تخييم وغيرها). يفحصون المعدة قبل وبعد كل إيجار لضمان مطابقتها للوصف وسلامتها.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="experts">
+      <div class="acc-question">
+        <span class="acc-q-text">هل فحص الخبير إلزامي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">لا، ليس إلزاميًا، لكنّه <strong>مُوصى به بشدة</strong> خاصةً للمعدات ذات القيمة المرتفعة كمعدات الغوص أو الكايتسرفينج. الفحص يحمي كلا الطرفين ويُقلّل احتمالية النزاعات.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="experts">
+      <div class="acc-question">
+        <span class="acc-q-text">من يتحمّل تكلفة فحص الخبير؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">تُوزَّع التكلفة وفق سياسة المنصة المحدَّثة، وتظهر <strong>بوضوح قبل تأكيد الحجز</strong> ضمن تفاصيل التكاليف حتى لا تُفاجَأ.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="experts">
+      <div class="acc-question">
+        <span class="acc-q-text">ماذا يحدث إذا رفض الخبير المعدة؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">إذا رفض الخبير المعدة لعدم مطابقتها للمعايير أو الوصف، يُلغى الإيجار ويُردّ للمستأجر مبلغه <strong>كاملًا</strong>. يتلقّى المالك تقرير الخبير المفصَّل لمعالجة المشكلة قبل إعادة نشر المعدة.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GROUP 5: النزاعات والمشكلات ══ -->
+  <div class="faq-group" data-category="disputes">
+    <div class="group-header">
+      <span class="group-title">النزاعات والمشكلات</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="disputes">
+      <div class="acc-question">
+        <span class="acc-q-text">ماذا أفعل إذا وصلتني المعدة تالفة أو مختلفة عن الوصف؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">افتح نزاعًا من صفحة تفاصيل الإيجار خلال <strong>7 أيام</strong> من الاستلام، وارفق صورًا وشرحًا واضحًا. سيراجع فريق الدعم القضية ويصدر قرارًا خلال <strong>5 أيام عمل</strong>.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="disputes">
+      <div class="acc-question">
+        <span class="acc-q-text">ماذا يحدث إذا تأخّر المستأجر في إرجاع المعدة؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">تُطبَّق <strong>رسوم تأخير يومية</strong> يحددها المالك مسبقًا وتظهر في صفحة المنتج. إذا تجاوز التأخير حدًا معينًا يحدده النظام، يمكن للمالك رفع تقرير رسمي عبر المنصة.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="disputes">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف يُحسم النزاع بين المالك والمستأجر؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">يُرسل كلا الطرفين حججهما وأدلتهما (صور، رسائل، تقارير الخبير). يراجع فريق دعم رنتي جميع المعطيات ويتخذ قرارًا <strong>ملزمًا وعادلًا</strong> خلال 5 أيام عمل. قرار المنصة نهائي وفق الشروط والأحكام.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="disputes">
+      <div class="acc-question">
+        <span class="acc-q-text">هل يمكنني الإبلاغ عن منتج مزيّف أو مضلّل؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">نعم. في صفحة تفاصيل المنتج، اضغط زر <strong>"إبلاغ"</strong> واختر السبب المناسب. عند وصول <strong>3 بلاغات</strong> على منتج واحد، تُجرى مراجعة فورية من فريق الإدارة.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GROUP 6: الحساب والملف الشخصي ══ -->
+  <div class="faq-group" data-category="account">
+    <div class="group-header">
+      <span class="group-title">الحساب والملف الشخصي</span>
+      <div class="group-bar"></div>
+    </div>
+
+    <div class="accordion-item" data-category="account">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف أُعدّل بيانات حسابي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">اذهب إلى <strong>الملف الشخصي ← تعديل المعلومات الشخصية</strong>. يمكنك تغيير الاسم، الصورة، رقم الهاتف، والمدينة. التغييرات تُطبَّق فورًا.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="account">
+      <div class="acc-question">
+        <span class="acc-q-text">كيف أحذف حسابي؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">من <strong>الإعدادات ← حذف الحساب</strong>. سيتم حذف بياناتك نهائيًا خلال <strong>90 يومًا</strong> وفق سياسة الخصوصية. ملاحظة: لا يمكن حذف الحساب إذا كان لديك إيجارات نشطة أو مبالغ معلّقة.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="account">
+      <div class="acc-question">
+        <span class="acc-q-text">نسيت كلمة المرور، ماذا أفعل؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">من صفحة تسجيل الدخول، اضغط <strong>"نسيت كلمة المرور؟"</strong>، أدخل بريدك الإلكتروني وستصلك رسالة فيها رابط لإعادة التعيين. انتبه: <strong>تنتهي صلاحية الرابط بعد ساعة</strong> واحدة.</div>
+      </div>
+    </div>
+
+    <div class="accordion-item" data-category="account">
+      <div class="acc-question">
+        <span class="acc-q-text">هل يمكنني امتلاك حسابين؟</span>
+        <span class="acc-chevron">▼</span>
+      </div>
+      <div class="acc-answer">
+        <div class="acc-answer-inner">لا. يُسمح بـ<strong>حساب واحد فقط</strong> لكل شخص. إنشاء حسابات متعددة يُعدّ مخالفة صريحة للشروط والأحكام ويؤدي إلى إيقاف جميع الحسابات المرتبطة.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT CTA -->
+  <div class="contact-cta visible">
+    <div class="cta-emoji">🤝</div>
+    <h2>لم تجد إجابة لسؤالك؟</h2>
+    <p>فريق دعم رنتي جاهز لمساعدتك. تواصل معنا ونحن سنردّ في أقرب وقت.</p>
+    <div class="cta-actions">
+      <a href="mailto:support@renty.com" class="btn-support">تواصل مع الدعم</a>
+      <div class="cta-meta">
+        <a href="mailto:support@renty.com">support@renty.com</a>
+        <strong>🕘 9 صباحًا – 10 مساءً &nbsp;|&nbsp; يوميًا</strong>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-logo">رنتي<span>.</span></div>
+  <div class="footer-links">
+    <a href="#">من نحن</a>
+    <a href="#">الشروط والأحكام</a>
+    <a href="#">الخصوصية</a>
+    <a href="#">الأسئلة الشائعة</a>
+  </div>
+  <div class="footer-divider"></div>
+  <p>© 2026 رنتي. جميع الحقوق محفوظة. منصة تأجير المعدات الرياضية من نظير إلى نظير في مصر.</p>
+</footer>
+
+<script>
+  // ─── HAMBURGER ───
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('nav-mobile');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    mob.classList.toggle('open');
+  });
+
+  // ─── ACCORDION ───
+  document.querySelectorAll('.acc-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const answer = item.querySelector('.acc-answer');
+      const isOpen = item.classList.contains('open');
+
+      // close all in same group
+      const group = item.closest('.faq-group');
+      group.querySelectorAll('.accordion-item.open').forEach(o => {
+        o.classList.remove('open');
+        o.querySelector('.acc-answer').style.maxHeight = '0';
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ─── CATEGORY TABS ───
+  const tabs = document.querySelectorAll('.tab-btn');
+  const groups = document.querySelectorAll('.faq-group');
+  const allItems = document.querySelectorAll('.accordion-item');
+
+  function applyCategory(cat) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+    groups.forEach(g => {
+      if (cat === 'all' || g.dataset.category === cat) {
+        g.classList.remove('hidden');
+      } else {
+        g.classList.add('hidden');
+      }
+    });
+    updateCount();
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      applyCategory(tab.dataset.cat);
+      // restore hidden items if switching tabs
+      allItems.forEach(i => i.classList.remove('hidden'));
+      applyCategory(tab.dataset.cat);
+    });
+  });
+
+  // ─── SEARCH ───
+  const searchInput = document.getElementById('searchInput');
+  const noResults   = document.getElementById('noResults');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+
+    // reset tab selection visually
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === 'all'));
+    groups.forEach(g => g.classList.remove('hidden'));
+
+    if (!q) {
+      allItems.forEach(i => i.classList.remove('hidden'));
+      updateCount();
+      return;
+    }
+
+    allItems.forEach(item => {
+      const text = item.querySelector('.acc-q-text').textContent.toLowerCase()
+                 + item.querySelector('.acc-answer-inner').textContent.toLowerCase();
+      item.classList.toggle('hidden', !text.includes(q));
+    });
+
+    // hide groups with no visible items
+    groups.forEach(g => {
+      const visible = [...g.querySelectorAll('.accordion-item')].some(i => !i.classList.contains('hidden'));
+      g.classList.toggle('hidden', !visible);
+    });
+
+    updateCount();
+  });
+
+  function updateCount() {
+    const visible = [...allItems].filter(i => !i.classList.contains('hidden'));
+    const rc = document.getElementById('resultCount');
+    const q = searchInput.value.trim();
+    if (q) {
+      rc.textContent = visible.length
+        ? `${visible.length} نتيجة مطابقة`
+        : '';
+    } else {
+      rc.textContent = '';
+    }
+    noResults.style.display = (visible.length === 0 && q) ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>
