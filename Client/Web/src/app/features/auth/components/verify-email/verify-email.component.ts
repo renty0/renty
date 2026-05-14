@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -10,6 +10,9 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { finalize } from 'rxjs';
 import { emailValidator } from '../../../../validators/email.validator';
 
+import { AuthClient, SendEmailConfirmationCommand } from '../../../../core/api/api-client';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-verify-email',
   standalone: true,
@@ -20,20 +23,25 @@ import { emailValidator } from '../../../../validators/email.validator';
     TranslatePipe,
     InputComponent,
     LoadingButtonComponent,
+    MatIconModule,
   ],
   templateUrl: './verify-email.component.html',
-  styleUrl: '../login/login.scss',
+  styleUrl: './verify-email.component.scss',
 })
-export class VerifyEmailComponent implements OnInit {
+export class VerifyEmailComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private toast = inject(ToastService);
   private translate = inject(TranslateService);
+  private authClient = inject(AuthClient);
 
   loading = signal(false);
   verified = signal(false);
+
+  countdown = signal(30);
+  private resendInterval: any;
 
   verifyForm = this.fb.group({
     email: ['', [Validators.required, emailValidator()]],
@@ -45,11 +53,58 @@ export class VerifyEmailComponent implements OnInit {
     const code = this.route.snapshot.queryParamMap.get('code');
     if (email) {
       this.verifyForm.patchValue({ email });
+      this.startResendTimer();
     }
     if (email && code) {
       this.verifyForm.patchValue({ code });
       this.submit();
     }
+  }
+
+  ngOnDestroy() {
+    if (this.resendInterval) {
+      clearInterval(this.resendInterval);
+    }
+  }
+
+  startResendTimer() {
+    this.countdown.set(30);
+    if (this.resendInterval) {
+      clearInterval(this.resendInterval);
+    }
+    this.resendInterval = setInterval(() => {
+      if (this.countdown() > 0) {
+        this.countdown.update((c) => c - 1);
+      } else {
+        clearInterval(this.resendInterval);
+      }
+    }, 1000);
+  }
+
+  resendCode() {
+    if (this.countdown() > 0) return;
+
+    const email = this.verifyForm.value.email;
+    if (!email) return;
+
+    this.loading.set(true);
+    const command = new SendEmailConfirmationCommand({ email });
+    this.authClient
+      .authSendVerification(command)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (response) => {
+          if (!response.error) {
+            this.toast.showSuccess(this.translate.instant('verifyEmail.resendCode'));
+            this.startResendTimer();
+          } else {
+            this.toast.showError(response.messages?.[0] || this.translate.instant('common.error'));
+          }
+        },
+        error: () => {
+          this.toast.showError(this.translate.instant('common.error'));
+        },
+      });
   }
 
   submit() {

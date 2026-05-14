@@ -202,7 +202,10 @@
     "submit": "Verify email",
     "success": "Your email has been verified. You can now sign in.",
     "failed": "Verification failed. Please check the code and try again.",
-    "backToLogin": "Back to login"
+    "backToLogin": "Back to login",
+    "codeSentTo": "We have sent a verification code to",
+    "resendCode": "Resend Code",
+    "resendIn": "Resend in {{seconds}}s"
   },
   "labels": {
     "email": "Email Address",
@@ -213,6 +216,7 @@
     "condition": "Condition",
     "location": "Location",
     "mapLocation": "Map Location",
+    "code": "Code",
     "category": "Category",
     "message": "Message",
     "subject": "Subject",

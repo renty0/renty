@@ -83,17 +83,15 @@
         </button>
 
       <!-- Authentication Specific Actions -->
-        @if (canPostItems()) {
-          <button
-            mat-stroked-button
-            color="accent"
-            routerLink="/items/new"
-            class="post-btn sm-hidden"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            <span>{{ 'nav.postProduct' | translate }}</span>
-          </button>
-        }
+        <button
+          mat-stroked-button
+          color="accent"
+          routerLink="/items/new"
+          class="post-btn sm-hidden"
+        >
+          <mat-icon>add_a_photo</mat-icon>
+          <span>{{ 'nav.postProduct' | translate }}</span>
+        </button>
 
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -110,6 +108,7 @@
           </div>
 
           <div class="menu-sections">
+            <!-- Profile (full width) -->
             <div class="section-group">
               <button mat-menu-item routerLink="/profile">
                 <mat-icon>person</mat-icon>
@@ -117,45 +116,46 @@
               </button>
             </div>
 
+            <!-- 2-column grid: Orders, Rentals, Items, Favorites -->
             <div class="section-group grid-layout">
-              @if (canViewOrders()) {
-                <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
-                  <mat-icon>shopping_bag</mat-icon>
-                  <span>{{ 'nav.myOrders' | translate }}</span>
-                </button>
-              }
-              @if (canViewRentals()) {
-                <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
-                  <mat-icon>receipt_long</mat-icon>
-                  <span>{{ 'nav.myRentals' | translate }}</span>
-                </button>
-              }
-              @if (canViewItems()) {
-                <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
-                  <mat-icon>inventory_2</mat-icon>
-                  <span>{{ 'nav.myItems' | translate }}</span>
-                </button>
-              }
+              <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
+                <mat-icon>shopping_bag</mat-icon>
+                <span>{{ 'nav.myOrders' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+                <mat-icon>receipt_long</mat-icon>
+                <span>{{ 'nav.myRentals' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
+                <mat-icon>inventory_2</mat-icon>
+                <span>{{ 'nav.myItems' | translate }}</span>
+              </button>
               <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
                 <mat-icon class="text-warn">favorite</mat-icon>
                 <span>{{ 'nav.favorites' | translate }}</span>
               </button>
-              @if (canViewWallet()) {
-                <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
-                  <mat-icon color="primary">account_balance_wallet</mat-icon>
-                  <span>{{ 'nav.wallet' | translate }}</span>
-                </button>
-              }
-              @if (isExpert()) {
+            </div>
+
+            <!-- Wallet (full width) -->
+            <div class="section-group">
+              <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
+                <mat-icon color="primary">account_balance_wallet</mat-icon>
+                <span>{{ 'nav.wallet' | translate }}</span>
+              </button>
+            </div>
+
+            @if (isExpert()) {
+              <div class="section-group">
                 <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
                   <mat-icon color="accent">fact_check</mat-icon>
                   <span>{{ 'expert.assigned.title' | translate }}</span>
                 </button>
-              }
-            </div>
+              </div>
+            }
 
             <hr class="menu-divider" />
 
+            <!-- Secondary 3-column grid: Chats, Notifications, Support -->
             <div class="section-group grid-layout secondary">
               <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
                 <mat-icon>chat</mat-icon>
@@ -165,12 +165,10 @@
                 <mat-icon>notifications</mat-icon>
                 <span>{{ 'nav.notifications' | translate }}</span>
               </button>
-              @if (canViewSupport()) {
-                <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
-                  <mat-icon>support_agent</mat-icon>
-                  <span>{{ 'nav.support' | translate }}</span>
-                </button>
-              }
+              <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
+                <mat-icon>support_agent</mat-icon>
+                <span>{{ 'nav.support' | translate }}</span>
+              </button>
             </div>
           </div>
 

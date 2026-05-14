@@ -45,6 +45,9 @@ export class NavbarComponent implements OnInit {
   canViewDashboard = computed(() => this.permissionService.hasPermission(PermissionType.Dashboards_View));
   canPostItems = computed(() => this.permissionService.hasPermission(PermissionType.Items_Create));
 
+  // Show standard user menu items for any logged-in user
+  isUser = computed(() => this.isLoggedIn());
+
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
   searchTerm = signal('');
