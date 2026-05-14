@@ -79,7 +79,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
             "New Support Ticket",
             $"{userName} opened a new '{ticketType}' ticket.",
             "support",
-            $"/support/tickets/{ticket.Id}",
+            $"/support/{ticket.Id}",
             ct);
 
         return new CreateTicketResponse(true, null, ticket.Id);
@@ -227,7 +227,7 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
                 "Support Reply",
                 "A support agent has replied to your ticket.",
                 "support",
-                $"/support/tickets/{ticket.Id}",
+                $"/support/{ticket.Id}",
                 ct);
         }
         else
@@ -239,7 +239,7 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
                 "New Ticket Message",
                 $"New message on ticket #{ticket.Id.ToString().Substring(0, 8)}",
                 "support",
-                $"/support/tickets/{ticket.Id}",
+                $"/support/{ticket.Id}",
                 ct);
         }
 

@@ -71,9 +71,9 @@
 
         <mat-tab [label]="'profile.reviews' | translate">
           <div class="reviews-section mt-4">
-            @if (mockReviews().length > 0) {
+            @if (reviews().length > 0) {
               <div class="reviews-list">
-                @for (review of mockReviews(); track review.id) {
+                @for (review of reviews(); track review.id) {
                   <div class="review-card glass-card">
                     <div class="reviewer-header">
                       <div class="reviewer-avatar">

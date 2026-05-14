@@ -1,5 +1,4 @@
 <div class="support-hub-wrapper">
-  <!-- Trigger Button -->
   <button class="hub-trigger" [class.active]="isOpen()" (click)="toggleHub()">
     <mat-icon>{{ isOpen() ? 'close' : 'support_agent' }}</mat-icon>
     @if (!isOpen()) {
@@ -7,7 +6,6 @@
     }
   </button>
 
-  <!-- Hub Panel -->
   @if (isOpen()) {
     <div class="hub-panel" @hubAnimation>
       <div class="hub-header">
@@ -21,35 +19,58 @@
       </div>
 
       <div class="hub-body custom-scrollbar">
-        <!-- Help Search -->
-        <div class="search-section">
-          <div class="hub-search-box">
-            <mat-icon>search</mat-icon>
-            <input 
-              type="text" 
-              [placeholder]="'support.hub.searchPlaceholder' | translate"
-              [ngModel]="searchQuery()"
-              (ngModelChange)="searchQuery.set($event)"
-            >
+        @if (!isSupport()) {
+          <div class="search-section">
+            <div class="hub-search-box">
+              <mat-icon>search</mat-icon>
+              <input 
+                type="text" 
+                [placeholder]="'support.hub.searchPlaceholder' | translate"
+                [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event)"
+              >
+            </div>
           </div>
-        </div>
 
-        <!-- Quick Actions Grid -->
-        <div class="actions-section">
-          <span class="section-label">{{ 'support.hub.quickActions' | translate }}</span>
-          <div class="actions-grid">
-            @for (action of quickActions; track action.id) {
-              <div class="action-card" (click)="onAction(action.id)">
-                <div class="action-icon" [style.background-color]="action.color">
-                  <mat-icon>{{ action.icon }}</mat-icon>
+          <div class="actions-section">
+            <span class="section-label">{{ 'support.hub.quickActions' | translate }}</span>
+            <div class="actions-grid">
+              @for (action of quickActions; track action.id) {
+                <div class="action-card" (click)="onAction(action.id)">
+                  <div class="action-icon" [style.background-color]="action.color">
+                    <mat-icon>{{ action.icon }}</mat-icon>
+                  </div>
+                  <span>{{ action.labelKey | translate }}</span>
                 </div>
-                <span>{{ action.labelKey | translate }}</span>
-              </div>
-            }
+              }
+            </div>
           </div>
-        </div>
+        } @else {
+          <div class="staff-greeting-section">
+            <div class="greeting-content">
+              <h4>{{ 'support.hub.staffGreeting' | translate }}</h4>
+              <p>{{ 'support.hub.staffSubtitle' | translate }}</p>
+            </div>
+          </div>
+          
+          <div class="actions-section">
+            <div class="actions-grid">
+              <div class="action-card" routerLink="/support" (click)="closeHub()">
+                <div class="action-icon" style="background-color: #2ED573">
+                  <mat-icon>dashboard</mat-icon>
+                </div>
+                <span>{{ 'support.hub.dashboard' | translate }}</span>
+              </div>
+              <div class="action-card" routerLink="/support" [queryParams]="{filter: 'open'}" (click)="closeHub()">
+                <div class="action-icon" style="background-color: #1E90FF">
+                  <mat-icon>assignment</mat-icon>
+                </div>
+                <span>{{ 'support.hub.openTickets' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        }
 
-        <!-- Recent Conversations (Only if logged in) -->
         @if (isLoggedIn()) {
           <div class="recent-section">
             <div class="section-header">
@@ -90,15 +111,21 @@
       </div>
 
       <div class="hub-footer">
-        <button mat-flat-button color="primary" class="new-chat-btn" routerLink="/support/new" (click)="closeHub()">
-          <mat-icon>add_comment</mat-icon>
-          {{ 'support.hub.startChat' | translate }}
-        </button>
+        @if (!isSupport()) {
+          <button mat-flat-button color="primary" class="new-chat-btn" routerLink="/support/new" (click)="closeHub()">
+            <mat-icon>add_comment</mat-icon>
+            {{ 'support.hub.startChat' | translate }}
+          </button>
+        } @else {
+          <button mat-flat-button color="primary" class="new-chat-btn" routerLink="/support" (click)="closeHub()">
+            <mat-icon>dashboard</mat-icon>
+            {{ 'support.hub.dashboard' | translate }}
+          </button>
+        }
       </div>
     </div>
-  }\n</div>
+  }</div>
 
-<!-- Live Support Chat Window (outside hub panel, fixed position) -->
 @if (activeLiveChat()) {
   <app-live-support-chat
     [ticketId]="activeLiveChat()!.ticketId"

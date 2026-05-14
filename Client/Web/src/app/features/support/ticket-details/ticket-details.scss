@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 120px);
-  max-width: 1000px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: $spacing-lg;
   gap: $spacing-lg;
@@ -62,11 +62,64 @@
 
     .status-badge {
       .status-select {
-        width: 180px;
+        width: 200px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-        ::ng-deep .mdc-text-field--outlined {
-          border-radius: $border-radius-lg;
-          background: rgba($primary-color, 0.03);
+        ::ng-deep {
+          .mdc-text-field--outlined {
+            border-radius: $border-radius-xxl;
+            transition: all 0.3s ease;
+            background: rgba($primary-color, 0.05);
+          }
+          
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__trailing,
+          .mdc-notched-outline__notch {
+            border-color: transparent !important;
+            transition: all 0.3s ease;
+          }
+
+          .mat-mdc-select-value-text {
+            font-weight: $font-weight-bold;
+            font-size: $font-size-sm;
+            display: flex;
+            align-items: center;
+          }
+
+          .mat-mdc-select-arrow {
+            color: inherit;
+          }
+
+          .mat-mdc-form-field-infix {
+            padding: 8px 16px;
+            min-height: 40px;
+          }
+        }
+
+        &:hover ::ng-deep .mdc-text-field--outlined {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* Dynamic Status Colors */
+        &.open {
+          ::ng-deep .mdc-text-field--outlined { background: rgba($primary-color, 0.1); }
+          ::ng-deep .mat-mdc-select-value-text, ::ng-deep .mat-mdc-select-arrow { color: $primary-color; }
+        }
+        &.awaitingsupport {
+          ::ng-deep .mdc-text-field--outlined { background: rgba($danger, 0.1); }
+          ::ng-deep .mat-mdc-select-value-text, ::ng-deep .mat-mdc-select-arrow { color: $danger; }
+        }
+        &.awaitingcustomer {
+          ::ng-deep .mdc-text-field--outlined { background: rgba($warning, 0.1); }
+          ::ng-deep .mat-mdc-select-value-text, ::ng-deep .mat-mdc-select-arrow { color: color-mix(in srgb, #{$warning}, black 15%); }
+        }
+        &.resolved {
+          ::ng-deep .mdc-text-field--outlined { background: rgba($success, 0.1); }
+          ::ng-deep .mat-mdc-select-value-text, ::ng-deep .mat-mdc-select-arrow { color: color-mix(in srgb, #{$success}, black 10%); }
+        }
+        &.closed {
+          ::ng-deep .mdc-text-field--outlined { background: rgba($text-muted, 0.1); }
+          ::ng-deep .mat-mdc-select-value-text, ::ng-deep .mat-mdc-select-arrow { color: $text-muted; }
         }
       }
 

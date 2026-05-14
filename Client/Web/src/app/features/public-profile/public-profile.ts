@@ -32,27 +32,10 @@ export class PublicProfileComponent implements OnInit {
   profile = signal<any>(null);
   isLoading = signal(true);
 
-  // MOCK DATA until backend is ready
-  mockReviews = signal<any[]>([
-    {
-      id: '1',
-      reviewerName: 'Ahmed Ali',
-      reviewerImage: 'assets/profile.webp',
-      rating: 5,
-      comment: 'Great person to deal with. The item was exactly as described and in perfect condition.',
-      createdAt: new Date(Date.now() - 86400000 * 2),
-      role: 'owner'
-    },
-    {
-      id: '2',
-      reviewerName: 'Sara Kamel',
-      reviewerImage: '',
-      rating: 4,
-      comment: 'Very smooth transaction. Was a bit late for pickup but overall great.',
-      createdAt: new Date(Date.now() - 86400000 * 10),
-      role: 'renter'
-    }
-  ]);
+  reviews = computed(() => {
+    const p = this.profile();
+    return p?.reviews || [];
+  });
 
   ownerRating = computed(() => {
     const p = this.profile();

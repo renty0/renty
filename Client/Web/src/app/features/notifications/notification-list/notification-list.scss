@@ -1,48 +1,153 @@
+@use "../../../shared/styles" as *;
+
 .notifications-container {
-  padding: 2rem;
+  padding: $spacing-xl;
   max-width: 1600px;
   margin: 0 auto;
 
   .notifications-content {
-    margin-top: 2rem;
-  }
-
-  .glass-card {
-    background: #ffffff;
-    backdrop-filter: blur(12px);
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-top: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
   }
 
   .notification-item {
-    padding: 1rem 0;
-    transition: background 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    padding: $spacing-lg;
+    background: $white;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-sm;
+    border: 1px solid $gray-200;
+    transition: $transition-base;
+    position: relative;
+    overflow: hidden;
+    gap: $spacing-md;
+
+    :host-context(body.dark-mode) & {
+      background: $gray-900;
+      border-color: $gray-800;
+    }
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
 
     &.unread {
-      background: rgba(12, 41, 94, 0.06);
+      background: rgba($primary-color, 0.02);
+      border-color: rgba($primary-color, 0.2);
 
-      .notif-title {
-        font-weight: 700;
-        color: #111827;
+      :host-context(body.dark-mode) & {
+        background: rgba($primary-color, 0.05);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: $primary-color;
+        
+        :host-context([dir="rtl"]) & {
+          left: auto;
+          right: 0;
+        }
       }
     }
 
-    .notif-title {
-      font-size: 1.1rem;
-      margin-bottom: 0.2rem;
-      color: #1f2937;
+    .icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: $border-radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background-color: $gray-100;
+      color: $text-muted;
+
+      :host-context(body.dark-mode) & {
+        background-color: $gray-800;
+        color: $gray-300;
+      }
+
+      // Type-specific colors
+      &.rental { background-color: rgba($success, 0.1); color: $success; }
+      &.chat { background-color: rgba($primary-color, 0.1); color: $primary-color; }
+      &.support { background-color: rgba($warning, 0.1); color: $warning; }
+      &.reminder { background-color: rgba($danger, 0.1); color: $danger; }
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
     }
 
-    .notif-body {
-      color: #4b5563;
-      margin-bottom: 0.2rem;
-    }
+    .content-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
 
-    .notif-time {
-      font-size: 0.8rem;
-      color: #9ca3af;
+      .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .notif-title {
+          font-size: $font-size-md;
+          font-weight: $font-weight-semibold;
+          color: $text-dark;
+
+          :host-context(body.dark-mode) & {
+            color: $gray-100;
+          }
+        }
+
+        .notif-time {
+          font-size: $font-size-xs;
+          color: $text-muted;
+          white-space: nowrap;
+          
+          :host-context(body.dark-mode) & {
+            color: $gray-400;
+          }
+        }
+      }
+
+      .notif-message {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        line-height: 1.5;
+        margin-bottom: $spacing-sm;
+
+        :host-context(body.dark-mode) & {
+          color: $gray-300;
+        }
+      }
+
+      .actions-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: $spacing-xs;
+
+        button {
+          font-size: $font-size-xs;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
     }
   }
 
@@ -52,21 +157,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6rem;
-    color: #9ca3af;
+    padding: $spacing-3xl;
+    color: $text-muted;
+    background: rgba($white, 0.5);
+    border-radius: $border-radius-xl;
+    border: 1px dashed $gray-300;
+
+    :host-context(body.dark-mode) & {
+      background: rgba($gray-900, 0.5);
+      border-color: $gray-700;
+    }
 
     mat-icon {
       font-size: 4rem;
       width: 4rem;
       height: 4rem;
-      margin-bottom: 1rem;
+      margin-bottom: $spacing-lg;
+      opacity: 0.5;
     }
-  }
-}
 
-[dir='rtl'] {
-  .notification-item {
-    direction: rtl;
-    text-align: right;
+    p {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-medium;
+    }
   }
 }

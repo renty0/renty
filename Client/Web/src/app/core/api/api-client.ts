@@ -13753,6 +13753,7 @@ export class PublicProfileDto implements IPublicProfileDto {
     totalRatings?: number;
     joinedAt?: Date;
     items?: ItemListDto[];
+    reviews?: ReviewDto2[];
 
     constructor(data?: IPublicProfileDto) {
         if (data) {
@@ -13779,6 +13780,11 @@ export class PublicProfileDto implements IPublicProfileDto {
                 this.items = [] as any;
                 for (let item of _data["items"])
                     this.items!.push(ItemListDto.fromJS(item));
+            }
+            if (Array.isArray(_data["reviews"])) {
+                this.reviews = [] as any;
+                for (let item of _data["reviews"])
+                    this.reviews!.push(ReviewDto2.fromJS(item));
             }
         }
     }
@@ -13807,6 +13813,11 @@ export class PublicProfileDto implements IPublicProfileDto {
             for (let item of this.items)
                 data["items"].push(item ? item.toJSON() : undefined as any);
         }
+        if (Array.isArray(this.reviews)) {
+            data["reviews"] = [];
+            for (let item of this.reviews)
+                data["reviews"].push(item ? item.toJSON() : undefined as any);
+        }
         return data;
     }
 }
@@ -13823,6 +13834,67 @@ export interface IPublicProfileDto {
     totalRatings?: number;
     joinedAt?: Date;
     items?: ItemListDto[];
+    reviews?: ReviewDto2[];
+}
+
+export class ReviewDto2 implements IReviewDto2 {
+    id?: string;
+    rating?: number;
+    comment?: string | undefined;
+    reviewerName?: string;
+    reviewerImage?: string | undefined;
+    createdAt?: Date;
+    role?: string;
+
+    constructor(data?: IReviewDto2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.rating = _data["rating"];
+            this.comment = _data["comment"];
+            this.reviewerName = _data["reviewerName"];
+            this.reviewerImage = _data["reviewerImage"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.role = _data["role"];
+        }
+    }
+
+    static fromJS(data: any): ReviewDto2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReviewDto2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["rating"] = this.rating;
+        data["comment"] = this.comment;
+        data["reviewerName"] = this.reviewerName;
+        data["reviewerImage"] = this.reviewerImage;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["role"] = this.role;
+        return data;
+    }
+}
+
+export interface IReviewDto2 {
+    id?: string;
+    rating?: number;
+    comment?: string | undefined;
+    reviewerName?: string;
+    reviewerImage?: string | undefined;
+    createdAt?: Date;
+    role?: string;
 }
 
 export interface FileParameter {

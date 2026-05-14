@@ -437,11 +437,14 @@
   }
 }
 
-.premium-menu {
-  border-radius: $border-radius-lg !important;
-  margin-top: 10px !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
-  border: 1px solid rgba($gray-200, 0.5) !important;
+::ng-deep .premium-menu {
+  border-radius: 16px !important;
+  margin-top: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5) inset !important;
+  border: 1px solid rgba($gray-200, 0.4) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   overflow: hidden;
 
   button.mat-mdc-menu-item {
@@ -458,12 +461,12 @@
 
       mat-icon {
         color: $primary-color !important;
-        transform: translateX(2px);
+        transform: scale(1.1);
       }
     }
 
     mat-icon {
-      margin-right: 12px !important;
+      margin-inline-end: 12px !important;
       font-size: 20px !important;
       width: 20px !important;
       height: 20px !important;
@@ -496,27 +499,28 @@
     min-width: 320px !important;
 
     .menu-header {
-      padding: 20px 16px;
+      padding: 24px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
+      background: linear-gradient(to bottom right, rgba($primary-color, 0.03), rgba($accent-color, 0.03));
       border-bottom: 1px solid rgba($gray-200, 0.5);
       margin-bottom: 8px;
 
-      .user-avatar {
+      .user-avatar-circle {
         width: 48px;
         height: 48px;
-        background: $white;
+        background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($accent-color, 0.1) 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 10px rgba($primary-color, 0.1);
 
         mat-icon {
-          font-size: 32px;
-          width: 32px;
-          height: 32px;
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
           color: $primary-color;
         }
       }
@@ -524,6 +528,7 @@
       .user-info {
         display: flex;
         flex-direction: column;
+        flex: 1;
 
         .user-name {
           font-weight: 700;
@@ -532,8 +537,12 @@
         }
 
         .user-email {
-          font-size: 13px;
+          font-size: 12px;
           color: $text-secondary;
+          opacity: 0.8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -557,7 +566,7 @@
           padding: 8px !important;
 
           mat-icon {
-            margin-right: 0 !important;
+            margin-inline-end: 0 !important;
             margin-bottom: 8px;
           }
 

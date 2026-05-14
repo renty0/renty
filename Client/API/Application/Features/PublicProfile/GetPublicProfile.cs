@@ -6,6 +6,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.PublicProfile;
 
+public record ReviewDto(
+    Guid Id,
+    int Rating,
+    string? Comment,
+    string ReviewerName,
+    string? ReviewerImage,
+    DateTime CreatedAt,
+    string Role
+);
+
 public record PublicProfileDto(
     long Id,
     string FirstName,
@@ -17,7 +27,8 @@ public record PublicProfileDto(
     double Rating,
     int TotalRatings,
     DateTimeOffset JoinedAt,
-    List<ItemListDto> Items
+    List<ItemListDto> Items,
+    List<ReviewDto> Reviews
 );
 
 public record GetPublicProfileQuery(long UserId) : IRequest<GetPublicProfileResponse>;
@@ -93,6 +104,24 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                 );
             }).ToList();
 
+        var reviews = await _context.Reviews
+            .Include(r => r.Reviewer)
+            .Include(r => r.Rental)
+            .Where(r => r.Rental.Item.OwnerId == request.UserId)
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new ReviewDto(
+                r.Id,
+                r.Rating,
+                r.Comment,
+                r.Reviewer.FirstName + " " + r.Reviewer.LastName,
+                !string.IsNullOrEmpty(r.Reviewer.ProfilePictureUrl) 
+                    ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}" : $"/api/v1/media/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}") 
+                    : null,
+                r.CreatedAt,
+                "owner"
+            ))
+            .ToListAsync(ct);
+
         var profileDto = new PublicProfileDto(
             user.Id,
             user.FirstName,
@@ -106,7 +135,8 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             user.Rating,
             user.TotalRatings,
             user.CreatedAt,
-            items
+            items,
+            reviews
         );
 
         return new GetPublicProfileResponse(true, null, profileDto);

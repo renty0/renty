@@ -110,9 +110,9 @@
               <h2>{{ 'profile.reviews' | translate }}</h2>
             </div>
 
-            @if (mockReviews().length > 0) {
+            @if (reviews().length > 0) {
               <div class="modern-reviews-list">
-                @for (review of mockReviews(); track review.id) {
+                @for (review of reviews(); track review.id) {
                   <div class="modern-review-item">
                     <div class="review-user">
                       <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">

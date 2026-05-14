@@ -1,9 +1,9 @@
-<div class="notifications-container" [dir]="unreadCount() > 0 ? 'ltr' : 'ltr'">
+<div class="notifications-container">
   <app-header-section [title]="'notifications.title' | translate" [showButton]="false" [showSearch]="false"
     icon="notifications_active">
     <div actions>
       @if (notifications().length > 0) {
-      <button mat-stroked-button color="primary" (click)="markAllAsRead()">
+      <button mat-flat-button color="primary" (click)="markAllAsRead()" [disabled]="unreadCount() === 0">
         <mat-icon>done_all</mat-icon>
         {{ 'notifications.markAllRead' | translate }}
       </button>
@@ -17,33 +17,43 @@
       <mat-spinner diameter="40"></mat-spinner>
     </div>
     } @else if (notifications().length > 0) {
-    <mat-card class="glass-card">
-      <mat-list>
-        @for (notif of notifications(); track notif.id; let last = $last) {
-        <mat-list-item class="notification-item" [class.unread]="!notif.isRead">
-          <mat-icon matListItemIcon [color]="notif.isRead ? '' : 'primary'">
-            {{ notif.isRead ? 'notifications' : 'notifications_active' }}
-          </mat-icon>
-          <div matListItemTitle class="notif-title">{{ notif.title }}</div>
-          <div matListItemLine class="notif-body">{{ notif.message }}</div>
-          <div matListItemLine class="notif-time">{{ notif.createdAt | date:'medium' }}</div>
-          <div matListItemMeta>
-            @if (!notif.isRead) {
-            <button mat-icon-button (click)="markAsRead(notif.id)" matTooltip="Mark as read">
-              <mat-icon>check</mat-icon>
-            </button>
-            }
+      @for (notif of notifications(); track notif.id) {
+        <div class="notification-item" [class.unread]="!notif.isRead">
+          
+          <div class="icon-wrapper" [ngClass]="notif.type || 'system'">
+            <mat-icon>{{ getIconForType(notif.type) }}</mat-icon>
           </div>
-        </mat-list-item>
-        @if (!last) { <mat-divider></mat-divider> }
-        }
-      </mat-list>
-    </mat-card>
+
+          <div class="content-wrapper">
+            <div class="title-row">
+              <div class="notif-title">{{ notif.title }}</div>
+              <div class="notif-time">{{ getTimeAgo(notif.createdAt) }}</div>
+            </div>
+            
+            <div class="notif-message">{{ notif.message }}</div>
+
+            <div class="actions-row">
+              @if (!notif.isRead) {
+                <button mat-button color="primary" (click)="markAsRead(notif.id)">
+                  <mat-icon>check</mat-icon>
+                  {{ 'notifications.markAsRead' | translate }}
+                </button>
+              }
+              @if (notif.actionUrl) {
+                <a mat-stroked-button [routerLink]="notif.actionUrl">
+                  {{ 'common.viewDetails' | translate }}
+                  <mat-icon>arrow_forward</mat-icon>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      }
     } @else {
-    <div class="empty-state">
-      <mat-icon>notifications_none</mat-icon>
-      <p>{{ 'notifications.noNotifications' | translate }}</p>
-    </div>
+      <div class="empty-state">
+        <mat-icon>notifications_none</mat-icon>
+        <p>{{ 'notifications.empty' | translate }}</p>
+      </div>
     }
   </div>
 </div>

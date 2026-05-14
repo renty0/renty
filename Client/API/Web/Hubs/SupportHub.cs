@@ -58,7 +58,7 @@ public class SupportHub : Hub
             return;
         }
 
-        var groupName = $"ticket_{ticketId}";
+        var groupName = $"ticket_{ticketGuid}";
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
         // Notify others if a support agent joined
@@ -74,18 +74,24 @@ public class SupportHub : Hub
     /// <summary>Leave the ticket room.</summary>
     public async Task LeaveTicket(string ticketId)
     {
-        var groupName = $"ticket_{ticketId}";
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        await Clients.OthersInGroup(groupName).SendAsync("AgentLeft", CurrentUserId);
+        if (Guid.TryParse(ticketId, out var ticketGuid))
+        {
+            var groupName = $"ticket_{ticketGuid}";
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            await Clients.OthersInGroup(groupName).SendAsync("AgentLeft", CurrentUserId);
+        }
     }
 
     // ── Typing Indicator ──────────────────────────────────────────────────────
 
     public async Task TypingIndicator(string ticketId, string senderName)
     {
-        await Clients
-            .OthersInGroup($"ticket_{ticketId}")
-            .SendAsync("UserTyping", senderName);
+        if (Guid.TryParse(ticketId, out var ticketGuid))
+        {
+            await Clients
+                .OthersInGroup($"ticket_{ticketGuid}")
+                .SendAsync("UserTyping", senderName);
+        }
     }
 
     // ── Static Broadcast Helper ───────────────────────────────────────────────

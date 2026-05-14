@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +17,7 @@ import { finalize, tap } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     TranslateModule,
     MatListModule,
     MatIconModule,
@@ -81,5 +83,29 @@ export class NotificationListComponent implements OnInit {
           }
         })
       ).subscribe();
+  }
+
+  getIconForType(type?: string): string {
+    switch (type) {
+      case 'rental': return 'receipt_long';
+      case 'chat': return 'chat';
+      case 'support': return 'support_agent';
+      case 'reminder': return 'notifications_active';
+      case 'system': return 'info';
+      default: return 'notifications';
+    }
+  }
+
+  getTimeAgo(date?: Date | string): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    const now = new Date();
+    const diff = Math.floor((now.getTime() - d.getTime()) / 1000);
+    
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+    return d.toLocaleDateString();
   }
 }

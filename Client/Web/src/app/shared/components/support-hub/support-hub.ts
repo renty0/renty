@@ -7,11 +7,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { PermissionService } from '../../../core/services/permission.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LiveSupportChatComponent } from '../live-support-chat/live-support-chat';
 import { SupportClient } from '../../../core/api/api-client';
 import { catchError, of } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-support-hub',
@@ -32,11 +33,11 @@ import { catchError, of } from 'rxjs';
     trigger('hubAnimation', [
       transition(':enter', [
         style({ transform: 'translateY(20px) scale(0.95)', opacity: 0 }),
-        animate('300ms cubic-bezier(0.34, 1.56, 0.64, 1)', 
+        animate('300ms cubic-bezier(0.34, 1.56, 0.64, 1)',
           style({ transform: 'translateY(0) scale(1)', opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('200ms ease-in', 
+        animate('200ms ease-in',
           style({ transform: 'translateY(20px) scale(0.95)', opacity: 0 }))
       ])
     ])
@@ -44,14 +45,13 @@ import { catchError, of } from 'rxjs';
 })
 export class SupportHubComponent {
   private authService = inject(AuthService);
-  private permissionService = inject(PermissionService);
   private supportClient = inject(SupportClient);
 
   isLoggedIn = this.authService.isLoggedIn;
+  isSupport = computed(() => this.authService.isSupport());
   isOpen = signal(false);
   searchQuery = signal('');
 
-  // Active live chat
   activeLiveChat = signal<{ ticketId: string; subject: string } | null>(null);
 
   quickActions = [
@@ -64,7 +64,6 @@ export class SupportHubComponent {
   recentTickets = signal<Array<{ id: string; subject: string; status: string; date: Date }>>([]);
 
   constructor() {
-    // Load real tickets when user is logged in
     if (this.isLoggedIn()) {
       this.loadTickets();
     }
@@ -95,7 +94,7 @@ export class SupportHubComponent {
 
   openLiveChat(ticketId: string, subject: string) {
     this.activeLiveChat.set({ ticketId, subject });
-    this.isOpen.set(false); // Close the hub panel when live chat opens
+    this.isOpen.set(false);
   }
 
   closeLiveChat() {
@@ -105,7 +104,6 @@ export class SupportHubComponent {
   onAction(actionId: string) {
     if (actionId === 'report' || actionId === 'payment' || actionId === 'expert') {
       this.closeHub();
-      // Navigate to new ticket with pre-filled type
     }
   }
 }

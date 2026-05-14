@@ -15,7 +15,7 @@
     
     <div class="status-badge">
       @if (isSupport()) {
-        <mat-form-field appearance="outline" class="status-select" subscriptSizing="dynamic">
+        <mat-form-field appearance="outline" class="status-select" [ngClass]="(ticket()?.status | lowercase) || ''" subscriptSizing="dynamic">
           <mat-select [value]="ticket()?.status" (selectionChange)="updateStatus($event.value)" [disabled]="isUpdatingStatus()">
             <mat-option value="Open">
               <span class="status-dot open"></span> {{ 'support.open' | translate }}
@@ -53,7 +53,7 @@
         </div>
       </div>
     } @else {
-      @for (msg of ticket()?.messages; track msg.id) {
+      @for (msg of messages(); track msg.id) {
         <div class="message-wrapper" [class.mine]="isCurrentUser(msg.senderId)">
           <div class="message-bubble">
             <p>{{ msg.message }}</p>

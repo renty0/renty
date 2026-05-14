@@ -100,9 +100,12 @@
         </button>
         <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu profile-menu">
           <div class="menu-header" (click)="$event.stopPropagation()">
-            <div class="user-avatar flex align-items-center">
-              <mat-icon ripple>account_circle</mat-icon>
+            <div class="user-avatar-circle">
+              <mat-icon>account_circle</mat-icon>
+            </div>
+            <div class="user-info">
               <span class="user-name">{{ userData()?.firstName }} {{ userData()?.lastName }}</span>
+              <span class="user-email">{{ userData()?.email }}</span>
             </div>
           </div>
 

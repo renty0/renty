@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../core/services/auth.service';
-import { AuthClient, AuthLoginUser, UpdateUserCommand, DeleteUserResponse } from '../../core/api/api-client';
+import { AuthClient, AuthLoginUser, UpdateUserCommand, DeleteUserResponse, Public_ProfileClient } from '../../core/api/api-client';
 import { InputComponent, SelectOption } from '../../shared/components/input/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.constants';
@@ -47,6 +47,8 @@ export class ProfileComponent {
   private destroyRef = inject(DestroyRef);
   private translate = inject(TranslateService);
 
+  private publicProfileClient = inject(Public_ProfileClient);
+
   currentUser = signal<any | null>(null);
   isLoading = signal(false);
   isUploading = signal(false);
@@ -61,27 +63,7 @@ export class ProfileComponent {
 
   egyptianCities: SelectOption[] = EGYPT_GOVERNORATES;
 
-  // MOCK DATA until backend exposes per-role ratings and reviews
-  mockReviews = signal<any[]>([
-    {
-      id: '1',
-      reviewerName: 'Ahmed Ali',
-      reviewerImage: 'assets/profile.webp',
-      rating: 5,
-      comment: 'Great person to deal with. The item was exactly as described and in perfect condition.',
-      createdAt: new Date(Date.now() - 86400000 * 2),
-      role: 'owner'
-    },
-    {
-      id: '2',
-      reviewerName: 'Sara Kamel',
-      reviewerImage: '',
-      rating: 4,
-      comment: 'Very smooth transaction. Was a bit late for pickup but overall great.',
-      createdAt: new Date(Date.now() - 86400000 * 10),
-      role: 'renter'
-    }
-  ]);
+  reviews = signal<any[]>([]);
 
   ownerRating = computed(() => {
     const u = this.currentUser();
@@ -126,6 +108,17 @@ export class ProfileComponent {
         country: user.country?.toLowerCase() || 'egypt',
         bio: user.bio,
       });
+
+      // Fetch dynamic reviews
+      this.publicProfileClient.getPublicProfile(user.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (res) => {
+            if (res.data && (res.data as any).reviews) {
+              this.reviews.set((res.data as any).reviews);
+            }
+          }
+        });
     }
   }
 

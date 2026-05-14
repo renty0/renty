@@ -47,12 +47,28 @@ public static class SupportEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound);
 
         // POST /support/tickets/:id/messages
-        g.MapPost("/tickets/{id:guid}/messages", async (Guid id, PostSupportMessageCommand cmd, ClaimsPrincipal cp, ISender sender) =>
+        g.MapPost("/tickets/{id:guid}/messages", async (Guid id, PostSupportMessageCommand cmd, ClaimsPrincipal cp, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
         {
             var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
             var r = await sender.Send(cmd with { TicketId = id, IsSupportAgent = isSupport });
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             // MessageId and CreatedAt are Guid?/DateTime? — use .Value on success
+            
+            // Broadcast the message to the SignalR Hub
+            var senderId = long.Parse(cp.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            var senderName = cp.FindFirstValue("FullName") ?? cp.FindFirstValue(ClaimTypes.Name) ?? "User";
+            
+            var liveMessage = new {
+                Id = r.MessageId!.Value.ToString(),
+                TicketId = id.ToString(),
+                SenderId = senderId,
+                SenderName = senderName,
+                SenderRole = isSupport ? "Support" : "User",
+                Message = r.Message,
+                CreatedAt = r.CreatedAt!.Value
+            };
+            await Web.Hubs.SupportHub.BroadcastMessage(hubContext, id.ToString(), liveMessage);
+
             return Api.Created(new SupportMessageData(r.MessageId!.Value, r.Message ?? "", r.CreatedAt!.Value));
         })
         .WithName("PostSupportMessage")

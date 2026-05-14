@@ -48,7 +48,16 @@ export class SupportSignalrService {
       .build();
 
     // Incoming live message from any participant
-    this.hubConnection.on('ReceiveSupportMessage', (msg: SupportMessage) => {
+    this.hubConnection.on('ReceiveSupportMessage', (payload: any) => {
+      const msg: SupportMessage = {
+        id: payload.id || payload.Id,
+        ticketId: payload.ticketId || payload.TicketId,
+        senderId: payload.senderId || payload.SenderId,
+        senderName: payload.senderName || payload.SenderName,
+        senderRole: payload.senderRole || payload.SenderRole,
+        message: payload.message || payload.Message,
+        createdAt: payload.createdAt || payload.CreatedAt
+      };
       this.newMessage.set(msg);
     });
 

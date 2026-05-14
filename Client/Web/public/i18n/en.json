@@ -12,11 +12,13 @@
     "role": "Role",
     "user": "User",
     "date": "Date",
+    "viewDetails": "View Details",
     "edit": "Edit",
     "delete": "Delete",
     "close": "Close",
     "active": "Active",
     "inactive": "Inactive",
+    "viewAll": "View All",
     "save": "Save",
     "status": "Status",
     "actions": "Actions",
@@ -799,7 +801,11 @@
       "guide": "User Guide",
       "loginRequired": "Login to view your tickets",
       "startChat": "Start New Conversation",
-      "openLiveChat": "Open Live Chat"
+      "openLiveChat": "Open Live Chat",
+      "staffGreeting": "Staff Control Center",
+      "staffSubtitle": "Manage your assigned tickets and live chats",
+      "dashboard": "Support Dashboard",
+      "openTickets": "Open Tickets"
     },
     "liveChat": {
       "title": "Live Support",

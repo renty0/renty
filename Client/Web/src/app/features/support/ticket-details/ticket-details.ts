@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, inject, signal, computed, ViewChild, ElementRef, AfterViewChecked, OnDestroy, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,6 +16,7 @@ import { SupportClient, PostSupportMessageCommand, UpdateTicketStatusCommand } f
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+import { SupportSignalrService } from '../../../core/services/support-signalr.service';
 import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
 
 @Component({
@@ -39,13 +40,14 @@ import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
   templateUrl: './ticket-details.html',
   styleUrl: './ticket-details.scss'
 })
-export class TicketDetailsComponent implements AfterViewChecked {
+export class TicketDetailsComponent implements AfterViewChecked, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   private readonly route = inject(ActivatedRoute);
   private readonly supportClient = inject(SupportClient);
   private readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
+  private readonly supportSignalr = inject(SupportSignalrService);
 
   ticketId = signal(this.route.snapshot.paramMap.get('id') || '');
   currentUserId = signal(this.auth.getCurrentUserId());
@@ -59,6 +61,7 @@ export class TicketDetailsComponent implements AfterViewChecked {
   ticket = computed(() => this.ticketResource.value()?.data?.ticket || null);
   isLoading = computed(() => this.ticketResource.isLoading());
   
+  messages = signal<any[]>([]);
   newMessage = signal('');
   isSending = signal(false);
   isUpdatingStatus = signal(false);
@@ -66,6 +69,38 @@ export class TicketDetailsComponent implements AfterViewChecked {
   private readonly sendSubject = new Subject<void>();
 
   constructor() {
+    effect(() => {
+      const ticketData = this.ticketResource.value()?.data?.ticket;
+      if (ticketData?.messages) {
+        untracked(() => {
+          this.messages.set(ticketData.messages ?? []);
+        });
+      }
+    });
+
+    effect(() => {
+      const msg = this.supportSignalr.newMessage();
+      if (msg && msg.ticketId === this.ticketId()) {
+        untracked(() => {
+          this.messages.update(msgs => {
+            if (msgs.find(m => m.id === msg.id)) return msgs;
+            return [...msgs, msg];
+          });
+        });
+      }
+    });
+
+    effect(() => {
+      const id = this.ticketId();
+      if (id) {
+        untracked(() => {
+          this.supportSignalr.startConnection().then(() => {
+            this.supportSignalr.joinTicket(id);
+          });
+        });
+      }
+    });
+
     this.sendSubject.pipe(
       tap(() => this.isSending.set(true)),
       exhaustMap(() => {
@@ -78,7 +113,6 @@ export class TicketDetailsComponent implements AfterViewChecked {
           tap((res) => {
             if (res.data) {
               this.newMessage.set('');
-              this.ticketResource.reload();
             }
           }),
           catchError(() => {
@@ -90,6 +124,10 @@ export class TicketDetailsComponent implements AfterViewChecked {
       }),
       takeUntilDestroyed()
     ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.supportSignalr.leaveTicket(this.ticketId());
   }
 
   ngAfterViewChecked() {

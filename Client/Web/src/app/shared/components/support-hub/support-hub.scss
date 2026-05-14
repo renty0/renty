@@ -123,6 +123,29 @@
   margin-bottom: $spacing-xl;
 }
 
+.staff-greeting-section {
+  margin-bottom: $spacing-xl;
+  background: rgba($primary-color, 0.05);
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  border-left: 4px solid $primary-color;
+
+  .greeting-content {
+    h4 {
+      margin: 0 0 $spacing-xs 0;
+      color: $text-dark;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-md;
+    }
+    p {
+      margin: 0;
+      color: $text-muted;
+      font-size: $font-size-xs;
+      line-height: 1.4;
+    }
+  }
+}
+
 .hub-search-box {
   background: $gray-100;
   border-radius: $border-radius-xl;

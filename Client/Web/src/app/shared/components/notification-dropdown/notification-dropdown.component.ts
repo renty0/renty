@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect, HostListener, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, signal, effect, HostListener, ElementRef, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -41,8 +41,7 @@ export class NotificationDropdownComponent implements OnInit {
   notifications = signal<NotificationDto[]>([]);
   unreadCount = signal(0);
 
-  /** How many items are currently visible in the dropdown */
-  private visibleCount = signal(5);
+  private visibleCount = signal(7);
   readonly PAGE_SIZE = 5;
 
   visibleNotifications = () => this.notifications().slice(0, this.visibleCount());
@@ -52,24 +51,27 @@ export class NotificationDropdownComponent implements OnInit {
     effect(() => {
       const newNotif = this.signalrService.newNotification();
       if (newNotif) {
-        this.notifications.update(current => {
-          // Convert payload to NotificationDto
-          const dto = new NotificationDto({
-            id: newNotif.id,
-            title: newNotif.title,
-            message: newNotif.message,
-            type: newNotif.type,
-            actionUrl: newNotif.actionUrl,
-            isRead: newNotif.isRead,
-            createdAt: new Date(newNotif.createdAt)
+        untracked(() => {
+          this.notifications.update(current => {
+            const dto = new NotificationDto({
+              id: newNotif.id,
+              title: newNotif.title,
+              message: newNotif.message,
+              type: newNotif.type,
+              actionUrl: newNotif.actionUrl,
+              isRead: newNotif.isRead,
+              createdAt: new Date(newNotif.createdAt)
+            });
+            
+            if (!current.find(n => n.id === dto.id)) {
+              return [dto, ...current];
+            }
+            return current;
           });
+          this.updateUnreadCount();
           
-          return [dto, ...current];
+          this.toastService.showInfo(`${newNotif.title} - ${newNotif.message}`);
         });
-        this.updateUnreadCount();
-        
-        // Show toaster notification
-        this.toastService.showInfo(`${newNotif.title} - ${newNotif.message}`);
       }
     }, { allowSignalWrites: true });
   }
@@ -88,15 +90,13 @@ export class NotificationDropdownComponent implements OnInit {
   toggleDropdown() {
     this.isOpen.update(v => !v);
     if (this.isOpen()) {
-      // Reset visible count each time dropdown opens
-      this.visibleCount.set(this.PAGE_SIZE);
+      this.visibleCount.set(7);
     }
   }
 
-  /** Called when the dropdown body scrolls — load more if near bottom */
   onBodyScroll(event: Event) {
     const el = event.target as HTMLElement;
-    const threshold = 40; // px from bottom
+    const threshold = 40; 
     if (el.scrollHeight - el.scrollTop - el.clientHeight <= threshold) {
       this.loadMore();
     }
@@ -155,7 +155,6 @@ export class NotificationDropdownComponent implements OnInit {
 
   onNotificationClick(notification: NotificationDto) {
     if (!notification.isRead) {
-      // Mark as read implicitly on click
       this.notificationsClient.markNotificationRead(notification.id!).subscribe(() => {
         this.notifications.update(current => 
           current.map(n => n.id === notification.id ? new NotificationDto({ ...n, isRead: true }) : n)
@@ -165,6 +164,8 @@ export class NotificationDropdownComponent implements OnInit {
     }
 
     if (notification.actionUrl) {
+      console.log(notification);
+      
       this.router.navigateByUrl(notification.actionUrl);
       this.isOpen.set(false);
     }
@@ -181,15 +182,16 @@ export class NotificationDropdownComponent implements OnInit {
     }
   }
 
-  getTimeAgo(date?: Date): string {
+  getTimeAgo(date?: Date | string): string {
     if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
     const now = new Date();
-    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const diff = Math.floor((now.getTime() - d.getTime()) / 1000);
     
     if (diff < 60) return 'Just now';
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
     if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-    return date.toLocaleDateString();
+    return d.toLocaleDateString();
   }
 }
