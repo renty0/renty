@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سياسة الخصوصية – رنتي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0c295e;
+      --navy-md: #1a365d;
+      --navy-dk: #153149;
+      --accent:  #0ea5e9;
+      --gold:    #ffd900;
+      --bg:      #f0f9ff;
+      --white:   #ffffff;
+      --gray:    #6b7280;
+      --success: #059669;
+      --danger:  #dc2626;
+      --radius:  16px;
+      --shadow:  0 4px 24px rgba(12,41,94,.10);
+      --shadow-lg: 0 8px 40px rgba(12,41,94,.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Alexandria', sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    /* ───────── NAVBAR ───────── */
+    nav {
+      position: fixed;
+      top: 0; right: 0; left: 0;
+      z-index: 999;
+      background: rgba(12,41,94,.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,217,0,.15);
+      padding: 0 5vw;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 8px; align-items: center; }
+    .nav-links a {
+      color: rgba(255,255,255,.82);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all .2s;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.12); }
+    .nav-links a.active {
+      color: var(--navy);
+      background: var(--gold);
+    }
+
+    /* ───────── HERO ───────── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-dk) 0%, var(--navy) 45%, #1e4080 100%);
+      padding: 140px 5vw 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 80%, rgba(14,165,233,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 60px;
+      background: var(--bg);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,217,0,.15);
+      border: 1px solid rgba(255,217,0,.35);
+      color: var(--gold);
+      font-size: .82rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 22px;
+      letter-spacing: .5px;
+    }
+
+    .hero-icon {
+      font-size: 3.8rem;
+      display: block;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 20px rgba(14,165,233,.5));
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: clamp(.95rem, 2vw, 1.1rem);
+      color: rgba(255,255,255,.78);
+      max-width: 640px;
+      margin: 0 auto 24px;
+      line-height: 1.75;
+    }
+
+    .hero-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.75);
+      font-size: .82rem;
+      padding: 6px 16px;
+      border-radius: 50px;
+    }
+
+    /* ───────── TRUST BADGES ───────── */
+    .trust-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: -30px auto 0;
+      padding: 0 5vw;
+      position: relative;
+      z-index: 2;
+    }
+
+    .trust-item {
+      background: var(--white);
+      border: 1px solid rgba(14,165,233,.15);
+      border-radius: var(--radius);
+      padding: 18px 14px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform .2s;
+    }
+    .trust-item:hover { transform: translateY(-3px); }
+    .trust-item .t-icon { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+    .trust-item .t-label { font-size: .78rem; font-weight: 700; color: var(--navy); line-height: 1.35; }
+
+    /* ───────── MAIN WRAPPER ───────── */
+    .main-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 5vw 100px;
+    }
+
+    /* ───────── QUICK LINKS ───────── */
+    .quick-links {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 28px 28px 22px;
+      margin-bottom: 40px;
+      border: 1px solid rgba(14,165,233,.12);
+    }
+    .quick-links h3 {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--gray);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quick-links h3::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+    .ql-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+    }
+    .ql-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--bg);
+      border: 1px solid rgba(14,165,233,.18);
+      border-radius: 10px;
+      color: var(--navy-md);
+      font-family: 'Alexandria', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .ql-btn:hover {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+      transform: translateY(-1px);
+    }
+    .ql-num {
+      width: 22px; height: 22px;
+      background: var(--accent);
+      color: var(--white);
+      border-radius: 50%;
+      font-size: .7rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ───────── SECTION CARDS ───────── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 36px 36px 30px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(12,41,94,.06);
+      transition: box-shadow .25s;
+      scroll-margin-top: 90px;
+    }
+    .card:hover { box-shadow: var(--shadow-lg); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--bg);
+    }
+    .card-num {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--navy), var(--accent));
+      color: var(--white);
+      border-radius: 10px;
+      font-size: .85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    /* ───────── SUB-SECTIONS ───────── */
+    .sub-list { display: flex; flex-direction: column; gap: 16px; }
+    .sub-item {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      border: 1px solid rgba(14,165,233,.1);
+    }
+    .sub-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .sub-title { font-size: .92rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .sub-text { font-size: .85rem; color: var(--gray); line-height: 1.65; }
+
+    /* ───────── TABLE ───────── */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .styled-table thead tr {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .styled-table thead th {
+      padding: 14px 18px;
+      text-align: right;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+    .styled-table tbody tr { transition: background .15s; }
+    .styled-table tbody tr:nth-child(even) { background: var(--bg); }
+    .styled-table tbody tr:hover { background: #e0f2fe; }
+    .styled-table tbody td {
+      padding: 13px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #374151;
+      font-size: .85rem;
+    }
+    .badge-legal {
+      display: inline-block;
+      background: rgba(5,150,105,.12);
+      color: var(--success);
+      border: 1px solid rgba(5,150,105,.25);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .badge-consent {
+      display: inline-block;
+      background: rgba(14,165,233,.12);
+      color: var(--accent);
+      border: 1px solid rgba(14,165,233,.3);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .badge-legit {
+      display: inline-block;
+      background: rgba(255,217,0,.15);
+      color: #92710c;
+      border: 1px solid rgba(255,217,0,.4);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .badge-contract {
+      display: inline-block;
+      background: rgba(12,41,94,.08);
+      color: var(--navy);
+      border: 1px solid rgba(12,41,94,.2);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+
+    /* ───────── SHARE GRID ───────── */
+    .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .share-col-title {
+      font-size: .85rem;
+      font-weight: 800;
+      padding: 10px 16px;
+      border-radius: 10px 10px 0 0;
+      margin-bottom: 0;
+    }
+    .share-col-yes .share-col-title { background: rgba(5,150,105,.12); color: var(--success); }
+    .share-col-no  .share-col-title { background: rgba(220,38,38,.08); color: var(--danger); }
+    .share-items { border-radius: 0 0 12px 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .share-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: .83rem;
+      line-height: 1.55;
+      color: #374151;
+    }
+    .share-item:last-child { border-bottom: none; }
+    .share-mark { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ───────── SECURITY FEATURES ───────── */
+    .security-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+    .sec-card {
+      background: var(--bg);
+      border: 1px solid rgba(5,150,105,.18);
+      border-radius: 12px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+    .sec-icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .sec-title { font-size: .82rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .sec-desc { font-size: .75rem; color: var(--gray); line-height: 1.5; }
+
+    /* ───────── RIGHTS GRID ───────── */
+    .rights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .right-card {
+      background: var(--bg);
+      border: 1px solid rgba(14,165,233,.15);
+      border-radius: 12px;
+      padding: 20px 18px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .right-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(12,41,94,.1); }
+    .right-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .right-title { font-size: .9rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .right-desc { font-size: .8rem; color: var(--gray); line-height: 1.6; }
+
+    .email-cta {
+      margin-top: 22px;
+      background: linear-gradient(135deg, var(--navy), #1e4080);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--white);
+    }
+    .email-cta .cta-icon { font-size: 1.4rem; }
+    .email-cta strong { display: block; font-size: .9rem; font-weight: 700; margin-bottom: 2px; }
+    .email-cta a { color: var(--gold); font-weight: 700; font-size: .95rem; }
+
+    /* ───────── RETENTION TABLE ───────── */
+    .retention-list { display: flex; flex-direction: column; gap: 12px; }
+    .ret-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px 18px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .ret-label { font-size: .88rem; font-weight: 700; color: var(--navy); }
+    .ret-period {
+      background: var(--navy);
+      color: var(--white);
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    /* ───────── CHILDREN SECTION ───────── */
+    .children-box {
+      background: rgba(220,38,38,.05);
+      border: 1.5px solid rgba(220,38,38,.2);
+      border-radius: 12px;
+      padding: 22px 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .children-box .ch-icon { font-size: 2rem; flex-shrink: 0; }
+    .children-box h3 { font-size: .95rem; font-weight: 800; color: var(--danger); margin-bottom: 8px; }
+    .children-box p { font-size: .85rem; color: #374151; line-height: 1.7; }
+
+    /* ───────── CHANGES SECTION ───────── */
+    .changes-box {
+      background: rgba(14,165,233,.06);
+      border: 1px solid rgba(14,165,233,.2);
+      border-radius: 12px;
+      padding: 22px 22px;
+      font-size: .88rem;
+      color: #374151;
+      line-height: 1.75;
+    }
+    .changes-box strong { color: var(--navy); }
+
+    /* ───────── CONTACT SECTION ───────── */
+    .contact-card {
+      background: linear-gradient(135deg, var(--navy-dk) 0%, #1e4080 100%);
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+      color: var(--white);
+      margin-bottom: 28px;
+    }
+    .contact-card .ct-icon { font-size: 2.5rem; margin-bottom: 14px; }
+    .contact-card h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+    .contact-card p { font-size: .9rem; color: rgba(255,255,255,.75); margin-bottom: 18px; }
+    .contact-card a {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 12px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .contact-card a:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,217,0,.4); }
+    .contact-meta {
+      margin-top: 16px;
+      font-size: .8rem;
+      color: rgba(255,255,255,.6);
+    }
+
+    /* ───────── FOOTER ───────── */
+    footer {
+      background: var(--navy-dk);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 40px 5vw 30px;
+      font-size: .83rem;
+    }
+    .footer-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      margin-bottom: 20px;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,.65);
+      text-decoration: none;
+      font-size: .82rem;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-divider {
+      height: 1px;
+      background: rgba(255,255,255,.1);
+      margin: 16px 0;
+    }
+
+    /* ───────── RESPONSIVE ───────── */
+    @media (max-width: 680px) {
+      .trust-strip { grid-template-columns: repeat(2, 1fr); margin-top: -20px; }
+      .share-grid { grid-template-columns: 1fr; }
+      .card { padding: 24px 18px; }
+      .card-header { flex-direction: row; }
+      nav { padding: 0 4vw; }
+      .nav-links { gap: 2px; }
+      .nav-links a { font-size: .78rem; padding: 5px 8px; }
+    }
+    @media (max-width: 440px) {
+      .trust-strip { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .trust-item { padding: 14px 10px; }
+    }
+
+    /* ───────── REVEAL ANIMATION ───────── */
+    .card { opacity: 0; transform: translateY(24px); animation: fadeUp .5s ease forwards; }
+    .card:nth-child(1)  { animation-delay: .05s; }
+    .card:nth-child(2)  { animation-delay: .1s; }
+    .card:nth-child(3)  { animation-delay: .15s; }
+    .card:nth-child(4)  { animation-delay: .2s; }
+    .card:nth-child(5)  { animation-delay: .25s; }
+    .card:nth-child(6)  { animation-delay: .3s; }
+    .card:nth-child(7)  { animation-delay: .35s; }
+    .card:nth-child(8)  { animation-delay: .4s; }
+    .card:nth-child(9)  { animation-delay: .45s; }
+    .card:nth-child(10) { animation-delay: .5s; }
+    @keyframes fadeUp { to { opacity: 1; transform: none; } }
+
+    .trust-strip { animation: fadeUp .6s .3s ease both; }
+    .quick-links { animation: fadeUp .5s .35s ease both; opacity: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#">رنتي<span>.</span></a>
+  <div class="nav-links">
+    <a href="#">من نحن</a>
+    <a href="#">الشروط والأحكام</a>
+    <a href="#" class="active">الخصوصية</a>
+    <a href="#">الأسئلة الشائعة</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">🛡 حماية بياناتك</div>
+  <span class="hero-icon">🔐</span>
+  <h1>سياسة الخصوصية</h1>
+  <p>نحن في رنتي نلتزم بحماية خصوصيتك وبياناتك الشخصية. تشرح هذه السياسة كيفية جمع بياناتك واستخدامها وحمايتها بشفافية تامة.</p>
+  <div class="hero-date">📅 &nbsp; آخر تحديث: مايو 2026</div>
+</section>
+
+<!-- ═══════════════════════════ TRUST BADGES ═══════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-item">
+    <span class="t-icon">🔒</span>
+    <div class="t-label">تشفير كامل لجميع البيانات</div>
+  </div>
+  <div class="trust-item">
+    <span class="t-icon">🚫</span>
+    <div class="t-label">لا نبيع بياناتك أبداً</div>
+  </div>
+  <div class="trust-item">
+    <span class="t-icon">✅</span>
+    <div class="t-label">ممتثلون للقانون المصري</div>
+  </div>
+  <div class="trust-item">
+    <span class="t-icon">🛡</span>
+    <div class="t-label">حماية على مدار الساعة</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<div class="main-wrap">
+
+  <!-- QUICK LINKS -->
+  <div class="quick-links">
+    <h3>⚡ الوصول السريع للأقسام</h3>
+    <div class="ql-grid">
+      <a class="ql-btn" href="#s1"><span class="ql-num">1</span> المعلومات التي نجمعها</a>
+      <a class="ql-btn" href="#s2"><span class="ql-num">2</span> كيف نستخدم بياناتك</a>
+      <a class="ql-btn" href="#s3"><span class="ql-num">3</span> مشاركة البيانات</a>
+      <a class="ql-btn" href="#s4"><span class="ql-num">4</span> حماية البيانات</a>
+      <a class="ql-btn" href="#s5"><span class="ql-num">5</span> ملفات الارتباط</a>
+      <a class="ql-btn" href="#s6"><span class="ql-num">6</span> حقوقك</a>
+      <a class="ql-btn" href="#s7"><span class="ql-num">7</span> بيانات الأطفال</a>
+      <a class="ql-btn" href="#s8"><span class="ql-num">8</span> مدة الاحتفاظ</a>
+      <a class="ql-btn" href="#s9"><span class="ql-num">9</span> تغييرات السياسة</a>
+      <a class="ql-btn" href="#s10"><span class="ql-num">10</span> التواصل معنا</a>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 1 ─── -->
+  <div class="card" id="s1">
+    <div class="card-header">
+      <div class="card-num">1</div>
+      <h2>المعلومات التي نجمعها</h2>
+    </div>
+    <div class="sub-list">
+      <div class="sub-item">
+        <div class="sub-icon">📋</div>
+        <div>
+          <div class="sub-title">البيانات الشخصية</div>
+          <div class="sub-text">الاسم الكامل، البريد الإلكتروني، رقم الهاتف، المدينة، صورة الملف الشخصي، رقم الهوية الوطنية (للتحقق من الهوية فقط وتُحفظ بأمان).</div>
+        </div>
+      </div>
+      <div class="sub-item">
+        <div class="sub-icon">🔄</div>
+        <div>
+          <div class="sub-title">بيانات المعاملات</div>
+          <div class="sub-text">تفاصيل طلبات الإيجار، المدفوعات والودائع، تاريخ العمليات، سجلات النزاعات والتقييمات.</div>
+        </div>
+      </div>
+      <div class="sub-item">
+        <div class="sub-icon">📍</div>
+        <div>
+          <div class="sub-title">بيانات الموقع</div>
+          <div class="sub-text">المدينة والمحافظة التي تحددها أنت لتحسين التوصيات وعرض العناصر المتاحة بالقرب منك. لا نتتبع موقعك الجغرافي الدقيق.</div>
+        </div>
+      </div>
+      <div class="sub-item">
+        <div class="sub-icon">📱</div>
+        <div>
+          <div class="sub-title">بيانات الاستخدام</div>
+          <div class="sub-text">الصفحات المُشاهَدة، عمليات البحث، مدة الاستخدام، نوع الجهاز والمتصفح المستخدم — لتحسين تجربتك على المنصة.</div>
+        </div>
+      </div>
+      <div class="sub-item">
+        <div class="sub-icon">💬</div>
+        <div>
+          <div class="sub-title">بيانات التواصل</div>
+          <div class="sub-text">رسائل المحادثات بين المستخدمين ضمن المنصة، وتذاكر الدعم الفني التي ترسلها لفريقنا.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 2 ─── -->
+  <div class="card" id="s2">
+    <div class="card-header">
+      <div class="card-num">2</div>
+      <h2>كيف نستخدم بياناتك</h2>
+    </div>
+    <div style="overflow-x:auto; border-radius:12px; border:1px solid #e2e8f0;">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>الغرض من الاستخدام</th>
+            <th>الأساس القانوني</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>تنفيذ عقود الإيجار وإدارة الطلبات</td>
+            <td><span class="badge-contract">ضرورة تعاقدية</span></td>
+          </tr>
+          <tr>
+            <td>التحقق من هوية المستخدمين</td>
+            <td><span class="badge-legal">الالتزام القانوني</span></td>
+          </tr>
+          <tr>
+            <td>نظام التوصيات الذكية (AI)</td>
+            <td><span class="badge-legit">مصلحة مشروعة</span></td>
+          </tr>
+          <tr>
+            <td>إرسال الإشعارات والتنبيهات</td>
+            <td><span class="badge-consent">موافقة المستخدم</span></td>
+          </tr>
+          <tr>
+            <td>كشف الاحتيال وضمان الأمن</td>
+            <td><span class="badge-legit">مصلحة مشروعة</span></td>
+          </tr>
+          <tr>
+            <td>تحسين المنصة والتحليلات</td>
+            <td><span class="badge-legit">مصلحة مشروعة</span></td>
+          </tr>
+          <tr>
+            <td>الامتثال للمتطلبات القانونية</td>
+            <td><span class="badge-legal">الالتزام القانوني</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 3 ─── -->
+  <div class="card" id="s3">
+    <div class="card-header">
+      <div class="card-num">3</div>
+      <h2>مشاركة البيانات</h2>
+    </div>
+    <div class="share-grid">
+      <div class="share-col-yes">
+        <div class="share-col-title">✔ نشارك مع</div>
+        <div class="share-items">
+          <div class="share-item">
+            <span class="share-mark">✔</span>
+            <div><strong>موفرو الدفع</strong> (Vodafone Cash, Fawry, Paymob): بيانات المعاملات الضرورية فقط لإتمام الدفع بأمان.</div>
+          </div>
+          <div class="share-item">
+            <span class="share-mark">✔</span>
+            <div><strong>الخبراء المعتمدون:</strong> بيانات العنصر المُستأجَر وتواريخ الإيجار لأغراض الفحص والتقييم.</div>
+          </div>
+          <div class="share-item">
+            <span class="share-mark">✔</span>
+            <div><strong>الجهات القانونية والتنظيمية:</strong> عند ورود طلب رسمي ملزم قانونًا فقط.</div>
+          </div>
+        </div>
+      </div>
+      <div class="share-col-no">
+        <div class="share-col-title">✘ لا نشارك مع</div>
+        <div class="share-items">
+          <div class="share-item">
+            <span class="share-mark" style="color:var(--danger)">✘</span>
+            <div>شركات الإعلانات أو التسويق.</div>
+          </div>
+          <div class="share-item">
+            <span class="share-mark" style="color:var(--danger)">✘</span>
+            <div>أي طرف ثالث لأغراض تجارية أو ربحية.</div>
+          </div>
+          <div class="share-item">
+            <span class="share-mark" style="color:var(--danger)">✘</span>
+            <div><strong>لا نبيع بياناتك أبداً</strong> — هذا مبدأ لا نتساهل فيه.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 4 ─── -->
+  <div class="card" id="s4">
+    <div class="card-header">
+      <div class="card-num">4</div>
+      <h2>حماية البيانات</h2>
+    </div>
+    <div class="security-grid">
+      <div class="sec-card">
+        <div class="sec-icon">🔐</div>
+        <div class="sec-title">تشفير كامل للمدفوعات</div>
+        <div class="sec-desc">تشفير End-to-End لجميع عمليات الدفع والودائع.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">🔑</div>
+        <div class="sec-title">كلمات مرور محمية</div>
+        <div class="sec-desc">تُخزَّن كلمات المرور مشفرة باستخدام خوارزمية bcrypt.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">🌐</div>
+        <div class="sec-title">بروتوكول SSL/TLS</div>
+        <div class="sec-desc">جميع البيانات المنقولة محمية بـ SSL/TLS.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">🔍</div>
+        <div class="sec-title">مراجعات أمنية دورية</div>
+        <div class="sec-desc">فحص واختبار منتظم للثغرات الأمنية.</div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">👮</div>
+        <div class="sec-title">تحكم في الوصول</div>
+        <div class="sec-desc">الموظفون المخوَّلون فقط يمكنهم الوصول لبيانات المستخدمين.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 5 ─── -->
+  <div class="card" id="s5">
+    <div class="card-header">
+      <div class="card-num">5</div>
+      <h2>ملفات الارتباط (Cookies)</h2>
+    </div>
+    <div style="overflow-x:auto; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:18px;">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>النوع</th>
+            <th>الغرض</th>
+            <th>مدة البقاء</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-contract">ضرورية</span></td>
+            <td>تسجيل الدخول وإدارة الجلسة</td>
+            <td>انتهاء الجلسة</td>
+          </tr>
+          <tr>
+            <td><span class="badge-legit">أداء</span></td>
+            <td>تحليل الاستخدام وتحسين الأداء</td>
+            <td>سنة واحدة</td>
+          </tr>
+          <tr>
+            <td><span class="badge-consent">تفضيلات</span></td>
+            <td>اللغة والإعدادات الشخصية</td>
+            <td>سنة واحدة</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub-item" style="background:rgba(14,165,233,.06); border-color:rgba(14,165,233,.2);">
+      <span class="sub-icon">💡</span>
+      <div class="sub-text">يمكنك تعطيل ملفات الارتباط غير الضرورية من إعدادات المتصفح. قد يؤثر ذلك على بعض وظائف المنصة. الكوكيز الضرورية مطلوبة لضمان عمل الموقع بشكل صحيح.</div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 6 ─── -->
+  <div class="card" id="s6">
+    <div class="card-header">
+      <div class="card-num">6</div>
+      <h2>حقوقك</h2>
+    </div>
+    <div class="rights-grid">
+      <div class="right-card">
+        <div class="right-icon">👁</div>
+        <div class="right-title">الحق في الاطلاع</div>
+        <div class="right-desc">يمكنك طلب الحصول على نسخة كاملة من بياناتك الشخصية المحفوظة لدينا.</div>
+      </div>
+      <div class="right-card">
+        <div class="right-icon">✏️</div>
+        <div class="right-title">الحق في التصحيح</div>
+        <div class="right-desc">تعديل أي بيانات غير دقيقة أو غير محدَّثة في حسابك في أي وقت.</div>
+      </div>
+      <div class="right-card">
+        <div class="right-icon">🗑</div>
+        <div class="right-title">الحق في الحذف</div>
+        <div class="right-desc">طلب حذف حسابك وبياناتك بشكل كامل. ينجز الطلب خلال 30 يومًا.</div>
+      </div>
+      <div class="right-card">
+        <div class="right-icon">📤</div>
+        <div class="right-title">الحق في النقل</div>
+        <div class="right-desc">الحصول على بياناتك بصيغة قابلة للقراءة الآلية (JSON / CSV).</div>
+      </div>
+      <div class="right-card">
+        <div class="right-icon">🚫</div>
+        <div class="right-title">الحق في الاعتراض</div>
+        <div class="right-desc">الاعتراض على معالجة بياناتك المبنية على أساس المصلحة المشروعة.</div>
+      </div>
+    </div>
+    <div class="email-cta">
+      <div class="cta-icon">✉️</div>
+      <div>
+        <strong>لممارسة أيٍّ من هذه الحقوق تواصل معنا عبر:</strong>
+        <a href="mailto:privacy@renty.com">privacy@renty.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 7 ─── -->
+  <div class="card" id="s7">
+    <div class="card-header">
+      <div class="card-num">7</div>
+      <h2>بيانات الأطفال</h2>
+    </div>
+    <div class="children-box">
+      <div class="ch-icon">🔞</div>
+      <div>
+        <h3>المنصة مخصصة للبالغين (18 عامًا فأكثر)</h3>
+        <p>لا نجمع بيانات من الأفراد الذين تقل أعمارهم عن 18 عامًا بشكل متعمد. إذا اكتشفنا أن حسابًا مسجلًا يعود لقاصر، نقوم بحذف الحساب وجميع بياناته المرتبطة به فورًا. إذا كنت تعتقد أن طفلك قد سجَّل حسابًا، يُرجى التواصل معنا على الفور عبر: <strong>privacy@renty.com</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 8 ─── -->
+  <div class="card" id="s8">
+    <div class="card-header">
+      <div class="card-num">8</div>
+      <h2>مدة الاحتفاظ بالبيانات</h2>
+    </div>
+    <div class="retention-list">
+      <div class="ret-item">
+        <div class="ret-label">⚡ الحسابات النشطة</div>
+        <div class="ret-period">طالما الحساب قائم</div>
+      </div>
+      <div class="ret-item">
+        <div class="ret-label">🗑 الحسابات المحذوفة</div>
+        <div class="ret-period">90 يومًا ثم حذف نهائي</div>
+      </div>
+      <div class="ret-item">
+        <div class="ret-label">📝 سجلات المعاملات</div>
+        <div class="ret-period">5 سنوات (التزام قانوني)</div>
+      </div>
+      <div class="ret-item">
+        <div class="ret-label">🎟 تذاكر الدعم الفني</div>
+        <div class="ret-period">سنتان</div>
+      </div>
+    </div>
+    <p style="font-size:.82rem; color:var(--gray); margin-top:16px; line-height:1.65;">
+      * مدة الاحتفاظ بسجلات المعاملات لمدة 5 سنوات هي متطلب قانوني وفقًا للتشريعات المصرية المعمول بها.
+    </p>
+  </div>
+
+  <!-- ─── SECTION 9 ─── -->
+  <div class="card" id="s9">
+    <div class="card-header">
+      <div class="card-num">9</div>
+      <h2>التغييرات على السياسة</h2>
+    </div>
+    <div class="changes-box">
+      <p>نحتفظ بحق تحديث هذه السياسة في أي وقت. في حال إجراء تغييرات جوهرية، <strong>سنُبلِّغك عبر البريد الإلكتروني المسجَّل قبل 14 يومًا</strong> على الأقل من سريان التغييرات.</p>
+      <br>
+      <p>استمرارك في استخدام المنصة بعد إخطارك بالتغييرات يُعدّ موافقةً ضمنية على السياسة المحدَّثة. إذا لم توافق على التغييرات يحق لك حذف حسابك وفقًا للإجراءات الموضَّحة في القسم السادس.</p>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 10 (CONTACT) ─── -->
+  <div class="contact-card" id="s10">
+    <div class="ct-icon">📬</div>
+    <h2>التواصل معنا</h2>
+    <p>لأي استفسارات حول هذه السياسة أو لممارسة حقوقك، يسعدنا الرد عليك في أقرب وقت.</p>
+    <a href="mailto:privacy@renty.com">privacy@renty.com</a>
+    <div class="contact-meta">مسؤول الخصوصية · وقت الاستجابة: خلال 5 أيام عمل</div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <div class="footer-logo">رنتي<span>.</span></div>
+  <div class="footer-links">
+    <a href="#">من نحن</a>
+    <a href="#">الشروط والأحكام</a>
+    <a href="#">سياسة الخصوصية</a>
+    <a href="#">الأسئلة الشائعة</a>
+    <a href="mailto:support@renty.com">تواصل معنا</a>
+  </div>
+  <div class="footer-divider"></div>
+  <p>© 2026 رنتي. جميع الحقوق محفوظة. منصة تأجير المعدات الرياضية من نظير إلى نظير في مصر.</p>
+</footer>
+
+</body>
+</html>

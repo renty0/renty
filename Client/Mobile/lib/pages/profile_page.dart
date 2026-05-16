@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/services/ProfileService.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -213,6 +214,54 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 16),
+
+                          // ── About Renty ──
+                          _buildSection(
+                            title: 'About Renty',
+                            icon: Icons.info_outline_rounded,
+                            isDark: isDark,
+                            cardColor: cardColor,
+                            children: [
+                              _ActionTile(
+                                icon: Icons.diversity_3_outlined,
+                                label: 'About Us',
+                                subtitle: 'Learn about our mission',
+                                isDark: isDark,
+                                iconColor: const Color(0xFF0ea5e9),
+                                onTap: () => _launchRentyUrl(
+                                  'https://appforyou.store/Renty/about.html'),
+                              ),
+                              _ActionTile(
+                                icon: Icons.gavel_outlined,
+                                label: 'Terms & Conditions',
+                                subtitle: 'Our terms of service',
+                                isDark: isDark,
+                                iconColor: const Color(0xFF0c295e),
+                                onTap: () => _launchRentyUrl(
+                                  'https://appforyou.store/Renty/terms.html'),
+                              ),
+                              _ActionTile(
+                                icon: Icons.shield_outlined,
+                                label: 'Privacy Policy',
+                                subtitle: 'How we protect your data',
+                                isDark: isDark,
+                                iconColor: const Color(0xFF059669),
+                                onTap: () => _launchRentyUrl(
+                                  'https://appforyou.store/Renty/privacy.html'),
+                              ),
+                              _ActionTile(
+                                icon: Icons.help_outline_rounded,
+                                label: 'FAQ',
+                                subtitle: 'Common questions answered',
+                                isDark: isDark,
+                                iconColor: const Color(0xFFd97706),
+                                showDivider: false,
+                                onTap: () => _launchRentyUrl(
+                                  'https://appforyou.store/Renty/faq.html'),
+                              ),
+                            ],
+                          ),
                           const SizedBox(height: 24),
 
                           // ── Logout ──
@@ -367,6 +416,13 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  Future<void> _launchRentyUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+    }
   }
 
   Widget _buildLogoutButton(bool isDark) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,7 @@ class _registerState extends State<register> {
   bool isLoading = false;
   String? errorMessage;
   bool acceptTerms = false;
+  bool acceptPrivacy = false;
 
   // UserType: 1=Renter, 2=Owner, 3=Both
   UserType _selectedUserType = UserType.number1;
@@ -85,22 +87,23 @@ class _registerState extends State<register> {
   String? _validateStep(int step) {
     switch (step) {
       case 0:
+        if (firstNameController.text.trim().isEmpty)
+          return 'First name is required';
+        if (lastNameController.text.trim().isEmpty)
+          return 'Last name is required';
         if (emailController.text.trim().isEmpty) return 'Email is required';
         if (!GetUtils.isEmail(emailController.text.trim()))
           return 'Please enter a valid email';
+        break;
+      case 1:
         if (passController.text.trim().length < 6)
           return 'Password must be at least 6 characters';
         if (passController.text != confirmController.text)
           return 'Passwords do not match';
         break;
-      case 1:
-        if (firstNameController.text.trim().isEmpty)
-          return 'First name is required';
-        if (lastNameController.text.trim().isEmpty)
-          return 'Last name is required';
-        break;
       case 2:
-        if (!acceptTerms) return 'You must accept the terms and conditions';
+        if (!acceptTerms) return 'You must agree to the Terms & Conditions to continue';
+        if (!acceptPrivacy) return 'You must agree to the Privacy Policy to continue';
         break;
     }
     return null;
@@ -376,32 +379,77 @@ class _registerState extends State<register> {
     );
   }
 
-  // ─── Step 1: Account Info ─────────────────────────────────────
+  // ─── Step 1: Personal Info ────────────────────────────────────
   Widget _buildAccountStep() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Account Information",
+        Text("Personal Information",
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white : AppColor.darkText)),
         SizedBox(height: 6),
-        Text("Enter your email and create a password",
+        Text("Tell us your name and email address",
             style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
         SizedBox(height: 20),
+        Text("First Name *", style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        CustomTextForm(
+          key: const ValueKey('firstName'),
+          hintText: "Enter your first name",
+          controller: firstNameController,
+        ),
+        SizedBox(height: 16),
+        Text("Last Name *", style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        CustomTextForm(
+          key: const ValueKey('lastName'),
+          hintText: "Enter your last name",
+          controller: lastNameController,
+        ),
+        SizedBox(height: 16),
         Text("Email *", style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
+          key: const ValueKey('email'),
           hintText: "Enter your email",
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
+        ),
+      ],
+    );
+  }
+
+  // ─── Step 2: Account Security ─────────────────────────────────
+  Widget _buildProfileStep() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Account Security",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : AppColor.darkText)),
+        SizedBox(height: 6),
+        Text("Set your phone number and create a password",
+            style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
+        SizedBox(height: 20),
+        Text("Phone Number", style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        CustomTextForm(
+          key: const ValueKey('phone'),
+          hintText: "Optional",
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
         ),
         SizedBox(height: 16),
         Text("Password *", style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
+          key: const ValueKey('password'),
           hintText: "Min 6 characters",
           controller: passController,
           obscureText: true,
@@ -412,50 +460,11 @@ class _registerState extends State<register> {
             style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
+          key: const ValueKey('confirmPassword'),
           hintText: "Re-enter your password",
           controller: confirmController,
           obscureText: true,
           isPassword: true,
-        ),
-      ],
-    );
-  }
-
-  // ─── Step 2: Profile Info ─────────────────────────────────────
-  Widget _buildProfileStep() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Profile Information",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColor.darkText)),
-        SizedBox(height: 6),
-        Text("Tell us about yourself",
-            style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
-        SizedBox(height: 20),
-        Text("First Name *", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Enter your first name",
-          controller: firstNameController,
-        ),
-        SizedBox(height: 16),
-        Text("Last Name *", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Enter your last name",
-          controller: lastNameController,
-        ),
-        SizedBox(height: 16),
-        Text("Phone Number", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Optional",
-          controller: phoneController,
-          keyboardType: TextInputType.phone,
         ),
       ],
     );
@@ -550,24 +559,106 @@ class _registerState extends State<register> {
           hintText: "Tell us about yourself (optional)",
           controller: bioController,
         ),
-        SizedBox(height: 16),
-        // Terms
-        Row(
-          children: [
-            Checkbox(
-              value: acceptTerms,
-              onChanged: (v) => setState(() => acceptTerms = v ?? false),
-              activeColor: AppColor.primaryColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+        SizedBox(height: 20),
+        // ── Terms & Privacy Agreement ──
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColor.primaryColor.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: AppColor.primaryColor.withOpacity(0.12),
             ),
-            Expanded(
-              child: Text(
-                "I accept the Terms and Conditions",
-                style: TextStyle(fontSize: 13, color: AppColor.mediumText),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Before creating your account',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColor.primaryColor,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              // Terms checkbox
+              _buildAgreementRow(
+                value: acceptTerms,
+                onChanged: (v) => setState(() => acceptTerms = v ?? false),
+                label: 'I agree to the ',
+                linkText: 'Terms & Conditions',
+                url: 'https://appforyou.store/Renty/terms.html',
+              ),
+              const SizedBox(height: 10),
+              // Privacy checkbox
+              _buildAgreementRow(
+                value: acceptPrivacy,
+                onChanged: (v) => setState(() => acceptPrivacy = v ?? false),
+                label: 'I agree to the ',
+                linkText: 'Privacy Policy',
+                url: 'https://appforyou.store/Renty/privacy.html',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Reusable checkbox + tappable link row for agreement items.
+  Widget _buildAgreementRow({
+    required bool value,
+    required ValueChanged<bool?> onChanged,
+    required String label,
+    required String linkText,
+    required String url,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 24,
+          height: 24,
+          child: Checkbox(
+            value: value,
+            onChanged: onChanged,
+            activeColor: AppColor.primaryColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Wrap(
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isDark ? Colors.white70 : AppColor.mediumText,
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  final uri = Uri.parse(url);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+                  }
+                },
+                child: Text(
+                  linkText,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColor.primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
