@@ -1,21 +1,21 @@
 using Application.Common.Interfaces;
+using Application.Common.Models;
+using Application.Features.Rentals;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Verifications;
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────
 
-public record VerificationDto(
-    Guid Id, string CheckType, string Status, string? Notes,
-    string? ExpertFirstName, DateTime CreatedAt
-);
+// DTOs are now in Application.Common.Models
 
 public record AssignedVerificationDto(
-    Guid VerificationId,
+    Guid VerificationId, Guid ItemId,
     string ItemTitleAr, string ItemTitleEn, string? ItemImage,
     DateTime? RentalStartDate, DateTime? RentalEndDate,
     string CheckType, DateTime CreatedAt
@@ -26,8 +26,8 @@ public record AssignedVerificationDto(
 public record CreateVerificationCommand(
     Guid ItemId,
     Guid? RentalId,
-    string CheckType,   // before_rent | after_return
-    string Status,      // pending | approved | rejected
+    string CheckType,
+    string Status,
     string? Notes
 ) : IRequest<CreateVerificationResponse>;
 
@@ -51,11 +51,13 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public CreateVerificationCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateVerificationCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<CreateVerificationResponse> Handle(CreateVerificationCommand request, CancellationToken ct)
@@ -73,18 +75,82 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
         Enum.TryParse<VerificationCheck>(request.CheckType.Replace("_", ""), true, out var checkType);
         Enum.TryParse<VerificationStatus>(request.Status, true, out var status);
 
-        var verification = new ItemVerification
+        var verification = await _context.ItemVerifications
+            .FirstOrDefaultAsync(v => v.ItemId == request.ItemId && v.ExpertId == _currentUser.Id.Value && v.Status == VerificationStatus.Pending, ct);
+
+        if (verification != null)
         {
-            ItemId = request.ItemId,
-            ExpertId = _currentUser.Id.Value,
-            RentalId = request.RentalId,
-            CheckType = checkType,
-            Status = status,
-            Notes = request.Notes,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        _context.ItemVerifications.Add(verification);
+            verification.Status = status;
+            verification.Notes = request.Notes;
+            verification.CheckType = checkType;
+            if (request.RentalId.HasValue) verification.RentalId = request.RentalId;
+            verification.UpdatedAt = DateTime.UtcNow;
+        }
+        else
+        {
+            verification = new ItemVerification
+            {
+                ItemId = request.ItemId,
+                ExpertId = _currentUser.Id.Value,
+                RentalId = request.RentalId,
+                CheckType = checkType,
+                Status = status,
+                Notes = request.Notes,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.ItemVerifications.Add(verification);
+        }
+
+        var rentalIdToUse = request.RentalId ?? verification?.RentalId;
+
+        // Update rental state if applicable
+        if (rentalIdToUse.HasValue)
+        {
+            var rental = await _context.Rentals.FirstOrDefaultAsync(r => r.Id == rentalIdToUse.Value, ct);
+            if (rental != null)
+            {
+                if (checkType == VerificationCheck.BeforeRent)
+                {
+                    if (status == VerificationStatus.Approved)
+                    {
+                        rental.IsHandoffVerified = true;
+                        rental.Status = Domain.Enums.RentalStatus.Active;
+                        item.Status = Domain.Enums.NewItemStatus.Rented;
+                    }
+                    else if (status == VerificationStatus.Rejected)
+                    {
+                        rental.Status = Domain.Enums.RentalStatus.Cancelled;
+                    }
+                }
+                else if (checkType == VerificationCheck.AfterReturn)
+                {
+                    if (status == VerificationStatus.Approved)
+                    {
+                        rental.Status = Domain.Enums.RentalStatus.Completed;
+                        rental.ActualReturnDate = DateTime.UtcNow;
+                        rental.DepositStatus = Domain.Enums.DepositStatus.Returned;
+                        item.Status = Domain.Enums.NewItemStatus.Available;
+                    }
+                    else if (status == VerificationStatus.Rejected)
+                    {
+                        // In case of damage/rejection, we forfeit the deposit and keep it pending resolution
+                        rental.DepositStatus = Domain.Enums.DepositStatus.Forfeited;
+                    }
+                }
+
+                // Notify users
+                var notifyIds = new List<long> { rental.UserId, item.OwnerId }.Distinct().ToList();
+                await _notifier.SendToUsersAsync(
+                    notifyIds,
+                    "Expert Evaluation Complete",
+                    $"The expert has completed the evaluation for '{item.TitleEn}'. Status: {status}.",
+                    "rental",
+                    $"/my-rentals/{rental.Id}",
+                    ct);
+            }
+        }
+
         await _context.SaveChangesAsync(ct);
         return new CreateVerificationResponse(true, null, verification.Id, verification.Status.ToString());
     }
@@ -93,23 +159,58 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
 // ── GET VERIFICATIONS ─────────────────────────────────────────────────────────
 
 public record GetVerificationsQuery(Guid ItemId) : IRequest<GetVerificationsResponse>;
-public record GetVerificationsResponse(bool Success, string? Error, List<VerificationDto>? Verifications);
+public record GetVerificationsResponse(bool Success, string? Error, ItemVerificationDetailsDto? ItemDetails, List<VerificationDto>? Verifications);
 
 public class GetVerificationsQueryHandler : IRequestHandler<GetVerificationsQuery, GetVerificationsResponse>
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetVerificationsQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetVerificationsQueryHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetVerificationsResponse> Handle(GetVerificationsQuery request, CancellationToken ct)
     {
-        var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == request.ItemId, ct);
-        if (item == null) return new GetVerificationsResponse(false, "Item not found.", null);
+        var item = await _context.Items
+            .Include(i => i.Owner)
+            .Include(i => i.Images).ThenInclude(img => img.Image)
+            .FirstOrDefaultAsync(i => i.Id == request.ItemId, ct);
+
+        if (item == null) return new GetVerificationsResponse(false, "Item not found.", null, null);
+
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
+
+        // Find the most recent rental for this item to provide context
+        var rental = await _context.Rentals
+            .Include(r => r.User)
+            .Where(r => r.ItemId == request.ItemId)
+            .OrderByDescending(r => r.CreatedAt)
+            .FirstOrDefaultAsync(ct);
+
+        var storagePath = item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                ?? item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
+        var imageUrl = !string.IsNullOrEmpty(storagePath)
+            ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+            : null;
+
+        var ownerDto = new PersonInfoDto(item.Owner.FullName, item.Owner.PhoneNumber, item.Owner.ProfilePictureUrl);
+        
+        RentalInfoDto? rentalDto = null;
+        if (rental != null)
+        {
+            var renterDto = new PersonInfoDto(rental.User.FullName, rental.User.PhoneNumber, rental.User.ProfilePictureUrl);
+            rentalDto = new RentalInfoDto(rental.Id, rental.StartDate, rental.EndDate, rental.RentalPrice, rental.DepositAmount, rental.Status.ToString(), renterDto);
+        }
+
+        var itemDetails = new ItemVerificationDetailsDto(
+            item.Id, item.TitleAr, item.TitleEn, imageUrl, item.Condition, item.City, ownerDto, rentalDto
+        );
 
         var verifications = await _context.ItemVerifications
             .Include(v => v.Expert)
@@ -122,7 +223,7 @@ public class GetVerificationsQueryHandler : IRequestHandler<GetVerificationsQuer
             ))
             .ToListAsync(ct);
 
-        return new GetVerificationsResponse(true, null, verifications);
+        return new GetVerificationsResponse(true, null, itemDetails, verifications);
     }
 }
 
@@ -135,33 +236,137 @@ public class GetExpertAssignedQueryHandler : IRequestHandler<GetExpertAssignedQu
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetExpertAssignedQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public GetExpertAssignedQueryHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
+    {
+        _context = context;
+        _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<GetExpertAssignedResponse> Handle(GetExpertAssignedQuery request, CancellationToken ct)
+    {
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
+
+        var rawAssignments = await _context.ItemVerifications
+            .Include(v => v.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
+            .Include(v => v.Rental)
+            .Where(v => v.ExpertId == _currentUser.Id!.Value && v.Status == VerificationStatus.Pending)
+            .OrderByDescending(v => v.CreatedAt)
+            .ToListAsync(ct);
+
+        var assignments = rawAssignments.Select(v =>
+        {
+            var storagePath = v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
+            var imageUrl = !string.IsNullOrEmpty(storagePath)
+                ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+                : null;
+            return new AssignedVerificationDto(
+                v.Id,
+                v.ItemId,
+                v.Item.TitleAr,
+                v.Item.TitleEn,
+                imageUrl,
+                v.Rental?.StartDate,
+                v.Rental?.EndDate,
+                v.CheckType.ToString(),
+                v.CreatedAt
+            );
+        }).ToList();
+
+        return new GetExpertAssignedResponse(assignments);
+    }
+}
+
+// ── GET UNASSIGNED VERIFICATIONS ──────────────────────────────────────────────
+
+public record GetUnassignedVerificationsQuery : IRequest<GetExpertAssignedResponse>;
+
+public class GetUnassignedVerificationsQueryHandler : IRequestHandler<GetUnassignedVerificationsQuery, GetExpertAssignedResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GetUnassignedVerificationsQueryHandler(IApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+    {
+        _context = context;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<GetExpertAssignedResponse> Handle(GetUnassignedVerificationsQuery request, CancellationToken ct)
+    {
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
+
+        var rawAssignments = await _context.ItemVerifications
+            .Include(v => v.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
+            .Include(v => v.Rental)
+            .Where(v => v.ExpertId == null && v.Status == VerificationStatus.Pending)
+            .OrderByDescending(v => v.CreatedAt)
+            .ToListAsync(ct);
+
+        var assignments = rawAssignments.Select(v =>
+        {
+            var storagePath = v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
+                ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
+            var imageUrl = !string.IsNullOrEmpty(storagePath)
+                ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+                : null;
+            return new AssignedVerificationDto(
+                v.Id,
+                v.ItemId,
+                v.Item.TitleAr,
+                v.Item.TitleEn,
+                imageUrl,
+                v.Rental?.StartDate,
+                v.Rental?.EndDate,
+                v.CheckType.ToString(),
+                v.CreatedAt
+            );
+        }).ToList();
+
+        return new GetExpertAssignedResponse(assignments);
+    }
+}
+
+// ── CLAIM VERIFICATION ───────────────────────────────────────────────────────
+
+public record ClaimVerificationCommand(Guid VerificationId) : IRequest<RentalActionResponse>;
+
+public class ClaimVerificationCommandHandler : IRequestHandler<ClaimVerificationCommand, RentalActionResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public ClaimVerificationCommandHandler(IApplicationDbContext context, IUser currentUser)
     {
         _context = context;
         _currentUser = currentUser;
     }
 
-    public async Task<GetExpertAssignedResponse> Handle(GetExpertAssignedQuery request, CancellationToken ct)
+    public async Task<RentalActionResponse> Handle(ClaimVerificationCommand request, CancellationToken ct)
     {
-        var assignments = await _context.ItemVerifications
-            .Include(v => v.Item).ThenInclude(i => i.Images)
-            .Include(v => v.Rental)
-            .Where(v => v.ExpertId == _currentUser.Id!.Value && v.Status == VerificationStatus.Pending)
-            .OrderByDescending(v => v.CreatedAt)
-            .Select(v => new AssignedVerificationDto(
-                v.Id,
-                v.Item.TitleAr,
-                v.Item.TitleEn,
-                v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
-                    ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault(),
-                v.Rental != null ? v.Rental.StartDate : null,
-                v.Rental != null ? v.Rental.EndDate : null,
-                v.CheckType.ToString(),
-                v.CreatedAt
-            ))
-            .ToListAsync(ct);
+        if (!_currentUser.Id.HasValue) return new RentalActionResponse(false, "Unauthorized.", null);
 
-        return new GetExpertAssignedResponse(assignments);
+        var verification = await _context.ItemVerifications
+            .Include(v => v.Item)
+            .FirstOrDefaultAsync(v => v.Id == request.VerificationId, ct);
+
+        if (verification == null) return new RentalActionResponse(false, "Verification not found.", null);
+        
+        if (verification.ExpertId.HasValue) 
+            return new RentalActionResponse(false, "Verification already assigned to another expert.", null);
+
+        if (verification.Item.OwnerId == _currentUser.Id.Value)
+            return new RentalActionResponse(false, "You cannot verify your own item.", null);
+
+        verification.ExpertId = _currentUser.Id.Value;
+        verification.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(ct);
+        return new RentalActionResponse(true, "Verification claimed successfully.", null);
     }
 }

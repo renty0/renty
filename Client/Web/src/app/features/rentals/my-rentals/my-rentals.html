@@ -3,6 +3,12 @@
     [showButton]="false" [showSearch]="false">
   </app-header-section>
 
+  <!-- Role Selection Tabs -->
+  <mat-tab-group (selectedTabChange)="onRoleChange($event.index === 0 ? 'renter' : 'owner')" class="mb-4">
+    <mat-tab [label]="'rentals.list.tabs.renter' | translate"></mat-tab>
+    <mat-tab [label]="'rentals.list.tabs.owner' | translate"></mat-tab>
+  </mat-tab-group>
+
   <!-- Filter Chips -->
   <div class="filters-container mb-4 overflow-x-auto">
     <mat-chip-listbox (change)="applyFilter($event.value)" class="premium-chips">

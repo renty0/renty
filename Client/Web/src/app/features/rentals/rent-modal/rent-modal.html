@@ -84,6 +84,12 @@
         <span>{{ 'rentals.deposit' | translate }}</span>
         <span class="amount">{{ depositAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
       </div>
+      @if (rentForm.get('requiresExpert')?.value) {
+        <div class="price-row expert-fee">
+          <span>{{ 'rentals.requiresExpert' | translate }}</span>
+          <span class="amount text-accent font-bold">+{{ expertFee() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+        </div>
+      }
       <div class="price-divider"></div>
       <div class="price-row total">
         <span>{{ 'rentals.total' | translate }}</span>

@@ -20,8 +20,15 @@ public class Rental
     public string? Notes { get; set; }
     public string? HandoffCode { get; set; } = Guid.NewGuid().ToString("N")[..6].ToUpper();
     public bool IsHandoffVerified { get; set; } = false;
+    public bool RenterWantsExpertReview { get; set; } = false;
+    public bool OwnerWantsExpertReview { get; set; } = false;
+    public decimal ExpertReviewFee { get; set; } = 0;
+    public long? AssignedExpertId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation
+    public ApplicationUser? AssignedExpert { get; set; }
 
     // Navigation
     public ApplicationUser User { get; set; } = null!;

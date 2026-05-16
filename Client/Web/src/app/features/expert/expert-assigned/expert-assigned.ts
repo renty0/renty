@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { VerificationsClient, AssignedVerificationDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -26,6 +27,7 @@ import { finalize } from 'rxjs';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    MatTabsModule,
     HeaderSectionComponent
   ],
   templateUrl: './expert-assigned.html',
@@ -37,12 +39,20 @@ export class ExpertAssignedComponent implements OnInit {
   public translate = inject(TranslateService);
 
   isLoading = signal(true);
+  isActionLoading = signal(false);
   assignments = signal<AssignedVerificationDto[]>([]);
+  availableTasks = signal<AssignedVerificationDto[]>([]);
 
   displayedColumns: string[] = ['item', 'checkType', 'dates', 'createdAt', 'actions'];
+  availableColumns: string[] = ['item', 'checkType', 'dates', 'createdAt', 'actions'];
 
   ngOnInit() {
+    this.loadAll();
+  }
+
+  loadAll() {
     this.loadAssignments();
+    this.loadAvailable();
   }
 
   loadAssignments() {
@@ -60,6 +70,31 @@ export class ExpertAssignedComponent implements OnInit {
           this.toast.showError('errors.fetchFailed');
         }
       });
+  }
+
+  loadAvailable() {
+    this.verificationsClient.getUnassignedVerifications().subscribe({
+      next: (res) => {
+        if (res.data?.assignments) {
+          this.availableTasks.set(res.data.assignments);
+        }
+      },
+    });
+  }
+
+  claimTask(id: string) {
+    this.isActionLoading.set(true);
+    this.verificationsClient.claimVerification(id).subscribe({
+      next: () => {
+        this.toast.showSuccess('expert.tasks.claimed_success');
+        this.loadAll();
+        this.isActionLoading.set(false);
+      },
+      error: (err) => {
+        this.toast.showError('errors.generic');
+        this.isActionLoading.set(false);
+      }
+    });
   }
 
   getLocalizedName(assignment: AssignedVerificationDto): string {

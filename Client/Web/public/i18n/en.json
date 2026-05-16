@@ -214,6 +214,8 @@
     "type": "Type",
     "reviews": "Reviews",
     "condition": "Condition",
+    "renter": "Renter",
+    "owner": "Owner",
     "location": "Location",
     "mapLocation": "Map Location",
     "code": "Code",
@@ -354,7 +356,11 @@
       "dates": "Rental Dates",
       "amount": "Total Amount",
       "status": "Status",
-      "all": "All Rentals"
+      "all": "All Rentals",
+      "tabs": {
+        "renter": "Items I Rented",
+        "owner": "Rentals of My Items"
+      }
     },
     "status": {
       "pending": "Pending",
@@ -366,6 +372,17 @@
       "overdue": "Overdue",
       "rejected": "Rejected",
       "disputed": "Disputed"
+    },
+    "expert": {
+      "assigned": "Assigned",
+      "not_assigned": "Not Assigned",
+      "submit_report": "Submit Report",
+      "pending_assignment": "Pending Assignment",
+      "status": {
+        "approved": "Evaluation Approved",
+        "rejected": "Evaluation Rejected",
+        "pending": "Evaluation Pending"
+      }
     },
     "details": {
       "title": "Rental Details",
@@ -379,6 +396,7 @@
       "price": "Rental Price",
       "deposit": "Security Deposit",
       "total": "Total Amount",
+      "expert_review": "Expert Review",
       "lateFee": "Late Fee",
       "notes": "Owner Notes",
       "parties": "Parties",
@@ -400,6 +418,9 @@
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
+      "request_expert": "Request Expert Review",
+      "cancel_expert": "Cancel Expert Request",
+      "cancel_assigned_expert": "Cancel Assigned Expert",
       "dispute": "Dispute",
       "damaged": "Forfeit Deposit",
       "verify": "Verify & Start Rental",
@@ -662,23 +683,53 @@
     "similarItems": "Similar Items"
   },
   "expert": {
+    "not_assigned": "Not Assigned",
     "verifyItem": "New Verification Workflow",
+    "verifyItem.subtitle": "Fill in the form to submit a new expert verification record",
     "backToAssigned": "Back to Assignments",
     "verifySuccess": "Verification submitted successfully",
+    "tabs": {
+      "my_tasks": "My Tasks",
+      "available": "Available Tasks"
+    },
+    "tasks": {
+      "claimed_success": "Task claimed successfully!"
+    },
+    "available": {
+      "empty_title": "Queue Empty",
+      "empty": "No new verification requests available."
+    },
+    "actions": {
+      "claim": "Claim Task"
+    },
     "assigned": {
       "title": "Assigned Verifications",
       "subtitle": "Items pending your expert review",
+      "empty_title": "No Tasks Assigned",
       "item": "Item",
       "type": "Check Type",
       "rentalDates": "Rental Dates",
       "empty": "No items assigned to you at the moment."
     },
     "history": {
-      "title": "Verification History",
+      "title": "Item Verification",
       "subtitle": "Review item condition history and submit new verification",
       "listTitle": "Verification Timeline",
       "verifiedBy": "Verified By",
-      "empty": "No previous verifications found."
+      "empty": "No previous verifications found.",
+      "empty_title": "No Verifications Yet",
+      "records": "records",
+      "noRecords": "No verification records",
+      "itemDetailsTitle": "Item & Rental Details",
+      "itemDetailsSubtitle": "Overview of the item and parties involved",
+      "itemName": "Item Name",
+      "itemCity": "City",
+      "ownerName": "Owner Name",
+      "ownerPhone": "Owner Phone",
+      "renterName": "Renter Name",
+      "renterPhone": "Renter Phone",
+      "rentalDates": "Rental Dates",
+      "rentalPrice": "Rental Price"
     },
     "verify": {
       "checkType": "Verification Type",

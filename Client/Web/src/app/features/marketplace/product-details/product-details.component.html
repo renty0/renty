@@ -20,7 +20,7 @@
                          [alt]="getLocalizedName(item())"
                          class="main-image">
 
-                    @if (isLoggedIn()) {
+                    @if (isLoggedIn() && !isOwner()) {
                     <button class="favorite-btn" [class.active]="isFavorite()" (click)="toggleFavorite()"
                             [title]="isFavorite() ? ('marketplace.removeFromFavorites' | translate) : ('marketplace.addToFavorites' | translate)">
                         <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
@@ -63,20 +63,22 @@
                 </div>
 
                 <div class="action-buttons flex flex-column gap-3 mt-4">
-                    <app-loading-button [color]="'primary'" customClass="rent-btn py-3 w-full" [disabled]="item()?.status !== 'Available'" (clicked)="openRentModal()">
-                        <mat-icon>calendar_today</mat-icon>
-                        {{ 'marketplace.rentNow' | translate }}
-                    </app-loading-button>
-                    <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3 w-full" [disabled]="item()?.status !== 'Available'">
-                        <mat-icon>shopping_cart</mat-icon>
-                        {{ 'marketplace.buyNow' | translate }}
-                    </button>
+                    @if (!isOwner()) {
+                        <app-loading-button [color]="'primary'" customClass="rent-btn py-3 w-full" [disabled]="item()?.status !== 'Available'" (clicked)="openRentModal()">
+                            <mat-icon>calendar_today</mat-icon>
+                            {{ 'marketplace.rentNow' | translate }}
+                        </app-loading-button>
+                        <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3 w-full" [disabled]="item()?.status !== 'Available'">
+                            <mat-icon>shopping_cart</mat-icon>
+                            {{ 'marketplace.buyNow' | translate }}
+                        </button>
 
-                    @if (item()?.status === 'Rented') {
-                    <button mat-flat-button [color]="isReminded() ? 'warn' : 'accent'" class="remind-btn py-3" (click)="toggleReminder()">
-                        <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
-                        {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
-                    </button>
+                        @if (item()?.status === 'Rented') {
+                        <button mat-flat-button [color]="isReminded() ? 'warn' : 'accent'" class="remind-btn py-3" (click)="toggleReminder()">
+                            <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+                            {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+                        </button>
+                        }
                     }
 
                     @if (canEdit() || canDelete()) {

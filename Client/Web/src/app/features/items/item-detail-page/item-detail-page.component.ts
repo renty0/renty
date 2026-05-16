@@ -1,5 +1,5 @@
 import {
-    Component, inject, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef
+    Component, inject, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef, computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -24,6 +24,7 @@ import { LocalizationService } from '../../../core/services/localization.service
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-item-detail-page',
@@ -60,6 +61,7 @@ export class ItemDetailPageComponent implements OnInit {
     private readonly translate = inject(TranslateService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly authService = inject(AuthService);
 
     // ── State signals ──────────────────────────────────────────────
     item = signal<ItemDetailDto | null>(null);
@@ -82,6 +84,14 @@ export class ItemDetailPageComponent implements OnInit {
     // ── Similar items ──────────────────────────────────────────────
     similarItems = signal<ItemListDto[]>([]);
     isLoadingSimilar = signal(false);
+
+    isOwner = computed(() => {
+        const currentUserId = this.authService.getCurrentUserId();
+        const itemOwnerId = this.item()?.owner?.id;
+        return currentUserId !== null && !!itemOwnerId && currentUserId === itemOwnerId;
+    });
+
+    isLoggedIn = this.authService.isLoggedIn;
 
     // ── Forms ──────────────────────────────────────────────────────
     reviewForm!: FormGroup;

@@ -1837,6 +1837,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("actual_return_date");
 
+                    b.Property<long?>("AssignedExpertId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1854,6 +1857,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
+
+                    b.Property<decimal>("ExpertReviewFee")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("HandoffCode")
                         .HasColumnType("text");
@@ -1878,10 +1884,16 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
+                    b.Property<bool>("OwnerWantsExpertReview")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal>("RentalPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)")
                         .HasColumnName("rental_price");
+
+                    b.Property<bool>("RenterWantsExpertReview")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone")
@@ -1901,6 +1913,8 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedExpertId");
 
                     b.HasIndex("ItemId");
 
@@ -2903,6 +2917,10 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Rental", b =>
                 {
+                    b.HasOne("Domain.Entities.ApplicationUser", "AssignedExpert")
+                        .WithMany()
+                        .HasForeignKey("AssignedExpertId");
+
                     b.HasOne("Domain.Entities.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -2918,6 +2936,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AssignedExpert");
 
                     b.Navigation("Item");
 

@@ -220,7 +220,9 @@
     "type": "النوع",
     "condition": "الحالة",
     "message": "الرسالة",
-    "subject": "الموضوع",    
+    "renter": "المستأجر",
+    "owner": "المالك",
+    "subject": "الموضوع",
     "code": "الكود",
     "reviews": "التقييمات",
     "location": "الموقع",
@@ -360,7 +362,11 @@
       "dates": "تاريخ التأجير",
       "amount": "المبلغ الإجمالي",
       "status": "الحالة",
-      "all": "كل الإيجارات"
+      "all": "كل الإيجارات",
+      "tabs": {
+        "renter": "منتجات استأجرتها",
+        "owner": "تأجير منتجاتي"
+      }
     },
     "status": {
       "pending": "قيد الانتظار",
@@ -372,6 +378,17 @@
       "overdue": "متأخر",
       "rejected": "مرفوض",
       "disputed": "متنازع عليه"
+    },
+    "expert": {
+      "assigned": "تم التعيين",
+      "not_assigned": "لم يتم التعيين",
+      "submit_report": "إرسال التقرير",
+      "pending_assignment": "قيد الانتظار",
+      "status": {
+        "approved": "تقييم مقبول",
+        "rejected": "تقييم مرفوض",
+        "pending": "قيد التقييم"
+      }
     },
     "details": {
       "title": "تفاصيل الإيجار",
@@ -389,6 +406,7 @@
       "notes": "ملاحظات المالك",
       "parties": "الأطراف",
       "owner": "المالك",
+      "expert_review": "تقييم الخبير",
       "createdAt": "تاريخ الإنشاء",
       "review": "إضافة تقييم",
       "rating": "التقييم",
@@ -406,6 +424,9 @@
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
+      "request_expert": "طلب تقييم خبير",
+      "cancel_expert": "إلغاء طلب الخبير",
+      "cancel_assigned_expert": "إلغاء الخبير المكلف",
       "dispute": "نزاع",
       "damaged": "مصادرة التأمين",
       "verify": "التحقق وبدء الإيجار",
@@ -668,23 +689,53 @@
     "similarItems": "منتجات مشابهة"
   },
   "expert": {
+    "not_assigned": "غير معين",
     "verifyItem": "فحص جديد",
+    "verifyItem.subtitle": "قم بملء النموذج لإرسال سجل فحص خبير جديد",
     "backToAssigned": "العودة للقائمة",
     "verifySuccess": "تم إرسال الفحص بنجاح",
+    "tabs": {
+      "my_tasks": "مهامي",
+      "available": "الطلبات المتاحة"
+    },
+    "tasks": {
+      "claimed_success": "تم استلام المهمة بنجاح!"
+    },
+    "available": {
+      "empty_title": "القائمة فارغة",
+      "empty": "لا توجد طلبات فحص جديدة متاحة حالياً."
+    },
+    "actions": {
+      "claim": "استلام المهمة"
+    },
     "assigned": {
       "title": "الفحوصات المخصصة",
       "subtitle": "المنتجات التي تنتظر مراجعتك وتقييمك",
+      "empty_title": "لا توجد مهام حالياً",
       "item": "المنتج",
       "type": "نوع الفحص",
       "rentalDates": "تواريخ الإيجار",
       "empty": "لا توجد منتجات مخصصة لك في الوقت الحالي."
     },
     "history": {
-      "title": "سجل الفحوصات",
+      "title": "فحص المنتج",
       "subtitle": "مراجعة حالة المنتج التاريخية وإرسال فحص جديد",
       "listTitle": "الجدول الزمني للفحص",
       "verifiedBy": "تم الفحص بواسطة",
-      "empty": "لم يتم العثور على فحوصات سابقة."
+      "empty": "لم يتم العثور على فحوصات سابقة.",
+      "empty_title": "لا توجد فحوصات بعد",
+      "records": "سجل",
+      "noRecords": "لا توجد سجلات فحص",
+      "itemDetailsTitle": "تفاصيل المنتج والإيجار",
+      "itemDetailsSubtitle": "نظرة عامة على المنتج والأطراف المعنية",
+      "itemName": "اسم المنتج",
+      "itemCity": "المدينة",
+      "ownerName": "اسم المالك",
+      "ownerPhone": "رقم المالك",
+      "renterName": "اسم المستأجر",
+      "renterPhone": "رقم المستأجر",
+      "rentalDates": "تواريخ الإيجار",
+      "rentalPrice": "سعر الإيجار"
     },
     "verify": {
       "checkType": "نوع الفحص",
@@ -695,7 +746,9 @@
     },
     "checkTypes": {
       "beforeRent": "قبل الإيجار",
-      "afterReturn": "بعد الإرجاع"
+      "afterReturn": "بعد الإرجاع",
+      "BeforeRent": "قبل الإيجار",
+      "AterReturn": "بعد الإرجاع"
     },
     "status": {
       "approved": "مقبول",

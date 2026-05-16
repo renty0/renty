@@ -12,6 +12,7 @@ import { RentalsClient, RentalListDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { RouterModule } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-my-rentals',
@@ -27,7 +28,8 @@ import { RouterModule } from '@angular/router';
     MatDividerModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    HeaderSectionComponent
+    HeaderSectionComponent,
+    MatTabsModule
   ],
   templateUrl: './my-rentals.html',
   styleUrl: './my-rentals.scss'
@@ -41,6 +43,7 @@ export class MyRentalsComponent implements OnInit {
   rentals = signal<RentalListDto[]>([]);
   filteredRentals = signal<RentalListDto[]>([]);
   activeStatus = signal<string | null>(null);
+  activeRole = signal<string>('renter');
 
   ngOnInit() {
     this.loadRentals();
@@ -48,7 +51,7 @@ export class MyRentalsComponent implements OnInit {
 
   loadRentals() {
     this.isLoading.set(true);
-    this.rentalsClient.getRentals(1, 100, undefined).subscribe({
+    this.rentalsClient.getRentals(1, 100, undefined, this.activeRole()).subscribe({
       next: (res) => {
         const rentalsList = res.data?.rentals || [];
         this.rentals.set(rentalsList);
@@ -61,6 +64,11 @@ export class MyRentalsComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  onRoleChange(role: string) {
+    this.activeRole.set(role);
+    this.loadRentals();
   }
 
   applyFilter(status: string | null) {

@@ -1,14 +1,10 @@
 <div class="rental-details-container">
-  <app-header-section [title]="'rentals.details.title' | translate" [showButton]="false" [showSearch]="false">
-  </app-header-section>
-
+  <app-header-section [title]="'rentals.details.title' | translate" [showButton]="false" [showSearch]="false"/>
   @if (isLoading()) {
   <div class="loading-state">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
   } @else if (rental(); as r) {
-
-  <!-- ─── HERO BANNER ─── -->
   <div class="rental-hero shadow-2 mb-4">
     <div class="hero-image-wrap">
       <img [src]="r.itemImageUrl || 'assets/placeholder-product.png'" alt="Product" class="hero-img">
@@ -27,7 +23,7 @@
           </span>
           <span class="hero-meta-item">
             <mat-icon>person</mat-icon>
-            {{ r.ownerFirstName }}{{ r.ownerCity ? ', ' + r.ownerCity : '' }}
+            {{ otherUserName() }}{{ !isOwner() && r.ownerCity ? ', ' + r.ownerCity : '' }}
           </span>
           <span class="hero-meta-item">
             <mat-icon>payments</mat-icon>
@@ -36,27 +32,20 @@
         </div>
       </div>
       <div class="hero-actions flex gap-2 flex-wrap">
-        <button mat-flat-button class="hero-item-btn" [routerLink]="['/marketplace/product', r.itemId]">
-          <mat-icon>open_in_new</mat-icon>
+        <app-loading-button variant="filled" class="hero-item-btn" [routerLink]="['/marketplace/product', r.itemId]" matIcon="open_in_new">
           {{ 'rentals.details.item' | translate }}
-        </button>
-        @if (!isOwner()) {
-        <button mat-flat-button color="accent" class="hero-chat-btn" (click)="startChat()" [disabled]="isActionLoading()">
-          <mat-icon>chat</mat-icon>
+        </app-loading-button>
+        @if (userId() && (isOwner() || isRenter())) {
+        <app-loading-button variant="filled" color="accent" class="hero-chat-btn" (clicked)="startChat()" [loading]="isActionLoading()" matIcon="chat">
           {{ 'rentals.details.chat_now' | translate }}
-        </button>
+        </app-loading-button>
         }
       </div>
     </div>
   </div>
 
-  <!-- ─── MAIN GRID ─── -->
   <div class="grid details-grid">
-
-    <!-- LEFT: Info + Photos + Review -->
     <div class="col-12 lg:col-8 main-info flex flex-column gap-4">
-
-      <!-- Rental Info Row -->
       <div class="info-strip grid gap-0">
         <div class="info-strip-item col-6 md:col-3">
           <label>{{ 'rentals.details.dates' | translate }}</label>
@@ -76,7 +65,6 @@
         </div>
       </div>
 
-      <!-- Handoff Code / Verify (only Confirmed/Active) -->
       @if (r.status?.toLowerCase() === 'confirmed' || r.status?.toLowerCase() === 'active') {
       <mat-card class="premium-card verification-card shadow-1">
         <mat-card-content class="p-0">
@@ -113,7 +101,6 @@
       </mat-card>
       }
 
-      <!-- Condition Photos -->
       <mat-card class="premium-card section-card photos-card shadow-1">
         <mat-card-header class="mb-3">
           <mat-icon mat-card-avatar class="text-primary">photo_library</mat-icon>
@@ -126,10 +113,9 @@
                 <h4>{{ 'rentals.details.handover_photos' | translate }}</h4>
                 <div *ngIf="isOwner() && r.status === 'Confirmed'">
                   <input type="file" #handoverInput (change)="onPhotoSelected($event, 'Handover')" hidden>
-                  <button mat-icon-button (click)="handoverInput.click()" [disabled]="isUploading()"
-                    [matTooltip]="'buttons.upload' | translate" color="primary">
-                    <mat-icon>add_a_photo</mat-icon>
-                  </button>
+                  <app-loading-button [iconOnly]="true" matIcon="add_a_photo" (clicked)="handoverInput.click()" [loading]="isUploading()"
+                    [tooltip]="'buttons.upload' | translate" color="primary">
+                  </app-loading-button>
                 </div>
               </div>
               <div class="photo-grid">
@@ -151,10 +137,9 @@
                 <h4>{{ 'rentals.details.return_photos' | translate }}</h4>
                 <div *ngIf="isOwner() && r.status === 'Active'">
                   <input type="file" #returnInput (change)="onPhotoSelected($event, 'Return')" hidden>
-                  <button mat-icon-button (click)="returnInput.click()" [disabled]="isUploading()"
-                    [matTooltip]="'buttons.upload' | translate" color="primary">
-                    <mat-icon>add_a_photo</mat-icon>
-                  </button>
+                  <app-loading-button [iconOnly]="true" matIcon="add_a_photo" (clicked)="returnInput.click()" [loading]="isUploading()"
+                    [tooltip]="'buttons.upload' | translate" color="primary">
+                  </app-loading-button>
                 </div>
               </div>
               <div class="photo-grid">
@@ -172,7 +157,6 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Review -->
       <mat-card class="premium-card section-card review-card shadow-1"
         *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
         <mat-card-header class="mb-3">
@@ -184,10 +168,9 @@
             <div class="rating-container">
               <label class="block text-sm text-500 mb-2">{{ 'rentals.details.rating' | translate }}</label>
               <div class="stars flex gap-1">
-                <button mat-icon-button *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)"
-                  [color]="reviewRating() >= s ? 'accent' : ''" type="button" class="star-btn">
-                  <mat-icon>{{ reviewRating() >= s ? 'star' : 'star_border' }}</mat-icon>
-                </button>
+                <app-loading-button [iconOnly]="true" *ngFor="let s of [1,2,3,4,5]" (clicked)="setRating(s)"
+                  [color]="reviewRating() >= s ? 'accent' : 'secondary'" [matIcon]="reviewRating() >= s ? 'star' : 'star_border'" class="star-btn">
+                </app-loading-button>
               </div>
             </div>
             <div class="flex-1">
@@ -218,11 +201,9 @@
       }
     </div>
 
-    <!-- RIGHT: Financial + Actions -->
     <div class="col-12 lg:col-4 side-info">
       <div class="side-sticky">
 
-        <!-- Financial Summary -->
         <mat-card class="premium-card financial-card shadow-1 mb-4">
           <mat-card-header class="mb-3">
             <mat-icon mat-card-avatar class="text-primary">payments</mat-icon>
@@ -255,7 +236,117 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Actions Card -->
+        <mat-card class="premium-card parties-card shadow-1 mb-4">
+          <mat-card-header class="mb-3">
+            <mat-icon mat-card-avatar class="text-primary">groups</mat-icon>
+            <mat-card-title class="font-bold">{{ 'rentals.details.parties' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="party-list flex flex-column gap-3">
+              <div class="party-item flex align-items-center gap-3">
+                <div class="party-avatar shadow-1">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div class="party-info flex-1">
+                  <label class="block text-xs text-400 uppercase tracking-wider">{{ 'rentals.details.owner' | translate }}</label>
+                  <a [routerLink]="['/user-profile', r.ownerId]" class="profile-link font-bold text-900">
+                    {{ r.ownerFirstName }}
+                  </a>
+                </div>
+                @if (isRenter()) {
+                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()">
+                  </app-loading-button>
+                }
+              </div>
+
+              <div class="party-item flex align-items-center gap-3">
+                <div class="party-avatar shadow-1 renter">
+                  <mat-icon>person_outline</mat-icon>
+                </div>
+                <div class="party-info flex-1">
+                  <label class="block text-xs text-400 uppercase tracking-wider">{{ 'labels.renter' | translate }}</label>
+                  <a [routerLink]="['/user-profile', r.renterId]" class="profile-link font-bold text-900">
+                    {{ r.renterFirstName }}
+                  </a>
+                </div>
+                @if (isOwner()) {
+                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()">
+                  </app-loading-button>
+                }
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        @if (r.renterWantsExpertReview || r.ownerWantsExpertReview) {
+          <mat-card class="premium-card expert-card shadow-1 mb-4">
+            <mat-card-header class="mb-3">
+              <mat-icon mat-card-avatar class="text-accent">verified_user</mat-icon>
+              <mat-card-title class="font-bold">{{ 'rentals.details.expert_review' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="expert-status-list flex flex-column gap-3">
+                  <div class="status-item flex align-items-center gap-3">
+                    <div class="status-icon" 
+                         [class.done]="r.verifications?.[0]?.status === 'Approved'"
+                         [class.error]="r.verifications?.[0]?.status === 'Rejected'"
+                         [class.pending]="!r.verifications?.[0]?.status && r.assignedExpertId">
+                      <mat-icon>
+                        {{ 
+                           r.verifications?.[0]?.status === 'Approved' ? 'check_circle' :
+                           r.verifications?.[0]?.status === 'Rejected' ? 'cancel' :
+                           r.assignedExpertId ? 'hourglass_bottom' : 'hourglass_empty'
+                        }}
+                      </mat-icon>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex justify-content-between align-items-start">
+                        <div>
+                          <p class="m-0 font-bold text-900">
+                            @if (r.verifications?.[0]?.status) {
+                               {{ 'rentals.expert.status.' + r.verifications?.[0]?.status?.toLowerCase() | translate }}
+                            } @else if (r.assignedExpertId) {
+                               {{ 'rentals.expert.assigned' | translate }}
+                            } @else {
+                               {{ 'rentals.expert.pending_assignment' | translate }}
+                            }
+                          </p>
+                          <small class="text-500 block mt-1">
+                            <mat-icon class="text-xs" style="vertical-align: middle; width: 14px; height: 14px; font-size: 14px;">person</mat-icon>
+                            {{ r.verifications?.[0]?.expertFirstName || r.assignedExpertName || ('expert.not_assigned' | translate) }}
+                          </small>
+                        </div>
+                        @if (r.verifications?.[0]?.createdAt) {
+                          <small class="text-400">{{ r.verifications?.[0]?.createdAt | date:'shortDate' }}</small>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  @if (r.verifications?.[0]?.notes) {
+                    <div class="expert-notes-box mt-2 p-3 border-round">
+                      <p class="m-0 text-sm text-600 font-italic">
+                        "{{ r.verifications?.[0]?.notes }}"
+                      </p>
+                    </div>
+                  }
+
+                  @if (r.assignedExpertId === userId() && !r.verifications?.[0]?.status) {
+                  <app-loading-button color="accent" [fullWidth]="true" class="mt-2" (clicked)="submitExpertReview()" [loading]="isActionLoading()" matIcon="rate_review">
+                    {{ 'rentals.expert.submit_report' | translate }}
+                  </app-loading-button>
+                }
+
+                @if (!r.verifications?.[0]?.status && ((isOwner() && r.ownerWantsExpertReview) || (isRenter() && r.renterWantsExpertReview))) {
+                  <app-loading-button variant="stroked" color="warn" [fullWidth]="true" class="mt-2" (clicked)="cancelExpertReview()" [loading]="isActionLoading()" matIcon="cancel">
+                    {{ (r.assignedExpertId ? 'rentals.actions.cancel_assigned_expert' : 'rentals.actions.cancel_expert') | translate }}
+                  </app-loading-button>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+
         <mat-card class="premium-card actions-card shadow-1">
           <mat-card-header class="mb-3">
             <mat-icon mat-card-avatar class="text-primary">touch_app</mat-icon>
@@ -264,79 +355,69 @@
           <mat-card-content>
             <div class="actions-section flex flex-column gap-3">
 
-              <!-- Renter: show chat and cancel -->
               @if (isRenter()) {
-                <!-- Cancel if Pending -->
                 @if (r.status?.toLowerCase() === 'pending') {
-                <app-loading-button variant="stroked" color="warn" class="w-full" (clicked)="cancelRental()"
-                  [loading]="isActionLoading()">
-                  <mat-icon>cancel</mat-icon>
+                <app-loading-button variant="stroked" color="warn" [fullWidth]="true" (clicked)="cancelRental()"
+                  [loading]="isActionLoading()" [disabled]="isUnderReview()" matIcon="cancel">
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
                 }
               }
 
-              <!-- Owner actions -->
               @if (isOwner()) {
-                <!-- Confirm if Pending -->
                 @if (r.status?.toLowerCase() === 'pending') {
-                <app-loading-button color="primary" class="w-full" (clicked)="confirmRental()"
-                  [loading]="isActionLoading()">
-                  <mat-icon>check_circle</mat-icon>
+                <app-loading-button color="primary" [fullWidth]="true" (clicked)="confirmRental()"
+                  [loading]="isActionLoading()" [disabled]="isUnderReview()" matIcon="check_circle">
                   {{ 'rentals.actions.confirm' | translate }}
                 </app-loading-button>
                 }
-                <!-- Cancel if Pending or Confirmed -->
                 @if (r.status?.toLowerCase() === 'pending' || r.status?.toLowerCase() === 'confirmed') {
-                <app-loading-button variant="stroked" color="warn" class="w-full" (clicked)="cancelRental()"
-                  [loading]="isActionLoading()">
-                  <mat-icon>cancel</mat-icon>
+                <app-loading-button variant="stroked" color="warn" [fullWidth]="true" (clicked)="cancelRental()"
+                  [loading]="isActionLoading()" [disabled]="isUnderReview()" matIcon="cancel">
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
                 }
-                <!-- Complete if Active/Overdue -->
                 @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
                 <div class="completion-box">
                   <mat-checkbox [(ngModel)]="isDamaged" color="warn" class="font-medium w-full">
                     {{ 'rentals.actions.damaged' | translate }}
                   </mat-checkbox>
-                  <app-loading-button color="accent" class="w-full" (clicked)="completeRental()"
-                    [loading]="isActionLoading()">
-                    <mat-icon>assignment_turned_in</mat-icon>
+                  <app-loading-button color="accent" [fullWidth]="true" (clicked)="completeRental()"
+                    [loading]="isActionLoading()" matIcon="assignment_turned_in">
                     {{ 'rentals.actions.complete' | translate }}
                   </app-loading-button>
                 </div>
                 }
+
+                @if (!r.ownerWantsExpertReview) {
+                  <app-loading-button variant="stroked" color="primary" [fullWidth]="true" (clicked)="requestExpertReview()" [loading]="isActionLoading()" matIcon="verified_user">
+                    {{ 'rentals.actions.request_expert' | translate }}
+                  </app-loading-button>
+                }
               }
 
-              <!-- Admin override actions -->
               @if (isAdmin()) {
                 @if (r.status?.toLowerCase() === 'pending') {
-                <app-loading-button color="primary" class="w-full" (clicked)="confirmRental()"
-                  [loading]="isActionLoading()">
-                  <mat-icon>admin_panel_settings</mat-icon>
+                <app-loading-button color="primary" [fullWidth]="true" (clicked)="confirmRental()"
+                  [loading]="isActionLoading()" matIcon="admin_panel_settings">
                   {{ 'rentals.actions.confirm' | translate }}
                 </app-loading-button>
                 }
                 @if (r.status?.toLowerCase() !== 'completed' && r.status?.toLowerCase() !== 'cancelled' && r.status?.toLowerCase() !== 'rejected') {
-                <app-loading-button variant="stroked" color="warn" class="w-full" (clicked)="cancelRental()"
-                  [loading]="isActionLoading()">
-                  <mat-icon>block</mat-icon>
+                <app-loading-button variant="stroked" color="warn" [fullWidth]="true" (clicked)="cancelRental()"
+                  [loading]="isActionLoading()" matIcon="block">
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
                 }
               }
 
-              <!-- Dispute Action -->
               @if ((isRenter() || isOwner()) && (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'overdue' || r.status?.toLowerCase() === 'disputed' || r.status?.toLowerCase() === 'confirmed')) {
                 <mat-divider class="my-1"></mat-divider>
-                <button mat-stroked-button color="warn" class="w-full" (click)="openDispute()">
-                  <mat-icon>gavel</mat-icon>
+                <app-loading-button variant="stroked" color="warn" [fullWidth]="true" (clicked)="openDispute()" [loading]="isActionLoading()" matIcon="gavel">
                   {{ 'rentals.actions.dispute' | translate }}
-                </button>
+                </app-loading-button>
               }
 
-              <!-- Empty state -->
               @if (r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'cancelled' || r.status?.toLowerCase() === 'rejected') {
               <div class="actions-empty flex flex-column align-items-center text-center gap-2 py-2">
                 <mat-icon class="text-300 text-4xl">check_circle_outline</mat-icon>

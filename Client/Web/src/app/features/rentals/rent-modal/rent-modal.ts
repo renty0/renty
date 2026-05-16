@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { RentalsClient, CreateRentalCommand, ItemDetailDto } from '../../../core/api/api-client';
+import { RentalsClient, CreateRentalRequest, ItemDetailDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 
@@ -56,7 +56,14 @@ export class RentModalComponent implements OnInit {
 
   rentalPrice = signal(0);
   depositAmount = signal(this.data.item.defaultDeposit || 0);
-  totalAmount = computed(() => this.rentalPrice() + this.depositAmount());
+  expertFee = signal(100);
+  totalAmount = computed(() => {
+    let total = this.rentalPrice() + this.depositAmount();
+    if (this.rentForm?.get('requiresExpert')?.value) {
+      total += this.expertFee();
+    }
+    return total;
+  });
 
   ngOnInit() {
     this.rentForm = this.fb.group({
@@ -104,11 +111,12 @@ export class RentModalComponent implements OnInit {
     this.isSubmitting.set(true);
     const formValue = this.rentForm.value;
 
-    const command = new CreateRentalCommand({
+    const command = new CreateRentalRequest({
       itemId: this.data.item.id!,
       startDate: formValue.startDate,
       endDate: formValue.endDate,
-      pricingType: formValue.pricingType.toLowerCase()
+      pricingType: formValue.pricingType.toLowerCase(),
+      requestExpertReview: formValue.requiresExpert
     });
 
     this.rentalsClient.createRental(command).subscribe({

@@ -5,7 +5,7 @@ namespace Domain.Entities;
 /// <summary>Matches the `item_verifications` table.</summary>
 public class ItemVerification
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
     public Guid ItemId { get; set; }
     public long? ExpertId { get; set; }
     public Guid? RentalId { get; set; }

@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
+using Application.Common.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ public record RentalDetailDto(
     long OwnerId,
     string OwnerFirstName,
     string? OwnerCity,
+    long RenterId,
+    string RenterFirstName,
     DateTime StartDate,
     DateTime EndDate,
     DateTime? ActualReturnDate,
@@ -42,8 +45,14 @@ public record RentalDetailDto(
     bool IsHandoffVerified,
     DateTime CreatedAt,
     bool HasReview,
+    bool RenterWantsExpertReview,
+    bool OwnerWantsExpertReview,
+    decimal ExpertReviewFee,
+    long? AssignedExpertId,
+    string? AssignedExpertName,
     List<string> HandoverImageUrls,
-    List<string> ReturnImageUrls
+    List<string> ReturnImageUrls,
+    List<VerificationDto> Verifications
 );
 
 
@@ -51,7 +60,9 @@ public record CreateRentalCommand(
     Guid ItemId,
     DateTime StartDate,
     DateTime EndDate,
-    string PricingType = "daily"
+    string PricingType = "daily",
+    string? Notes = null,
+    bool RequestExpertReview = false
 ) : IRequest<CreateRentalResponse>;
 
 public record CreateRentalResponse(bool Success, string? Error, Guid? RentalId, Guid? OrderId,
@@ -75,11 +86,19 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+    private readonly INotificationSender _notifier;
 
-    public CreateRentalCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateRentalCommandHandler(
+        IApplicationDbContext context, 
+        IUser currentUser,
+        Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager,
+        INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _userManager = userManager;
+        _notifier = notifier;
     }
 
     public async Task<CreateRentalResponse> Handle(CreateRentalCommand request, CancellationToken ct)
@@ -140,9 +159,21 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             DepositAmount = item.DefaultDeposit,
             DepositStatus = DepositStatus.Held,
             HandoffCode = Guid.NewGuid().ToString("N")[..6].ToUpper(),
+            Notes = request.Notes,
+            RenterWantsExpertReview = request.RequestExpertReview,
+            ExpertReviewFee = request.RequestExpertReview ? 100 : 0, // Flat fee
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
+
+        if (rental.RenterWantsExpertReview)
+        {
+            rental.Verifications.Add(new ItemVerification
+            {
+                CheckType = VerificationCheck.BeforeRent,
+                Status = VerificationStatus.Pending
+            });
+        }
         _context.Rentals.Add(rental);
 
         _context.UserInteractions.Add(new UserInteraction
@@ -155,12 +186,28 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
 
         await _context.SaveChangesAsync(ct);
 
+        if (rental.RenterWantsExpertReview)
+        {
+            var experts = await _userManager.GetUsersInRoleAsync("Expert");
+            if (experts.Any())
+            {
+                var expertIds = experts.Select(e => e.Id).ToList();
+                await _notifier.SendToUsersAsync(
+                    expertIds,
+                    "New Expert Task",
+                    $"A new item verification has been requested for '{item.TitleEn}'.",
+                    "verification",
+                    "/expert/assigned",
+                    ct);
+            }
+        }
+
         return new CreateRentalResponse(true, null, rental.Id, order.Id, rental.RentalPrice, rental.DepositAmount);
     }
 }
 
 
-public record GetRentalsQuery(string? Status = null, int Page = 1, int Limit = 20) : IRequest<GetRentalsResponse>;
+public record GetRentalsQuery(string? Status = null, int Page = 1, int Limit = 20, string? Role = null) : IRequest<GetRentalsResponse>;
 public record GetRentalsResponse(List<RentalListDto> Rentals, int Total, int Page, int Pages);
  
 public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRentalsResponse>
@@ -181,9 +228,20 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
         var requestPath = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestPath != null ? $"{requestPath.Scheme}://{requestPath.Host}" : "";
 
-        var query = _context.Rentals
-            .Where(r => r.UserId == _currentUser.Id!.Value || r.Item.OwnerId == _currentUser.Id!.Value)
-            .AsQueryable();
+        var query = _context.Rentals.AsQueryable();
+
+        if (request.Role?.ToLower() == "owner")
+        {
+            query = query.Where(r => r.Item.OwnerId == _currentUser.Id!.Value);
+        }
+        else if (request.Role?.ToLower() == "renter")
+        {
+            query = query.Where(r => r.UserId == _currentUser.Id!.Value);
+        }
+        else
+        {
+            query = query.Where(r => r.UserId == _currentUser.Id!.Value || r.Item.OwnerId == _currentUser.Id!.Value);
+        }
 
         if (!string.IsNullOrEmpty(request.Status) && Enum.TryParse<RentalStatus>(request.Status, true, out var status))
             query = query.Where(r => r.Status == status);
@@ -243,7 +301,9 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
         var rental = await _context.Rentals
             .Include(r => r.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .Include(r => r.Item).ThenInclude(i => i.Owner)
+            .Include(r => r.User)
             .Include(r => r.Reviews)
+            .Include(r => r.Verifications)
             .Include(r => r.Images).ThenInclude(ri => ri.Image)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
@@ -260,6 +320,8 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             itemFullUrl,
             rental.Item.OwnerId,
             rental.Item.Owner.FirstName, rental.Item.Owner.City,
+            rental.UserId,
+            rental.User.FirstName,
             rental.StartDate, rental.EndDate, rental.ActualReturnDate,
             rental.RentalPrice, rental.DepositAmount, rental.LateFee,
             rental.Status.ToString(), rental.DepositStatus.ToString(),
@@ -268,8 +330,17 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             rental.IsHandoffVerified,
             rental.CreatedAt,
             rental.Reviews.Any(),
+            rental.RenterWantsExpertReview,
+            rental.OwnerWantsExpertReview,
+            rental.ExpertReviewFee,
+            rental.AssignedExpertId,
+            rental.AssignedExpert?.FirstName,
             rental.Images.Where(i => i.Type == RentalImageType.Handover).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList(),
-            rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList()
+            rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList(),
+            rental.Verifications.OrderByDescending(v => v.CreatedAt).Select(v => new VerificationDto(
+                v.Id, v.CheckType.ToString(), v.Status.ToString(), v.Notes,
+                v.Expert?.FirstName, v.CreatedAt
+            )).ToList()
         );
 
         return new GetRentalByIdResponse(true, null, dto);
@@ -300,7 +371,10 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
-        if (rental.Item.OwnerId != _currentUser.Id!.Value)
+        if (!_currentUser.Id.HasValue)
+            return new RentalActionResponse(false, "User session not found.", null);
+
+        if (rental.Item.OwnerId != _currentUser.Id.Value)
             return new RentalActionResponse(false, "Only the item owner can confirm a rental.", null);
         if (rental.Status != RentalStatus.Pending)
             return new RentalActionResponse(false, "Rental must be in pending status to confirm.", null);
@@ -605,5 +679,149 @@ public class UploadRentalPhotosCommandHandler : IRequestHandler<UploadRentalPhot
 
         await _context.SaveChangesAsync(ct);
         return true;
+    }
+}
+
+public record RequestExpertReviewCommand(Guid RentalId) : IRequest<RentalActionResponse>;
+
+public class RequestExpertReviewCommandHandler : IRequestHandler<RequestExpertReviewCommand, RentalActionResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+    private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+    private readonly INotificationSender _notifier;
+
+    public RequestExpertReviewCommandHandler(
+        IApplicationDbContext context, 
+        IUser currentUser,
+        Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager,
+        INotificationSender notifier)
+    {
+        _context = context;
+        _currentUser = currentUser;
+        _userManager = userManager;
+        _notifier = notifier;
+    }
+
+    public async Task<RentalActionResponse> Handle(RequestExpertReviewCommand request, CancellationToken ct)
+    {
+        var rental = await _context.Rentals
+            .Include(r => r.Item)
+            .Include(r => r.Verifications)
+            .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
+
+        if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
+
+        if (!_currentUser.Id.HasValue)
+            return new RentalActionResponse(false, "User session not found.", null);
+
+        if (rental.Item.OwnerId != _currentUser.Id.Value)
+            return new RentalActionResponse(false, "Only the owner can request an expert review from this endpoint.", null);
+
+        if (rental.OwnerWantsExpertReview)
+            return new RentalActionResponse(false, "Expert review already requested by owner.", null);
+
+        rental.OwnerWantsExpertReview = true;
+        rental.ExpertReviewFee += 100;
+        rental.UpdatedAt = DateTime.UtcNow;
+
+        if (rental.Status == RentalStatus.Pending || rental.Status == RentalStatus.Confirmed)
+        {
+            if (!rental.Verifications.Any(v => v.CheckType == VerificationCheck.BeforeRent))
+            {
+                var verification = new ItemVerification
+                {
+                    ItemId = rental.ItemId,
+                    RentalId = rental.Id,
+                    CheckType = VerificationCheck.BeforeRent,
+                    Status = VerificationStatus.Pending,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                _context.ItemVerifications.Add(verification);
+            }
+        }
+
+        try 
+        {
+            await _context.SaveChangesAsync(ct);
+            
+            // Notify experts
+            var experts = await _userManager.GetUsersInRoleAsync("Expert");
+            if (experts.Any())
+            {
+                var expertIds = experts.Select(e => e.Id).ToList();
+                await _notifier.SendToUsersAsync(
+                    expertIds,
+                    "New Expert Task",
+                    $"A new item verification has been requested for '{rental.Item.TitleEn}'.",
+                    "verification",
+                    "/expert/assigned",
+                    ct);
+            }
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new RentalActionResponse(false, "The rental was updated by another process. Please refresh and try again.", null);
+        }
+        return new RentalActionResponse(true, null, rental.Status.ToString());
+    }
+}
+
+public record CancelExpertReviewCommand(Guid RentalId) : IRequest<RentalActionResponse>;
+
+public class CancelExpertReviewCommandHandler : IRequestHandler<CancelExpertReviewCommand, RentalActionResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public CancelExpertReviewCommandHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
+
+    public async Task<RentalActionResponse> Handle(CancelExpertReviewCommand request, CancellationToken ct)
+    {
+        var rental = await _context.Rentals
+            .Include(r => r.Item)
+            .Include(r => r.Verifications)
+            .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
+
+        if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
+        if (!_currentUser.Id.HasValue) return new RentalActionResponse(false, "Unauthorized.", null);
+
+        bool isOwner = rental.Item.OwnerId == _currentUser.Id.Value;
+        bool isRenter = rental.UserId == _currentUser.Id.Value;
+
+        if (!isOwner && !isRenter)
+            return new RentalActionResponse(false, "Unauthorized.", null);
+
+        if (isOwner && !rental.OwnerWantsExpertReview)
+            return new RentalActionResponse(false, "You haven't requested an expert review.", null);
+        if (isRenter && !rental.RenterWantsExpertReview)
+            return new RentalActionResponse(false, "You haven't requested an expert review.", null);
+
+        if (rental.AssignedExpertId.HasValue)
+            return new RentalActionResponse(false, "Cannot cancel after an expert has been assigned.", null);
+
+        if (isOwner) rental.OwnerWantsExpertReview = false;
+        else rental.RenterWantsExpertReview = false;
+
+        rental.ExpertReviewFee = Math.Max(0, rental.ExpertReviewFee - 100);
+        rental.UpdatedAt = DateTime.UtcNow;
+
+        // If no one wants it anymore, remove pending verifications
+        if (!rental.OwnerWantsExpertReview && !rental.RenterWantsExpertReview)
+        {
+            var pending = rental.Verifications.Where(v => v.Status == VerificationStatus.Pending).ToList();
+            if (pending.Any())
+            {
+                _context.ItemVerifications.RemoveRange(pending);
+            }
+        }
+
+        await _context.SaveChangesAsync(ct);
+        return new RentalActionResponse(true, "Expert review request cancelled.", rental.Status.ToString());
     }
 }

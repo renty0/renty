@@ -81,6 +81,18 @@ export class RentalDetailsComponent implements OnInit {
 
   rentalId = computed(() => this.route.snapshot.paramMap.get('id') ?? '');
 
+  otherUserName = computed(() => {
+    const r = this.rental();
+    if (!r) return '';
+    return this.isOwner() ? r.renterFirstName : r.ownerFirstName;
+  });
+
+  otherUserId = computed(() => {
+    const r = this.rental();
+    if (!r) return null;
+    return this.isOwner() ? r.renterId : r.ownerId;
+  });
+
   ngOnInit() {
     this.loadRental();
   }
@@ -145,6 +157,48 @@ export class RentalDetailsComponent implements OnInit {
     });
   }
 
+  isUnderReview = computed(() => {
+    const r = this.rental();
+    if (!r) return false;
+    // Consider under review if expert requested but not yet assigned
+    return !!(r.renterWantsExpertReview || r.ownerWantsExpertReview) && !r.assignedExpertId;
+  });
+
+  requestExpertReview() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.requestExpertReview(this.rentalId()).subscribe({
+      next: () => { 
+        this.toast.showSuccess('common.success'); 
+        this.loadRental(); 
+        this.isActionLoading.set(false); 
+      },
+      error: () => { 
+        this.toast.showError('errors.generic'); 
+        this.isActionLoading.set(false); 
+      }
+    });
+  }
+
+  cancelExpertReview() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.cancelExpertReview(this.rentalId()).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isActionLoading.set(false);
+      },
+      error: () => {
+        this.toast.showError('errors.generic');
+        this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  submitExpertReview() {
+    this.toast.showInfo('Expert review form coming soon');
+    // Here you would open a modal or navigate to a review form
+  }
+
   onPhotoSelected(event: Event, typeStr: 'Handover' | 'Return') {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
@@ -202,7 +256,7 @@ export class RentalDetailsComponent implements OnInit {
     const r = this.rental();
     if (!r) return;
 
-    const targetUserId = r.ownerId;
+    const targetUserId = this.otherUserId();
     if (!targetUserId) return;
 
     const cmd = new CreateChatCommand({

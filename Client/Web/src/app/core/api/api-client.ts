@@ -1889,6 +1889,112 @@ export class VerificationsClient {
         }
         return _observableOf(null as any);
     }
+
+    getUnassignedVerifications(): Observable<ApiResponse<GetExpertAssignedResponse>> {
+        let url_ = this.baseUrl + "/api/v1/verifications/unassigned";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUnassignedVerifications(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUnassignedVerifications(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<GetExpertAssignedResponse>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<GetExpertAssignedResponse>>;
+        }));
+    }
+
+    protected processGetUnassignedVerifications(response: HttpResponseBase): Observable<ApiResponse<GetExpertAssignedResponse>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    claimVerification(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/verifications/{id}/claim";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processClaimVerification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processClaimVerification(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processClaimVerification(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -2952,11 +3058,11 @@ export class RentalsClient {
         this.baseUrl = baseUrl ?? "http://localhost:5106";
     }
 
-    createRental(cmd: CreateRentalCommand): Observable<ApiResponse<RentalCreateData>> {
+    createRental(req: CreateRentalRequest): Observable<ApiResponse<RentalCreateData>> {
         let url_ = this.baseUrl + "/api/v1/rentals";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(cmd);
+        const content_ = JSON.stringify(req);
 
         let options_ : any = {
             body: content_,
@@ -3011,7 +3117,7 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
-    getRentals(page: number, limit: number, status?: string | null | undefined): Observable<ApiResponse<GetRentalsResponse>> {
+    getRentals(page: number, limit: number, status?: string | null | undefined, role?: string | null | undefined): Observable<ApiResponse<GetRentalsResponse>> {
         let url_ = this.baseUrl + "/api/v1/rentals?";
         if (page === undefined || page === null)
             throw new globalThis.Error("The parameter 'page' must be defined and cannot be null.");
@@ -3023,6 +3129,8 @@ export class RentalsClient {
             url_ += "limit=" + encodeURIComponent("" + limit) + "&";
         if (status !== undefined && status !== null)
             url_ += "status=" + encodeURIComponent("" + status) + "&";
+        if (role !== undefined && role !== null)
+            url_ += "role=" + encodeURIComponent("" + role) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3343,6 +3451,122 @@ export class RentalsClient {
     }
 
     protected processCompleteRental(response: HttpResponseBase): Observable<ApiResponse<RentalCompleteData>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    requestExpertReview(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/rentals/{id}/request-expert";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRequestExpertReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRequestExpertReview(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processRequestExpertReview(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    cancelExpertReview(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/rentals/{id}/request-expert";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancelExpertReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancelExpertReview(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processCancelExpertReview(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -9064,6 +9288,7 @@ export interface ICreateVerificationCommand {
 export class GetVerificationsResponse implements IGetVerificationsResponse {
     success?: boolean;
     error?: string | undefined;
+    itemDetails?: ItemVerificationDetailsDto | undefined;
     verifications?: VerificationDto[] | undefined;
 
     constructor(data?: IGetVerificationsResponse) {
@@ -9079,6 +9304,7 @@ export class GetVerificationsResponse implements IGetVerificationsResponse {
         if (_data) {
             this.success = _data["success"];
             this.error = _data["error"];
+            this.itemDetails = _data["itemDetails"] ? ItemVerificationDetailsDto.fromJS(_data["itemDetails"]) : undefined as any;
             if (Array.isArray(_data["verifications"])) {
                 this.verifications = [] as any;
                 for (let item of _data["verifications"])
@@ -9098,6 +9324,7 @@ export class GetVerificationsResponse implements IGetVerificationsResponse {
         data = typeof data === 'object' ? data : {};
         data["success"] = this.success;
         data["error"] = this.error;
+        data["itemDetails"] = this.itemDetails ? this.itemDetails.toJSON() : undefined as any;
         if (Array.isArray(this.verifications)) {
             data["verifications"] = [];
             for (let item of this.verifications)
@@ -9110,7 +9337,176 @@ export class GetVerificationsResponse implements IGetVerificationsResponse {
 export interface IGetVerificationsResponse {
     success?: boolean;
     error?: string | undefined;
+    itemDetails?: ItemVerificationDetailsDto | undefined;
     verifications?: VerificationDto[] | undefined;
+}
+
+export class ItemVerificationDetailsDto implements IItemVerificationDetailsDto {
+    itemId?: string;
+    titleAr?: string;
+    titleEn?: string;
+    imageUrl?: string | undefined;
+    condition?: string | undefined;
+    city?: string | undefined;
+    owner?: PersonInfoDto;
+    activeRental?: RentalInfoDto | undefined;
+
+    constructor(data?: IItemVerificationDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.itemId = _data["itemId"];
+            this.titleAr = _data["titleAr"];
+            this.titleEn = _data["titleEn"];
+            this.imageUrl = _data["imageUrl"];
+            this.condition = _data["condition"];
+            this.city = _data["city"];
+            this.owner = _data["owner"] ? PersonInfoDto.fromJS(_data["owner"]) : undefined as any;
+            this.activeRental = _data["activeRental"] ? RentalInfoDto.fromJS(_data["activeRental"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): ItemVerificationDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ItemVerificationDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["itemId"] = this.itemId;
+        data["titleAr"] = this.titleAr;
+        data["titleEn"] = this.titleEn;
+        data["imageUrl"] = this.imageUrl;
+        data["condition"] = this.condition;
+        data["city"] = this.city;
+        data["owner"] = this.owner ? this.owner.toJSON() : undefined as any;
+        data["activeRental"] = this.activeRental ? this.activeRental.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface IItemVerificationDetailsDto {
+    itemId?: string;
+    titleAr?: string;
+    titleEn?: string;
+    imageUrl?: string | undefined;
+    condition?: string | undefined;
+    city?: string | undefined;
+    owner?: PersonInfoDto;
+    activeRental?: RentalInfoDto | undefined;
+}
+
+export class PersonInfoDto implements IPersonInfoDto {
+    fullName?: string;
+    phone?: string | undefined;
+    profilePicture?: string | undefined;
+
+    constructor(data?: IPersonInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fullName = _data["fullName"];
+            this.phone = _data["phone"];
+            this.profilePicture = _data["profilePicture"];
+        }
+    }
+
+    static fromJS(data: any): PersonInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PersonInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fullName"] = this.fullName;
+        data["phone"] = this.phone;
+        data["profilePicture"] = this.profilePicture;
+        return data;
+    }
+}
+
+export interface IPersonInfoDto {
+    fullName?: string;
+    phone?: string | undefined;
+    profilePicture?: string | undefined;
+}
+
+export class RentalInfoDto implements IRentalInfoDto {
+    rentalId?: string;
+    startDate?: Date;
+    endDate?: Date;
+    rentalPrice?: number;
+    depositAmount?: number;
+    status?: string;
+    renter?: PersonInfoDto;
+
+    constructor(data?: IRentalInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rentalId = _data["rentalId"];
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : undefined as any;
+            this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : undefined as any;
+            this.rentalPrice = _data["rentalPrice"];
+            this.depositAmount = _data["depositAmount"];
+            this.status = _data["status"];
+            this.renter = _data["renter"] ? PersonInfoDto.fromJS(_data["renter"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): RentalInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RentalInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rentalId"] = this.rentalId;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : undefined as any;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : undefined as any;
+        data["rentalPrice"] = this.rentalPrice;
+        data["depositAmount"] = this.depositAmount;
+        data["status"] = this.status;
+        data["renter"] = this.renter ? this.renter.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface IRentalInfoDto {
+    rentalId?: string;
+    startDate?: Date;
+    endDate?: Date;
+    rentalPrice?: number;
+    depositAmount?: number;
+    status?: string;
+    renter?: PersonInfoDto;
 }
 
 export class VerificationDto implements IVerificationDto {
@@ -9219,6 +9615,7 @@ export interface IGetExpertAssignedResponse {
 
 export class AssignedVerificationDto implements IAssignedVerificationDto {
     verificationId?: string;
+    itemId?: string;
     itemTitleAr?: string;
     itemTitleEn?: string;
     itemImage?: string | undefined;
@@ -9239,6 +9636,7 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
     init(_data?: any) {
         if (_data) {
             this.verificationId = _data["verificationId"];
+            this.itemId = _data["itemId"];
             this.itemTitleAr = _data["itemTitleAr"];
             this.itemTitleEn = _data["itemTitleEn"];
             this.itemImage = _data["itemImage"];
@@ -9259,6 +9657,7 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["verificationId"] = this.verificationId;
+        data["itemId"] = this.itemId;
         data["itemTitleAr"] = this.itemTitleAr;
         data["itemTitleEn"] = this.itemTitleEn;
         data["itemImage"] = this.itemImage;
@@ -9272,6 +9671,7 @@ export class AssignedVerificationDto implements IAssignedVerificationDto {
 
 export interface IAssignedVerificationDto {
     verificationId?: string;
+    itemId?: string;
     itemTitleAr?: string;
     itemTitleEn?: string;
     itemImage?: string | undefined;
@@ -9761,13 +10161,15 @@ export interface IRentalCreateData {
     status?: string | undefined;
 }
 
-export class CreateRentalCommand implements ICreateRentalCommand {
+export class CreateRentalRequest implements ICreateRentalRequest {
     itemId?: string;
     startDate?: Date;
     endDate?: Date;
     pricingType?: string;
+    notes?: string | undefined;
+    requestExpertReview?: boolean;
 
-    constructor(data?: ICreateRentalCommand) {
+    constructor(data?: ICreateRentalRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9782,12 +10184,14 @@ export class CreateRentalCommand implements ICreateRentalCommand {
             this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : undefined as any;
             this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : undefined as any;
             this.pricingType = _data["pricingType"];
+            this.notes = _data["notes"];
+            this.requestExpertReview = _data["requestExpertReview"];
         }
     }
 
-    static fromJS(data: any): CreateRentalCommand {
+    static fromJS(data: any): CreateRentalRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateRentalCommand();
+        let result = new CreateRentalRequest();
         result.init(data);
         return result;
     }
@@ -9798,15 +10202,19 @@ export class CreateRentalCommand implements ICreateRentalCommand {
         data["startDate"] = this.startDate ? this.startDate.toISOString() : undefined as any;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : undefined as any;
         data["pricingType"] = this.pricingType;
+        data["notes"] = this.notes;
+        data["requestExpertReview"] = this.requestExpertReview;
         return data;
     }
 }
 
-export interface ICreateRentalCommand {
+export interface ICreateRentalRequest {
     itemId?: string;
     startDate?: Date;
     endDate?: Date;
     pricingType?: string;
+    notes?: string | undefined;
+    requestExpertReview?: boolean;
 }
 
 
@@ -9953,6 +10361,8 @@ export class RentalDetailDto implements IRentalDetailDto {
     ownerId?: number;
     ownerFirstName?: string;
     ownerCity?: string | undefined;
+    renterId?: number;
+    renterFirstName?: string;
     startDate?: Date;
     endDate?: Date;
     actualReturnDate?: Date | undefined;
@@ -9966,8 +10376,14 @@ export class RentalDetailDto implements IRentalDetailDto {
     isHandoffVerified?: boolean;
     createdAt?: Date;
     hasReview?: boolean;
+    renterWantsExpertReview?: boolean;
+    ownerWantsExpertReview?: boolean;
+    expertReviewFee?: number;
+    assignedExpertId?: number | undefined;
+    assignedExpertName?: string | undefined;
     handoverImageUrls?: string[];
     returnImageUrls?: string[];
+    verifications?: VerificationDto[];
 
     constructor(data?: IRentalDetailDto) {
         if (data) {
@@ -9987,6 +10403,8 @@ export class RentalDetailDto implements IRentalDetailDto {
             this.ownerId = _data["ownerId"];
             this.ownerFirstName = _data["ownerFirstName"];
             this.ownerCity = _data["ownerCity"];
+            this.renterId = _data["renterId"];
+            this.renterFirstName = _data["renterFirstName"];
             this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : undefined as any;
             this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : undefined as any;
             this.actualReturnDate = _data["actualReturnDate"] ? new Date(_data["actualReturnDate"].toString()) : undefined as any;
@@ -10000,6 +10418,11 @@ export class RentalDetailDto implements IRentalDetailDto {
             this.isHandoffVerified = _data["isHandoffVerified"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
             this.hasReview = _data["hasReview"];
+            this.renterWantsExpertReview = _data["renterWantsExpertReview"];
+            this.ownerWantsExpertReview = _data["ownerWantsExpertReview"];
+            this.expertReviewFee = _data["expertReviewFee"];
+            this.assignedExpertId = _data["assignedExpertId"];
+            this.assignedExpertName = _data["assignedExpertName"];
             if (Array.isArray(_data["handoverImageUrls"])) {
                 this.handoverImageUrls = [] as any;
                 for (let item of _data["handoverImageUrls"])
@@ -10009,6 +10432,11 @@ export class RentalDetailDto implements IRentalDetailDto {
                 this.returnImageUrls = [] as any;
                 for (let item of _data["returnImageUrls"])
                     this.returnImageUrls!.push(item);
+            }
+            if (Array.isArray(_data["verifications"])) {
+                this.verifications = [] as any;
+                for (let item of _data["verifications"])
+                    this.verifications!.push(VerificationDto.fromJS(item));
             }
         }
     }
@@ -10029,6 +10457,8 @@ export class RentalDetailDto implements IRentalDetailDto {
         data["ownerId"] = this.ownerId;
         data["ownerFirstName"] = this.ownerFirstName;
         data["ownerCity"] = this.ownerCity;
+        data["renterId"] = this.renterId;
+        data["renterFirstName"] = this.renterFirstName;
         data["startDate"] = this.startDate ? this.startDate.toISOString() : undefined as any;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : undefined as any;
         data["actualReturnDate"] = this.actualReturnDate ? this.actualReturnDate.toISOString() : undefined as any;
@@ -10042,6 +10472,11 @@ export class RentalDetailDto implements IRentalDetailDto {
         data["isHandoffVerified"] = this.isHandoffVerified;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         data["hasReview"] = this.hasReview;
+        data["renterWantsExpertReview"] = this.renterWantsExpertReview;
+        data["ownerWantsExpertReview"] = this.ownerWantsExpertReview;
+        data["expertReviewFee"] = this.expertReviewFee;
+        data["assignedExpertId"] = this.assignedExpertId;
+        data["assignedExpertName"] = this.assignedExpertName;
         if (Array.isArray(this.handoverImageUrls)) {
             data["handoverImageUrls"] = [];
             for (let item of this.handoverImageUrls)
@@ -10051,6 +10486,11 @@ export class RentalDetailDto implements IRentalDetailDto {
             data["returnImageUrls"] = [];
             for (let item of this.returnImageUrls)
                 data["returnImageUrls"].push(item);
+        }
+        if (Array.isArray(this.verifications)) {
+            data["verifications"] = [];
+            for (let item of this.verifications)
+                data["verifications"].push(item ? item.toJSON() : undefined as any);
         }
         return data;
     }
@@ -10064,6 +10504,8 @@ export interface IRentalDetailDto {
     ownerId?: number;
     ownerFirstName?: string;
     ownerCity?: string | undefined;
+    renterId?: number;
+    renterFirstName?: string;
     startDate?: Date;
     endDate?: Date;
     actualReturnDate?: Date | undefined;
@@ -10077,8 +10519,14 @@ export interface IRentalDetailDto {
     isHandoffVerified?: boolean;
     createdAt?: Date;
     hasReview?: boolean;
+    renterWantsExpertReview?: boolean;
+    ownerWantsExpertReview?: boolean;
+    expertReviewFee?: number;
+    assignedExpertId?: number | undefined;
+    assignedExpertName?: string | undefined;
     handoverImageUrls?: string[];
     returnImageUrls?: string[];
+    verifications?: VerificationDto[];
 }
 
 

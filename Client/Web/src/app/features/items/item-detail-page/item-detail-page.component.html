@@ -34,9 +34,11 @@
       <div class="gallery-card">
         <div class="main-image-wrap">
           <div class="overlay-actions">
-            <button (click)="addToFavorites()" [style.color]="isFavoriting() ? '#ff4081' : ''">
-              <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
-            </button>
+            @if (isLoggedIn() && !isOwner()) {
+              <button (click)="addToFavorites()" [style.color]="isFavoriting() ? '#ff4081' : ''">
+                <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
+            }
             <button title="Share">
               <mat-icon>share</mat-icon>
             </button>
@@ -132,29 +134,31 @@
           <span>{{ 'items.noReviewsYet' | translate }}</span>
         </div>
         }
-        <div class="add-review-section">
-          <h3 class="title">{{ 'items.leaveReview' | translate }}</h3>
+        @if (!isOwner()) {
+          <div class="add-review-section">
+            <h3 class="title">{{ 'items.leaveReview' | translate }}</h3>
 
-          <div class="star-box">
-            @for (s of [1,2,3,4,5]; track s) {
-            <button type="button" class="star-btn" [class.active]="s <= selectedStar()"
-              [class.hovered]="s <= hoveredStar() && !selectedStar()" (mouseenter)="setHoveredStar(s)"
-              (mouseleave)="clearHoveredStar()" (click)="selectStar(s)" [attr.aria-label]="s + ' stars'">★</button>
-            }
-          </div>
-
-          <form [formGroup]="reviewForm" (submit)="submitReview()">
-            <app-input [formGroup]="reviewForm" controlName="comment" label="items.yourComment" type="textarea"
-              [rows]="4" [placeholder]="'items.reviewPlaceholder' | translate" [maxLength]="500" [required]="true" />
-
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-              <app-loading-button type="submit" color="primary" [loading]="isSubmittingReview()"
-                [disabled]="reviewForm.invalid || !selectedStar()" [title]="'items.submitReview' | translate">
-                {{ 'items.submitReview' | translate }}
-              </app-loading-button>
+            <div class="star-box">
+              @for (s of [1,2,3,4,5]; track s) {
+              <button type="button" class="star-btn" [class.active]="s <= selectedStar()"
+                [class.hovered]="s <= hoveredStar() && !selectedStar()" (mouseenter)="setHoveredStar(s)"
+                (mouseleave)="clearHoveredStar()" (click)="selectStar(s)" [attr.aria-label]="s + ' stars'">★</button>
+              }
             </div>
-          </form>
-        </div>
+
+            <form [formGroup]="reviewForm" (submit)="submitReview()">
+              <app-input [formGroup]="reviewForm" controlName="comment" label="items.yourComment" type="textarea"
+                [rows]="4" [placeholder]="'items.reviewPlaceholder' | translate" [maxLength]="500" [required]="true" />
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <app-loading-button type="submit" color="primary" [loading]="isSubmittingReview()"
+                  [disabled]="reviewForm.invalid || !selectedStar()" [title]="'items.submitReview' | translate">
+                  {{ 'items.submitReview' | translate }}
+                </app-loading-button>
+              </div>
+            </form>
+          </div>
+        }
       </div>
       @if (similarItems().length > 0) {
       <div class="similar-section">
@@ -254,22 +258,24 @@
           }
         </div>
 
-        <div class="availability-section">
-          <p class="section-label">{{ 'marketplace.availability' | translate }}</p>
-          <div class="calendar-wrapper">
-            <mat-calendar [dateFilter]="dateFilter"></mat-calendar>
-            <div class="calendar-legend">
-              <div class="legend-item">
-                <span class="dot available"></span>
-                <span>{{ 'marketplace.available' | translate }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="dot booked"></span>
-                <span>{{ 'marketplace.booked' | translate }}</span>
+        @if (!isOwner()) {
+          <div class="availability-section">
+            <p class="section-label">{{ 'marketplace.availability' | translate }}</p>
+            <div class="calendar-wrapper">
+              <mat-calendar [dateFilter]="dateFilter"></mat-calendar>
+              <div class="calendar-legend">
+                <div class="legend-item">
+                  <span class="dot available"></span>
+                  <span>{{ 'marketplace.available' | translate }}</span>
+                </div>
+                <div class="legend-item">
+                  <span class="dot booked"></span>
+                  <span>{{ 'marketplace.booked' | translate }}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        }
         @if (item()?.descEn || item()?.descAr) {
         <div class="desc-section">
           <p class="section-label">{{ 'items.description' | translate }}</p>
@@ -300,36 +306,38 @@
         </div>
         }
         <div class="grid">
-          <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
-            <mat-icon>flash_on</mat-icon>
-            {{ 'items.rentNow' | translate }}
-          </app-loading-button>
+          @if (!isOwner()) {
+            <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
+              <mat-icon>flash_on</mat-icon>
+              {{ 'items.rentNow' | translate }}
+            </app-loading-button>
 
-          @if (item()?.isForSale) {
-          <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
-            <mat-icon>shopping_cart</mat-icon>
-            {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
-          </app-loading-button>
+            @if (item()?.isForSale) {
+            <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
+              <mat-icon>shopping_cart</mat-icon>
+              {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
+            </app-loading-button>
+            }
+
+            @if (item()?.status === 'Rented') {
+            <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
+              <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+              {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+            </app-loading-button>
+            }
+
+            <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
+              [title]="'common.chat' | translate">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              {{ 'common.chat' | translate }}
+            </app-loading-button>
+
+            <app-loading-button class="col-12 md:col-6" variant="stroked" [loading]="isFavoriting()" (clicked)="addToFavorites()"
+              [title]="'items.favorite' | translate">
+              <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+              {{ 'items.favorite' | translate }}
+            </app-loading-button>
           }
-
-          @if (item()?.status === 'Rented') {
-          <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
-            <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
-            {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
-          </app-loading-button>
-          }
-
-          <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
-            [title]="'common.chat' | translate">
-            <mat-icon>chat_bubble_outline</mat-icon>
-            {{ 'common.chat' | translate }}
-          </app-loading-button>
-
-          <app-loading-button class="col-12 md:col-6" variant="stroked" [loading]="isFavoriting()" (clicked)="addToFavorites()"
-            [title]="'items.favorite' | translate">
-            <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
-            {{ 'items.favorite' | translate }}
-          </app-loading-button>
         </div>
 
       </div>
