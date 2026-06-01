@@ -18,6 +18,7 @@ import { LocalizationService } from '../../../core/services/localization.service
 
 const ERROR_MESSAGE_MAP: Record<string, string> = {
   required: 'validation.required',
+  email: 'validation.invalidEmail',
   invalidEmail: 'validation.invalidEmail',
   minlength: 'validation.minLength',
   maxlength: 'validation.maxLength',

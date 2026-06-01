@@ -24,6 +24,8 @@ public record UpdateItemCommand(
     int? CategoryId,
     int? SubcategoryId,
     int? BrandId,
+    bool? IsForSale,
+    decimal? SalePrice,
     List<CreateItemPricingCommand>? Pricing,
     List<CreateItemImageCommand>? Images
 ) : IRequest<UpdateItemResponse>;
@@ -69,8 +71,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
             if (item == null)
                 return new UpdateItemResponse(false, "Item not found.", null);
 
-            var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") ?? false;
-            if (!isAdmin && item.OwnerId != _currentUser.Id.Value)
+            if (item.OwnerId != _currentUser.Id.Value)
                 return new UpdateItemResponse(false, "Forbidden. You do not own this item.", null);
 
             if (item.Status == NewItemStatus.Rented)
@@ -94,6 +95,8 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
             if (request.CategoryId.HasValue)    item.CategoryId    = request.CategoryId;
             if (request.SubcategoryId.HasValue) item.SubcategoryId = request.SubcategoryId;
             if (request.BrandId.HasValue)       item.BrandId       = request.BrandId;
+            item.IsForSale = request.IsForSale ?? false;
+            item.SalePrice = request.SalePrice;
             item.UpdatedAt = DateTime.UtcNow;
 
             // Update Pricing

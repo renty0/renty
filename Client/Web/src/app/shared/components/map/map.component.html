@@ -1,10 +1,25 @@
 <div class="map-wrapper" [class.has-coordinates]="hasCoordinates" [class.readonly]="readonly">
     @if (!readonly) {
     <div class="map-controls">
-        <div class="search-box" [class.focused]="searchFocused">
-            <mat-icon class="search-icon">search</mat-icon>
-            <input #searchInput type="text" class="search-input" [placeholder]="'common.searchLocation' | translate"
-                (focus)="onSearchFocus()" (blur)="onSearchBlur()" />
+        <div class="search-box-wrapper">
+            <div class="search-box" [class.focused]="searchFocused">
+                <mat-icon class="search-icon">search</mat-icon>
+                <input #searchInput type="text" class="search-input" [placeholder]="'common.searchLocation' | translate"
+                    [value]="searchQuery" (input)="onSearchInput($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()" />
+                @if (isSearching) {
+                <div class="search-spinner"></div>
+                }
+            </div>
+            @if (searchResults.length > 0 && searchFocused) {
+            <div class="search-dropdown">
+                @for (result of searchResults; track result.place_id) {
+                <div class="search-item" (mousedown)="selectSearchResult(result)">
+                    <mat-icon>place</mat-icon>
+                    <span class="search-item-text">{{ result.display_name }}</span>
+                </div>
+                }
+            </div>
+            }
         </div>
         <div class="coord-box" [class.focused]="coordFocused">
             <mat-icon class="coord-icon">my_location</mat-icon>
@@ -21,14 +36,7 @@
     }
 
     <div class="map-container" [style.height.px]="height">
-        @if (apiLoaded) {
-        <div #mapContainer class="google-map"></div>
-        } @else {
-        <div class="map-loading">
-            <div class="loading-spinner"></div>
-            <p>{{ 'common.loadingMap' | translate }}</p>
-        </div>
-        }
+        <div #mapContainer class="leaflet-map"></div>
 
         @if (!hasCoordinates && readonly) {
         <div class="map-empty-overlay">

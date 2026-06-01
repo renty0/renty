@@ -4,8 +4,8 @@
         <p class="info-text">{{ 'uploader.dragDrop' | translate }}</p>
         <div class="w-full">
             <app-image-uploader [formGroup]="form" controlName="imageId" [imgUrl]="data.currentImageUrl"
-                [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']" [label]="'profile.uploadNewPhoto' | translate">
-            </app-image-uploader>
+                [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']"
+                [label]="'profile.uploadNewPhoto' | translate" />
         </div>
     </div>
 </mat-dialog-content>

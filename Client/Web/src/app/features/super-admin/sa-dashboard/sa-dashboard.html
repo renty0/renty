@@ -15,7 +15,6 @@
       </button>
     </div>
   } @else {
-    <!-- KPI Metrics -->
     <div class="kpi-grid">
       @if (isLoading()) {
         @for (i of [1,2,3,4,5,6]; track i) {
@@ -30,90 +29,86 @@
           </div>
         }
       } @else if (kpi(); as data) {
-        <!-- Revenue -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow revenue"></div>
           <mat-card-header>
             <div class="icon-container revenue">
               <mat-icon>payments</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.revenue | currency:'EGP ' }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.totalRevenue' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.revenue | currency:'EGP ' }}</mat-card-title>
             </div>
           </mat-card-header>
           <mat-card-content>
             <div class="trend positive">
               <mat-icon>trending_up</mat-icon>
-              <span>+12.5% {{ 'superAdmin.vsLastMonth' | translate }}</span>
+              <span>+12.5%</span>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <!-- Active Users -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow users"></div>
           <mat-card-header>
             <div class="icon-container users">
               <mat-icon>group</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.activeUsers | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.activeUsers' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.activeUsers | number }}</mat-card-title>
             </div>
           </mat-card-header>
           <mat-card-content>
             <div class="trend positive">
               <mat-icon>person_add</mat-icon>
-              <span>+{{ data.newUsers }} {{ 'superAdmin.newThisPeriod' | translate }}</span>
+              <span>+{{ data.newUsers }}</span>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <!-- Rentals -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow rentals"></div>
           <mat-card-header>
             <div class="icon-container rentals">
               <mat-icon>autorenew</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.rentals | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.totalRentals' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.rentals | number }}</mat-card-title>
             </div>
           </mat-card-header>
           <mat-card-content>
             <div class="trend positive">
               <mat-icon>check_circle</mat-icon>
-              <span>98% {{ 'superAdmin.completionRate' | translate }}</span>
+              <span>98%</span>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <!-- Items -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow items"></div>
           <mat-card-header>
             <div class="icon-container items">
               <mat-icon>inventory_2</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.totalItems | number }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.activeItems' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.totalItems | number }}</mat-card-title>
             </div>
           </mat-card-header>
+          <mat-card-content>
+            <div class="trend neutral">
+              <mat-icon>horizontal_rule</mat-icon>
+              <span>{{ 'common.stable' | translate }}</span>
+            </div>
+          </mat-card-content>
         </mat-card>
 
-        <!-- Fraud Rate -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow fraud"></div>
           <mat-card-header>
             <div class="icon-container fraud">
               <mat-icon>security</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.fraudRate | percent:'1.2-2' }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.fraudRate' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.fraudRate | percent:'1.2-2' }}</mat-card-title>
             </div>
           </mat-card-header>
           <mat-card-content>
@@ -124,104 +119,127 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Recommendation CTR -->
         <mat-card class="kpi-card fade-in">
-          <div class="card-glow recommendation"></div>
           <mat-card-header>
             <div class="icon-container recommendation">
               <mat-icon>ads_click</mat-icon>
             </div>
             <div class="metric-info">
-              <mat-card-title>{{ data.recommendationCtr | percent:'1.2-2' }}</mat-card-title>
               <mat-card-subtitle>{{ 'superAdmin.recommendationCtr' | translate }}</mat-card-subtitle>
+              <mat-card-title>{{ data.recommendationCtr | percent:'1.2-2' }}</mat-card-title>
             </div>
           </mat-card-header>
+          <mat-card-content>
+            <div class="trend positive">
+              <mat-icon>trending_up</mat-icon>
+              <span>+2.4%</span>
+            </div>
+          </mat-card-content>
         </mat-card>
       }
     </div>
 
-    <!-- Staff Section -->
-    <div class="staff-section">
-      <h3 class="section-title">
-        <mat-icon>badge</mat-icon>
-        {{ 'superAdmin.staffOverview' | translate }}
-      </h3>
-      <div class="staff-grid">
-        <div class="staff-card" routerLink="/super-admin/staff">
-          <div class="staff-icon admins">
-            <mat-icon>admin_panel_settings</mat-icon>
-          </div>
-          <div class="staff-info">
-            <span class="staff-count">{{ staffCounts().admins }}</span>
-            <span class="staff-label">{{ 'superAdmin.admins' | translate }}</span>
-          </div>
+    <div class="dashboard-split-layout">
+      <div class="layout-column staff-overview-col">
+        <div class="section-header">
+          <h3 class="section-title">
+            <mat-icon>badge</mat-icon>
+            {{ 'superAdmin.staffOverview' | translate }}
+          </h3>
+          <button mat-button color="primary" routerLink="/super-admin/staff" class="view-all-btn">
+            {{ 'common.viewAll' | translate }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
 
-        <div class="staff-card" routerLink="/super-admin/staff">
-          <div class="staff-icon support">
-            <mat-icon>headset_mic</mat-icon>
+        <div class="staff-compact-grid">
+          <div class="staff-row-card" routerLink="/super-admin/staff">
+            <div class="staff-icon admins">
+              <mat-icon>admin_panel_settings</mat-icon>
+            </div>
+            <div class="staff-row-info">
+              <span class="staff-row-label">{{ 'superAdmin.admins' | translate }}</span>
+              <span class="staff-row-count">{{ staffCounts().admins }}</span>
+            </div>
+            <mat-icon class="arrow-icon">chevron_right</mat-icon>
           </div>
-          <div class="staff-info">
-            <span class="staff-count">{{ staffCounts().support }}</span>
-            <span class="staff-label">{{ 'superAdmin.supportAgents' | translate }}</span>
+
+          <div class="staff-row-card" routerLink="/super-admin/staff">
+            <div class="staff-icon support">
+              <mat-icon>headset_mic</mat-icon>
+            </div>
+            <div class="staff-row-info">
+              <span class="staff-row-label">{{ 'superAdmin.supportAgents' | translate }}</span>
+              <span class="staff-row-count">{{ staffCounts().support }}</span>
+            </div>
+            <mat-icon class="arrow-icon">chevron_right</mat-icon>
+          </div>
+
+          <div class="staff-row-card" routerLink="/super-admin/staff">
+            <div class="staff-icon experts">
+              <mat-icon>verified</mat-icon>
+            </div>
+            <div class="staff-row-info">
+              <span class="staff-row-label">{{ 'superAdmin.experts' | translate }}</span>
+              <span class="staff-row-count">{{ staffCounts().experts }}</span>
+            </div>
+            <mat-icon class="arrow-icon">chevron_right</mat-icon>
           </div>
         </div>
+      </div>
 
-        <div class="staff-card" routerLink="/super-admin/staff">
-          <div class="staff-icon experts">
-            <mat-icon>verified</mat-icon>
+      <div class="layout-column quick-actions-col">
+        <h3 class="section-title">
+          <mat-icon>bolt</mat-icon>
+          {{ 'superAdmin.quickActions' | translate }}
+        </h3>
+
+        <div class="actions-compact-grid grid">
+          <div class="action-tile-card col-12" routerLink="/super-admin/staff">
+            <div class="tile-icon-wrapper">
+              <mat-icon>person_add</mat-icon>
+            </div>
+            <div class="tile-content">
+              <h4>{{ 'superAdmin.manageStaff' | translate }}</h4>
+              <p>{{ 'superAdmin.manageStaffDesc' | translate }}</p>
+            </div>
           </div>
-          <div class="staff-info">
-            <span class="staff-count">{{ staffCounts().experts }}</span>
-            <span class="staff-label">{{ 'superAdmin.experts' | translate }}</span>
+
+          <div class="action-tile-card col-12" routerLink="/admin/users">
+            <div class="tile-icon-wrapper">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="tile-content">
+              <h4>{{ 'superAdmin.manageUsers' | translate }}</h4>
+              <p>{{ 'superAdmin.manageUsersDesc' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="action-tile-card col-12" routerLink="/admin/settings">
+            <div class="tile-icon-wrapper">
+              <mat-icon>settings_suggest</mat-icon>
+            </div>
+            <div class="tile-content">
+              <h4>{{ 'superAdmin.systemSettings' | translate }}</h4>
+              <p>{{ 'superAdmin.systemSettingsDesc' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="action-tile-card col-12" routerLink="/super-admin/overrides">
+            <div class="tile-icon-wrapper warn">
+              <mat-icon>security_update_warning</mat-icon>
+            </div>
+            <div class="tile-content">
+              <h4>{{ 'superAdmin.overrides' | translate }}</h4>
+              <p>{{ 'superAdmin.overridesDesc' | translate }}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-      <h3 class="section-title">
-        <mat-icon>bolt</mat-icon>
-        {{ 'superAdmin.quickActions' | translate }}
-      </h3>
-      <div class="actions-grid">
-        <div class="action-card" routerLink="/super-admin/staff">
-          <div class="action-icon">
-            <mat-icon>person_add</mat-icon>
-          </div>
-          <h4>{{ 'superAdmin.manageStaff' | translate }}</h4>
-          <p>{{ 'superAdmin.manageStaffDesc' | translate }}</p>
-        </div>
-
-        <div class="action-card" routerLink="/admin/users">
-          <div class="action-icon">
-            <mat-icon>people</mat-icon>
-          </div>
-          <h4>{{ 'superAdmin.manageUsers' | translate }}</h4>
-          <p>{{ 'superAdmin.manageUsersDesc' | translate }}</p>
-        </div>
-
-        <div class="action-card" routerLink="/admin/settings">
-          <div class="action-icon">
-            <mat-icon>settings_suggest</mat-icon>
-          </div>
-          <h4>{{ 'superAdmin.systemSettings' | translate }}</h4>
-          <p>{{ 'superAdmin.systemSettingsDesc' | translate }}</p>
-        </div>
-
-        <div class="action-card" routerLink="/super-admin/overrides">
-          <div class="action-icon warn">
-            <mat-icon>admin_panel_settings</mat-icon>
-          </div>
-          <h4>{{ 'superAdmin.overrides' | translate }}</h4>
-          <p>{{ 'superAdmin.overridesDesc' | translate }}</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="dashboard-actions">
-      <button mat-flat-button color="primary" (click)="loadKpi()" [disabled]="isLoading()">
+    <div class="dashboard-footer-actions">
+      <button mat-stroked-button (click)="loadKpi()" [disabled]="isLoading()" class="refresh-button">
         <mat-icon [class.refreshing]="isLoading()">refresh</mat-icon>
         {{ 'superAdmin.refreshMetrics' | translate }}
       </button>

@@ -170,6 +170,7 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
         {
             rental.Verifications.Add(new ItemVerification
             {
+                ItemId = request.ItemId,
                 CheckType = VerificationCheck.BeforeRent,
                 Status = VerificationStatus.Pending
             });

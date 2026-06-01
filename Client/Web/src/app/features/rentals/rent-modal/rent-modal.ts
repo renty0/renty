@@ -4,17 +4,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { RentalsClient, CreateRentalRequest, ItemDetailDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
+import { InputComponent, SelectOption } from '../../../shared/components/input/input';
 
 @Component({
   selector: 'app-rent-modal',
@@ -24,15 +20,11 @@ import { LoadingButtonComponent } from '../../../shared/components/loading-butto
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
     MatCheckboxModule,
     MatIconModule,
     TranslateModule,
-    LoadingButtonComponent
+    LoadingButtonComponent,
+    InputComponent
   ],
   templateUrl: './rent-modal.html',
   styleUrl: './rent-modal.scss'
@@ -54,6 +46,13 @@ export class RentModalComponent implements OnInit {
     return this.data.item.pricing?.map(p => p.pricingType) || [];
   });
 
+  pricingTypeOptions = computed<SelectOption[]>(() =>
+    (this.data.item.pricing ?? []).map(p => ({
+      name: 'rentals.' + (p.pricingType ?? '').toLowerCase(),
+      code: p.pricingType ?? ''
+    }))
+  );
+
   rentalPrice = signal(0);
   depositAmount = signal(this.data.item.defaultDeposit || 0);
   expertFee = signal(100);
@@ -70,7 +69,8 @@ export class RentModalComponent implements OnInit {
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
       pricingType: [this.availablePricingTypes()[0] || 'daily', Validators.required],
-      requiresExpert: [false]
+      requiresExpert: [false],
+      notes: ['']
     });
 
     this.rentForm.valueChanges.subscribe(() => {
@@ -116,7 +116,8 @@ export class RentModalComponent implements OnInit {
       startDate: formValue.startDate,
       endDate: formValue.endDate,
       pricingType: formValue.pricingType.toLowerCase(),
-      requestExpertReview: formValue.requiresExpert
+      requestExpertReview: formValue.requiresExpert,
+      notes: formValue.notes || undefined
     });
 
     this.rentalsClient.createRental(command).subscribe({

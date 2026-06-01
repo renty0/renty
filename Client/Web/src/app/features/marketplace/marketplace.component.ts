@@ -204,21 +204,17 @@ export class MarketplaceComponent implements OnInit {
 
     switch (this.sortBy()) {
       case 'price_low':
-        sort = 'price';
-        sortOrder = 'asc';
+        sort = 'price_asc';
         break;
       case 'price_high':
-        sort = 'price';
-        sortOrder = 'desc';
+        sort = 'price_desc';
         break;
       case 'rating':
         sort = 'rating';
-        sortOrder = 'desc';
         break;
       case 'newest':
       default:
-        sort = 'createdAt';
-        sortOrder = 'desc';
+        sort = 'newest';
         break;
     }
 

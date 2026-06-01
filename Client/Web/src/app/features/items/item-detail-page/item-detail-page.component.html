@@ -1,14 +1,14 @@
 <div class="detail-page">
   @if (isLoading()) {
   <div class="skeleton-page">
-    <div class="detail-grid">
-      <div class="left-col">
+    <div class="grid">
+      <div class="col-12 lg:col-8 xl:col-8 flex flex-column gap-4 lg:gap-5">
         <div class="sk-gallery"></div>
         <div class="sk-title"></div>
         <div class="sk-text"></div>
         <div class="sk-text" style="width: 80%"></div>
       </div>
-      <div>
+      <div class="col-12 lg:col-4 xl:col-4">
         <div class="sk-price"></div>
         <div class="sk-text"></div>
         <div class="sk-text"></div>
@@ -29,8 +29,8 @@
     }
     <span class="crumb-current">{{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}</span>
   </nav>
-  <div class="detail-grid">
-    <div class="left-col">
+  <div class="grid">
+    <div class="col-12 lg:col-8 xl:col-8 flex flex-column gap-4 lg:gap-5">
       <div class="gallery-card">
         <div class="main-image-wrap">
           <div class="overlay-actions">
@@ -181,8 +181,9 @@
       }
 
     </div>
-    <aside class="sticky-sidebar">
-      <div class="info-card">
+    <div class="col-12 lg:col-4 xl:col-4">
+      <aside class="sticky-sidebar">
+        <div class="info-card">
         @if (item()?.condition) {
         <div class="condition-badge">
           <mat-icon>verified</mat-icon>
@@ -341,7 +342,8 @@
         </div>
 
       </div>
-    </aside>
+      </aside>
+    </div>
 
   </div>
   }

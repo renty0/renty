@@ -78,10 +78,12 @@
               [title]="'buttons.view' | translate">
               <mat-icon>visibility</mat-icon>
             </app-loading-button>
+            @if (isOwner(row)) {
             <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="editItem(row.id!)"
               [title]="'buttons.edit' | translate">
               <mat-icon>edit</mat-icon>
             </app-loading-button>
+            }
             <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
               [title]="'buttons.delete' | translate">
               <mat-icon>delete</mat-icon>
@@ -134,10 +136,12 @@
             [routerLink]="['/items', item.id]">
             <mat-icon>visibility</mat-icon>
           </app-loading-button>
+          @if (isOwner(item)) {
           <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm" class="flex-1"
             (clicked)="editItem(item.id!)">
             <mat-icon>edit</mat-icon>
           </app-loading-button>
+          }
           <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
             (clicked)="deleteItem(item.id!)">
             <mat-icon>delete</mat-icon>

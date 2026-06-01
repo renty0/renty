@@ -47,8 +47,8 @@
               <!-- Owner Box -->
               <div class="rich-box party-box">
                 <div class="party-avatar">
-                  <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'" alt="Owner"
-                    (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+                  <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'"
+                    alt="Owner" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
                   <div class="role-badge owner">{{ 'expert.history.ownerName' | translate }}</div>
                 </div>
                 <div class="box-content">
@@ -121,15 +121,15 @@
           </div>
 
           <form [formGroup]="verifyForm" class="verification-form">
-            <app-input [formGroup]="verifyForm" controlName="checkType" [label]="'expert.verify.checkType' | translate"
-              [translateLabel]="false" type="select" [options]="checkTypeOptions" [translateOptions]="true"
-              [required]="true" prefixIcon="assignment_turned_in" />
-            <app-input [formGroup]="verifyForm" controlName="status" [label]="'expert.verify.status' | translate"
-              [translateLabel]="false" type="select" [options]="statusOptions" [translateOptions]="true"
-              [required]="true" prefixIcon="verified" />
-            <app-input [formGroup]="verifyForm" controlName="notes" [label]="'expert.verify.notes' | translate"
-              [translateLabel]="false" type="textarea" [rows]="4"
-              [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" />
+            <app-input [formGroup]="verifyForm" controlName="checkType" label="checkType" [translateLabel]="false"
+              type="select" [options]="checkTypeOptions" [translateOptions]="true" [required]="true"
+              prefixIcon="assignment_turned_in" />
+            <app-input [formGroup]="verifyForm" controlName="status" label="status" [translateLabel]="false"
+              type="select" [options]="statusOptions" [translateOptions]="true" [required]="true"
+              prefixIcon="verified" />
+            <app-input [formGroup]="verifyForm" controlName="notes" label="notes" [translateLabel]="false"
+              type="textarea" [rows]="4" [placeholder]="'expert.verify.notesPlaceholder' | translate"
+              prefixIcon="notes" />
           </form>
 
           <div class="form-actions">

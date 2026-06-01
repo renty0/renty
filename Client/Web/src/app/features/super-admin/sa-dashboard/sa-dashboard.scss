@@ -1,5 +1,6 @@
 @use "../../../shared/styles" as *;
 
+// Animations
 @mixin skeleton-animation {
   background: linear-gradient(90deg,
       rgba($primary-color, 0.02) 25%,
@@ -20,7 +21,7 @@
 }
 
 .sa-dashboard-container {
-  padding: $spacing-xl;
+  padding: $spacing-xl $spacing-2xl;
   max-width: 1600px;
   margin: 0 auto;
 
@@ -49,371 +50,416 @@
   }
 }
 
-// KPI Section
+// KPI Grid
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing-xl;
-  margin-top: $spacing-xl;
-  margin-bottom: $spacing-3xl;
+  grid-template-columns: repeat(6, 1fr);
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-2xl;
 
   @include tablet {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @include mobile {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 .kpi-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: $border-radius-2xl;
-  border: 1px solid rgba($primary-color, 0.05);
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   background: $white;
-  transition: all $transition-base;
-  padding: $spacing-xl;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  padding: $spacing-lg;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: $shadow-xl;
-    border-color: rgba($primary-light, 0.2);
-
-    .card-glow {
-      opacity: 0.1;
-    }
-
-    .icon-container {
-      transform: scale(1.1);
-    }
-  }
-
-  .card-glow {
-    position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.05;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-
-    &.revenue {
-      background: $success;
-    }
-
-    &.users {
-      background: $primary-light;
-    }
-
-    &.rentals {
-      background: $warning;
-    }
-
-    &.items {
-      background: $accent-color;
-    }
-
-    &.fraud {
-      background: $danger;
-    }
-
-    &.recommendation {
-      background: $info;
-    }
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: rgba($primary-color, 0.15);
   }
 
   mat-card-header {
     display: flex;
-    align-items: center;
-    gap: $spacing-md;
+    flex-direction: column;
+    align-items: flex-start;
     padding: 0;
-    margin-bottom: $spacing-md;
+    gap: $spacing-md;
+    width: 100%;
 
     .icon-container {
-      width: 56px;
-      height: 56px;
-      border-radius: $border-radius-xl;
+      width: 40px;
+      height: 40px;
+      border-radius: $border-radius-lg;
       @include flex-center;
-      transition: transform 0.3s ease;
-      box-shadow: $shadow-sm;
+      transition: transform 0.25s ease;
+      background: rgba(0, 0, 0, 0.03);
+      color: $text-dark;
 
       mat-icon {
-        color: $white;
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
 
       &.revenue {
-        background: linear-gradient(135deg, $success, #10b981);
+        background: rgba($success, 0.07);
+        color: $success;
       }
 
       &.users {
-        background: linear-gradient(135deg, $primary-light, #3b82f6);
+        background: rgba($primary-color, 0.07);
+        color: $primary-color;
       }
 
       &.rentals {
-        background: linear-gradient(135deg, $warning, #f59e0b);
+        background: rgba($warning, 0.07);
+        color: $warning;
       }
 
       &.items {
-        background: linear-gradient(135deg, $accent-color, #6366f1);
+        background: rgba($info, 0.07);
+        color: $info;
       }
 
       &.fraud {
-        background: linear-gradient(135deg, $danger, #ef4444);
+        background: rgba($danger, 0.07);
+        color: $danger;
       }
 
       &.recommendation {
-        background: linear-gradient(135deg, $info, #06b6d4);
+        background: rgba($primary-light, 0.07);
+        color: $primary-light;
       }
     }
 
     .metric-info {
-      mat-card-title {
-        font-size: $font-size-xl;
-        font-weight: $font-weight-bold;
-        color: $text-dark;
-        margin: 0 0 4px;
-        line-height: 1.2;
-      }
+      display: flex;
+      flex-direction: column;
+      width: 100%;
 
       mat-card-subtitle {
-        font-size: $font-size-xs;
+        font-size: 11px;
         color: $text-muted;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      mat-card-title {
+        font-size: $font-size-lg;
+        font-weight: 700;
+        color: $text-dark;
         margin: 0;
-        font-weight: $font-weight-bold;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
       }
     }
   }
 
   mat-card-content {
     padding: 0;
+    margin-top: $spacing-sm;
 
     .trend {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: $font-size-xs;
-      font-weight: $font-weight-bold;
+      gap: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: $border-radius-sm;
 
       mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
+        font-size: 13px;
+        width: 13px;
+        height: 13px;
       }
 
       &.positive {
+        background: rgba($success, 0.08);
         color: $success;
       }
 
       &.negative {
+        background: rgba($danger, 0.08);
         color: $danger;
+      }
+
+      &.neutral {
+        background: rgba(0, 0, 0, 0.04);
+        color: $text-muted;
       }
     }
   }
 }
 
-// Sections
+// Split Layout
+.dashboard-split-layout {
+  display: grid;
+  grid-template-columns: 4fr 5fr;
+  gap: $spacing-2xl;
+  margin-top: $spacing-xl;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+  }
+}
+
+.layout-column {
+  background: $white;
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: $spacing-xl;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
+}
+
+// Headers
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  .section-title {
+    margin-bottom: 0;
+  }
+
+  .view-all-btn {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 $spacing-sm;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
 .section-title {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  margin-bottom: $spacing-xl;
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
+  gap: $spacing-sm;
+  font-size: $font-size-md;
+  font-weight: 700;
   color: $text-dark;
+  margin-top: 0;
+  margin-bottom: $spacing-lg;
 
   mat-icon {
-    color: $primary-light;
-    opacity: 0.8;
+    color: $text-muted;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 }
 
-.staff-section {
-  margin-bottom: $spacing-3xl;
-}
-
-.staff-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing-xl;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-.staff-card {
+// Staff Compact Grid (Rows)
+.staff-compact-grid {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.staff-row-card {
+  display: flex;
   align-items: center;
-  gap: $spacing-lg;
-  padding: $spacing-xl;
-  border-radius: $border-radius-xl;
-  border: 1px solid rgba($primary-color, 0.05);
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.01);
   cursor: pointer;
-  transition: all $transition-base;
-  background: $white;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: rgba($primary-light, 0.02);
-    border-color: rgba($primary-light, 0.1);
-    transform: translateX(5px);
-    box-shadow: $shadow-md;
+    background: rgba($primary-color, 0.03);
+    border-color: rgba($primary-color, 0.08);
+    transform: translateX(4px);
+
+    .arrow-icon {
+      color: $primary-color;
+      transform: translateX(2px);
+    }
   }
 
   .staff-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: $border-radius-full;
+    width: 42px;
+    height: 42px;
+    border-radius: $border-radius-lg;
     @include flex-center;
-    background: $gray-100;
-    color: $primary-light;
     flex-shrink: 0;
 
     mat-icon {
-      font-size: 26px;
-      width: 26px;
-      height: 26px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
 
     &.admins {
-      background: rgba($primary-light, 0.1);
-      color: $primary-light;
+      background: rgba($primary-color, 0.08);
+      color: $primary-color;
     }
 
     &.support {
-      background: rgba($info, 0.1);
+      background: rgba($info, 0.08);
       color: $info;
     }
 
     &.experts {
-      background: rgba($success, 0.1);
+      background: rgba($success, 0.08);
       color: $success;
     }
   }
 
-  .staff-info {
-    .staff-count {
-      display: block;
-      font-size: $font-size-xxl;
-      font-weight: $font-weight-bold;
+  .staff-row-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: $spacing-sm;
+
+    .staff-row-label {
+      font-size: $font-size-sm;
+      font-weight: 600;
       color: $text-dark;
-      line-height: 1.1;
     }
 
-    .staff-label {
-      font-size: $font-size-xs;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: $font-weight-bold;
+    .staff-row-count {
+      font-size: $font-size-md;
+      font-weight: 700;
+      color: $text-dark;
+      background: $white;
+      padding: 2px 10px;
+      border-radius: $border-radius-sm;
+      border: 1px solid rgba(0, 0, 0, 0.05);
     }
+  }
+
+  .arrow-icon {
+    color: $text-muted;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    transition: all 0.2s ease;
   }
 }
 
-// Quick Actions
-.quick-actions {
-  margin-bottom: $spacing-3xl;
-}
-
-.actions-grid {
+// Quick Actions Compact Grid
+.actions-compact-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $spacing-xl;
-
-  @include tablet {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
 
   @include mobile {
     grid-template-columns: 1fr;
   }
 }
 
-.action-card {
-  background: $white;
-  border-radius: $border-radius-xl;
-  padding: $spacing-xl;
-  border: 1px solid rgba($primary-color, 0.05);
+.action-tile-card {
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(0, 0, 0, 0.01);
+  padding: $spacing-md;
   cursor: pointer;
-  transition: all $transition-base;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: $spacing-md;
+  height: 100%;
 
   &:hover {
-    background: $primary-color;
-    border-color: $primary-color;
-    transform: translateY(-5px);
-    box-shadow: $shadow-lg;
+    background: $white;
+    border-color: rgba($primary-color, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
 
-    .action-icon {
-      background: rgba($white, 0.2);
-      color: $white;
-    }
-
-    h4,
-    p {
+    .tile-icon-wrapper {
+      background: $primary-color;
       color: $white;
     }
   }
 
-  .action-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: $border-radius-lg;
+  .tile-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: $border-radius-md;
     @include flex-center;
-    background: rgba($primary-light, 0.1);
-    color: $primary-light;
-    transition: all 0.3s ease;
+    background: $white;
+    color: $text-dark;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
 
     mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
 
     &.warn {
-      background: rgba($danger, 0.1);
-      color: $danger;
+      color: $warning;
+
+      &:hover {
+        background: $warning;
+        color: $white;
+      }
     }
   }
 
-  h4 {
-    margin: 0;
-    font-size: $font-size-md;
-    font-weight: $font-weight-bold;
-    color: $text-dark;
-  }
+  .tile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 
-  p {
-    margin: 0;
-    font-size: $font-size-xs;
-    color: $text-muted;
-    line-height: 1.4;
+    h4 {
+      margin: 0;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      color: $text-dark;
+    }
+
+    p {
+      margin: 0;
+      font-size: 11px;
+      color: $text-muted;
+      line-height: 1.4;
+    }
   }
 }
 
-.dashboard-actions {
+// Refresh Actions
+.dashboard-footer-actions {
   display: flex;
   justify-content: center;
-  margin-top: $spacing-3xl;
+  margin-top: $spacing-2xl;
 
-  button {
-    padding: $spacing-md $spacing-2xl;
+  .refresh-button {
     border-radius: $border-radius-xxl;
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: $shadow-lg;
+    font-weight: 600;
+    font-size: $font-size-xs;
+    padding: $spacing-sm $spacing-xl;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: $text-dark;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 
@@ -434,8 +480,9 @@
 // Skeletons
 .skeleton-card {
   background: $white;
-  border-radius: $border-radius-2xl;
-  padding: $spacing-xl;
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: $spacing-lg;
   height: 120px;
   @include flex-center;
 
@@ -446,9 +493,9 @@
     width: 100%;
 
     .skeleton-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: $border-radius-xl;
+      width: 40px;
+      height: 40px;
+      border-radius: $border-radius-lg;
       @include skeleton-animation;
     }
 
@@ -456,20 +503,20 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
 
       .skeleton-text {
-        height: 12px;
+        height: 10px;
         border-radius: $border-radius-sm;
         @include skeleton-animation;
 
         &.title {
-          width: 60%;
-          height: 20px;
+          width: 50%;
+          height: 16px;
         }
 
         &.subtitle {
-          width: 40%;
+          width: 70%;
         }
       }
     }

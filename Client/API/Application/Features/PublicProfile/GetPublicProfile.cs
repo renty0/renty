@@ -75,9 +75,11 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                 if (primaryImage?.Image != null)
                 {
                     var path = primaryImage.Image.StoragePath.Replace("\\", "/").TrimStart('/');
-                    imageUrl = !string.IsNullOrEmpty(baseUrl) 
-                        ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{path}" 
-                        : $"/api/v1/media/{path}";
+                    imageUrl = path.StartsWith("http://") || path.StartsWith("https://")
+                        ? path
+                        : (!string.IsNullOrEmpty(baseUrl) 
+                            ? $"{baseUrl.TrimEnd('/')}/{path}" 
+                            : $"/{path}");
                 }
 
                 var dailyPrice = i.Pricing.FirstOrDefault(p => p.PricingType == "daily")?.Price 
@@ -115,7 +117,9 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                 r.Comment,
                 r.Reviewer.FirstName + " " + r.Reviewer.LastName,
                 !string.IsNullOrEmpty(r.Reviewer.ProfilePictureUrl) 
-                    ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}" : $"/api/v1/media/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}") 
+                    ? (r.Reviewer.ProfilePictureUrl.StartsWith("http://") || r.Reviewer.ProfilePictureUrl.StartsWith("https://")
+                        ? r.Reviewer.ProfilePictureUrl
+                        : (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}" : "/" + r.Reviewer.ProfilePictureUrl.TrimStart('/')))
                     : null,
                 r.CreatedAt,
                 "owner"
@@ -127,7 +131,9 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             user.FirstName,
             user.LastName,
             !string.IsNullOrEmpty(user.ProfilePictureUrl)
-                ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/api/v1/media/{user.ProfilePictureUrl.TrimStart('/')}" : $"/api/v1/media/{user.ProfilePictureUrl.TrimStart('/')}")
+                ? (user.ProfilePictureUrl.StartsWith("http://") || user.ProfilePictureUrl.StartsWith("https://")
+                    ? user.ProfilePictureUrl
+                    : (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" : "/" + user.ProfilePictureUrl.TrimStart('/')))
                 : null,
             user.Bio,
             user.City,

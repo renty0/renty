@@ -87,7 +87,7 @@ export class ProfileComponent {
   });
 
   profileImageUrl = computed(() => {
-    return this.profileForm.get('profilePictureUrl')?.value || 'assets/profile.webp';
+    return this.currentUser()?.profilePictureUrl || 'assets/profile.webp';
   });
 
   constructor() {
@@ -123,11 +123,12 @@ export class ProfileComponent {
   }
 
   openImageDialog() {
+    const currentUrl = this.profileForm.get('profilePictureUrl')?.value;
     const dialogRef = this.dialog.open(ProfileImageDialogComponent, {
       width: '650px',
       maxWidth: '90vw',
       disableClose: false,
-      data: { currentImageUrl: this.profileImageUrl() }
+      data: { currentImageUrl: currentUrl && currentUrl !== 'assets/profile.webp' ? currentUrl : null }
     });
 
     dialogRef.afterClosed().subscribe(newUrl => {

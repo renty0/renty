@@ -87,9 +87,7 @@ export class NavbarComponent implements OnInit {
 
     // Dashboards
     if (this.permissionService.hasPermission(PermissionType.Dashboards_View)) {
-      links.push({ path: '/admin/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' });
       links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
-      links.push({ path: '/admin/fraud', labelKey: 'nav.fraud', icon: 'security' });
     }
 
     // User Management

@@ -44,8 +44,9 @@
     </div>
   </div>
 
-  <div class="grid details-grid">
-    <div class="col-12 lg:col-8 main-info flex flex-column gap-4">
+  <div class="grid">
+    
+    <div class="col-12 lg:col-8 flex flex-column gap-4">
       <div class="info-strip grid gap-0">
         <div class="info-strip-item col-6 md:col-3">
           <label>{{ 'rentals.details.dates' | translate }}</label>
@@ -101,7 +102,7 @@
       </mat-card>
       }
 
-      <mat-card class="premium-card section-card photos-card shadow-1">
+      <mat-card class="premium-card shadow-1">
         <mat-card-header class="mb-3">
           <mat-icon mat-card-avatar class="text-primary">photo_library</mat-icon>
           <mat-card-title class="font-bold">{{ 'rentals.details.condition_photos' | translate }}</mat-card-title>
@@ -157,7 +158,7 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="premium-card section-card review-card shadow-1"
+      <mat-card class="premium-card review-card shadow-1"
         *ngIf="rental()?.status === 'Completed' && !isOwner() && !rental()?.hasReview">
         <mat-card-header class="mb-3">
           <mat-icon mat-card-avatar class="text-accent">star</mat-icon>
@@ -189,44 +190,44 @@
       </mat-card>
 
       @if (r.notes) {
-      <mat-card class="premium-card section-card shadow-1">
+      <mat-card class="premium-card shadow-1">
         <mat-card-header class="mb-2">
           <mat-icon mat-card-avatar class="text-primary">notes</mat-icon>
           <mat-card-title class="font-bold">{{ 'rentals.details.notes' | translate }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="notes-text text-600 line-height-3">{{ r.notes }}</p>
+          <p class="text-600 line-height-3">{{ r.notes }}</p>
         </mat-card-content>
       </mat-card>
       }
     </div>
 
-    <div class="col-12 lg:col-4 side-info">
+    <div class="col-12 lg:col-4">
       <div class="side-sticky">
 
-        <mat-card class="premium-card financial-card shadow-1 mb-4">
+        <mat-card class="premium-card shadow-1 mb-4">
           <mat-card-header class="mb-3">
             <mat-icon mat-card-avatar class="text-primary">payments</mat-icon>
             <mat-card-title class="font-bold">{{ 'rentals.details.financials' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="price-list flex flex-column gap-3">
-              <div class="price-row flex justify-content-between">
+            <div class="flex flex-column gap-3">
+              <div class="flex justify-content-between">
                 <span class="text-600">{{ 'rentals.details.price' | translate }}</span>
                 <span class="font-bold">{{ r.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
-              <div class="price-row flex justify-content-between">
+              <div class="flex justify-content-between">
                 <span class="text-600">{{ 'rentals.details.deposit' | translate }}</span>
                 <span class="font-bold">{{ r.depositAmount | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
               @if (r.lateFee && r.lateFee > 0) {
-              <div class="price-row flex justify-content-between text-red-500">
+              <div class="flex justify-content-between text-red-500">
                 <span>{{ 'rentals.details.lateFee' | translate }}</span>
                 <span class="font-bold">+{{ r.lateFee | currency:'EGP ':'symbol':'1.0-2' }}</span>
               </div>
               }
               <mat-divider></mat-divider>
-              <div class="price-row total flex justify-content-between align-items-center py-1">
+              <div class="flex justify-content-between align-items-center py-1 mt-2">
                 <span class="text-900 font-bold text-lg">{{ 'rentals.details.total' | translate }}</span>
                 <span class="text-primary font-bold text-xl">
                   {{ (r.rentalPrice || 0) + (r.depositAmount || 0) + (r.lateFee || 0) | currency:'EGP ':'symbol':'1.0-2' }}
@@ -236,13 +237,13 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="premium-card parties-card shadow-1 mb-4">
+        <mat-card class="premium-card shadow-1 mb-4">
           <mat-card-header class="mb-3">
             <mat-icon mat-card-avatar class="text-primary">groups</mat-icon>
             <mat-card-title class="font-bold">{{ 'rentals.details.parties' | translate }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="party-list flex flex-column gap-3">
+            <div class="flex flex-column gap-3">
               <div class="party-item flex align-items-center gap-3">
                 <div class="party-avatar shadow-1">
                   <mat-icon>person</mat-icon>
@@ -285,8 +286,8 @@
               <mat-card-title class="font-bold">{{ 'rentals.details.expert_review' | translate }}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <div class="expert-status-list flex flex-column gap-3">
-                  <div class="status-item flex align-items-center gap-3">
+              <div class="flex flex-column gap-3">
+                  <div class="flex align-items-center gap-3">
                     <div class="status-icon" 
                          [class.done]="r.verifications?.[0]?.status === 'Approved'"
                          [class.error]="r.verifications?.[0]?.status === 'Rejected'"

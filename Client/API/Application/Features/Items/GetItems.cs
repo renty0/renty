@@ -124,6 +124,12 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
         if (request.City != null)
             query = query.Where(i => i.City == request.City);
 
+        if (request.CategoryId.HasValue)
+            query = query.Where(i => i.CategoryId == request.CategoryId.Value);
+
+        if (request.SubcategoryId.HasValue)
+            query = query.Where(i => i.SubcategoryId == request.SubcategoryId.Value);
+
         if (request.Type != null && Enum.TryParse<ItemType>(request.Type, true, out var itemType))
             query = query.Where(i => i.Type == itemType);
 
@@ -193,7 +199,11 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.Item.TitleEn,
                 x.DailyPrice,
                 x.Item.City,
-                x.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
+                x.PrimaryImage != null
+                    ? (x.PrimaryImage.StartsWith("http://") || x.PrimaryImage.StartsWith("https://")
+                        ? x.PrimaryImage
+                        : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/'))
+                    : null,
                 x.AvgRating,  
                 x.ReviewCount,  
                 x.Item.Type.ToString(),

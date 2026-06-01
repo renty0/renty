@@ -31,16 +31,8 @@
 
     <div>
       <form [formGroup]="overrideForm" class="form-body">
-        <app-input [formGroup]="overrideForm" controlName="referenceId" [label]="'superAdmin.override.referenceId'"
-          [placeholder]="'superAdmin.override.referenceIdPlaceholder' | translate" [required]="true"
-          prefixIcon="fingerprint">
-        </app-input>
-
-        <app-input [formGroup]="overrideForm" controlName="justification" type="textarea" [rows]="4"
-          [label]="'superAdmin.override.justification'"
-          [placeholder]="'superAdmin.override.justificationPlaceholder' | translate" [required]="true"
-          prefixIcon="notes">
-        </app-input>
+        <app-input [formGroup]="overrideForm" controlName="referenceId" label="referenceId" [placeholder]="'superAdmin.override.referenceIdPlaceholder' | translate" [required]="true" prefixIcon="fingerprint" />
+        <app-input [formGroup]="overrideForm" controlName="justification" type="textarea" [rows]="4" label="justification" [placeholder]="'superAdmin.override.justificationPlaceholder' | translate" [required]="true" prefixIcon="notes" />
       </form>
 
       <div class="warning-notice">
@@ -50,11 +42,8 @@
     </div>
 
     <div class="form-actions">
-      <button mat-stroked-button (click)="cancelAction()">
-        {{ 'common.cancel' | translate }}
-      </button>
-      <app-loading-button color="warn" [loading]="isExecuting()" [disabled]="overrideForm.invalid"
-        (clicked)="executeOverride()" matIcon="bolt">
+      <button mat-stroked-button (click)="cancelAction()"> {{ 'common.cancel' | translate }} </button>
+      <app-loading-button color="warn" [loading]="isExecuting()" [disabled]="overrideForm.invalid" (clicked)="executeOverride()" matIcon="bolt">
         {{ 'superAdmin.override.execute' | translate }}
       </app-loading-button>
     </div>

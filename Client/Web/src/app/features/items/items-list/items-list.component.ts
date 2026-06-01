@@ -20,6 +20,7 @@ import { ItemsClient, ItemListDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-items-list',
@@ -49,8 +50,14 @@ export class ItemsListComponent implements OnInit {
   private dialog = inject(MatDialog);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
+  private authService = inject(AuthService);
 
   isOwnerMode = signal(false);
+
+  isOwner(item: ItemListDto): boolean {
+    const currentUserId = this.authService.getCurrentUserId();
+    return currentUserId !== null && item.ownerId === currentUserId;
+  }
 
   displayedColumns = ['image', 'title', 'price', 'category', 'actions'];
   dataSource = signal<ItemListDto[]>([]);

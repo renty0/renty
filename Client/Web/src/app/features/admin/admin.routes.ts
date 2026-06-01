@@ -8,11 +8,7 @@ export const ADMIN_ROUTES: Routes = [
     path: '',
     canActivate: [AuthGuard, AdminGuard],
     children: [
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent),
-        data: { permission: PermissionType.Dashboards_View }
-      },
+
       {
         path: 'gap-analysis',
         loadComponent: () => import('./gap-analysis/gap-analysis').then(m => m.GapAnalysisComponent),
@@ -45,7 +41,7 @@ export const ADMIN_ROUTES: Routes = [
       },
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'gap-analysis',
         pathMatch: 'full'
       }
     ]

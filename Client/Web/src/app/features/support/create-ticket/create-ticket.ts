@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -40,6 +40,7 @@ import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
 export class CreateTicketComponent {
   private readonly supportClient = inject(SupportClient);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
 
   ticketType = signal('General');
@@ -58,6 +59,13 @@ export class CreateTicketComponent {
   ];
 
   constructor() {
+    // Auto-fill ticket type from quick-action navigation (e.g., ?type=Payment)
+    const typeParam = this.route.snapshot.queryParamMap.get('type');
+    const validTypes = ['General', 'Billing', 'Rental', 'Payment', 'Technical', 'Other'];
+    if (typeParam && validTypes.includes(typeParam)) {
+      this.ticketType.set(typeParam);
+    }
+
     this.submitSubject.pipe(
       tap(() => this.isSubmitting.set(true)),
       exhaustMap(() => {

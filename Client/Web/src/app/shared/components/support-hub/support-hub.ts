@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,6 +46,7 @@ import { catchError, of } from 'rxjs';
 export class SupportHubComponent {
   private authService = inject(AuthService);
   private supportClient = inject(SupportClient);
+  private router = inject(Router);
 
   isLoggedIn = this.authService.isLoggedIn;
   isSupport = computed(() => this.authService.isSupport());
@@ -102,8 +103,20 @@ export class SupportHubComponent {
   }
 
   onAction(actionId: string) {
-    if (actionId === 'report' || actionId === 'payment' || actionId === 'expert') {
-      this.closeHub();
+    this.closeHub();
+    switch (actionId) {
+      case 'report':
+        this.router.navigate(['/support/new'], { queryParams: { type: 'Technical' } });
+        break;
+      case 'payment':
+        this.router.navigate(['/support/new'], { queryParams: { type: 'Payment' } });
+        break;
+      case 'expert':
+        this.router.navigate(['/expert']);
+        break;
+      case 'guide':
+        this.router.navigate(['/about']);
+        break;
     }
   }
 }

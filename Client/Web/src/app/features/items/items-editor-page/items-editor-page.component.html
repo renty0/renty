@@ -14,27 +14,38 @@
         <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.general' | translate }}</h3>
         <div class="field-group grid">
           <app-input class="col-12 md:col-6" label="nameEn" [formGroup]="form" controlName="titleEn" [required]="true"
-            placeholder="placeholders.titleEn" />
+            [placeholder]="'placeholders.titleEn' | translate" />
           <app-input class="col-12 md:col-6" label="nameAr" [formGroup]="form" controlName="titleAr" [required]="true"
-            placeholder="placeholders.titleAr" />
+            [placeholder]="'placeholders.titleAr' | translate" />
           <app-input class="col-12 md:col-6" label="descEn" [formGroup]="form" controlName="descEn" type="textarea"
-            [height]="120" placeholder="placeholders.descEn" />
+            [height]="120" [placeholder]="'placeholders.descEn' | translate" />
           <app-input class="col-12 md:col-6" label="descAr" [formGroup]="form" controlName="descAr" type="textarea"
-            [height]="120" placeholder="placeholders.descAr" />
+            [height]="120" [placeholder]="'placeholders.descAr' | translate" />
         </div>
       </div>
 
       <div class="card mb-4 shadow-1 p-4 border-round bg-white">
         <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3 grid">{{ 'products.pricing' | translate }}
         </h3>
-        <app-input class="col-12 md:col-6" label="dailyPrice" [formGroup]="form" controlName="dailyPrice" type="number"
+        <app-input class="col-12 mb-3" label="availableFor" [formGroup]="form" controlName="availableFor" type="select"
+          [options]="availableForOptions" [translateOptions]="true" />
+        
+        <div class="grid w-full m-0 p-0">
+          @if (form.get('availableFor')?.value === 'sale' || form.get('availableFor')?.value === 'both') {
+            <app-input class="col-12 md:col-6" label="salePrice" [formGroup]="form" controlName="salePrice" type="number"
+              [required]="true" />
+          }
+          @if (form.get('availableFor')?.value === 'rent' || form.get('availableFor')?.value === 'both') {
+            <app-input class="col-12 md:col-6" label="dailyPrice" [formGroup]="form" controlName="dailyPrice" type="number"
+              [required]="true" />
+            <app-input class="col-12 md:col-6" label="weeklyPrice" [formGroup]="form" controlName="weeklyPrice"
+              type="number" />
+            <app-input class="col-12 md:col-6" label="monthlyPrice" [formGroup]="form" controlName="monthlyPrice"
+              type="number" />
+          }
+        </div>
+        <app-input class="col-12 mt-3" label="deposit" [formGroup]="form" controlName="defaultDeposit" type="number"
           [required]="true" />
-        <app-input class="col-12 md:col-6" label="deposit" [formGroup]="form" controlName="defaultDeposit" type="number"
-          [required]="true" />
-        <app-input class="col-12 md:col-6" label="weeklyPrice" [formGroup]="form" controlName="weeklyPrice"
-          type="number" />
-        <app-input class="col-12 md:col-6" label="monthlyPrice" [formGroup]="form" controlName="monthlyPrice"
-          type="number" />
       </div>
 
       <div class="card mb-4 shadow-1 p-4 border-round bg-white">
@@ -47,7 +58,7 @@
           <app-input class="col-12 md:col-6" label="city" [formGroup]="form" controlName="city" type="select"
             [options]="governorateOptions" [translateOptions]="true" />
           <app-input class="col-12 md:col-6" label="location" [formGroup]="form" controlName="location"
-            placeholder="placeholders.location" />
+            [placeholder]="'placeholders.location' | translate" />
         </div>
         <div class="field-group mt-3">
           <label class="field-label">{{ 'labels.mapLocation' | translate }}</label>
@@ -67,11 +78,11 @@
         <h3 class="text-xl font-bold mb-4 border-bottom-1 border-100 pb-3">{{ 'products.organization' | translate }}
         </h3>
         <app-input label="category" [formGroup]="form" controlName="categoryId" type="select" [options]="categories()"
-          [required]="true" placeholder="placeholders.category" />
+          [required]="true" [placeholder]="'placeholders.category' | translate" />
         <app-input class="m-2" label="subcategory" [formGroup]="form" controlName="subcategoryId" type="select"
-          [options]="subcategories()" [required]="true" placeholder="placeholders.subcategory" />
+          [options]="subcategories()" [required]="true" [placeholder]="'placeholders.subcategory' | translate" />
         <app-input label="brand" [formGroup]="form" controlName="brandId" type="select" [options]="brands()"
-          [required]="true" placeholder="placeholders.brand" />
+          [required]="true" [placeholder]="'placeholders.brand' | translate" />
       </div>
     </div>
   </form>

@@ -14,7 +14,8 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    NgZone
+    NgZone,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../services/toast.service';
+import * as L from 'leaflet';
 import { environment } from '../../../../environments/environment';
 
 export interface MapCoordinates {
@@ -43,6 +45,7 @@ export interface MapCoordinates {
         MatMenuModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './map.component.html',
     styleUrl: './map.component.scss',
 })
@@ -52,7 +55,6 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
     private cdr = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
 
-    @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
     @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
     @Input() latitude: string | number | null | undefined = null;
@@ -72,7 +74,6 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
 
     @Output() locationChanged = new EventEmitter<MapCoordinates>();
 
-    apiLoaded = false;
     coordinateInput = '';
     searchFocused = false;
     coordFocused = false;
@@ -80,46 +81,30 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
     hasCoordinates = false;
     displayCoordinates = '';
 
-    center: google.maps.LatLngLiteral = { lat: 24.7136, lng: 46.6753 };
+    center = { lat: 24.7136, lng: 46.6753 };
     zoom = 5;
-    markerPosition: google.maps.LatLngLiteral = { lat: 24.7136, lng: 46.6753 };
+    markerPosition = { lat: 24.7136, lng: 46.6753 };
 
-    mapOptions: google.maps.MapOptions = {
-        mapTypeId: 'roadmap',
-        mapTypeControl: true,
-        streetViewControl: true,
-        fullscreenControl: true,
-        zoomControl: true,
-        gestureHandling: 'greedy'
-    };
+    // Nominatim Search
+    searchQuery = '';
+    searchResults: any[] = [];
+    isSearching = false;
+    private searchDebounceTimeout: any = null;
 
-    markerOptions: google.maps.MarkerOptions = {
-        draggable: true
-    };
-
-    private autocomplete: google.maps.places.Autocomplete | null = null;
-    private autocompleteInitialized = false;
-    private mutationObserver: MutationObserver | null = null;
-    private positionDropdownFn: (() => void) | null = null;
+    private map: L.Map | null = null;
+    private marker: L.Marker | null = null;
     private formControlSubscription: Subscription | null = null;
-    private map: google.maps.Map | null = null;
-    private marker: google.maps.Marker | null = null;
 
     ngOnInit(): void {
         this.zoom = this.defaultZoom;
-        this.updateMarkerOptions();
-        this.loadGoogleMapsApi();
         this.initializeFromInputs();
         this.subscribeToFormControl();
     }
 
     ngAfterViewInit(): void {
-        if (!this.readonly) {
-            this.waitForApiAndSetupAutocomplete();
-        }
-        if (this.apiLoaded) {
-            this.initializeMapInstance();
-        }
+        this.ngZone.runOutsideAngular(() => {
+            this.initializeMap();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -127,38 +112,87 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
             this.initializeFromInputs();
         }
         if (changes['readonly']) {
-            this.updateMarkerOptions();
+            this.updateMarkerDraggability();
         }
     }
 
     ngOnDestroy(): void {
-        if (this.mutationObserver) {
-            this.mutationObserver.disconnect();
-            this.mutationObserver = null;
-        }
-        if (this.positionDropdownFn) {
-            window.removeEventListener('scroll', this.positionDropdownFn, true);
-            window.removeEventListener('resize', this.positionDropdownFn, true);
-            this.positionDropdownFn = null;
-        }
-        if (this.autocomplete) {
-            google.maps.event.clearInstanceListeners(this.autocomplete);
-            this.autocomplete = null;
+        if (this.searchDebounceTimeout) {
+            clearTimeout(this.searchDebounceTimeout);
         }
         if (this.formControlSubscription) {
             this.formControlSubscription.unsubscribe();
             this.formControlSubscription = null;
         }
-        this.autocompleteInitialized = false;
+        if (this.map) {
+            this.map.remove();
+            this.map = null;
+        }
+        this.marker = null;
     }
 
     onSearchFocus(): void {
         this.searchFocused = true;
-        this.positionAutocompleteDropdown();
     }
 
     onSearchBlur(): void {
-        this.searchFocused = false;
+        setTimeout(() => {
+            this.searchFocused = false;
+            this.cdr.markForCheck();
+        }, 200);
+    }
+
+    onSearchInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.searchQuery = input.value;
+
+        if (this.searchDebounceTimeout) {
+            clearTimeout(this.searchDebounceTimeout);
+        }
+
+        if (!this.searchQuery.trim()) {
+            this.searchResults = [];
+            this.isSearching = false;
+            this.cdr.markForCheck();
+            return;
+        }
+
+        this.isSearching = true;
+        this.cdr.markForCheck();
+
+        this.searchDebounceTimeout = setTimeout(() => {
+            const key = environment.locationIqToken || 'pk.8eb219bf6bd5a83ccf8c37d6e76cf0e3';
+            const url = `https://us1.locationiq.com/v1/search?key=${key}&q=${encodeURIComponent(this.searchQuery)}&format=json&limit=5`;
+            
+            fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                this.searchResults = data || [];
+                this.isSearching = false;
+                this.cdr.markForCheck();
+            })
+            .catch(() => {
+                this.searchResults = [];
+                this.isSearching = false;
+                this.cdr.markForCheck();
+            });
+        }, 500);
+    }
+
+    selectSearchResult(result: any): void {
+        const lat = Number.parseFloat(result.lat);
+        const lng = Number.parseFloat(result.lon);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            this.searchQuery = result.display_name;
+            this.searchResults = [];
+            this.setLocation(lat, lng);
+            this.zoom = this.markerZoom;
+            if (this.map) {
+                this.map.setView([lat, lng], this.zoom);
+            }
+            this.cdr.markForCheck();
+        }
     }
 
     onCoordBlur(): void {
@@ -168,16 +202,6 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
 
     onCoordinateInputChange(value: string): void {
         this.coordinateInput = value;
-    }
-
-    onMapClick(event: google.maps.MapMouseEvent): void {
-        if (this.readonly || !event.latLng) return;
-        this.setLocation(event.latLng.lat(), event.latLng.lng());
-    }
-
-    onMarkerDragEnd(event: google.maps.MapMouseEvent): void {
-        if (!event.latLng) return;
-        this.setLocation(event.latLng.lat(), event.latLng.lng());
     }
 
     parseCoordinateInput(): void {
@@ -191,6 +215,9 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
             if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
                 this.setLocation(lat, lng);
                 this.zoom = this.markerZoom;
+                if (this.map) {
+                    this.map.setView([lat, lng], this.zoom);
+                }
                 this.cdr.markForCheck();
                 return;
             }
@@ -227,236 +254,87 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
         }
     }
 
-    private loadGoogleMapsApi(): void {
-        if (typeof google !== 'undefined' && google.maps) {
-            this.apiLoaded = true;
-            this.initializeMapOptions();
-            this.initializeMapInstance();
-            this.cdr.markForCheck();
-            return;
-        }
-
-        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-        if (existingScript) {
-            existingScript.addEventListener('load', () => {
-                this.ngZone.run(() => {
-                    this.apiLoaded = true;
-                    this.initializeMapOptions();
-                    this.cdr.markForCheck();
-                });
-            });
-            return;
-        }
-
-        const apiKey = (environment as any).googleMapsApiKey || '';
-        if (!apiKey) {
-            console.warn('Google Maps API Key not found in environment');
-        }
-
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        script.onload = () => {
-            this.ngZone.run(() => {
-                this.apiLoaded = true;
-                this.initializeMapOptions();
-                this.initializeMapInstance();
-                if (!this.readonly) {
-                    setTimeout(() => this.setupAutocomplete(), 100);
-                }
-                this.cdr.markForCheck();
-            });
-        };
-        document.head.appendChild(script);
+    private getCustomIcon(): L.DivIcon {
+        const svgPin = `
+            <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 0C7.16 0 0 7.16 0 16C0 26.8 16 42 16 42C16 42 32 26.8 32 16C32 7.16 24.84 0 16 0ZM16 22C12.68 22 10 19.32 10 16C10 12.68 12.68 10 16 10C19.32 10 22 12.68 22 16C22 19.32 19.32 22 16 22Z" fill="#ea4335" stroke="#ffffff" stroke-width="1.5"/>
+            </svg>
+        `;
+        return L.divIcon({
+            html: svgPin,
+            className: 'custom-map-marker',
+            iconSize: [32, 42],
+            iconAnchor: [16, 42]
+        });
     }
 
-    private initializeMapOptions(): void {
-        if (typeof google === 'undefined' || !google.maps) return;
-
-        this.mapOptions = {
-            ...this.mapOptions,
-            mapTypeControlOptions: {
-                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                position: google.maps.ControlPosition.TOP_RIGHT
-            },
-            streetViewControlOptions: {
-                position: google.maps.ControlPosition.LEFT_BOTTOM
-            }
-        };
-
-        this.markerOptions = {
-            ...this.markerOptions,
-            animation: google.maps.Animation.DROP
-        };
-    }
-
-    private initializeMapInstance(): void {
-        if (typeof google === 'undefined' || !google.maps) return;
+    private initializeMap(): void {
         if (!this.mapContainer?.nativeElement) return;
 
         const element = this.mapContainer.nativeElement;
-
         const initialCenter = this.getCoordinates() ?? { lat: this.center.lat, lng: this.center.lng };
 
-        this.map = new google.maps.Map(element, {
-            ...this.mapOptions,
-            center: initialCenter,
-            zoom: this.zoom
+        this.map = L.map(element, {
+            center: [initialCenter.lat, initialCenter.lng],
+            zoom: this.zoom,
+            zoomControl: true,
+            attributionControl: true
         });
 
-        this.marker = new google.maps.Marker({
-            ...this.markerOptions,
-            position: initialCenter,
-            map: this.map
-        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(this.map);
+
+        if (this.getCoordinates()) {
+            this.createMarker(initialCenter.lat, initialCenter.lng);
+        }
 
         if (!this.readonly) {
-            this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
-                if (!event.latLng) {
-                    return;
-                }
+            this.map.on('click', (event: L.LeafletMouseEvent) => {
                 this.ngZone.run(() => {
-                    this.setLocation(event.latLng!.lat(), event.latLng!.lng());
-                });
-            });
-
-            this.marker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
-                if (!event.latLng) {
-                    return;
-                }
-                this.ngZone.run(() => {
-                    this.setLocation(event.latLng!.lat(), event.latLng!.lng());
+                    this.setLocation(event.latlng.lat, event.latlng.lng);
                 });
             });
         }
-    }
 
-    private updateMarkerOptions(): void {
-        this.markerOptions = {
-            ...this.markerOptions,
-            draggable: !this.readonly
-        };
-
-        if (this.marker) {
-            this.marker.setDraggable(!this.readonly);
-        }
-    }
-
-    private waitForApiAndSetupAutocomplete(): void {
-        if (typeof google !== 'undefined' && google.maps?.places) {
-            setTimeout(() => this.setupAutocomplete(), 100);
-        } else {
-            setTimeout(() => this.waitForApiAndSetupAutocomplete(), 500);
-        }
-    }
-
-    private setupAutocomplete(): void {
-        if (this.autocompleteInitialized || this.autocomplete) return;
-        if (!this.searchInput?.nativeElement || this.readonly) return;
-        if (typeof google === 'undefined' || !google.maps?.places) return;
-
-        try {
-            this.autocompleteInitialized = true;
-
-            this.ngZone.runOutsideAngular(() => {
-                this.autocomplete = new google.maps.places.Autocomplete(this.searchInput.nativeElement, {
-                    types: ['geocode', 'establishment']
-                });
-
-                this.autocomplete.addListener('place_changed', () => {
-                    this.ngZone.run(() => {
-                        const place = this.autocomplete?.getPlace();
-                        if (place?.geometry?.location) {
-                            this.setLocation(place.geometry.location.lat(), place.geometry.location.lng());
-                            this.zoom = 17;
-                            this.cdr.markForCheck();
-                        }
-                    });
-                });
-
-                if (this.map) {
-                    this.autocomplete.bindTo('bounds', this.map);
-                }
-
-                this.setupDropdownObserver();
-            });
-
-        } catch {
-            this.autocompleteInitialized = false;
-        }
-    }
-
-    private setupDropdownObserver(): void {
-        if (this.mutationObserver) return;
-
-        this.injectAutocompleteStyles();
-
-        this.positionDropdownFn = () => {
-            const pacContainers = document.querySelectorAll('.pac-container') as NodeListOf<HTMLElement>;
-            if (pacContainers.length > 0 && this.searchInput?.nativeElement) {
-                const inputRect = this.searchInput.nativeElement.getBoundingClientRect();
-                pacContainers.forEach(pacContainer => {
-                    pacContainer.style.setProperty('top', `${inputRect.bottom + 4}px`, 'important');
-                    pacContainer.style.setProperty('left', `${inputRect.left}px`, 'important');
-                    pacContainer.style.setProperty('width', `${inputRect.width}px`, 'important');
-                    pacContainer.style.setProperty('position', 'fixed', 'important');
-                    pacContainer.style.setProperty('z-index', '10000', 'important');
-                });
+        setTimeout(() => {
+            if (this.map) {
+                this.map.invalidateSize();
             }
-        };
-
-        this.searchInput?.nativeElement?.addEventListener('input', () => {
-            setTimeout(() => this.positionDropdownFn?.(), 10);
-        });
-
-        this.searchInput?.nativeElement?.addEventListener('focus', () => {
-            setTimeout(() => this.positionDropdownFn?.(), 10);
-        });
-
-        this.mutationObserver = new MutationObserver(() => {
-            this.positionDropdownFn?.();
-        });
-
-        this.mutationObserver.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['style', 'class']
-        });
-
-        window.addEventListener('scroll', this.positionDropdownFn, true);
-        window.addEventListener('resize', this.positionDropdownFn, true);
+        }, 200);
     }
 
-    private injectAutocompleteStyles(): void {
-        const styleId = 'map-autocomplete-override';
-        if (document.getElementById(styleId)) return;
+    private createMarker(lat: number, lng: number): void {
+        if (this.marker) {
+            this.marker.setLatLng([lat, lng]);
+            return;
+        }
 
-        const style = document.createElement('style');
-        style.id = styleId;
-        style.textContent = `
-      .pac-container {
-        z-index: 10000 !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-        border: none !important;
-        margin-top: 0 !important;
-      }
-      .pac-item {
-        padding: 8px 12px !important;
-        cursor: pointer !important;
-      }
-      .pac-item:hover {
-        background-color: #f5f5f5 !important;
-      }
-    `;
-        document.head.appendChild(style);
+        if (!this.map) return;
+
+        this.marker = L.marker([lat, lng], {
+            icon: this.getCustomIcon(),
+            draggable: !this.readonly
+        }).addTo(this.map);
+
+        if (!this.readonly) {
+            this.marker.on('dragend', (event: any) => {
+                const position = event.target.getLatLng();
+                this.ngZone.run(() => {
+                    this.setLocation(position.lat, position.lng);
+                });
+            });
+        }
     }
 
-    private positionAutocompleteDropdown(): void {
-        if (this.positionDropdownFn) {
-            this.positionDropdownFn();
+    private updateMarkerDraggability(): void {
+        if (this.marker) {
+            if (this.readonly) {
+                this.marker.dragging?.disable();
+            } else {
+                this.marker.dragging?.enable();
+            }
         }
     }
 
@@ -493,6 +371,7 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
                     this.zoom = this.markerZoom;
                     this.hasCoordinates = true;
                     this.displayCoordinates = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+                    this.updateMapView(coords.lat, coords.lng, this.zoom);
                     this.cdr.markForCheck();
                 }
             }
@@ -580,11 +459,12 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
 
     private updateMapView(lat: number, lng: number, zoom: number): void {
         if (this.map) {
-            const position = { lat, lng };
-            this.map.setCenter(position);
-            this.map.setZoom(zoom);
+            const position: L.LatLngExpression = [lat, lng];
+            this.map.setView(position, zoom);
             if (this.marker) {
-                this.marker.setPosition(position);
+                this.marker.setLatLng(position);
+            } else {
+                this.createMarker(lat, lng);
             }
         }
     }

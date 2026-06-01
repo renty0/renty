@@ -48,6 +48,9 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
         if (request.City != null)
             query = query.Where(i => i.City == request.City);
 
+        if (request.CategoryId != null)
+            query = query.Where(i => i.CategoryId == request.CategoryId);
+
         var total = await query.CountAsync(ct);
         var pages = (int)Math.Ceiling((double)total / request.Limit);
 

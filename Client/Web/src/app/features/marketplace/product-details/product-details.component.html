@@ -49,8 +49,19 @@
                 <h1 class="product-title mb-4">{{ getLocalizedName(item()) }}</h1>
 
                 <div class="price-display mb-4">
-                    <span class="amount">{{ displayPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
-                    <span class="per-day">/ {{ 'marketplace.day' | translate }}</span>
+                    @if (item()?.isForSale && hasRent()) {
+                        <div class="flex flex-column gap-1">
+                            <div><span class="amount">{{ item()?.salePrice | currency:'EGP ':'symbol':'1.0-2' }}</span> <span class="per-day">{{ 'marketplace.salePrice' | translate }}</span></div>
+                            <div class="mt-2"><span class="text-3xl font-bold text-primary">{{ item()?.pricing?.[0]?.price | currency:'EGP ':'symbol':'1.0-2' }}</span> <span class="per-day">/ {{ 'marketplace.day' | translate }}</span></div>
+                        </div>
+                    } @else {
+                        <span class="amount">{{ displayPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+                        @if (!item()?.isForSale) {
+                            <span class="per-day">/ {{ 'marketplace.day' | translate }}</span>
+                        } @else {
+                            <span class="per-day">{{ 'marketplace.salePrice' | translate }}</span>
+                        }
+                    }
                 </div>
 
                 <div class="short-desc mb-4">
@@ -64,14 +75,18 @@
 
                 <div class="action-buttons flex flex-column gap-3 mt-4">
                     @if (!isOwner()) {
-                        <app-loading-button [color]="'primary'" customClass="rent-btn py-3 w-full" [disabled]="item()?.status !== 'Available'" (clicked)="openRentModal()">
-                            <mat-icon>calendar_today</mat-icon>
-                            {{ 'marketplace.rentNow' | translate }}
-                        </app-loading-button>
+                        @if (hasRent()) {
+                            <app-loading-button [color]="'primary'" customClass="rent-btn py-3 w-full" [disabled]="item()?.status !== 'Available'" (clicked)="openRentModal()">
+                                <mat-icon>calendar_today</mat-icon>
+                                {{ 'marketplace.rentNow' | translate }}
+                            </app-loading-button>
+                        }
+                        @if (item()?.isForSale) {
                         <button mat-stroked-button color="accent" (click)="buyNow()" class="buy-button py-3 w-full" [disabled]="item()?.status !== 'Available'">
                             <mat-icon>shopping_cart</mat-icon>
                             {{ 'marketplace.buyNow' | translate }}
                         </button>
+                        }
 
                         @if (item()?.status === 'Rented') {
                         <button mat-flat-button [color]="isReminded() ? 'warn' : 'accent'" class="remind-btn py-3" (click)="toggleReminder()">

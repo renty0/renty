@@ -75,7 +75,33 @@ export class CreateUserDialogComponent {
           }
         },
         error: (err) => {
-          this.toast.showError('Failed to create user');
+          let errorMsg = 'Failed to create user';
+          if (err) {
+            if (err.response) {
+              try {
+                const parsed = JSON.parse(err.response);
+                if (parsed && parsed.messages && parsed.messages.length > 0) {
+                  errorMsg = parsed.messages[0];
+                }
+              } catch (e) {}
+            } else if (err.error) {
+              if (typeof err.error === 'object') {
+                if (err.error.messages && err.error.messages.length > 0) {
+                  errorMsg = err.error.messages[0];
+                }
+              } else if (typeof err.error === 'string') {
+                try {
+                  const parsed = JSON.parse(err.error);
+                  if (parsed && parsed.messages && parsed.messages.length > 0) {
+                    errorMsg = parsed.messages[0];
+                  }
+                } catch (e) {}
+              }
+            } else if (err.messages && err.messages.length > 0) {
+              errorMsg = err.messages[0];
+            }
+          }
+          this.toast.showError(errorMsg);
           console.error(err);
         }
       });
