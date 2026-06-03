@@ -5,36 +5,7 @@ $grid-gap: $spacing-sm;
 $grid-min-card-width: 200px;
 $grid-max-card-width: 320px;
 
-.view-toggle {
-  border-radius: $border-radius-md;
-  overflow: hidden;
-
-  ::ng-deep {
-    .mat-button-toggle {
-
-      .mat-button-toggle-button {
-        min-height: 42px;
-        padding: 0 12px;
-      }
-
-      .mat-button-toggle-checkbox-wrapper {
-        display: none;
-      }
-
-      &.mat-button-toggle-checked {
-        background: $primary-color;
-
-        mat-icon {
-          color: $white;
-        }
-      }
-
-      mat-icon {
-        color: $gray-600;
-      }
-    }
-  }
-}
+@use './view-toggle.scss';
 
 .cards-grid {
   display: flex;

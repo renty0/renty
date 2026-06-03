@@ -79,7 +79,8 @@ export class VerificationHistoryComponent implements OnInit {
   verifyForm = this.fb.group({
     status: ['', Validators.required],
     checkType: ['', Validators.required],
-    notes: ['']
+    notes: [''],
+    destination: ['', Validators.required]
   });
 
   checkTypeOptions: SelectOption[] = [
@@ -90,6 +91,11 @@ export class VerificationHistoryComponent implements OnInit {
   statusOptions: SelectOption[] = [
     { name: 'expert.status.approved', code: 'approved' },
     { name: 'expert.status.rejected', code: 'rejected' }
+  ];
+
+  destinationOptions: SelectOption[] = [
+    { name: 'labels.renter', code: 'renter' },
+    { name: 'labels.owner', code: 'owner' }
   ];
 
   ngOnInit() {
@@ -131,12 +137,13 @@ export class VerificationHistoryComponent implements OnInit {
     this.isSubmitting.set(true);
     const formVal = this.verifyForm.value;
 
+    const destinationPrefix = `[DESTINATION:${formVal.destination}] `;
     const cmd = new CreateVerificationCommand({
       itemId: this.itemId(),
       rentalId: this.itemDetails()?.activeRental?.rentalId || undefined,
       checkType: formVal.checkType!,
       status: formVal.status!,
-      notes: formVal.notes || undefined
+      notes: destinationPrefix + (formVal.notes || '')
     });
 
     this.verificationsClient.createVerification(this.itemId(), cmd).subscribe({

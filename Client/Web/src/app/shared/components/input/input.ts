@@ -22,6 +22,8 @@ const ERROR_MESSAGE_MAP: Record<string, string> = {
   invalidEmail: 'validation.invalidEmail',
   minlength: 'validation.minLength',
   maxlength: 'validation.maxLength',
+  min: 'validation.min',
+  max: 'validation.max',
   pattern: 'validation.invalidFormat',
   invalidPostalCode: 'validation.invalidPostalCode',
   invalidPhone: 'validation.invalidPhone',

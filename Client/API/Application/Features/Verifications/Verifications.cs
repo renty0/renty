@@ -75,13 +75,25 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
         Enum.TryParse<VerificationCheck>(request.CheckType.Replace("_", ""), true, out var checkType);
         Enum.TryParse<VerificationStatus>(request.Status, true, out var status);
 
+        var destination = "";
+        var cleanNotes = request.Notes;
+        if (!string.IsNullOrEmpty(cleanNotes) && cleanNotes.StartsWith("[DESTINATION:"))
+        {
+            var endIdx = cleanNotes.IndexOf(']');
+            if (endIdx > 13)
+            {
+                destination = cleanNotes.Substring(13, endIdx - 13).ToLower();
+                cleanNotes = cleanNotes.Substring(endIdx + 1).Trim();
+            }
+        }
+
         var verification = await _context.ItemVerifications
             .FirstOrDefaultAsync(v => v.ItemId == request.ItemId && v.ExpertId == _currentUser.Id.Value && v.Status == VerificationStatus.Pending, ct);
 
         if (verification != null)
         {
             verification.Status = status;
-            verification.Notes = request.Notes;
+            verification.Notes = cleanNotes;
             verification.CheckType = checkType;
             if (request.RentalId.HasValue) verification.RentalId = request.RentalId;
             verification.UpdatedAt = DateTime.UtcNow;
@@ -95,7 +107,7 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                 RentalId = request.RentalId,
                 CheckType = checkType,
                 Status = status,
-                Notes = request.Notes,
+                Notes = cleanNotes,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -117,10 +129,25 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                         rental.IsHandoffVerified = true;
                         rental.Status = Domain.Enums.RentalStatus.Active;
                         item.Status = Domain.Enums.NewItemStatus.Rented;
+                        
+                        // Set possession based on destination chosen by expert
+                        if (destination == "renter")
+                        {
+                            rental.CurrentPossession = ItemPossession.Renter;
+                        }
+                        else if (destination == "owner")
+                        {
+                            rental.CurrentPossession = ItemPossession.Owner;
+                        }
+                        else
+                        {
+                            rental.CurrentPossession = ItemPossession.Renter;
+                        }
                     }
                     else if (status == VerificationStatus.Rejected)
                     {
                         rental.Status = Domain.Enums.RentalStatus.Cancelled;
+                        rental.CurrentPossession = ItemPossession.Owner;
                     }
                 }
                 else if (checkType == VerificationCheck.AfterReturn)
@@ -130,12 +157,31 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                         rental.Status = Domain.Enums.RentalStatus.Completed;
                         rental.ActualReturnDate = DateTime.UtcNow;
                         rental.DepositStatus = Domain.Enums.DepositStatus.Returned;
+                        
+                        // Set possession based on destination chosen by expert
+                        if (destination == "renter")
+                        {
+                            rental.CurrentPossession = ItemPossession.Renter;
+                        }
+                        else
+                        {
+                            rental.CurrentPossession = ItemPossession.Owner;
+                        }
                         item.Status = Domain.Enums.NewItemStatus.Available;
                     }
                     else if (status == VerificationStatus.Rejected)
                     {
-                        // In case of damage/rejection, we forfeit the deposit and keep it pending resolution
                         rental.DepositStatus = Domain.Enums.DepositStatus.Forfeited;
+                        
+                        // Set possession based on destination chosen by expert
+                        if (destination == "renter")
+                        {
+                            rental.CurrentPossession = ItemPossession.Renter;
+                        }
+                        else
+                        {
+                            rental.CurrentPossession = ItemPossession.Owner;
+                        }
                     }
                 }
 
@@ -146,7 +192,7 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                     "Expert Evaluation Complete",
                     $"The expert has completed the evaluation for '{item.TitleEn}'. Status: {status}.",
                     "rental",
-                    $"/my-rentals/{rental.Id}",
+                    $"/rentals/{rental.Id}",
                     ct);
             }
         }

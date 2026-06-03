@@ -72,6 +72,8 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
                 (long?)i.OwnerId,
                 i.IsForSale,
                 i.SalePrice,
+                i.Status.ToString(),
+                i.CreatedAt,
                 i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
                 i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
                 i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null

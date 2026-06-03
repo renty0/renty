@@ -36,9 +36,7 @@
                 <img [src]="chat.itemImage || 'assets/placeholder-product.png'" class="mini-product-thumb">
               }
 
-              <button mat-icon-button class="delete-chat-btn" (click)="deleteChat($event, chat.id)">
-                <mat-icon>delete_outline</mat-icon>
-              </button>
+              <!-- Chat deletion intentionally disabled -->
             </a>
           } @empty {
             <div class="empty-list">

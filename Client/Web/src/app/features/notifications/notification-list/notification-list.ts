@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NotificationsClient, NotificationDto, ApiResponse, GetNotificationsResponse } from '../../../core/api/api-client';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
 import { finalize, tap } from 'rxjs';
 
 @Component({
@@ -32,10 +33,13 @@ import { finalize, tap } from 'rxjs';
 export class NotificationListComponent implements OnInit {
   private notificationsClient = inject(NotificationsClient);
   private toast = inject(ToastService);
+  private signalrService = inject(NotificationSignalrService);
 
   notifications = signal<NotificationDto[]>([]);
-  unreadCount = signal(0);
   isLoading = signal(true);
+
+  // Use shared unreadCount from service (keeps navbar badge in sync)
+  unreadCount = this.signalrService.unreadCount;
 
   ngOnInit() {
     this.loadNotifications();
@@ -48,7 +52,8 @@ export class NotificationListComponent implements OnInit {
         tap((res: ApiResponse<GetNotificationsResponse>) => {
           if (res.data) {
             this.notifications.set(res.data.notifications || []);
-            this.unreadCount.set(res.data.unreadCount || 0);
+            // Sync shared count with server value
+            this.signalrService.unreadCount.set(res.data.unreadCount || 0);
           }
         }),
         finalize(() => this.isLoading.set(false))
@@ -57,6 +62,8 @@ export class NotificationListComponent implements OnInit {
 
   markAsRead(id: string | undefined) {
     if (!id) return;
+    const notif = this.notifications().find(n => n.id === id);
+    if (notif?.isRead) return; // already read, skip
     this.notificationsClient.markNotificationRead(id)
       .pipe(
         tap((res: any) => {
@@ -64,7 +71,8 @@ export class NotificationListComponent implements OnInit {
             this.notifications.update(list =>
               list.map(n => n.id === id ? { ...n, isRead: true } as NotificationDto : n)
             );
-            this.unreadCount.update(c => Math.max(0, c - 1));
+            // Decrement shared badge count
+            this.signalrService.unreadCount.update(c => Math.max(0, c - 1));
           }
         })
       ).subscribe();
@@ -78,7 +86,8 @@ export class NotificationListComponent implements OnInit {
             this.notifications.update(list =>
               list.map(n => ({ ...n, isRead: true } as NotificationDto))
             );
-            this.unreadCount.set(0);
+            // Reset shared badge count
+            this.signalrService.unreadCount.set(0);
             this.toast.showSuccess('notifications.markAllRead');
           }
         })

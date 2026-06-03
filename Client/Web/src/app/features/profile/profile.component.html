@@ -6,11 +6,8 @@
         <button class="camera-fab" (click)="openImageDialog()" [title]="'profile.updatePhoto' | translate">
           <mat-icon>camera_alt</mat-icon>
         </button>
-        <div class="upload-badge" *ngIf="isUploading()">
-          <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
-        </div>
       </div>
-      
+
       <div class="user-meta">
         <h1>{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</h1>
         <p class="user-email">{{ currentUser()?.email }}</p>
@@ -42,7 +39,7 @@
 
   <main class="profile-main">
     <div class="content-animate-wrapper">
-      
+
       @if (activeTab === 'personal') {
         <div class="tab-content fade-in">
           <div class="section-card">
@@ -50,7 +47,7 @@
               <div class="icon-box"><mat-icon>account_circle</mat-icon></div>
               <h2>{{ 'info.accountInfo' | translate }}</h2>
             </div>
-            
+
             <form [formGroup]="profileForm" (submit)="onSubmit()" class="modern-form">
               <div class="form-grid">
                 <app-input class="form-col" label="firstName" [formGroup]="profileForm" controlName="firstName" />
@@ -64,7 +61,7 @@
                 <div class="icon-box secondary"><mat-icon>location_on</mat-icon></div>
                 <h2>{{ 'register.locationAbout' | translate }}</h2>
               </div>
-              
+
               <div class="form-grid">
                 <app-input class="form-col" label="country" [formGroup]="profileForm" controlName="country" type="select" [options]="countryOptions" [translateOptions]="true" />
                 <app-input class="form-col" label="city" [formGroup]="profileForm" controlName="city" type="select" [options]="egyptianCities" [translateOptions]="true" />
@@ -78,6 +75,34 @@
                 <h2>{{ 'profile.bio' | translate }}</h2>
               </div>
               <app-input class="form-col-full" label="bio" [formGroup]="profileForm" controlName="bio" type="textarea" />
+
+              <div class="section-divider"></div>
+
+              <div class="section-header">
+                <div class="icon-box accent"><mat-icon>verified_user</mat-icon></div>
+                <h2>{{ 'profile.identityVerification' | translate }}</h2>
+              </div>
+
+              <div class="verification-status-card">
+                @if (currentUser()?.idVerified) {
+                  <div class="status-badge verified">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>{{ 'profile.verified' | translate }}</span>
+                  </div>
+                  <p class="status-text">{{ 'profile.idVerifiedDesc' | translate }}</p>
+                } @else {
+                  <div class="status-badge unverified">
+                    <mat-icon>error</mat-icon>
+                    <span>{{ 'profile.notVerified' | translate }}</span>
+                  </div>
+                  <p class="status-text">{{ 'profile.idNotVerifiedDesc' | translate }}</p>
+                  <p class="status-note">{{ 'profile.verificationNote' | translate }}</p>
+                  <button mat-flat-button color="primary" class="upload-id-btn" (click)="openIdUploadDialog()">
+                    <mat-icon>upload_file</mat-icon>
+                    {{ 'profile.uploadId' | translate }}
+                  </button>
+                }
+              </div>
 
               <div class="form-actions">
                 <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine" type="submit" color="primary">

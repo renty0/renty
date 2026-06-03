@@ -19,7 +19,8 @@ public record ChatListDto(
     DateTime? LastMessageAt,
     Guid? ItemId = null,
     string? ItemTitle = null,
-    string? ItemImage = null
+    string? ItemImage = null,
+    DateTimeOffset? OtherUserLastLoginAt = null
 );
 
 public record ChatMessageDto(
@@ -118,14 +119,19 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
             c.Id,
             c.OtherUser.FirstName,
             c.OtherUser.LastName,
-            !string.IsNullOrEmpty(c.OtherUser.ProfilePictureUrl) ? $"{baseUrl}/{c.OtherUser.ProfilePictureUrl.TrimStart('/')}" : null,
+            !string.IsNullOrEmpty(c.OtherUser.ProfilePictureUrl)
+                ? (c.OtherUser.ProfilePictureUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? c.OtherUser.ProfilePictureUrl
+                    : $"{baseUrl}/{c.OtherUser.ProfilePictureUrl.TrimStart('/')}")
+                : null,
             c.LastMsg?.Message ?? (c.LastMsg?.MessageType != MessageType.Text ? $"[{c.LastMsg?.MessageType}]" : null),
             c.LastMsg?.MessageType ?? MessageType.Text,
             c.UnreadCount,
             c.LastMsg?.CreatedAt ?? c.CreatedAt,
             c.ItemId,
             c.ItemTitle,
-            !string.IsNullOrEmpty(c.ItemImage) ? $"{baseUrl}/{c.ItemImage.TrimStart('/')}" : null
+            !string.IsNullOrEmpty(c.ItemImage) ? $"{baseUrl}/{c.ItemImage.TrimStart('/')}" : null,
+            c.OtherUser.LastLoginAt
         ))
         .OrderByDescending(c => c.LastMessageAt)
         .ToList();
@@ -254,18 +260,8 @@ public class DeleteChatCommandHandler : IRequestHandler<DeleteChatCommand, bool>
 
     public async Task<bool> Handle(DeleteChatCommand request, CancellationToken ct)
     {
-        var uid = _currentUser.Id;
-        if (uid == null) return false;
-
-        var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == request.ChatId, ct);
-        if (chat == null) return false;
-
-        if (chat.User1Id == uid) chat.DeletedByUser1 = true;
-        else if (chat.User2Id == uid) chat.DeletedByUser2 = true;
-        else return false;
-
-        await _context.SaveChangesAsync(ct);
-        return true;
+        // Chat deletion is disabled for all users.
+        return await Task.FromResult(false);
     }
 }
 
@@ -332,7 +328,8 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
             chat.CreatedAt,
             chat.ItemId,
             chat.Item?.TitleAr,
-            itemImage
+            itemImage,
+            otherUser.LastLoginAt
         );
 
         var messages = await _context.ChatMessages

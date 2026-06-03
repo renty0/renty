@@ -271,6 +271,10 @@ export class AuthService {
     return this.hasRole('SuperAdmin');
   }
 
+  isUser(): boolean {
+    return this.roles() === 'user' || this.hasRole('user');
+  }
+
   hasPermission(permission: string): boolean {
     if (this.isSuperAdmin()) return true;
     return this.permissions().includes(permission);

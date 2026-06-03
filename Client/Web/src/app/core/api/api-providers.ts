@@ -21,6 +21,7 @@ import {
   Gap_AnalysisClient,
   Public_ProfileClient,
   WalletClient,
+  AdminItemsClient, IdentityClient
 } from './api-client';
 
 export const PROVIDE_API_CLIENTS = [
@@ -46,4 +47,5 @@ export const PROVIDE_API_CLIENTS = [
   Gap_AnalysisClient,
   Public_ProfileClient,
   WalletClient,
+  AdminItemsClient, IdentityClient
 ];

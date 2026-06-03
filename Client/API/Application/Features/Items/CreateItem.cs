@@ -83,7 +83,7 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
             DescAr = request.DescAr,
             DescEn = request.DescEn,
             Type = itemType,
-            Status = NewItemStatus.Available,
+            Status = NewItemStatus.UnderReview,
             Condition = request.Condition,
             DefaultDeposit = request.DefaultDeposit,
             Location = request.Location,

@@ -27,7 +27,7 @@
 
   <mat-card class="table-card fade-in">
     <div class="table-container">
-      <table mat-table [dataSource]="isLoading() ? ($any([1,2,3,4,5])) : filteredUsers()" class="data-table">
+      <table mat-table [dataSource]="isLoading() ? ($any([1,2,3,4,5])) : paginatedUsers()" class="data-table">
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
@@ -129,7 +129,7 @@
       </div>
       }
 
-      <mat-paginator [length]="totalUsers()" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
+      <mat-paginator [length]="filteredUsers().length" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
         [pageSizeOptions]="[10, 20, 50]" (page)="onPageChange($event)" aria-label="Select page of staff">
       </mat-paginator>
     </div>

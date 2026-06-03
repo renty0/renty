@@ -24,6 +24,10 @@ public class Rental
     public bool OwnerWantsExpertReview { get; set; } = false;
     public decimal ExpertReviewFee { get; set; } = 0;
     public long? AssignedExpertId { get; set; }
+    public ItemPossession CurrentPossession { get; set; } = ItemPossession.Owner;
+    public DeliveryMethod DeliveryMethod { get; set; } = DeliveryMethod.ByHand;
+    public DateTime? DesiredDeliveryDate { get; set; }
+    public string? DeliveryNotes { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

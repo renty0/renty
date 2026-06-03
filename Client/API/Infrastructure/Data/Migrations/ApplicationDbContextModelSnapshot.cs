@@ -642,6 +642,11 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<string>("AdminNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("admin_note");
+
                     b.Property<int?>("BrandId")
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
@@ -1844,6 +1849,15 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<int>("CurrentPossession")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DeliveryMethod")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DeliveryNotes")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("DepositAmount")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)")
@@ -1853,6 +1867,9 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("deposit_status");
+
+                    b.Property<DateTime?>("DesiredDeliveryDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone")

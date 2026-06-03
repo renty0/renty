@@ -43,7 +43,14 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'labels.name' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row">{{ getLocalizedTitle(row) }}</td>
+        <td mat-cell *matCellDef="let row">
+          <div class="item-title-wrap">
+            <span>{{ getLocalizedTitle(row) }}</span>
+            @if (isRemoved(row)) {
+              <small class="removed-note">{{ 'products.removedFromMarket' | translate }}</small>
+            }
+          </div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="price">
@@ -84,10 +91,21 @@
               <mat-icon>edit</mat-icon>
             </app-loading-button>
             }
-            <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
-              [title]="'buttons.delete' | translate">
-              <mat-icon>delete</mat-icon>
-            </app-loading-button>
+            @if (isRemoved(row)) {
+              <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="reactivateItemWithConfirm(row.id!)"
+                [title]="'buttons.reactivate' | translate">
+                <mat-icon>restart_alt</mat-icon>
+              </app-loading-button>
+              <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
+                [title]="'products.permanentDelete' | translate">
+                <mat-icon>delete_forever</mat-icon>
+              </app-loading-button>
+            } @else {
+              <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
+                [title]="'buttons.delete' | translate">
+                <mat-icon>delete</mat-icon>
+              </app-loading-button>
+            }
           </div>
         </td>
       </ng-container>
@@ -102,7 +120,7 @@
   } @else {
   <div class="grid cards-grid">
     @for (item of dataSource(); track item.id) {
-    <div class="col-12 sm:col-6 md:col-4 lg:col-3 p-3">
+    <div class="col-12 sm:col-6 lg:col-3 xl:col-3 p-3">
       <mat-card class="entity-card h-full shadow-1 hover:shadow-3 transition-all" [routerLink]="['/items', item.id]">
         <div class="card-content">
           <div class="card-image mb-3">
@@ -119,6 +137,9 @@
             <small class="sku-hint text-primary font-bold uppercase tracking-wider text-xs">{{ getLocalizedName(item.brand) }}</small>
             }
             <h3 class="text-lg font-bold text-900 m-0">{{ getLocalizedTitle(item) }}</h3>
+            @if (isRemoved(item)) {
+              <small class="removed-note">{{ 'products.removedFromMarket' | translate }}</small>
+            }
           </div>
           <div class="price-tag mb-3">
             <span class="text-xl font-black text-primary">{{ item.dailyPrice }} EGP <small class="text-sm font-medium text-600">{{ 'labels.perDay' | translate }}</small></span>
@@ -142,10 +163,21 @@
             <mat-icon>edit</mat-icon>
           </app-loading-button>
           }
-          <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
-            (clicked)="deleteItem(item.id!)">
-            <mat-icon>delete</mat-icon>
-          </app-loading-button>
+          @if (isRemoved(item)) {
+            <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm" class="flex-1"
+              (clicked)="reactivateItemWithConfirm(item.id!)">
+              <mat-icon>restart_alt</mat-icon>
+            </app-loading-button>
+            <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+              (clicked)="deleteItem(item.id!)" [title]="'products.permanentDelete' | translate">
+              <mat-icon>delete_forever</mat-icon>
+            </app-loading-button>
+          } @else {
+            <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+              (clicked)="deleteItem(item.id!)">
+              <mat-icon>delete</mat-icon>
+            </app-loading-button>
+          }
         </div>
       </mat-card>
     </div>

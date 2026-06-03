@@ -10,108 +10,76 @@
     </div>
     } @else {
 
-    @if (itemDetails()) {
-    <div class="details-panel">
-      <div class="section-card details-card">
-        <div class="card-header">
-          <div class="card-icon-wrap accent">
-            <mat-icon>info</mat-icon>
-          </div>
-          <div>
-            <h2 class="card-title">{{ 'expert.history.itemDetailsTitle' | translate }}</h2>
-            <p class="card-subtitle">{{ 'expert.history.itemDetailsSubtitle' | translate }}</p>
+    <div class="main-layout">
+      @if (itemDetails()) {
+      <div class="item-summary-card">
+        <div class="item-image-wrap">
+          <img [src]="itemDetails()?.imageUrl || 'assets/images/placeholder.png'" alt="Item Image"
+            (error)="$event.target.src='assets/images/placeholder.png'">
+          <div class="image-badge">
+            <mat-icon>inventory_2</mat-icon>
           </div>
         </div>
-
-        <div class="details-rich-layout">
-          <!-- Item Box -->
-          <div class="rich-box item-box">
-            <div class="box-image">
-              <img [src]="itemDetails()?.imageUrl || 'assets/images/placeholder.png'" alt="Item Image"
-                (error)="$event.target.src='assets/images/placeholder.png'">
-            </div>
-            <div class="box-content">
-              <span class="box-label">{{ 'expert.history.itemName' | translate }}</span>
-              <h3 class="box-title">{{ translate.currentLang === 'ar' ? itemDetails()?.titleAr : itemDetails()?.titleEn
-                }}</h3>
-              <div class="box-meta">
-                <mat-icon>location_on</mat-icon>
-                <span>{{ itemDetails()?.city || '-' }}</span>
-              </div>
+        <div class="item-info">
+          <div class="item-header">
+            <h3 class="item-title">{{ translate.currentLang === 'ar' ? itemDetails()?.titleAr : itemDetails()?.titleEn }}</h3>
+            <div class="item-location">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ itemDetails()?.city || '-' }}</span>
             </div>
           </div>
-
-          <div class="right-col">
-            <!-- Parties Row -->
-            <div class="parties-row">
-              <!-- Owner Box -->
-              <div class="rich-box party-box">
-                <div class="party-avatar">
-                  <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'"
-                    alt="Owner" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
-                  <div class="role-badge owner">{{ 'expert.history.ownerName' | translate }}</div>
-                </div>
-                <div class="box-content">
-                  <h4 class="party-name">{{ itemDetails()?.owner?.fullName }}</h4>
-                  <div class="party-phone" dir="ltr">
-                    <mat-icon>phone</mat-icon>
-                    <span>{{ itemDetails()?.owner?.phone || '-' }}</span>
-                  </div>
-                </div>
+          <div class="parties-row">
+            <div class="party-mini owner">
+              <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'"
+                alt="Owner" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.ownerName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.owner?.fullName }}</span>
               </div>
-
-              <!-- Renter Box (if rental exists) -->
-              @if (itemDetails()?.activeRental) {
-              <div class="rich-box party-box">
-                <div class="party-avatar">
-                  <img
-                    [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/images/avatar-placeholder.png'"
-                    alt="Renter" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
-                  <div class="role-badge renter">{{ 'expert.history.renterName' | translate }}</div>
-                </div>
-                <div class="box-content">
-                  <h4 class="party-name">{{ itemDetails()?.activeRental?.renter?.fullName }}</h4>
-                  <div class="party-phone" dir="ltr">
-                    <mat-icon>phone</mat-icon>
-                    <span>{{ itemDetails()?.activeRental?.renter?.phone || '-' }}</span>
-                  </div>
-                </div>
-              </div>
-              }
+              <mat-icon class="party-icon">person</mat-icon>
             </div>
-
-            <!-- Rental Info Banner -->
             @if (itemDetails()?.activeRental) {
-            <div class="rental-banner">
-              <div class="banner-item">
-                <div class="banner-icon"><mat-icon>date_range</mat-icon></div>
-                <div class="banner-text">
-                  <span class="banner-label">{{ 'expert.history.rentalDates' | translate }}</span>
-                  <span class="banner-value">{{ itemDetails()?.activeRental?.startDate | date:'MMM d' }} - {{
-                    itemDetails()?.activeRental?.endDate | date:'MMM d, y' }}</span>
-                </div>
+            <div class="party-mini renter">
+              <img [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/images/avatar-placeholder.png'"
+                alt="Renter" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.renterName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.activeRental?.renter?.fullName }}</span>
               </div>
-              <div class="banner-divider"></div>
-              <div class="banner-item">
-                <div class="banner-icon"><mat-icon>payments</mat-icon></div>
-                <div class="banner-text">
-                  <span class="banner-label">{{ 'expert.history.rentalPrice' | translate }}</span>
-                  <span class="banner-value highlight">{{ itemDetails()?.activeRental?.rentalPrice }} EGP</span>
-                </div>
-              </div>
+              <mat-icon class="party-icon">person_outline</mat-icon>
             </div>
             }
           </div>
+          @if (itemDetails()?.activeRental) {
+          <div class="rental-info-bar">
+            <div class="info-pill dates">
+              <div class="pill-icon">
+                <mat-icon>event</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalDates' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.startDate | date:'MMM d' }} - {{ itemDetails()?.activeRental?.endDate | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+            <div class="info-pill price">
+              <div class="pill-icon">
+                <mat-icon>payments</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalPrice' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.rentalPrice }} EGP</span>
+              </div>
+            </div>
+          </div>
+          }
         </div>
       </div>
-    </div>
-    }
+      }
 
-    <div class="grid-content">
-      <div class="form-section">
-        <div class="section-card">
-          <div class="card-header">
-            <div class="card-icon-wrap primary">
+      <div class="content-grid">
+        <div class="form-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap primary pulse">
               <mat-icon>fact_check</mat-icon>
             </div>
             <div>
@@ -120,16 +88,19 @@
             </div>
           </div>
 
-          <form [formGroup]="verifyForm" class="verification-form">
-            <app-input [formGroup]="verifyForm" controlName="checkType" label="checkType" [translateLabel]="false"
-              type="select" [options]="checkTypeOptions" [translateOptions]="true" [required]="true"
-              prefixIcon="assignment_turned_in" />
-            <app-input [formGroup]="verifyForm" controlName="status" label="status" [translateLabel]="false"
-              type="select" [options]="statusOptions" [translateOptions]="true" [required]="true"
-              prefixIcon="verified" />
-            <app-input [formGroup]="verifyForm" controlName="notes" label="notes" [translateLabel]="false"
-              type="textarea" [rows]="4" [placeholder]="'expert.verify.notesPlaceholder' | translate"
-              prefixIcon="notes" />
+          <form [formGroup]="verifyForm" class="verification-form compact">
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="checkType" label="checkType" type="select" [options]="checkTypeOptions" [translateOptions]="true" [required]="true" prefixIcon="assignment_turned_in" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="status" label="status" type="select" [options]="statusOptions" [translateOptions]="true" [required]="true" prefixIcon="verified" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="destination" label="expert.destination" type="select" [options]="destinationOptions" [translateOptions]="true" [required]="true" prefixIcon="local_shipping" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="notes" label="notes" type="textarea" [rows]="3" [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" />
+            </div>
           </form>
 
           <div class="form-actions">
@@ -139,19 +110,17 @@
             </app-loading-button>
           </div>
         </div>
-      </div>
 
-      <div class="history-section">
-        <div class="section-card">
-          <div class="card-header">
-            <div class="card-icon-wrap accent">
+        <div class="history-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap accent pulse">
               <mat-icon>history</mat-icon>
             </div>
             <div>
               <h2 class="card-title">{{ 'expert.history.listTitle' | translate }}</h2>
               <p class="card-subtitle">
                 @if (verifications().length > 0) {
-                {{ verifications().length }} {{ 'expert.history.records' | translate }}
+                <span class="record-count">{{ verifications().length }}</span> {{ 'expert.history.records' | translate }}
                 } @else {
                 {{ 'expert.history.noRecords' | translate }}
                 }
@@ -160,9 +129,9 @@
           </div>
 
           @if (verifications().length > 0) {
-          <div class="timeline">
+          <div class="timeline compact">
             @for (v of verifications(); track v.id) {
-            <div class="timeline-item">
+            <div class="timeline-item" [class.fade-in]="true">
               <div class="timeline-marker">
                 <div class="marker-dot" [class]="getStatusColor(v.status)">
                   <mat-icon>
@@ -191,8 +160,8 @@
                     <span>{{ v.createdAt | date:'mediumDate' }}</span>
                   </div>
                   @if (v.expertFirstName) {
-                  <div class="meta-item">
-                    <mat-icon>person</mat-icon>
+                  <div class="meta-item expert">
+                    <mat-icon>badge</mat-icon>
                     <span>{{ v.expertFirstName }}</span>
                   </div>
                   }
@@ -209,7 +178,7 @@
             }
           </div>
           } @else {
-          <div class="empty-state">
+          <div class="empty-state compact">
             <div class="empty-icon-wrap">
               <mat-icon>hourglass_empty</mat-icon>
             </div>

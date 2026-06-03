@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerificationHistory } from './verification-history';
+import { VerificationHistoryComponent } from './verification-history';
 
-describe('VerificationHistory', () => {
-  let component: VerificationHistory;
-  let fixture: ComponentFixture<VerificationHistory>;
+describe('VerificationHistoryComponent', () => {
+  let component: VerificationHistoryComponent;
+  let fixture: ComponentFixture<VerificationHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VerificationHistory]
+      imports: [VerificationHistoryComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(VerificationHistory);
+    fixture = TestBed.createComponent(VerificationHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

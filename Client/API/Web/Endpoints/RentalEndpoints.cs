@@ -136,6 +136,22 @@ public static class RentalEndpoints
         .Produces<ApiResponse<RentalStatusData>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
+
+        // PUT /rentals/:id/possession
+        g.MapPut("/{id:guid}/possession", async (
+            Guid id,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string action,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string method,
+            ISender sender) =>
+        {
+            var r = await sender.Send(new UpdatePossessionCommand(id, action, method));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { r.Success, r.Status });
+        })
+        .WithName("UpdatePossession")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
     }
 }
 

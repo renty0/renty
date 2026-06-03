@@ -32,6 +32,7 @@ public class Item
 
     public bool IsForSale { get; set; } = false;
     public decimal? SalePrice { get; set; }
+    public string? AdminNote { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -9,7 +9,9 @@
         <img [src]="chatMetadata()?.otherUserProfileImage || 'assets/profile.webp'" class="avatar">
         <div class="name-status">
           <span class="name">{{ chatMetadata()?.otherUserFirstName }} {{ chatMetadata()?.otherUserLastName }}</span>
-          <span class="status online">{{ 'chat.activeNow' | translate }}</span>
+          <span class="status" [class.online]="isUserOnline()" [class.offline]="!isUserOnline()">
+            {{ getUserStatusText() }}
+          </span>
         </div>
       </div>
 
@@ -23,9 +25,7 @@
         </a>
       }
 
-      <button mat-icon-button class="header-delete-btn" (click)="deleteCurrentChat()">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
+      <!-- Chat deletion intentionally disabled -->
     </div>
 
     <div class="messages-area" #scrollContainer>
@@ -94,15 +94,15 @@
           <button mat-icon-button type="button" class="action-btn" (click)="imageInput.click()">
             <mat-icon>add_photo_alternate</mat-icon>
           </button>
-          <button mat-icon-button type="button" class="action-btn" 
+          <button mat-icon-button type="button" class="action-btn"
                   (mousedown)="startRecording()">
             <mat-icon>mic_none</mat-icon>
           </button>
         </div>
-        
+
         <div class="input-field-wrap">
-          <input type="text" 
-                 [ngModel]="newMessage()" 
+          <input type="text"
+                 [ngModel]="newMessage()"
                  (ngModelChange)="newMessage.set($event)"
                  (keyup.enter)="sendMessage()"
                  [placeholder]="'chat.typePlaceholder' | translate">

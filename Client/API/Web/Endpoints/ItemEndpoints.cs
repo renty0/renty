@@ -97,9 +97,21 @@ public static class ItemEndpoints
         {
             var r = await sender.Send(new DeleteItemCommand(id));
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
-            return Api.Ok(new { message = "Item deleted." });
+            return Api.Ok(new { message = r.IsPermanentDelete ? "Item permanently deleted." : "Item removed from marketplace." });
         })
         .WithName("DeleteItem")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
+
+        // POST /items/:id/reactivate
+        g.MapPost("/{id:guid}/reactivate", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new ReactivateItemCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { message = "Item reactivated and visible in marketplace." });
+        })
+        .WithName("ReactivateItem")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);

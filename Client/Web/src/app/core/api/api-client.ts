@@ -990,6 +990,64 @@ export class ItemsClient {
         return _observableOf(null as any);
     }
 
+    reactivateItem(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/items/{id}/reactivate";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReactivateItem(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReactivateItem(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processReactivateItem(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     addItemReminder(id: string): Observable<ApiResponse<ReminderResponse>> {
         let url_ = this.baseUrl + "/api/v1/items/{id}/remind";
         if (id === undefined || id === null)
@@ -3625,6 +3683,72 @@ export class RentalsClient {
     }
 
     protected processCancelRental(response: HttpResponseBase): Observable<ApiResponse<RentalStatusData>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updatePossession(id: string, action: string, method: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/rentals/{id}/possession?";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (action === undefined || action === null)
+            throw new globalThis.Error("The parameter 'action' must be defined and cannot be null.");
+        else
+            url_ += "action=" + encodeURIComponent("" + action) + "&";
+        if (method === undefined || method === null)
+            throw new globalThis.Error("The parameter 'method' must be defined and cannot be null.");
+        else
+            url_ += "method=" + encodeURIComponent("" + method) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePossession(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePossession(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processUpdatePossession(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7699,6 +7823,8 @@ export class ItemListDto implements IItemListDto {
     ownerId?: number | undefined;
     isForSale?: boolean;
     salePrice?: number | undefined;
+    status?: string | undefined;
+    createdAt?: Date;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -7727,6 +7853,8 @@ export class ItemListDto implements IItemListDto {
             this.ownerId = _data["ownerId"];
             this.isForSale = _data["isForSale"];
             this.salePrice = _data["salePrice"];
+            this.status = _data["status"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
             this.category = _data["category"] ? ItemCategoryRef.fromJS(_data["category"]) : undefined as any;
             this.subcategory = _data["subcategory"] ? ItemSubcategoryRef.fromJS(_data["subcategory"]) : undefined as any;
             this.brand = _data["brand"] ? ItemBrandRef.fromJS(_data["brand"]) : undefined as any;
@@ -7755,6 +7883,8 @@ export class ItemListDto implements IItemListDto {
         data["ownerId"] = this.ownerId;
         data["isForSale"] = this.isForSale;
         data["salePrice"] = this.salePrice;
+        data["status"] = this.status;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         data["category"] = this.category ? this.category.toJSON() : undefined as any;
         data["subcategory"] = this.subcategory ? this.subcategory.toJSON() : undefined as any;
         data["brand"] = this.brand ? this.brand.toJSON() : undefined as any;
@@ -7776,6 +7906,8 @@ export interface IItemListDto {
     ownerId?: number | undefined;
     isForSale?: boolean;
     salePrice?: number | undefined;
+    status?: string | undefined;
+    createdAt?: Date;
     category?: ItemCategoryRef | undefined;
     subcategory?: ItemSubcategoryRef | undefined;
     brand?: ItemBrandRef | undefined;
@@ -8165,6 +8297,7 @@ export class ItemDetailDto implements IItemDetailDto {
     descEn?: string | undefined;
     type?: string;
     status?: string;
+    adminNote?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
     location?: string | undefined;
@@ -8201,6 +8334,7 @@ export class ItemDetailDto implements IItemDetailDto {
             this.descEn = _data["descEn"];
             this.type = _data["type"];
             this.status = _data["status"];
+            this.adminNote = _data["adminNote"];
             this.condition = _data["condition"];
             this.defaultDeposit = _data["defaultDeposit"];
             this.location = _data["location"];
@@ -8245,6 +8379,7 @@ export class ItemDetailDto implements IItemDetailDto {
         data["descEn"] = this.descEn;
         data["type"] = this.type;
         data["status"] = this.status;
+        data["adminNote"] = this.adminNote;
         data["condition"] = this.condition;
         data["defaultDeposit"] = this.defaultDeposit;
         data["location"] = this.location;
@@ -8282,6 +8417,7 @@ export interface IItemDetailDto {
     descEn?: string | undefined;
     type?: string;
     status?: string;
+    adminNote?: string | undefined;
     condition?: string | undefined;
     defaultDeposit?: number;
     location?: string | undefined;
@@ -10400,6 +10536,7 @@ export class RentalDetailDto implements IRentalDetailDto {
     handoverImageUrls?: string[];
     returnImageUrls?: string[];
     verifications?: VerificationDto[];
+    currentPossession?: string;
 
     constructor(data?: IRentalDetailDto) {
         if (data) {
@@ -10454,6 +10591,7 @@ export class RentalDetailDto implements IRentalDetailDto {
                 for (let item of _data["verifications"])
                     this.verifications!.push(VerificationDto.fromJS(item));
             }
+            this.currentPossession = _data["currentPossession"];
         }
     }
 
@@ -10508,6 +10646,7 @@ export class RentalDetailDto implements IRentalDetailDto {
             for (let item of this.verifications)
                 data["verifications"].push(item ? item.toJSON() : undefined as any);
         }
+        data["currentPossession"] = this.currentPossession;
         return data;
     }
 }
@@ -10543,6 +10682,7 @@ export interface IRentalDetailDto {
     handoverImageUrls?: string[];
     returnImageUrls?: string[];
     verifications?: VerificationDto[];
+    currentPossession?: string;
 }
 
 
@@ -11870,6 +12010,7 @@ export class ChatListDto implements IChatListDto {
     itemId?: string | undefined;
     itemTitle?: string | undefined;
     itemImage?: string | undefined;
+    otherUserLastLoginAt?: Date | undefined;
 
     constructor(data?: IChatListDto) {
         if (data) {
@@ -11893,6 +12034,7 @@ export class ChatListDto implements IChatListDto {
             this.itemId = _data["itemId"];
             this.itemTitle = _data["itemTitle"];
             this.itemImage = _data["itemImage"];
+            this.otherUserLastLoginAt = _data["otherUserLastLoginAt"] ? new Date(_data["otherUserLastLoginAt"].toString()) : undefined as any;
         }
     }
 
@@ -11916,6 +12058,7 @@ export class ChatListDto implements IChatListDto {
         data["itemId"] = this.itemId;
         data["itemTitle"] = this.itemTitle;
         data["itemImage"] = this.itemImage;
+        data["otherUserLastLoginAt"] = this.otherUserLastLoginAt ? this.otherUserLastLoginAt.toISOString() : undefined as any;
         return data;
     }
 }
@@ -11932,6 +12075,7 @@ export interface IChatListDto {
     itemId?: string | undefined;
     itemTitle?: string | undefined;
     itemImage?: string | undefined;
+    otherUserLastLoginAt?: Date | undefined;
 }
 
 export enum MessageType {

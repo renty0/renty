@@ -105,6 +105,11 @@ export class NavbarComponent implements OnInit {
       links.push(...this.allNavLinks.filter((link) => link.permission === PermissionType.Items_View));
     }
 
+    // Admin: Item review
+    if (this.authService.isAdmin() && this.permissionService.hasPermission(PermissionType.Items_View)) {
+      links.push({ path: '/admin/item-management', labelKey: 'nav.itemReview', icon: 'rule' });
+    }
+
     // Expert Actions
     if (this.isExpert()) {
       links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });

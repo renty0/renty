@@ -58,8 +58,8 @@ public static class ChatEndpoints
 
         g.MapDelete("/{id:guid}", async (Guid id, ISender sender) =>
         {
-            var success = await sender.Send(new DeleteChatCommand(id));
-            return success ? Api.Ok("Chat deleted.") : Api.Fail("Failed to delete chat.");
+            // Chat deletion is intentionally disabled for all users.
+            return Api.Fail("Chat deletion is disabled.", 403);
         })
         .WithName("DeleteChat")
         .Produces<ApiResponse<string>>(StatusCodes.Status200OK)

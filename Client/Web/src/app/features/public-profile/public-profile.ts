@@ -7,16 +7,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { Public_ProfileClient } from '../../core/api/api-client';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-public-profile',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
-    MatIconModule, 
-    MatTabsModule, 
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    MatTabsModule,
     MatButtonModule,
     MatChipsModule,
     TranslateModule
@@ -39,12 +38,12 @@ export class PublicProfileComponent implements OnInit {
 
   ownerRating = computed(() => {
     const p = this.profile();
-    return p?.ownerRating || 4.8; // Fallback mock
+    return p?.rating || 0;
   });
 
   renterRating = computed(() => {
     const p = this.profile();
-    return p?.renterRating || 4.5; // Fallback mock
+    return p?.rating || 0;
   });
 
   ngOnInit() {

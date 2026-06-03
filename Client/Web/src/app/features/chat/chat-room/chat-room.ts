@@ -12,8 +12,7 @@ import { ChatSignalrService } from '../../../core/services/chat-signalr.service'
 import { catchError, finalize, of, tap, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export interface QueuedImage {
   file: File;
@@ -38,7 +37,7 @@ export interface QueuedImage {
 })
 export class ChatRoomComponent implements OnInit, AfterViewChecked {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
-  
+
   private route = inject(ActivatedRoute);
   private chatClient = inject(ChatClient);
   private mediaClient = inject(MediaClient);
@@ -46,8 +45,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private chatSignalr = inject(ChatSignalrService);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
-  
+
   chatId = signal('');
   messages = signal<any[]>([]);
   chatMetadata = signal<any>(null);
@@ -63,15 +61,30 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     effect(() => {
       const msg = this.chatSignalr.newMessage();
       if (msg && msg.chatId === this.chatId()) {
-        // Prevent duplicating optimistic messages
-        if (!this.messages().find(m => m.id === msg.id && !m.isOptimistic)) {
-           this.messages.update(msgs => {
-             // Remove optimistic message if real one arrived
-             const filtered = msgs.filter(m => !(m.isOptimistic && m.message === msg.message && m.mediaUrl === msg.mediaUrl));
-             return [...filtered, msg];
-           });
-           setTimeout(() => this.scrollToBottom(), 100);
-        }
+        this.messages.update(msgs => {
+          // If we already have the real message, ignore.
+          if (msgs.some(m => m.id === msg.id)) return msgs;
+
+          // Try to "upgrade" an optimistic message instead of appending (prevents duplicates).
+          const optimisticIdx = msgs.findIndex(m =>
+            m?.isOptimistic === true &&
+            m?.senderId === msg.senderId &&
+            m?.messageType === msg.messageType &&
+            (m?.message ?? '') === (msg.message ?? '') &&
+            // For media messages the optimistic mediaUrl is usually a blob: preview, so don't require equality.
+            (msg.messageType === 0 || m?.mediaUrl === msg.mediaUrl || (typeof m?.mediaUrl === 'string' && m.mediaUrl.startsWith('blob:')))
+          );
+
+          if (optimisticIdx >= 0) {
+            const copy = [...msgs];
+            copy[optimisticIdx] = { ...msg, isOptimistic: false };
+            return copy;
+          }
+
+          return [...msgs, msg];
+        });
+
+        setTimeout(() => this.scrollToBottom(), 100);
       }
     });
   }
@@ -157,16 +170,16 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   startRecording() {
     if (this.isRecording()) return;
-    
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       this.mediaRecorder = new MediaRecorder(stream);
       this.audioChunks = [];
       this.recordingTime.set(0);
-      
+
       this.mediaRecorder.ondataavailable = (event: any) => {
         this.audioChunks.push(event.data);
       };
-      
+
       this.mediaRecorder.onstop = () => {
         clearInterval(this.recordingInterval);
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
@@ -174,10 +187,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
         this.uploadAudioAndSend(file);
         stream.getTracks().forEach(track => track.stop());
       };
-      
+
       this.mediaRecorder.start();
       this.isRecording.set(true);
-      
+
       this.recordingInterval = setInterval(() => {
         this.recordingTime.update(t => t + 1);
       }, 1000);
@@ -202,11 +215,11 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private uploadAudioAndSend(file: File) {
     this.isSending.set(true);
     const fileParam: FileParameter = { data: file, fileName: file.name };
-    
+
     // Add optimistic message
     const optimisticId = `temp_${Date.now()}`;
     const localUrl = URL.createObjectURL(file);
-    
+
     this.messages.update(msgs => [...msgs, {
       id: optimisticId,
       message: null,
@@ -278,16 +291,16 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   async sendMessage() {
     const textMsg = this.newMessage().trim();
     const imgs = this.selectedImages();
-    
+
     if (!textMsg && imgs.length === 0) return;
     if (this.isSending()) return;
 
     this.isSending.set(true);
-    
+
     // Copy the items to send
     const imagesToSend = [...imgs];
     const messageToSend = textMsg;
-    
+
     // Clear the inputs immediately for better UX
     this.newMessage.set('');
     this.selectedImages.set([]);
@@ -299,7 +312,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
           const queuedImg = imagesToSend[i];
           const isFirstImage = i === 0;
           const caption = isFirstImage && messageToSend ? messageToSend : undefined;
-          
+
           // Add optimistic image message
           const optimisticId = `temp_${Date.now()}_${i}`;
           this.messages.update(msgs => [...msgs, {
@@ -316,7 +329,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
           // Upload
           const fileParam: FileParameter = { data: queuedImg.file, fileName: queuedImg.file.name };
           const uploadRes = await firstValueFrom(this.mediaClient.uploadMedia(undefined, undefined, fileParam));
-          
+
           if (uploadRes?.data?.url) {
             this.sendMediaMessage(uploadRes.data.url, 1, caption, optimisticId);
           } else {
@@ -364,26 +377,6 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.messages.update(msgs => msgs.filter(m => m.id !== id));
   }
 
-  deleteCurrentChat() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: this.translate.instant('common.delete'),
-        message: this.translate.instant('chat.deleteConfirmation'),
-        color: 'warn',
-        confirmText: this.translate.instant('common.delete'),
-        cancelText: this.translate.instant('common.cancel')
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
-      if (confirmed) {
-        this.chatClient.deleteChat(this.chatId()).subscribe(() => {
-          this.router.navigate(['/chats']);
-        });
-      }
-    });
-  }
-
   private scrollToBottom(): void {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
@@ -392,5 +385,43 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   isCurrentUser(senderId: number | undefined): boolean {
     return senderId === this.currentUserId();
+  }
+
+  isUserOnline(): boolean {
+    const lastLoginAt = this.chatMetadata()?.otherUserLastLoginAt;
+    if (!lastLoginAt) return false;
+
+    const lastLogin = new Date(lastLoginAt);
+    const now = new Date();
+    const diffInMinutes = (now.getTime() - lastLogin.getTime()) / (1000 * 60);
+
+    // Consider user online if they logged in within the last 5 minutes
+    return diffInMinutes <= 5;
+  }
+
+  getUserStatusText(): string {
+    if (this.isUserOnline()) {
+      return this.translate.instant('chat.activeNow');
+    }
+
+    const lastLoginAt = this.chatMetadata()?.otherUserLastLoginAt;
+    if (!lastLoginAt) {
+      return this.translate.instant('chat.offline');
+    }
+
+    const lastLogin = new Date(lastLoginAt);
+    const now = new Date();
+    const diffInMinutes = (now.getTime() - lastLogin.getTime()) / (1000 * 60);
+
+    if (diffInMinutes < 60) {
+      const minutes = Math.floor(diffInMinutes);
+      return this.translate.instant('chat.lastSeenMinutes', { minutes });
+    } else if (diffInMinutes < 24 * 60) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return this.translate.instant('chat.lastSeenHours', { hours });
+    } else {
+      const days = Math.floor(diffInMinutes / (24 * 60));
+      return this.translate.instant('chat.lastSeenDays', { days });
+    }
   }
 }

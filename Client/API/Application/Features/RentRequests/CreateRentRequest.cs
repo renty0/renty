@@ -51,11 +51,13 @@ public class CreateRentRequestCommandHandler : IRequestHandler<CreateRentRequest
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notificationSender;
 
-    public CreateRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notificationSender)
     {
         _context = context;
         _currentUser = currentUser;
+        _notificationSender = notificationSender;
     }
 
     public async Task<CreateRentRequestResponse> Handle(CreateRentRequestCommand request, CancellationToken cancellationToken)
@@ -136,6 +138,16 @@ public class CreateRentRequestCommandHandler : IRequestHandler<CreateRentRequest
 
         _context.RentRequests.Add(rentRequest);
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Send notification to the item owner
+        await _notificationSender.SendToUserAsync(
+            item.OwnerId,
+            "New Rental Request",
+            $"You have a new rental request for {item.TitleEn}.",
+            "rental",
+            $"/rental-requests/{rentRequest.Id}",
+            cancellationToken
+        );
 
         return new CreateRentRequestResponse(true, "Rent request submitted successfully.", rentRequest.Id);
     }

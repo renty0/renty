@@ -45,7 +45,7 @@
   </div>
 
   <div class="grid">
-    
+
     <div class="col-12 lg:col-8 flex flex-column gap-4">
       <div class="info-strip grid gap-0">
         <div class="info-strip-item col-6 md:col-3">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      @if (r.status?.toLowerCase() === 'confirmed' || r.status?.toLowerCase() === 'active') {
+      @if (r.status?.toLowerCase() === 'confirmed' && !r.isHandoffVerified) {
       <mat-card class="premium-card verification-card shadow-1">
         <mat-card-content class="p-0">
           @if (!isOwner()) {
@@ -246,7 +246,7 @@
             <div class="flex flex-column gap-3">
               <div class="party-item flex align-items-center gap-3">
                 <div class="party-avatar shadow-1">
-                  <mat-icon>person</mat-icon>
+                  <img src="assets/profile.webp" class="w-12 h-12 rounded-full object-cover" [alt]="r.ownerFirstName">
                 </div>
                 <div class="party-info flex-1">
                   <label class="block text-xs text-400 uppercase tracking-wider">{{ 'rentals.details.owner' | translate }}</label>
@@ -255,14 +255,13 @@
                   </a>
                 </div>
                 @if (isRenter()) {
-                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()">
-                  </app-loading-button>
+                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()"/>
                 }
               </div>
 
               <div class="party-item flex align-items-center gap-3">
                 <div class="party-avatar shadow-1 renter">
-                  <mat-icon>person_outline</mat-icon>
+                  <img src="assets/profile.webp" class="w-12 h-12 rounded-full object-cover" [alt]="r.renterFirstName">
                 </div>
                 <div class="party-info flex-1">
                   <label class="block text-xs text-400 uppercase tracking-wider">{{ 'labels.renter' | translate }}</label>
@@ -271,8 +270,7 @@
                   </a>
                 </div>
                 @if (isOwner()) {
-                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()">
-                  </app-loading-button>
+                  <app-loading-button [iconOnly]="true" matIcon="chat" color="accent" (clicked)="startChat()" [tooltip]="'rentals.details.chat_now' | translate" [loading]="isActionLoading()"/>
                 }
               </div>
             </div>
@@ -288,12 +286,12 @@
             <mat-card-content>
               <div class="flex flex-column gap-3">
                   <div class="flex align-items-center gap-3">
-                    <div class="status-icon" 
+                    <div class="status-icon"
                          [class.done]="r.verifications?.[0]?.status === 'Approved'"
                          [class.error]="r.verifications?.[0]?.status === 'Rejected'"
                          [class.pending]="!r.verifications?.[0]?.status && r.assignedExpertId">
                       <mat-icon>
-                        {{ 
+                        {{
                            r.verifications?.[0]?.status === 'Approved' ? 'check_circle' :
                            r.verifications?.[0]?.status === 'Rejected' ? 'cancel' :
                            r.assignedExpertId ? 'hourglass_bottom' : 'hourglass_empty'
@@ -363,12 +361,57 @@
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
                 }
+                @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
+                  @if (productHolder() === 'renter') {
+                    <div class="completion-box">
+                      @if (showReturnOptions()) {
+                        <div class="return-options-box mb-3 p-3 border-round border-1 border-200">
+                          <p class="text-sm text-600 mb-2">{{ 'rentals.return.select_method' | translate }}</p>
+                          <div class="flex flex-column gap-2">
+                            <mat-radio-group [value]="returnDeliveryMethod()" (change)="returnDeliveryMethod.set($event.value)">
+                              <mat-radio-button value="ByHand" class="w-full">
+                                {{ 'rentals.delivery.byHand' | translate }}
+                              </mat-radio-button>
+                              <mat-radio-button value="NearestLocation" class="w-full">
+                                {{ 'rentals.delivery.nearestLocation' | translate }}
+                              </mat-radio-button>
+                              <mat-radio-button value="DeliveryService" class="w-full">
+                                {{ 'rentals.delivery.deliveryService' | translate }}
+                              </mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                          <div class="flex gap-2 mt-3">
+                            <app-loading-button variant="stroked" color="warn" (clicked)="cancelReturnOptions()" [loading]="isActionLoading()">
+                              {{ 'buttons.cancel' | translate }}
+                            </app-loading-button>
+                            <app-loading-button color="primary" (clicked)="confirmReturn()" [loading]="isActionLoading()">
+                              {{ 'rentals.return.confirm' | translate }}
+                            </app-loading-button>
+                          </div>
+                        </div>
+                      } @else {
+                        <app-loading-button color="accent" [fullWidth]="true" (clicked)="initiateReturn()"
+                          [loading]="isActionLoading()" matIcon="assignment_turned_in">
+                          {{ 'rentals.actions.complete' | translate }}
+                        </app-loading-button>
+                      }
+                    </div>
+                  }
+                  @if (r.currentPossession?.toString() === 'InTransit') {
+                    <div class="p-3 mb-2 border-round bg-primary-50 text-700 text-sm font-medium">
+                      {{ 'rentals.delivery.in_transit' | translate }}
+                    </div>
+                    <app-loading-button color="primary" [fullWidth]="true" (clicked)="confirmReceipt()" [loading]="isActionLoading()" matIcon="check_circle">
+                      تأكيد استلام المنتج
+                    </app-loading-button>
+                  }
+                }
               }
 
               @if (isOwner()) {
                 @if (r.status?.toLowerCase() === 'pending') {
                 <app-loading-button color="primary" [fullWidth]="true" (clicked)="confirmRental()"
-                  [loading]="isActionLoading()" [disabled]="isUnderReview()" matIcon="check_circle">
+                   [loading]="isActionLoading()" [disabled]="isUnderReview()" matIcon="check_circle">
                   {{ 'rentals.actions.confirm' | translate }}
                 </app-loading-button>
                 }
@@ -378,19 +421,59 @@
                   {{ 'rentals.actions.cancel' | translate }}
                 </app-loading-button>
                 }
-                @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
-                <div class="completion-box">
-                  <mat-checkbox [(ngModel)]="isDamaged" color="warn" class="font-medium w-full">
-                    {{ 'rentals.actions.damaged' | translate }}
-                  </mat-checkbox>
-                  <app-loading-button color="accent" [fullWidth]="true" (clicked)="completeRental()"
-                    [loading]="isActionLoading()" matIcon="assignment_turned_in">
-                    {{ 'rentals.actions.complete' | translate }}
-                  </app-loading-button>
-                </div>
+                
+                @if ((r.renterWantsExpertReview || r.ownerWantsExpertReview) && r.currentPossession?.toString() === 'Owner') {
+                  <div class="flex flex-column gap-2 mb-3">
+                    <p class="mb-2 text-sm font-medium">{{ (r.renterWantsExpertReview ? 'rentals.expert.renter_requested' : 'rentals.actions.send_to_expert') | translate }}</p>
+                    <app-loading-button variant="filled" color="primary" [fullWidth]="true" (clicked)="chooseDelivery()" [loading]="isActionLoading()" matIcon="local_shipping">
+                      {{ 'rentals.actions.send_via_delivery' | translate }}
+                    </app-loading-button>
+                    <app-loading-button variant="stroked" color="accent" [fullWidth]="true" (clicked)="chooseNearestLocation()" [loading]="isActionLoading()" matIcon="location_on">
+                      {{ 'rentals.actions.nearest_location' | translate }}
+                    </app-loading-button>
+                  </div>
                 }
 
-                @if (!r.ownerWantsExpertReview) {
+                @if (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'overdue') {
+                  <div class="completion-box">
+                    @if (needsReturnAction()) {
+                      <div class="return-info-box mb-3 p-3 border-round bg-primary-50">
+                        <p class="m-0 text-sm text-700 font-medium">
+                          <mat-icon class="text-xs align-middle mr-1">info</mat-icon>
+                          @if (productHolder() === 'renter') {
+                            @if (r.status?.toLowerCase() === 'overdue') {
+                              {{ 'rentals.return.product_with_renter_overdue' | translate }}
+                            } @else {
+                              {{ 'rentals.return.product_with_renter' | translate }}
+                            }
+                          } @else if (productHolder() === 'expert') {
+                            {{ 'rentals.return.product_with_expert' | translate }}
+                          } @else if (productHolder() === 'owner') {
+                            {{ 'rentals.return.product_with_owner' | translate }}
+                          }
+                        </p>
+                      </div>
+                    }
+
+                    @if (r.currentPossession?.toString() === 'InTransit') {
+                      <app-loading-button color="primary" [fullWidth]="true" class="mb-2" (clicked)="confirmReceipt()" [loading]="isActionLoading()" matIcon="check_circle">
+                        تأكيد استلام المرتجع
+                      </app-loading-button>
+                    }
+
+                    @if (productHolder() === 'owner') {
+                      <mat-checkbox [(ngModel)]="isDamaged" color="warn" class="font-medium w-full mb-2">
+                        {{ 'rentals.actions.damaged' | translate }}
+                      </mat-checkbox>
+                      <app-loading-button color="primary" [fullWidth]="true" (clicked)="confirmReturn()"
+                        [loading]="isActionLoading()" matIcon="assignment_turned_in">
+                        {{ 'rentals.actions.complete' | translate }}
+                      </app-loading-button>
+                    }
+                  </div>
+                }
+
+                @if (!r.ownerWantsExpertReview && !r.renterWantsExpertReview && r.status?.toLowerCase() !== 'completed' && r.status?.toLowerCase() !== 'cancelled') {
                   <app-loading-button variant="stroked" color="primary" [fullWidth]="true" (clicked)="requestExpertReview()" [loading]="isActionLoading()" matIcon="verified_user">
                     {{ 'rentals.actions.request_expert' | translate }}
                   </app-loading-button>

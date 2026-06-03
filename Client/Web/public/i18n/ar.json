@@ -14,6 +14,7 @@
     "chat": "المحادثة",
     "save": "حفظ",
     "edit": "تعديل",
+    "modify": "تعديل",
     "delete": "حذف",
     "user": "مستخدم",
     "date": "التاريخ",
@@ -47,7 +48,11 @@
     "Password": "كلمة المرور",
     "Save": "حفظ",
     "Cancel": "إلغاء",
-    "Retry": "إعادة المحاولة"
+    "Retry": "إعادة المحاولة",
+    "share": "مشاركة",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "underReview": "قيد المراجعة"
   },
   "favorites": {
     "title": "المفضلة",
@@ -137,7 +142,8 @@
     "saDashboard": "لوحة تحكم المسؤول الأعلى",
     "staffManagement": "إدارة الموظفين",
     "overrides": "تجاوزات وطوارئ",
-    "superAdmin": "المسؤول الأعلى"
+    "superAdmin": "المسؤول الأعلى",
+    "itemReview": "مراجعة المنتجات"
   },
   "register": {
     "welcomeMessage": "انضم إلى رنتي اليوم",
@@ -220,10 +226,12 @@
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "checkType": "نوع الفحص",
+
     "status": "النتيجة",
     "referenceId": "رقم المرجع",
     "notes": "ملاحظات الخبير",
     "deposit": "مبلغ الإيداع",
+    "salePrice": "سعر البيع",
     "type": "النوع",
     "condition": "الحالة",
     "message": "الرسالة",
@@ -313,7 +321,8 @@
     "cancel": "إلغاء",
     "browse": "تصفح",
     "upload": "رفع",
-    "newProduct": "منتج جديد"
+    "newProduct": "منتج جديد",
+    "reactivate": "إعادة التفعيل"
   },
   "categories": {
     "title": "الفئات",
@@ -347,7 +356,15 @@
     "organization": "التنظيم",
     "rentOnly": "للإيجار فقط",
     "saleOnly": "للبيع فقط",
-    "rentAndSale": "للإيجار والبيع"
+    "rentAndSale": "للإيجار والبيع",
+    "deactivateConfirmation": "سيتم إخفاء المنتج مؤقتًا من السوق. هل تريد المتابعة؟",
+    "permanentDeleteConfirmation": "سيتم حذف المنتج نهائيًا من قائمتك. هل تريد المتابعة؟",
+    "deactivateSuccess": "تم إخفاء المنتج من السوق.",
+    "permanentDeleteSuccess": "تم حذف المنتج نهائيًا.",
+    "reactivateSuccess": "تمت إعادة تفعيل المنتج وظهر في السوق.",
+    "removedFromMarket": "مخفي مؤقتًا من السوق"
+    ,"reactivateConfirmation": "سيتم استعادة المنتج وإظهاره في السوق. هل تريد المتابعة؟"
+    ,"permanentDelete": "حذف نهائي"
   },
   "info": {
     "additionalInfo": "معلومات إضافية",
@@ -362,7 +379,7 @@
     "title": "استئجار المنتج",
     "pricingType": "نوع التسعير",
     "estimatedPrice": "السعر التقديري",
-    "notesPlaceholder": "Add any notes for the owner...",
+    "notesPlaceholder": "أضف أي ملاحظات للمالك...",
     "deposit": "مبلغ التأمين",
     "total": "المبلغ الإجمالي",
     "submit": "تأكيد طلب التأجير",
@@ -371,6 +388,18 @@
     "daily": "يومي",
     "weekly": "أسبوعي",
     "monthly": "شهري",
+    "deliveryMethod": "طريقة التوصيل",
+    "desiredDeliveryDate": "تاريخ التسليم المطلوب",
+    "negotiatedDeliveryDate": "تاريخ التسليم المتفق عليه",
+    "return": {
+      "product_with_renter": "المنتج حالياً مع المستأجر.",
+      "product_with_renter_overdue": "انتهت فترة الإيجار ويجب إرجاع المنتج.",
+      "product_with_expert": "المنتج حاليًا مع الخبير للتفتيش. الخبير سيعوده بعد التقييم.",
+      "product_with_owner": "المنتج مع المالك. لا حاجة لإرجاعه.",
+      "select_method": "اختر الطريقة التي ترغب في إرجاع المنتج بها:",
+      "confirm": "تأكيد الإرجاع",
+      "confirmed": "تم بدء عملية الإرجاع بنجاح"
+    },
     "list": {
       "title": "إيجاراتي",
       "subtitle": "تتبع وإدارة إيجاراتك النشطة والسابقة",
@@ -402,6 +431,7 @@
       "not_assigned": "لم يتم التعيين",
       "submit_report": "إرسال التقرير",
       "pending_assignment": "قيد الانتظار",
+      "renter_requested": "طلب المستأجر تقييم خبير. اختر كيفية المتابعة:",
       "status": {
         "approved": "تقييم مقبول",
         "rejected": "تقييم مرفوض",
@@ -445,10 +475,26 @@
       "request_expert": "طلب تقييم خبير",
       "cancel_expert": "إلغاء طلب الخبير",
       "cancel_assigned_expert": "إلغاء الخبير المكلف",
+      "send_via_delivery": "إرسال عبر التوصيل",
+      "nearest_location": "التسليم في أقرب مكان",
+      "send_to_expert": "تم طلب تقييم الخبير. اختر كيفية المتابعة:",
       "dispute": "نزاع",
       "damaged": "مصادرة التأمين",
       "verify": "التحقق وبدء الإيجار",
       "no_actions": "لا توجد إجراءات متاحة لهذا الإيجار."
+    },
+    "delivery": {
+      "byHand": "تسليم باليد",
+      "nearestLocation": "أقرب مكان",
+      "deliveryService": "خدمة التوصيل",
+      "initiated": "تم بدء التوصيل بنجاح",
+      "picked_up": "تم استلام الطرد من قبل المندوب",
+      "in_transit": "الطرد في الطريق",
+      "delivered": "تم تسليم الطرد بنجاح",
+      "negotiation_info": "حدد تاريخ البدء المطلوب. يمكنك التفاوض حول وقت التسليم الدقيق مع المالك عبر الدردشة. وقت التسليم لا يُحسب في فترة الإيجار."
+    },
+    "nearest_location": {
+      "confirmed": "تم تأكيد التسليم في أقرب مكان"
     },
     "disputes": {
       "title": "نزاع على الإيجار",
@@ -479,6 +525,8 @@
     "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
     "minLength": "لم يتم استيفاء الحد الأدنى للطول",
     "maxLength": "تم تجاوز الحد الأقصى للطول",
+    "min": "القيمة أقل من الحد المسموح",
+    "max": "القيمة أكبر من الحد المسموح",
     "invalidFormat": "تنسيق غير صحيح",
     "invalidPhone": "رقم هاتف غير صحيح",
     "passwordMismatch": "كلمات المرور غير متوافقة",
@@ -690,6 +738,20 @@
     "renterRating": "تقييم كمستأجر",
     "noReviews": "لا توجد تقييمات بعد.",
     "deleteAccount": "حذف الحساب",
+    "identityVerification": "التحقق من الهوية",
+    "notVerified": "غير موثق",
+    "idNotVerifiedDesc": "الهوية غير موثقة",
+    "verificationNote": "ارفع بطاقة الهوية الخاصة بك للتحقق من هويتك وفتح ميزات التداول.",
+    "uploadId": "رفع الهوية",
+    "uploadIdTitle": "رفع بطاقة الهوية",
+    "uploadIdDesc": "يرجى رفع صور واضحة للوجه الأمامي والخلفي لبطاقة الهوية الحكومية. سيتم مراجعتها من قبل فريقنا.",
+    "frontSide": "الوجه الأمامي",
+    "backSide": "الوجه الخلفي",
+    "chooseFile": "اختر ملف",
+    "upload": "رفع",
+    "uploadBothSides": "يرجى رفع الوجهين الأمامي والخلفي",
+    "idUploadSuccess": "تم رفع الهوية بنجاح. التحقق معلق للمراجعة.",
+    "phoneNotVerifiedDesc": "الهاتف غير موثق",
     "deleteConfirmTitle": "حذف الحساب؟",
     "deleteConfirmMessage": "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء نهائي ولا يمكن التراجع عنه.",
     "deleteSuccess": "تم حذف حسابك بنجاح."
@@ -719,12 +781,21 @@
     "rentNow": "استأجر الآن",
     "favorite": "المفضلة",
     "addedToFavorites": "تمت الإضافة للمفضلة",
+    "linkCopied": "تم نسخ الرابط",
     "buyNow": "اشترِ الآن",
     "buyRequestSent": "تم إرسال طلب الشراء! سيتواصل معك المالك قريباً.",
-    "similarItems": "منتجات مشابهة"
+    "similarItems": "منتجات مشابهة",
+    "ownerUnderReviewTitle": "قيد المراجعة",
+    "ownerUnderReviewDesc": "منتجك قيد المراجعة من قِبَل الإدارة وسيظهر في السوق بعد القبول.",
+    "ownerRejectedTitle": "تم رفض المنتج",
+    "thumbnail": "صورة مصغرة",
+    "starsAria": "{{count}} نجوم",
+    "memberFallback": "عضو"
   },
   "expert": {
     "not_assigned": "غير معين",
+    "destination": "الوجهة (من يستلم بعد الفحص)",
+    "destinationPlaceholder": "اختر من يستلم المنتج",
     "verifyItem": "فحص جديد",
     "verifyItem.subtitle": "قم بملء النموذج لإرسال سجل فحص خبير جديد",
     "backToAssigned": "العودة للقائمة",
@@ -823,6 +894,11 @@
     "noFraudData": "لم يتم اكتشاف تهديدات أمنية مؤخراً.",
     "settingsTitle": "إعدادات النظام",
     "itemsTitle": "تدقيق المنتجات",
+    "pendingReviewTitle": "بانتظار مراجعة الإدارة",
+    "pendingReviewDesc": "هذا المنتج بانتظار موافقتك قبل نشره في السوق.",
+    "reviewPanelTitle": "مراجعة الإدارة",
+    "reviewNotePlaceholder": "أضف ملاحظة للمالك (مطلوبة عند الرفض)…",
+    "noPendingItems": "لا توجد منتجات قيد المراجعة حالياً.",
     "commissionRate": "عمولة المنصة",
     "maintenanceMode": "وضع الصيانة",
     "userManagementTitle": "إدارة المستخدمين",
@@ -1036,7 +1112,10 @@
     "viewProduct": "عرض المنتج",
     "recording": "جاري التسجيل...",
     "releaseToSend": "اترك الزر للإرسال",
-    "deleteConfirmation": "هل أنت متأكد من حذف هذه المحادثة؟"
+    "deleteConfirmation": "هل أنت متأكد من حذف هذه المحادثة؟",
+    "lastSeenMinutes": "آخر ظهور منذ {{minutes}} دقيقة",
+    "lastSeenHours": "آخر ظهور منذ {{hours}} ساعة",
+    "lastSeenDays": "آخر ظهور منذ {{days}} يوم"
   },
   "notifications": {
     "title": "الإشعارات",

@@ -99,7 +99,7 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
             "Dispute Resolved",
             $"The dispute for '{rental.Item.TitleEn}' has been resolved. Compensation: {request.OwnerCompensation:C}",
             "rental",
-            $"/my-rentals/{rental.Id}",
+            $"/rentals/{rental.Id}",
             ct);
 
         await _notifier.SendToUserAsync(
@@ -107,7 +107,7 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
             "Dispute Resolved",
             $"The dispute for '{rental.Item.TitleEn}' has been resolved. Refund: {request.RenterRefund:C}",
             "rental",
-            $"/my-rentals/{rental.Id}",
+            $"/rentals/{rental.Id}",
             ct);
 
         return new ResolveDisputeResponse(true, null);

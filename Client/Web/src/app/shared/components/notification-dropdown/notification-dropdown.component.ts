@@ -39,7 +39,7 @@ export class NotificationDropdownComponent implements OnInit {
   isOpen = signal(false);
   isLoading = signal(false);
   notifications = signal<NotificationDto[]>([]);
-  unreadCount = signal(0);
+  unreadCount = this.signalrService.unreadCount;
 
   private visibleCount = signal(7);
   readonly PAGE_SIZE = 5;
@@ -73,7 +73,7 @@ export class NotificationDropdownComponent implements OnInit {
           this.toastService.showInfo(`${newNotif.title} - ${newNotif.message}`);
         });
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   ngOnInit() {

@@ -60,6 +60,16 @@ public static class RentRequestEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
+        group.MapPut("/{id:long}", async (long id, UpdateRentRequestCommand command, ISender sender) =>
+        {
+            if (id != command.RequestId) return Api.Fail("ID mismatch");
+            var r = await sender.Send(command);
+            return r.Success ? Api.Ok(r) : Api.Fail(r.Message ?? "Bad request");
+        })
+        .WithName("UpdateRentRequest")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
+
         group.MapPost("/{id:long}/start", async (long id, ISender sender) =>
         {
             var r = await sender.Send(new StartRentalCommand(id));

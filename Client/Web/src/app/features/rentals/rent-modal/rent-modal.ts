@@ -53,6 +53,12 @@ export class RentModalComponent implements OnInit {
     }))
   );
 
+  deliveryMethodOptions = computed<SelectOption[]>(() => [
+    { name: 'rentals.delivery.byHand', code: 'ByHand' },
+    { name: 'rentals.delivery.nearestLocation', code: 'NearestLocation' },
+    { name: 'rentals.delivery.deliveryService', code: 'DeliveryService' }
+  ]);
+
   rentalPrice = signal(0);
   depositAmount = signal(this.data.item.defaultDeposit || 0);
   expertFee = signal(100);
@@ -70,6 +76,9 @@ export class RentModalComponent implements OnInit {
       endDate: [null, Validators.required],
       pricingType: [this.availablePricingTypes()[0] || 'daily', Validators.required],
       requiresExpert: [false],
+      deliveryMethod: ['ByHand', Validators.required],
+      desiredDeliveryDate: [null],
+      negotiatedDeliveryDate: [null],
       notes: ['']
     });
 
@@ -118,7 +127,7 @@ export class RentModalComponent implements OnInit {
       pricingType: formValue.pricingType.toLowerCase(),
       requestExpertReview: formValue.requiresExpert,
       notes: formValue.notes || undefined
-    });
+    }) as any;
 
     this.rentalsClient.createRental(command).subscribe({
       next: (res) => {

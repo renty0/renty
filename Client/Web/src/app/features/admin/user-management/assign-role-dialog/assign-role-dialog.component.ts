@@ -49,7 +49,10 @@ export class AssignRoleDialogComponent implements OnInit {
       .subscribe({
         next: (res) => {
           if (!res.error) {
-            this.availableRoles.set(res.data || []);
+            const filtered = (res.data || []).filter(r => 
+              r.name && !['owner', 'renter'].includes(r.name.toLowerCase())
+            );
+            this.availableRoles.set(filtered);
           } else {
             this.error.set(res.messages?.[0] || 'Failed to load roles');
           }

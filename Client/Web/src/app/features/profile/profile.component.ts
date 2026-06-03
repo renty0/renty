@@ -9,12 +9,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../core/services/auth.service';
-import { AuthClient, AuthLoginUser, UpdateUserCommand, DeleteUserResponse, Public_ProfileClient } from '../../core/api/api-client';
+import { AuthClient, AuthLoginUser, UpdateUserCommand, DeleteUserResponse, Public_ProfileClient, MediaClient, FileParameter, UploadIdVerificationCommand, IdentityClient } from '../../core/api/api-client';
 import { InputComponent, SelectOption } from '../../shared/components/input/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.constants';
 import { ProfileImageDialogComponent } from './components/profile-image-dialog/profile-image-dialog.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { IdUploadDialogComponent } from './components/id-upload-dialog/id-upload-dialog.component';
 
 import { LoadingButtonComponent } from '../../shared/components/loading-button/loading-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -41,11 +42,13 @@ export class ProfileComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private authClient = inject(AuthClient);
+  private identityClient = inject(IdentityClient);
   private toastService = inject(ToastService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   private translate = inject(TranslateService);
+  private mediaClient = inject(MediaClient);
 
   private publicProfileClient = inject(Public_ProfileClient);
 
@@ -260,6 +263,47 @@ export class ProfileComponent {
           });
       }
     });
+  }
+
+  openIdUploadDialog() {
+    const dialogRef = this.dialog.open(IdUploadDialogComponent, {
+      width: '600px',
+      maxWidth: '90vw'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.frontUrl && result.backUrl) {
+        this.uploadIdVerification(result.frontUrl, result.backUrl);
+      }
+    });
+  }
+
+  uploadIdVerification(frontUrl: string, backUrl: string) {
+    this.isLoading.set(true);
+
+    const command = new UploadIdVerificationCommand({
+      frontImageUrl: frontUrl,
+      backImageUrl: backUrl
+    });
+
+    this.identityClient.uploadIdVerification(command)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: any) => {
+          if (res?.data) {
+            this.toastService.showSuccess('profile.idUploadSuccess');
+            // Reload user data to update verification status
+            this.loadUserData();
+          } else {
+            this.toastService.showError('error.updateFailed');
+          }
+          this.isLoading.set(false);
+        },
+        error: (err: any) => {
+          this.toastService.showError('error.updateFailed');
+          this.isLoading.set(false);
+        }
+      });
   }
 }
 

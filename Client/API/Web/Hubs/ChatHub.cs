@@ -65,6 +65,6 @@ public class ChatHub : Hub
 
         await Clients
             .OthersInGroup(chatId.ToString())
-            .SendAsync("UserTyping", uid.Value);
+            .SendAsync("UserTyping", uid.Value, chatId.ToString());
     }
 }

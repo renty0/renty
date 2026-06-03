@@ -60,7 +60,6 @@ export class StaffManagementComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'email', 'roles', 'status', 'actions'];
 
-  // Tabs config
   tabs = [
     { label: 'superAdmin.allStaff', role: null },
     { label: 'superAdmin.admins', role: 'Admin' },
@@ -68,17 +67,21 @@ export class StaffManagementComponent implements OnInit {
     { label: 'superAdmin.experts', role: 'Expert' },
   ];
 
-  // Filtered users based on active tab
   filteredUsers = computed(() => {
     const tab = this.tabs[this.activeTabIndex()];
     const users = this.allUsers();
     if (!tab.role) {
-      // "All Staff" tab: only show users with staff roles (Admin, Support, Expert)
       return users.filter(u => u.roles?.some(r =>
         ['admin', 'support', 'expert', 'superadmin'].includes(r.toLowerCase())
       ));
     }
     return users.filter(u => u.roles?.some(r => r.toLowerCase() === tab.role!.toLowerCase()));
+  });
+
+  paginatedUsers = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredUsers().slice(start, end);
   });
 
   ngOnInit(): void {
@@ -94,13 +97,14 @@ export class StaffManagementComponent implements OnInit {
 
   onTabChange(index: number): void {
     this.activeTabIndex.set(index);
+    this.pageIndex.set(0);
   }
 
   loadUsers(): void {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.adminClient.getAdminUsers(this.pageIndex() + 1, this.pageSize(), this.searchTerm() ?? undefined)
+    this.adminClient.getAdminUsers(1, 10000, this.searchTerm() ?? undefined)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response) => {
@@ -133,7 +137,6 @@ export class StaffManagementComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
-    this.loadUsers();
   }
 
   toggleUserStatus(user: IAdminUserDto): void {

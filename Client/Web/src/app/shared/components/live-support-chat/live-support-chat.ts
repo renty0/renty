@@ -77,7 +77,7 @@ export class LiveSupportChatComponent implements AfterViewChecked, OnDestroy {
         });
         this.shouldScroll = true;
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   private async connectToTicket(ticketId: string) {

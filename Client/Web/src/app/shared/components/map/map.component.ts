@@ -161,13 +161,12 @@ export class MapComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy
         this.cdr.markForCheck();
 
         this.searchDebounceTimeout = setTimeout(() => {
-            const key = environment.locationIqToken || 'pk.8eb219bf6bd5a83ccf8c37d6e76cf0e3';
-            const url = `https://us1.locationiq.com/v1/search?key=${key}&q=${encodeURIComponent(this.searchQuery)}&format=json&limit=5`;
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(this.searchQuery)}&format=json&limit=5`;
             
             fetch(url)
             .then(res => res.json())
             .then(data => {
-                this.searchResults = data || [];
+                this.searchResults = Array.isArray(data) ? data : [];
                 this.isSearching = false;
                 this.cdr.markForCheck();
             })

@@ -38,6 +38,22 @@
         </mat-checkbox>
       </div>
 
+      <app-input [formGroup]="rentForm" controlName="deliveryMethod" label="rentals.deliveryMethod" type="select"
+        [options]="deliveryMethodOptions()" [translateOptions]="true" [required]="true" />
+
+      <div class="delivery-info-box mb-3 p-3 border-round bg-blue-50">
+        <p class="m-0 text-sm text-700">
+          <mat-icon class="text-xs align-middle mr-1">info</mat-icon>
+          {{ 'rentals.delivery.negotiation_info' | translate }}
+        </p>
+      </div>
+
+      <app-input [formGroup]="rentForm" controlName="desiredDeliveryDate" label="rentals.desiredDeliveryDate" type="date"
+        [minDate]="minDate" />
+
+      <app-input [formGroup]="rentForm" controlName="negotiatedDeliveryDate" label="rentals.negotiatedDeliveryDate" type="date"
+        [minDate]="minDate" />
+
       <app-input [formGroup]="rentForm" controlName="notes" label="labels.message" type="textarea" [rows]="3"
         [placeholder]="'rentals.notesPlaceholder' | translate" />
     </div>

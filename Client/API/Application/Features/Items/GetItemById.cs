@@ -39,6 +39,18 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
         if (item == null)
             return new GetItemByIdResponse(false, "Item not found.", null);
 
+        if (item.Status != NewItemStatus.Available && item.Status != NewItemStatus.Rented)
+        {
+            var isOwnerOrAdmin = _currentUser.Id.HasValue && 
+                                 (item.OwnerId == _currentUser.Id.Value || 
+                                  _httpContextAccessor.HttpContext?.User.IsInRole("Admin") == true ||
+                                  _httpContextAccessor.HttpContext?.User.IsInRole("SuperAdmin") == true);
+            if (!isOwnerOrAdmin)
+            {
+                return new GetItemByIdResponse(false, "Item is not available.", null);
+            }
+        }
+
         if (_currentUser.Id.HasValue)
         {
             _context.UserInteractions.Add(new Domain.Entities.UserInteraction
@@ -62,6 +74,7 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
             item.DescEn,
             item.Type.ToString(),
             item.Status.ToString(),
+            item.AdminNote,
             item.Condition,
             item.DefaultDeposit,
             item.Location,

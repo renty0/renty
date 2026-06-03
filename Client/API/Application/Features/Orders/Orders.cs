@@ -37,12 +37,18 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
     private readonly IFraudDetectionService _fraudService;
+    private readonly INotificationSender _notifier;
 
-    public CreateOrderCommandHandler(IApplicationDbContext context, IUser currentUser, IFraudDetectionService fraudService)
+    public CreateOrderCommandHandler(
+        IApplicationDbContext context,
+        IUser currentUser,
+        IFraudDetectionService fraudService,
+        INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
         _fraudService = fraudService;
+        _notifier = notifier;
     }
 
     public async Task<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken ct)
@@ -97,6 +103,46 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
 
         // Run background fraud check
         _ = _fraudService.EvaluateOrderAsync(order.Id);
+
+        // Notify item owner(s)
+        try
+        {
+            var ownerIds = items.Select(i => i.OwnerId).Distinct().ToList();
+            var title = "New Order";
+
+            foreach (var ownerId in ownerIds)
+            {
+                // Avoid notifying the buyer if they order their own item (shouldn't happen, but safe)
+                if (ownerId == _currentUser.Id.Value) continue;
+
+                var ownerItems = items
+                    .Where(i => i.OwnerId == ownerId)
+                    .Select(i => i.TitleEn)
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+                    .Take(3)
+                    .ToList();
+
+                var msg = ownerItems.Count switch
+                {
+                    0 => "You received a new order.",
+                    1 => $"You received a new order for '{ownerItems[0]}'.",
+                    _ => $"You received a new order for {ownerItems.Count} items."
+                };
+
+                await _notifier.SendToUserAsync(
+                    ownerId,
+                    title,
+                    msg,
+                    "order",
+                    actionUrl: $"/orders/{order.Id}",
+                    ct: ct);
+            }
+        }
+        catch
+        {
+            // Notification failures shouldn't block order creation.
+        }
 
         return new CreateOrderResponse(true, null, order.Id, total);
     }
@@ -163,7 +209,7 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, GetOr
     public async Task<GetOrderByIdResponse> Handle(GetOrderByIdQuery request, CancellationToken ct)
     {
         var order = await _context.Orders
-            .Include(o => o.Items).ThenInclude(oi => oi.Item).ThenInclude(i => i.Images)
+            .Include(o => o.Items).ThenInclude(oi => oi.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .Include(o => o.Payments)
             .Include(o => o.DeliveryTrackings)
             .FirstOrDefaultAsync(o => o.Id == request.OrderId, ct);

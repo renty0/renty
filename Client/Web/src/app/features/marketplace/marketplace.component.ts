@@ -113,7 +113,7 @@ export class MarketplaceComponent implements OnInit {
       this.minRating();
       this.sortBy();
       untracked(() => this.pageNumber.set(1));
-    }, { allowSignalWrites: true });
+    });
 
     // Load items reactively
     effect(() => {
@@ -129,7 +129,7 @@ export class MarketplaceComponent implements OnInit {
         this.subcategories.set([]);
         untracked(() => this.selectedSubcategoryId.set(undefined));
       }
-    }, { allowSignalWrites: true });
+    });
   }
 
   ngOnInit() {
