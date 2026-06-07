@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RentalsClient, RentalDetailDto, ReviewsClient, CreateReviewCommand, MediaClient, FileParameter, UploadRentalPhotosBody, ChatClient, CreateChatCommand, RentalImageType } from '../../../core/api/api-client';
@@ -32,6 +34,7 @@ import { DisputeModalComponent } from '../dispute-modal/dispute-modal';
     MatDividerModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatRadioModule,
     FormsModule,
     MatTooltipModule,
     HeaderSectionComponent,
@@ -51,6 +54,7 @@ export class RentalDetailsComponent implements OnInit {
   private toast = inject(ToastService);
   private permissionService = inject(PermissionService);
   private dialog = inject(MatDialog);
+  private http = inject(HttpClient);
 
   isLoading = signal(true);
   isActionLoading = signal(false);
@@ -80,6 +84,18 @@ export class RentalDetailsComponent implements OnInit {
   canManage = computed(() => this.isAdmin());
 
   rentalId = computed(() => this.route.snapshot.paramMap.get('id') ?? '');
+
+  otherUserName = computed(() => {
+    const r = this.rental();
+    if (!r) return '';
+    return this.isOwner() ? r.renterFirstName : r.ownerFirstName;
+  });
+
+  otherUserId = computed(() => {
+    const r = this.rental();
+    if (!r) return null;
+    return this.isOwner() ? r.renterId : r.ownerId;
+  });
 
   ngOnInit() {
     this.loadRental();
@@ -145,13 +161,221 @@ export class RentalDetailsComponent implements OnInit {
     });
   }
 
+  isUnderReview = computed(() => {
+    const r = this.rental();
+    if (!r) return false;
+    // Consider under review if expert requested but not yet assigned
+    return !!(r.renterWantsExpertReview || r.ownerWantsExpertReview) && !r.assignedExpertId;
+  });
+
+  // Determine who currently has the product
+  productHolder = computed(() => {
+    const r = this.rental();
+    if (!r) return 'unknown';
+
+    const status = r.status?.toLowerCase();
+    if (status === 'pending' || status === 'confirmed') {
+      return 'owner';
+    } else if (status === 'active' || status === 'overdue') {
+      // If expert is assigned and verification is pending, expert has it
+      if (r.assignedExpertId && !r.verifications?.[0]?.status) {
+        return 'expert';
+      }
+      // Otherwise renter has it
+      return 'renter';
+    } else if (status === 'completed' || status === 'cancelled' || status === 'rejected') {
+      return 'owner';
+    }
+    return 'unknown';
+  });
+
+  // Check if return action is needed based on who has the product
+  needsReturnAction = computed(() => {
+    const holder = this.productHolder();
+    const r = this.rental();
+    if (!r) return false;
+
+    const status = r.status?.toLowerCase();
+    if (status !== 'active' && status !== 'overdue') return false;
+
+    // If owner is viewing and product is with renter or expert, owner needs to wait for return
+    if (this.isOwner() && (holder === 'renter' || holder === 'expert')) {
+      return true;
+    }
+    // If renter is viewing and product is with renter, renter needs to return
+    if (this.isRenter() && holder === 'renter') {
+      return true;
+    }
+    // If expert is viewing and product is with expert, expert needs to return
+    if (this.isAdmin() && holder === 'expert') {
+      return true;
+    }
+
+    return false;
+  });
+
+  returnDeliveryMethod = signal<'ByHand' | 'NearestLocation' | 'DeliveryService'>('ByHand');
+  showReturnOptions = signal(false);
+
+  initiateReturn() {
+    this.showReturnOptions.set(true);
+  }
+
+  updatePossession(action: string, method: string) {
+    this.isActionLoading.set(true);
+    const url = `/api/v1/rentals/${this.rentalId()}/possession?action=${action}&method=${method}`;
+    this.http.put(url, {}).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isActionLoading.set(false);
+        this.showReturnOptions.set(false);
+      },
+      error: () => {
+        this.toast.showError('errors.generic');
+        this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  confirmReceipt() {
+    this.updatePossession('confirm_receipt', 'ByHand');
+  }
+
+  confirmReturn() {
+    this.isActionLoading.set(true);
+    const method = this.returnDeliveryMethod();
+
+    if (this.isRenter()) {
+      const url = `/api/v1/rentals/${this.rentalId()}/possession?action=initiate_return&method=${method}`;
+      this.http.put(url, {}).subscribe({
+        next: () => {
+          if (method === 'DeliveryService') {
+            this.toast.showSuccess('rentals.delivery.initiated');
+            this.simulateReturnDelivery();
+          } else if (method === 'NearestLocation') {
+            this.toast.showSuccess('rentals.nearest_location.confirmed');
+          } else {
+            this.toast.showSuccess('rentals.return.confirmed');
+          }
+          this.loadRental();
+          this.showReturnOptions.set(false);
+          this.isActionLoading.set(false);
+        },
+        error: () => {
+          this.toast.showError('errors.generic');
+          this.isActionLoading.set(false);
+        }
+      });
+    } else {
+      this.rentalsClient.completeRental(this.rentalId(), this.isDamaged()).subscribe({
+        next: () => {
+          this.toast.showSuccess('rentals.return.confirmed');
+          this.loadRental();
+          this.showReturnOptions.set(false);
+          this.isActionLoading.set(false);
+        },
+        error: () => {
+          this.toast.showError('errors.generic');
+          this.isActionLoading.set(false);
+        }
+      });
+    }
+  }
+
+  simulateReturnDelivery() {
+    setTimeout(() => {
+      this.toast.showInfo('rentals.delivery.picked_up');
+    }, 2000);
+
+    setTimeout(() => {
+      this.toast.showInfo('rentals.delivery.in_transit');
+    }, 4000);
+
+    setTimeout(() => {
+      this.toast.showSuccess('rentals.delivery.delivered');
+      const url = `/api/v1/rentals/${this.rentalId()}/possession?action=confirm_receipt&method=ByHand`;
+      this.http.put(url, {}).subscribe({
+        next: () => this.loadRental()
+      });
+    }, 6000);
+  }
+
+  cancelReturnOptions() {
+    this.showReturnOptions.set(false);
+  }
+
+  requestExpertReview() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.requestExpertReview(this.rentalId()).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isActionLoading.set(false);
+      },
+      error: () => {
+        this.toast.showError('errors.generic');
+        this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  cancelExpertReview() {
+    this.isActionLoading.set(true);
+    this.rentalsClient.cancelExpertReview(this.rentalId()).subscribe({
+      next: () => {
+        this.toast.showSuccess('common.success');
+        this.loadRental();
+        this.isActionLoading.set(false);
+      },
+      error: () => {
+        this.toast.showError('errors.generic');
+        this.isActionLoading.set(false);
+      }
+    });
+  }
+
+  chooseDelivery() {
+    this.updatePossession('send_to_expert', 'DeliveryService');
+    this.simulateDelivery();
+  }
+
+  chooseNearestLocation() {
+    this.updatePossession('send_to_expert', 'NearestLocation');
+  }
+
+  simulateDelivery() {
+    setTimeout(() => {
+      this.toast.showInfo('rentals.delivery.picked_up');
+    }, 2000);
+
+    setTimeout(() => {
+      this.toast.showInfo('rentals.delivery.in_transit');
+    }, 4000);
+
+    setTimeout(() => {
+      this.toast.showSuccess('rentals.delivery.delivered');
+      const url = `/api/v1/rentals/${this.rentalId()}/possession?action=confirm_receipt&method=ByHand`;
+      this.http.put(url, {}).subscribe({
+        next: () => this.loadRental()
+      });
+    }, 6000);
+  }
+
+  submitExpertReview() {
+    const r = this.rental();
+    if (r && r.itemId) {
+      this.router.navigate(['/expert/verify', r.itemId]);
+    }
+  }
+
   onPhotoSelected(event: Event, typeStr: 'Handover' | 'Return') {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
     const file = input.files[0];
     const fileParam: FileParameter = { data: file, fileName: file.name };
     const type = typeStr === 'Handover' ? RentalImageType.Handover : RentalImageType.Return;
-    
+
     this.isUploading.set(true);
     this.mediaClient.uploadMedia(this.rentalId(), 'Rental', fileParam).subscribe({
       next: (res) => {
@@ -202,7 +426,7 @@ export class RentalDetailsComponent implements OnInit {
     const r = this.rental();
     if (!r) return;
 
-    const targetUserId = r.ownerId;
+    const targetUserId = this.otherUserId();
     if (!targetUserId) return;
 
     const cmd = new CreateChatCommand({

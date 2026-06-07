@@ -57,13 +57,13 @@ public static class DependencyInjection
                     context.User.IsInRole(Roles.SuperAdmin) ||
                     context.User.FindFirstValue(ClaimTypes.Email) == adminEmail));
 
-            // Any authenticated role (all users, EXCLUDES experts for transactional ops)
+            // Any authenticated user can perform transactions
             options.AddPolicy(Policies.CanTransact, p =>
-                p.RequireRole(Roles.User, Roles.Admin, Roles.SuperAdmin));
+                p.RequireAuthenticatedUser());
 
-            // Non-expert authenticated user (renter/owner/admin/support/super_admin)
+            // Authenticated user policy (includes all roles)
             options.AddPolicy(Policies.NonExpert, p =>
-                p.RequireRole(Roles.User, Roles.Admin, Roles.Support, Roles.SuperAdmin));
+                p.RequireAuthenticatedUser());
         });
 
         // Configure CORS

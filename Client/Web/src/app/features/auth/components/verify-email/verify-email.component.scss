@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../../../../shared/styles/variables' as *;
 @use '../../../../shared/styles/mixins' as *;
 
@@ -285,7 +286,7 @@
     }
 
     &:hover {
-      color: darken($accent-color, 10%);
+      color: color.adjust($accent-color, $lightness: -10%);
       
       mat-icon {
         transform: translateX(4px);

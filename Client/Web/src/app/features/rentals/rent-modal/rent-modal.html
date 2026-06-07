@@ -2,7 +2,6 @@
   <mat-icon>calendar_today</mat-icon>
   {{ 'rentals.title' | translate }}
 </h2>
-
 <mat-dialog-content class="mat-typography">
   <div class="product-context">
     <div class="product-img">
@@ -16,51 +15,21 @@
       </div>
     </div>
   </div>
-
   <form [formGroup]="rentForm" class="rent-form">
     <div class="form-section">
       <h4 class="section-title">
         <mat-icon>settings</mat-icon>
         {{ 'rentals.config' | translate }}
       </h4>
-      
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>{{ 'rentals.pricingType' | translate }}</mat-label>
-        <mat-select formControlName="pricingType" panelClass="rent-pricing-panel">
-          @for (type of availablePricingTypes(); track type) {
-            <mat-option [value]="type">{{ 'rentals.' + type?.toLowerCase() | translate }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-  
+      <app-input [formGroup]="rentForm" controlName="pricingType" label="rentals.pricingType" type="select"
+        [options]="pricingTypeOptions()" [translateOptions]="true" [required]="true" />
+
       <div class="date-range">
-        <div class="date-field">
-          <label class="field-label">{{ 'labels.startDate' | translate }}</label>
-          <mat-form-field appearance="outline">
-            <input
-              matInput
-              [matDatepicker]="startPicker"
-              formControlName="startDate"
-              [min]="minDate"
-            />
-            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
-  
-        <div class="date-field">
-          <label class="field-label">{{ 'labels.endDate' | translate }}</label>
-          <mat-form-field appearance="outline">
-            <input
-              matInput
-              [matDatepicker]="endPicker"
-              formControlName="endDate"
-              [min]="rentForm.get('startDate')?.value || minDate"
-            />
-            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
+        <app-input [formGroup]="rentForm" controlName="startDate" label="labels.startDate" type="date"
+          [minDate]="minDate" [required]="true" />
+
+        <app-input [formGroup]="rentForm" controlName="endDate" label="labels.endDate" type="date"
+          [minDate]="rentForm.get('startDate')?.value || minDate" [required]="true" />
       </div>
 
       <div class="expert-section mt-3">
@@ -68,6 +37,25 @@
           {{ 'rentals.requiresExpert' | translate }}
         </mat-checkbox>
       </div>
+
+      <app-input [formGroup]="rentForm" controlName="deliveryMethod" label="rentals.deliveryMethod" type="select"
+        [options]="deliveryMethodOptions()" [translateOptions]="true" [required]="true" />
+
+      <div class="delivery-info-box mb-3 p-3 border-round bg-blue-50">
+        <p class="m-0 text-sm text-700">
+          <mat-icon class="text-xs align-middle mr-1">info</mat-icon>
+          {{ 'rentals.delivery.negotiation_info' | translate }}
+        </p>
+      </div>
+
+      <app-input [formGroup]="rentForm" controlName="desiredDeliveryDate" label="rentals.desiredDeliveryDate" type="date"
+        [minDate]="minDate" />
+
+      <app-input [formGroup]="rentForm" controlName="negotiatedDeliveryDate" label="rentals.negotiatedDeliveryDate" type="date"
+        [minDate]="minDate" />
+
+      <app-input [formGroup]="rentForm" controlName="notes" label="labels.message" type="textarea" [rows]="3"
+        [placeholder]="'rentals.notesPlaceholder' | translate" />
     </div>
 
     <div class="price-breakdown">
@@ -75,7 +63,7 @@
         <mat-icon>receipt_long</mat-icon>
         {{ 'rentals.paymentDetails' | translate }}
       </h4>
-      
+
       <div class="price-row">
         <span>{{ 'rentals.estimatedPrice' | translate }}</span>
         <span class="amount">{{ rentalPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
@@ -84,54 +72,57 @@
         <span>{{ 'rentals.deposit' | translate }}</span>
         <span class="amount">{{ depositAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
       </div>
+      @if (rentForm.get('requiresExpert')?.value) {
+      <div class="price-row expert-fee">
+        <span>{{ 'rentals.requiresExpert' | translate }}</span>
+        <span class="amount text-accent font-bold">+{{ expertFee() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+      </div>
+      }
       <div class="price-divider"></div>
       <div class="price-row total">
         <span>{{ 'rentals.total' | translate }}</span>
         <span class="total-amount">{{ totalAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
       </div>
     </div>
-
-    <!-- Cancellation Policy -->
     <div class="policy-section mt-4">
       <button type="button" class="policy-toggle" (click)="policyExpanded.set(!policyExpanded())">
         <mat-icon>policy</mat-icon>
         <span>{{ 'cancellationPolicy.title' | translate }}</span>
         <mat-icon class="chevron" [class.rotated]="policyExpanded()">expand_more</mat-icon>
       </button>
-
       @if (policyExpanded()) {
-        <div class="policy-body">
-          <p class="policy-subtitle">{{ 'cancellationPolicy.subtitle' | translate }}</p>
+      <div class="policy-body">
+        <p class="policy-subtitle">{{ 'cancellationPolicy.subtitle' | translate }}</p>
 
-          <div class="policy-tiers">
-            <div class="tier free">
-              <mat-icon>check_circle</mat-icon>
-              <div>
-                <strong>{{ 'cancellationPolicy.freeTier.label' | translate }}</strong>
-                <p>{{ 'cancellationPolicy.freeTier.description' | translate }}</p>
-              </div>
-            </div>
-            <div class="tier partial">
-              <mat-icon>info</mat-icon>
-              <div>
-                <strong>{{ 'cancellationPolicy.partialTier.label' | translate }}</strong>
-                <p>{{ 'cancellationPolicy.partialTier.description' | translate }}</p>
-              </div>
-            </div>
-            <div class="tier no-refund">
-              <mat-icon>cancel</mat-icon>
-              <div>
-                <strong>{{ 'cancellationPolicy.noRefund.label' | translate }}</strong>
-                <p>{{ 'cancellationPolicy.noRefund.description' | translate }}</p>
-              </div>
+        <div class="policy-tiers">
+          <div class="tier">
+            <mat-icon>check_circle</mat-icon>
+            <div>
+              <strong>{{ 'cancellationPolicy.freeTier.label' | translate }}</strong>
+              <p>{{ 'cancellationPolicy.freeTier.description' | translate }}</p>
             </div>
           </div>
-
-          <p class="deposit-note">
-            <mat-icon>lock</mat-icon>
-            {{ 'cancellationPolicy.depositNote' | translate }}
-          </p>
+          <div class="tier">
+            <mat-icon>info</mat-icon>
+            <div>
+              <strong>{{ 'cancellationPolicy.partialTier.label' | translate }}</strong>
+              <p>{{ 'cancellationPolicy.partialTier.description' | translate }}</p>
+            </div>
+          </div>
+          <div class="tier">
+            <mat-icon>cancel</mat-icon>
+            <div>
+              <strong>{{ 'cancellationPolicy.noRefund.label' | translate }}</strong>
+              <p>{{ 'cancellationPolicy.noRefund.description' | translate }}</p>
+            </div>
+          </div>
         </div>
+
+        <p class="deposit-note">
+          <mat-icon>lock</mat-icon>
+          {{ 'cancellationPolicy.depositNote' | translate }}
+        </p>
+      </div>
       }
     </div>
   </form>
@@ -140,13 +131,8 @@
 
 <mat-dialog-actions align="end">
   <button mat-button class="cancel-btn" (click)="onCancel()">{{ 'buttons.cancel' | translate }}</button>
-  <app-loading-button
-    [loading]="isSubmitting()"
-    [disabled]="rentForm.invalid || isSubmitting()"
-    (clicked)="onSubmit()"
-    customClass="submit-btn"
-    color="primary">
+  <app-loading-button [loading]="isSubmitting()" [disabled]="rentForm.invalid || isSubmitting()" (clicked)="onSubmit()"
+    customClass="submit-btn" color="primary">
     {{ 'rentals.submit' | translate }}
   </app-loading-button>
 </mat-dialog-actions>
-

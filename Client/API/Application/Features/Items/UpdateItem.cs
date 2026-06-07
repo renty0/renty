@@ -24,6 +24,8 @@ public record UpdateItemCommand(
     int? CategoryId,
     int? SubcategoryId,
     int? BrandId,
+    bool? IsForSale,
+    decimal? SalePrice,
     List<CreateItemPricingCommand>? Pricing,
     List<CreateItemImageCommand>? Images
 ) : IRequest<UpdateItemResponse>;
@@ -45,12 +47,21 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly INotificationSender _notifier;
+    private readonly IRoleService _roleService;
 
-    public UpdateItemCommandHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
+    public UpdateItemCommandHandler(
+        IApplicationDbContext context,
+        IUser currentUser,
+        IHttpContextAccessor httpContextAccessor,
+        INotificationSender notifier,
+        IRoleService roleService)
     {
         _context = context;
         _currentUser = currentUser;
         _httpContextAccessor = httpContextAccessor;
+        _notifier = notifier;
+        _roleService = roleService;
     }
 
     public async Task<UpdateItemResponse> Handle(UpdateItemCommand request, CancellationToken ct)
@@ -69,8 +80,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
             if (item == null)
                 return new UpdateItemResponse(false, "Item not found.", null);
 
-            var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") ?? false;
-            if (!isAdmin && item.OwnerId != _currentUser.Id.Value)
+            if (item.OwnerId != _currentUser.Id.Value)
                 return new UpdateItemResponse(false, "Forbidden. You do not own this item.", null);
 
             if (item.Status == NewItemStatus.Rented)
@@ -94,6 +104,10 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
             if (request.CategoryId.HasValue)    item.CategoryId    = request.CategoryId;
             if (request.SubcategoryId.HasValue) item.SubcategoryId = request.SubcategoryId;
             if (request.BrandId.HasValue)       item.BrandId       = request.BrandId;
+            item.IsForSale = request.IsForSale ?? false;
+            item.SalePrice = request.SalePrice;
+            item.Status = NewItemStatus.UnderReview;
+            item.AdminNote = null;
             item.UpdatedAt = DateTime.UtcNow;
 
             // Update Pricing
@@ -201,9 +215,23 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
                 return new UpdateItemResponse(false, $"Database Exception: {ex.Message}", null);
             }
 
+            var adminIds = await _roleService.GetUserIdsInRoleAsync("Admin");
+            var superAdminIds = await _roleService.GetUserIdsInRoleAsync("SuperAdmin");
+            var recipientIds = adminIds.Concat(superAdminIds).Distinct().ToList();
+            if (recipientIds.Count > 0)
+            {
+                await _notifier.SendToUsersAsync(
+                    recipientIds,
+                    "Item updated",
+                    $"Owner updated item \"{item.TitleEn}\" and it is pending review.",
+                    "item",
+                    $"/items/{item.Id}",
+                    ct);
+            }
+
             var dto = new ItemDetailDto(
                 item.Id, item.TitleAr, item.TitleEn, item.DescAr, item.DescEn,
-                item.Type.ToString(), item.Status.ToString(), item.Condition,
+                item.Type.ToString(), item.Status.ToString(), item.AdminNote, item.Condition,
                 item.DefaultDeposit, item.Location, item.City, item.Lat, item.Lng,
                 item.IsForSale, item.SalePrice,
                 item.CreatedAt,

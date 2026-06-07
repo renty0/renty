@@ -1,14 +1,14 @@
 <div class="detail-page">
   @if (isLoading()) {
   <div class="skeleton-page">
-    <div class="detail-grid">
-      <div class="left-col">
+    <div class="grid">
+      <div class="col-12 lg:col-8 xl:col-8 flex flex-column gap-4 lg:gap-5">
         <div class="sk-gallery"></div>
         <div class="sk-title"></div>
         <div class="sk-text"></div>
         <div class="sk-text" style="width: 80%"></div>
       </div>
-      <div>
+      <div class="col-12 lg:col-4 xl:col-4">
         <div class="sk-price"></div>
         <div class="sk-text"></div>
         <div class="sk-text"></div>
@@ -29,15 +29,48 @@
     }
     <span class="crumb-current">{{ lang === 'ar' ? item()?.titleAr : item()?.titleEn }}</span>
   </nav>
-  <div class="detail-grid">
-    <div class="left-col">
+
+  @if (isOwner() && item()?.status === 'UnderReview') {
+  <div class="status-banner review-banner">
+    <mat-icon>hourglass_top</mat-icon>
+    <div class="banner-text">
+      <strong>{{ 'items.ownerUnderReviewTitle' | translate }}</strong>
+      <span>{{ 'items.ownerUnderReviewDesc' | translate }}</span>
+    </div>
+  </div>
+  }
+
+  @if (isOwner() && item()?.status === 'Suspended' && item()?.adminNote) {
+  <div class="status-banner reject-banner">
+    <mat-icon>cancel</mat-icon>
+    <div class="banner-text">
+      <strong>{{ 'items.ownerRejectedTitle' | translate }}</strong>
+      <span>{{ item()?.adminNote }}</span>
+    </div>
+  </div>
+  }
+
+  @if (isAdmin() && item()?.status === 'UnderReview') {
+  <div class="status-banner admin-pending-banner">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <div class="banner-text">
+      <strong>{{ 'admin.pendingReviewTitle' | translate }}</strong>
+      <span>{{ 'admin.pendingReviewDesc' | translate }}</span>
+    </div>
+  </div>
+  }
+
+  <div class="grid">
+    <div class="col-12 lg:col-8 xl:col-8 flex flex-column gap-4 lg:gap-5">
       <div class="gallery-card">
         <div class="main-image-wrap">
           <div class="overlay-actions">
-            <button (click)="addToFavorites()" [style.color]="isFavoriting() ? '#ff4081' : ''">
-              <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
-            </button>
-            <button title="Share">
+            @if (isLoggedIn() && !isOwner() && item()?.status !== 'UnderReview' && isRegularUser()) {
+              <button class="cursor-pointer" (click)="addToFavorites()" [style.color]="isFavoriting() ? '#ff4081' : ''">
+                <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
+            }
+            <button type="button" class="cursor-pointer" (click)="shareItem()" [title]="'common.share' | translate">
               <mat-icon>share</mat-icon>
             </button>
           </div>
@@ -57,12 +90,13 @@
         <div class="thumbnails">
           @for (img of item()?.images; track img.imageUrl; let i = $index) {
           <div class="thumb" [class.active]="activeImageIndex() === i" (click)="setActiveImage(i)">
-            <img [src]="img.imageUrl" alt="thumbnail" />
+            <img [src]="img.imageUrl" [alt]="'items.thumbnail' | translate" />
           </div>
           }
         </div>
         }
       </div>
+      @if (item()?.status !== 'UnderReview') {
       <div class="reviews-section">
         <div class="section-head">
           <h2>{{ 'items.reviews' | translate }}</h2>
@@ -132,31 +166,35 @@
           <span>{{ 'items.noReviewsYet' | translate }}</span>
         </div>
         }
-        <div class="add-review-section">
-          <h3 class="title">{{ 'items.leaveReview' | translate }}</h3>
+        @if (!isOwner()) {
+          <div class="add-review-section">
+            <h3 class="title">{{ 'items.leaveReview' | translate }}</h3>
 
-          <div class="star-box">
-            @for (s of [1,2,3,4,5]; track s) {
-            <button type="button" class="star-btn" [class.active]="s <= selectedStar()"
-              [class.hovered]="s <= hoveredStar() && !selectedStar()" (mouseenter)="setHoveredStar(s)"
-              (mouseleave)="clearHoveredStar()" (click)="selectStar(s)" [attr.aria-label]="s + ' stars'">★</button>
-            }
-          </div>
-
-          <form [formGroup]="reviewForm" (submit)="submitReview()">
-            <app-input [formGroup]="reviewForm" controlName="comment" label="items.yourComment" type="textarea"
-              [rows]="4" [placeholder]="'items.reviewPlaceholder' | translate" [maxLength]="500" [required]="true" />
-
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-              <app-loading-button type="submit" color="primary" [loading]="isSubmittingReview()"
-                [disabled]="reviewForm.invalid || !selectedStar()" [title]="'items.submitReview' | translate">
-                {{ 'items.submitReview' | translate }}
-              </app-loading-button>
+            <div class="star-box">
+              @for (s of [1,2,3,4,5]; track s) {
+              <button type="button" class="star-btn" [class.active]="s <= selectedStar()"
+                [class.hovered]="s <= hoveredStar() && !selectedStar()" (mouseenter)="setHoveredStar(s)"
+                (mouseleave)="clearHoveredStar()" (click)="selectStar(s)"
+                [attr.aria-label]="'items.starsAria' | translate:{ count: s }">★</button>
+              }
             </div>
-          </form>
-        </div>
+
+            <form [formGroup]="reviewForm" (submit)="submitReview()">
+              <app-input [formGroup]="reviewForm" controlName="comment" label="items.yourComment" type="textarea"
+                [rows]="4" [placeholder]="'items.reviewPlaceholder' | translate" [maxLength]="500" [required]="true" />
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <app-loading-button type="submit" color="primary" [loading]="isSubmittingReview()"
+                  [disabled]="reviewForm.invalid || !selectedStar()" [title]="'items.submitReview' | translate">
+                  {{ 'items.submitReview' | translate }}
+                </app-loading-button>
+              </div>
+            </form>
+          </div>
+        }
       </div>
-      @if (similarItems().length > 0) {
+      }
+      @if (item()?.status !== 'UnderReview' && similarItems().length > 0) {
       <div class="similar-section">
         <h2 class="head">{{ 'items.similarItems' | translate }}</h2>
         <div class="similar-track">
@@ -177,8 +215,9 @@
       }
 
     </div>
-    <aside class="sticky-sidebar">
-      <div class="info-card">
+    <div class="col-12 lg:col-4 xl:col-4">
+      <aside class="sticky-sidebar">
+        <div class="info-card">
         @if (item()?.condition) {
         <div class="condition-badge">
           <mat-icon>verified</mat-icon>
@@ -254,22 +293,6 @@
           }
         </div>
 
-        <div class="availability-section">
-          <p class="section-label">{{ 'marketplace.availability' | translate }}</p>
-          <div class="calendar-wrapper">
-            <mat-calendar [dateFilter]="dateFilter"></mat-calendar>
-            <div class="calendar-legend">
-              <div class="legend-item">
-                <span class="dot available"></span>
-                <span>{{ 'marketplace.available' | translate }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="dot booked"></span>
-                <span>{{ 'marketplace.booked' | translate }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
         @if (item()?.descEn || item()?.descAr) {
         <div class="desc-section">
           <p class="section-label">{{ 'items.description' | translate }}</p>
@@ -290,7 +313,7 @@
             <div class="name">{{ item()?.owner?.firstName }}</div>
             <div class="meta">
               <mat-icon style="font-size: 14px; width: 14px; height: 14px;">location_on</mat-icon>
-              {{ item()?.owner?.city || 'Member' }}
+              {{ item()?.owner?.city || ('items.memberFallback' | translate) }}
             </div>
           </div>
           <div class="owner-rating">
@@ -300,40 +323,81 @@
         </div>
         }
         <div class="grid">
-          <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
-            <mat-icon>flash_on</mat-icon>
-            {{ 'items.rentNow' | translate }}
-          </app-loading-button>
+          @if (!isOwner() && item()?.status !== 'UnderReview' && isRegularUser()) {
+            <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
+              <mat-icon>flash_on</mat-icon>
+              {{ 'items.rentNow' | translate }}
+            </app-loading-button>
 
-          @if (item()?.isForSale) {
-          <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
-            <mat-icon>shopping_cart</mat-icon>
-            {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
-          </app-loading-button>
+            @if (item()?.isForSale) {
+            <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
+              <mat-icon>shopping_cart</mat-icon>
+              {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
+            </app-loading-button>
+            }
+
+            @if (item()?.status === 'Rented') {
+            <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
+              <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+              {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+            </app-loading-button>
+            }
+
+            <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
+              [title]="'common.chat' | translate">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              {{ 'common.chat' | translate }}
+            </app-loading-button>
+
+            <app-loading-button class="col-12 md:col-6" variant="stroked" [loading]="isFavoriting()" (clicked)="addToFavorites()"
+              [title]="'items.favorite' | translate">
+              <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
+              {{ 'items.favorite' | translate }}
+            </app-loading-button>
           }
-
-          @if (item()?.status === 'Rented') {
-          <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
-            <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
-            {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
-          </app-loading-button>
-          }
-
-          <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"
-            [title]="'common.chat' | translate">
-            <mat-icon>chat_bubble_outline</mat-icon>
-            {{ 'common.chat' | translate }}
-          </app-loading-button>
-
-          <app-loading-button class="col-12 md:col-6" variant="stroked" [loading]="isFavoriting()" (clicked)="addToFavorites()"
-            [title]="'items.favorite' | translate">
-            <mat-icon>{{ isFavoriting() ? 'favorite' : 'favorite_border' }}</mat-icon>
-            {{ 'items.favorite' | translate }}
-          </app-loading-button>
         </div>
 
+        @if (isAdmin()) {
+        <div class="admin-review-panel">
+          <p class="section-label">
+            <mat-icon style="vertical-align:middle;font-size:18px;width:18px;height:18px;">admin_panel_settings</mat-icon>
+            {{ 'admin.reviewPanelTitle' | translate }}
+          </p>
+          <div class="review-status-row">
+            <span class="review-status-badge"
+              [class.badge-review]="item()?.status === 'UnderReview'"
+              [class.badge-approved]="item()?.status === 'Available'"
+              [class.badge-rejected]="item()?.status === 'Suspended'">
+              {{ item()?.status }}
+            </span>
+          </div>
+
+          <textarea class="admin-note-input" rows="3"
+            [placeholder]="'admin.reviewNotePlaceholder' | translate"
+            [value]="adminReviewNote()"
+            (input)="adminReviewNote.set($any($event.target).value)">
+          </textarea>
+
+          <div class="review-actions">
+            <button mat-stroked-button color="warn"
+              [disabled]="isReviewing() || !adminReviewNote()"
+              (click)="reviewItem('rejected')">
+              <mat-icon>block</mat-icon>
+              {{ 'common.reject' | translate }}
+            </button>
+            <button mat-flat-button color="primary"
+              [disabled]="isReviewing()"
+              (click)="reviewItem('approved')">
+              <mat-icon>check_circle</mat-icon>
+              {{ 'common.approve' | translate }}
+            </button>
+          </div>
+        </div>
+        }
+
       </div>
-    </aside>
+      </aside>
+    </div>
 
   </div>
   }

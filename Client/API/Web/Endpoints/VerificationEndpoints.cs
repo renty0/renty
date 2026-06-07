@@ -42,6 +42,28 @@ public static class VerificationEndpoints
         .WithTags("Verifications").WithName("GetExpertAssigned")
         .Produces<ApiResponse<GetExpertAssignedResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.ExpertAccess);
+        
+        // GET /verifications/unassigned
+        app.MapGet("/api/v1/verifications/unassigned", async (ISender sender) =>
+        {
+            var r = await sender.Send(new GetUnassignedVerificationsQuery());
+            return Api.Ok(r);
+        })
+        .WithTags("Verifications").WithName("GetUnassignedVerifications")
+        .Produces<ApiResponse<GetExpertAssignedResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization(Policies.ExpertAccess);
+
+        // POST /verifications/{id}/claim
+        app.MapPost("/api/v1/verifications/{id:guid}/claim", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new ClaimVerificationCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { r.Success });
+        })
+        .WithTags("Verifications").WithName("ClaimVerification")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.ExpertAccess);
 
         // ── USER IDENTITY VERIFICATIONS ──
 

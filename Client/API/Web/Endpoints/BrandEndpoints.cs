@@ -51,7 +51,7 @@ public static class BrandEndpoints
         .WithName("CreateBrand")
         .Produces<ApiResponse<BrandDto>>(StatusCodes.Status201Created)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(Policies.AdminAccess);
+        .RequireAuthorization(Policies.CanTransact);
 
         // PUT /brands/:id
         g.MapPut("/{id:int}", async (int id, UpdateBrandCommand cmd, ISender sender) =>

@@ -24,6 +24,8 @@ public record CreateItemCommand(
     int? CategoryId,
     int? SubcategoryId,
     int? BrandId,
+    bool? IsForSale,
+    decimal? SalePrice,
     List<CreateItemPricingCommand> Pricing,
     List<CreateItemImageCommand> Images
 ) : IRequest<CreateItemResponse>;
@@ -38,7 +40,8 @@ public class CreateItemCommandValidator : AbstractValidator<CreateItemCommand>
         RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
         RuleFor(x => x.TitleAr).NotEmpty().MaximumLength(200);
         RuleFor(x => x.DefaultDeposit).GreaterThanOrEqualTo(0);
-        RuleFor(x => x.Pricing).NotEmpty().WithMessage("At least one pricing entry is required.");
+        RuleFor(x => x).Must(x => (x.Pricing != null && x.Pricing.Any()) || (x.IsForSale == true && x.SalePrice > 0))
+            .WithMessage("Item must be available for rent or sale.");
         RuleFor(x => x.Images).NotEmpty().WithMessage("At least one image is required.");
         RuleFor(x => x.Images)
             .Must(images => images != null && images.Any(i => i.IsPrimary))
@@ -80,7 +83,7 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
             DescAr = request.DescAr,
             DescEn = request.DescEn,
             Type = itemType,
-            Status = NewItemStatus.Available,
+            Status = NewItemStatus.UnderReview,
             Condition = request.Condition,
             DefaultDeposit = request.DefaultDeposit,
             Location = request.Location,
@@ -90,6 +93,8 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Creat
             CategoryId    = request.CategoryId,
             SubcategoryId = request.SubcategoryId,
             BrandId       = request.BrandId,
+            IsForSale     = request.IsForSale ?? false,
+            SalePrice     = request.SalePrice,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

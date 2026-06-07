@@ -32,11 +32,13 @@ public class CancelRentRequestCommandHandler : IRequestHandler<CancelRentRequest
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notificationSender;
 
-    public CancelRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CancelRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notificationSender)
     {
         _context = context;
         _currentUser = currentUser;
+        _notificationSender = notificationSender;
     }
 
     public async Task<CancelRentRequestResponse> Handle(CancelRentRequestCommand request, CancellationToken cancellationToken)
@@ -47,6 +49,7 @@ public class CancelRentRequestCommandHandler : IRequestHandler<CancelRentRequest
         }
 
         var rentRequest = await _context.RentRequests
+            .Include(r => r.RentableItem)
             .FirstOrDefaultAsync(r => r.Id == request.RequestId, cancellationToken);
 
         if (rentRequest == null)
@@ -69,6 +72,16 @@ public class CancelRentRequestCommandHandler : IRequestHandler<CancelRentRequest
         rentRequest.CancelledAt = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Send notification to the item owner
+        await _notificationSender.SendToUserAsync(
+            rentRequest.RentableItem.OwnerId,
+            "Rental Request Cancelled",
+            $"The rental request for {rentRequest.RentableItem.TitleEn} has been cancelled by the renter.",
+            "rental",
+            $"/rental-requests/{rentRequest.Id}",
+            cancellationToken
+        );
 
         return new CancelRentRequestResponse(true, "Request cancelled successfully.");
     }

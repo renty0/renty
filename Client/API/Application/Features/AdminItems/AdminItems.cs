@@ -16,22 +16,37 @@ public record ReviewItemResponse(bool Success, string? Error);
 public class ReviewItemCommandHandler : IRequestHandler<ReviewItemCommand, ReviewItemResponse>
 {
     private readonly IApplicationDbContext _context;
+    private readonly INotificationSender _notifier;
 
-    public ReviewItemCommandHandler(IApplicationDbContext context) => _context = context;
+    public ReviewItemCommandHandler(IApplicationDbContext context, INotificationSender notifier)
+    {
+        _context = context;
+        _notifier = notifier;
+    }
 
     public async Task<ReviewItemResponse> Handle(ReviewItemCommand request, CancellationToken ct)
     {
         var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == request.ItemId, ct);
         if (item == null) return new ReviewItemResponse(false, "Item not found.");
 
+        string notificationTitle;
+        string notificationMessage;
         if (request.Status == "approved")
         {
             item.Status = NewItemStatus.Available;
+            item.AdminNote = null;
+            notificationTitle = "Item approved";
+            notificationMessage = $"Your item \"{item.TitleEn}\" has been approved and is now live.";
         }
         else if (request.Status == "rejected")
         {
             item.Status = NewItemStatus.Suspended;
-            // Optionally store the reason somewhere like a ItemReviews or push a notification.
+            item.AdminNote = request.RejectionReason;
+            notificationTitle = "Item rejected";
+            var reasonSuffix = string.IsNullOrWhiteSpace(request.RejectionReason)
+                ? string.Empty
+                : $" Reason: {request.RejectionReason}";
+            notificationMessage = $"Your item \"{item.TitleEn}\" was rejected by admin.{reasonSuffix}";
         }
         else
         {
@@ -39,6 +54,18 @@ public class ReviewItemCommandHandler : IRequestHandler<ReviewItemCommand, Revie
         }
 
         await _context.SaveChangesAsync(ct);
+
+        if (item.OwnerId > 0)
+        {
+            await _notifier.SendToUserAsync(
+                item.OwnerId,
+                notificationTitle,
+                notificationMessage,
+                "item",
+                $"/items/{item.Id}",
+                ct);
+        }
+
         return new ReviewItemResponse(true, null);
     }
 }
@@ -91,6 +118,8 @@ public class GetPendingItemsQueryHandler : IRequestHandler<GetPendingItemsQuery,
             x.Item.OwnerId,
             x.Item.IsForSale,
             x.Item.SalePrice,
+            x.Item.Status.ToString(),
+            x.Item.CreatedAt,
             x.Item.Category != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
             x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
             x.Item.Brand != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null

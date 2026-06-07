@@ -642,6 +642,11 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<string>("AdminNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("admin_note");
+
                     b.Property<int?>("BrandId")
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
@@ -1837,9 +1842,21 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("actual_return_date");
 
+                    b.Property<long?>("AssignedExpertId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<int>("CurrentPossession")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DeliveryMethod")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DeliveryNotes")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("DepositAmount")
                         .HasPrecision(10, 2)
@@ -1851,9 +1868,15 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("deposit_status");
 
+                    b.Property<DateTime?>("DesiredDeliveryDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
+
+                    b.Property<decimal>("ExpertReviewFee")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("HandoffCode")
                         .HasColumnType("text");
@@ -1878,10 +1901,16 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
+                    b.Property<bool>("OwnerWantsExpertReview")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal>("RentalPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)")
                         .HasColumnName("rental_price");
+
+                    b.Property<bool>("RenterWantsExpertReview")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone")
@@ -1901,6 +1930,8 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedExpertId");
 
                     b.HasIndex("ItemId");
 
@@ -2903,6 +2934,10 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Rental", b =>
                 {
+                    b.HasOne("Domain.Entities.ApplicationUser", "AssignedExpert")
+                        .WithMany()
+                        .HasForeignKey("AssignedExpertId");
+
                     b.HasOne("Domain.Entities.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -2918,6 +2953,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AssignedExpert");
 
                     b.Navigation("Item");
 

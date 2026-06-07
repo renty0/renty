@@ -65,18 +65,23 @@ export class ChatSignalrService {
   }
 
   async joinChat(chatId: string) {
+    if (this.hubConnection?.state !== HubConnectionState.Connected) {
+      await this.startConnection();
+    }
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       await this.hubConnection.invoke('JoinChat', chatId);
     }
   }
 
   async leaveChat(chatId: string) {
-    if (this.hubConnection?.state === HubConnectionState.Connected) {
-      await this.hubConnection.invoke('LeaveChat', chatId);
-    }
+    if (this.hubConnection?.state !== HubConnectionState.Connected) return;
+    await this.hubConnection.invoke('LeaveChat', chatId);
   }
 
   async sendTypingIndicator(chatId: string) {
+    if (this.hubConnection?.state !== HubConnectionState.Connected) {
+      await this.startConnection();
+    }
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       await this.hubConnection.invoke('TypingIndicator', chatId);
     }

@@ -36,12 +36,22 @@ public class EmailSender : IEmailSender
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(fromAddress, "Rently"),
-                Subject = subject,
-                Body = htmlBody,
-                IsBodyHtml = true
+                From = new MailAddress(fromAddress, "Rently Support"),
+                Subject = subject
             };
 
+            // Set standard transactional/bulk suppression headers
+            mailMessage.Headers.Add("Precedence", "bulk");
+            mailMessage.Headers.Add("X-Auto-Response-Suppress", "OOF, AutoReply");
+            mailMessage.ReplyToList.Add(new MailAddress(fromAddress, "Rently Support"));
+
+            // Strip HTML to generate a plain-text alternative view to prevent spam filtering
+            string plainTextBody = System.Text.RegularExpressions.Regex.Replace(htmlBody, "<.*?>", string.Empty).Trim();
+            var plainTextView = AlternateView.CreateAlternateViewFromString(plainTextBody, null, "text/plain");
+            var htmlTextView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
+
+            mailMessage.AlternateViews.Add(plainTextView);
+            mailMessage.AlternateViews.Add(htmlTextView);
             mailMessage.To.Add(to);
 
             await client.SendMailAsync(mailMessage);

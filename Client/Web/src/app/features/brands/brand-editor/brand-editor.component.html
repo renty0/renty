@@ -1,56 +1,17 @@
 <div class="editor-container">
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="grid">
-      <app-input
-        class="col-12"
-        label="nameEn"
-        [formGroup]="form"
-        controlName="nameEn"
-        icon="title"
-      />
-
-      <app-input
-        class="col-12"
-        label="nameAr"
-        [formGroup]="form"
-        controlName="nameAr"
-        icon="translate"
-      />
-
-      <app-input
-        class="col-12"
-        label="descEn"
-        [formGroup]="form"
-        controlName="descEn"
-        type="textarea"
-        icon="description"
-      />
-      <app-input
-        class="col-12"
-        label="descAr"
-        [formGroup]="form"
-        controlName="descAr"
-        type="textarea"
-        icon="description"
-      />
+      <app-input class="col-12" label="nameEn" [formGroup]="form" controlName="nameEn" icon="title" />
+      <app-input class="col-12" label="nameAr" [formGroup]="form" controlName="nameAr" icon="translate" />
+      <app-input class="col-12" label="descEn" [formGroup]="form" controlName="descEn" type="textarea" icon="description" />
+      <app-input class="col-12" label="descAr" [formGroup]="form" controlName="descAr" type="textarea" icon="description" />
     </div>
     <div class="logo-section">
-      <app-image-uploader
-        [uploadPath]="'brands/logos'"
-        #logoUploader
-        [label]="'labels.logo' | translate"
-        folder="brands"
-      >
-      </app-image-uploader>
+      <app-image-uploader [uploadPath]="'brands/logos'" #logoUploader [label]="'labels.logo' | translate" folder="brands"/>
     </div>
 
     <div class="form-actions">
-      <app-loading-button
-        variant="stroked"
-        color="primary"
-        (clicked)="cancel()"
-        [disabled]="isSaving"
-      >
+      <app-loading-button variant="stroked" color="primary" (clicked)="cancel()" [disabled]="isSaving">
         {{ 'buttons.cancel' | translate }}
       </app-loading-button>
       <app-loading-button variant="stroked" color="primary" [loading]="isSaving" (clicked)="submit()">

@@ -108,6 +108,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.City).HasColumnName("city").HasMaxLength(100);
             entity.Property(e => e.Lat).HasColumnName("lat").HasPrecision(10, 7);
             entity.Property(e => e.Lng).HasColumnName("lng").HasPrecision(10, 7);
+            entity.Property(e => e.AdminNote).HasColumnName("admin_note").HasMaxLength(1000);
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");

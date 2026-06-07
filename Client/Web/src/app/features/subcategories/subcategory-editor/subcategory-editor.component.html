@@ -1,38 +1,31 @@
 <div class="editor-wrapper">
-  <div class="loading-overlay" *ngIf="isLoadingCategories() || isLoading() || isSaving()">
-    <div class="spinner"></div>
-  </div>
+  @if (isLoadingCategories() || isLoading() || isSaving()) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+  }
 
-  <form [formGroup]="form" class="category-form" (ngSubmit)="submit()">
-    <h2>
-      {{ (isEditMode() ? 'buttons.edit' : 'subcategories.createButton') | translate }}
-    </h2>
-    <div class="form-body">
-      <app-input class="field" [formGroup]="form" [controlName]="'nameEn'" [label]="'nameEn' | translate"
-        [required]="true" />
-
-      <app-input class="field" [formGroup]="form" [controlName]="'nameAr'" [label]="'nameAr' | translate"
-        [required]="true" />
-
-      <app-input class="field" [formGroup]="form" [controlName]="'descEn'" [label]="'descEn' | translate"
-        [type]="'textarea'" />
-      <app-input class="field" [formGroup]="form" [controlName]="'descAr'" [label]="'descAr' | translate"
-        [type]="'textarea'" />
-      <app-input class="field" [formGroup]="form" [controlName]="'categoryId'" [label]="'parentCategory' | translate"
-        [type]="'select'" [options]="categoryOptions()" [required]="true" />
+  <form [formGroup]="form" class="category-form" (submit)="submit()">
+    <div class="grid">
+      <app-input class="col-12" label="nameEn" [formGroup]="form" controlName="nameEn" [required]="true" />
+      <app-input class="col-12" label="nameAr" [formGroup]="form" controlName="nameAr" [required]="true" />
+      <app-input class="col-12" label="descEn" type="textarea" [formGroup]="form" controlName="descEn" />
+      <app-input class="col-12" label="descAr" type="textarea" [formGroup]="form" controlName="descAr" />
+      <app-input class="col-12" label="parentCategory" type="select" [formGroup]="form" controlName="categoryId" [options]="categoryOptions()" [required]="true" />
+      
+      <div class="logo-section col-12">
+        <span class="label">{{ 'labels.logo' | translate }}</span>
+        <app-image-uploader #logoUploader [uploadPath]="'subcategories/logos'" [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']"/>
+      </div>
     </div>
 
-    <app-image-uploader #logoUploader [formGroup]="form" [controlName]="'logoId'" [label]="'labels.logo' | translate"
-      [folder]="'subcategories'"></app-image-uploader>
-
     <div class="form-actions">
-      <app-loading-button type="button" variant="stroked" color="accent" (clicked)="cancelled.emit()">
+      <app-loading-button variant="stroked" (clicked)="cancelled.emit()" type="button" class="btn-cancel" [title]="'buttons.cancel' | translate">
         {{ 'buttons.cancel' | translate }}
       </app-loading-button>
-
-      <app-loading-button type="submit" color="primary" [loading]="isSaving()">
-        {{ (isEditMode() ? 'buttons.save' : 'buttons.create') | translate }}
+      <app-loading-button color="primary" type="submit" [loading]="isSaving()" [disabled]="form.invalid" class="btn-submit" [title]="'buttons.save' | translate">
+        {{ 'buttons.save' | translate }}
       </app-loading-button>
     </div>
   </form>
-</div>
+</div>

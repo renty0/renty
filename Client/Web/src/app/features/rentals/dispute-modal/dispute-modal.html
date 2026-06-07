@@ -24,7 +24,7 @@
         [options]="disputeReasonOptions" [translateOptions]="true" [translateLabel]="true" [required]="true" />
 
       <app-input label="rentals.disputes.description" [formGroup]="disputeForm" controlName="description" type="textarea"
-        placeholder="rentals.disputes.descriptionPlaceholder" [translateLabel]="true" [required]="true" [rows]="4" />
+        [placeholder]="'rentals.disputes.descriptionPlaceholder' | translate" [translateLabel]="true" [required]="true" [rows]="4" />
 
       <div class="photos-section mt-3 w-full">
         <h4 class="section-title">

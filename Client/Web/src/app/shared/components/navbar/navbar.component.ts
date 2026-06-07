@@ -87,9 +87,7 @@ export class NavbarComponent implements OnInit {
 
     // Dashboards
     if (this.permissionService.hasPermission(PermissionType.Dashboards_View)) {
-      links.push({ path: '/admin/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' });
       links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
-      links.push({ path: '/admin/fraud', labelKey: 'nav.fraud', icon: 'security' });
     }
 
     // User Management
@@ -105,6 +103,11 @@ export class NavbarComponent implements OnInit {
     // Catalog/Inventory Management
     if (this.permissionService.hasPermission(PermissionType.Items_View)) {
       links.push(...this.allNavLinks.filter((link) => link.permission === PermissionType.Items_View));
+    }
+
+    // Admin: Item review
+    if (this.authService.isAdmin() && this.permissionService.hasPermission(PermissionType.Items_View)) {
+      links.push({ path: '/admin/item-management', labelKey: 'nav.itemReview', icon: 'rule' });
     }
 
     // Expert Actions

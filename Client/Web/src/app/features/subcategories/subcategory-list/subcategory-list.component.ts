@@ -1,17 +1,18 @@
-import { Component, inject, OnInit, signal, ViewChild, effect, untracked } from '@angular/core';
+import { Component, inject, OnInit, signal, effect, untracked, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule, PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData,
@@ -22,12 +23,13 @@ import { LoadingButtonComponent } from '../../../shared/components/loading-butto
 import { SubcategoryEditorComponent } from '../subcategory-editor/subcategory-editor.component';
 import { ToastService } from '../../../shared/services/toast.service';
 
+type ViewMode = 'list' | 'cards';
+
 @Component({
   selector: 'app-subcategory-list',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
     TranslateModule,
     MatTableModule,
     MatSortModule,
@@ -45,88 +47,70 @@ import { ToastService } from '../../../shared/services/toast.service';
   styleUrl: './subcategory-list.component.scss',
 })
 export class SubcategoryListComponent implements OnInit {
-  private apiClient = inject(SubcategoriesClient);
-  private dialog = inject(MatDialog);
-  private toast = inject(ToastService);
-  public translate = inject(TranslateService);
+  private readonly apiClient = inject(SubcategoriesClient);
+  private readonly dialog = inject(MatDialog);
+  private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  displayedColumns = ['logo', 'name', 'category', 'description', 'created', 'actions'];
-  dataSource = signal<ProductSubcategoryDto[]>([]);
-  isLoading = signal(false);
-  viewMode = signal<'list' | 'cards'>('cards');
+  readonly displayedColumns = ['logo', 'name', 'category', 'description', 'actions'] as const;
+  readonly dataSource = signal<ProductSubcategoryDto[]>([]);
+  readonly isLoading = signal(false);
+  readonly viewMode = signal<ViewMode>('cards');
 
-  // Dialog state
-  showDialog = signal(false);
-  selectedSubcategoryId = signal<number | null>(null);
+  readonly showDialog = signal(false);
+  readonly selectedSubcategoryId = signal<number | null>(null);
 
-  // Pagination & Filtering state
-  searchTerm = signal('');
-  pageNumber = signal(1);
-  pageSize = signal(10);
-  totalCount = signal(0);
+  readonly searchTerm = signal('');
+  readonly pageNumber = signal(1);
+  readonly pageSize = signal(10);
+  readonly totalCount = signal(0);
   refreshTime = signal(Date.now());
 
-  // Sorting state
-  sortBy = signal<string | null>('date');
-  sortOrder = signal<'asc' | 'desc' | null>('desc');
+  readonly sortBy = signal<string | null>('nameEn');
+  readonly sortOrder = signal<'asc' | 'desc' | null>('asc');
 
   constructor() {
-    effect(
-      () => {
-        const mode = this.viewMode();
-        untracked(() => {
-          this.pageNumber.set(1);
-          this.pageSize.set(mode === 'cards' ? 12 : 10);
-        });
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const mode = this.viewMode();
+      untracked(() => {
+        this.pageNumber.set(1);
+        this.pageSize.set(mode === 'cards' ? 12 : 10);
+      });
+    });
 
-    effect(
-      () => {
-        this.getData();
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      this.getData();
+    });
   }
 
   ngOnInit() {}
 
-  private getData() {
-    const page = this.pageNumber();
-    const size = this.pageSize();
-    const term = this.searchTerm();
-
+  private getData(): void {
     this.isLoading.set(true);
     this.apiClient
       .getSubcategories(
-        page,
-        size,
+        this.pageNumber(),
+        this.pageSize(),
         undefined,
-        term || undefined,
+        this.searchTerm() || undefined,
         this.sortBy() || undefined,
         this.sortOrder() || undefined,
       )
       .pipe(
+        tap((res) => {
+          this.dataSource.set(res?.data ?? []);
+          this.totalCount.set(res?.total ?? 0);
+        }),
         catchError((err) => {
           this.dataSource.set([]);
+          this.toast.showError(err.messages?.[0]);
           return of(null);
         }),
         finalize(() => this.isLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((res) => {
-        const items = res?.data || [];
-        this.dataSource.set(items);
-        this.totalCount.set(res?.total || 0);
-        if (res && res.messages) {
-          if (res.error) {
-            this.toast.showError(res.messages?.[0]);
-          } else {
-            this.toast.showSuccess(res.messages?.[0]);
-          }
-          return;
-        }
-      });
+      .subscribe();
   }
 
   onSearchChange(event: string | Event): void {
@@ -146,59 +130,61 @@ export class SubcategoryListComponent implements OnInit {
     this.pageNumber.set(1);
   }
 
-  createSubcategory() {
+  createSubcategory(): void {
     this.selectedSubcategoryId.set(null);
     this.showDialog.set(true);
   }
 
-  editSubcategory(id: number) {
+  editSubcategory(id: number): void {
     this.selectedSubcategoryId.set(id);
     this.showDialog.set(true);
   }
 
-  deleteSubcategory(id: number) {
+  async deleteSubcategory(id: number): Promise<void> {
+    const data: ConfirmDialogData = {
+      title: this.translate.instant('buttons.delete'),
+      message: this.translate.instant('subcategories.messages.deleteConfirmation'),
+      confirmText: this.translate.instant('buttons.delete'),
+      cancelText: this.translate.instant('buttons.cancel'),
+    };
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: this.translate.instant('buttons.delete'),
-        message: this.translate.instant('subcategories.messages.deleteConfirmation'),
-        confirmText: this.translate.instant('buttons.delete'),
-        cancelText: this.translate.instant('buttons.cancel'),
-      } as ConfirmDialogData,
+      data,
+      width: '480px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.isLoading.set(true);
-        this.apiClient
-          .deleteSubcategory(id)
-          .pipe(
-            tap((res) => {
-              if (res && !res.error) {
-                this.toast.showSuccess(res.messages?.[0] || 'subcategories.messages.deleteSuccess');
-                this.dataSource.update((current) => current.filter((s) => s.id !== id));
-                this.totalCount.update((t) => Math.max(0, t - 1));
-              } else {
-                this.toast.showError(res.messages?.[0] || 'subcategories.errors.failedToDelete');
-              }
-            }),
-            catchError((err) => {
-              this.toast.showError(err.messages?.[0] || 'subcategories.errors.failedToDelete');
-              return of(null);
-            }),
-            finalize(() => this.isLoading.set(false)),
-          )
-          .subscribe();
-      }
-    });
+    const confirmed = await firstValueFrom(dialogRef.afterClosed());
+    if (!confirmed) return;
+
+    this.isLoading.set(true);
+    this.apiClient
+      .deleteSubcategory(id)
+      .pipe(
+        tap((res) => {
+          if (res && !res.error) {
+            this.toast.showSuccess(res.messages?.[0] || '');
+            this.dataSource.update((current) => current.filter((s) => s.id !== id));
+            this.totalCount.update((t) => Math.max(0, t - 1));
+          } else {
+            this.toast.showError(res?.messages?.[0] || '');
+          }
+        }),
+        catchError((err) => {
+          this.toast.showError(err.messages?.[0] || '');
+          return of(null);
+        }),
+        finalize(() => this.isLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
-  closeDialog() {
+  closeDialog(): void {
     this.showDialog.set(false);
     this.selectedSubcategoryId.set(null);
   }
 
-  onSaved(subcategory: ProductSubcategoryDto) {
+  onSaved(subcategory: ProductSubcategoryDto): void {
     this.closeDialog();
     this.dataSource.update((current) => {
       const index = current.findIndex((s) => s.id === subcategory.id);
@@ -215,6 +201,16 @@ export class SubcategoryListComponent implements OnInit {
     this.refreshTime.set(Date.now());
   }
 
+  truncate(text: string | undefined, maxLen: number): string {
+    if (!text) return '';
+    return text.length <= maxLen ? text : text.slice(0, maxLen) + '...';
+  }
+
+  getLogoUrl(url: string | undefined): string {
+    if (!url) return 'assets/images/placeholder.png';
+    return `${url}?t=${this.refreshTime()}`;
+  }
+
   getLocalizedName(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
     return isAr ? row.nameAr || row.nameEn || '' : row.nameEn || row.nameAr || '';
@@ -222,14 +218,7 @@ export class SubcategoryListComponent implements OnInit {
 
   getLocalizedDesc(row: ProductSubcategoryDto): string {
     const isAr = this.translate.currentLang === 'ar';
-    return isAr
-      ? row.descAr || row.descEn || ''
-      : row.descEn || row.descAr || '';
-  }
-
-  getLogoUrl(url: string | undefined): string {
-    if (!url) return 'assets/images/placeholder.png';
-    return `${url}?t=${this.refreshTime()}`;
+    return isAr ? row.descAr || row.descEn || '' : row.descEn || row.descAr || '';
   }
 
   getLocalizedCatName(row: ProductSubcategoryDto): string {

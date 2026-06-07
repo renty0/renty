@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 import {
   AuthClient,
   ResetPasswordCommand,
@@ -24,9 +25,10 @@ import { catchError, finalize, of, tap } from 'rxjs';
     TranslateModule,
     InputComponent,
     LoadingButtonComponent,
+    MatIconModule,
   ],
   templateUrl: './reset-password.html',
-  styleUrl: '../login/login.scss', // reuse login styles
+  styleUrls: ['../login/login.scss', './reset-password.scss'],
 })
 export class ResetPassword {
   private fb = inject(FormBuilder);
@@ -37,7 +39,7 @@ export class ResetPassword {
 
   resetForm: FormGroup;
   isLoading = signal(false);
-  step = signal(1); // 1: Request Code, 2: Verify Code, 3: Reset Password
+  step = signal(1);
 
   constructor() {
     this.resetForm = this.fb.group(
@@ -86,24 +88,27 @@ export class ResetPassword {
       .pipe(
         finalize(() => this.isLoading.set(false)),
         catchError((err) => {
+          const apiError = err?.result;
+          const errMsg = apiError?.messages?.[0] || err?.message || this.translate.instant('forgotPassword.errorDesc');
+          this.toastService.showError(errMsg);
           return of(null);
         }),
-        tap((res) => {
-          if (res && res.error) {
-            this.toastService.showError(
-              res.messages?.[0] || this.translate.instant('forgotPassword.errorDesc'),
-            );
-          } else {
-            this.toastService.showSuccess(
-              res?.messages?.[0] || this.translate.instant('resetPassword.successDesc'),
-            );
-            this.step.set(2);
-            this.resetForm.get('email')?.disable();
-            this.resetForm.get('token')?.enable();
-          }
-        }),
       )
-      .subscribe();
+      .subscribe((res) => {
+        if (!res) return;
+        if (res.error) {
+          this.toastService.showError(
+            res.messages?.[0] || this.translate.instant('forgotPassword.errorDesc'),
+          );
+        } else {
+          this.toastService.showSuccess(
+            res.messages?.[0] || this.translate.instant('forgotPassword.successMessage'),
+          );
+          this.step.set(2);
+          this.resetForm.get('email')?.disable();
+          this.resetForm.get('token')?.enable();
+        }
+      });
   }
 
   verifyResetCode() {
@@ -122,13 +127,16 @@ export class ResetPassword {
       .authVerifyResetCode(command)
       .pipe(
         finalize(() => this.isLoading.set(false)),
-        catchError(() => {
-          this.toastService.showError(this.translate.instant('resetPassword.invalidCode'));
+        catchError((err) => {
+          const apiError = err?.result;
+          const errMsg = apiError?.messages?.[0] || err?.message || this.translate.instant('resetPassword.invalidCode');
+          this.toastService.showError(errMsg);
           return of(null);
         }),
       )
       .subscribe((res) => {
-        if (res && res.error) {
+        if (!res) return;
+        if (res.error) {
           this.toastService.showError(
             res.messages?.[0] || this.translate.instant('resetPassword.invalidCode'),
           );
@@ -161,18 +169,21 @@ export class ResetPassword {
       .pipe(
         finalize(() => this.isLoading.set(false)),
         catchError((err) => {
-          this.toastService.showError(this.translate.instant('resetPassword.errorDesc'));
+          const apiError = err?.result;
+          const errMsg = apiError?.messages?.[0] || err?.message || this.translate.instant('resetPassword.errorDesc');
+          this.toastService.showError(errMsg);
           return of(null);
         }),
       )
       .subscribe((res) => {
-        if (res && res.error) {
+        if (!res) return;
+        if (res.error) {
           this.toastService.showError(
             res.messages?.[0] || this.translate.instant('resetPassword.errorDesc'),
           );
         } else {
           this.toastService.showSuccess(
-            res?.messages?.[0] || this.translate.instant('resetPassword.successDesc'),
+            res.messages?.[0] || this.translate.instant('resetPassword.successDesc'),
           );
           this.router.navigate(['/login']);
         }

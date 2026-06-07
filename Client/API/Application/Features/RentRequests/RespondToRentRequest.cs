@@ -37,11 +37,13 @@ public class RespondToRentRequestCommandHandler : IRequestHandler<RespondToRentR
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notificationSender;
 
-    public RespondToRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public RespondToRentRequestCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notificationSender)
     {
         _context = context;
         _currentUser = currentUser;
+        _notificationSender = notificationSender;
     }
 
     public async Task<RespondToRentRequestResponse> Handle(RespondToRentRequestCommand request, CancellationToken cancellationToken)
@@ -80,6 +82,21 @@ public class RespondToRentRequestCommandHandler : IRequestHandler<RespondToRentR
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Send notification to the renter
+        var notificationTitle = request.Approve ? "Rental Request Approved" : "Rental Request Rejected";
+        var notificationMessage = request.Approve
+            ? $"Your rental request for {rentRequest.RentableItem.TitleEn} has been approved."
+            : $"Your rental request for {rentRequest.RentableItem.TitleEn} has been rejected.";
+
+        await _notificationSender.SendToUserAsync(
+            rentRequest.RenterId,
+            notificationTitle,
+            notificationMessage,
+            "rental",
+            $"/rental-requests/{rentRequest.Id}",
+            cancellationToken
+        );
 
         return new RespondToRentRequestResponse(
             true,

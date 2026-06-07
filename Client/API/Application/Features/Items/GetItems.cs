@@ -27,6 +27,8 @@ public record ItemListDto(
     long? OwnerId,
     bool IsForSale,
     decimal? SalePrice,
+    string? Status,
+    DateTime CreatedAt,
     ItemCategoryRef? Category,
     ItemSubcategoryRef? Subcategory,
     ItemBrandRef? Brand
@@ -46,6 +48,7 @@ public record ItemDetailDto(
     string? DescEn,
     string Type,
     string Status,
+    string? AdminNote,
     string? Condition,
     decimal DefaultDeposit,
     string? Location,
@@ -124,6 +127,12 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
         if (request.City != null)
             query = query.Where(i => i.City == request.City);
 
+        if (request.CategoryId.HasValue)
+            query = query.Where(i => i.CategoryId == request.CategoryId.Value);
+
+        if (request.SubcategoryId.HasValue)
+            query = query.Where(i => i.SubcategoryId == request.SubcategoryId.Value);
+
         if (request.Type != null && Enum.TryParse<ItemType>(request.Type, true, out var itemType))
             query = query.Where(i => i.Type == itemType);
 
@@ -193,7 +202,11 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.Item.TitleEn,
                 x.DailyPrice,
                 x.Item.City,
-                x.PrimaryImage != null ? (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/')) : null,
+                x.PrimaryImage != null
+                    ? (x.PrimaryImage.StartsWith("http://") || x.PrimaryImage.StartsWith("https://")
+                        ? x.PrimaryImage
+                        : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/'))
+                    : null,
                 x.AvgRating,  
                 x.ReviewCount,  
                 x.Item.Type.ToString(),
@@ -201,6 +214,8 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.Item.OwnerId,
                 x.Item.IsForSale,
                 x.Item.SalePrice,
+                x.Item.Status.ToString(),
+                x.Item.CreatedAt,
                 x.Item.Category    != null ? new ItemCategoryRef(x.Item.Category.Id, x.Item.Category.NameAr, x.Item.Category.NameEn) : null,
                 x.Item.Subcategory != null ? new ItemSubcategoryRef(x.Item.Subcategory.Id, x.Item.Subcategory.NameAr, x.Item.Subcategory.NameEn) : null,
                 x.Item.Brand       != null ? new ItemBrandRef(x.Item.Brand.Id, x.Item.Brand.NameAr, x.Item.Brand.NameEn) : null

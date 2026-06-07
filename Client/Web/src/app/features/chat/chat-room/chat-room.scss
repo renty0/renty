@@ -58,6 +58,20 @@
             border-radius: 50%;
             margin-left: 4px;
           }
+
+          &.offline {
+            color: #999;
+
+            &::before {
+              content: '';
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              background: #999;
+              border-radius: 50%;
+              margin-left: 4px;
+            }
+          }
         }
       }
     }
@@ -145,7 +159,7 @@
 
       &.me {
         align-self: flex-start; // In RTL, left is 'start'? Wait, let's be careful.
-        // Actually, let's use align-self: flex-end for "me" in standard, 
+        // Actually, let's use align-self: flex-end for "me" in standard,
         // but since container is RTL, flex-start is right.
         align-self: flex-start;
 

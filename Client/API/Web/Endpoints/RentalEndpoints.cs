@@ -12,8 +12,9 @@ public static class RentalEndpoints
         var g = app.MapGroup("/api/v1/rentals").WithTags("Rentals");
 
         // POST /rentals
-        g.MapPost("/", async (CreateRentalCommand cmd, ISender sender) =>
+        g.MapPost("/", async (CreateRentalRequest req, ISender sender) =>
         {
+            var cmd = new CreateRentalCommand(req.ItemId, req.StartDate, req.EndDate, req.PricingType, req.Notes, req.RequestExpertReview);
             var r = await sender.Send(cmd);
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             return Api.Created(new RentalCreateData(r.RentalId, r.OrderId, r.RentalPrice, r.DepositAmount, r.Status));
@@ -26,11 +27,12 @@ public static class RentalEndpoints
         // GET /rentals
         g.MapGet("/", async (
             [Microsoft.AspNetCore.Mvc.FromQuery] string? status,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string? role,
             [Microsoft.AspNetCore.Mvc.FromQuery] int page,
             [Microsoft.AspNetCore.Mvc.FromQuery] int limit,
             ISender sender) =>
         {
-            var r = await sender.Send(new GetRentalsQuery(status, page < 1 ? 1 : page, limit < 1 ? 20 : limit));
+            var r = await sender.Send(new GetRentalsQuery(status, page < 1 ? 1 : page, limit < 1 ? 20 : limit, role));
             return Api.Ok(r);
         })
         .WithName("GetRentals")
@@ -99,6 +101,30 @@ public static class RentalEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
 
+        // PUT /rentals/:id/request-expert
+        g.MapPut("/{id:guid}/request-expert", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new RequestExpertReviewCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { r.Success });
+        })
+        .WithName("RequestExpertReview")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
+        
+        // DELETE /rentals/:id/request-expert
+        g.MapDelete("/{id:guid}/request-expert", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new CancelExpertReviewCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { r.Success });
+        })
+        .WithName("CancelExpertReview")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
+
         // PUT /rentals/:id/cancel
         g.MapPut("/{id:guid}/cancel", async (Guid id, ISender sender) =>
         {
@@ -110,5 +136,30 @@ public static class RentalEndpoints
         .Produces<ApiResponse<RentalStatusData>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
+
+        // PUT /rentals/:id/possession
+        g.MapPut("/{id:guid}/possession", async (
+            Guid id,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string action,
+            [Microsoft.AspNetCore.Mvc.FromQuery] string method,
+            ISender sender) =>
+        {
+            var r = await sender.Send(new UpdatePossessionCommand(id, action, method));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            return Api.Ok(new { r.Success, r.Status });
+        })
+        .WithName("UpdatePossession")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
     }
 }
+
+public record CreateRentalRequest(
+    Guid ItemId,
+    DateTime StartDate,
+    DateTime EndDate,
+    string PricingType = "daily",
+    string? Notes = null,
+    bool RequestExpertReview = false
+);

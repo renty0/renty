@@ -3,7 +3,11 @@
     [showButton]="false" [showSearch]="false">
   </app-header-section>
 
-  <!-- Filter Chips -->
+  <mat-tab-group (selectedTabChange)="onRoleChange($event.index === 0 ? 'renter' : 'owner')" class="mb-4">
+    <mat-tab [label]="'rentals.list.tabs.renter' | translate"></mat-tab>
+    <mat-tab [label]="'rentals.list.tabs.owner' | translate"></mat-tab>
+  </mat-tab-group>
+
   <div class="filters-container mb-4 overflow-x-auto">
     <mat-chip-listbox (change)="applyFilter($event.value)" class="premium-chips">
       <mat-chip-option [selected]="!activeStatus()" value="">{{ 'rentals.list.all' | translate }}</mat-chip-option>
@@ -17,72 +21,78 @@
   </div>
 
   @if (isLoading()) {
-    <div class="rentals-grid">
-      @for (i of [1,2,3,4,5,6]; track i) {
-        <div class="rental-skeleton-card shadow-1">
-          <div class="skeleton-img shimmer"></div>
-          <div class="skeleton-content p-3">
-            <div class="skeleton-line shimmer w-8 mb-2"></div>
-            <div class="skeleton-line shimmer w-6 mb-3"></div>
-            <div class="skeleton-line shimmer w-full"></div>
+  <div class="rentals-grid">
+    @for (i of [1,2,3,4,5,6]; track i) {
+    <div class="rental-skeleton-card shadow-1">
+      <div class="skeleton-img shimmer"></div>
+      <div class="skeleton-content p-3">
+        <div class="skeleton-line shimmer w-8 mb-2"></div>
+        <div class="skeleton-line shimmer w-6 mb-3"></div>
+        <div class="skeleton-line shimmer w-full"></div>
+      </div>
+    </div>
+    }
+  </div>
+  } @else if (filteredRentals().length === 0) {
+  <div class="empty-state-card shadow-1 py-8 px-4 text-center border-round-xl">
+    <div class="empty-icon-wrap mb-4">
+      <mat-icon>receipt_long</mat-icon>
+    </div>
+    <h3 class="text-900 font-bold mb-2">{{ 'rentals.list.empty' | translate }}</h3>
+    <p class="text-600 mb-4">{{ 'rentals.list.empty_sub' | translate }}</p>
+    <button mat-flat-button color="primary" routerLink="/marketplace">
+      <mat-icon>explore</mat-icon>
+      {{ 'marketplace.title' | translate }}
+    </button>
+  </div>
+  } @else {
+  <div class="rentals-grid">
+    @for (rental of filteredRentals(); track rental.id) {
+    <mat-card class="rental-card shadow-1 hover-lift" [routerLink]="['/rentals', rental.id]">
+      <div class="card-image-wrap">
+        <img [src]="rental.itemImageUrl || 'assets/placeholder-product.png'" alt="Product" class="card-img">
+        <div class="status-overlay">
+          <span class="status-badge" [ngClass]="getStatusColor(rental.status)">
+            {{ 'rentals.status.' + rental.status?.toLowerCase() | translate }}
+          </span>
+        </div>
+      </div>
+
+      <mat-card-content class="p-3">
+        <h3 class="item-title text-900 font-bold mb-1 line-clamp-1">{{ rental.itemTitle }}</h3>
+        <div class="owner-row flex align-items-center gap-2 mb-3">
+          <mat-icon class="text-400 text-sm">person</mat-icon>
+          <span class="text-600 text-sm">{{ rental.ownerFirstName }}</span>
+        </div>
+
+        <div class="meta-row flex flex-column gap-2">
+          <div class="meta-item flex align-items-center gap-2">
+            <mat-icon class="text-primary text-sm">calendar_today</mat-icon>
+            <span class="text-800 text-sm font-medium">
+              {{ rental.startDate | date:'shortDate' }} - {{ rental.endDate | date:'shortDate' }}
+            </span>
+          </div>
+          <div class="meta-item flex align-items-center gap-2">
+            <mat-icon class="text-accent text-sm">payments</mat-icon>
+            <span class="text-900 font-bold">{{ rental.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
           </div>
         </div>
-      }
-    </div>
-  } @else if (filteredRentals().length === 0) {
-    <div class="empty-state-card shadow-1 py-8 px-4 text-center border-round-xl">
-      <div class="empty-icon-wrap mb-4">
-        <mat-icon>receipt_long</mat-icon>
-      </div>
-      <h3 class="text-900 font-bold mb-2">{{ 'rentals.list.empty' | translate }}</h3>
-      <p class="text-600 mb-4">{{ 'rentals.list.empty_sub' | translate }}</p>
-      <button mat-flat-button color="primary" routerLink="/marketplace">
-        <mat-icon>explore</mat-icon>
-        {{ 'marketplace.title' | translate }}
-      </button>
-    </div>
-  } @else {
-    <div class="rentals-grid">
-      @for (rental of filteredRentals(); track rental.id) {
-        <mat-card class="rental-card shadow-1 hover-lift" [routerLink]="['/rentals', rental.id]">
-          <div class="card-image-wrap">
-            <img [src]="rental.itemImageUrl || 'assets/placeholder-product.png'" alt="Product" class="card-img">
-            <div class="status-overlay">
-              <span class="status-badge" [ngClass]="getStatusColor(rental.status)">
-                {{ 'rentals.status.' + rental.status?.toLowerCase() | translate }}
-              </span>
-            </div>
-          </div>
-          
-          <mat-card-content class="p-3">
-            <h3 class="item-title text-900 font-bold mb-1 line-clamp-1">{{ rental.itemTitle }}</h3>
-            <div class="owner-row flex align-items-center gap-2 mb-3">
-              <mat-icon class="text-400 text-sm">person</mat-icon>
-              <span class="text-600 text-sm">{{ rental.ownerFirstName }}</span>
-            </div>
-            
-            <div class="meta-row flex flex-column gap-2">
-              <div class="meta-item flex align-items-center gap-2">
-                <mat-icon class="text-primary text-sm">calendar_today</mat-icon>
-                <span class="text-800 text-sm font-medium">
-                  {{ rental.startDate | date:'shortDate' }} - {{ rental.endDate | date:'shortDate' }}
-                </span>
-              </div>
-              <div class="meta-item flex align-items-center gap-2">
-                <mat-icon class="text-accent text-sm">payments</mat-icon>
-                <span class="text-900 font-bold">{{ rental.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
-              </div>
-            </div>
-          </mat-card-content>
-          
-          <mat-card-actions class="px-3 pb-3 pt-0 flex justify-content-end">
-            <button mat-button color="primary" class="font-bold text-sm">
-              {{ 'marketplace.viewDetails' | translate }}
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      }
-    </div>
+      </mat-card-content>
+
+      <mat-card-actions class="px-3 pb-3 pt-0 flex justify-content-end gap-2">
+        @if (rental.status?.toLowerCase() === 'pending' && activeRole() === 'renter') {
+        <button mat-stroked-button color="primary" class="font-bold text-sm" (click)="openModifyModal(rental)">
+          <mat-icon>edit</mat-icon>
+          {{ 'common.modify' | translate }}
+        </button>
+        }
+        <button mat-button color="primary" class="font-bold text-sm" [routerLink]="['/rentals', rental.id]">
+          {{ 'marketplace.viewDetails' | translate }}
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
   }
 </div>

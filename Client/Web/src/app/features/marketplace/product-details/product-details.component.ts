@@ -61,8 +61,7 @@ export class ProductDetailsComponent implements OnInit {
     isLoggedIn = this.authService.isLoggedIn;
 
     canEdit = computed(() => {
-        if (this.isOwner()) return true;
-        return this.permissionService.hasPermission(PermissionType.Items_Edit);
+        return this.isOwner();
     });
 
     canDelete = computed(() => {
@@ -80,8 +79,17 @@ export class ProductDetailsComponent implements OnInit {
     displayPrice = computed(() => {
         const item = this.item();
         if (!item) return 0;
-        return item.pricing?.find(p => p.pricingType === 'Daily')?.price ??
+        if (item.isForSale) {
+            return item.salePrice ?? 0;
+        }
+        return item.pricing?.find(p => p.pricingType === 'Daily' || p.pricingType === 'daily')?.price ??
             item.pricing?.[0]?.price ?? 0;
+    });
+
+    hasRent = computed(() => {
+        const item = this.item();
+        if (!item?.pricing) return false;
+        return item.pricing.some(p => p.pricingType?.toLowerCase() === 'daily' || p.pricingType?.toLowerCase() === 'weekly' || p.pricingType?.toLowerCase() === 'monthly');
     });
 
     ngOnInit() {

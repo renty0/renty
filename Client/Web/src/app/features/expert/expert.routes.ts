@@ -1,24 +1,20 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from '../../core/guards/auth.guard';
-// We need an ExpertGuard or reuse AuthGuard + role check
+import { ExpertGuard } from '../../core/guards/expert.guard';
 import { ExpertAssignedComponent } from './expert-assigned/expert-assigned';
 import { VerificationHistoryComponent } from './verification-history/verification-history';
 
 export const EXPERT_ROUTES: Routes = [
   {
     path: '',
+    canActivate: [ExpertGuard],
     children: [
       {
         path: 'assigned',
         component: ExpertAssignedComponent,
-        canActivate: [AuthGuard],
-        data: { role: 'Expert' }, // AuthGuard should handle this if implemented, otherwise just AuthGuard
       },
       {
-        path: 'verify/:id', // The id is the verificationId in our UI, but the API needs ItemId?
+        path: 'verify/:id', // Note: This :id is now ItemId as fixed in routing
         component: VerificationHistoryComponent,
-        canActivate: [AuthGuard],
-        data: { role: 'Expert' },
       },
       {
         path: '',

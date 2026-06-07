@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "../../../shared/styles" as *;
+@use 'sass:color';
+@use '../../../shared/styles' as *;
 
 .support-hub-wrapper {
   position: fixed;
@@ -23,7 +23,7 @@
   border-radius: 50%;
   border: none;
   background: $primary-color;
-  color: $white;
+  color: $white !important;
   box-shadow: $shadow-xl;
   cursor: pointer;
   @include flex-center;
@@ -34,6 +34,7 @@
     font-size: 32px;
     width: 32px;
     height: 32px;
+    color: $white !important;
     transition: transform 0.3s ease;
   }
 
@@ -62,9 +63,18 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.6; }
-  70% { transform: scale(1.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 .hub-panel {
@@ -87,7 +97,11 @@
 
 .hub-header {
   padding: $spacing-xl;
-  background: linear-gradient(135deg, $primary-color 0%, color.adjust($primary-color, $lightness: -15%) 100%);
+  background: linear-gradient(
+    135deg,
+    $primary-color 0%,
+    color.adjust($primary-color, $lightness: -15%) 100%
+  );
   color: $white;
   display: flex;
   justify-content: space-between;
@@ -314,10 +328,22 @@
     text-transform: uppercase;
     flex-shrink: 0;
 
-    &.in-progress { background: rgba($primary-color, 0.1); color: $primary-color; }
-    &.resolved { background: rgba($success, 0.1); color: $success; }
-    &.open { background: rgba($info, 0.1); color: $info; }
-    &.closed { background: rgba($gray-500, 0.1); color: $gray-500; }
+    &.in-progress {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+    }
+    &.resolved {
+      background: rgba($success, 0.1);
+      color: $success;
+    }
+    &.open {
+      background: rgba($info, 0.1);
+      color: $info;
+    }
+    &.closed {
+      background: rgba($gray-500, 0.1);
+      color: $gray-500;
+    }
   }
 
   .live-chat-btn {
@@ -333,7 +359,11 @@
     border-left: 1px solid rgba($primary-color, 0.1);
     transition: all $transition-fast;
 
-    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
 
     &:hover {
       background: $primary-color;

@@ -8,10 +8,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { RentalsClient, RentalListDto } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { RouterModule } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-my-rentals',
@@ -27,7 +29,8 @@ import { RouterModule } from '@angular/router';
     MatDividerModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    HeaderSectionComponent
+    HeaderSectionComponent,
+    MatTabsModule
   ],
   templateUrl: './my-rentals.html',
   styleUrl: './my-rentals.scss'
@@ -36,11 +39,13 @@ export class MyRentalsComponent implements OnInit {
   private rentalsClient = inject(RentalsClient);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
+  private dialog = inject(MatDialog);
 
   isLoading = signal(true);
   rentals = signal<RentalListDto[]>([]);
   filteredRentals = signal<RentalListDto[]>([]);
   activeStatus = signal<string | null>(null);
+  activeRole = signal<string>('renter');
 
   ngOnInit() {
     this.loadRentals();
@@ -48,7 +53,7 @@ export class MyRentalsComponent implements OnInit {
 
   loadRentals() {
     this.isLoading.set(true);
-    this.rentalsClient.getRentals(1, 100, undefined).subscribe({
+    this.rentalsClient.getRentals(1, 100, undefined, this.activeRole()).subscribe({
       next: (res) => {
         const rentalsList = res.data?.rentals || [];
         this.rentals.set(rentalsList);
@@ -61,6 +66,11 @@ export class MyRentalsComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  onRoleChange(role: string) {
+    this.activeRole.set(role);
+    this.loadRentals();
   }
 
   applyFilter(status: string | null) {
@@ -83,6 +93,15 @@ export class MyRentalsComponent implements OnInit {
       case 'overdue':   return 'bg-orange-50 text-orange-700 border-1 border-orange-100';
       case 'disputed':  return 'bg-purple-50 text-purple-700 border-1 border-purple-100';
       default:          return 'bg-gray-50 text-gray-700 border-1 border-gray-100';
+    }
+  }
+
+  openModifyModal(rental: RentalListDto) {
+    // Since the API doesn't support rental modification, suggest canceling and re-creating
+    if (rental.status?.toLowerCase() === 'pending') {
+      this.toast.showInfo('rentals.modify.cancel_and_recreate');
+    } else {
+      this.toast.showInfo('rentals.modify.not_available');
     }
   }
 }

@@ -14,6 +14,7 @@
     "date": "Date",
     "viewDetails": "View Details",
     "edit": "Edit",
+    "modify": "Modify",
     "delete": "Delete",
     "close": "Close",
     "active": "Active",
@@ -36,6 +37,7 @@
     "language": "Language",
     "not_applicable": "N/A",
     "retry": "Retry",
+    "stable": "Stable",
     "view": {
       "list": "List view",
       "cards": "Cards view"
@@ -46,7 +48,11 @@
     "Password": "Password",
     "Save": "Save",
     "Cancel": "Cancel",
-    "Retry": "Retry"
+    "Retry": "Retry",
+    "share": "Share",
+    "approve": "Approve",
+    "reject": "Reject",
+    "underReview": "Under Review"
   },
   "marketplace": {
     "title": "Marketplace",
@@ -85,6 +91,7 @@
     "editItem": "Edit Item",
     "deleteItem": "Delete Item",
     "day": "day",
+    "salePrice": "Sale Price",
     "available": "Available",
     "booked": "Booked",
     "startDate": "Start Date",
@@ -129,7 +136,8 @@
     "saDashboard": "Super Admin Dashboard",
     "staffManagement": "Staff Management",
     "overrides": "Overrides & Emergency",
-    "superAdmin": "Super Admin"
+    "superAdmin": "Super Admin",
+    "itemReview": "Item Review"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -192,7 +200,8 @@
     "successDesc": "Your password has been reset successfully. You can now login.",
     "errorDesc": "Failed to reset password. The code might be invalid or expired.",
     "invalidCode": "Invalid or expired reset code.",
-    "codeVerified": "Reset code verified successfully."
+    "codeVerified": "Reset code verified successfully.",
+    "codeSent": "A reset code has been sent to:"
   },
   "verifyEmail": {
     "title": "Verify your email",
@@ -214,7 +223,16 @@
     "type": "Type",
     "reviews": "Reviews",
     "condition": "Condition",
+    "renter": "Renter",
+    "salePrice": "Sale Price",
+    "referenceId": "Reference ID",
+    "owner": "Owner",
     "location": "Location",
+    "justification": "Justification",
+    "checkType": "Verification Type",
+    "status": "Result",
+    "notes": "Expert Notes",
+    "newPassword": "New Password",
     "mapLocation": "Map Location",
     "code": "Code",
     "category": "Category",
@@ -243,6 +261,7 @@
     "price": "Price",
     "date": "Date",
     "actions": "Actions",
+    "availableFor": "Available For",
     "items": "Items",
     "image": "Image",
     "sku": "SKU",
@@ -264,6 +283,10 @@
     }
   },
   "placeholders": {
+    "titleEn": "Enter Arabic Title",
+    "titleAr": "Enter English Title",
+    "descEn": "Enter Arabic Description",
+    "descAr": "Enter English Description",
     "name": "Enter product name",
     "sku": "Enter SKU",
     "description": "Enter product description",
@@ -292,6 +315,7 @@
     "browse": "Browse",
     "upload": "Upload",
     "newProduct": "New Product"
+    ,"reactivate": "Reactivate"
   },
   "categories": {
     "title": "Categories",
@@ -322,7 +346,18 @@
     "pricing": "Pricing",
     "details": "Details",
     "media": "Media",
-    "organization": "Organization"
+    "organization": "Organization",
+    "rentOnly": "Rent Only",
+    "saleOnly": "Sale Only",
+    "rentAndSale": "Rent & Sale",
+    "deactivateConfirmation": "This will temporarily remove the product from marketplace. Continue?",
+    "permanentDeleteConfirmation": "This will permanently delete the product from your list. Continue?",
+    "deactivateSuccess": "Product removed from marketplace.",
+    "permanentDeleteSuccess": "Product permanently deleted.",
+    "reactivateSuccess": "Product reactivated and visible in marketplace.",
+    "removedFromMarket": "Temporarily removed from marketplace"
+    ,"reactivateConfirmation": "This will restore the product and make it visible in marketplace. Continue?"
+    ,"permanentDelete": "Permanent delete"
   },
   "info": {
     "additionalInfo": "Additional Information",
@@ -339,12 +374,16 @@
     "estimatedPrice": "Estimated Price",
     "deposit": "Security Deposit",
     "total": "Total Amount",
+    "notesPlaceholder": "Add any notes for the owner...",
     "submit": "Confirm Rental Request",
     "success": "Rental request submitted successfully!",
     "error": "Failed to submit rental request. Please try again.",
     "daily": "Daily",
     "weekly": "Weekly",
     "monthly": "Monthly",
+    "deliveryMethod": "Delivery Method",
+    "desiredDeliveryDate": "Desired Delivery Date",
+    "negotiatedDeliveryDate": "Negotiated Delivery Date (Agreed with Owner)",
     "list": {
       "title": "My Rentals",
       "subtitle": "Track and manage your active and past rentals",
@@ -354,7 +393,11 @@
       "dates": "Rental Dates",
       "amount": "Total Amount",
       "status": "Status",
-      "all": "All Rentals"
+      "all": "All Rentals",
+      "tabs": {
+        "renter": "Items I Rented",
+        "owner": "Rentals of My Items"
+      }
     },
     "status": {
       "pending": "Pending",
@@ -366,6 +409,20 @@
       "overdue": "Overdue",
       "rejected": "Rejected",
       "disputed": "Disputed"
+    },
+    "expert": {
+      "assigned": "Assigned",
+      "not_assigned": "Not Assigned",
+      "destination": "Destination (Who receives after inspection)",
+      "destinationPlaceholder": "Choose who receives the product",
+      "submit_report": "Submit Report",
+      "pending_assignment": "Pending Assignment",
+      "renter_requested": "Renter requested expert review. Choose how to proceed:",
+      "status": {
+        "approved": "Evaluation Approved",
+        "rejected": "Evaluation Rejected",
+        "pending": "Evaluation Pending"
+      }
     },
     "details": {
       "title": "Rental Details",
@@ -379,6 +436,7 @@
       "price": "Rental Price",
       "deposit": "Security Deposit",
       "total": "Total Amount",
+      "expert_review": "Expert Review",
       "lateFee": "Late Fee",
       "notes": "Owner Notes",
       "parties": "Parties",
@@ -400,10 +458,38 @@
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
+      "request_expert": "Request Expert Review",
+      "cancel_expert": "Cancel Expert Request",
+      "cancel_assigned_expert": "Cancel Assigned Expert",
+      "send_via_delivery": "Send via Delivery",
+      "nearest_location": "Handoff at Nearest Location",
+      "send_to_expert": "Expert review requested. Choose how to proceed:",
       "dispute": "Dispute",
       "damaged": "Forfeit Deposit",
       "verify": "Verify & Start Rental",
       "no_actions": "No actions available for this rental."
+    },
+    "delivery": {
+      "byHand": "By Hand",
+      "nearestLocation": "Nearest Location",
+      "deliveryService": "Delivery Service",
+      "initiated": "Delivery initiated successfully",
+      "picked_up": "Package picked up by courier",
+      "in_transit": "Package is in transit",
+      "delivered": "Package delivered successfully",
+      "negotiation_info": "Set your desired start date. You can negotiate the exact delivery time with the owner via chat. Delivery time is not counted in your rental period."
+    },
+    "nearest_location": {
+      "confirmed": "Nearest location handoff confirmed"
+    },
+    "return": {
+      "product_with_renter": "Product is currently with the renter.",
+      "product_with_renter_overdue": "Rental period has ended. Product must be returned.",
+      "product_with_expert": "Product is currently with the expert for inspection. Expert will return it after evaluation.",
+      "product_with_owner": "Product is with the owner. No return needed.",
+      "select_method": "Select how you want to return the product:",
+      "confirm": "Confirm Return",
+      "confirmed": "Return process initiated successfully"
     },
     "disputes": {
       "title": "Dispute Rental",
@@ -427,13 +513,21 @@
     },
     "config": "Configuration",
     "paymentDetails": "Payment Details",
-    "requiresExpert": "Requires Expert Verification"
+    "requiresExpert": "Requires Expert Verification",
+    "modify": {
+      "not_available": "Rental modification is not currently available. Please cancel this rental and create a new one with your desired dates.",
+      "cancel_and_recreate": "To modify your rental dates, please cancel this request and create a new one with your preferred dates.",
+      "success": "Rental modified successfully",
+      "error": "Failed to modify rental"
+    }
   },
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Please enter a valid email address",
     "minLength": "Minimum length not met",
     "maxLength": "Maximum length exceeded",
+    "min": "Value is too low",
+    "max": "Value is too high",
     "invalidFormat": "Invalid format",
     "invalidPhone": "Invalid phone number",
     "passwordMismatch": "Passwords do not match",
@@ -609,7 +703,24 @@
     "personalInfo": "Personal Info",
     "bio": "Bio",
     "locationInfo": "Location Info",
+    "badges": "Badges",
+    "idVerifiedDesc": "Id Verified",
+    "idVerified": "ID Verified",
+    "verification": "Verification",
+    "phoneVerified": "Phone Verified",
+    "phoneVerifiedDesc": "Phone Verified",
+    "emailVerified": "Email Verified",
+    "emailVerifiedDesc": "Email Verified",
+    "fastResponder": "Fast Responder",
+    "cleanGear": "Clean Gear",
+    "topOwner": "Top Owner",
+    "noReviewsSub": "No Reviews",
+    "trustMember": "Trust Member",
+    "responseTime": "Response Time",
+    "trustMemberDesc": "Trustworthy user",
+    "responseTimeDesc": "Responds quickly",
     "address": "Address",
+    "verified": "Verified",
     "city": "City",
     "country": "Country",
     "imageAlt": "Profile Picture",
@@ -629,6 +740,20 @@
     "noReviews": "No reviews found.",
     "deleteAccount": "Delete Account",
     "deleteConfirmTitle": "Delete Account?",
+    "identityVerification": "Identity Verification",
+    "notVerified": "Not Verified",
+    "idNotVerifiedDesc": "Identity not verified",
+    "verificationNote": "Upload your government ID to verify your identity and unlock trading features.",
+    "uploadId": "Upload ID",
+    "uploadIdTitle": "Upload Government ID",
+    "uploadIdDesc": "Please upload clear photos of the front and back of your government ID. This will be reviewed by our team.",
+    "frontSide": "Front Side",
+    "backSide": "Back Side",
+    "chooseFile": "Choose File",
+    "upload": "Upload",
+    "uploadBothSides": "Please upload both front and back sides",
+    "idUploadSuccess": "ID uploaded successfully. Your verification is pending review.",
+    "phoneNotVerifiedDesc": "Phone not verified",
     "deleteConfirmMessage": "Are you sure you want to delete your account? This action is permanent and cannot be undone.",
     "deleteSuccess": "Your account has been deleted successfully."
   },
@@ -657,33 +782,67 @@
     "rentNow": "Rent Now",
     "favorite": "Favorite",
     "addedToFavorites": "Added to favorites",
+    "linkCopied": "Link copied to clipboard",
     "buyNow": "Buy Now",
     "buyRequestSent": "Buy request sent! Owner will contact you soon.",
-    "similarItems": "Similar Items"
+    "similarItems": "Similar Items",
+    "ownerUnderReviewTitle": "Under Review",
+    "ownerUnderReviewDesc": "Your item is under admin review and will appear in the marketplace after approval.",
+    "ownerRejectedTitle": "Item Rejected",
+    "thumbnail": "Thumbnail",
+    "starsAria": "{{count}} stars",
+    "memberFallback": "Member"
   },
   "expert": {
+    "not_assigned": "Not Assigned",
     "verifyItem": "New Verification Workflow",
+    "verifyItem.subtitle": "Fill in the form to submit a new expert verification record",
     "backToAssigned": "Back to Assignments",
     "verifySuccess": "Verification submitted successfully",
+    "tabs": {
+      "my_tasks": "My Tasks",
+      "available": "Available Tasks"
+    },
+    "tasks": {
+      "claimed_success": "Task claimed successfully!"
+    },
+    "available": {
+      "empty_title": "Queue Empty",
+      "empty": "No new verification requests available."
+    },
+    "actions": {
+      "claim": "Claim Task"
+    },
     "assigned": {
       "title": "Assigned Verifications",
       "subtitle": "Items pending your expert review",
+      "empty_title": "No Tasks Assigned",
       "item": "Item",
       "type": "Check Type",
       "rentalDates": "Rental Dates",
       "empty": "No items assigned to you at the moment."
     },
     "history": {
-      "title": "Verification History",
+      "title": "Item Verification",
       "subtitle": "Review item condition history and submit new verification",
       "listTitle": "Verification Timeline",
       "verifiedBy": "Verified By",
-      "empty": "No previous verifications found."
+      "empty": "No previous verifications found.",
+      "empty_title": "No Verifications Yet",
+      "records": "records",
+      "noRecords": "No verification records",
+      "itemDetailsTitle": "Item & Rental Details",
+      "itemDetailsSubtitle": "Overview of the item and parties involved",
+      "itemName": "Item Name",
+      "itemCity": "City",
+      "ownerName": "Owner Name",
+      "ownerPhone": "Owner Phone",
+      "renterName": "Renter Name",
+      "renterPhone": "Renter Phone",
+      "rentalDates": "Rental Dates",
+      "rentalPrice": "Rental Price"
     },
     "verify": {
-      "checkType": "Verification Type",
-      "status": "Result",
-      "notes": "Expert Notes",
       "notesPlaceholder": "Add any details regarding item condition...",
       "submit": "Submit Verification"
     },
@@ -732,6 +891,11 @@
     "noFraudData": "No security threats detected recently.",
     "settingsTitle": "System Settings",
     "itemsTitle": "Item Auditing",
+    "pendingReviewTitle": "Pending Admin Review",
+    "pendingReviewDesc": "This item is awaiting your approval before it goes live.",
+    "reviewPanelTitle": "Admin Review",
+    "reviewNotePlaceholder": "Add a note for the owner (required when rejecting)…",
+    "noPendingItems": "No pending items to review.",
     "commissionRate": "Platform Commission",
     "maintenanceMode": "Maintenance Mode",
     "userManagementTitle": "User Management",
@@ -951,7 +1115,10 @@
     "viewProduct": "View Product",
     "recording": "Recording...",
     "releaseToSend": "Release to send",
-    "deleteConfirmation": "Are you sure you want to delete this conversation?"
+    "deleteConfirmation": "Are you sure you want to delete this conversation?",
+    "lastSeenMinutes": "Last seen {{minutes}} min ago",
+    "lastSeenHours": "Last seen {{hours}} hr ago",
+    "lastSeenDays": "Last seen {{days}} days ago"
   },
   "notifications": {
     "title": "Notifications",
@@ -987,6 +1154,7 @@
     "failedToLoadSubcategory": "Failed to load subcategory data",
     "failedToLoadProduct": "Failed to load product data",
     "failedToLoadItemDetails": "Failed to load item details",
+    "unauthorizedToEdit": "You are not authorized to edit this item.",
     "failedToUploadLogo": "Failed to upload logo image",
     "invalidCoordinates": "Invalid coordinates format. Use: lat, lng",
     "unexpectedError": "An unexpected error occurred",
@@ -1154,9 +1322,7 @@
       "reverseForfeitureDesc": "Reverse a deposit forfeiture decision",
       "forceCloseDispute": "Force Close Dispute",
       "forceCloseDisputeDesc": "Administratively close an open dispute",
-      "referenceId": "Reference ID",
       "referenceIdPlaceholder": "Enter the user ID, item ID, or dispute ID",
-      "justification": "Justification",
       "justificationPlaceholder": "Explain why this override is necessary...",
       "warning": "This action is irreversible and will be recorded in the audit log. Ensure you have proper authorization.",
       "execute": "Execute Override",

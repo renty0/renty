@@ -1,5 +1,5 @@
 import {
-    Component, inject, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef
+    Component, inject, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef, computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -16,7 +16,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import {
     ItemsClient, ItemDetailDto, FavoritesClient, ReviewsClient, ChatClient,
     GetItemReviewsResponse, ReviewDto, ItemListDto, CreateChatCommand, CreateReviewCommand,
-    BookedRangeDto
+    BookedRangeDto, AdminItemsClient, ReviewItemCommand
 } from '../../../core/api/api-client';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -24,6 +24,7 @@ import { LocalizationService } from '../../../core/services/localization.service
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { InputComponent } from '../../../shared/components/input/input';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-item-detail-page',
@@ -52,6 +53,7 @@ export class ItemDetailPageComponent implements OnInit {
     private readonly favoritesClient = inject(FavoritesClient);
     private readonly reviewsClient = inject(ReviewsClient);
     private readonly chatClient = inject(ChatClient);
+    private readonly adminItemsClient = inject(AdminItemsClient);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly localization = inject(LocalizationService);
@@ -60,9 +62,11 @@ export class ItemDetailPageComponent implements OnInit {
     private readonly translate = inject(TranslateService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly authService = inject(AuthService);
 
-    // ── State signals ──────────────────────────────────────────────
     item = signal<ItemDetailDto | null>(null);
+    adminReviewNote = signal('');
+    isReviewing = signal(false);
     activeImageIndex = signal(0);
     isLoading = signal(false);
     isFavoriting = signal(false);
@@ -72,18 +76,27 @@ export class ItemDetailPageComponent implements OnInit {
     bookedDates = signal<BookedRangeDto[]>([]);
     isLoadingAvailability = signal(false);
 
-    // ── Reviews ────────────────────────────────────────────────────
     reviewsData = signal<GetItemReviewsResponse | null>(null);
     isLoadingReviews = signal(false);
     isSubmittingReview = signal(false);
     hoveredStar = signal(0);
     selectedStar = signal(0);
 
-    // ── Similar items ──────────────────────────────────────────────
     similarItems = signal<ItemListDto[]>([]);
     isLoadingSimilar = signal(false);
 
-    // ── Forms ──────────────────────────────────────────────────────
+    isOwner = computed(() => {
+        const currentUserId = this.authService.getCurrentUserId();
+        const itemOwnerId = this.item()?.owner?.id;
+        return currentUserId !== null && !!itemOwnerId && currentUserId === itemOwnerId;
+    });
+
+    isAdmin = computed(() => this.authService.isAdmin());
+
+    isRegularUser = computed(() => this.authService.isUser());
+
+    isLoggedIn = this.authService.isLoggedIn;
+
     reviewForm!: FormGroup;
 
     get lang() { return this.localization.language(); }
@@ -215,11 +228,11 @@ export class ItemDetailPageComponent implements OnInit {
     toggleReminder(): void {
         const id = this.item()?.id;
         if (!id) return;
-        
-        const action = this.isReminded() 
-            ? this.itemsClient.removeItemReminder(id) 
+
+        const action = this.isReminded()
+            ? this.itemsClient.removeItemReminder(id)
             : this.itemsClient.addItemReminder(id);
-            
+
         action.pipe(
             tap((res) => {
                 if (!res?.error) {
@@ -241,15 +254,13 @@ export class ItemDetailPageComponent implements OnInit {
     buyItem(): void {
         const item = this.item();
         if (!item?.id) return;
-        // For now, redirect to chat to negotiate or a simple buy-now flow
         this.startChat();
         this.showToast('items.buyRequestSent');
     }
-    
+
     dateFilter = (d: Date | null): boolean => {
         if (!d) return false;
         const time = d.getTime();
-        // Check if d is within any booked range
         return !this.bookedDates().some(range => {
             if (!range.start || !range.end) return false;
             const start = new Date(range.start).getTime();
@@ -258,11 +269,44 @@ export class ItemDetailPageComponent implements OnInit {
         });
     };
 
+    shareItem(): void {
+        const item = this.item();
+        if (!item?.id) return;
+
+        const title = this.lang === 'ar'
+            ? (item.titleAr || item.titleEn || '')
+            : (item.titleEn || item.titleAr || '');
+        const url = `${window.location.origin}/items/${item.id}`;
+
+        if (typeof navigator !== 'undefined' && navigator.share) {
+            navigator.share({ title, url }).catch((err: Error) => {
+                if (err?.name !== 'AbortError') {
+                    this.copyShareLink(url);
+                }
+            });
+            return;
+        }
+
+        this.copyShareLink(url);
+    }
+
+    private copyShareLink(url: string): void {
+        if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
+            this.toast.showError('common.errorOccurred');
+            return;
+        }
+
+        navigator.clipboard.writeText(url).then(
+            () => this.toast.showSuccess('items.linkCopied'),
+            () => this.toast.showError('common.errorOccurred')
+        );
+    }
+
     startChat(): void {
         const ownerId = this.item()?.owner?.id;
         if (!ownerId) return;
         this.isChatting.set(true);
-        
+
         const cmd = new CreateChatCommand({
             userId: ownerId,
             itemId: this.item()?.id as any
@@ -305,14 +349,38 @@ export class ItemDetailPageComponent implements OnInit {
                     this.showToast('items.reviewRequiresRental');
                 }
             }),
-            catchError(() => { 
-                this.showToast('items.reviewRequiresRental'); 
-                return of(null); 
+            catchError(() => {
+                this.showToast('items.reviewRequiresRental');
+                return of(null);
             }),
-            finalize(() => { 
-                this.isSubmittingReview.set(false); 
-                this.cdr.markForCheck(); 
+            finalize(() => {
+                this.isSubmittingReview.set(false);
+                this.cdr.markForCheck();
             })
+        ).subscribe();
+    }
+
+    reviewItem(decision: 'approved' | 'rejected'): void {
+        const id = this.item()?.id;
+        if (!id) return;
+
+        this.isReviewing.set(true);
+        const cmd = new ReviewItemCommand({
+            status: decision,
+            rejectionReason: this.adminReviewNote()
+        });
+
+        this.adminItemsClient.reviewItem(id, cmd).pipe(
+            tap((res) => {
+                if (!res?.error) {
+                    this.showToast(decision === 'approved' ? 'admin.itemApproved' : 'admin.itemRejected');
+                    this.router.navigate(['/admin/item-management']);
+                } else {
+                    this.showToast('common.errorOccurred');
+                }
+            }),
+            catchError(() => { this.showToast('common.errorOccurred'); return of(null); }),
+            finalize(() => { this.isReviewing.set(false); this.cdr.markForCheck(); })
         ).subscribe();
     }
 

@@ -11,8 +11,9 @@ import { MultiImageUploaderComponent, UploadedImage } from '../../../shared/comp
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { MapComponent } from '../../../shared/components/map/map.component';
-import { ItemsClient, SubcategoriesClient, CreateItemCommand, CreateItemPricingCommand, CreateItemImageCommand, UpdateItemCommand, CategoriesClient, BrandsClient } from '../../../core/api/api-client';
+import { ItemsClient, SubcategoriesClient, CreateItemCommand, CreateItemPricingCommand, CreateItemImageCommand, UpdateItemCommand, CategoriesClient, BrandsClient, CreateBrandCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { ITEM_TYPE_OPTIONS, ITEM_CONDITION_OPTIONS, EGYPT_GOVERNORATES } from './items-editor.constants';
 import { LocalizationService } from '../../../core/services/localization.service';
@@ -35,6 +36,7 @@ export class ItemsEditorPageComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private localization = inject(LocalizationService);
+  private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
   @Input('itemId') set setItemId(val: string | undefined | null) {
@@ -81,10 +83,14 @@ export class ItemsEditorPageComponent implements OnInit {
 
   brands = computed(() => {
     const lang = this.localization.language();
-    return this.allBrands().map((b) => ({
+    const list = this.allBrands().map((b) => ({
       name: lang === 'ar' ? (b.nameAr || b.nameEn) : (b.nameEn || b.nameAr),
       code: b.code,
     }));
+    return [
+      ...list,
+      { name: lang === 'ar' ? 'أخرى (ماركة غير مدرجة)' : 'Other (Brand not listed)', code: -1 }
+    ];
   });
   allBrands = signal<{ nameAr: string; nameEn: string; code: number }[]>([]);
 
@@ -93,6 +99,11 @@ export class ItemsEditorPageComponent implements OnInit {
   readonly typeOptions = ITEM_TYPE_OPTIONS;
   readonly conditionOptions = ITEM_CONDITION_OPTIONS;
   readonly governorateOptions = EGYPT_GOVERNORATES;
+  readonly availableForOptions = [
+    { name: 'products.rentOnly', code: 'rent' },
+    { name: 'products.saleOnly', code: 'sale' },
+    { name: 'products.rentAndSale', code: 'both' }
+  ];
 
   constructor() {
     this.initForm();
@@ -137,7 +148,14 @@ export class ItemsEditorPageComponent implements OnInit {
     if (this.form) {
       this.form.reset();
       this.uploadedImages = [];
-      this.form.patchValue({ defaultDeposit: 0, dailyPrice: 0, weeklyPrice: 0, monthlyPrice: 0 });
+      this.form.patchValue({
+        availableFor: 'rent',
+        defaultDeposit: 0,
+        dailyPrice: null,
+        weeklyPrice: 0,
+        monthlyPrice: 0,
+        salePrice: null
+      });
     }
   }
 
@@ -149,8 +167,10 @@ export class ItemsEditorPageComponent implements OnInit {
       descEn: ['', [Validators.maxLength(1000)]],
       type: ['standard'],
       condition: ['good'],
+      availableFor: ['rent'],
+      salePrice: [null],
       defaultDeposit: [0, [Validators.required, Validators.min(0)]],
-      dailyPrice: [0, [Validators.required, Validators.min(0.01)]],
+      dailyPrice: [null, [Validators.required, Validators.min(0.01)]],
       weeklyPrice: [0, [Validators.min(0)]],
       monthlyPrice: [0, [Validators.min(0)]],
       location: [''],
@@ -160,6 +180,49 @@ export class ItemsEditorPageComponent implements OnInit {
       subcategoryId: [null, [Validators.required]],
       categoryId: [null],
       brandId: [null],
+      newBrandNameAr: [''],
+      newBrandNameEn: [''],
+    });
+
+    this.form.get('brandId')?.valueChanges.subscribe(val => {
+      const nameArCtrl = this.form.get('newBrandNameAr');
+      const nameEnCtrl = this.form.get('newBrandNameEn');
+      
+      if (val === -1) {
+        nameArCtrl?.setValidators([Validators.required, Validators.maxLength(100)]);
+        nameEnCtrl?.setValidators([Validators.required, Validators.maxLength(100)]);
+      } else {
+        nameArCtrl?.clearValidators();
+        nameEnCtrl?.clearValidators();
+      }
+      nameArCtrl?.updateValueAndValidity();
+      nameEnCtrl?.updateValueAndValidity();
+    });
+
+    this.form.get('availableFor')?.valueChanges.subscribe(val => {
+      const dailyCtrl = this.form.get('dailyPrice');
+      const saleCtrl = this.form.get('salePrice');
+      
+      if (val === 'rent' || val === 'both') {
+        dailyCtrl?.setValidators([Validators.required, Validators.min(0.01)]);
+      } else {
+        dailyCtrl?.clearValidators();
+        dailyCtrl?.setValue(null, { emitEvent: false });
+        dailyCtrl?.markAsPristine();
+        dailyCtrl?.markAsUntouched();
+      }
+      
+      if (val === 'sale' || val === 'both') {
+        saleCtrl?.setValidators([Validators.required, Validators.min(0.01)]);
+      } else {
+        saleCtrl?.clearValidators();
+        saleCtrl?.setValue(null, { emitEvent: false });
+        saleCtrl?.markAsPristine();
+        saleCtrl?.markAsUntouched();
+      }
+      
+      dailyCtrl?.updateValueAndValidity();
+      saleCtrl?.updateValueAndValidity();
     });
   }
   private loadSubcategories() {
@@ -225,12 +288,28 @@ export class ItemsEditorPageComponent implements OnInit {
         tap((res) => {
           if (res.error) {
             this.toast.showError(res.messages?.[0] ?? 'errors.failedToLoadItemDetails');
-            this.router.navigate(['/items']);
+            const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+            this.router.navigate(target);
             return;
           }
 
           const item = res.data;
           if (item) {
+            const currentUserId = this.authService.getCurrentUserId();
+            const isOwner = currentUserId !== null && item.owner?.id === currentUserId;
+            if (!isOwner) {
+              this.toast.showError('errors.unauthorizedToEdit');
+              const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+              this.router.navigate(target);
+              return;
+            }
+
+            const hasRent = item.pricing?.some((p: any) => p.pricingType === 'daily' || p.pricingType === 'weekly' || p.pricingType === 'monthly');
+            const isSale = item.isForSale;
+            let availableFor = 'rent';
+            if (hasRent && isSale) availableFor = 'both';
+            else if (isSale) availableFor = 'sale';
+            
             this.form.patchValue({
               titleAr: item.titleAr,
               titleEn: item.titleEn,
@@ -238,10 +317,12 @@ export class ItemsEditorPageComponent implements OnInit {
               descEn: item.descEn,
               type: item.type,
               condition: item.condition,
+              availableFor: availableFor,
+              salePrice: item.salePrice ?? 0,
               defaultDeposit: item.defaultDeposit,
-              dailyPrice: item.pricing?.find((p) => p.pricingType === 'daily')?.price ?? 0,
-              weeklyPrice: item.pricing?.find((p) => p.pricingType === 'weekly')?.price ?? 0,
-              monthlyPrice: item.pricing?.find((p) => p.pricingType === 'monthly')?.price ?? 0,
+              dailyPrice: item.pricing?.find((p: any) => p.pricingType === 'daily')?.price ?? 0,
+              weeklyPrice: item.pricing?.find((p: any) => p.pricingType === 'weekly')?.price ?? 0,
+              monthlyPrice: item.pricing?.find((p: any) => p.pricingType === 'monthly')?.price ?? 0,
               location: item.location,
               city: item.city,
               lat: item.lat,
@@ -270,7 +351,8 @@ export class ItemsEditorPageComponent implements OnInit {
         }),
         catchError(() => {
           this.toast.showError('errors.failedToLoadItemDetails');
-          this.router.navigate(['/items']);
+          const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+          this.router.navigate(target);
           return of(null);
         }),
         finalize(() => { this.isLoading.set(false); this.cdr.markForCheck(); }),
@@ -280,8 +362,42 @@ export class ItemsEditorPageComponent implements OnInit {
   onSubmit() {
     if (this.form.invalid) return;
     this.isSaving.set(true);
-    if (this.isEditMode && this.itemId) this.updateItem();
-    else this.createItem();
+
+    const brandIdCtrl = this.form.get('brandId');
+    if (brandIdCtrl?.value === -1) {
+      const nameAr = this.form.get('newBrandNameAr')?.value;
+      const nameEn = this.form.get('newBrandNameEn')?.value;
+
+      const cmd = new CreateBrandCommand({
+        nameAr: nameAr,
+        nameEn: nameEn,
+      });
+
+      this.brandsClient.createBrand(cmd)
+        .subscribe({
+          next: (res) => {
+            if (res.error || !res.data) {
+              this.toast.showError(res.messages?.[0] ?? 'brands.errors.failedToCreate');
+              this.isSaving.set(false);
+              this.cdr.markForCheck();
+            } else {
+              const newBrandId = res.data.id;
+              this.form.patchValue({ brandId: newBrandId });
+
+              if (this.isEditMode && this.itemId) this.updateItem();
+              else this.createItem();
+            }
+          },
+          error: () => {
+            this.toast.showError('brands.errors.failedToCreate');
+            this.isSaving.set(false);
+            this.cdr.markForCheck();
+          }
+        });
+    } else {
+      if (this.isEditMode && this.itemId) this.updateItem();
+      else this.createItem();
+    }
   }
   private buildImages(): CreateItemImageCommand[] {
     return this.uploadedImages
@@ -310,11 +426,13 @@ export class ItemsEditorPageComponent implements OnInit {
       subcategoryId: v.subcategoryId ?? null,
       categoryId: v.categoryId ?? null,
       brandId: v.brandId ?? null,
-      pricing: [
+      isForSale: v.availableFor === 'sale' || v.availableFor === 'both',
+      salePrice: (v.availableFor === 'sale' || v.availableFor === 'both') ? v.salePrice : null,
+      pricing: (v.availableFor === 'rent' || v.availableFor === 'both') ? [
         new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice }),
         ...(v.weeklyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'weekly', price: v.weeklyPrice })] : []),
         ...(v.monthlyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'monthly', price: v.monthlyPrice })] : []),
-      ],
+      ] : [],
       images: this.buildImages(),
     });
     this.itemsClient.createItem(cmd)
@@ -325,7 +443,10 @@ export class ItemsEditorPageComponent implements OnInit {
           } else {
             this.toast.showSuccess(res.messages?.[0] || 'products.createSuccess');
             this.saved.emit();
-            if (this.saved.observed === false) this.router.navigate(['/items']);
+            if (this.saved.observed === false) {
+              const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+              this.router.navigate(target);
+            }
           }
         }),
         catchError(() => {
@@ -355,11 +476,13 @@ export class ItemsEditorPageComponent implements OnInit {
       subcategoryId: v.subcategoryId ?? null,
       categoryId: v.categoryId ?? null,
       brandId: v.brandId ?? null,
-      pricing: [
+      isForSale: v.availableFor === 'sale' || v.availableFor === 'both',
+      salePrice: (v.availableFor === 'sale' || v.availableFor === 'both') ? v.salePrice : null,
+      pricing: (v.availableFor === 'rent' || v.availableFor === 'both') ? [
         new CreateItemPricingCommand({ pricingType: 'daily', price: v.dailyPrice }),
         ...(v.weeklyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'weekly', price: v.weeklyPrice })] : []),
         ...(v.monthlyPrice > 0 ? [new CreateItemPricingCommand({ pricingType: 'monthly', price: v.monthlyPrice })] : []),
-      ],
+      ] : [],
       images: this.buildImages(),
     });
 
@@ -372,7 +495,10 @@ export class ItemsEditorPageComponent implements OnInit {
           } else {
             this.toast.showSuccess(res.messages?.[0] || 'products.updateSuccess');
             this.saved.emit();
-            if (this.saved.observed === false) this.router.navigate(['/items']);
+            if (this.saved.observed === false) {
+              const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+              this.router.navigate(target);
+            }
           }
         }),
         catchError(() => {
@@ -386,6 +512,9 @@ export class ItemsEditorPageComponent implements OnInit {
 
   cancel() {
     this.cancelled.emit();
-    if (this.cancelled.observed === false) this.router.navigate(['/items']);
+    if (this.cancelled.observed === false) {
+      const target = this.authService.isAdmin() ? ['/items'] : ['/my-items'];
+      this.router.navigate(target);
+    }
   }
 }

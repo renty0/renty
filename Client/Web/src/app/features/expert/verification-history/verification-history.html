@@ -1,121 +1,194 @@
 <div class="verification-history-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
-  <app-header-section
-    [title]="'expert.history.title' | translate"
-    [subtitle]="'expert.history.subtitle' | translate"
-    icon="history">
-    <div actions>
-      <button mat-stroked-button routerLink="/expert/assigned">
-        <mat-icon>arrow_back</mat-icon>
-        {{ 'expert.backToAssigned' | translate }}
-      </button>
-    </div>
-  </app-header-section>
+  <app-header-section [title]="'expert.history.title' | translate" [showSearch]="false" [showButton]="false"
+    icon="history" />
 
   <div class="content-wrapper">
     @if (isLoading()) {
-      <div class="loader-container">
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
+    <div class="loader-container">
+      <div class="spinner-ring"></div>
+      <p class="loading-text">{{ 'common.loading' | translate }}</p>
+    </div>
     } @else {
-      <div class="grid-content">
-        <div class="form-section">
-          <mat-card class="premium-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar color="primary">fact_check</mat-icon>
-              <mat-card-title>{{ 'expert.verifyItem' | translate }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <form [formGroup]="verifyForm" class="verification-form">
 
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>{{ 'expert.verify.checkType' | translate }}</mat-label>
-                  <mat-select formControlName="checkType">
-                    <mat-option value="before_rent">{{ 'expert.checkTypes.beforeRent' | translate }}</mat-option>
-                    <mat-option value="after_return">{{ 'expert.checkTypes.afterReturn' | translate }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+    <div class="main-layout">
+      @if (itemDetails()) {
+      <div class="item-summary-card">
+        <div class="item-image-wrap">
+          <img [src]="itemDetails()?.imageUrl || 'assets/images/placeholder.png'" alt="Item Image"
+            (error)="$event.target.src='assets/images/placeholder.png'">
+          <div class="image-badge">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+        </div>
+        <div class="item-info">
+          <div class="item-header">
+            <h3 class="item-title">{{ translate.currentLang === 'ar' ? itemDetails()?.titleAr : itemDetails()?.titleEn }}</h3>
+            <div class="item-location">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ itemDetails()?.city || '-' }}</span>
+            </div>
+          </div>
+          <div class="parties-row">
+            <div class="party-mini owner">
+              <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'"
+                alt="Owner" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.ownerName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.owner?.fullName }}</span>
+              </div>
+              <mat-icon class="party-icon">person</mat-icon>
+            </div>
+            @if (itemDetails()?.activeRental) {
+            <div class="party-mini renter">
+              <img [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/images/avatar-placeholder.png'"
+                alt="Renter" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.renterName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.activeRental?.renter?.fullName }}</span>
+              </div>
+              <mat-icon class="party-icon">person_outline</mat-icon>
+            </div>
+            }
+          </div>
+          @if (itemDetails()?.activeRental) {
+          <div class="rental-info-bar">
+            <div class="info-pill dates">
+              <div class="pill-icon">
+                <mat-icon>event</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalDates' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.startDate | date:'MMM d' }} - {{ itemDetails()?.activeRental?.endDate | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+            <div class="info-pill price">
+              <div class="pill-icon">
+                <mat-icon>payments</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalPrice' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.rentalPrice }} EGP</span>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
 
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>{{ 'expert.verify.status' | translate }}</mat-label>
-                  <mat-select formControlName="status">
-                    <mat-option value="approved">{{ 'expert.status.approved' | translate }}</mat-option>
-                    <mat-option value="rejected">{{ 'expert.status.rejected' | translate }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
+      <div class="content-grid">
+        <div class="form-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap primary pulse">
+              <mat-icon>fact_check</mat-icon>
+            </div>
+            <div>
+              <h2 class="card-title">{{ 'expert.verifyItem' | translate }}</h2>
+              <p class="card-subtitle">{{ 'expert.verifyItem.subtitle' | translate }}</p>
+            </div>
+          </div>
 
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>{{ 'expert.verify.notes' | translate }}</mat-label>
-                  <textarea matInput formControlName="notes" rows="4"
-                            [placeholder]="'expert.verify.notesPlaceholder' | translate"></textarea>
-                </mat-form-field>
+          <form [formGroup]="verifyForm" class="verification-form compact">
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="checkType" label="checkType" type="select" [options]="checkTypeOptions" [translateOptions]="true" [required]="true" prefixIcon="assignment_turned_in" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="status" label="status" type="select" [options]="statusOptions" [translateOptions]="true" [required]="true" prefixIcon="verified" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="destination" label="expert.destination" type="select" [options]="destinationOptions" [translateOptions]="true" [required]="true" prefixIcon="local_shipping" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="notes" label="notes" type="textarea" [rows]="3" [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" />
+            </div>
+          </form>
 
-              </form>
-            </mat-card-content>
-            <mat-card-actions align="end">
-              <app-loading-button
-                [loading]="isSubmitting()"
-                [disabled]="verifyForm.invalid"
-                color="primary"
-                (click)="onSubmit()">
-                <mat-icon>send</mat-icon>
-                {{ 'expert.verify.submit' | translate }}
-              </app-loading-button>
-            </mat-card-actions>
-          </mat-card>
+          <div class="form-actions">
+            <app-loading-button [loading]="isSubmitting()" [disabled]="verifyForm.invalid" color="primary" size="lg"
+              [fullWidth]="true" matIcon="send" (clicked)="onSubmit()">
+              {{ 'expert.verify.submit' | translate }}
+            </app-loading-button>
+          </div>
         </div>
 
-        <div class="history-section">
-          <mat-card class="premium-card history-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar color="accent">history</mat-icon>
-              <mat-card-title>{{ 'expert.history.listTitle' | translate }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              @if (verifications().length > 0) {
-                <div class="timeline">
-                  @for (v of verifications(); track v.id) {
-                    <div class="timeline-item">
-                      <div class="timeline-marker">
-                        <mat-icon [class]="getStatusColor(v.status)">
-                          {{ v.status?.toLowerCase() === 'approved' ? 'check_circle' :
-                             (v.status?.toLowerCase() === 'rejected' ? 'cancel' : 'pending') }}
-                        </mat-icon>
-                        <div class="line"></div>
-                      </div>
-                      <div class="timeline-content">
-                        <div class="header">
-                          <span class="type">{{ 'expert.checkTypes.' + v.checkType?.toLowerCase() | translate }}</span>
-                          <span class="date">{{ v.createdAt | date:'medium' }}</span>
-                        </div>
-                        <div class="status-badge" [class]="getStatusColor(v.status)">
-                          {{ 'expert.status.' + v.status?.toLowerCase() | translate }}
-                        </div>
-                        @if (v.expertFirstName) {
-                          <div class="expert-name">
-                            <mat-icon>person</mat-icon>
-                            <span>{{ 'expert.history.verifiedBy' | translate }}: {{ v.expertFirstName }}</span>
-                          </div>
-                        }
-                        @if (v.notes) {
-                          <div class="notes-box">
-                            <p>{{ v.notes }}</p>
-                          </div>
-                        }
-                      </div>
-                    </div>
+        <div class="history-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap accent pulse">
+              <mat-icon>history</mat-icon>
+            </div>
+            <div>
+              <h2 class="card-title">{{ 'expert.history.listTitle' | translate }}</h2>
+              <p class="card-subtitle">
+                @if (verifications().length > 0) {
+                <span class="record-count">{{ verifications().length }}</span> {{ 'expert.history.records' | translate }}
+                } @else {
+                {{ 'expert.history.noRecords' | translate }}
+                }
+              </p>
+            </div>
+          </div>
+
+          @if (verifications().length > 0) {
+          <div class="timeline compact">
+            @for (v of verifications(); track v.id) {
+            <div class="timeline-item" [class.fade-in]="true">
+              <div class="timeline-marker">
+                <div class="marker-dot" [class]="getStatusColor(v.status)">
+                  <mat-icon>
+                    {{ v.status?.toLowerCase() === 'approved' ? 'check_circle' :
+                    (v.status?.toLowerCase() === 'rejected' ? 'cancel' : 'pending') }}
+                  </mat-icon>
+                </div>
+              </div>
+
+              <div class="timeline-content">
+                <div class="content-header">
+                  <div class="type-badge">
+                    <mat-icon>
+                      {{ v.checkType?.includes('before') ? 'inventory_2' : 'assignment_return' }}
+                    </mat-icon>
+                    <span>{{ 'expert.checkTypes.' + v.checkType | translate }}</span>
+                  </div>
+                  <span class="status-pill" [class]="getStatusColor(v.status)">
+                    {{ 'expert.status.' + v.status?.toLowerCase() | translate }}
+                  </span>
+                </div>
+
+                <div class="content-meta">
+                  <div class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ v.createdAt | date:'mediumDate' }}</span>
+                  </div>
+                  @if (v.expertFirstName) {
+                  <div class="meta-item expert">
+                    <mat-icon>badge</mat-icon>
+                    <span>{{ v.expertFirstName }}</span>
+                  </div>
                   }
                 </div>
-              } @else {
-                <div class="empty-state">
-                  <mat-icon>hourglass_empty</mat-icon>
-                  <p>{{ 'expert.history.empty' | translate }}</p>
-                </div>
-              }
-            </mat-card-content>
-          </mat-card>
-        </div>
 
+                @if (v.notes) {
+                <div class="notes-box">
+                  <mat-icon>format_quote</mat-icon>
+                  <p>{{ v.notes }}</p>
+                </div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+          } @else {
+          <div class="empty-state compact">
+            <div class="empty-icon-wrap">
+              <mat-icon>hourglass_empty</mat-icon>
+            </div>
+            <h3>{{ 'expert.history.empty_title' | translate }}</h3>
+            <p>{{ 'expert.history.empty' | translate }}</p>
+          </div>
+          }
+        </div>
       </div>
+    </div>
     }
   </div>
 </div>

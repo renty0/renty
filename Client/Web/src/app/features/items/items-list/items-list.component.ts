@@ -20,6 +20,9 @@ import { ItemsClient, ItemListDto } from '../../../core/api/api-client';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../../../core/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-items-list',
@@ -49,8 +52,15 @@ export class ItemsListComponent implements OnInit {
   private dialog = inject(MatDialog);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
 
   isOwnerMode = signal(false);
+
+  isOwner(item: ItemListDto): boolean {
+    const currentUserId = this.authService.getCurrentUserId();
+    return currentUserId !== null && item.ownerId === currentUserId;
+  }
 
   displayedColumns = ['image', 'title', 'price', 'category', 'actions'];
   dataSource = signal<ItemListDto[]>([]);
@@ -76,20 +86,18 @@ export class ItemsListComponent implements OnInit {
           this.pageSize.set(mode === 'cards' ? 12 : 10);
         });
       },
-      { allowSignalWrites: true },
     );
 
     effect(
       () => {
         this.getData();
       },
-      { allowSignalWrites: true },
     );
   }
 
   ngOnInit() {
     // Read mode from route data
-    this.route.data.subscribe((data) => {
+    this.route.data.subscribe((data: any) => {
       if (data['ownerMode'] === 'me') {
         this.isOwnerMode.set(true);
       }
@@ -98,6 +106,7 @@ export class ItemsListComponent implements OnInit {
 
   private getData() {
     this.isLoading.set(true);
+    const term = this.searchTerm().trim().toLowerCase();
 
     this.apiClient
       .getItems(
@@ -118,11 +127,31 @@ export class ItemsListComponent implements OnInit {
         this.isOwnerMode() ? 'me' : undefined, // owner
       )
       .pipe(
-        tap((response) => {
-          this.dataSource.set(response?.data ?? []);
-          this.totalCount.set(response?.total ?? 0);
+        tap((response: any) => {
+          const items = response?.data ?? [];
+          const filteredItems = term
+            ? items.filter((item: ItemListDto) => {
+                const titleAr = (item.titleAr ?? '').toLowerCase();
+                const titleEn = (item.titleEn ?? '').toLowerCase();
+                const categoryAr = (item.category?.nameAr ?? '').toLowerCase();
+                const categoryEn = (item.category?.nameEn ?? '').toLowerCase();
+                const subcategoryAr = (item.subcategory?.nameAr ?? '').toLowerCase();
+                const subcategoryEn = (item.subcategory?.nameEn ?? '').toLowerCase();
+                return (
+                  titleAr.includes(term) ||
+                  titleEn.includes(term) ||
+                  categoryAr.includes(term) ||
+                  categoryEn.includes(term) ||
+                  subcategoryAr.includes(term) ||
+                  subcategoryEn.includes(term)
+                );
+              })
+            : items;
+
+          this.dataSource.set(filteredItems);
+          this.totalCount.set(term ? filteredItems.length : response?.total ?? 0);
         }),
-        catchError((err) => {
+        catchError((err: any) => {
           console.error('Failed to load items', err);
           this.dataSource.set([]);
           this.toast.showError('errors.failedToLoadProducts');
@@ -167,10 +196,14 @@ export class ItemsListComponent implements OnInit {
   }
 
   async deleteItem(id: string) {
+    const item = this.dataSource().find((x: ItemListDto) => x.id === id);
+    const isRemoved = item?.status === 'Removed';
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: this.translate.instant('buttons.delete'),
-        message: this.translate.instant('products.deleteConfirmation'),
+        message: this.translate.instant(
+          isRemoved ? 'products.permanentDeleteConfirmation' : 'products.deactivateConfirmation'
+        ),
         confirmText: this.translate.instant('buttons.delete'),
         cancelText: this.translate.instant('buttons.cancel'),
       } as ConfirmDialogData,
@@ -183,15 +216,17 @@ export class ItemsListComponent implements OnInit {
       this.apiClient
         .deleteItem(id)
         .pipe(
-          tap((res) => {
+          tap((res: any) => {
             if (res.error) {
               this.toast.showError(res.messages?.[0] || 'errors.unknownError');
             } else {
-              this.toast.showSuccess(res.messages?.[0] || 'products.deleteSuccess');
+              this.toast.showSuccess(
+                res.messages?.[0] || (isRemoved ? 'products.permanentDeleteSuccess' : 'products.deactivateSuccess')
+              );
               this.getData();
             }
           }),
-          catchError((err) => {
+          catchError((err: any) => {
             console.error('Delete failed', err);
             this.toast.showError('errors.unknownError');
             return of(null);
@@ -200,6 +235,50 @@ export class ItemsListComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  reactivateItem(id: string): void {
+    // kept for backward compatibility; use confirm handler
+    this.reactivateItemWithConfirm(id);
+  }
+
+  async reactivateItemWithConfirm(id: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: this.translate.instant('buttons.reactivate'),
+        message: this.translate.instant('products.reactivateConfirmation'),
+        confirmText: this.translate.instant('buttons.reactivate'),
+        cancelText: this.translate.instant('buttons.cancel'),
+      } as ConfirmDialogData,
+      width: '480px',
+    });
+
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) return;
+
+    this.isLoading.set(true);
+    this.http
+      .post<any>(`${environment.apiUrl}/api/v1/items/${id}/reactivate`, {})
+      .pipe(
+        tap((res: any) => {
+          if (res?.error) {
+            this.toast.showError(res.messages?.[0] || 'errors.unknownError');
+          } else {
+            this.toast.showSuccess(res?.messages?.[0] || 'products.reactivateSuccess');
+            this.getData();
+          }
+        }),
+        catchError(() => {
+          this.toast.showError('errors.unknownError');
+          return of(null);
+        }),
+        finalize(() => this.isLoading.set(false))
+      )
+      .subscribe();
+  }
+
+  isRemoved(item: ItemListDto): boolean {
+    return item.status === 'Removed';
   }
 
   getLocalizedTitle(item: ItemListDto): string {

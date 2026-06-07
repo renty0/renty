@@ -22,9 +22,9 @@ export class NotificationSignalrService {
   
   isConnected = signal(false);
   newNotification = signal<NotificationPayload | null>(null);
+  unreadCount = signal(0);
 
   constructor() {
-    // Automatically connect if user is logged in
     if (this.authService.isLoggedIn()) {
       this.startConnection();
     }
