@@ -4,10 +4,13 @@ import 'package:renty/core/services/api_service.dart';
 
 class HomeController extends GetxController {
   final isLoading = true.obs;
-  final items = <ItemListDto>[].obs;
-  final recommendations = <RecommendationEntryDto>[].obs;
-  final categories = <ProductCategoryDto>[].obs;
   final errorMessage = ''.obs;
+
+  // Data sections — matches web's forkJoin structure
+  final newItems = <ItemListDto>[].obs;        // sort: newest, 4 items
+  final popularItems = <ItemListDto>[].obs;    // sort: popular, 4 items
+  final suggestedItems = <ItemListDto>[].obs;  // carousel items
+  final categories = <ProductCategoryDto>[].obs;
 
   @override
   void onInit() {
@@ -20,57 +23,58 @@ class HomeController extends GetxController {
     errorMessage.value = '';
     try {
       await Future.wait([
-        _loadFeaturedItems(),
+        _loadNewItems(),
+        _loadPopularItems(),
+        _loadSuggestedItems(),
         _loadCategories(),
-        _loadRecommendations(),
       ]);
     } catch (e) {
       errorMessage.value = 'Failed to load data. Pull to refresh.';
-      print('HomeController error: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> _loadFeaturedItems() async {
+  Future<void> _loadNewItems() async {
     try {
       final response = await ApiService.items.getItems(
-        1, 10,
-        sort: 'createdAt',
+        1, 4,
+        sort: 'newest',
         sortOrder: 'desc',
       );
-      if (response != null && response.data != null) {
-        items.assignAll(response.data!);
-      }
-    } catch (e) {
-      print('Error loading featured items: $e');
-    }
+      if (response?.data != null) newItems.assignAll(response!.data!);
+    } catch (_) {}
   }
 
-  Future<void> _loadRecommendations() async {
+  Future<void> _loadPopularItems() async {
     try {
-      final response = await ApiService.recommendations.getRecommendationsV1();
-      if (response != null && response.data != null) {
-        recommendations.assignAll(response.data!.recommendations);
-      }
-    } catch (e) {
-      // Recommendations are non-critical — fail silently
-      print('Error loading recommendations: $e');
-    }
+      final response = await ApiService.items.getItems(
+        1, 4,
+        sort: 'popular',
+        sortOrder: 'desc',
+      );
+      if (response?.data != null) popularItems.assignAll(response!.data!);
+    } catch (_) {}
+  }
+
+  Future<void> _loadSuggestedItems() async {
+    try {
+      // Use regular items endpoint — 8 items for the carousel
+      final response = await ApiService.items.getItems(
+        1, 8,
+        sort: 'popular',
+        sortOrder: 'desc',
+      );
+      if (response?.data != null) suggestedItems.assignAll(response!.data!);
+    } catch (_) {}
   }
 
   Future<void> _loadCategories() async {
     try {
       final response = await ApiService.categories.getCategories(1, 20);
-      if (response != null && response.data != null) {
-        categories.assignAll(response.data!);
-      }
-    } catch (e) {
-      print('Error loading categories: $e');
-    }
+      if (response?.data != null) categories.assignAll(response!.data!);
+    } catch (_) {}
   }
 
-  Future<void> refreshHome() async {
-    await loadHomeData();
-  }
+  Future<void> refreshHome() async => loadHomeData();
 }

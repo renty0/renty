@@ -16,7 +16,22 @@ class AppSearchController extends GetxController {
 
   // Filters
   final selectedCategoryId = Rxn<int>();
+  final selectedCategoryName = ''.obs;
   final selectedCity = ''.obs;
+  final sortBy = 'newest'.obs; // newest, price_low, price_high, rating
+
+  // Categories loaded from API
+  final categories = <ProductCategoryDto>[].obs;
+  final isCategoriesLoaded = false.obs;
+
+  // Egypt governorates (matches web EGYPT_GOVERNORATES)
+  static const List<String> governorates = [
+    'Cairo', 'Giza', 'Alexandria', 'Dakahlia', 'Red Sea', 'Beheira',
+    'Fayoum', 'Gharbia', 'Ismailia', 'Menofia', 'Minya', 'Qalyubia',
+    'New Valley', 'Suez', 'Aswan', 'Assiut', 'Beni Suef', 'Port Said',
+    'Damietta', 'Sharkia', 'South Sinai', 'Kafr El Sheikh', 'Matrouh',
+    'Luxor', 'Qena', 'North Sinai', 'Sohag',
+  ];
 
   // Debounce timer for live search
   Timer? _debounceTimer;
@@ -25,6 +40,20 @@ class AppSearchController extends GetxController {
   void onClose() {
     _debounceTimer?.cancel();
     super.onClose();
+  }
+
+  /// Load categories from API (once).
+  Future<void> loadCategories() async {
+    if (isCategoriesLoaded.value) return;
+    try {
+      final resp = await ApiService.categories.getCategories(1, 100);
+      if (resp?.data != null) {
+        categories.assignAll(resp!.data!);
+        isCategoriesLoaded.value = true;
+      }
+    } catch (e) {
+      print('Failed to load categories: $e');
+    }
   }
 
   /// Called on every keystroke — debounces then searches
@@ -62,6 +91,10 @@ class AppSearchController extends GetxController {
         final data = response.data!;
         // Use List.from to ensure a growable list (avoid fixed-length crash)
         final newItems = List<ItemListDto>.from(data.items);
+
+        // Client-side sort (search API doesn't support sort param)
+        _sortItems(newItems);
+
         if (reset) {
           results.assignAll(newItems);
         } else {
@@ -88,12 +121,52 @@ class AppSearchController extends GetxController {
     }
   }
 
+  void _sortItems(List<ItemListDto> items) {
+    switch (sortBy.value) {
+      case 'price_low':
+        items.sort((a, b) => (a.dailyPrice ?? 0).compareTo(b.dailyPrice ?? 0));
+        break;
+      case 'price_high':
+        items.sort((a, b) => (b.dailyPrice ?? 0).compareTo(a.dailyPrice ?? 0));
+        break;
+      case 'rating':
+        items.sort((a, b) => (b.avgRating ?? 0).compareTo(a.avgRating ?? 0));
+        break;
+      default: // newest — keep server order
+        break;
+    }
+  }
+
   void loadMore() {
     if (currentPage.value < totalPages.value && !isLoading.value) {
       currentPage.value++;
       performSearch(searchQuery.value, reset: false);
     }
   }
+
+  /// Apply filters and re-search.
+  void applyFilters() {
+    if (searchQuery.value.isNotEmpty) {
+      performSearch(searchQuery.value);
+    }
+  }
+
+  /// Reset all filters.
+  void resetFilters() {
+    selectedCategoryId.value = null;
+    selectedCategoryName.value = '';
+    selectedCity.value = '';
+    sortBy.value = 'newest';
+    if (searchQuery.value.isNotEmpty) {
+      performSearch(searchQuery.value);
+    }
+  }
+
+  /// Whether any filter is active.
+  bool get hasActiveFilters =>
+      selectedCategoryId.value != null ||
+      selectedCity.value.isNotEmpty ||
+      sortBy.value != 'newest';
 
   void clearSearch() {
     searchQuery.value = '';

@@ -104,6 +104,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildUserHeader(isDark, textColor, subtextColor),
                           const SizedBox(height: 12),
 
+                          // ── Owner/Renter Rating Stats ──
+                          _buildRatingStats(isDark, cardColor),
+                          const SizedBox(height: 12),
+
                           // ── Edit Profile Button ──
                           SizedBox(
                             width: 160,
@@ -155,6 +159,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: 'Manage your listings',
                                 isDark: isDark,
                                 onTap: () => Get.toNamed('/my-items'),
+                              ),
+                              _ActionTile(
+                                icon: Icons.account_balance_wallet_outlined,
+                                label: 'Wallet',
+                                subtitle: 'Balance & transactions',
+                                isDark: isDark,
+                                iconColor: const Color(0xFF059669),
+                                onTap: () => Get.toNamed('/wallet'),
                               ),
                               _ActionTile(
                                 icon: Icons.favorite_outline,
@@ -210,7 +222,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               _ThemeToggleTile(
                                 isDark: isDark,
+                                showDivider: true,
+                              ),
+                              _ActionTile(
+                                icon: Icons.delete_forever_outlined,
+                                label: 'Delete Account',
+                                subtitle: 'Permanently remove your account',
+                                isDark: isDark,
+                                iconColor: const Color(0xFFDC2626),
                                 showDivider: false,
+                                onTap: () => _showDeleteAccountDialog(),
                               ),
                             ],
                           ),
@@ -363,6 +384,114 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Widget _buildRatingStats(bool isDark, Color cardColor) {
+    final ownerRating = _profile?['ownerRating'];
+    final renterRating = _profile?['renterRating'];
+    // Only show if at least one rating exists
+    if (ownerRating == null && renterRating == null) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(children: [
+        Expanded(
+          child: _ratingItem(
+            'Owner Rating',
+            ownerRating ?? 0.0,
+            const Color(0xFF059669),
+            isDark,
+          ),
+        ),
+        Container(width: 1, height: 40, color: isDark ? Colors.white12 : Colors.grey[200]),
+        Expanded(
+          child: _ratingItem(
+            'Renter Rating',
+            renterRating ?? 0.0,
+            AppColor.fourthColor,
+            isDark,
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _ratingItem(String label, dynamic rating, Color color, bool isDark) {
+    final val = (rating is num) ? rating.toDouble() : 0.0;
+    return Column(children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(val.toStringAsFixed(1),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: isDark ? Colors.white : AppColor.darkText)),
+        const SizedBox(width: 4),
+        Icon(Icons.star_rounded, size: 20, color: color),
+      ]),
+      const SizedBox(height: 4),
+      Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: isDark ? Colors.white54 : AppColor.lightText)),
+    ]);
+  }
+
+  void _showDeleteAccountDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(children: [
+          const Icon(Icons.warning_amber_rounded, color: Color(0xFFDC2626), size: 28),
+          const SizedBox(width: 10),
+          Text('Delete Account',
+              style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColor.darkText)),
+        ]),
+        content: Text(
+          'This action is permanent and cannot be undone. All your data, listings, and history will be permanently deleted.',
+          style: TextStyle(color: isDark ? Colors.white70 : AppColor.mediumText, height: 1.4),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: TextStyle(color: AppColor.mediumText)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await _deleteAccount();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFDC2626),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Delete Account'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteAccount() async {
+    try {
+      // Call DELETE /api/v1/auth/me directly (not in generated client)
+      await ApiService.client.invokeAPI('/api/v1/auth/me', 'DELETE', [], null, {}, {}, null);
+      await ApiService.clearTokens();
+      Get.offAllNamed('/login');
+      Get.snackbar('Account Deleted', 'Your account has been permanently deleted.',
+          backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete account. Please try again.',
+          backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
+    }
+  }
+
   Widget _buildSection({
     required String title,
     required IconData icon,
@@ -419,9 +548,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _launchRentyUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
+    } catch (_) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
   }
 

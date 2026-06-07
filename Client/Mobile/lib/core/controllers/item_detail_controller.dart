@@ -20,6 +20,17 @@ class ItemDetailController extends GetxController {
   final isChatting = false.obs;
   final ownerId = Rxn<int>();
 
+  // ── New: Availability ──
+  final bookedRanges = <Map<String, DateTime>>[].obs;
+  final isLoadingAvailability = false.obs;
+
+  // ── New: Reminder ──
+  final isReminded = false.obs;
+
+  // ── New: Review submission ──
+  final isSubmittingReview = false.obs;
+  final hasRentedItem = false.obs;
+
   String? itemId;
 
   void loadItem(String id) {
@@ -27,6 +38,9 @@ class ItemDetailController extends GetxController {
     _fetchItemDetail();
     _fetchReviews();
     _checkFavorite();
+    _fetchAvailability();
+    _checkReminder();
+    _checkUserHasRented();
   }
 
   /// Star distribution: count of reviews per star level (1–5)
@@ -91,6 +105,130 @@ class ItemDetailController extends GetxController {
     }
   }
 
+  // ── Availability (raw API — not in generated client) ──
+
+  Future<void> _fetchAvailability() async {
+    isLoadingAvailability.value = true;
+    try {
+      final response = await ApiService.items.apiClient.invokeAPI(
+        '/api/v1/items/$itemId/availability',
+        'GET', [], null, {}, {}, null,
+      );
+      if (response.statusCode == 200 && response.body.isNotEmpty) {
+        final body = jsonDecode(response.body);
+        final data = body['data'];
+        if (data is List) {
+          bookedRanges.assignAll(data.map<Map<String, DateTime>>((range) {
+            return {
+              'start': DateTime.parse(range['start']),
+              'end': DateTime.parse(range['end']),
+            };
+          }).toList());
+        }
+      }
+    } catch (e) {
+      print('Error loading availability: $e');
+    } finally {
+      isLoadingAvailability.value = false;
+    }
+  }
+
+  bool isDateBooked(DateTime day) {
+    for (final range in bookedRanges) {
+      final start = range['start']!;
+      final end = range['end']!;
+      if (!day.isBefore(start) && !day.isAfter(end)) return true;
+    }
+    return false;
+  }
+
+  // ── Reminder (raw API — not in generated client) ──
+
+  Future<void> _checkReminder() async {
+    if (!ApiService.isAuthenticated) return;
+    try {
+      final response = await ApiService.items.apiClient.invokeAPI(
+        '/api/v1/items/$itemId/remind',
+        'GET', [], null, {}, {}, null,
+      );
+      if (response.statusCode == 200 && response.body.isNotEmpty) {
+        final body = jsonDecode(response.body);
+        isReminded.value = body['data']?['isReminded'] == true;
+      }
+    } catch (_) {}
+  }
+
+  Future<void> toggleReminder() async {
+    if (!ApiService.isAuthenticated) {
+      _showSnackbar(icon: Icons.login, message: 'Please login first', color: AppColor.fourthColor);
+      return;
+    }
+    try {
+      final method = isReminded.value ? 'DELETE' : 'POST';
+      final response = await ApiService.items.apiClient.invokeAPI(
+        '/api/v1/items/$itemId/remind',
+        method, [], null, {}, {}, null,
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        isReminded.value = !isReminded.value;
+        _showSnackbar(
+          icon: isReminded.value ? Icons.notifications_active : Icons.notifications_off,
+          message: isReminded.value ? 'Reminder set' : 'Reminder removed',
+          color: isReminded.value ? AppColor.fourthColor : Colors.grey[700]!,
+        );
+      }
+    } catch (e) {
+      _showSnackbar(icon: Icons.error_outline, message: 'Failed to update reminder', color: const Color(0xFFDC2626));
+    }
+  }
+
+  // ── Check if user has rented this item (to show/hide review form) ──
+
+  Future<void> _checkUserHasRented() async {
+    if (!ApiService.isAuthenticated) return;
+    try {
+      final response = await ApiService.rentals.getRentals(1, 100);
+      if (response != null && response.data != null) {
+        // RentalListDto doesn't have itemId, match by itemTitle
+        final currentTitle = item.value?.titleEn;
+        hasRentedItem.value = currentTitle != null &&
+            response.data!.rentals.any((r) => r.itemTitle == currentTitle);
+      }
+    } catch (_) {}
+  }
+
+  // ── Submit Review (raw API — not in generated client) ──
+
+  Future<void> submitReview(int rating, String comment) async {
+    if (!ApiService.isAuthenticated) {
+      _showSnackbar(icon: Icons.login, message: 'Please login to review', color: AppColor.fourthColor);
+      return;
+    }
+    isSubmittingReview.value = true;
+    try {
+      final body = jsonEncode({'rating': rating, 'comment': comment});
+      final response = await ApiService.items.apiClient.invokeAPI(
+        '/api/v1/items/$itemId/reviews',
+        'POST', [], body, {'Content-Type': 'application/json'}, {}, 'application/json',
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        _showSnackbar(icon: Icons.check_circle, message: 'Review submitted!', color: AppColor.successColor);
+        _fetchReviews(); // Refresh reviews list
+      } else {
+        final errorBody = response.body.isNotEmpty ? jsonDecode(response.body) : {};
+        final messages = errorBody['messages'];
+        final msg = (messages is List && messages.isNotEmpty) ? messages.first.toString() : 'Failed to submit review';
+        _showSnackbar(icon: Icons.error_outline, message: msg, color: const Color(0xFFDC2626));
+      }
+    } catch (e) {
+      _showSnackbar(icon: Icons.error_outline, message: 'Failed to submit review', color: const Color(0xFFDC2626));
+    } finally {
+      isSubmittingReview.value = false;
+    }
+  }
+
+  // ── Chat ──
+
   Future<void> startChat() async {
     if (ownerId.value == null) {
       _showSnackbar(
@@ -129,6 +267,8 @@ class ItemDetailController extends GetxController {
     }
   }
 
+  // ── Reviews ──
+
   Future<void> _fetchReviews() async {
     try {
       final response = await ApiService.reviews.getItemReviews(itemId!);
@@ -141,6 +281,8 @@ class ItemDetailController extends GetxController {
       print('Error loading reviews: $e');
     }
   }
+
+  // ── Favorites ──
 
   Future<void> _checkFavorite() async {
     if (!ApiService.isAuthenticated) return;

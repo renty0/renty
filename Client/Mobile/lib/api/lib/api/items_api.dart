@@ -163,29 +163,21 @@ class ItemsApi {
   /// Parameters:
   ///
   /// * [int] page (required):
-  ///
   /// * [int] limit (required):
-  ///
   /// * [int] categoryId:
-  ///
   /// * [int] subcategoryId:
-  ///
   /// * [String] city:
-  ///
   /// * [num] minPrice:
-  ///
   /// * [num] maxPrice:
-  ///
+  /// * [DateTime] startDate:
+  /// * [DateTime] endDate:
+  /// * [num] minRating:
   /// * [String] type:
-  ///
   /// * [String] condition:
-  ///
   /// * [String] sort:
-  ///
   /// * [String] sortOrder:
-  ///
   /// * [String] owner:
-  Future<Response> getItemsWithHttpInfo(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
+  Future<Response> getItemsWithHttpInfo(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, num? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/items';
 
@@ -212,6 +204,15 @@ class ItemsApi {
     }
     if (maxPrice != null) {
       queryParams.addAll(_queryParams('', 'maxPrice', maxPrice));
+    }
+    if (startDate != null) {
+      queryParams.addAll(_queryParams('', 'startDate', startDate.toIso8601String()));
+    }
+    if (endDate != null) {
+      queryParams.addAll(_queryParams('', 'endDate', endDate.toIso8601String()));
+    }
+    if (minRating != null) {
+      queryParams.addAll(_queryParams('', 'minRating', minRating));
     }
     if (type != null) {
       queryParams.addAll(_queryParams('', 'type', type));
@@ -244,32 +245,23 @@ class ItemsApi {
   }
 
   /// Parameters:
-  ///
   /// * [int] page (required):
-  ///
   /// * [int] limit (required):
-  ///
   /// * [int] categoryId:
-  ///
   /// * [int] subcategoryId:
-  ///
   /// * [String] city:
-  ///
   /// * [num] minPrice:
-  ///
   /// * [num] maxPrice:
-  ///
+  /// * [DateTime] startDate:
+  /// * [DateTime] endDate:
+  /// * [num] minRating:
   /// * [String] type:
-  ///
   /// * [String] condition:
-  ///
   /// * [String] sort:
-  ///
   /// * [String] sortOrder:
-  ///
   /// * [String] owner:
-  Future<ApiResponseOfListOfItemListDto?> getItems(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
-    final response = await getItemsWithHttpInfo(page, limit,  categoryId: categoryId, subcategoryId: subcategoryId, city: city, minPrice: minPrice, maxPrice: maxPrice, type: type, condition: condition, sort: sort, sortOrder: sortOrder, owner: owner, );
+  Future<ApiResponseOfListOfItemListDto?> getItems(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, num? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
+    final response = await getItemsWithHttpInfo(page, limit, categoryId: categoryId, subcategoryId: subcategoryId, city: city, minPrice: minPrice, maxPrice: maxPrice, startDate: startDate, endDate: endDate, minRating: minRating, type: type, condition: condition, sort: sort, sortOrder: sortOrder, owner: owner, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

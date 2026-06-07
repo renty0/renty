@@ -66,6 +66,8 @@ class InternetChecker {
             return 'Bluetooth';
           case ConnectivityResult.other:
             return 'Other';
+          case ConnectivityResult.satellite:
+            return 'Satellite';
           case ConnectivityResult.none:
             continue;
         }

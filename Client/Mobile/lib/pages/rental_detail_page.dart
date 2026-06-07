@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/main.dart';
 import 'package:renty/pages/chat_room_page.dart';
 
 class RentalDetailPage extends StatefulWidget {
@@ -137,6 +141,65 @@ class _RentalDetailPageState extends State<RentalDetailPage> {
           colorText: Colors.white);
     } finally {
       setState(() => _isActionLoading = false);
+    }
+  }
+
+  Future<void> _pickAndUploadPhoto(String type) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1200, imageQuality: 80);
+    if (picked == null) return;
+
+    setState(() => _isActionLoading = true);
+
+    try {
+      // Step 1: Upload media file via raw multipart request
+      final file = File(picked.path);
+      final token = sharedPref.getString('token') ?? '';
+      final uri = Uri.parse('${ApiService.client.basePath}/api/v1/media?entityId=${widget.rentalId}&entityType=Rental');
+      final request = http.MultipartRequest('POST', uri);
+      request.headers['Authorization'] = 'Bearer $token';
+      request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: picked.name));
+
+      final streamResp = await request.send();
+      final respBody = await streamResp.stream.bytesToString();
+
+      if (streamResp.statusCode < 200 || streamResp.statusCode >= 300) {
+        setState(() => _isActionLoading = false);
+        Get.snackbar('Error', 'Failed to upload photo',
+            backgroundColor: AppColor.warningColor.withOpacity(0.9), colorText: Colors.white);
+        return;
+      }
+
+      final mediaJson = jsonDecode(respBody);
+      final mediaId = mediaJson['data']?['id'];
+
+      if (mediaId == null) {
+        setState(() => _isActionLoading = false);
+        Get.snackbar('Error', 'Failed to get media ID',
+            backgroundColor: AppColor.warningColor.withOpacity(0.9), colorText: Colors.white);
+        return;
+      }
+
+      // Step 2: Associate photo with rental
+      final body = jsonEncode({'imageIds': [mediaId], 'type': type});
+      final assocResp = await ApiService.client.invokeAPI(
+        '/api/v1/rentals/${widget.rentalId}/photos',
+        'POST', [], body, {'Content-Type': 'application/json'}, {}, 'application/json',
+      );
+
+      if (assocResp.statusCode >= 200 && assocResp.statusCode < 300) {
+        Get.snackbar('Success', '$type photo uploaded!',
+            backgroundColor: AppColor.successColor.withOpacity(0.9), colorText: Colors.white);
+        await _loadRentalDetail();
+      } else {
+        Get.snackbar('Error', 'Failed to associate photo',
+            backgroundColor: AppColor.warningColor.withOpacity(0.9), colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Photo upload failed',
+          backgroundColor: AppColor.warningColor.withOpacity(0.9), colorText: Colors.white);
+    } finally {
+      if (mounted) setState(() => _isActionLoading = false);
     }
   }
 
@@ -627,18 +690,36 @@ class _RentalDetailPageState extends State<RentalDetailPage> {
                       ElevatedButton(
                         onPressed: _isActionLoading
                             ? null
-                            : () {
-                                // MOCK — Backend API not available yet
+                            : () async {
+                                final code = _handoffCodeController.text.trim();
+                                if (code.isEmpty) return;
                                 setState(() => _isActionLoading = true);
-                                Future.delayed(Duration(seconds: 1), () {
-                                  setState(() {
-                                    _isActionLoading = false;
-                                    _isHandoffVerified = true;
-                                  });
-                                  Get.snackbar('Success', 'Handoff code verified!',
-                                      backgroundColor: AppColor.successColor.withOpacity(0.9),
+                                try {
+                                  final resp = await ApiService.client.invokeAPI(
+                                    '/api/v1/rentals/${widget.rentalId}/verify-handoff?code=$code',
+                                    'PUT', [], null, {}, {}, null,
+                                  );
+                                  if (resp.statusCode >= 200 && resp.statusCode < 300) {
+                                    setState(() {
+                                      _isActionLoading = false;
+                                      _isHandoffVerified = true;
+                                    });
+                                    Get.snackbar('Success', 'Handoff code verified!',
+                                        backgroundColor: AppColor.successColor.withOpacity(0.9),
+                                        colorText: Colors.white);
+                                    await _loadRentalDetail();
+                                  } else {
+                                    setState(() => _isActionLoading = false);
+                                    Get.snackbar('Error', 'Invalid handoff code',
+                                        backgroundColor: AppColor.warningColor.withOpacity(0.9),
+                                        colorText: Colors.white);
+                                  }
+                                } catch (e) {
+                                  setState(() => _isActionLoading = false);
+                                  Get.snackbar('Error', 'Failed to verify handoff code',
+                                      backgroundColor: AppColor.warningColor.withOpacity(0.9),
                                       colorText: Colors.white);
-                                });
+                                }
                               },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primaryColor,
@@ -738,13 +819,7 @@ class _RentalDetailPageState extends State<RentalDetailPage> {
                 )),
             if (canUpload)
               TextButton.icon(
-                onPressed: () {
-                  // MOCK — uploadRentalPhotos API not available yet
-                  Get.snackbar('Coming Soon',
-                      'Photo upload will be available once the backend API is ready.',
-                      backgroundColor: Color(0xFF2563eb).withOpacity(0.9),
-                      colorText: Colors.white);
-                },
+                onPressed: () => _pickAndUploadPhoto(title == 'Handover Photos' ? 'Handover' : 'Return'),
                 icon: Icon(Icons.add_a_photo_outlined, size: 16),
                 label: Text('Upload', style: TextStyle(fontSize: 12)),
                 style: TextButton.styleFrom(

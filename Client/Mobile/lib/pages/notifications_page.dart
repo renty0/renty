@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/core/services/notification_signalr_service.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -18,10 +20,51 @@ class _NotificationsPageState extends State<NotificationsPage> {
   int _unreadCount = 0;
   String? _errorMessage;
 
+  final _signalr = NotificationSignalrService();
+  StreamSubscription? _notifSub;
+
   @override
   void initState() {
     super.initState();
     _loadNotifications();
+    _initSignalR();
+  }
+
+  Future<void> _initSignalR() async {
+    await _signalr.startConnection();
+    _notifSub = _signalr.onNotification.listen((notif) {
+      if (!mounted) return;
+      setState(() {
+        _notifications.insert(
+          0,
+          NotificationDto(
+            id: notif.id,
+            title: notif.title,
+            message: notif.message,
+            isRead: false,
+            createdAt: notif.createdAt ?? DateTime.now(),
+          ),
+        );
+        _unreadCount++;
+      });
+      // Show in-app snackbar for real-time notification
+      Get.snackbar(
+        notif.title ?? 'Notification',
+        notif.message ?? '',
+        backgroundColor: AppColor.primaryColor.withOpacity(0.9),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 4),
+        icon: const Icon(Icons.notifications_active, color: Colors.white),
+        snackPosition: SnackPosition.TOP,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _notifSub?.cancel();
+    _signalr.dispose();
+    super.dispose();
   }
 
   Future<void> _loadNotifications() async {

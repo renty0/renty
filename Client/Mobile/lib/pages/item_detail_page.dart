@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/controllers/item_detail_controller.dart';
@@ -77,20 +79,40 @@ class ItemDetailPage extends StatelessWidget {
                 onPressed: () => Get.back(),
               ),
               actions: [
+                // Share
+                IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
+                    child: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+                  ),
+                  onPressed: () {
+                    final title = item.titleEn ?? item.titleAr ?? '';
+                    SharePlus.instance.share(ShareParams(text: 'Check out "$title" on Renty!\nhttps://renty.runasp.net/items/${item.id}'));
+                  },
+                ),
+                // Reminder (only when rented)
+                if (item.status?.toLowerCase() == 'rented')
+                  Obx(() => IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
+                      child: Icon(
+                        controller.isReminded.value ? Icons.notifications_active : Icons.notifications_outlined,
+                        color: controller.isReminded.value ? const Color(0xFFF59E0B) : Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    onPressed: controller.toggleReminder,
+                  )),
+                // Favorite
                 Obx(() => IconButton(
                       icon: Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
                         child: Icon(
-                          controller.isFavorite.value
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: controller.isFavorite.value
-                              ? Colors.red
-                              : Colors.white,
+                          controller.isFavorite.value ? Icons.favorite : Icons.favorite_border,
+                          color: controller.isFavorite.value ? Colors.red : Colors.white,
                           size: 20,
                         ),
                       ),
@@ -273,6 +295,70 @@ class ItemDetailPage extends StatelessWidget {
                       ),
                       _divider(isDark),
                     ],
+
+                    // ── Availability Calendar ──
+                    Obx(() {
+                      return Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Availability', style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700,
+                              color: isDark ? Colors.white : AppColor.primaryColor,
+                            )),
+                            const SizedBox(height: 12),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                              ),
+                              child: TableCalendar(
+                                firstDay: DateTime.now(),
+                                lastDay: DateTime.now().add(const Duration(days: 365)),
+                                focusedDay: DateTime.now(),
+                                calendarFormat: CalendarFormat.month,
+                                headerStyle: HeaderStyle(
+                                  formatButtonVisible: false,
+                                  titleCentered: true,
+                                  titleTextStyle: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark ? Colors.white : AppColor.darkText,
+                                  ),
+                                  leftChevronIcon: Icon(Icons.chevron_left, color: isDark ? Colors.white54 : AppColor.mediumText),
+                                  rightChevronIcon: Icon(Icons.chevron_right, color: isDark ? Colors.white54 : AppColor.mediumText),
+                                ),
+                                calendarStyle: CalendarStyle(
+                                  defaultTextStyle: TextStyle(color: isDark ? Colors.white70 : AppColor.darkText),
+                                  weekendTextStyle: TextStyle(color: isDark ? Colors.white54 : AppColor.mediumText),
+                                  outsideTextStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[400]!),
+                                  todayDecoration: BoxDecoration(
+                                    color: AppColor.fourthColor.withOpacity(0.3),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  todayTextStyle: TextStyle(color: isDark ? Colors.white : AppColor.darkText, fontWeight: FontWeight.w700),
+                                  disabledTextStyle: const TextStyle(color: Colors.red, decoration: TextDecoration.lineThrough),
+                                ),
+                                enabledDayPredicate: (day) => !controller.isDateBooked(day),
+                                onDaySelected: (_, __) {},
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(children: [
+                              Container(width: 10, height: 10, decoration: BoxDecoration(color: AppColor.successColor, shape: BoxShape.circle)),
+                              const SizedBox(width: 6),
+                              Text('Available', style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText)),
+                              const SizedBox(width: 16),
+                              Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),
+                              const SizedBox(width: 6),
+                              Text('Booked', style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText)),
+                            ]),
+                          ],
+                        ),
+                      );
+                    }),
+                    _divider(isDark),
 
                     // ── Description ──
                     Padding(
@@ -543,6 +629,17 @@ class ItemDetailPage extends StatelessWidget {
                         ),
                       ),
                     ],
+
+                    // ── Write a Review (only if user has rented) ──
+                    Obx(() {
+                      if (!controller.hasRentedItem.value) return const SizedBox.shrink();
+                      return Column(
+                        children: [
+                          _divider(isDark),
+                          _WriteReviewSection(controller: controller, isDark: isDark),
+                        ],
+                      );
+                    }),
 
                     // ── Similar Items ──
                     Obx(() {
@@ -1017,6 +1114,111 @@ class _ReviewCard extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _WriteReviewSection extends StatefulWidget {
+  final ItemDetailController controller;
+  final bool isDark;
+  const _WriteReviewSection({required this.controller, required this.isDark});
+
+  @override
+  State<_WriteReviewSection> createState() => _WriteReviewSectionState();
+}
+
+class _WriteReviewSectionState extends State<_WriteReviewSection> {
+  int _selectedStar = 0;
+  final _commentCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Leave a Review', style: TextStyle(
+            fontSize: 18, fontWeight: FontWeight.w700,
+            color: widget.isDark ? Colors.white : AppColor.primaryColor,
+          )),
+          const SizedBox(height: 14),
+          // Star selector
+          Row(
+            children: List.generate(5, (i) {
+              final star = i + 1;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedStar = star),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Icon(
+                    star <= _selectedStar ? Icons.star_rounded : Icons.star_outline_rounded,
+                    size: 36,
+                    color: star <= _selectedStar ? const Color(0xFFFFB800) : (widget.isDark ? Colors.grey[600] : Colors.grey[400]),
+                  ),
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 14),
+          // Comment field
+          TextField(
+            controller: _commentCtrl,
+            maxLines: 4,
+            maxLength: 500,
+            style: TextStyle(color: widget.isDark ? Colors.white : AppColor.darkText),
+            decoration: InputDecoration(
+              hintText: 'Share your experience...',
+              hintStyle: TextStyle(color: widget.isDark ? Colors.white38 : Colors.grey[400]),
+              filled: true,
+              fillColor: widget.isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: AppColor.fourthColor, width: 1.5),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          // Submit button
+          Align(
+            alignment: Alignment.centerRight,
+            child: Obx(() => ElevatedButton(
+              onPressed: (_selectedStar == 0 || _commentCtrl.text.trim().length < 10 || widget.controller.isSubmittingReview.value)
+                  ? null
+                  : () async {
+                      await widget.controller.submitReview(_selectedStar, _commentCtrl.text.trim());
+                      setState(() => _selectedStar = 0);
+                      _commentCtrl.clear();
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.fourthColor,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.grey[400],
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 0,
+              ),
+              child: widget.controller.isSubmittingReview.value
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('Submit Review', style: TextStyle(fontWeight: FontWeight.w700)),
+            )),
+          ),
         ],
       ),
     );

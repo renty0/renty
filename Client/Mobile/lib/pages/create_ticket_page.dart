@@ -13,13 +13,15 @@ class CreateTicketPage extends StatefulWidget {
 
 class _CreateTicketPageState extends State<CreateTicketPage> {
   final _messageController = TextEditingController();
-  String _selectedType = 'Issue';
+  String _selectedType = 'General';
   bool _isSubmitting = false;
 
   static const _types = [
-    {'value': 'Issue', 'label': 'Issue'},
-    {'value': 'Feedback', 'label': 'Feedback'},
-    {'value': 'Inquiry', 'label': 'Inquiry'},
+    {'value': 'General', 'label': 'General'},
+    {'value': 'Billing', 'label': 'Billing'},
+    {'value': 'Rental', 'label': 'Rental'},
+    {'value': 'Payment', 'label': 'Payment'},
+    {'value': 'Technical', 'label': 'Technical'},
     {'value': 'Other', 'label': 'Other'},
   ];
 

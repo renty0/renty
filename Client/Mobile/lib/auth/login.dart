@@ -15,6 +15,7 @@ import 'package:renty/utils/favorites_manager.dart';
 import 'package:renty/utils/language_manager.dart';
 import 'package:renty/utils/theme_manager.dart';
 import 'package:renty/auth/forget_password_email.dart';
+import 'package:renty/auth/otp_verification_page.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -143,6 +144,23 @@ class _loginState extends State<login> {
           // No token — server returned error messages
           final messages = response.messages ?? [];
           if (!mounted) return;
+
+          // EmailNotConfirmed: redirect to OTP verification (matches web behaviour)
+          if (messages.isNotEmpty && messages.first == 'EmailNotConfirmed') {
+            setState(() => isLoading = false);
+            Get.snackbar(
+              'Verify Your Email',
+              'Please verify your email to continue.',
+              backgroundColor: Colors.orange.withValues(alpha: 0.9),
+              colorText: Colors.white,
+              snackPosition: SnackPosition.TOP,
+            );
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => OTPVerificationPage(email: email),
+            ));
+            return;
+          }
+
           setState(() {
             isLoading = false;
             errorMessage = messages.isNotEmpty
@@ -161,9 +179,25 @@ class _loginState extends State<login> {
       }
     } on ApiException catch (e) {
       if (!mounted) return;
+      // EmailNotConfirmed can also arrive as a 400/401 ApiException
+      final parsed = _parseApiError(e);
+      if (parsed == 'EmailNotConfirmed' || e.message?.contains('EmailNotConfirmed') == true) {
+        setState(() => isLoading = false);
+        Get.snackbar(
+          'Verify Your Email',
+          'Please verify your email to continue.',
+          backgroundColor: Colors.orange.withValues(alpha: 0.9),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => OTPVerificationPage(email: email),
+        ));
+        return;
+      }
       setState(() {
         isLoading = false;
-        errorMessage = _parseApiError(e);
+        errorMessage = parsed;
       });
     } on SocketException catch (_) {
       if (!mounted) return;

@@ -8,6 +8,7 @@ import 'package:renty/pages/my_orders_page.dart';
 import 'package:renty/pages/my_items_page.dart';
 import 'package:renty/pages/create_item_page.dart';
 import 'package:renty/pages/edit_profile_page.dart';
+import 'package:renty/pages/recommended_items_page.dart';
 import 'package:renty/pages/notifications_page.dart';
 import 'package:renty/pages/favorites_page.dart';
 import 'package:renty/pages/chat_list_page.dart';
@@ -56,6 +57,13 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
     name: "/item-detail",
     page: () => const ItemDetailPage(),
+    transition: Transition.cupertino,
+  ),
+
+  // Recommended items
+  GetPage(
+    name: "/recommended-items",
+    page: () => const RecommendedItemsPage(),
     transition: Transition.cupertino,
   ),
 

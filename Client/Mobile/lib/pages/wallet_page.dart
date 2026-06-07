@@ -112,6 +112,7 @@ class _WalletPageState extends State<WalletPage> {
                     child: Column(
                       children: [
                         _buildBalanceCard(isDark),
+                        _buildEarningsCard(isDark),
                         _buildTransactionsSection(isDark),
                       ],
                     ),
@@ -166,7 +167,7 @@ class _WalletPageState extends State<WalletPage> {
             width: double.infinity,
             height: 46,
             child: ElevatedButton.icon(
-              onPressed: () => _showWithdrawDialog(),
+              onPressed: _balance > 0 ? () => _showWithdrawDialog() : null,
               icon: Icon(Icons.arrow_upward_rounded, size: 18),
               label: Text('Withdraw', style: TextStyle(fontWeight: FontWeight.w600)),
               style: ElevatedButton.styleFrom(
@@ -179,6 +180,50 @@ class _WalletPageState extends State<WalletPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildEarningsCard(bool isDark) {
+    final totalEarnings = _transactions
+        .where((t) =>
+            t.type.toLowerCase().contains('credit') ||
+            t.type.toLowerCase().contains('deposit') ||
+            t.type.toLowerCase().contains('earning'))
+        .fold<double>(0, (sum, t) => sum + t.amount);
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.fromLTRB(16, 0, 16, 4),
+      padding: EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: isDark ? Color(0xFF1E1E1E) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: AppColor.cardShadow, blurRadius: 8, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Row(children: [
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColor.successColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(Icons.trending_up_rounded, size: 22, color: AppColor.successColor),
+        ),
+        SizedBox(width: 14),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Total Earnings',
+              style: TextStyle(fontSize: 13, color: isDark ? Colors.white54 : AppColor.mediumText)),
+          SizedBox(height: 2),
+          Text('EGP ${totalEarnings.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColor.successColor,
+              )),
+        ]),
+      ]),
     );
   }
 
@@ -254,7 +299,7 @@ class _WalletPageState extends State<WalletPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx.description,
+                  tx.type.isNotEmpty ? tx.type : 'Transaction',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -263,6 +308,13 @@ class _WalletPageState extends State<WalletPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (tx.description.isNotEmpty)
+                  Text(
+                    tx.description,
+                    style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 SizedBox(height: 4),
                 Text(
                   tx.createdAt != null

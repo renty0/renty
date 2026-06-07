@@ -89,7 +89,7 @@ class MyRentalsPage extends StatelessWidget {
 
   Widget _buildFilterChips(BuildContext context, RentalsController controller) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final statuses = ['All', 'Pending', 'Confirmed', 'Active', 'Completed', 'Cancelled'];
+    final statuses = ['All', 'Pending', 'Confirmed', 'Active', 'Completed', 'Cancelled', 'Overdue', 'Disputed'];
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12),
       color: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,

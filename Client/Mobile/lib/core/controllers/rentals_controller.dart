@@ -128,7 +128,7 @@ class RentalsController extends GetxController {
     }
   }
 
-  Future<bool> createRental({
+  Future<ApiResponseOfRentalCreateDataData?> createRental({
     required String itemId,
     required DateTime startDate,
     required DateTime endDate,
@@ -144,13 +144,13 @@ class RentalsController extends GetxController {
       final response = await ApiService.rentals.createRental(command);
       if (response != null && response.data != null) {
         Get.snackbar('Success', 'Rental request created!');
-        return true;
+        return response.data;
       }
-      return false;
+      return null;
     } catch (e) {
       print('Error creating rental: $e');
       Get.snackbar('Error', 'Failed to create rental');
-      return false;
+      return null;
     }
   }
 

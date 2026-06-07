@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/pages/payment_page.dart';
+import 'package:renty/pages/checkout_page.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final String orderId;
@@ -17,6 +20,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   bool _isLoading = true;
   ApiResponseOfOrderDetailDto? _response;
   ApiResponseOfPaymentDto? _paymentResponse;
+  List<TrackingEntryDto> _deliveryTracking = [];
   String? _errorMessage;
 
   @override
@@ -38,15 +42,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         _isLoading = false;
       });
 
-      // Also try to load payment info
-      try {
-        final payment =
-            await ApiService.payments.getPaymentByOrder(widget.orderId);
-        if (mounted) {
-          setState(() => _paymentResponse = payment);
-        }
-      } catch (_) {
-        // Payment info may not exist yet
+      // Also load payment + delivery in parallel
+      final futures = await Future.wait([
+        ApiService.payments.getPaymentByOrder(widget.orderId).catchError((_) => null),
+        ApiService.delivery.getDelivery(widget.orderId).catchError((_) => null),
+      ]);
+      if (mounted) {
+        setState(() {
+          _paymentResponse = futures[0] as ApiResponseOfPaymentDto?;
+          final deliveryRes = futures[1] as ApiResponseOfListOfTrackingEntryDto?;
+          _deliveryTracking = deliveryRes?.data ?? [];
+        });
       }
     } catch (e) {
       setState(() {
@@ -185,8 +191,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             SizedBox(height: 20),
 
             // Payment Info
-            if (_paymentResponse?.data != null)
-              _buildPaymentCard(_paymentResponse!.data!),
+            _buildPaymentSection(),
+
+            SizedBox(height: 20),
+
+            // Delivery Tracking
+            _buildDeliveryTimeline(),
 
             SizedBox(height: 20),
           ],
@@ -386,15 +396,151 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     );
   }
 
+  Widget _buildPaymentSection() {
+    if (_paymentResponse?.data != null) {
+      return _buildPaymentCard(_paymentResponse!.data!);
+    }
+    // No payment yet — show Pay Now
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: AppColor.cardShadow, blurRadius: 8, offset: Offset(0, 2))],
+      ),
+      child: Column(children: [
+        Row(children: [
+          Icon(Icons.payment, size: 20, color: Color(0xFFd97706)),
+          SizedBox(width: 8),
+          Text('Payment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColor.primaryColor)),
+        ]),
+        SizedBox(height: 12),
+        Text('No payment recorded yet.', style: TextStyle(color: AppColor.mediumText, fontSize: 14)),
+        SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => PaymentPage(
+                  orderId: widget.orderId,
+                  totalAmount: _response?.data?.totalAmount?.toDouble() ?? 0,
+                  items: [],
+                ),
+              )).then((_) => _loadOrderDetail());
+            },
+            icon: Icon(Icons.payments_outlined, size: 18),
+            label: Text('Pay Now', style: TextStyle(fontWeight: FontWeight.w700)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColor.fourthColor,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 0,
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildDeliveryTimeline() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: AppColor.cardShadow, blurRadius: 8, offset: Offset(0, 2))],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Icon(Icons.local_shipping_outlined, size: 20, color: AppColor.primaryColor),
+          SizedBox(width: 8),
+          Text('Delivery Tracking', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColor.primaryColor)),
+        ]),
+        SizedBox(height: 12),
+        if (_deliveryTracking.isEmpty)
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Column(children: [
+                Icon(Icons.hourglass_empty, size: 36, color: Colors.grey[300]),
+                SizedBox(height: 8),
+                Text('No tracking info yet', style: TextStyle(color: AppColor.mediumText, fontSize: 13)),
+              ]),
+            ),
+          )
+        else
+          ..._deliveryTracking.asMap().entries.map((e) => _buildTimelineItem(e.key, e.value, e.key == _deliveryTracking.length - 1)),
+      ]),
+    );
+  }
+
+  Widget _buildTimelineItem(int index, TrackingEntryDto step, bool isLast) {
+    final dateFormat = DateFormat('MMM dd, yyyy • hh:mm a');
+    final isFirst = index == 0;
+    return IntrinsicHeight(
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        SizedBox(
+          width: 28,
+          child: Column(children: [
+            Container(
+              width: 14, height: 14,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isFirst ? AppColor.fourthColor : Colors.grey[300],
+                border: isFirst ? Border.all(color: AppColor.fourthColor.withOpacity(0.3), width: 3) : null,
+              ),
+            ),
+            if (!isLast)
+              Expanded(child: Container(width: 2, color: Colors.grey[200])),
+          ]),
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                (step.status ?? 'Unknown').replaceAll('_', ' ').capitalize ?? '',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: isFirst ? AppColor.darkText : AppColor.mediumText),
+              ),
+              if (step.location != null && step.location!.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Row(children: [
+                    Icon(Icons.location_on, size: 12, color: AppColor.lightText),
+                    SizedBox(width: 4),
+                    Text(step.location!, style: TextStyle(fontSize: 12, color: AppColor.lightText)),
+                  ]),
+                ),
+              if (step.updatedAt != null)
+                Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Text(dateFormat.format(step.updatedAt!), style: TextStyle(fontSize: 11, color: Colors.grey[400])),
+                ),
+            ]),
+          ),
+        ),
+      ]),
+    );
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
         return Color(0xFFd97706);
       case 'processing':
         return Color(0xFF2563eb);
+      case 'paid':
+      case 'delivered':
+      case 'success':
       case 'completed':
         return AppColor.successColor;
       case 'cancelled':
+      case 'failed':
         return AppColor.warningColor;
       case 'shipped':
         return Color(0xFF7c3aed);

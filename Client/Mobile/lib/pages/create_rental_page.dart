@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/controllers/rentals_controller.dart';
+import 'package:renty/pages/checkout_page.dart';
+import 'package:renty/pages/payment_page.dart';
 
 class CreateRentalPage extends StatefulWidget {
   final String itemId;
@@ -114,15 +116,32 @@ class _CreateRentalPageState extends State<CreateRentalPage> {
 
     try {
       final controller = Get.find<RentalsController>();
-      final success = await controller.createRental(
+      final result = await controller.createRental(
         itemId: widget.itemId,
         startDate: _startDate!,
         endDate: _endDate!,
         pricingType: _selectedPricingType,
       );
 
-      if (success) {
-        Navigator.pop(context, true);
+      if (result != null) {
+        if (result.orderId != null && result.orderId!.isNotEmpty) {
+          final totalAmount = (result.rentalPrice?.toDouble() ?? _estimatedPrice.toDouble())
+              + (result.depositAmount?.toDouble() ?? 0);
+          // Navigate to payment with orderId — matches web flow
+          Get.off(() => PaymentPage(
+            orderId: result.orderId!,
+            totalAmount: totalAmount,
+            items: [
+              CheckoutItem(
+                itemId: widget.itemId,
+                title: widget.itemTitle,
+                price: totalAmount,
+              ),
+            ],
+          ));
+        } else {
+          Navigator.pop(context, true);
+        }
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

@@ -13,10 +13,19 @@ import '../component/logo.dart';
 import '../component/textformfield.dart';
 import 'email_verification_notification.dart';
 
-/// Register page — matches the Web's 3-step registration flow:
-/// Step 1: Account Info (email, password, confirm)
-/// Step 2: Profile Info (firstName, lastName, phone)
-/// Step 3: Additional Info (userType, city, country, bio)
+/// Egypt governorates — matches EGYPT_GOVERNORATES on the web.
+const List<String> kEgyptGovernorates = [
+  'Cairo', 'Alexandria', 'Giza', 'Shubra El-Kheima', 'Port Said',
+  'Suez', 'Luxor', 'Mansoura', 'El-Mahalla El-Kubra', 'Tanta',
+  'Asyut', 'Ismailia', 'Faiyum', 'Zagazig', 'Aswan',
+  'Damietta', 'Damanhur', 'Minya', 'Beni Suef', 'Hurghada',
+  'Qena', 'Sohag', 'Shibin El-Kom', 'Banha', 'Arish',
+];
+
+/// Register page — 3-step registration flow:
+/// Step 1: Personal Info  (firstName, lastName, email)
+/// Step 2: Account Security (phone, password, confirmPassword)
+/// Step 3: Additional       (city, country=Egypt, address, bio, terms)
 class register extends StatefulWidget {
   const register({super.key});
 
@@ -25,50 +34,26 @@ class register extends StatefulWidget {
 }
 
 class _registerState extends State<register> {
-  // Step 1: Account Info
+  // ── Step 1: Account Info ───────────────────────────────────────
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmController = TextEditingController();
 
-  // Step 2: Profile Info
+  // ── Step 2: Profile Info ───────────────────────────────────────
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
 
-  // Step 3: Additional Info
-  final cityController = TextEditingController();
-  final countryController = TextEditingController();
+  // ── Step 3: Additional Info ────────────────────────────────────
   final bioController = TextEditingController();
+  final addressController = TextEditingController();
+  String _selectedCity = 'Cairo'; // required, defaults to Cairo like the web
 
   int _currentStep = 0;
   bool isLoading = false;
   String? errorMessage;
   bool acceptTerms = false;
   bool acceptPrivacy = false;
-
-  // UserType: 1=Renter, 2=Owner, 3=Both
-  UserType _selectedUserType = UserType.number1;
-
-  final List<Map<String, dynamic>> _userTypeOptions = [
-    {
-      'label': 'Renter',
-      'desc': 'I want to rent items from others',
-      'icon': Icons.shopping_bag_outlined,
-      'value': UserType.number1,
-    },
-    {
-      'label': 'Owner',
-      'desc': 'I want to list my items for others to rent',
-      'icon': Icons.storefront_outlined,
-      'value': UserType.number2,
-    },
-    {
-      'label': 'Both',
-      'desc': 'I want to rent and list items',
-      'icon': Icons.groups_outlined,
-      'value': UserType.number3,
-    },
-  ];
 
   @override
   void dispose() {
@@ -78,9 +63,8 @@ class _registerState extends State<register> {
     firstNameController.dispose();
     lastNameController.dispose();
     phoneController.dispose();
-    cityController.dispose();
-    countryController.dispose();
     bioController.dispose();
+    addressController.dispose();
     super.dispose();
   }
 
@@ -102,8 +86,10 @@ class _registerState extends State<register> {
           return 'Passwords do not match';
         break;
       case 2:
-        if (!acceptTerms) return 'You must agree to the Terms & Conditions to continue';
-        if (!acceptPrivacy) return 'You must agree to the Privacy Policy to continue';
+        if (!acceptTerms)
+          return 'You must agree to the Terms & Conditions to continue';
+        if (!acceptPrivacy)
+          return 'You must agree to the Privacy Policy to continue';
         break;
     }
     return null;
@@ -128,7 +114,6 @@ class _registerState extends State<register> {
     });
   }
 
-  /// Parse user-friendly error from ApiException JSON body
   String _parseApiError(ApiException e) {
     try {
       if (e.message != null && e.message!.isNotEmpty) {
@@ -161,7 +146,6 @@ class _registerState extends State<register> {
       return;
     }
 
-    // Check internet BEFORE calling API
     bool hasInternet = await checkInternet();
     if (!hasInternet) {
       if (mounted) showNoInternetDialog(context);
@@ -183,13 +167,11 @@ class _registerState extends State<register> {
         phoneNumber: phoneController.text.trim().isEmpty
             ? null
             : phoneController.text.trim(),
-        userType: _selectedUserType,
-        city: cityController.text.trim().isEmpty
+        address: addressController.text.trim().isEmpty
             ? null
-            : cityController.text.trim(),
-        country: countryController.text.trim().isEmpty
-            ? null
-            : countryController.text.trim(),
+            : addressController.text.trim(),
+        city: _selectedCity,
+        country: 'Egypt',
         bio: bioController.text.trim().isEmpty
             ? null
             : bioController.text.trim(),
@@ -200,11 +182,14 @@ class _registerState extends State<register> {
       if (!mounted) return;
 
       if (response != null && response.error != true) {
-        Get.snackbar('Success', 'Account created! Please verify your email.',
-            backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
-            colorText: Colors.white,
-            snackPosition: SnackPosition.TOP,
-            duration: Duration(seconds: 3));
+        Get.snackbar(
+          'Success',
+          'Account created! Please verify your email.',
+          backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          duration: Duration(seconds: 3),
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -236,7 +221,8 @@ class _registerState extends State<register> {
       if (!mounted) return;
       setState(() {
         isLoading = false;
-        errorMessage = 'Connection error. Please check your internet and try again.';
+        errorMessage =
+            'Connection error. Please check your internet and try again.';
       });
     }
   }
@@ -244,9 +230,10 @@ class _registerState extends State<register> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
+      backgroundColor:
+          isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(20),
@@ -256,7 +243,7 @@ class _registerState extends State<register> {
               Logo(),
               SizedBox(height: 20),
               Text(
-                "Create Account",
+                'Create Account',
                 style: TextStyle(
                   color: isDark ? Colors.white : AppColor.primaryColor,
                   fontSize: 28,
@@ -266,49 +253,41 @@ class _registerState extends State<register> {
               ),
               SizedBox(height: 6),
               Text(
-                "Step ${_currentStep + 1} of 3",
+                'Step ${_currentStep + 1} of 3',
                 style: TextStyle(
-                    fontSize: 14,
-                    color: AppColor.mediumText,
-                    fontWeight: FontWeight.w500),
+                  fontSize: 14,
+                  color: AppColor.mediumText,
+                  fontWeight: FontWeight.w500,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16),
-
-              // Step indicator
               _buildStepIndicator(),
               SizedBox(height: 16),
-
-              // Error
               if (errorMessage != null) _buildError(),
-
               SizedBox(height: 16),
-
-              // Step content
               if (_currentStep == 0) _buildAccountStep(),
               if (_currentStep == 1) _buildProfileStep(),
               if (_currentStep == 2) _buildAdditionalStep(),
-
               SizedBox(height: 24),
-
-              // Navigation
               _buildStepButtons(),
-
               SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already have an account? ",
+                    'Already have an account? ',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   InkWell(
                     onTap: () => Navigator.of(context).pop(),
                     child: Text(
-                      "Login",
+                      'Login',
                       style: TextStyle(
                         fontSize: 16,
-                        color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor,
+                        color: isDark
+                            ? const Color(0xFF93C5FD)
+                            : AppColor.primaryColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -332,9 +311,7 @@ class _registerState extends State<register> {
             margin: EdgeInsets.symmetric(horizontal: 4),
             height: 4,
             decoration: BoxDecoration(
-              color: isActive
-                  ? AppColor.primaryColor
-                  : AppColor.borderGray,
+              color: isActive ? AppColor.primaryColor : AppColor.borderGray,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -360,12 +337,15 @@ class _registerState extends State<register> {
           ),
           SizedBox(width: 10),
           Expanded(
-            child: Text(errorMessage!,
-                style: TextStyle(
-                    color: Color(0xFFDC2626),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    height: 1.4)),
+            child: Text(
+              errorMessage!,
+              style: TextStyle(
+                color: Color(0xFFDC2626),
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                height: 1.4,
+              ),
+            ),
           ),
           GestureDetector(
             onTap: () => setState(() => errorMessage = null),
@@ -379,42 +359,47 @@ class _registerState extends State<register> {
     );
   }
 
-  // ─── Step 1: Personal Info ────────────────────────────────────
+  // ── Step 1: Personal Info (firstName, lastName, email) ────────
   Widget _buildAccountStep() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Personal Information",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColor.darkText)),
+        Text(
+          'Personal Information',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : AppColor.darkText,
+          ),
+        ),
         SizedBox(height: 6),
-        Text("Tell us your name and email address",
-            style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
+        Text(
+          'Tell us your name and email address',
+          style: TextStyle(fontSize: 13, color: AppColor.mediumText),
+        ),
         SizedBox(height: 20),
-        Text("First Name *", style: Theme.of(context).textTheme.titleMedium),
+        Text('First Name *', style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('firstName'),
-          hintText: "Enter your first name",
+          hintText: 'Enter your first name',
           controller: firstNameController,
         ),
         SizedBox(height: 16),
-        Text("Last Name *", style: Theme.of(context).textTheme.titleMedium),
+        Text('Last Name *', style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('lastName'),
-          hintText: "Enter your last name",
+          hintText: 'Enter your last name',
           controller: lastNameController,
         ),
         SizedBox(height: 16),
-        Text("Email *", style: Theme.of(context).textTheme.titleMedium),
+        Text('Email *', style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('email'),
-          hintText: "Enter your email",
+          hintText: 'Enter your email',
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
         ),
@@ -422,46 +407,51 @@ class _registerState extends State<register> {
     );
   }
 
-  // ─── Step 2: Account Security ─────────────────────────────────
+  // ── Step 2: Account Security (phone, password, confirmPassword) ─
   Widget _buildProfileStep() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Account Security",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColor.darkText)),
+        Text(
+          'Account Security',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : AppColor.darkText,
+          ),
+        ),
         SizedBox(height: 6),
-        Text("Set your phone number and create a password",
-            style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
+        Text(
+          'Set your phone number and create a password',
+          style: TextStyle(fontSize: 13, color: AppColor.mediumText),
+        ),
         SizedBox(height: 20),
-        Text("Phone Number", style: Theme.of(context).textTheme.titleMedium),
+        Text('Phone Number', style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('phone'),
-          hintText: "Optional",
+          hintText: 'Optional',
           controller: phoneController,
           keyboardType: TextInputType.phone,
         ),
         SizedBox(height: 16),
-        Text("Password *", style: Theme.of(context).textTheme.titleMedium),
+        Text('Password *', style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('password'),
-          hintText: "Min 6 characters",
+          hintText: 'Min 6 characters',
           controller: passController,
           obscureText: true,
           isPassword: true,
         ),
         SizedBox(height: 16),
-        Text("Confirm Password *",
+        Text('Confirm Password *',
             style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('confirmPassword'),
-          hintText: "Re-enter your password",
+          hintText: 'Re-enter your password',
           controller: confirmController,
           obscureText: true,
           isPassword: true,
@@ -470,96 +460,115 @@ class _registerState extends State<register> {
     );
   }
 
-  // ─── Step 3: Additional Info ──────────────────────────────────
+  // ── Step 3: Additional Info (bio, address, city, country, terms) ─
   Widget _buildAdditionalStep() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Account Type",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColor.darkText)),
+        Text(
+          'Additional Info',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : AppColor.darkText,
+          ),
+        ),
         SizedBox(height: 6),
-        Text("How will you use Renty?",
-            style: TextStyle(fontSize: 13, color: AppColor.mediumText)),
-        SizedBox(height: 16),
-        // User Type Cards
-        ..._userTypeOptions.map((opt) {
-          final isSelected = _selectedUserType == opt['value'];
-          return GestureDetector(
-            onTap: () => setState(() => _selectedUserType = opt['value']),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? (isDark ? AppColor.fourthColor.withOpacity(0.2) : AppColor.primaryColor.withOpacity(0.08))
-                    : (isDark ? const Color(0xFF1E293B) : Colors.white),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: isSelected ? (isDark ? AppColor.fourthColor : AppColor.primaryColor) : (isDark ? const Color(0xFF334155) : AppColor.borderGray),
-                  width: isSelected ? 2 : 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(opt['icon'],
-                          color: isSelected
-                              ? (isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor)
-                              : (isDark ? Colors.white54 : AppColor.mediumText),
-                      size: 28),
-                  SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(opt['label'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: isSelected
-                                  ? (isDark ? Colors.white : AppColor.primaryColor)
-                                  : (isDark ? Colors.white : AppColor.darkText),
-                            )),
-                        SizedBox(height: 2),
-                        Text(opt['desc'],
-                            style: TextStyle(
-                                fontSize: 12, color: AppColor.mediumText)),
-                      ],
-                    ),
-                  ),
-                  if (isSelected)
-                    Icon(Icons.check_circle,
-                        color: isDark ? AppColor.fourthColor : AppColor.primaryColor, size: 22),
-                ],
-              ),
-            ),
-          );
-        }),
-        SizedBox(height: 16),
-        Text("City", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Optional",
-          controller: cityController,
-        ),
-        SizedBox(height: 16),
-        Text("Country", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Optional",
-          controller: countryController,
-        ),
-        SizedBox(height: 16),
-        Text("Bio", style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
-        CustomTextForm(
-          hintText: "Tell us about yourself (optional)",
-          controller: bioController,
+        Text(
+          'Almost done — a few more optional details',
+          style: TextStyle(fontSize: 13, color: AppColor.mediumText),
         ),
         SizedBox(height: 20),
+
+        // City — required dropdown (Egypt governorates)
+        Text('City *', style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E293B) : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isDark ? const Color(0xFF334155) : AppColor.borderGray,
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _selectedCity,
+              isExpanded: true,
+              padding: EdgeInsets.symmetric(horizontal: 14),
+              borderRadius: BorderRadius.circular(12),
+              dropdownColor:
+                  isDark ? const Color(0xFF1E293B) : Colors.white,
+              style: TextStyle(
+                color: isDark ? Colors.white : AppColor.darkText,
+                fontSize: 15,
+              ),
+              items: kEgyptGovernorates
+                  .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                  .toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => _selectedCity = val);
+              },
+            ),
+          ),
+        ),
+
+        SizedBox(height: 16),
+
+        // Country — hardcoded to Egypt (same as web: disabled field)
+        Text('Country', style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          decoration: BoxDecoration(
+            color: isDark
+                ? const Color(0xFF1E293B).withValues(alpha: 0.5)
+                : AppColor.borderGray.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isDark ? const Color(0xFF334155) : AppColor.borderGray,
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(
+                'Egypt',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: isDark ? Colors.white60 : AppColor.mediumText,
+                ),
+              ),
+              Spacer(),
+              Icon(Icons.lock_outline, size: 16,
+                  color: isDark ? Colors.white38 : AppColor.mediumText),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 16),
+
+        // Address — optional (web sends this field)
+        Text('Address', style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        CustomTextForm(
+          key: const ValueKey('address'),
+          hintText: 'Optional',
+          controller: addressController,
+        ),
+
+        SizedBox(height: 16),
+
+        // Bio — optional
+        Text('Bio', style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8),
+        CustomTextForm(
+          hintText: 'Tell us about yourself (optional)',
+          controller: bioController,
+        ),
+
+        SizedBox(height: 20),
+
         // ── Terms & Privacy Agreement ──
         Container(
           padding: const EdgeInsets.all(16),
@@ -582,7 +591,6 @@ class _registerState extends State<register> {
                 ),
               ),
               const SizedBox(height: 12),
-              // Terms checkbox
               _buildAgreementRow(
                 value: acceptTerms,
                 onChanged: (v) => setState(() => acceptTerms = v ?? false),
@@ -591,7 +599,6 @@ class _registerState extends State<register> {
                 url: 'https://appforyou.store/Renty/terms.html',
               ),
               const SizedBox(height: 10),
-              // Privacy checkbox
               _buildAgreementRow(
                 value: acceptPrivacy,
                 onChanged: (v) => setState(() => acceptPrivacy = v ?? false),
@@ -606,7 +613,6 @@ class _registerState extends State<register> {
     );
   }
 
-  /// Reusable checkbox + tappable link row for agreement items.
   Widget _buildAgreementRow({
     required bool value,
     required ValueChanged<bool?> onChanged,
@@ -625,7 +631,8 @@ class _registerState extends State<register> {
             value: value,
             onChanged: onChanged,
             activeColor: AppColor.primaryColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ),
@@ -642,9 +649,14 @@ class _registerState extends State<register> {
               ),
               GestureDetector(
                 onTap: () async {
-                  final uri = Uri.parse(url);
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+                  try {
+                    await launchUrl(
+                      Uri.parse(url),
+                      mode: LaunchMode.inAppBrowserView,
+                    );
+                  } catch (_) {
+                    // fallback: open in external browser
+                    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                   }
                 },
                 child: Text(
@@ -666,11 +678,7 @@ class _registerState extends State<register> {
 
   Widget _buildStepButtons() {
     if (_currentStep == 0) {
-      return Button(
-        title: "Next",
-        isLoading: false,
-        onpressed: _nextStep,
-      );
+      return Button(title: 'Next', isLoading: false, onpressed: _nextStep);
     } else if (_currentStep == 1) {
       return Row(
         children: [
@@ -683,15 +691,17 @@ class _registerState extends State<register> {
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: AppColor.primaryColor),
               ),
-              child: Text("Back",
-                  style: TextStyle(
-                      color: AppColor.primaryColor,
-                      fontWeight: FontWeight.w600)),
+              child: Text(
+                'Back',
+                style: TextStyle(
+                    color: AppColor.primaryColor, fontWeight: FontWeight.w600),
+              ),
             ),
           ),
           SizedBox(width: 12),
           Expanded(
-            child: Button(title: "Next", isLoading: false, onpressed: _nextStep),
+            child:
+                Button(title: 'Next', isLoading: false, onpressed: _nextStep),
           ),
         ],
       );
@@ -707,16 +717,17 @@ class _registerState extends State<register> {
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: AppColor.primaryColor),
               ),
-              child: Text("Back",
-                  style: TextStyle(
-                      color: AppColor.primaryColor,
-                      fontWeight: FontWeight.w600)),
+              child: Text(
+                'Back',
+                style: TextStyle(
+                    color: AppColor.primaryColor, fontWeight: FontWeight.w600),
+              ),
             ),
           ),
           SizedBox(width: 12),
           Expanded(
             child: Button(
-                title: "Register", isLoading: isLoading, onpressed: _signUp),
+                title: 'Register', isLoading: isLoading, onpressed: _signUp),
           ),
         ],
       );

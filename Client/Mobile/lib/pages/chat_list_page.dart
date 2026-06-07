@@ -141,6 +141,7 @@ class _ChatListPageState extends State<ChatListPage> {
             builder: (_) => ChatRoomPage(
               chatId: chat.id ?? '',
               otherUserName: chat.otherUserFirstName ?? 'User',
+              otherUserImage: chat.otherUserProfileImage,
             ),
           ),
         );

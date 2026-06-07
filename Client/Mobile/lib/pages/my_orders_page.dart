@@ -237,9 +237,12 @@ class MyOrdersPage extends StatelessWidget {
         return Color(0xFFd97706);
       case 'processing':
         return Color(0xFF2563eb);
+      case 'paid':
+      case 'delivered':
       case 'completed':
         return AppColor.successColor;
       case 'cancelled':
+      case 'failed':
         return AppColor.warningColor;
       case 'shipped':
         return Color(0xFF7c3aed);

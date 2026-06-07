@@ -63,10 +63,14 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
         return const Color(0xFF2563EB);
       case 'in_progress':
       case 'inprogress':
+      case 'awaitingsupport':
         return const Color(0xFFF59E0B);
+      case 'awaitingcustomer':
+        return const Color(0xFF6366F1);
       case 'resolved':
-      case 'closed':
         return const Color(0xFF10B981);
+      case 'closed':
+        return Colors.grey;
       default:
         return Colors.grey;
     }
@@ -79,6 +83,10 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
       case 'in_progress':
       case 'inprogress':
         return 'In Progress';
+      case 'awaitingsupport':
+        return 'Awaiting Support';
+      case 'awaitingcustomer':
+        return 'Awaiting Response';
       case 'resolved':
         return 'Resolved';
       case 'closed':
