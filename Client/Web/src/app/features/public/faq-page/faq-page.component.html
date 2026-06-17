@@ -1,0 +1,97 @@
+<div class="faq-page" [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <mat-icon>chat</mat-icon>
+        <span>{{ 'faq.heroBadge' | translate }}</span>
+      </div>
+      <h1>{{ 'faq.heroTitle' | translate }}</h1>
+      <p>{{ 'faq.heroDesc' | translate }}</p>
+    </div>
+  </section>
+
+  <div class="container wrap-content">
+    <!-- Search Box -->
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text" 
+        [ngModel]="searchQuery()" 
+        (ngModelChange)="searchQuery.set($event)"
+        [placeholder]="'faq.searchPlaceholder' | translate"
+        autocomplete="off" 
+      />
+      <div class="result-count" *ngIf="searchQuery()">
+        {{ filteredFaqs().length }} {{ 'faq.matchingResults' | translate }}
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tabs-wrap">
+      <div class="tabs">
+        <button 
+          *ngFor="let cat of categories" 
+          class="tab-btn" 
+          [class.active]="selectedCategory() === cat.id"
+          (click)="selectCategory(cat.id)"
+        >
+          {{ 'faq.' + cat.translateKey | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- No Results State -->
+    <div class="no-results" *ngIf="filteredFaqs().length === 0">
+      <mat-icon class="nr-icon">search_off</mat-icon>
+      <p>{{ 'faq.noResultsTitle' | translate }}</p>
+      <p class="sub-msg">{{ 'faq.noResultsSub' | translate }}</p>
+    </div>
+
+    <!-- FAQ Groups & Accordions -->
+    <div *ngIf="filteredFaqs().length > 0">
+      <div 
+        *ngFor="let catId of (selectedCategory() === 'all' ? ['register', 'rental', 'payment', 'experts', 'disputes', 'account'] : [selectedCategory()])"
+        class="faq-group"
+        [class.hidden]="!getGroupedFaqs()[catId] || getGroupedFaqs()[catId].length === 0"
+      >
+        <ng-container *ngIf="getGroupedFaqs()[catId] && getGroupedFaqs()[catId].length > 0">
+          <div class="group-header">
+            <span class="group-title">{{ getCategoryLabel(catId) }}</span>
+            <div class="group-bar"></div>
+          </div>
+
+          <div 
+            *ngFor="let item of getGroupedFaqs()[catId]" 
+            class="accordion-item" 
+            [class.open]="isOpen(item.id)"
+          >
+            <div class="acc-question" (click)="toggleItem(item.id)">
+              <span class="acc-q-text">{{ isArabic ? item.questionAr : item.questionEn }}</span>
+              <mat-icon class="acc-chevron">expand_more</mat-icon>
+            </div>
+            <div class="acc-answer" [style.maxHeight]="isOpen(item.id) ? '400px' : '0'">
+              <div class="acc-answer-inner" [innerHTML]="isArabic ? item.answerAr : item.answerEn"></div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Contact Support CTA -->
+    <div class="contact-cta">
+      <div class="cta-emoji">
+        <mat-icon>support_agent</mat-icon>
+      </div>
+      <h2>{{ 'faq.ctaTitle' | translate }}</h2>
+      <p>{{ 'faq.ctaDesc' | translate }}</p>
+      <div class="cta-actions">
+        <a href="mailto:support@renty.com" class="btn-support">{{ 'faq.ctaButton' | translate }}</a>
+        <div class="cta-meta">
+          <a href="mailto:support@renty.com">support&#64;renty.com</a>
+          <strong>{{ 'faq.ctaHours' | translate }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

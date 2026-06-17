@@ -1,74 +1,86 @@
-<div class="legal-page">
+<div class="legal-page" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+  <!-- Hero Section -->
   <div class="legal-hero">
     <div class="container">
       <mat-icon class="hero-icon">gavel</mat-icon>
       <h1>{{ 'legal.terms.title' | translate }}</h1>
       <p class="hero-sub">{{ 'legal.terms.subtitle' | translate }}</p>
-      <span class="last-updated">{{ 'legal.lastUpdated' | translate }}: {{ lastUpdated }}</span>
+      <span class="last-updated">{{ 'legal.lastUpdated' | translate }}: {{ 'legal.lastUpdatedDate' | translate }} &nbsp;·&nbsp; {{ 'legal.version' | translate }}</span>
     </div>
   </div>
 
   <div class="container legal-content">
+    <!-- Sidebar / TOC -->
     <nav class="toc-sidebar">
       <h3>{{ 'legal.tableOfContents' | translate }}</h3>
-      <ul>
-        <li><a href="/terms#section1">{{ 'legal.terms.s1Title' | translate }}</a></li>
-        <li><a href="/terms#section2">{{ 'legal.terms.s2Title' | translate }}</a></li>
-        <li><a href="/terms#section3">{{ 'legal.terms.s3Title' | translate }}</a></li>
-        <li><a href="/terms#section4">{{ 'legal.terms.s4Title' | translate }}</a></li>
-        <li><a href="/terms#section5">{{ 'legal.terms.s5Title' | translate }}</a></li>
-        <li><a href="/terms#section6">{{ 'legal.terms.s6Title' | translate }}</a></li>
-        <li><a href="/terms#section7">{{ 'legal.terms.s7Title' | translate }}</a></li>
-        <li><a href="/terms#section8">{{ 'legal.terms.s8Title' | translate }}</a></li>
+      <ul class="toc-list">
+        <li><a (click)="scrollToSection('s1')"><span class="toc-num">1</span> {{ 'legal.terms.s1Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s2')"><span class="toc-num">2</span> {{ 'legal.terms.s2Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s3')"><span class="toc-num">3</span> {{ 'legal.terms.s3Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s4')"><span class="toc-num">4</span> {{ 'legal.terms.s4Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s5')"><span class="toc-num">5</span> {{ 'legal.terms.s5Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s6')"><span class="toc-num">6</span> {{ 'legal.terms.s6Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s7')"><span class="toc-num">7</span> {{ 'legal.terms.s7Title' | translate }}</a></li>
+        <li><a (click)="scrollToSection('s8')"><span class="toc-num">8</span> {{ 'legal.terms.s8Title' | translate }}</a></li>
       </ul>
+      <div class="toc-progress">
+        <div class="toc-progress-label">
+          <span>{{ 'legal.readingProgress' | translate }}</span>
+          <span>{{ readingProgress }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="readingProgress"></div>
+        </div>
+      </div>
     </nav>
 
+    <!-- Main Legal Articles -->
     <article class="legal-body">
       <p class="intro-text">{{ 'legal.terms.intro' | translate }}</p>
 
-      <section id="section1" class="legal-section">
+      <section id="s1" class="legal-section">
         <h2>{{ 'legal.terms.s1Title' | translate }}</h2>
         <p>{{ 'legal.terms.s1Body' | translate }}</p>
       </section>
 
-      <section id="section2" class="legal-section">
+      <section id="s2" class="legal-section">
         <h2>{{ 'legal.terms.s2Title' | translate }}</h2>
         <p>{{ 'legal.terms.s2Body' | translate }}</p>
       </section>
 
-      <section id="section3" class="legal-section">
+      <section id="s3" class="legal-section">
         <h2>{{ 'legal.terms.s3Title' | translate }}</h2>
         <p>{{ 'legal.terms.s3Body' | translate }}</p>
       </section>
 
-      <section id="section4" class="legal-section">
+      <section id="s4" class="legal-section">
         <h2>{{ 'legal.terms.s4Title' | translate }}</h2>
         <p>{{ 'legal.terms.s4Body' | translate }}</p>
       </section>
 
-      <section id="section5" class="legal-section">
+      <section id="s5" class="legal-section">
         <h2>{{ 'legal.terms.s5Title' | translate }}</h2>
         <p>{{ 'legal.terms.s5Body' | translate }}</p>
       </section>
 
-      <section id="section6" class="legal-section">
+      <section id="s6" class="legal-section">
         <h2>{{ 'legal.terms.s6Title' | translate }}</h2>
         <p>{{ 'legal.terms.s6Body' | translate }}</p>
       </section>
 
-      <section id="section7" class="legal-section">
+      <section id="s7" class="legal-section">
         <h2>{{ 'legal.terms.s7Title' | translate }}</h2>
         <p>{{ 'legal.terms.s7Body' | translate }}</p>
       </section>
 
-      <section id="section8" class="legal-section">
+      <section id="s8" class="legal-section">
         <h2>{{ 'legal.terms.s8Title' | translate }}</h2>
         <p>{{ 'legal.terms.s8Body' | translate }}</p>
       </section>
 
-      <div class="legal-footer-note">
-        <mat-icon>info</mat-icon>
-        <p>{{ 'legal.contactNote' | translate }} <a routerLink="/contact">{{ 'support.title' | translate }}</a></p>
+      <div class="email-box">
+        <mat-icon>mail</mat-icon>
+        <a href="mailto:legal@renty.com">legal&#64;renty.com</a>
       </div>
     </article>
   </div>

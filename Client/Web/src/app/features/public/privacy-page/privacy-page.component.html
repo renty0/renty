@@ -1,74 +1,95 @@
-<div class="legal-page">
+<div class="legal-page" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
   <div class="legal-hero privacy-hero">
     <div class="container">
       <mat-icon class="hero-icon">shield</mat-icon>
       <h1>{{ 'legal.privacy.title' | translate }}</h1>
       <p class="hero-sub">{{ 'legal.privacy.subtitle' | translate }}</p>
-      <span class="last-updated">{{ 'legal.lastUpdated' | translate }}: {{ lastUpdated }}</span>
+      <span class="last-updated">{{ 'legal.lastUpdated' | translate }}: {{ 'legal.lastUpdatedDate' | translate }}
+        &nbsp;·&nbsp; {{ 'legal.version' | translate }}</span>
     </div>
   </div>
 
   <div class="container legal-content">
     <nav class="toc-sidebar">
       <h3>{{ 'legal.tableOfContents' | translate }}</h3>
-      <ul>
-        <li><a href="/privacy#section1">{{ 'legal.privacy.s1Title' | translate }}</a></li>
-        <li><a href="/privacy#section2">{{ 'legal.privacy.s2Title' | translate }}</a></li>
-        <li><a href="/privacy#section3">{{ 'legal.privacy.s3Title' | translate }}</a></li>
-        <li><a href="/privacy#section4">{{ 'legal.privacy.s4Title' | translate }}</a></li>
-        <li><a href="/privacy#section5">{{ 'legal.privacy.s5Title' | translate }}</a></li>
-        <li><a href="/privacy#section6">{{ 'legal.privacy.s6Title' | translate }}</a></li>
-        <li><a href="/privacy#section7">{{ 'legal.privacy.s7Title' | translate }}</a></li>
-        <li><a href="/privacy#section8">{{ 'legal.privacy.s8Title' | translate }}</a></li>
+      <ul class="toc-list">
+        <li><a (click)="scrollToSection('s1')"><span class="toc-num">1</span> {{ 'legal.privacy.s1Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s2')"><span class="toc-num">2</span> {{ 'legal.privacy.s2Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s3')"><span class="toc-num">3</span> {{ 'legal.privacy.s3Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s4')"><span class="toc-num">4</span> {{ 'legal.privacy.s4Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s5')"><span class="toc-num">5</span> {{ 'legal.privacy.s5Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s6')"><span class="toc-num">6</span> {{ 'legal.privacy.s6Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s7')"><span class="toc-num">7</span> {{ 'legal.privacy.s7Title' | translate
+            }}</a></li>
+        <li><a (click)="scrollToSection('s8')"><span class="toc-num">8</span> {{ 'legal.privacy.s8Title' | translate
+            }}</a></li>
       </ul>
+      <div class="toc-progress">
+        <div class="toc-progress-label">
+          <span>{{ 'legal.readingProgress' | translate }}</span>
+          <span>{{ readingProgress }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="readingProgress"></div>
+        </div>
+      </div>
     </nav>
 
     <article class="legal-body">
       <p class="intro-text">{{ 'legal.privacy.intro' | translate }}</p>
 
-      <section id="section1" class="legal-section">
+      <section id="s1" class="legal-section">
         <h2>{{ 'legal.privacy.s1Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s1Body' | translate }}</p>
       </section>
 
-      <section id="section2" class="legal-section">
+      <section id="s2" class="legal-section">
         <h2>{{ 'legal.privacy.s2Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s2Body' | translate }}</p>
       </section>
 
-      <section id="section3" class="legal-section">
+      <section id="s3" class="legal-section">
         <h2>{{ 'legal.privacy.s3Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s3Body' | translate }}</p>
       </section>
 
-      <section id="section4" class="legal-section">
+      <section id="s4" class="legal-section">
         <h2>{{ 'legal.privacy.s4Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s4Body' | translate }}</p>
       </section>
 
-      <section id="section5" class="legal-section">
+      <section id="s5" class="legal-section">
         <h2>{{ 'legal.privacy.s5Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s5Body' | translate }}</p>
       </section>
 
-      <section id="section6" class="legal-section">
+      <section id="s6" class="legal-section">
         <h2>{{ 'legal.privacy.s6Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s6Body' | translate }}</p>
       </section>
 
-      <section id="section7" class="legal-section">
+      <section id="s7" class="legal-section">
         <h2>{{ 'legal.privacy.s7Title' | translate }}</h2>
-        <p>{{ 'legal.privacy.s7Body' | translate }}</p>
+        <div class="info-box-legal warning">
+          <mat-icon>warning</mat-icon>
+          <span>{{ 'legal.privacy.s7Body' | translate }}</span>
+        </div>
       </section>
 
-      <section id="section8" class="legal-section">
+      <section id="s8" class="legal-section">
         <h2>{{ 'legal.privacy.s8Title' | translate }}</h2>
         <p>{{ 'legal.privacy.s8Body' | translate }}</p>
       </section>
 
-      <div class="legal-footer-note">
-        <mat-icon>info</mat-icon>
-        <p>{{ 'legal.contactNote' | translate }} <a routerLink="/contact">{{ 'support.title' | translate }}</a></p>
+      <div class="email-box">
+        <mat-icon>mail</mat-icon>
+        <a href="mailto:privacy@renty.com">privacy&#64;renty.com</a>
       </div>
     </article>
   </div>

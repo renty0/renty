@@ -57,6 +57,7 @@ export class NavbarComponent implements OnInit {
     { path: '/', labelKey: 'nav.home', icon: 'home', public: true },
     { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
     { path: '/about', labelKey: 'nav.about', icon: 'info', public: true },
+    { path: '/faq', labelKey: 'nav.faq', icon: 'help', public: true },
     { path: '/contact', labelKey: 'nav.contact', icon: 'contact_support', public: true },
     { path: '/categories', labelKey: 'nav.categories', icon: 'category', permission: PermissionType.Items_View },
     { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', permission: PermissionType.Items_View },

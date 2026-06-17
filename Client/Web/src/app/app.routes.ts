@@ -92,6 +92,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/public/privacy-page/privacy-page.component').then(m => m.PrivacyPageComponent)
   },
   {
+    path: 'faq',
+    loadComponent: () => import('./features/public/faq-page/faq-page.component').then(m => m.FaqPageComponent)
+  },
+  {
     path: '',
     component: HomeComponent,
   },

@@ -1,89 +1,202 @@
 <div class="about-page" [attr.dir]="lang === 'ar' ? 'rtl' : 'ltr'">
+  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="container hero-content text-center">
-      <div class="badge fade-in-up" style="animation-delay: 0.1s;">{{ 'about.badge' | translate }}</div>
-      <h1 class="hero-title fade-in-up" style="animation-delay: 0.2s;">
-        {{ 'about.title1' | translate }} <br>
-        <span>{{ 'about.title2' | translate }}</span>
+    <div class="hero-inner">
+      <span class="hero-badge">{{ 'about.page.heroBadge' | translate }}</span>
+      <h1>
+        {{ 'about.page.heroTitle1' | translate }}<br />
+        <span class="highlight">{{ 'about.page.heroTitleHighlight' | translate }}</span><br />
+        {{ 'about.page.heroTitle2' | translate }}
       </h1>
-      <p class="hero-subtitle fade-in-up" style="animation-delay: 0.3s; margin: 0 auto 50px;">
-        {{ 'about.subtitle' | translate }}
-      </p>
+      <p class="hero-sub">{{ 'about.page.heroSub' | translate }}</p>
+      <div class="hero-cta-group">
+        <a href="#story" class="btn-primary-custom">{{ 'about.page.heroStory' | translate }}</a>
+        <a href="#values" class="btn-outline-custom">{{ 'about.page.heroPrinciples' | translate }}</a>
+      </div>
     </div>
   </section>
 
-  <section class="stats-section">
+  <!-- Mission, Vision, Values -->
+  <section class="mvv-section" id="identity">
     <div class="container">
-      <div class="stats-grid glass-card">
-        <div class="stat-item">
-          <mat-icon class="text-primary">group</mat-icon>
-          <div class="stat-value">10K+</div>
-          <div class="stat-label">{{ 'about.stats.users' | translate }}</div>
+      <div class="section-header text-center">
+        <span class="section-label">{{ 'about.page.identityLabel' | translate }}</span>
+        <h2>{{ 'about.page.identityTitle' | translate }}</h2>
+        <p>{{ 'about.page.identityDesc' | translate }}</p>
+      </div>
+
+      <div class="mvv-grid">
+        <div class="mvv-card">
+          <span class="mvv-icon">🎯</span>
+          <h3>{{ 'about.page.missionTitle' | translate }}</h3>
+          <p>{{ 'about.page.missionDesc' | translate }}</p>
         </div>
-        <div class="stat-item">
-          <mat-icon class="text-accent">inventory_2</mat-icon>
-          <div class="stat-value">5K+</div>
-          <div class="stat-label">{{ 'about.stats.items' | translate }}</div>
+
+        <div class="mvv-card">
+          <span class="mvv-icon">🌟</span>
+          <h3>{{ 'about.page.visionTitle' | translate }}</h3>
+          <p>{{ 'about.page.visionDesc' | translate }}</p>
         </div>
-        <div class="stat-item">
-          <mat-icon class="text-success">handshake</mat-icon>
-          <div class="stat-value">20K+</div>
-          <div class="stat-label">{{ 'about.stats.rentals' | translate }}</div>
-        </div>
-        <div class="stat-item">
-          <mat-icon class="text-warn">star</mat-icon>
-          <div class="stat-value">4.9</div>
-          <div class="stat-label">{{ 'about.stats.rating' | translate }}</div>
+
+        <div class="mvv-card">
+          <span class="mvv-icon">💎</span>
+          <h3>{{ 'about.page.valuesTitle' | translate }}</h3>
+          <p>{{ 'about.page.valuesDesc' | translate }}</p>
+          <div class="values-chips">
+            <span class="chip">{{ 'about.page.chip1' | translate }}</span>
+            <span class="chip">{{ 'about.page.chip2' | translate }}</span>
+            <span class="chip">{{ 'about.page.chip3' | translate }}</span>
+            <span class="chip">{{ 'about.page.chip4' | translate }}</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="values-section">
+  <!-- Story Section -->
+  <section class="story-section" id="story">
+    <div class="container">
+      <div class="story-grid">
+        <!-- Left: Visual Card -->
+        <div class="story-visual">
+          <div class="story-year">2026</div>
+          <div class="story-divider"></div>
+          <div class="story-founded">{{ 'about.page.storyFounded' | translate }}</div>
+          <div class="story-flag">🇪🇬</div>
+          <p class="story-note">{{ 'about.page.storyNote' | translate }}</p>
+        </div>
+
+        <!-- Right: Story Details -->
+        <div class="story-text">
+          <span class="section-label">{{ 'about.page.storyLabel' | translate }}</span>
+          <h2>{{ 'about.page.storyTitle' | translate }}</h2>
+          <p>{{ 'about.page.storyP1' | translate }}</p>
+          <p>{{ 'about.page.storyP2' | translate }}</p>
+
+          <div class="story-features">
+            <div class="story-feature">
+              <span class="story-feature-icon">🤿</span>
+              <div class="story-feature-text">
+                <strong>{{ 'about.page.feat1Title' | translate }}</strong>
+                <span>{{ 'about.page.feat1Desc' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="story-feature">
+              <span class="story-feature-icon">🏓</span>
+              <div class="story-feature-text">
+                <strong>{{ 'about.page.feat2Title' | translate }}</strong>
+                <span>{{ 'about.page.feat2Desc' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="story-feature">
+              <span class="story-feature-icon">⛺</span>
+              <div class="story-feature-text">
+                <strong>{{ 'about.page.feat3Title' | translate }}</strong>
+                <span>{{ 'about.page.feat3Desc' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="story-feature">
+              <span class="story-feature-icon">🤖</span>
+              <div class="story-feature-text">
+                <strong>{{ 'about.page.feat4Title' | translate }}</strong>
+                <span>{{ 'about.page.feat4Desc' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="story-feature">
+              <span class="story-feature-icon">🔍</span>
+              <div class="story-feature-text">
+                <strong>{{ 'about.page.feat5Title' | translate }}</strong>
+                <span>{{ 'about.page.feat5Desc' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats-bar-section">
+    <div class="container stats-grid-bar">
+      <div class="stat-item">
+        <span class="stat-number">+6</span>
+        <span class="stat-label">{{ 'about.page.stat1Label' | translate }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">27</span>
+        <span class="stat-label">{{ 'about.page.stat2Label' | translate }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">AI</span>
+        <span class="stat-label">{{ 'about.page.stat3Label' | translate }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">4.9★</span>
+        <span class="stat-label">{{ 'about.page.stat4Label' | translate }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values / Why Choose Us -->
+  <section class="values-section" id="values">
     <div class="container">
       <div class="section-header text-center">
-        <div class="badge">{{ 'about.values.badge' | translate }}</div>
-        <h2>{{ 'about.values.title' | translate }}</h2>
-        <p>{{ 'about.values.subtitle' | translate }}</p>
+        <span class="section-label">{{ 'about.page.whyLabel' | translate }}</span>
+        <h2>{{ 'about.page.whyTitle' | translate }}</h2>
+        <p>{{ 'about.page.whyDesc' | translate }}</p>
       </div>
 
       <div class="values-grid">
         <div class="value-card">
-          <div class="icon-box primary">
-            <mat-icon>verified_user</mat-icon>
-          </div>
-          <h3>{{ 'about.values.trust' | translate }}</h3>
-          <p>{{ 'about.values.trustDesc' | translate }}</p>
+          <span class="value-emoji">🔒</span>
+          <h3>{{ 'about.page.val1Title' | translate }}</h3>
+          <p>{{ 'about.page.val1Desc' | translate }}</p>
         </div>
 
         <div class="value-card">
-          <div class="icon-box accent">
-            <mat-icon>eco</mat-icon>
-          </div>
-          <h3>{{ 'about.values.sustainability' | translate }}</h3>
-          <p>{{ 'about.values.sustainabilityDesc' | translate }}</p>
+          <span class="value-emoji">✅</span>
+          <h3>{{ 'about.page.val2Title' | translate }}</h3>
+          <p>{{ 'about.page.val2Desc' | translate }}</p>
         </div>
 
         <div class="value-card">
-          <div class="icon-box success">
-            <mat-icon>people</mat-icon>
-          </div>
-          <h3>{{ 'about.values.community' | translate }}</h3>
-          <p>{{ 'about.values.communityDesc' | translate }}</p>
+          <span class="value-emoji">🤖</span>
+          <h3>{{ 'about.page.val3Title' | translate }}</h3>
+          <p>{{ 'about.page.val3Desc' | translate }}</p>
+        </div>
+
+        <div class="value-card">
+          <span class="value-emoji">♻️</span>
+          <h3>{{ 'about.page.val4Title' | translate }}</h3>
+          <p>{{ 'about.page.val4Desc' | translate }}</p>
+        </div>
+
+        <div class="value-card">
+          <span class="value-emoji">📱</span>
+          <h3>{{ 'about.page.val5Title' | translate }}</h3>
+          <p>{{ 'about.page.val5Desc' | translate }}</p>
+        </div>
+
+        <div class="value-card">
+          <span class="value-emoji">⚡</span>
+          <h3>{{ 'about.page.val6Title' | translate }}</h3>
+          <p>{{ 'about.page.val6Desc' | translate }}</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- CTA Section -->
   <section class="cta-section">
-    <div class="container text-center">
-      <h2>{{ 'about.cta.title' | translate }}</h2>
-      <p>{{ 'about.cta.subtitle' | translate }}</p>
-      <div class="cta-actions mt-5">
-        <a routerLink="/register" class="btn-primary-custom">{{ 'about.cta.signUp' | translate }}</a>
-        <a routerLink="/marketplace" class="btn-outline-custom ml-3">{{ 'about.cta.browse' | translate }}</a>
+    <div class="container text-center cta-inner">
+      <h2>{{ 'about.page.ctaTitle' | translate }}</h2>
+      <p>{{ 'about.page.ctaDesc' | translate }}</p>
+      <div class="cta-actions">
+        <a routerLink="/marketplace" class="btn-gold">{{ 'about.page.ctaBrowse' | translate }}</a>
       </div>
     </div>
   </section>
