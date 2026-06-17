@@ -112,13 +112,29 @@ public static class VerificationEndpoints
         .RequireAuthorization(Policies.AdminAccess);
 
         // GET /admin/id-verifications
-        app.MapGet("/api/v1/admin/id-verifications", async ([AsParameters] GetIdVerificationRequestsQuery query, ISender sender) =>
+        app.MapGet("/api/v1/admin/id-verifications", async (
+            [Microsoft.AspNetCore.Mvc.FromQuery] string? status,
+            [Microsoft.AspNetCore.Mvc.FromQuery] int page,
+            [Microsoft.AspNetCore.Mvc.FromQuery] int limit,
+            ISender sender) =>
         {
-            var r = await sender.Send(query);
+            var r = await sender.Send(new GetAdminIdVerificationsQuery(status, page < 1 ? 1 : page, limit < 1 ? 20 : limit));
             return Api.Ok(r);
         })
-        .WithTags("Identity").WithName("GetIdVerificationRequests")
-        .Produces<ApiResponse<GetIdVerificationRequestsResponse>>(StatusCodes.Status200OK)
+        .WithTags("Identity").WithName("GetAdminIdVerifications")
+        .Produces<ApiResponse<GetAdminIdVerificationsResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization(Policies.AdminAccess);
+
+        // GET /admin/id-verifications/{id}
+        app.MapGet("/api/v1/admin/id-verifications/{id:guid}", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new GetAdminIdVerificationByIdQuery(id));
+            if (r == null) return Api.Fail("Not found", 404);
+            return Api.Ok(r);
+        })
+        .WithTags("Identity").WithName("GetAdminIdVerificationById")
+        .Produces<ApiResponse<AdminIdVerificationDto>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
         .RequireAuthorization(Policies.AdminAccess);
     }
 }

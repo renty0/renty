@@ -2276,66 +2276,6 @@ export class IdentityClient {
         }
         return _observableOf(null as any);
     }
-
-    getIdVerificationRequests(page?: number | undefined, limit?: number | undefined, status?: string | null | undefined, sortOrder?: string | null | undefined): Observable<ApiResponse<GetIdVerificationRequestsResponse>> {
-        let url_ = this.baseUrl + "/api/v1/admin/id-verifications?";
-        if (page === null)
-            throw new globalThis.Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "Page=" + encodeURIComponent("" + page) + "&";
-        if (limit === null)
-            throw new globalThis.Error("The parameter 'limit' cannot be null.");
-        else if (limit !== undefined)
-            url_ += "Limit=" + encodeURIComponent("" + limit) + "&";
-        if (status !== undefined && status !== null)
-            url_ += "Status=" + encodeURIComponent("" + status) + "&";
-        if (sortOrder !== undefined && sortOrder !== null)
-            url_ += "SortOrder=" + encodeURIComponent("" + sortOrder) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetIdVerificationRequests(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetIdVerificationRequests(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<ApiResponse<GetIdVerificationRequestsResponse>>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<ApiResponse<GetIdVerificationRequestsResponse>>;
-        }));
-    }
-
-    protected processGetIdVerificationRequests(response: HttpResponseBase): Observable<ApiResponse<GetIdVerificationRequestsResponse>> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
 }
 
 @Injectable()
@@ -7973,9 +7913,6 @@ export class AuthLoginUser implements IAuthLoginUser {
     role?: string | undefined;
     profileImageUrl?: string | undefined;
     permissions?: string[] | undefined;
-    idVerificationStatus?: string | undefined;
-    idVerified?: boolean;
-    isVerified?: boolean;
 
     constructor(data?: IAuthLoginUser) {
         if (data) {
@@ -7999,9 +7936,6 @@ export class AuthLoginUser implements IAuthLoginUser {
                 for (let item of _data["permissions"])
                     this.permissions!.push(item);
             }
-            this.idVerificationStatus = _data["idVerificationStatus"];
-            this.idVerified = _data["idVerified"];
-            this.isVerified = _data["isVerified"];
         }
     }
 
@@ -8025,9 +7959,6 @@ export class AuthLoginUser implements IAuthLoginUser {
             for (let item of this.permissions)
                 data["permissions"].push(item);
         }
-        data["idVerificationStatus"] = this.idVerificationStatus;
-        data["idVerified"] = this.idVerified;
-        data["isVerified"] = this.isVerified;
         return data;
     }
 }
@@ -8040,9 +7971,6 @@ export interface IAuthLoginUser {
     role?: string | undefined;
     profileImageUrl?: string | undefined;
     permissions?: string[] | undefined;
-    idVerificationStatus?: string | undefined;
-    idVerified?: boolean;
-    isVerified?: boolean;
 }
 
 export class LoginCommand implements ILoginCommand {
@@ -8185,8 +8113,6 @@ export class AuthMeData implements IAuthMeData {
     isVerified?: boolean;
     createdAt?: Date;
     permissions?: string[] | undefined;
-    idVerificationStatus?: string | undefined;
-    idVerified?: boolean;
 
     constructor(data?: IAuthMeData) {
         if (data) {
@@ -8214,8 +8140,6 @@ export class AuthMeData implements IAuthMeData {
                 for (let item of _data["permissions"])
                     this.permissions!.push(item);
             }
-            this.idVerificationStatus = _data["idVerificationStatus"];
-            this.idVerified = _data["idVerified"];
         }
     }
 
@@ -8243,8 +8167,6 @@ export class AuthMeData implements IAuthMeData {
             for (let item of this.permissions)
                 data["permissions"].push(item);
         }
-        data["idVerificationStatus"] = this.idVerificationStatus;
-        data["idVerified"] = this.idVerified;
         return data;
     }
 }
@@ -8261,8 +8183,6 @@ export interface IAuthMeData {
     isVerified?: boolean;
     createdAt?: Date;
     permissions?: string[] | undefined;
-    idVerificationStatus?: string | undefined;
-    idVerified?: boolean;
 }
 
 export class UpdateUserCommand implements IUpdateUserCommand {
@@ -10579,134 +10499,6 @@ export interface IReviewIdVerificationCommand {
     idVerificationId?: string;
     status?: string;
     rejectionReason?: string | undefined;
-}
-
-
-
-
-
-export class GetIdVerificationRequestsResponse implements IGetIdVerificationRequestsResponse {
-    requests?: IdVerificationRequestDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-
-    constructor(data?: IGetIdVerificationRequestsResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["requests"])) {
-                this.requests = [] as any;
-                for (let item of _data["requests"])
-                    this.requests!.push(IdVerificationRequestDto.fromJS(item));
-            }
-            this.total = _data["total"];
-            this.page = _data["page"];
-            this.pages = _data["pages"];
-        }
-    }
-
-    static fromJS(data: any): GetIdVerificationRequestsResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetIdVerificationRequestsResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.requests)) {
-            data["requests"] = [];
-            for (let item of this.requests)
-                data["requests"].push(item ? item.toJSON() : undefined as any);
-        }
-        data["total"] = this.total;
-        data["page"] = this.page;
-        data["pages"] = this.pages;
-        return data;
-    }
-}
-
-export interface IGetIdVerificationRequestsResponse {
-    requests?: IdVerificationRequestDto[];
-    total?: number;
-    page?: number;
-    pages?: number;
-}
-
-export class IdVerificationRequestDto implements IIdVerificationRequestDto {
-    id?: string;
-    userId?: number;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    frontImageUrl?: string;
-    backImageUrl?: string;
-    status?: string;
-    createdAt?: Date;
-
-    constructor(data?: IIdVerificationRequestDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userId = _data["userId"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.email = _data["email"];
-            this.frontImageUrl = _data["frontImageUrl"];
-            this.backImageUrl = _data["backImageUrl"];
-            this.status = _data["status"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
-        }
-    }
-
-    static fromJS(data: any): IdVerificationRequestDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new IdVerificationRequestDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userId"] = this.userId;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["email"] = this.email;
-        data["frontImageUrl"] = this.frontImageUrl;
-        data["backImageUrl"] = this.backImageUrl;
-        data["status"] = this.status;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
-        return data;
-    }
-}
-
-export interface IIdVerificationRequestDto {
-    id?: string;
-    userId?: number;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    frontImageUrl?: string;
-    backImageUrl?: string;
-    status?: string;
-    createdAt?: Date;
 }
 
 export class RequestWithdrawalCommand implements IRequestWithdrawalCommand {

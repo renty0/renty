@@ -234,26 +234,155 @@
     margin-bottom: $spacing-xl;
 
     &.danger {
-        border: 1px solid rgba($danger, 0.1);
-        background: rgba($danger, 0.01);
+        border: 1px solid rgba($danger, 0.15);
+        background: rgba($danger, 0.015);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, $danger 0%, rgba($danger, 0.4) 100%);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .danger-zone-layout {
+            display: flex;
+            gap: $spacing-xl;
+            align-items: flex-start;
+
+            @include mobile {
+                flex-direction: column;
+                gap: $spacing-md;
+            }
+        }
+
+        .danger-icon-col {
+            flex-shrink: 0;
+        }
+
+        .danger-icon-badge {
+            width: 56px;
+            height: 56px;
+            border-radius: $border-radius-xl;
+            background: rgba($danger, 0.08);
+            border: 1px solid rgba($danger, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                font-size: 26px;
+                width: 26px;
+                height: 26px;
+                color: $danger;
+            }
+        }
+
+        .danger-body {
+            flex: 1;
+            min-width: 0;
+        }
 
         .danger-header {
             display: flex;
             align-items: center;
             gap: $spacing-md;
-            color: $danger;
-            margin-bottom: $spacing-md;
+            margin-bottom: $spacing-sm;
+            flex-wrap: wrap;
 
             h3 {
                 margin: 0;
+                font-size: $font-size-lg;
                 font-weight: $font-weight-bold;
+                color: $danger;
+            }
+
+            .danger-chip {
+                font-size: 10px;
+                font-weight: $font-weight-bold;
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                padding: 3px 10px;
+                border-radius: $border-radius-full;
+                background: rgba($danger, 0.1);
+                color: $danger;
+                border: 1px solid rgba($danger, 0.2);
             }
         }
 
         p {
             color: $gray-600;
-            margin-bottom: $spacing-lg;
+            margin-bottom: $spacing-md;
             font-size: $font-size-sm;
+            line-height: 1.65;
+        }
+
+        .danger-list {
+            list-style: none;
+            margin: 0 0 $spacing-lg;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-sm;
+
+            li {
+                display: flex;
+                align-items: center;
+                gap: $spacing-sm;
+                font-size: $font-size-sm;
+                color: $gray-600;
+
+                mat-icon {
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                    color: rgba($danger, 0.7);
+                    flex-shrink: 0;
+                }
+            }
+        }
+
+        .danger-actions {
+            display: flex;
+            align-items: center;
+            gap: $spacing-md;
+
+            .delete-account-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: $danger;
+                color: $white;
+                border-radius: $border-radius-lg;
+                padding: 0 22px;
+                height: 42px;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-sm;
+                box-shadow: 0 4px 14px rgba($danger, 0.3);
+                transition: $transition-base;
+
+                mat-icon {
+                    font-size: 18px;
+                    width: 18px;
+                    height: 18px;
+                }
+
+                &:hover:not(:disabled) {
+                    box-shadow: 0 6px 20px rgba($danger, 0.45);
+                    transform: translateY(-1px);
+                }
+
+                &:disabled {
+                    opacity: 0.5;
+                    box-shadow: none;
+                    cursor: not-allowed;
+                }
+            }
         }
     }
 }
@@ -461,74 +590,165 @@
     }
 }
 
-.highlight-pulse {
-    animation: highlightPulse 1.5s ease-in-out 2;
-    border-radius: $border-radius-lg;
-    padding: $spacing-xs;
-}
-
-@keyframes highlightPulse {
-    0% { background-color: transparent; }
-    50% { background-color: rgba($primary-color, 0.2); box-shadow: 0 0 15px rgba($primary-color, 0.3); }
-    100% { background-color: transparent; }
-}
-
+// Identity Verification Card Styling
 .verification-status-card {
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    border: 1px solid $gray-200;
+    background: $gray-50;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 1px 2px rgba($black, 0.02);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: $spacing-md;
-    padding: $spacing-lg;
-    background-color: $gray-50;
-    border-radius: $border-radius-xl;
-    border: 1px solid $gray-200;
-    
+
+    &.verified {
+        background: rgba(16, 185, 129, 0.02);
+        border-color: rgba(16, 185, 129, 0.2);
+        box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.06);
+
+        &:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.04);
+        }
+    }
+
+    &.pending {
+        background: rgba(245, 158, 11, 0.02);
+        border-color: rgba(245, 158, 11, 0.2);
+        box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.06);
+
+        &:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.04);
+        }
+    }
+
+    &.unverified {
+        background: rgba(239, 68, 68, 0.01);
+        border-color: rgba(239, 68, 68, 0.1);
+        box-shadow: 0 4px 20px -2px rgba(239, 68, 68, 0.04);
+
+        &:hover {
+            border-color: rgba(239, 68, 68, 0.25);
+            background: rgba(239, 68, 68, 0.025);
+        }
+    }
+
     .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: $spacing-xs;
-        padding: $spacing-xs $spacing-sm;
-        border-radius: $border-radius-lg;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: $border-radius-full;
         font-weight: $font-weight-bold;
-        font-size: $font-size-sm;
-        
-        &.verified {
-            background-color: rgba($primary-light, 0.1);
-            color: $primary-color;
-        }
-        
-        &.pending {
-            background-color: rgba($info, 0.1);
-            color: $info;
-        }
-        
-        &.unverified {
-            background-color: rgba($warning, 0.1);
-            color: $warning;
-        }
-        
+        font-size: $font-size-xs;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 5px rgba($black, 0.05);
+
         mat-icon {
-            font-size: 18px;
-            width: 18px;
-            height: 18px;
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+
+        &.verified {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+        }
+
+        &.pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #d97706;
+            animation: pulse-light 2s infinite ease-in-out;
+        }
+
+        &.unverified {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
         }
     }
-    
+
     .status-text {
+        font-weight: $font-weight-bold;
         font-size: $font-size-md;
-        font-weight: $font-weight-semibold;
         color: $primary-dark;
         margin: 0;
     }
-    
+
     .status-note {
         font-size: $font-size-sm;
         color: $gray-500;
+        line-height: 1.6;
         margin: 0;
-        line-height: 1.5;
+        max-width: 600px;
     }
-    
+
+    .status-note-detail {
+        font-size: $font-size-sm;
+        color: $gray-600;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 600px;
+        font-style: italic;
+    }
+
     .upload-id-btn {
-        margin-top: $spacing-sm;
+        margin-top: $spacing-xs;
+        padding: 10px 20px;
+        border-radius: $border-radius-lg;
+        font-weight: $font-weight-bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: $transition-base;
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+
+        &.pending-btn {
+            background: rgba($gray-300, 0.4) !important;
+            color: $gray-500 !important;
+            border: 1px solid rgba($gray-400, 0.2);
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none !important;
+
+            mat-icon {
+                animation: spin 3s infinite linear;
+            }
+        }
+
+        &:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+        }
+    }
+}
+
+@keyframes pulse-light {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

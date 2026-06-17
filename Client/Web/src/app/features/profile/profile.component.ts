@@ -98,17 +98,54 @@ export class ProfileComponent implements OnInit {
     this.loadUserData();
   }
 
-  ngOnInit() {
-    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      if (params['verify'] === 'true') {
-        this.activeTab = 'personal';
-        setTimeout(() => {
-          const el = document.getElementById('identity-verification-section');
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // Add a temporary highlight effect
-            el.classList.add('highlight-pulse');
-            setTimeout(() => el.classList.remove('highlight-pulse'), 3000);
+  refreshMeData() {
+    this.authClient.authMe()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res?.data) {
+            const u = res.data;
+            const loginUser: any = {
+              id: u.id,
+              firstName: u.firstName,
+              lastName: u.lastName,
+              email: u.email,
+              role: u.role,
+              profileImageUrl: u.profileImageUrl,
+              permissions: u.permissions,
+              idVerified: u.idVerified,
+              idVerificationStatus: u.idVerificationStatus
+            };
+            this.currentUser.set(loginUser);
+            this.authService.storeUserData(loginUser);
+          }
+        }
+      });
+  }
+
+  loadUserData() {
+    const user = this.authService.getUserData() as any;
+    if (user) {
+      this.currentUser.set(user);
+      this.profileForm.patchValue({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePictureUrl: user.profilePictureUrl,
+        address: user.address,
+        city: user.city?.toLowerCase() || 'cairo',
+        country: user.country?.toLowerCase() || 'egypt',
+        bio: user.bio,
+      });
+
+      // Fetch dynamic reviews
+      this.publicProfileClient.getPublicProfile(user.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (res) => {
+            if (res.data && (res.data as any).reviews) {
+              this.reviews.set((res.data as any).reviews);
+            }
           }
         }, 300);
       }
@@ -121,43 +158,7 @@ export class ProfileComponent implements OnInit {
     if (localUser) {
       this.populateForm(localUser);
     }
-
-    // 2. Fetch fresh data from backend
-    this.authClient.authMe()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (res: any) => {
-          if (res?.data) {
-            this.authService.storeUserData(res.data as any);
-            this.populateForm(res.data);
-          }
-        }
-      });
-  }
-
-  private populateForm(user: any) {
-    this.currentUser.set(user);
-    this.profileForm.patchValue({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      profilePictureUrl: user.profileImageUrl || user.profilePictureUrl,
-      address: user.address,
-      city: user.city?.toLowerCase() || 'cairo',
-      country: user.country?.toLowerCase() || 'egypt',
-      bio: user.bio,
-    });
-
-    // Fetch dynamic reviews
-    this.publicProfileClient.getPublicProfile(user.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (res) => {
-          if (res.data && (res.data as any).reviews) {
-            this.reviews.set((res.data as any).reviews);
-          }
-        }
-      });
+    this.refreshMeData();
   }
 
   openImageDialog() {
@@ -218,10 +219,10 @@ export class ProfileComponent implements OnInit {
           this.profileForm.markAsPristine();
 
           const currentUserObj = this.currentUser();
-          const updatedUser = { 
-            ...currentUserObj, 
+          const updatedUser = {
+            ...currentUserObj,
             ...command,
-            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl 
+            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl
           };
           this.currentUser.set(updatedUser as AuthLoginUser);
           this.authService.storeUserData(updatedUser as AuthLoginUser);
@@ -261,10 +262,10 @@ export class ProfileComponent implements OnInit {
 
           // Update currentUser signal and localStorage
           const currentUserObj = this.currentUser();
-          const updatedUser = { 
-            ...currentUserObj, 
-            ...command, 
-            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl 
+          const updatedUser = {
+            ...currentUserObj,
+            ...command,
+            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl
           };
           this.currentUser.set(updatedUser as AuthLoginUser);
           this.authService.storeUserData(updatedUser as AuthLoginUser);

@@ -1,308 +1,350 @@
 <div class="profile-container">
   @if (isLoading()) {
-    <div class="loading-overlay">
-      <div class="spinner-outer">
-        <div class="spinner-inner"></div>
-      </div>
+  <div class="loading-overlay">
+    <div class="spinner-outer">
+      <div class="spinner-inner"></div>
     </div>
+  </div>
   }
 
   @if (profile(); as p) {
-    <div class="profile-header-section">
-      <div class="ambient-glow-blob blob-1"></div>
-      <div class="ambient-glow-blob blob-2"></div>
+  <div class="profile-header-section">
+    <div class="ambient-glow-blob blob-1"></div>
+    <div class="ambient-glow-blob blob-2"></div>
 
-      <div class="profile-info-banner-container">
-        <div class="profile-info-banner glass-card">
-          <div class="avatar-column">
-            <div class="avatar-gradient-ring">
-              <div class="avatar-inner">
-                <img [src]="p.profileImageUrl || p.profilePictureUrl || 'assets/profile.webp'" alt="Avatar">
-              </div>
+    <div class="profile-info-banner-container">
+      <div class="profile-info-banner glass-card">
+        <div class="avatar-column">
+          <div class="avatar-gradient-ring">
+            <div class="avatar-inner">
+              <img [src]="p.profilePictureUrl || 'assets/profile.webp'" alt="Avatar">
+            </div>
+          </div>
+        </div>
+
+        <div class="bio-column">
+          <div class="name-status-row">
+            <h1>{{ p.firstName }} {{ p.lastName }}</h1>
+            <div class="verified-badge-glow" title="Verified Member">
+              <mat-icon>verified</mat-icon>
+              <span>{{ ('profile.verified' | translate) || 'Verified' }}</span>
             </div>
           </div>
 
-          <div class="bio-column">
-            <div class="name-status-row">
-              <h1>{{ p.firstName }} {{ p.lastName }}</h1>
-              @if (p.idVerified) {
-              <div class="verified-badge-glow" title="Verified Member">
-                <mat-icon>verified</mat-icon>
-                <span>{{ ('profile.verified' | translate) || 'Verified' }}</span>
+          <p class="location-text">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ p.city }}, {{ p.country }}</span>
+            <span class="bullet-separator">•</span>
+            <mat-icon>calendar_month</mat-icon>
+            <span>{{ 'profile.joined' | translate }}: {{ p.joinedAt | date:'mediumDate' }}</span>
+          </p>
+
+          <div class="quick-stats-grid">
+            <div class="quick-stat-card">
+              <div class="stat-icon-wrap owner-color">
+                <mat-icon>storefront</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">
+                  <mat-icon>star</mat-icon>
+                  <span>{{ ownerRating() | number:'1.1-1' }}</span>
+                </div>
+                <span class="stat-label">{{ 'profile.ownerRating' | translate }}</span>
               </div>
               }
             </div>
 
-            <p class="location-text">
-              <mat-icon>location_on</mat-icon>
-              <span>{{ p.city }}, {{ p.country }}</span>
-              <span class="bullet-separator">•</span>
-              <mat-icon>calendar_month</mat-icon>
-              <span>{{ 'profile.joined' | translate }}: {{ p.joinedAt | date:'mediumDate' }}</span>
-            </p>
-
-            <div class="quick-stats-grid">
-              <div class="quick-stat-card">
-                <div class="stat-icon-wrap owner-color">
-                  <mat-icon>storefront</mat-icon>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">
-                    <mat-icon>star</mat-icon>
-                    <span>{{ ownerRating() | number:'1.1-1' }}</span>
-                  </div>
-                  <span class="stat-label">{{ 'profile.ownerRating' | translate }}</span>
-                </div>
+            <div class="quick-stat-card">
+              <div class="stat-icon-wrap renter-color">
+                <mat-icon>shopping_bag</mat-icon>
               </div>
-
-              <div class="quick-stat-card">
-                <div class="stat-icon-wrap renter-color">
-                  <mat-icon>shopping_bag</mat-icon>
+              <div class="stat-info">
+                <div class="stat-value">
+                  <mat-icon>star</mat-icon>
+                  <span>{{ renterRating() | number:'1.1-1' }}</span>
                 </div>
-                <div class="stat-info">
-                  <div class="stat-value">
-                    <mat-icon>star</mat-icon>
-                    <span>{{ renterRating() | number:'1.1-1' }}</span>
-                  </div>
-                  <span class="stat-label">{{ 'profile.renterRating' | translate }}</span>
-                </div>
+                <span class="stat-label">{{ 'profile.renterRating' | translate }}</span>
               </div>
+            </div>
 
-              <div class="quick-stat-card">
-                <div class="stat-icon-wrap items-color">
-                  <mat-icon>layers</mat-icon>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">{{ p.items?.length || 0 }}</div>
-                  <span class="stat-label">{{ 'profile.listings' | translate }}</span>
-                </div>
+            <div class="quick-stat-card">
+              <div class="stat-icon-wrap items-color">
+                <mat-icon>layers</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ p.items?.length || 0 }}</div>
+                <span class="stat-label">{{ 'profile.listings' | translate }}</span>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="actions-column">
-            <!-- <button mat-flat-button class="action-btn-message" [routerLink]="['/chats', p.id]">
-              <mat-icon>chat</mat-icon>
-              <span>{{ 'profile.sendMessage' | translate }}</span>
-              <div class="btn-shine"></div>
-            </button> -->
-          </div>
+        <div class="actions-column">
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="profile-layout-body">
-      <div class="profile-grid-container">
+  <div class="profile-layout-body">
+    <div class="profile-grid-container">
 
-        <aside class="profile-sidebar">
-          <div class="sidebar-widget-card glass-card">
-            <h3 class="widget-title">
-              <mat-icon>gavel</mat-icon>
-              <span>{{ ('profile.verification' | translate) || 'Trust & Safety' }}</span>
-            </h3>
+      <aside class="profile-sidebar">
+        <div class="sidebar-widget-card glass-card">
+          <h3 class="widget-title">
+            <mat-icon>gavel</mat-icon>
+            <span>{{ ('profile.verification' | translate) || 'Trust & Safety' }}</span>
+          </h3>
 
-            <ul class="verification-check-list">
-              <li class="check-item" [class.verified]="p.idVerified" [class.unverified]="!p.idVerified">
-                <div class="check-circle">
-                  @if (p.idVerified) {
-                    <mat-icon>check</mat-icon>
-                  } @else {
-                    <mat-icon>close</mat-icon>
-                  }
-                </div>
-                <div class="check-text">
-                  <span class="check-title">{{ ('profile.idVerified' | translate) || 'Identity Verified' }}</span>
-                  <span class="check-desc">
-                    @if (p.idVerified) {
-                      {{ ('profile.idVerifiedDesc' | translate) || 'Government ID uploaded & approved' }}
-                    } @else {
-                      {{ ('profile.idNotVerifiedDesc' | translate) || 'Identity not verified' }}
-                    }
-                  </span>
-                </div>
-              </li>
-              <li class="check-item verified">
-                <div class="check-circle"><mat-icon>check</mat-icon></div>
-                <div class="check-text">
-                  <span class="check-title">{{ ('profile.emailVerified' | translate) || 'Email Confirmed' }}</span>
-                  <span class="check-desc">{{ p.email }}</span>
-                </div>
-              </li>
-              <li class="check-item" [class.verified]="p.phoneVerified" [class.unverified]="!p.phoneVerified">
-                <div class="check-circle">
-                  @if (p.phoneVerified) {
-                    <mat-icon>check</mat-icon>
-                  } @else {
-                    <mat-icon>close</mat-icon>
-                  }
-                </div>
-                <div class="check-text">
-                  <span class="check-title">{{ ('profile.phoneVerified' | translate) || 'Phone Number Verified' }}</span>
-                  <span class="check-desc">
-                    @if (p.phoneVerified) {
-                      {{ ('profile.phoneVerifiedDesc' | translate) || 'SMS code verification complete' }}
-                    } @else {
-                      {{ ('profile.phoneNotVerifiedDesc' | translate) || 'Phone not verified' }}
-                    }
-                  </span>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-        </aside>
-
-        <main class="profile-main-content">
-          <mat-tab-group class="premium-custom-tabs font-family-primary">
-
-            <mat-tab>
-              <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">layers</mat-icon>
-                <span>{{ 'profile.listings' | translate }}</span>
-              </ng-template>
-
-              <div class="listings-tab-pane">
-                <div class="listings-grid">
-                  @for (item of p.items; track item.id) {
-                    <a [routerLink]="['/marketplace/product', item.id]" class="listing-product-card glass-card">
-                      <div class="card-img-container">
-                        <img [src]="item.primaryImage || 'assets/placeholder.png'" alt="Listing Image">
-                        <div class="card-image-gradient"></div>
-                        @if (item.isForSale) {
-                          <span class="listing-type-badge sale-badge">{{ ('items.buyNow' | translate) || 'For Sale' }}</span>
-                        } @else {
-                          <span class="listing-type-badge rent-badge">{{ ('items.rentNow' | translate) || 'For Rent' }}</span>
-                        }
-                      </div>
-                      <div class="card-content-body">
-                        <h3 class="listing-title">{{ getLocalizedTitle(item) }}</h3>
-                        <div class="listing-location-row">
-                          <mat-icon>location_on</mat-icon>
-                          <span>{{ item.city }}</span>
-                        </div>
-                        <div class="listing-footer-price-row">
-                          <div class="price-value-container">
-                            <span class="currency-symbol">EGP </span>
-                            <span class="price-digits">{{ item.dailyPrice }}</span>
-                            <span class="price-frequency">&nbsp;/ {{ 'items.day' | translate }}</span>
-                          </div>
-                          <div class="card-action-arrow">
-                            <mat-icon>arrow_forward</mat-icon>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  } @empty {
-                    <div class="empty-state-card glass-card">
-                      <div class="empty-icon-wrap">
-                        <mat-icon>inventory_2</mat-icon>
-                      </div>
-                      <h3>{{ 'profile.noListings' | translate }}</h3>
-                      <p>{{ ('profile.noListingsSub' | translate) || 'This user has not posted any sports gear listings yet.' }}</p>
-                    </div>
-                  }
-                </div>
-              </div>
-            </mat-tab>
-
-            <mat-tab>
-              <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">rate_review</mat-icon>
-                <span>{{ 'profile.reviews' | translate }}</span>
-                @if (reviews().length > 0) {
-                  <span class="tab-badge">{{ reviews().length }}</span>
-                }
-              </ng-template>
-
-              <div class="reviews-tab-pane">
-                @if (reviews().length > 0) {
-                  <div class="ratings-breakdown-card glass-card">
-                    <div class="average-rating-block">
-                      <span class="big-rating">{{ (ownerRating() + renterRating()) / 2 | number:'1.1-1' }}</span>
-                      <div class="stars-display">
-                        <mat-icon class="star-icon">star</mat-icon>
-                        <mat-icon class="star-icon">star</mat-icon>
-                        <mat-icon class="star-icon">star</mat-icon>
-                        <mat-icon class="star-icon">star</mat-icon>
-                        <mat-icon class="star-icon">star_half</mat-icon>
-                      </div>
-                      <span class="total-reviews-count">{{ reviews().length }} {{ 'profile.reviews' | translate }}</span>
-                    </div>
-
-                    <div class="rating-bars-block">
-                      <div class="rating-bar-row">
-                        <span class="bar-lbl">5 {{ ('profile.stars' | translate) || 'stars' }}</span>
-                        <div class="bar-track"><div class="bar-fill" style="width: 85%"></div></div>
-                        <span class="bar-pct">85%</span>
-                      </div>
-                      <div class="rating-bar-row">
-                        <span class="bar-lbl">4 {{ ('profile.stars' | translate) || 'stars' }}</span>
-                        <div class="bar-track"><div class="bar-fill" style="width: 10%"></div></div>
-                        <span class="bar-pct">10%</span>
-                      </div>
-                      <div class="rating-bar-row">
-                        <span class="bar-lbl">3 {{ ('profile.stars' | translate) || 'stars' }}</span>
-                        <div class="bar-track"><div class="bar-fill" style="width: 5%"></div></div>
-                        <span class="bar-pct">5%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="reviews-feed">
-                    @for (review of reviews(); track review.id) {
-                      <div class="premium-review-card glass-card">
-                        <div class="review-header">
-                          <div class="reviewer-meta-avatar">
-                            <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="Reviewer Avatar">
-                          </div>
-                          <div class="reviewer-meta-text">
-                            <h4>{{ review.reviewerName }}</h4>
-                            <div class="role-date-row">
-                              <span class="review-role-badge" [class.owner-badge]="review.role === 'owner'">
-                                {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
-                              </span>
-                              <span class="bullet-dot">•</span>
-                              <span class="review-date">{{ review.createdAt | date:'mediumDate' }}</span>
-                            </div>
-                          </div>
-                          <div class="review-stars-badge">
-                            <mat-icon>star</mat-icon>
-                            <span>{{ review.rating }}</span>
-                          </div>
-                        </div>
-                        <p class="review-text-content">"{{ review.comment }}"</p>
-                      </div>
-                    }
-                  </div>
+          <ul class="verification-check-list">
+            <li class="check-item" [class.verified]="p.idVerified" [class.unverified]="!p.idVerified">
+              <div class="check-circle">
+                @if (p.idVerified) {
+                <mat-icon>check</mat-icon>
                 } @else {
-                  <div class="empty-state-card glass-card">
-                    <div class="empty-icon-wrap">
-                      <mat-icon>rate_review</mat-icon>
-                    </div>
-                    <h3>{{ 'profile.noReviews' | translate }}</h3>
-                    <p>{{ ('profile.noReviewsSub' | translate) || 'No reviews have been written for this member yet.' }}</p>
-                  </div>
+                <mat-icon>close</mat-icon>
                 }
               </div>
-            </mat-tab>
+              <div class="check-text">
+                <span class="check-title">{{ ('profile.idVerified' | translate) || 'Identity Verified' }}</span>
+                <span class="check-desc">
+                  @if (p.idVerified) {
+                  {{ ('profile.idVerifiedDesc' | translate) || 'Government ID uploaded & approved' }}
+                  } @else {
+                  {{ ('profile.idNotVerifiedDesc' | translate) || 'Identity not verified' }}
+                  }
+                </span>
+              </div>
+            </li>
+            <li class="check-item verified">
+              <div class="check-circle"><mat-icon>check</mat-icon></div>
+              <div class="check-text">
+                <span class="check-title">{{ ('profile.emailVerified' | translate) || 'Email Confirmed' }}</span>
+                <span class="check-desc">{{ p.email }}</span>
+              </div>
+            </li>
+            <li class="check-item" [class.verified]="p.phoneVerified" [class.unverified]="!p.phoneVerified">
+              <div class="check-circle">
+                @if (p.phoneVerified) {
+                <mat-icon>check</mat-icon>
+                } @else {
+                <mat-icon>close</mat-icon>
+                }
+              </div>
+              <div class="check-text">
+                <span class="check-title">{{ ('profile.phoneVerified' | translate) || 'Phone Number Verified' }}</span>
+                <span class="check-desc">
+                  @if (p.phoneVerified) {
+                  {{ ('profile.phoneVerifiedDesc' | translate) || 'SMS code verification complete' }}
+                  } @else {
+                  {{ ('profile.phoneNotVerifiedDesc' | translate) || 'Phone not verified' }}
+                  }
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-            <mat-tab>
-              <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">info</mat-icon>
-                <span>{{ 'profile.about' | translate }}</span>
-              </ng-template>
+        <div class="sidebar-widget-card glass-card">
+          <h3 class="widget-title">
+            <mat-icon>workspace_premium</mat-icon>
+            <span>{{ ('profile.badges' | translate) || 'Renty Badges' }}</span>
+          </h3>
 
-              <div class="about-tab-pane">
-                <div class="about-content-card glass-card">
-                  <h3 class="about-heading">{{ 'profile.bio' | translate }}</h3>
-                  <p class="about-description-text">{{ p.bio || 'This user has not shared a biography yet.' }}</p>
+          <div class="badges-wrapper">
+            <div class="badge-pill active-badge" title="Fast Responder">
+              <div class="badge-icon-wrap"><mat-icon>bolt</mat-icon></div>
+              <span class="badge-name">{{ ('profile.fastResponder' | translate) || 'Quick Responder' }}</span>
+            </div>
+            <div class="badge-pill active-badge" title="Highly Rated Owner">
+              <div class="badge-icon-wrap"><mat-icon>emoji_events</mat-icon></div>
+              <span class="badge-name">{{ ('profile.topOwner' | translate) || 'Super Owner' }}</span>
+            </div>
+            <div class="badge-pill active-badge" title="Clean Gear Provider">
+              <div class="badge-icon-wrap"><mat-icon>clean_hands</mat-icon></div>
+              <span class="badge-name">{{ ('profile.cleanGear' | translate) || 'Clean Gear' }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="profile-main-content">
+        <mat-tab-group class="premium-custom-tabs font-family-primary">
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">layers</mat-icon>
+              <span>{{ 'profile.listings' | translate }}</span>
+            </ng-template>
+
+            <div class="listings-tab-pane">
+              <div class="listings-grid">
+                @for (item of p.items; track item.id) {
+                <a [routerLink]="['/marketplace/product', item.id]" class="listing-product-card glass-card">
+                  <div class="card-img-container">
+                    <img [src]="item.primaryImage || 'assets/placeholder.png'" alt="Listing Image">
+                    <div class="card-image-gradient"></div>
+                    @if (item.isForSale) {
+                    <span class="listing-type-badge sale-badge">{{ ('items.buyNow' | translate) || 'For Sale' }}</span>
+                    } @else {
+                    <span class="listing-type-badge rent-badge">{{ ('items.rentNow' | translate) || 'For Rent' }}</span>
+                    }
+                  </div>
+                  <div class="card-content-body">
+                    <h3 class="listing-title">{{ getLocalizedTitle(item) }}</h3>
+                    <div class="listing-location-row">
+                      <mat-icon>location_on</mat-icon>
+                      <span>{{ item.city }}</span>
+                    </div>
+                    <div class="listing-footer-price-row">
+                      <div class="price-value-container">
+                        <span class="currency-symbol">$</span>
+                        <span class="price-digits">{{ item.dailyPrice }}</span>
+                        <span class="price-frequency">/ {{ 'items.day' | translate }}</span>
+                      </div>
+                      <div class="card-action-arrow">
+                        <mat-icon>arrow_forward</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+                } @empty {
+                <div class="empty-state-card glass-card">
+                  <div class="empty-icon-wrap">
+                    <mat-icon>inventory_2</mat-icon>
+                  </div>
+                  <h3>{{ 'profile.noListings' | translate }}</h3>
+                  <p>{{ ('profile.noListingsSub' | translate) || 'This user has not posted any sports gear listings
+                    yet.' }}</p>
+                </div>
+                }
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">rate_review</mat-icon>
+              <span>{{ 'profile.reviews' | translate }}</span>
+              @if (reviews().length > 0) {
+              <span class="tab-badge">{{ reviews().length }}</span>
+              }
+            </ng-template>
+
+            <div class="reviews-tab-pane">
+              @if (reviews().length > 0) {
+              <div class="ratings-breakdown-card glass-card">
+                <div class="average-rating-block">
+                  <span class="big-rating">{{ (ownerRating() + renterRating()) / 2 | number:'1.1-1' }}</span>
+                  <div class="stars-display">
+                    <mat-icon class="star-icon">star</mat-icon>
+                    <mat-icon class="star-icon">star</mat-icon>
+                    <mat-icon class="star-icon">star</mat-icon>
+                    <mat-icon class="star-icon">star</mat-icon>
+                    <mat-icon class="star-icon">star_half</mat-icon>
+                  </div>
+                  <span class="total-reviews-count">{{ reviews().length }} {{ 'profile.reviews' | translate }}</span>
+                </div>
+
+                <div class="rating-bars-block">
+                  <div class="rating-bar-row">
+                    <span class="bar-lbl">5 {{ ('profile.stars' | translate) || 'stars' }}</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 85%"></div>
+                    </div>
+                    <span class="bar-pct">85%</span>
+                  </div>
+                  <div class="rating-bar-row">
+                    <span class="bar-lbl">4 {{ ('profile.stars' | translate) || 'stars' }}</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 10%"></div>
+                    </div>
+                    <span class="bar-pct">10%</span>
+                  </div>
+                  <div class="rating-bar-row">
+                    <span class="bar-lbl">3 {{ ('profile.stars' | translate) || 'stars' }}</span>
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 5%"></div>
+                    </div>
+                    <span class="bar-pct">5%</span>
+                  </div>
                 </div>
               </div>
-            </mat-tab>
-          </mat-tab-group>
-        </main>
 
-      </div>
+              <div class="reviews-feed">
+                @for (review of reviews(); track review.id) {
+                <div class="premium-review-card glass-card">
+                  <div class="review-header">
+                    <div class="reviewer-meta-avatar">
+                      <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="Reviewer Avatar">
+                    </div>
+                    <div class="reviewer-meta-text">
+                      <h4>{{ review.reviewerName }}</h4>
+                      <div class="role-date-row">
+                        <span class="review-role-badge" [class.owner-badge]="review.role === 'owner'">
+                          {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
+                        </span>
+                        <span class="bullet-dot">•</span>
+                        <span class="review-date">{{ review.createdAt | date:'mediumDate' }}</span>
+                      </div>
+                    </div>
+                    <div class="review-stars-badge">
+                      <mat-icon>star</mat-icon>
+                      <span>{{ review.rating }}</span>
+                    </div>
+                  </div>
+                  <p class="review-text-content">"{{ review.comment }}"</p>
+                </div>
+                }
+              </div>
+              } @else {
+              <div class="empty-state-card glass-card">
+                <div class="empty-icon-wrap">
+                  <mat-icon>rate_review</mat-icon>
+                </div>
+                <h3>{{ 'profile.noReviews' | translate }}</h3>
+                <p>{{ ('profile.noReviewsSub' | translate) || 'No reviews have been written for this member yet.' }}</p>
+              </div>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">info</mat-icon>
+              <span>{{ 'profile.about' | translate }}</span>
+            </ng-template>
+
+            <div class="about-tab-pane">
+              <div class="about-content-card glass-card">
+                <h3 class="about-heading">{{ 'profile.bio' | translate }}</h3>
+                <p class="about-description-text">{{ p.bio || 'This user has not shared a biography yet.' }}</p>
+
+                <div class="about-trust-signals-grid">
+                  <div class="trust-signal-item">
+                    <mat-icon class="signal-icon">verified_user</mat-icon>
+                    <div class="signal-text">
+                      <span class="signal-title">{{ ('profile.trustMember' | translate) || 'Trusted Member' }}</span>
+                      <span class="signal-desc">{{ ('profile.trustMemberDesc' | translate) || 'Successfully completed
+                        rentals with no disputes.' }}</span>
+                    </div>
+                  </div>
+
+                  <div class="trust-signal-item">
+                    <mat-icon class="signal-icon">schedule</mat-icon>
+                    <div class="signal-text">
+                      <span class="signal-title">{{ ('profile.responseTime' | translate) || 'Response Time' }}</span>
+                      <span class="signal-desc">{{ ('profile.responseTimeDesc' | translate) || 'Usually responds within
+                        a few minutes.' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </main>
+
     </div>
+  </div>
   }
 </div>

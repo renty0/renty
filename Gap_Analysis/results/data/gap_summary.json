@@ -37,11 +37,29 @@
   },
   {
     "category": "Winter Sports",
+    "supply": 0,
+    "demand": 0,
+    "gap_score": 1.0,
+    "gap_status": "Low Gap",
+    "normalized_gap": 1.0,
+    "gap_pct": 0.0
+  },
+  {
+    "category": "new category",
+    "supply": 0,
+    "demand": 0,
+    "gap_score": 1.0,
+    "gap_status": "Low Gap",
+    "normalized_gap": 1.0,
+    "gap_pct": 0.0
+  },
+  {
+    "category": "Fitness & Gym",
     "supply": 2,
     "demand": 0,
     "gap_score": 0.33,
     "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
+    "normalized_gap": 0.1067,
     "gap_pct": -66.67
   },
   {
@@ -59,25 +77,16 @@
     "demand": 0,
     "gap_score": 0.2,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
-    "gap_pct": -80.0
+    "normalized_gap": 0.1067,
+    "gap_pct": -66.67
   },
   {
-    "category": "Diving & Snorkeling",
-    "supply": 4,
+    "category": "Camping & Outdoors",
+    "supply": 3,
     "demand": 0,
-    "gap_score": 0.2,
+    "gap_score": 0.25,
     "gap_status": "Low Gap",
     "normalized_gap": 0.0,
-    "gap_pct": -80.0
-  },
-  {
-    "category": "Bikes & Scooters",
-    "supply": 4,
-    "demand": 0,
-    "gap_score": 0.2,
-    "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
-    "gap_pct": -80.0
+    "gap_pct": -75.0
   }
 ]

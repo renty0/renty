@@ -19,7 +19,8 @@ public record UserDto(
     string? Bio = null,
     string? PhoneNumber = null,
     DateTimeOffset CreatedAt = default,
-    string? IdVerificationStatus = null,
-    bool IdVerified = false
+    bool IdVerified = false,
+    string? IdVerificationStatus = "None",
+    string? IdVerificationRejectionReason = null
 );
 

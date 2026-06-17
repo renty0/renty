@@ -25,6 +25,11 @@ export const ADMIN_ROUTES: Routes = [
         data: { permission: PermissionType.Users_View }
       },
       {
+        path: 'id-verifications',
+        loadComponent: () => import('./id-verification/id-verification.component').then(m => m.IdVerificationComponent),
+        data: { permission: PermissionType.Users_View }
+      },
+      {
         path: 'roles',
         loadComponent: () => import('./role-management/role-management').then(m => m.RoleManagementComponent),
         data: { permission: PermissionType.Roles_View }

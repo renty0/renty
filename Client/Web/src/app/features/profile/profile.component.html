@@ -78,10 +78,43 @@
 
                 <div class="section-divider"></div>
 
-                <div class="section-header" id="identity-verification-section">
-                  <div class="icon-box accent"><mat-icon>verified_user</mat-icon></div>
-                  <h2>{{ 'profile.identityVerification' | translate }}</h2>
-                </div>
+              <div class="section-header">
+                <div class="icon-box accent"><mat-icon>verified_user</mat-icon></div>
+                <h2>{{ 'profile.identityVerification' | translate }}</h2>
+              </div>
+
+              <div class="verification-status-card" [class.verified]="currentUser()?.idVerified" [class.pending]="!currentUser()?.idVerified && currentUser()?.idVerificationStatus === 'Pending'" [class.unverified]="!currentUser()?.idVerified && currentUser()?.idVerificationStatus !== 'Pending'">
+                @if (currentUser()?.idVerified) {
+                  <div class="status-badge verified">
+                    <mat-icon>verified</mat-icon>
+                    <span>{{ 'profile.verified' | translate }}</span>
+                  </div>
+                  <p class="status-text">{{ 'profile.idVerifiedDesc' | translate }}</p>
+                  <p class="status-note-detail">Thank you! Your identity has been verified. You now have full access to rent and list products.</p>
+                } @else if (currentUser()?.idVerificationStatus === 'Pending') {
+                  <div class="status-badge pending">
+                    <mat-icon>hourglass_empty</mat-icon>
+                    <span>{{ 'profile.verificationPending' | translate }}</span>
+                  </div>
+                  <p class="status-text">{{ 'profile.verificationPending' | translate }}</p>
+                  <p class="status-note">{{ 'profile.verificationPendingDesc' | translate }}</p>
+                  <button type="button" mat-flat-button class="upload-id-btn pending-btn" [disabled]="true">
+                    <mat-icon>hourglass_top</mat-icon>
+                    {{ 'profile.verificationPending' | translate }}
+                  </button>
+                } @else {
+                  <div class="status-badge unverified">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>{{ 'profile.notVerified' | translate }}</span>
+                  </div>
+                  <p class="status-text">{{ 'profile.idNotVerifiedDesc' | translate }}</p>
+                  <p class="status-note">{{ 'profile.verificationNote' | translate }}</p>
+                  <button type="button" mat-flat-button color="primary" class="upload-id-btn" (click)="openIdUploadDialog()">
+                    <mat-icon>upload_file</mat-icon>
+                    {{ 'profile.uploadId' | translate }}
+                  </button>
+                }
+              </div>
 
                 <div class="verification-status-card">
                   @if (currentUser()?.idVerified) {
@@ -118,15 +151,40 @@
           </div>
 
           <div class="section-card danger">
-            <div class="danger-header">
-              <mat-icon>warning_amber</mat-icon>
-              <h3>{{ 'profile.deleteAccount' | translate }}</h3>
+            <div class="danger-zone-layout">
+              <div class="danger-icon-col">
+                <div class="danger-icon-badge">
+                  <mat-icon>delete_forever</mat-icon>
+                </div>
+              </div>
+              <div class="danger-body">
+                <div class="danger-header">
+                  <h3>{{ 'profile.deleteAccount' | translate }}</h3>
+                  <span class="danger-chip">{{ 'profile.irreversible' | translate }}</span>
+                </div>
+                <p>{{ 'profile.deleteConfirmMessage' | translate }}</p>
+                <ul class="danger-list">
+                  <li>
+                    <mat-icon>block</mat-icon>
+                    <span>{{ 'profile.deleteEffect1' | translate }}</span>
+                  </li>
+                  <li>
+                    <mat-icon>cloud_off</mat-icon>
+                    <span>{{ 'profile.deleteEffect2' | translate }}</span>
+                  </li>
+                  <li>
+                    <mat-icon>history_toggle_off</mat-icon>
+                    <span>{{ 'profile.deleteEffect3' | translate }}</span>
+                  </li>
+                </ul>
+                <div class="danger-actions">
+                  <button mat-flat-button class="delete-account-btn" (click)="deleteAccount()" [disabled]="isLoading()">
+                    <mat-icon>delete_forever</mat-icon>
+                    <span>{{ 'profile.deleteAccount' | translate }}</span>
+                  </button>
+                </div>
+              </div>
             </div>
-            <p>{{ 'profile.deleteConfirmMessage' | translate }}</p>
-            <button mat-flat-button color="warn" (click)="deleteAccount()" [disabled]="isLoading()">
-              <mat-icon>delete_forever</mat-icon>
-              {{ 'profile.deleteAccount' | translate }}
-            </button>
           </div>
         </div>
       }

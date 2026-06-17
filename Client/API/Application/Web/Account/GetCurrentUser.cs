@@ -52,10 +52,12 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
-        var idVerification = await _context.IdVerifications
-                .Where(v => v.UserId == user.Id)
-                .OrderByDescending(v => v.CreatedAt)
-                .FirstOrDefaultAsync(cancellationToken);
+        var latestVerification = await _context.IdVerifications
+            .Where(v => v.UserId == user.Id)
+            .OrderByDescending(v => v.CreatedAt)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        var idVerificationStatus = latestVerification?.Status.ToString() ?? "None";
 
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
@@ -83,8 +85,9 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.Bio,
             user.PhoneNumber,
             user.CreatedAt,
-            idVerification?.Status.ToString(),
-            user.IdVerified
+            user.IdVerified,
+            idVerificationStatus,
+            latestVerification?.RejectionReason
         );
 
         return new GetCurrentUserResponse(true, null, userDto);

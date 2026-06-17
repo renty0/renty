@@ -80,7 +80,42 @@ export class NavbarComponent implements OnInit {
     if (!loggedIn) return [];
 
     const links = [];
-    
+
+    // Support
+    if (this.permissionService.hasPermission(PermissionType.Complaints_View)) {
+      links.push({ path: '/support', labelKey: 'nav.support', icon: 'support_agent' });
+    }
+
+    // Dashboards
+    if (this.permissionService.hasPermission(PermissionType.Dashboards_View)) {
+      links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
+    }
+
+    // User Management
+    if (this.permissionService.hasPermission(PermissionType.Users_View)) {
+      links.push({ path: '/admin/users', labelKey: 'nav.userManagement', icon: 'people' });
+    }
+
+    // ID Verifications
+    if (this.authService.isAdmin()) {
+      links.push({ path: '/admin/id-verifications', labelKey: 'nav.idVerifications', icon: 'badge' });
+    }
+
+    // Role Management
+    if (this.permissionService.hasPermission(PermissionType.Roles_View)) {
+      links.push({ path: '/admin/roles', labelKey: 'nav.roleManagement', icon: 'policy' });
+    }
+
+    // Catalog/Inventory Management
+    if (this.permissionService.hasPermission(PermissionType.Items_View)) {
+      links.push(...this.allNavLinks.filter((link) => link.permission === PermissionType.Items_View));
+    }
+
+    // Admin: Item review
+    if (this.authService.isAdmin() && this.permissionService.hasPermission(PermissionType.Items_View)) {
+      links.push({ path: '/admin/item-management', labelKey: 'nav.itemReview', icon: 'rule' });
+    }
+
     // Expert Actions
     if (this.isExpert()) {
       links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });

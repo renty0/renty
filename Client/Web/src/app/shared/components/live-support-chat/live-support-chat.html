@@ -1,5 +1,4 @@
 <div class="live-chat-window" [class.minimized]="isMinimized()">
-  <!-- Header -->
   <div class="chat-header" (click)="toggleMinimize()">
     <div class="header-left">
       <div class="support-icon">
@@ -26,7 +25,6 @@
   </div>
 
   @if (!isMinimized()) {
-    <!-- Active Agents Banner -->
     @if (activeAgents().length > 0) {
       <div class="agents-banner">
         <mat-icon>groups</mat-icon>
@@ -39,7 +37,6 @@
       </div>
     }
 
-    <!-- Messages Area -->
     <div class="messages-container" #msgContainer>
       @if (messages().length === 0) {
         <div class="empty-state">
@@ -72,7 +69,6 @@
         </div>
       }
 
-      <!-- Typing Indicator -->
       @if (typingUser()) {
         <div class="typing-indicator" @messageIn>
           <div class="avatar">{{ getInitials(typingUser()!) }}</div>
@@ -85,7 +81,6 @@
       }
     </div>
 
-    <!-- Input Area -->
     <div class="input-area">
       <textarea
         [placeholder]="'support.liveChat.typePlaceholder' | translate"

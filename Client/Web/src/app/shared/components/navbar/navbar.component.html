@@ -5,187 +5,161 @@
     </a>
     <nav class="desktop-nav">
       @for (link of filteredNavLinks(); track link.path) {
-      <a
-        [routerLink]="link.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-        class="nav-link"
-      >
-          {{ link.labelKey | translate }}
-        </a>
+      <a [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+        class="nav-link">
+        {{ link.labelKey | translate }}
+      </a>
       }
 
       @if (managementLinks().length > 0) {
-        <button class="nav-link dropdown-toggle" [matMenuTriggerFor]="mgmtMenu">
-          {{ 'nav.management' | translate }}
-          <mat-icon class="dropdown-icon">expand_more</mat-icon>
+      <button class="nav-link dropdown-toggle" [matMenuTriggerFor]="mgmtMenu">
+        {{ 'nav.management' | translate }}
+        <mat-icon class="dropdown-icon">expand_more</mat-icon>
+      </button>
+      <mat-menu #mgmtMenu="matMenu" class="premium-menu">
+        @for (link of managementLinks(); track link.path) {
+        <button mat-menu-item [routerLink]="link.path">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          <span>{{ link.labelKey | translate }}</span>
         </button>
-        <mat-menu #mgmtMenu="matMenu" class="premium-menu">
-          @for (link of managementLinks(); track link.path) {
-            <button mat-menu-item [routerLink]="link.path">
-              <mat-icon>{{ link.icon }}</mat-icon>
-              <span>{{ link.labelKey | translate }}</span>
-            </button>
-          }
-        </mat-menu>
+        }
+      </mat-menu>
+      }
+
+      @if (superAdminLinks().length > 0) {
+      <button class="nav-link dropdown-toggle sa-trigger" [matMenuTriggerFor]="saMenu">
+        {{ 'nav.superAdmin' | translate }}
+        <mat-icon class="dropdown-icon">expand_more</mat-icon>
+      </button>
+      <mat-menu #saMenu="matMenu" class="premium-menu sa-menu">
+        @for (link of superAdminLinks(); track link.path) {
+        <button mat-menu-item [routerLink]="link.path">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          <span>{{ link.labelKey | translate }}</span>
+        </button>
+        }
+      </mat-menu>
       }
     </nav>
 
     <div class="nav-search sm-hidden">
       <div class="search-input-wrapper">
         <mat-icon>search</mat-icon>
-        <input
-          type="text"
-          [placeholder]="'marketplace.searchPlaceholder' | translate"
-          [ngModel]="searchTerm()"
-          (ngModelChange)="searchTerm.set($event)"
-          (keyup.enter)="onSearch()"
-        />
+        <input type="text" [placeholder]="'marketplace.searchPlaceholder' | translate" [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)" (keyup.enter)="onSearch()" />
       </div>
     </div>
 
     <div class="nav-actions">
-      <button
-        class="action-btn lang-btn"
-        (click)="toggleLanguage()"
-        [title]="'common.language' | translate"
-      >
+      <button class="action-btn lang-btn" (click)="toggleLanguage()" [title]="'common.language' | translate">
         <mat-icon>language</mat-icon>
         <span class="lang-code">{{ isArabic ? 'EN' : 'العربية' }}</span>
       </button>
-
-      <!-- Common Action Icons (Notification & Chat) -->
       @if (isLoggedIn()) {
-        <app-notification-dropdown></app-notification-dropdown>
-        
-        <button
-          mat-icon-button
-          routerLink="/chats"
-          class="user-btn"
-          [title]="'nav.chats' | translate"
-        >
-          <mat-icon>chat</mat-icon>
-        </button>
+      <app-notification-dropdown></app-notification-dropdown>
 
-      <!-- Authentication Specific Actions -->
-        @if (isOwnerRole()) {
-          <button
-            mat-stroked-button
-            color="accent"
-            routerLink="/items/new"
-            class="post-btn sm-hidden"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            <span>{{ 'nav.postProduct' | translate }}</span>
-          </button>
-        }
+      <button mat-icon-button routerLink="/chats" class="user-btn" [title]="'nav.chats' | translate">
+        <mat-icon>chat</mat-icon>
+      </button>
+      <button mat-stroked-button color="accent" routerLink="/items/new" class="post-btn sm-hidden">
+        <mat-icon>add_a_photo</mat-icon>
+        <span>{{ 'nav.postProduct' | translate }}</span>
+      </button>
 
-        <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-        <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu profile-menu">
-          <div class="menu-header" (click)="$event.stopPropagation()">
-            <div class="user-avatar-circle">
-              <mat-icon>account_circle</mat-icon>
-            </div>
-            <div class="user-info">
-              <span class="user-name">{{ userData()?.firstName }} {{ userData()?.lastName }}</span>
-              <span class="user-email">{{ userData()?.email }}</span>
-            </div>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" xPosition="before" class="premium-menu profile-menu">
+        <div class="menu-header" (click)="$event.stopPropagation()">
+          <div class="user-avatar-circle">
+            <mat-icon>account_circle</mat-icon>
           </div>
-
-          <div class="menu-sections">
-            <!-- Profile (full width) -->
-            <div class="section-group">
-              <button mat-menu-item routerLink="/profile">
-                <mat-icon>person</mat-icon>
-                <span>{{ 'nav.profile' | translate }}</span>
-              </button>
-            </div>
-
-              <!-- 2-column grid: Orders, Rentals, Items, Favorites -->
-              <div class="section-group grid-layout">
-                <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
-                  <mat-icon>shopping_bag</mat-icon>
-                  <span>{{ 'nav.myOrders' | translate }}</span>
-                </button>
-                <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
-                  <mat-icon>receipt_long</mat-icon>
-                  <span>{{ 'nav.myRentals' | translate }}</span>
-                </button>
-                <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
-                  <mat-icon>inventory_2</mat-icon>
-                  <span>{{ 'nav.myItems' | translate }}</span>
-                </button>
-                <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
-                  <mat-icon class="text-warn">favorite</mat-icon>
-                  <span>{{ 'nav.favorites' | translate }}</span>
-                </button>
-              </div>
-
-              <!-- Wallet (full width) -->
-              <div class="section-group">
-                <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
-                  <mat-icon color="primary">account_balance_wallet</mat-icon>
-                  <span>{{ 'nav.wallet' | translate }}</span>
-                </button>
-              </div>
-
-            @if (isExpert()) {
-              <div class="section-group">
-                <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
-                  <mat-icon color="accent">fact_check</mat-icon>
-                  <span>{{ 'expert.assigned.title' | translate }}</span>
-                </button>
-              </div>
-            }
-
-            <hr class="menu-divider" />
-
-            <!-- Secondary 3-column grid: Chats, Notifications, Support -->
-            <div class="section-group grid-layout secondary">
-              <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
-                <mat-icon>chat</mat-icon>
-                <span>{{ 'nav.chats' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/notifications" (click)="closeMobileMenu()">
-                <mat-icon>notifications</mat-icon>
-                <span>{{ 'nav.notifications' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
-                <mat-icon>support_agent</mat-icon>
-                <span>{{ 'nav.support' | translate }}</span>
-              </button>
-            </div>
+          <div class="user-info">
+            <span class="user-name">{{ userData()?.firstName }} {{ userData()?.lastName }}</span>
+            <span class="user-email">{{ userData()?.email }}</span>
           </div>
+        </div>
 
-          <hr class="menu-divider" />
-          <button mat-menu-item (click)="logout()" class="logout-item">
-            <mat-icon color="warn">logout</mat-icon>
-            <span class="text-warn">{{ 'nav.logout' | translate }}</span>
-          </button>
-        </mat-menu>
-      } @else {
-        <div class="auth-buttons sm-hidden">
-          @if (isOwnerRole()) {
-            <button
-              mat-stroked-button
-              color="accent"
-              routerLink="/items/new"
-              class="post-btn sm-hidden"
-            >
-              <mat-icon>add_a_photo</mat-icon>
-              <span>{{ 'nav.postProduct' | translate }}</span>
+        <div class="menu-sections">
+          <div class="section-group">
+            <button mat-menu-item routerLink="/profile">
+              <mat-icon>person</mat-icon>
+              <span>{{ 'nav.profile' | translate }}</span>
             </button>
+          </div>
+          <div class="section-group grid-layout">
+            <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
+              <mat-icon>shopping_bag</mat-icon>
+              <span>{{ 'nav.myOrders' | translate }}</span>
+            </button>
+            <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+              <mat-icon>receipt_long</mat-icon>
+              <span>{{ 'nav.myRentals' | translate }}</span>
+            </button>
+            <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
+              <mat-icon>inventory_2</mat-icon>
+              <span>{{ 'nav.myItems' | translate }}</span>
+            </button>
+            <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
+              <mat-icon class="text-warn">favorite</mat-icon>
+              <span>{{ 'nav.favorites' | translate }}</span>
+            </button>
+          </div>
+          <div class="section-group">
+            <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
+              <mat-icon color="primary">account_balance_wallet</mat-icon>
+              <span>{{ 'nav.wallet' | translate }}</span>
+            </button>
+          </div>
+
+          @if (isExpert()) {
+          <div class="section-group">
+            <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
+              <mat-icon color="accent">fact_check</mat-icon>
+              <span>{{ 'expert.assigned.title' | translate }}</span>
+            </button>
+          </div>
           }
 
-          <div class="divider sm-hidden"></div>
-
-          <a routerLink="/login" class="nav-link login-link">{{ 'nav.login' | translate }}</a>
-          <app-loading-button color="accent" size="sm" routerLink="/register">
-            {{ 'nav.register' | translate }}
-          </app-loading-button>
+          <hr class="menu-divider" />
+          <div class="section-group grid-layout secondary">
+            <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
+              <mat-icon>chat</mat-icon>
+              <span>{{ 'nav.chats' | translate }}</span>
+            </button>
+            <button mat-menu-item routerLink="/notifications" (click)="closeMobileMenu()">
+              <mat-icon>notifications</mat-icon>
+              <span>{{ 'nav.notifications' | translate }}</span>
+            </button>
+            <button mat-menu-item routerLink="/support" (click)="closeMobileMenu()">
+              <mat-icon>support_agent</mat-icon>
+              <span>{{ 'nav.support' | translate }}</span>
+            </button>
+          </div>
         </div>
+
+        <hr class="menu-divider" />
+        <button mat-menu-item (click)="logout()" class="logout-item">
+          <mat-icon color="warn">logout</mat-icon>
+          <span class="text-warn">{{ 'nav.logout' | translate }}</span>
+        </button>
+      </mat-menu>
+      } @else {
+      <div class="auth-buttons sm-hidden">
+        @if (canPostItems()) {
+        <button mat-stroked-button color="accent" routerLink="/items/new" class="post-btn sm-hidden">
+          <mat-icon>add_a_photo</mat-icon>
+          <span>{{ 'nav.postProduct' | translate }}</span>
+        </button>
+        }
+
+        <div class="divider sm-hidden"></div>
+
+        <a routerLink="/login" class="nav-link login-link">{{ 'nav.login' | translate }}</a>
+        <app-loading-button color="accent" size="sm" routerLink="/register">
+          {{ 'nav.register' | translate }}
+        </app-loading-button>
+      </div>
       }
 
       <button class="mobile-toggle" (click)="toggleMobileMenu()">
@@ -194,123 +168,121 @@
     </div>
   </div>
   @if (mobileMenuOpen()) {
-    <div class="mobile-drawer animate-fade-in">
-      <div class="container drawer-content">
-        <div class="mobile-search">
-          <div class="search-input-wrapper">
-            <mat-icon>search</mat-icon>
-            <input
-              type="text"
-              [placeholder]="'marketplace.searchPlaceholder' | translate"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event)"
-              (keyup.enter)="onSearch()"
-            />
-          </div>
+  <div class="mobile-drawer animate-fade-in">
+    <div class="container drawer-content">
+      <div class="mobile-search">
+        <div class="search-input-wrapper">
+          <mat-icon>search</mat-icon>
+          <input type="text" [placeholder]="'marketplace.searchPlaceholder' | translate" [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)" (keyup.enter)="onSearch()" />
         </div>
+      </div>
 
-        @if (isOwnerRole()) {
-          <a
-            routerLink="/items/new"
-            class="mobile-link highlight-link"
-            (click)="closeMobileMenu()"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            {{ 'nav.postProduct' | translate }}
-          </a>
-        }
+      @if (canPostItems()) {
+      <a routerLink="/items/new" class="mobile-link highlight-link" (click)="closeMobileMenu()">
+        <mat-icon>add_a_photo</mat-icon>
+        {{ 'nav.postProduct' | translate }}
+      </a>
+      }
 
-        @for (link of filteredNavLinks(); track link.path) {
-          <a
-            [routerLink]="link.path"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-            class="mobile-link"
-            (click)="closeMobileMenu()"
-          >
-            <mat-icon>{{ link.icon }}</mat-icon>
-            {{ link.labelKey | translate }}
-          </a>
-        }
+      @for (link of filteredNavLinks(); track link.path) {
+      <a [routerLink]="link.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+        class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.labelKey | translate }}
+      </a>
+      }
 
-
-
-        <hr class="drawer-divider" />
-
-        <button class="mobile-link" (click)="toggleLanguage(); closeMobileMenu()">
-          <mat-icon>language</mat-icon>
-          {{ isArabic ? 'Switch to English' : 'التبديل للعربية' }}
-        </button>
-
-        @if (isLoggedIn()) {
-          @if (canViewRentals()) {
-            <a routerLink="/my-rentals" class="mobile-link" (click)="closeMobileMenu()">
-              <mat-icon>receipt_long</mat-icon>
-              {{ 'nav.myRentals' | translate }}
-            </a>
-          }
-          @if (canViewOrders()) {
-            <a routerLink="/my-orders" class="mobile-link" (click)="closeMobileMenu()">
-              <mat-icon>shopping_bag</mat-icon>
-              {{ 'nav.myOrders' | translate }}
-            </a>
-          }
-          <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>person</mat-icon>
-            {{ 'nav.profile' | translate }}
-          </a>
-          @if (canViewWallet()) {
-            <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">
-              <mat-icon>account_balance_wallet</mat-icon>
-              {{ 'nav.wallet' | translate }}
-            </a>
-          }
-          @if (isExpert()) {
-            <a routerLink="/expert/assigned" class="mobile-link" (click)="closeMobileMenu()">
-              <mat-icon color="accent">fact_check</mat-icon>
-              {{ 'expert.assigned.title' | translate }}
-            </a>
-          }
-          <a routerLink="/chats" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>chat</mat-icon>
-            {{ 'nav.chats' | translate }}
-          </a>
-          <a routerLink="/notifications" class="mobile-link" (click)="closeMobileMenu()">
-            <mat-icon>notifications</mat-icon>
-            {{ 'nav.notifications' | translate }}
-          </a>
-          @if (canViewSupport()) {
-            <a routerLink="/support" class="mobile-link" (click)="closeMobileMenu()">
-              <mat-icon>support_agent</mat-icon>
-              {{ 'nav.support' | translate }}
-            </a>
-          }
-          <button class="mobile-link logout-link" (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            {{ 'nav.logout' | translate }}
-          </button>
-        } @else {
-          <div class="mobile-auth-grid">
-            <app-loading-button
-              variant="stroked"
-              color="primary"
-              class="w-full"
-              routerLink="/login"
-              (clicked)="closeMobileMenu()"
-            >
-              {{ 'nav.login' | translate }}
-            </app-loading-button>
-            <app-loading-button
-              color="accent"
-              class="w-full"
-              routerLink="/register"
-              (clicked)="closeMobileMenu()"
-            >
-              {{ 'nav.register' | translate }}
-            </app-loading-button>
-          </div>
+      @if (managementLinks().length > 0) {
+      <div class="drawer-section">
+        <span class="section-label">{{ 'nav.management' | translate }}</span>
+        @for (link of managementLinks(); track link.path) {
+        <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          {{ link.labelKey | translate }}
+        </a>
         }
       </div>
+      }
+
+      @if (superAdminLinks().length > 0) {
+      <div class="drawer-section sa-section">
+        <span class="section-label sa-label">{{ 'nav.superAdmin' | translate }}</span>
+        @for (link of superAdminLinks(); track link.path) {
+        <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          {{ link.labelKey | translate }}
+        </a>
+        }
+      </div>
+      }
+
+      <hr class="drawer-divider" />
+
+      <button class="mobile-link" (click)="toggleLanguage(); closeMobileMenu()">
+        <mat-icon>language</mat-icon>
+        {{ isArabic ? 'Switch to English' : 'التبديل للعربية' }}
+      </button>
+
+      @if (isLoggedIn()) {
+      @if (canViewRentals()) {
+      <a routerLink="/my-rentals" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>receipt_long</mat-icon>
+        {{ 'nav.myRentals' | translate }}
+      </a>
+      }
+      @if (canViewOrders()) {
+      <a routerLink="/my-orders" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>shopping_bag</mat-icon>
+        {{ 'nav.myOrders' | translate }}
+      </a>
+      }
+      <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>person</mat-icon>
+        {{ 'nav.profile' | translate }}
+      </a>
+      @if (canViewWallet()) {
+      <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>account_balance_wallet</mat-icon>
+        {{ 'nav.wallet' | translate }}
+      </a>
+      }
+      @if (isExpert()) {
+      <a routerLink="/expert/assigned" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon color="accent">fact_check</mat-icon>
+        {{ 'expert.assigned.title' | translate }}
+      </a>
+      }
+      <a routerLink="/chats" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>chat</mat-icon>
+        {{ 'nav.chats' | translate }}
+      </a>
+      <a routerLink="/notifications" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>notifications</mat-icon>
+        {{ 'nav.notifications' | translate }}
+      </a>
+      @if (canViewSupport()) {
+      <a routerLink="/support" class="mobile-link" (click)="closeMobileMenu()">
+        <mat-icon>support_agent</mat-icon>
+        {{ 'nav.support' | translate }}
+      </a>
+      }
+      <button class="mobile-link logout-link" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        {{ 'nav.logout' | translate }}
+      </button>
+      } @else {
+      <div class="mobile-auth-grid">
+        <app-loading-button variant="stroked" color="primary" class="w-full" routerLink="/login"
+          (clicked)="closeMobileMenu()">
+          {{ 'nav.login' | translate }}
+        </app-loading-button>
+        <app-loading-button color="accent" class="w-full" routerLink="/register" (clicked)="closeMobileMenu()">
+          {{ 'nav.register' | translate }}
+        </app-loading-button>
+      </div>
+      }
     </div>
+  </div>
   }
 </header>

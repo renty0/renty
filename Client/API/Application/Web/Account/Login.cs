@@ -106,6 +106,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
         var tokenData = await _tokenService.GenerateTokensAsync(user.Id);
 
+        var latestVerification = await _context.IdVerifications
+            .Where(v => v.UserId == user.Id)
+            .OrderByDescending(v => v.CreatedAt)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        var idVerificationStatus = latestVerification?.Status.ToString() ?? "None";
+
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
 
@@ -132,8 +139,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.Bio,
             user.PhoneNumber,
             user.CreatedAt,
-            null,
-            user.IdVerified
+            user.IdVerified,
+            idVerificationStatus,
+            latestVerification?.RejectionReason
         );
 
         return new LoginResponse(true, "Login successful.", tokenData, userDto);

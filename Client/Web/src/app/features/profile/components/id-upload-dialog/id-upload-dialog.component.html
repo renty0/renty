@@ -1,58 +1,80 @@
-<div class="id-upload-dialog">
-  <h2 mat-dialog-title>{{ 'profile.uploadIdTitle' | translate }}</h2>
-  <mat-dialog-content>
+<div class="id-upload-dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="header-icon">fingerprint</mat-icon>
+      {{ 'profile.uploadIdTitle' | translate }}
+    </h2>
     <p class="dialog-description">{{ 'profile.uploadIdDesc' | translate }}</p>
+  </div>
 
-    <div class="upload-section">
-      <div class="upload-item">
-        <label class="upload-label">{{ 'profile.frontSide' | translate }}</label>
+  <mat-dialog-content class="custom-dialog-content">
+    <div class="upload-grid">
+      <div class="upload-card">
+        <label class="card-label">{{ 'profile.frontSide' | translate }}</label>
+        
         @if (frontImage) {
-          <div class="image-preview">
+          <div class="preview-wrapper fade-in">
             <img [src]="frontImage" alt="Front ID">
-            <button class="remove-btn" (click)="removeFront()">
-              <mat-icon>close</mat-icon>
-            </button>
+            <div class="preview-overlay">
+              <button type="button" class="action-btn delete-btn" (click)="removeFront()" title="Remove file">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
           </div>
         } @else {
-          <label class="upload-box">
-            <mat-icon>add_photo_alternate</mat-icon>
-            <span>{{ 'profile.chooseFile' | translate }}</span>
+          <label class="drop-zone">
             <input type="file" accept="image/*" (change)="onFrontSelected($event)" hidden>
+            <div class="drop-zone-content">
+              <div class="icon-circle">
+                <mat-icon>add_a_photo</mat-icon>
+              </div>
+              <span class="upload-title">{{ 'profile.chooseFile' | translate }}</span>
+              <span class="upload-subtitle">Supports JPG, PNG up to 5MB</span>
+            </div>
           </label>
         }
       </div>
 
-      <div class="upload-item">
-        <label class="upload-label">{{ 'profile.backSide' | translate }}</label>
+      <div class="upload-card">
+        <label class="card-label">{{ 'profile.backSide' | translate }}</label>
+        
         @if (backImage) {
-          <div class="image-preview">
+          <div class="preview-wrapper fade-in">
             <img [src]="backImage" alt="Back ID">
-            <button class="remove-btn" (click)="removeBack()">
-              <mat-icon>close</mat-icon>
-            </button>
+            <div class="preview-overlay">
+              <button type="button" class="action-btn delete-btn" (click)="removeBack()" title="Remove file">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
           </div>
         } @else {
-          <label class="upload-box">
-            <mat-icon>add_photo_alternate</mat-icon>
-            <span>{{ 'profile.chooseFile' | translate }}</span>
+          <label class="drop-zone">
             <input type="file" accept="image/*" (change)="onBackSelected($event)" hidden>
+            <div class="drop-zone-content">
+              <div class="icon-circle">
+                <mat-icon>add_a_photo</mat-icon>
+              </div>
+              <span class="upload-title">{{ 'profile.chooseFile' | translate }}</span>
+              <span class="upload-subtitle">Supports JPG, PNG up to 5MB</span>
+            </div>
           </label>
         }
       </div>
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="cancel()" [disabled]="isUploading">
+  <mat-dialog-actions align="end" class="custom-dialog-actions">
+    <button type="button" mat-button class="cancel-btn" (click)="cancel()" [disabled]="isUploading">
       {{ 'common.cancel' | translate }}
     </button>
-    <button mat-raised-button color="primary" (click)="upload()" [disabled]="isUploading || !frontImage || !backImage">
+    <button type="button" mat-flat-button color="primary" class="submit-btn" (click)="upload()" [disabled]="isUploading || !frontImage || !backImage">
       @if (isUploading) {
-        <mat-progress-spinner diameter="20"></mat-progress-spinner>
+        <mat-progress-spinner diameter="20" mode="indeterminate" class="btn-spinner"></mat-progress-spinner>
+        <span>{{ 'profile.uploading' | translate }}</span>
       } @else {
         <ng-container>
-          <mat-icon>upload</mat-icon>
-          {{ 'profile.upload' | translate }}
+          <mat-icon>cloud_upload</mat-icon>
+          <span>{{ 'profile.upload' | translate }}</span>
         </ng-container>
       }
     </button>

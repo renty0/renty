@@ -110,6 +110,13 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
+        var latestVerification = await _context.IdVerifications
+            .Where(v => v.UserId == user.Id)
+            .OrderByDescending(v => v.CreatedAt)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        var idVerificationStatus = latestVerification?.Status.ToString() ?? "None";
+
         var userDto = new UserDto(
             user.Id,
             user.Email!,
@@ -128,7 +135,10 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Updat
             user.Country,
             user.Bio,
             user.PhoneNumber,
-            user.CreatedAt
+            user.CreatedAt,
+            user.IdVerified,
+            idVerificationStatus,
+            latestVerification?.RejectionReason
         );
 
         return new UpdateUserResponse(true, "Profile updated successfully.", userDto);

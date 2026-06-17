@@ -1,5 +1,4 @@
 <div class="dispute-modal-container">
-  <!-- Custom Header -->
   <div class="modal-header">
     <div class="icon-container">
       <mat-icon color="warn">gavel</mat-icon>
@@ -23,8 +22,9 @@
       <app-input label="rentals.disputes.reasonType" [formGroup]="disputeForm" controlName="reasonType" type="select"
         [options]="disputeReasonOptions" [translateOptions]="true" [translateLabel]="true" [required]="true" />
 
-      <app-input label="rentals.disputes.description" [formGroup]="disputeForm" controlName="description" type="textarea"
-        [placeholder]="'rentals.disputes.descriptionPlaceholder' | translate" [translateLabel]="true" [required]="true" [rows]="4" />
+      <app-input label="rentals.disputes.description" [formGroup]="disputeForm" controlName="description"
+        type="textarea" [placeholder]="'rentals.disputes.descriptionPlaceholder' | translate" [translateLabel]="true"
+        [required]="true" [rows]="4" />
 
       <div class="photos-section mt-3 w-full">
         <h4 class="section-title">
@@ -32,7 +32,8 @@
           {{ 'rentals.disputes.uploadPhotos' | translate }}
         </h4>
         <p class="section-desc mb-3">{{ 'rentals.disputes.uploadPhotosHint' | translate }}</p>
-        <app-multi-image-uploader class="w-full" [images]="uploadedPhotos()" (imagesChange)="uploadedPhotos.set($event)" />
+        <app-multi-image-uploader class="w-full" [images]="uploadedPhotos()"
+          (imagesChange)="uploadedPhotos.set($event)" />
       </div>
     </form>
   </mat-dialog-content>
@@ -41,11 +42,8 @@
     <button mat-stroked-button class="cancel-btn" (click)="onCancel()" [disabled]="isSubmitting()">
       {{ 'buttons.cancel' | translate }}
     </button>
-    <app-loading-button
-      [loading]="isSubmitting()"
-      [disabled]="disputeForm.invalid || isSubmitting()"
-      (clicked)="onSubmit()"
-      color="warn">
+    <app-loading-button [loading]="isSubmitting()" [disabled]="disputeForm.invalid || isSubmitting()"
+      (clicked)="onSubmit()" color="warn">
       <mat-icon>gavel</mat-icon>
       {{ 'rentals.disputes.submit' | translate }}
     </app-loading-button>

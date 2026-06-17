@@ -1,0 +1,74 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>{{ 'adminIdVerification.dialogTitle' | translate }}</h2>
+    <app-loading-button matIcon="close" [iconOnly]="true" variant="text" color="secondary" size="sm" class="close-btn"
+      mat-dialog-close>
+    </app-loading-button>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+    <div class="user-details-card">
+      <div class="detail-item">
+        <span class="label">{{ 'adminIdVerification.user' | translate }}:</span>
+        <span class="val">{{ data.request.userName }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Email:</span>
+        <span class="val">{{ data.request.userEmail }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">{{ 'adminIdVerification.submittedAt' | translate }}:</span>
+        <span class="val">{{ data.request.createdAt | date:'medium' }}</span>
+      </div>
+    </div>
+    <div class="images-section">
+      <h3>{{ 'adminIdVerification.documentImages' | translate }}</h3>
+      <div class="images-grid">
+        <div class="img-container" (click)="zoomImage(data.request.frontImageUrl)">
+          <span class="img-label">{{ 'adminIdVerification.frontImage' | translate }}</span>
+          <img [src]="data.request.frontImageUrl" alt="ID Front Side" class="doc-img">
+          <div class="img-overlay">
+            <mat-icon>zoom_in</mat-icon>
+          </div>
+        </div>
+
+        <div class="img-container" (click)="zoomImage(data.request.backImageUrl)">
+          <span class="img-label">{{ 'adminIdVerification.backImage' | translate }}</span>
+          <img [src]="data.request.backImageUrl" alt="ID Back Side" class="doc-img">
+          <div class="img-overlay">
+            <mat-icon>zoom_in</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="reviewForm" class="verdict-form">
+      <h3>{{ 'adminIdVerification.actionTitle' | translate }}</h3>
+
+      <app-input type="select" label="adminIdVerification.selectStatus" controlName="status" [formGroup]="reviewForm"
+        [options]="statusOptions" [translateOptions]="true" [required]="true">
+      </app-input>
+      <div class="rejection-reason-container" *ngIf="reviewForm.get('status')?.value === 'rejected'">
+        <app-input type="textarea" label="adminIdVerification.rejectionReasonLabel" controlName="rejectionReason"
+          [formGroup]="reviewForm" placeholder="adminIdVerification.rejectionReasonPlaceholder" [required]="true"
+          [rows]="3">
+        </app-input>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <app-loading-button variant="text" color="secondary" [disabled]="loading()" mat-dialog-close>
+      {{ 'adminIdVerification.cancel' | translate }}
+    </app-loading-button>
+    <app-loading-button color="primary" variant="filled" [loading]="loading()" [disabled]="reviewForm.invalid"
+      (clicked)="submitVerdict()">
+      {{ 'adminIdVerification.submit' | translate }}
+    </app-loading-button>
+  </mat-dialog-actions>
+  <div class="zoom-overlay" *ngIf="selectedZoomImage()" (click)="closeZoom()">
+    <app-loading-button matIcon="close" [iconOnly]="true" variant="text" color="secondary" class="close-zoom-btn"
+      (clicked)="closeZoom()">
+    </app-loading-button>
+    <img [src]="selectedZoomImage()" alt="Zoomed ID Document" class="zoomed-img" (click)="$event.stopPropagation()">
+  </div>
+</div>

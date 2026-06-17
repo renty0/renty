@@ -115,6 +115,7 @@
     "fraud": "Fraud Detection",
     "userManagement": "User Management",
     "roleManagement": "Role Management",
+    "idVerifications": "ID Verifications",
     "login": "Login",
     "support": "Support",
     "logout": "Logout",
@@ -799,7 +800,13 @@
     "idUploadSuccess": "ID uploaded successfully. Your verification is pending review.",
     "phoneNotVerifiedDesc": "Phone not verified",
     "deleteConfirmMessage": "Are you sure you want to delete your account? This action is permanent and cannot be undone.",
-    "deleteSuccess": "Your account has been deleted successfully."
+    "deleteSuccess": "Your account has been deleted successfully.",
+    "verificationPending": "Verification Pending",
+    "verificationPendingDesc": "Your ID verification request has been received and is currently under review by our admin team. This usually takes less than 24 hours.",
+    "irreversible": "Irreversible",
+    "deleteEffect1": "Your profile and all personal data will be permanently removed.",
+    "deleteEffect2": "All active listings and rental history will be erased.",
+    "deleteEffect3": "This action cannot be undone. There is no recovery option."
   },
   "items": {
     "daily": "Daily",
@@ -1485,6 +1492,35 @@
       "s8Title": "8. Children's Privacy",
       "s8Body": "Renty is not intended for users under the age of 18. We do not knowingly collect personal information from children. If we become aware that we have collected data from a child under 18, we will take steps to delete that information immediately. If you believe a child has provided us with personal data, please contact support."
     }
+  },
+  "adminIdVerification": {
+    "title": "ID Verification Management",
+    "all": "All Requests",
+    "pending": "Pending Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "user": "User",
+    "submittedAt": "Submitted At",
+    "status": "Status",
+    "actions": "Actions",
+    "review": "Review Request",
+    "noRequests": "No ID verification requests found.",
+    "reviewedAt": "Reviewed At",
+    "dialogTitle": "Review Identity Document",
+    "documentImages": "Document Images",
+    "frontImage": "Front Side",
+    "backImage": "Back Side",
+    "actionTitle": "Verification Verdict",
+    "selectStatus": "Select Verification Status",
+    "rejectionReason": "Rejection Reason",
+    "rejectionReasonRequired": "Please enter a reason for rejecting this ID verification request.",
+    "cancel": "Cancel",
+    "submit": "Submit Verdict",
+    "successApprove": "ID verification approved successfully.",
+    "successReject": "ID verification rejected successfully.",
+    "errorUpdate": "Failed to update ID verification status.",
+    "rejectionReasonLabel": "Reason for Rejection",
+    "rejectionReasonPlaceholder": "Describe why the ID was rejected (e.g. Blurry photo, expired ID, name mismatch...)"
   },
   "roles": {
     "admin": "Administrator",
