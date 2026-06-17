@@ -224,7 +224,7 @@
                         }
                     </div>
                     <div class="calendar-days grid">
-                        @for (cell of calendarCells(); track cell.dayNumber) {
+                        @for (cell of calendarCells(); track $index) {
                         <div class="col p-1">
                             <button type="button"
                                 class="day-cell w-full aspect-ratio-1 border-none bg-transparent flex align-items-center justify-content-center border-round cursor-pointer hover:bg-gray-100 transition-all"

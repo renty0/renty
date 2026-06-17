@@ -90,7 +90,7 @@
                     <span>{{ 'profile.verified' | translate }}</span>
                   </div>
                   <p class="status-text">{{ 'profile.idVerifiedDesc' | translate }}</p>
-                  <p class="status-note-detail">Thank you! Your identity has been verified. You now have full access to rent and list products.</p>
+                  <p class="status-note-detail">{{'profile.noteDetail' | translate}}</p>
                 } @else if (currentUser()?.idVerificationStatus === 'Pending') {
                   <div class="status-badge pending">
                     <mat-icon>hourglass_empty</mat-icon>

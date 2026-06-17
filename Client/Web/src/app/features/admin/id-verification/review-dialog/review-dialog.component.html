@@ -49,8 +49,8 @@
       </app-input>
       <div class="rejection-reason-container" *ngIf="reviewForm.get('status')?.value === 'rejected'">
         <app-input type="textarea" label="adminIdVerification.rejectionReasonLabel" controlName="rejectionReason"
-          [formGroup]="reviewForm" placeholder="adminIdVerification.rejectionReasonPlaceholder" [required]="true"
-          [rows]="3">
+          [formGroup]="reviewForm" placeholder="{{'adminIdVerification.rejectionReasonPlaceholder' | translate}}"
+          [required]="true" [rows]="3">
         </app-input>
       </div>
     </form>
