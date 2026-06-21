@@ -1,0 +1,147 @@
+<div class="register-page">
+  <div class="register-container">
+    <div class="header">
+      <img class="logo" src="assets/logo.png" alt="Renty Logo" />
+      <h1 class="title">{{ 'register.welcomeMessage' | translate }}</h1>
+      <p class="login-prompt">
+        {{ 'register.haveAccount' | translate }}
+        <a routerLink="/login">{{ 'register.login' | translate }}</a>
+      </p>
+    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="steps-indicator">
+        <div class="step-item" [class.active]="stepper.selectedIndex === 0"
+          [class.completed]="stepper.selectedIndex > 0">
+          <div class="step-icon-wrapper">
+            @if (stepper.selectedIndex <= 0) { <mat-icon>person_outline</mat-icon>
+              } @else {
+              <mat-icon>check</mat-icon>
+              }
+          </div>
+          <span class="step-label">{{ 'info.accountInfo' | translate }}</span>
+        </div>
+        <div class="step-connector" [class.completed]="stepper.selectedIndex > 0"></div>
+        <div class="step-item" [class.active]="stepper.selectedIndex === 1"
+          [class.completed]="stepper.selectedIndex > 1">
+          <div class="step-icon-wrapper">
+            @if (stepper.selectedIndex <= 1) { <mat-icon>assignment_ind</mat-icon>
+              } @else {
+              <mat-icon>check</mat-icon>
+              }
+          </div>
+          <span class="step-label">{{ 'info.profileInfo' | translate }}</span>
+        </div>
+        <div class="step-connector" [class.completed]="stepper.selectedIndex > 1"></div>
+        <div class="step-item" [class.active]="stepper.selectedIndex === 2"
+          [class.completed]="stepper.selectedIndex > 2">
+          <div class="step-icon-wrapper">
+            <mat-icon>settings_suggest</mat-icon>
+          </div>
+          <span class="step-label">{{ 'info.additionalInfo' | translate }}</span>
+        </div>
+      </div>
+
+      <mat-stepper linear #stepper class="register-stepper">
+        <mat-step [stepControl]="accountInfoGroup" [editable]="true">
+          <ng-template matStepLabel>{{ 'info.accountInfo' | translate }}</ng-template>
+          <div class="grid px-1">
+            <div class="step-header col-12">
+              <h2>{{ 'info.accountInfo' | translate }}</h2>
+              <p>{{ 'register.step1Desc' | translate }}</p>
+            </div>
+            <app-input class="col-12" [formGroup]="accountInfoGroup" controlName="email" label="email" type="email" />
+            <app-input class="col-12 lg:col-6" [formGroup]="accountInfoGroup" controlName="password" label="password"
+              type="password" />
+            <app-input class="col-12 lg:col-6" [formGroup]="accountInfoGroup" controlName="confirmPassword"
+              label="confirmPassword" type="password" />
+          </div>
+          <div class="step-actions ">
+            <span></span>
+            <app-loading-button type="button" color="primary" (clicked)="stepper.next()">
+              {{ 'buttons.next' | translate }}
+              <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+            </app-loading-button>
+          </div>
+        </mat-step>
+
+        <mat-step [stepControl]="profileInfoGroup" [editable]="true">
+          <ng-template matStepLabel>{{ 'info.profileInfo' | translate }}</ng-template>
+          <div class="grid px-1">
+            <div class="step-header col-12">
+              <h2>{{ 'info.profileInfo' | translate }}</h2>
+              <p>{{ 'register.step2Desc' | translate }}</p>
+            </div>
+            <app-input class="col-12 lg:col-6" [formGroup]="profileInfoGroup" controlName="firstName"
+              label="firstName" />
+            <app-input class="col-12 lg:col-6" [formGroup]="profileInfoGroup" controlName="lastName" label="lastName" />
+            <app-input class="col-12" [formGroup]="profileInfoGroup" controlName="phoneNumber" label="phoneNumber" />
+            <div class="step-actions col-12">
+              <app-loading-button type="button" variant="stroked" color="primary" (clicked)="stepper.previous()">
+                <mat-icon>{{ 'icons.back' | translate }}</mat-icon>
+                {{ 'buttons.back' | translate }}
+              </app-loading-button>
+              <app-loading-button type="button" color="primary" (clicked)="stepper.next()">
+                {{ 'buttons.next' | translate }}
+                <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+              </app-loading-button>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step [stepControl]="additionalInfoGroup" [editable]="true">
+          <ng-template matStepLabel>{{ 'info.additionalInfo' | translate }}</ng-template>
+          <div class="mx-1 ">
+            <div class="step-header">
+              <h2>{{ 'register.step3Title' | translate }}</h2>
+              <p>{{ 'register.step3Desc' | translate }}</p>
+            </div>
+
+            <div class="divider">
+              <span>{{ 'register.locationAbout' | translate }}</span>
+            </div>
+
+            <div class="grid">
+              <app-input [formGroup]="additionalInfoGroup" controlName="city" label="city" type="select"
+                [options]="egyptianCities" [translateOptions]="true" class="col-12 lg:col-6" />
+              <app-input [formGroup]="additionalInfoGroup" controlName="country" label="country" type="select"
+                [options]="countryOptions" [translateOptions]="true" class="col-12 lg:col-6" />
+              <app-input [formGroup]="additionalInfoGroup" controlName="address" label="address" class="col-12" />
+              <app-input [formGroup]="additionalInfoGroup" controlName="bio" label="bio" type="textarea"
+                class="col-12" />
+            </div>
+
+            <div class="terms-container">
+              <mat-checkbox [formControl]="$any(additionalInfoGroup.controls['acceptTerms'])" color="primary">
+                <span class="terms-text">
+                  {{ 'register.acceptOn' | translate }}
+                  <button type="button" class="terms-link" (click)="$event.stopPropagation(); showTerms.set(true)">
+                    {{ 'register.terms' | translate }}
+                  </button>
+                </span>
+              </mat-checkbox>
+              @if (additionalInfoGroup.get('acceptTerms')?.invalid && formSubmitted()) {
+              <p class="terms-error text-danger">
+                <mat-icon>error_outline</mat-icon>
+                {{ 'validation.acceptTerms' | translate }}
+              </p>
+              }
+            </div>
+
+            <div class="step-actions">
+              <app-loading-button type="button" variant="stroked" color="primary" (clicked)="stepper.previous()">
+                <mat-icon>{{ 'icons.back' | translate }}</mat-icon>
+                {{ 'buttons.back' | translate }}
+              </app-loading-button>
+              <app-loading-button type="submit" color="accent" [loading]="loading()">
+                {{ 'register.registerButton' | translate }}
+                <mat-icon>{{ 'icons.next' | translate }}</mat-icon>
+              </app-loading-button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </form>
+  </div>
+</div>
+
+<app-terms-and-conditions [visible]="showTerms()" (closeDialog)="showTerms.set(false)"></app-terms-and-conditions>

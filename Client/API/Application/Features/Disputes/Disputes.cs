@@ -7,6 +7,122 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Disputes;
 
+public record OpenDisputeCommand(
+    Guid RentalId,
+    string ReasonType,
+    string Description
+) : IRequest<OpenDisputeResponse>;
+
+public record OpenDisputeResponse(bool Success, string? Error);
+
+public class OpenDisputeCommandValidator : AbstractValidator<OpenDisputeCommand>
+{
+    public OpenDisputeCommandValidator()
+    {
+        RuleFor(x => x.RentalId).NotEmpty();
+        RuleFor(x => x.ReasonType).NotEmpty();
+        RuleFor(x => x.Description).NotEmpty().MinimumLength(10);
+    }
+}
+
+public class OpenDisputeCommandHandler : IRequestHandler<OpenDisputeCommand, OpenDisputeResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
+    private readonly IRoleService _roleService;
+
+    public OpenDisputeCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier, IRoleService roleService)
+    {
+        _context = context;
+        _currentUser = currentUser;
+        _notifier = notifier;
+        _roleService = roleService;
+    }
+
+    public async Task<OpenDisputeResponse> Handle(OpenDisputeCommand request, CancellationToken ct)
+    {
+        if (_currentUser.Id == null) return new OpenDisputeResponse(false, "Unauthorized.");
+
+        var rental = await _context.Rentals
+            .Include(r => r.Item)
+            .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
+
+        if (rental == null) return new OpenDisputeResponse(false, "Rental not found.");
+
+        if (rental.UserId != _currentUser.Id.Value && rental.Item.OwnerId != _currentUser.Id.Value)
+            return new OpenDisputeResponse(false, "Forbidden.");
+
+        if (rental.Status == RentalStatus.Disputed)
+            return new OpenDisputeResponse(false, "Rental is already disputed.");
+
+        // Update rental status
+        rental.Status = RentalStatus.Disputed;
+
+        // Create Support Ticket
+        var ticket = new SupportTicket
+        {
+            UserId = _currentUser.Id.Value,
+            Type = SupportTicketType.Rental,
+            Status = SupportTicketStatus.Open,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        _context.SupportTickets.Add(ticket);
+
+        // Add Initial Message
+        _context.SupportMessages.Add(new SupportMessage
+        {
+            TicketId = ticket.Id,
+            SenderId = _currentUser.Id.Value,
+            Message = $"**Reason:** {request.ReasonType}\n\n**Description:**\n{request.Description}",
+            CreatedAt = DateTime.UtcNow
+        });
+
+        // Add Event
+        _context.SupportTicketEvents.Add(new SupportTicketEvent
+        {
+            TicketId = ticket.Id,
+            ActorId = _currentUser.Id.Value,
+            EventType = "Created",
+            Details = "Dispute ticket created by user.",
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync(ct);
+
+        var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+        var userName = sender?.FirstName ?? "A user";
+
+        // Notify Support Agents
+        var agents = await _roleService.GetUserIdsInRoleAsync(SecurityRoles.Support.ToString());
+        await _notifier.SendToUsersAsync(
+            agents,
+            "New Rental Dispute",
+            $"{userName} opened a dispute for rental #{rental.Id.ToString().Substring(0, 8)}.",
+            "support",
+            $"/support/{ticket.Id}",
+            ct,
+            titleAr: "نزاع إيجار جديد",
+            messageAr: $"{userName} فتح نزاعًا للإيجار #{rental.Id.ToString().Substring(0, 8)}.");
+
+        // Notify the other party
+        var otherPartyId = rental.UserId == _currentUser.Id.Value ? rental.Item.OwnerId : rental.UserId;
+        await _notifier.SendToUserAsync(
+            otherPartyId,
+            "Rental Disputed",
+            $"{userName} has opened a dispute on your rental for '{rental.Item.TitleEn}'.",
+            "rental",
+            $"/rentals/{rental.Id}",
+            ct,
+            titleAr: "إيجار متنازع عليه",
+            messageAr: $"فتح {userName} نزاعًا على إيجارك للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'."
+        );
+
+        return new OpenDisputeResponse(true, null);
+    }
+}
+
 
 public record ResolveDisputeCommand(
     Guid RentalId,

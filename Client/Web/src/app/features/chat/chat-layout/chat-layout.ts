@@ -5,13 +5,13 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ChatClient } from '../../../core/api/api-client';
+import { ChatClient, SupportClient } from '../../../core/api/api-client';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ChatSignalrService } from '../../../core/services/chat-signalr.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-chat-layout',
@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class ChatLayoutComponent implements OnInit, OnDestroy {
   private chatClient = inject(ChatClient);
+  private supportClient = inject(SupportClient);
   private router = inject(Router);
   private translate = inject(TranslateService);
   private chatSignalr = inject(ChatSignalrService);
@@ -81,8 +82,36 @@ export class ChatLayoutComponent implements OnInit, OnDestroy {
 
   loadChats() {
     this.isLoading.set(true);
-    this.chatClient.getChats().subscribe((res: any) => {
-      let loadedChats = res?.data?.chats || [];
+    forkJoin({
+      chatsRes: this.chatClient.getChats() as any,
+      supportRes: this.supportClient.getSupportTickets() as any
+    }).subscribe(({ chatsRes, supportRes }: any) => {
+      let loadedChats = chatsRes?.data?.chats || [];
+      
+      const ticketsList = supportRes?.data?.tickets ?? supportRes?.data ?? (Array.isArray(supportRes) ? supportRes : []);
+      let lastSupportMessage = 'chat.supportPlaceholder';
+      let lastSupportDate = new Date().toISOString();
+      
+      if (ticketsList.length > 0) {
+        lastSupportMessage = ticketsList[0].lastMessage || ticketsList[0].subject || 'chat.supportPlaceholder';
+        lastSupportDate = ticketsList[0].updatedAt || ticketsList[0].createdAt;
+      }
+
+      const supportChat = {
+        id: 'support',
+        otherUserFirstName: 'Support',
+        otherUserLastName: 'Team',
+        otherUserProfileImage: null,
+        lastMessage: lastSupportMessage,
+        lastMessageType: 0,
+        unreadCount: 0,
+        lastMessageAt: lastSupportDate,
+        isSupport: true
+      };
+      
+      loadedChats = [supportChat, ...loadedChats];
+      loadedChats.sort((a: any, b: any) => new Date(b.lastMessageAt || 0).getTime() - new Date(a.lastMessageAt || 0).getTime());
+
       const activeId = this.activeChatId();
       if (activeId) {
         loadedChats = loadedChats.map((c: any) => c.id === activeId ? { ...c, unreadCount: 0 } : c);
@@ -105,6 +134,10 @@ export class ChatLayoutComponent implements OnInit, OnDestroy {
     // Clear unread count optimistically
     this.chats.update(chats => chats.map(c => c.id === id ? { ...c, unreadCount: 0 } : c));
     
-    this.router.navigate(['/chats', id]);
+    if (id === 'support') {
+      this.router.navigate(['/chats', id], { queryParams: { type: 'support' } });
+    } else {
+      this.router.navigate(['/chats', id]);
+    }
   }
 }

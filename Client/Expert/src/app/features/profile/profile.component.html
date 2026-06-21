@@ -13,25 +13,12 @@
         <p class="user-email">{{ currentUser()?.email }}</p>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-item owner">
-          <span class="stat-value">{{ ownerRating() | number:'1.1-1' }} <mat-icon>star</mat-icon></span>
-          <span class="stat-label">{{ 'profile.ownerRating' | translate }}</span>
-        </div>
-        <div class="stat-item renter">
-          <span class="stat-value">{{ renterRating() | number:'1.1-1' }} <mat-icon>star</mat-icon></span>
-          <span class="stat-label">{{ 'profile.renterRating' | translate }}</span>
-        </div>
-      </div>
+
 
       <nav class="side-nav">
         <button class="nav-link" [class.active]="activeTab === 'personal'" (click)="activeTab = 'personal'">
           <mat-icon>person_outline</mat-icon>
           <span>{{ 'profile.personalInfo' | translate }}</span>
-        </button>
-        <button class="nav-link" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
-          <mat-icon>rate_review</mat-icon>
-          <span>{{ 'profile.reviews' | translate }}</span>
         </button>
       </nav>
     </div>
@@ -84,60 +71,6 @@
                 </app-loading-button>
               </div>
             </form>
-          </div>
-
-          <div class="section-card danger">
-            <div class="danger-header">
-              <mat-icon>warning_amber</mat-icon>
-              <h3>{{ 'profile.deleteAccount' | translate }}</h3>
-            </div>
-            <p>{{ 'profile.deleteConfirmMessage' | translate }}</p>
-            <button mat-flat-button color="warn" (click)="deleteAccount()" [disabled]="isLoading()">
-              <mat-icon>delete_forever</mat-icon>
-              {{ 'profile.deleteAccount' | translate }}
-            </button>
-          </div>
-        </div>
-      }
-
-      @if (activeTab === 'reviews') {
-        <div class="tab-content fade-in">
-          <div class="section-card">
-            <div class="section-header">
-              <div class="icon-box accent"><mat-icon>star_outline</mat-icon></div>
-              <h2>{{ 'profile.reviews' | translate }}</h2>
-            </div>
-
-            @if (reviews().length > 0) {
-              <div class="modern-reviews-list">
-                @for (review of reviews(); track review.id) {
-                  <div class="modern-review-item">
-                    <div class="review-user">
-                      <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
-                      <div class="review-user-info">
-                        <h4>{{ review.reviewerName }}</h4>
-                        <span class="role-pills" [class.owner]="review.role === 'owner'">
-                          {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
-                        </span>
-                      </div>
-                      <div class="review-rating">
-                        <mat-icon>star</mat-icon>
-                        <span>{{ review.rating }}</span>
-                      </div>
-                    </div>
-                    <p class="review-text">{{ review.comment }}</p>
-                    <div class="review-footer">
-                      <span>{{ review.createdAt | date:'mediumDate' }}</span>
-                    </div>
-                  </div>
-                }
-              </div>
-            } @else {
-              <div class="empty-state">
-                <mat-icon>sentiment_dissatisfied</mat-icon>
-                <p>{{ 'profile.noReviews' | translate }}</p>
-              </div>
-            }
           </div>
         </div>
       }

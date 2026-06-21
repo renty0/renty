@@ -173,6 +173,42 @@ public class ApplicationDbContextInitialiser
             var token = await _userManager.GeneratePasswordResetTokenAsync(expertUser);
             await _userManager.ResetPasswordAsync(expertUser, token, expertPassword);
         }
+
+        // Create support user
+        var supportEmail = Environment.GetEnvironmentVariable("SEED_SUPPORT_EMAIL") ?? "support@renty.com";
+        var supportPassword = Environment.GetEnvironmentVariable("SEED_SUPPORT_PASSWORD") ?? "Password12!";
+
+        var supportUser = await _userManager.FindByEmailAsync(supportEmail);
+        if (supportUser == null)
+        {
+            supportUser = new ApplicationUser
+            {
+                UserName = supportEmail,
+                Email = supportEmail,
+                FirstName = "Test",
+                LastName = "Support",
+                EmailConfirmed = true,
+                IsActive = true,
+                IsVerified = true
+            };
+
+            var result = await _userManager.CreateAsync(supportUser, supportPassword);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(supportUser, SecurityRoles.Support.ToString());
+                _logger.LogInformation("Support user created successfully.");
+            }
+            else
+            {
+                _logger.LogWarning("Failed to create support user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            // Reset password to ensure it matches the requested seed password
+            var token = await _userManager.GeneratePasswordResetTokenAsync(supportUser);
+            await _userManager.ResetPasswordAsync(supportUser, token, supportPassword);
+        }
     }
 
     private async Task ResetSequencesAsync()

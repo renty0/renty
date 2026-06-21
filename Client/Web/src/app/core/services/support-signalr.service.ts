@@ -10,6 +10,8 @@ export interface SupportMessage {
   senderName: string;
   senderRole: 'User' | 'Support' | 'Admin';
   message: string;
+  mediaUrl?: string;
+  messageType?: number;
   createdAt: string;
 }
 
@@ -30,6 +32,7 @@ export class SupportSignalrService {
   newMessage = signal<SupportMessage | null>(null);
   activeAgents = signal<SupportAgent[]>([]);
   typingUser = signal<string | null>(null);
+  ticketStatusChanged = signal<{ ticketId: string, status: string } | null>(null);
 
   private typingTimeout: any;
   private connectionPromise: Promise<void> | null = null;
@@ -58,6 +61,8 @@ export class SupportSignalrService {
         senderName: payload.senderName || payload.SenderName,
         senderRole: payload.senderRole || payload.SenderRole,
         message: payload.message || payload.Message,
+        mediaUrl: payload.mediaUrl || payload.MediaUrl,
+        messageType: payload.messageType ?? payload.MessageType ?? 0,
         createdAt: payload.createdAt || payload.CreatedAt
       };
       this.newMessage.set(msg);
@@ -74,6 +79,13 @@ export class SupportSignalrService {
     // An agent left the ticket room
     this.hubConnection.on('AgentLeft', (agentId: number) => {
       this.activeAgents.update(agents => agents.filter(a => a.id !== agentId));
+    });
+
+    // Ticket status changed
+    this.hubConnection.on('TicketStatusChanged', (status: string, ticketId?: string) => {
+      if (ticketId) {
+        this.ticketStatusChanged.set({ ticketId, status });
+      }
     });
 
     // Typing indicator

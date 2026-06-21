@@ -13,7 +13,7 @@
     } @else if (chats().length > 0) {
       <mat-selection-list [multiple]="false">
         @for (chat of chats(); track chat.id) {
-          <mat-list-item [routerLink]="['/chats', chat.id]" class="chat-item glass-card">
+          <mat-list-item [routerLink]="['/chats', chat.id]" [queryParams]="chat.isSupport ? { type: 'support' } : null" class="chat-item glass-card">
             <img matListItemAvatar [src]="chat.otherUserProfileImage || 'assets/images/default-avatar.png'" alt="User">
             <span matListItemTitle>{{ chat.otherUserFirstName }}</span>
             <span matListItemLine class="last-message">{{ chat.lastMessage || ('chat.no_messages' | translate) }}</span>

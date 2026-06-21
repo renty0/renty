@@ -40,7 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private authClient = inject(AuthClient);
   private identityClient = inject(IdentityClient);
   private toastService = inject(ToastService);

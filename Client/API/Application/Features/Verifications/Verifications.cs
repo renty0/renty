@@ -153,6 +153,7 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                     else if (status == VerificationStatus.Rejected)
                     {
                         rental.Status = Domain.Enums.RentalStatus.Rejected;
+                        item.Status = Domain.Enums.NewItemStatus.Available;
                         rental.CurrentPossession = rental.DeliveryMethod == Domain.Enums.DeliveryMethod.DeliveryService 
                             ? ItemPossession.InTransit 
                             : ItemPossession.Owner;

@@ -2497,11 +2497,11 @@ export class WalletClient {
         return _observableOf(null as any);
     }
 
-    topUpWallet(command: TopUpWalletCommand): Observable<ApiResponse<null>> {
+    topUpWallet(cmd: TopUpWalletCommand): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/wallet/topup";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(command);
+        const content_ = JSON.stringify(cmd);
 
         let options_ : any = {
             body: content_,
@@ -2549,11 +2549,6 @@ export class WalletClient {
         return _observableOf(null as any);
     }
 }
-
-export interface TopUpWalletCommand {
-    amount: number;
-}
-
 
 @Injectable()
 export class AdminSettingsClient {
@@ -4132,6 +4127,68 @@ export class RentalsClient {
         return _observableOf(null as any);
     }
 
+    openRentalDispute(id: string, body: OpenDisputeBody): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/rentals/{id}/dispute";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOpenRentalDispute(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOpenRentalDispute(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processOpenRentalDispute(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     updatePossession(id: string, action: string, method: string): Observable<ApiResponse<null>> {
         let url_ = this.baseUrl + "/api/v1/rentals/{id}/possession?";
         if (id === undefined || id === null)
@@ -4904,6 +4961,122 @@ export class SupportClient {
     }
 
     protected processUpdateSupportTicketStatus(response: HttpResponseBase): Observable<ApiResponse<SupportTicketStatusData>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    assignSupportTicket(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/support/tickets/{id}/assign";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAssignSupportTicket(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAssignSupportTicket(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processAssignSupportTicket(response: HttpResponseBase): Observable<ApiResponse<null>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ApiResponse.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    unassignSupportTicket(id: string): Observable<ApiResponse<null>> {
+        let url_ = this.baseUrl + "/api/v1/support/tickets/{id}/unassign";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnassignSupportTicket(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnassignSupportTicket(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<null>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<null>>;
+        }));
+    }
+
+    protected processUnassignSupportTicket(response: HttpResponseBase): Observable<ApiResponse<null>> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6250,6 +6423,64 @@ export class AdminClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ApiResponse.fromJS(resultData200);
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAdminRentalFinancials(id: string): Observable<ApiResponse<RentalFinancialBreakdownDto>> {
+        let url_ = this.baseUrl + "/api/v1/admin/rentals/{id}/financials";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAdminRentalFinancials(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAdminRentalFinancials(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApiResponse<RentalFinancialBreakdownDto>>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApiResponse<RentalFinancialBreakdownDto>>;
+        }));
+    }
+
+    protected processGetAdminRentalFinancials(response: HttpResponseBase): Observable<ApiResponse<RentalFinancialBreakdownDto>> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ApiResponse.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -10191,6 +10422,7 @@ export class RentalInfoDto implements IRentalInfoDto {
     renter?: PersonInfoDto;
     currentPossession?: string;
     hasReturnTransfers?: boolean;
+    pendingTransferType?: string | undefined;
 
     constructor(data?: IRentalInfoDto) {
         if (data) {
@@ -10212,6 +10444,7 @@ export class RentalInfoDto implements IRentalInfoDto {
             this.renter = _data["renter"] ? PersonInfoDto.fromJS(_data["renter"]) : undefined as any;
             this.currentPossession = _data["currentPossession"];
             this.hasReturnTransfers = _data["hasReturnTransfers"];
+            this.pendingTransferType = _data["pendingTransferType"];
         }
     }
 
@@ -10233,6 +10466,7 @@ export class RentalInfoDto implements IRentalInfoDto {
         data["renter"] = this.renter ? this.renter.toJSON() : undefined as any;
         data["currentPossession"] = this.currentPossession;
         data["hasReturnTransfers"] = this.hasReturnTransfers;
+        data["pendingTransferType"] = this.pendingTransferType;
         return data;
     }
 }
@@ -10247,6 +10481,7 @@ export interface IRentalInfoDto {
     renter?: PersonInfoDto;
     currentPossession?: string;
     hasReturnTransfers?: boolean;
+    pendingTransferType?: string | undefined;
 }
 
 export class VerificationDto implements IVerificationDto {
@@ -10747,6 +10982,42 @@ export class RequestWithdrawalCommand implements IRequestWithdrawalCommand {
 export interface IRequestWithdrawalCommand {
     amount?: number;
     mobileWalletNumber?: string;
+}
+
+export class TopUpWalletCommand implements ITopUpWalletCommand {
+    amount?: number;
+
+    constructor(data?: ITopUpWalletCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): TopUpWalletCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new TopUpWalletCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["amount"] = this.amount;
+        return data;
+    }
+}
+
+export interface ITopUpWalletCommand {
+    amount?: number;
 }
 
 export class UpdateSettingCommand implements IUpdateSettingCommand {
@@ -11710,6 +11981,46 @@ export interface IRentalCompleteData {
     depositStatus?: string | undefined;
 }
 
+export class OpenDisputeBody implements IOpenDisputeBody {
+    reasonType?: string;
+    description?: string;
+
+    constructor(data?: IOpenDisputeBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.reasonType = _data["reasonType"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): OpenDisputeBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new OpenDisputeBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reasonType"] = this.reasonType;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IOpenDisputeBody {
+    reasonType?: string;
+    description?: string;
+}
+
 export class ExtendRentalBody implements IExtendRentalBody {
     extraDays?: number;
 
@@ -12338,6 +12649,7 @@ export class CreateTicketCommand implements ICreateTicketCommand {
     type?: string;
     subject?: string;
     message?: string;
+    isAutoGenerated?: boolean;
 
     constructor(data?: ICreateTicketCommand) {
         if (data) {
@@ -12353,6 +12665,7 @@ export class CreateTicketCommand implements ICreateTicketCommand {
             this.type = _data["type"];
             this.subject = _data["subject"];
             this.message = _data["message"];
+            this.isAutoGenerated = _data["isAutoGenerated"];
         }
     }
 
@@ -12368,6 +12681,7 @@ export class CreateTicketCommand implements ICreateTicketCommand {
         data["type"] = this.type;
         data["subject"] = this.subject;
         data["message"] = this.message;
+        data["isAutoGenerated"] = this.isAutoGenerated;
         return data;
     }
 }
@@ -12376,6 +12690,7 @@ export interface ICreateTicketCommand {
     type?: string;
     subject?: string;
     message?: string;
+    isAutoGenerated?: boolean;
 }
 
 
@@ -12431,8 +12746,12 @@ export class TicketListDto implements ITicketListDto {
     type?: string;
     status?: string;
     createdAt?: Date;
+    updatedAt?: Date;
     lastMessage?: string | undefined;
     userName?: string | undefined;
+    isAutoGenerated?: boolean;
+    assignedAgentId?: number | undefined;
+    assignedAgentName?: string | undefined;
 
     constructor(data?: ITicketListDto) {
         if (data) {
@@ -12449,8 +12768,12 @@ export class TicketListDto implements ITicketListDto {
             this.type = _data["type"];
             this.status = _data["status"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
             this.lastMessage = _data["lastMessage"];
             this.userName = _data["userName"];
+            this.isAutoGenerated = _data["isAutoGenerated"];
+            this.assignedAgentId = _data["assignedAgentId"];
+            this.assignedAgentName = _data["assignedAgentName"];
         }
     }
 
@@ -12467,8 +12790,12 @@ export class TicketListDto implements ITicketListDto {
         data["type"] = this.type;
         data["status"] = this.status;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
         data["lastMessage"] = this.lastMessage;
         data["userName"] = this.userName;
+        data["isAutoGenerated"] = this.isAutoGenerated;
+        data["assignedAgentId"] = this.assignedAgentId;
+        data["assignedAgentName"] = this.assignedAgentName;
         return data;
     }
 }
@@ -12478,8 +12805,12 @@ export interface ITicketListDto {
     type?: string;
     status?: string;
     createdAt?: Date;
+    updatedAt?: Date;
     lastMessage?: string | undefined;
     userName?: string | undefined;
+    isAutoGenerated?: boolean;
+    assignedAgentId?: number | undefined;
+    assignedAgentName?: string | undefined;
 }
 
 
@@ -12535,8 +12866,13 @@ export class TicketDetailsDto implements ITicketDetailsDto {
     type?: string;
     status?: string;
     createdAt?: Date;
+    updatedAt?: Date;
     messages?: SupportMessageDto[];
+    events?: SupportTicketEventDto[];
     userName?: string | undefined;
+    isAutoGenerated?: boolean;
+    assignedAgentId?: number | undefined;
+    assignedAgentName?: string | undefined;
 
     constructor(data?: ITicketDetailsDto) {
         if (data) {
@@ -12553,12 +12889,21 @@ export class TicketDetailsDto implements ITicketDetailsDto {
             this.type = _data["type"];
             this.status = _data["status"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
             if (Array.isArray(_data["messages"])) {
                 this.messages = [] as any;
                 for (let item of _data["messages"])
                     this.messages!.push(SupportMessageDto.fromJS(item));
             }
+            if (Array.isArray(_data["events"])) {
+                this.events = [] as any;
+                for (let item of _data["events"])
+                    this.events!.push(SupportTicketEventDto.fromJS(item));
+            }
             this.userName = _data["userName"];
+            this.isAutoGenerated = _data["isAutoGenerated"];
+            this.assignedAgentId = _data["assignedAgentId"];
+            this.assignedAgentName = _data["assignedAgentName"];
         }
     }
 
@@ -12575,12 +12920,21 @@ export class TicketDetailsDto implements ITicketDetailsDto {
         data["type"] = this.type;
         data["status"] = this.status;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
         if (Array.isArray(this.messages)) {
             data["messages"] = [];
             for (let item of this.messages)
                 data["messages"].push(item ? item.toJSON() : undefined as any);
         }
+        if (Array.isArray(this.events)) {
+            data["events"] = [];
+            for (let item of this.events)
+                data["events"].push(item ? item.toJSON() : undefined as any);
+        }
         data["userName"] = this.userName;
+        data["isAutoGenerated"] = this.isAutoGenerated;
+        data["assignedAgentId"] = this.assignedAgentId;
+        data["assignedAgentName"] = this.assignedAgentName;
         return data;
     }
 }
@@ -12590,14 +12944,21 @@ export interface ITicketDetailsDto {
     type?: string;
     status?: string;
     createdAt?: Date;
+    updatedAt?: Date;
     messages?: SupportMessageDto[];
+    events?: SupportTicketEventDto[];
     userName?: string | undefined;
+    isAutoGenerated?: boolean;
+    assignedAgentId?: number | undefined;
+    assignedAgentName?: string | undefined;
 }
 
 export class SupportMessageDto implements ISupportMessageDto {
     id?: string;
     senderId?: number;
-    message?: string;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     createdAt?: Date;
 
     constructor(data?: ISupportMessageDto) {
@@ -12614,6 +12975,8 @@ export class SupportMessageDto implements ISupportMessageDto {
             this.id = _data["id"];
             this.senderId = _data["senderId"];
             this.message = _data["message"];
+            this.mediaUrl = _data["mediaUrl"];
+            this.messageType = _data["messageType"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
         }
     }
@@ -12630,6 +12993,8 @@ export class SupportMessageDto implements ISupportMessageDto {
         data["id"] = this.id;
         data["senderId"] = this.senderId;
         data["message"] = this.message;
+        data["mediaUrl"] = this.mediaUrl;
+        data["messageType"] = this.messageType;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         return data;
     }
@@ -12638,8 +13003,70 @@ export class SupportMessageDto implements ISupportMessageDto {
 export interface ISupportMessageDto {
     id?: string;
     senderId?: number;
-    message?: string;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     createdAt?: Date;
+}
+
+export enum MessageType {
+    Text = 0,
+    Image = 1,
+    Video = 2,
+    Audio = 3,
+    Document = 4,
+}
+
+export class SupportTicketEventDto implements ISupportTicketEventDto {
+    id?: string;
+    eventType?: string;
+    details?: string;
+    createdAt?: Date;
+    actorName?: string | undefined;
+
+    constructor(data?: ISupportTicketEventDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.eventType = _data["eventType"];
+            this.details = _data["details"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.actorName = _data["actorName"];
+        }
+    }
+
+    static fromJS(data: any): SupportTicketEventDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupportTicketEventDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["eventType"] = this.eventType;
+        data["details"] = this.details;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["actorName"] = this.actorName;
+        return data;
+    }
+}
+
+export interface ISupportTicketEventDto {
+    id?: string;
+    eventType?: string;
+    details?: string;
+    createdAt?: Date;
+    actorName?: string | undefined;
 }
 
 
@@ -12649,6 +13076,8 @@ export interface ISupportMessageDto {
 export class SupportMessageData implements ISupportMessageData {
     messageId?: string;
     message?: string;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     createdAt?: Date;
 
     constructor(data?: ISupportMessageData) {
@@ -12664,6 +13093,8 @@ export class SupportMessageData implements ISupportMessageData {
         if (_data) {
             this.messageId = _data["messageId"];
             this.message = _data["message"];
+            this.mediaUrl = _data["mediaUrl"];
+            this.messageType = _data["messageType"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
         }
     }
@@ -12679,6 +13110,8 @@ export class SupportMessageData implements ISupportMessageData {
         data = typeof data === 'object' ? data : {};
         data["messageId"] = this.messageId;
         data["message"] = this.message;
+        data["mediaUrl"] = this.mediaUrl;
+        data["messageType"] = this.messageType;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
         return data;
     }
@@ -12687,12 +13120,16 @@ export class SupportMessageData implements ISupportMessageData {
 export interface ISupportMessageData {
     messageId?: string;
     message?: string;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     createdAt?: Date;
 }
 
 export class PostSupportMessageCommand implements IPostSupportMessageCommand {
     ticketId?: string;
-    message?: string;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     isSupportAgent?: boolean;
 
     constructor(data?: IPostSupportMessageCommand) {
@@ -12708,6 +13145,8 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
         if (_data) {
             this.ticketId = _data["ticketId"];
             this.message = _data["message"];
+            this.mediaUrl = _data["mediaUrl"];
+            this.messageType = _data["messageType"];
             this.isSupportAgent = _data["isSupportAgent"];
         }
     }
@@ -12723,6 +13162,8 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
         data = typeof data === 'object' ? data : {};
         data["ticketId"] = this.ticketId;
         data["message"] = this.message;
+        data["mediaUrl"] = this.mediaUrl;
+        data["messageType"] = this.messageType;
         data["isSupportAgent"] = this.isSupportAgent;
         return data;
     }
@@ -12730,7 +13171,9 @@ export class PostSupportMessageCommand implements IPostSupportMessageCommand {
 
 export interface IPostSupportMessageCommand {
     ticketId?: string;
-    message?: string;
+    message?: string | undefined;
+    mediaUrl?: string | undefined;
+    messageType?: MessageType;
     isSupportAgent?: boolean;
 }
 
@@ -13032,14 +13475,6 @@ export interface IChatListDto {
     itemTitle?: string | undefined;
     itemImage?: string | undefined;
     otherUserLastLoginAt?: Date | undefined;
-}
-
-export enum MessageType {
-    Text = 0,
-    Image = 1,
-    Video = 2,
-    Audio = 3,
-    Document = 4,
 }
 
 
@@ -14743,6 +15178,170 @@ export interface IGapDto {
     supply?: number;
     gapScore?: number;
     recommendations?: string | undefined;
+    createdAt?: Date;
+}
+
+
+
+
+
+export class RentalFinancialBreakdownDto implements IRentalFinancialBreakdownDto {
+    rentalId?: string;
+    initialRentalPrice?: number;
+    initialDeposit?: number;
+    initialExpertFee?: number;
+    escrowRental?: number;
+    escrowDeposit?: number;
+    escrowExpert?: number;
+    distributedToOwner?: number;
+    distributedToRenter?: number;
+    distributedToExpert?: number;
+    platformRevenue?: number;
+    penaltiesCollected?: number;
+    rentalStatus?: string;
+    cancellationReason?: string | undefined;
+    transactions?: WalletTransactionDto[];
+
+    constructor(data?: IRentalFinancialBreakdownDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rentalId = _data["rentalId"];
+            this.initialRentalPrice = _data["initialRentalPrice"];
+            this.initialDeposit = _data["initialDeposit"];
+            this.initialExpertFee = _data["initialExpertFee"];
+            this.escrowRental = _data["escrowRental"];
+            this.escrowDeposit = _data["escrowDeposit"];
+            this.escrowExpert = _data["escrowExpert"];
+            this.distributedToOwner = _data["distributedToOwner"];
+            this.distributedToRenter = _data["distributedToRenter"];
+            this.distributedToExpert = _data["distributedToExpert"];
+            this.platformRevenue = _data["platformRevenue"];
+            this.penaltiesCollected = _data["penaltiesCollected"];
+            this.rentalStatus = _data["rentalStatus"];
+            this.cancellationReason = _data["cancellationReason"];
+            if (Array.isArray(_data["transactions"])) {
+                this.transactions = [] as any;
+                for (let item of _data["transactions"])
+                    this.transactions!.push(WalletTransactionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RentalFinancialBreakdownDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RentalFinancialBreakdownDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rentalId"] = this.rentalId;
+        data["initialRentalPrice"] = this.initialRentalPrice;
+        data["initialDeposit"] = this.initialDeposit;
+        data["initialExpertFee"] = this.initialExpertFee;
+        data["escrowRental"] = this.escrowRental;
+        data["escrowDeposit"] = this.escrowDeposit;
+        data["escrowExpert"] = this.escrowExpert;
+        data["distributedToOwner"] = this.distributedToOwner;
+        data["distributedToRenter"] = this.distributedToRenter;
+        data["distributedToExpert"] = this.distributedToExpert;
+        data["platformRevenue"] = this.platformRevenue;
+        data["penaltiesCollected"] = this.penaltiesCollected;
+        data["rentalStatus"] = this.rentalStatus;
+        data["cancellationReason"] = this.cancellationReason;
+        if (Array.isArray(this.transactions)) {
+            data["transactions"] = [];
+            for (let item of this.transactions)
+                data["transactions"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IRentalFinancialBreakdownDto {
+    rentalId?: string;
+    initialRentalPrice?: number;
+    initialDeposit?: number;
+    initialExpertFee?: number;
+    escrowRental?: number;
+    escrowDeposit?: number;
+    escrowExpert?: number;
+    distributedToOwner?: number;
+    distributedToRenter?: number;
+    distributedToExpert?: number;
+    platformRevenue?: number;
+    penaltiesCollected?: number;
+    rentalStatus?: string;
+    cancellationReason?: string | undefined;
+    transactions?: WalletTransactionDto[];
+}
+
+export class WalletTransactionDto implements IWalletTransactionDto {
+    id?: string;
+    userId?: number;
+    amount?: number;
+    type?: string;
+    description?: string;
+    isPending?: boolean;
+    createdAt?: Date;
+
+    constructor(data?: IWalletTransactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userId = _data["userId"];
+            this.amount = _data["amount"];
+            this.type = _data["type"];
+            this.description = _data["description"];
+            this.isPending = _data["isPending"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): WalletTransactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WalletTransactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userId"] = this.userId;
+        data["amount"] = this.amount;
+        data["type"] = this.type;
+        data["description"] = this.description;
+        data["isPending"] = this.isPending;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IWalletTransactionDto {
+    id?: string;
+    userId?: number;
+    amount?: number;
+    type?: string;
+    description?: string;
+    isPending?: boolean;
     createdAt?: Date;
 }
 

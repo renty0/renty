@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ChatClient, MediaClient, PostChatMessageCommand, FileParameter, NotificationsClient } from '../../../core/api/api-client';
+import { ChatClient, MediaClient, PostChatMessageCommand, FileParameter, NotificationsClient, SupportClient, PostSupportMessageCommand, CreateTicketCommand } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
 import { ChatSignalrService } from '../../../core/services/chat-signalr.service';
+import { SupportSignalrService } from '../../../core/services/support-signalr.service';
 import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
-import { catchError, finalize, of, tap, firstValueFrom, Subscription } from 'rxjs';
+import { catchError, finalize, of, tap, firstValueFrom, Subscription, switchMap, forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -45,9 +46,11 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   private route = inject(ActivatedRoute);
   private chatClient = inject(ChatClient);
+  private supportClient = inject(SupportClient);
   private mediaClient = inject(MediaClient);
   private auth = inject(AuthService);
   private chatSignalr = inject(ChatSignalrService);
+  private supportSignalr = inject(SupportSignalrService);
   private notificationsClient = inject(NotificationsClient);
   private notificationSignalr = inject(NotificationSignalrService);
   private router = inject(Router);
@@ -66,11 +69,21 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
   selectedImages = signal<QueuedImage[]>([]);
   previewImage = signal<string | null>(null);
 
+  isSupport = false;
+
   private messageSubscription?: Subscription;
+  private supportMessageSubscription?: Subscription;
+
+  activeSupportTickets: string[] = [];
+  activeSupportTicketId?: string;
 
   constructor() {
-    this.messageSubscription = this.chatSignalr.newMessage$.subscribe(rawMsg => {
-      if (rawMsg && rawMsg.chatId === this.chatId()) {
+    const handleMsg = (rawMsg: any) => {
+      const isMatch = this.isSupport 
+        ? (rawMsg?.ticketId && (this.activeSupportTickets.some(id => id.toLowerCase() === rawMsg.ticketId.toLowerCase()) || this.chatId().toLowerCase() === rawMsg.ticketId.toLowerCase()))
+        : (rawMsg?.chatId && rawMsg.chatId.toLowerCase() === this.chatId().toLowerCase());
+
+      if (rawMsg && isMatch) {
         const msg = { ...rawMsg };
         if (msg.mediaUrl) {
           if (!msg.mediaUrl.startsWith('http')) {
@@ -104,17 +117,43 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
 
         setTimeout(() => this.scrollToBottom(), 100);
       }
+    };
+
+    this.messageSubscription = this.chatSignalr.newMessage$.subscribe(handleMsg);
+    effect(() => {
+      const msg = this.supportSignalr.newMessage();
+      if (msg) handleMsg(msg);
     });
+
+    // Reset active ticket if it gets resolved while the user is actively viewing the chat
+    effect(() => {
+      const statusChange = this.supportSignalr.ticketStatusChanged();
+      if (statusChange && this.isSupport && this.activeSupportTicketId) {
+        if (statusChange.ticketId.toLowerCase() === this.activeSupportTicketId.toLowerCase()) {
+          const s = statusChange.status.toLowerCase();
+          if (s === 'resolved' || s === 'closed') {
+            this.activeSupportTicketId = undefined;
+          }
+        }
+      }
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit() {
     this.currentUserId.set(this.auth.getCurrentUserId());
+    
+    this.route.queryParams.subscribe(params => {
+      this.isSupport = params['type'] === 'support';
+    });
+
     this.route.params.subscribe(params => {
       const id = params['id'];
       if (id) {
         this.chatId.set(id);
         this.loadMessages();
-        this.chatSignalr.joinChat(id);
+        if (!this.isSupport) {
+          this.chatSignalr.joinChat(id);
+        }
       }
     });
   }
@@ -127,6 +166,20 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
+    if (this.supportMessageSubscription) {
+      this.supportMessageSubscription.unsubscribe();
+    }
+    if (this.isSupport) {
+      if (this.chatId() !== 'support') {
+        this.supportSignalr.leaveTicket(this.chatId());
+      } else {
+        for (const tId of this.activeSupportTickets) {
+          this.supportSignalr.leaveTicket(tId);
+        }
+      }
+    } else {
+      this.chatSignalr.leaveChat(this.chatId());
+    }
     if (this.recordingInterval) {
       clearInterval(this.recordingInterval);
     }
@@ -136,15 +189,94 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.messages.set([]);
     this.chatMetadata.set(null);
     this.isLoading.set(true);
-    this.chatClient.getChatMessages(this.chatId() as any)
-      .pipe(
-        tap((res: any) => {
-          if (res && res.data && res.data.found) {
-            this.messages.set(res.data.messages || []);
-            this.chatMetadata.set(res.data.chatMetadata);
-          }
-          // Sync notification counter after chat messages are loaded and marked as read
-          this.notificationsClient.getNotifications().subscribe((notifRes: any) => {
+
+    if (this.isSupport) {
+      if (this.chatId() === 'support') {
+        this.supportClient.getSupportTickets().pipe(
+          switchMap((res: any) => {
+            const ticketsList = res?.data?.tickets ?? res?.data ?? (Array.isArray(res) ? res : []);
+            if (ticketsList.length === 0) {
+              this.activeSupportTicketId = undefined;
+              return of([]);
+            }
+            this.activeSupportTickets = ticketsList.map((t: any) => t.id);
+            
+            const now = new Date();
+            const activeTicket = ticketsList.find((t: any) => {
+              const status = t.status?.toLowerCase();
+              if (status === 'resolved' || status === 'closed') return false;
+              const lastActivity = new Date(t.updatedAt || t.createdAt);
+              const diffDays = (now.getTime() - lastActivity.getTime()) / (1000 * 3600 * 24);
+              return diffDays < 4;
+            });
+            this.activeSupportTicketId = activeTicket ? activeTicket.id : undefined;
+            
+            for (const tId of this.activeSupportTickets) {
+              this.supportSignalr.joinTicket(tId);
+            }
+
+            const reqs = this.activeSupportTickets.map(id => this.supportClient.getSupportTicketDetails(id));
+            return forkJoin(reqs);
+          }),
+          tap((results: any[]) => {
+            let allMsgs: any[] = [];
+            for (const r of results) {
+              if (r?.data?.ticket?.messages) {
+                allMsgs.push(...r.data.ticket.messages);
+              }
+            }
+            allMsgs.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            this.messages.set(allMsgs);
+            this.chatMetadata.set({
+              otherUserFirstName: 'Support',
+              otherUserLastName: 'Team',
+              otherUserProfileImage: null,
+              otherUserLastLoginAt: new Date().toISOString()
+            });
+          }),
+          catchError(err => {
+            console.error('Failed to load support messages', err);
+            return of(null);
+          }),
+          finalize(() => {
+            this.isLoading.set(false);
+            setTimeout(() => this.scrollToBottom(), 100);
+          })
+        ).subscribe();
+      } else {
+        this.supportClient.getSupportTicketDetails(this.chatId()).pipe(
+          tap((res: any) => {
+            if (res && res.data && res.data.ticket) {
+              const t = res.data.ticket;
+              this.messages.set(t.messages || []);
+              this.chatMetadata.set({
+                otherUserFirstName: 'Support',
+                otherUserLastName: 'Team',
+                otherUserProfileImage: null,
+                otherUserLastLoginAt: new Date().toISOString()
+              });
+            }
+          }),
+          catchError(err => {
+            console.error('Failed to load support messages', err);
+            return of(null);
+          }),
+          finalize(() => {
+            this.isLoading.set(false);
+            setTimeout(() => this.scrollToBottom(), 100);
+          })
+        ).subscribe();
+      }
+    } else {
+      this.chatClient.getChatMessages(this.chatId() as any)
+        .pipe(
+          tap((res: any) => {
+            if (res && res.data && res.data.found) {
+              this.messages.set(res.data.messages || []);
+              this.chatMetadata.set(res.data.chatMetadata);
+            }
+            // Sync notification counter after chat messages are loaded and marked as read
+            this.notificationsClient.getNotifications().subscribe((notifRes: any) => {
             if (notifRes?.data?.notifications) {
               const count = notifRes.data.notifications.filter((n: any) => !n.isRead).length;
               this.notificationSignalr.unreadCount.set(count);
@@ -160,6 +292,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
           setTimeout(() => this.scrollToBottom(), 100);
         })
       ).subscribe();
+    }
   }
 
   isRecording = signal(false);
@@ -329,15 +462,18 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   private sendMediaMessage(url: string, type: number, text?: string, optimisticId?: string) {
-    const cmd = new PostChatMessageCommand({
-      chatId: this.chatId() as any,
-      message: text,
-      mediaUrl: url,
-      messageType: type as any
-    });
+    if (this.isSupport) {
+      this.sendSupportMessage(text, url, type, optimisticId);
+    } else {
+      const cmd = new PostChatMessageCommand({
+        chatId: this.chatId() as any,
+        message: text,
+        mediaUrl: url,
+        messageType: type as any
+      });
 
-    this.chatClient.postChatMessage(this.chatId() as any, cmd)
-      .pipe(
+      this.chatClient.postChatMessage(this.chatId() as any, cmd)
+        .pipe(
         tap((res: any) => {
           const data = res?.data;
           if (data && data.success) {
@@ -387,6 +523,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
           return of(null);
         })
       ).subscribe();
+    }
   }
 
   async sendMessage() {
@@ -470,14 +607,17 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
         }]);
         setTimeout(() => this.scrollToBottom(), 50);
 
-        const cmd = new PostChatMessageCommand({
-          chatId: this.chatId() as any,
-          message: messageToSend,
-          messageType: 0 as any
-        });
+        if (this.isSupport) {
+          this.sendSupportMessage(messageToSend, undefined, 0, optimisticId);
+        } else {
+          const cmd = new PostChatMessageCommand({
+            chatId: this.chatId() as any,
+            message: messageToSend,
+            messageType: 0 as any
+          });
 
-        const res = await firstValueFrom(this.chatClient.postChatMessage(this.chatId() as any, cmd));
-        if (res?.data?.success) {
+          const res = await firstValueFrom(this.chatClient.postChatMessage(this.chatId() as any, cmd));
+          if (res?.data?.success) {
           const realId = res.data!.messageId;
           this.messages.update(msgs => {
             const alreadyExists = msgs.some(m => m.id === realId && !m.isOptimistic);
@@ -494,6 +634,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.removeOptimisticMessage(optimisticId);
           this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 4000, horizontalPosition: 'center', verticalPosition: 'bottom' });
         }
+       }
       }
     } catch (err) {
       console.error('Failed to send message', err);
@@ -512,6 +653,109 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(err) { }
+  }
+
+  private async sendSupportMessage(text: string | undefined, mediaUrl: string | undefined, type: number, optimisticId?: string) {
+    if (this.chatId() === 'support' && !this.activeSupportTicketId) {
+      try {
+        const createCmd = new CreateTicketCommand({
+          type: 'Technical',
+          subject: 'Support Chat',
+          message: text || '[Media Attachment]',
+          isAutoGenerated: false
+        });
+        const res = await firstValueFrom(this.supportClient.createSupportTicket(createCmd));
+        if (res?.data?.ticketId) {
+          this.activeSupportTicketId = res.data.ticketId;
+          this.activeSupportTickets.push(this.activeSupportTicketId!);
+          this.supportSignalr.joinTicket(this.activeSupportTicketId!);
+          
+          if (mediaUrl) {
+            const cmd = new PostSupportMessageCommand({
+              ticketId: this.activeSupportTicketId,
+              message: text,
+              mediaUrl: mediaUrl,
+              messageType: type as any,
+              isSupportAgent: false
+            });
+            const postRes = await firstValueFrom(this.supportClient.postSupportMessage(this.activeSupportTicketId!, cmd));
+            if (postRes && !postRes.error) {
+              const data = postRes.data;
+              if (optimisticId) {
+                this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
+                  ...m,
+                  id: data?.messageId,
+                  mediaUrl: mediaUrl,
+                  isOptimistic: false
+                } : m));
+              }
+            } else {
+              if (optimisticId) this.removeOptimisticMessage(optimisticId);
+            }
+          } else {
+            if (optimisticId) this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? { ...m, isOptimistic: false } : m));
+          }
+          
+          // Append auto reply if it exists in the response
+          if ((res.data as any).autoReplyMessage) {
+            const autoReply = (res.data as any).autoReplyMessage;
+            // Map keys if they come in pascal case from raw JSON or just use them
+            const mappedReply = {
+              id: autoReply.id || autoReply.Id,
+              ticketId: autoReply.ticketId || autoReply.TicketId,
+              senderId: autoReply.senderId || autoReply.SenderId,
+              message: autoReply.message || autoReply.Message,
+              mediaUrl: autoReply.mediaUrl || autoReply.MediaUrl,
+              messageType: autoReply.messageType || autoReply.MessageType,
+              createdAt: autoReply.createdAt || autoReply.CreatedAt,
+              isOptimistic: false
+            };
+            this.messages.update(msgs => [...msgs, mappedReply]);
+            setTimeout(() => this.scrollToBottom(), 100);
+          }
+        } else {
+          if (optimisticId) this.removeOptimisticMessage(optimisticId);
+        }
+      } catch (err) {
+        console.error('Failed to create ticket', err);
+        if (optimisticId) this.removeOptimisticMessage(optimisticId);
+        this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 3000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+      }
+      return;
+    }
+
+    const targetTicketId = this.chatId() === 'support' ? this.activeSupportTicketId! : this.chatId();
+    const cmd = new PostSupportMessageCommand({
+      ticketId: targetTicketId,
+      message: text,
+      mediaUrl: mediaUrl,
+      messageType: type as any,
+      isSupportAgent: false
+    });
+
+    this.supportClient.postSupportMessage(targetTicketId, cmd).pipe(
+      tap(res => {
+        if (res && !res.error) {
+          const data = res.data;
+          if (optimisticId) {
+            this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
+              ...m,
+              id: data?.messageId,
+              mediaUrl: mediaUrl,
+              isOptimistic: false
+            } : m));
+          }
+        } else {
+          if (optimisticId) this.removeOptimisticMessage(optimisticId);
+        }
+      }),
+      catchError(err => {
+        console.error('Failed to send support message', err);
+        if (optimisticId) this.removeOptimisticMessage(optimisticId);
+        this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 3000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+        return of(null);
+      })
+    ).subscribe();
   }
 
   isCurrentUser(senderId: number | undefined): boolean {

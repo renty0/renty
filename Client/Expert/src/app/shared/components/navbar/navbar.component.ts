@@ -19,7 +19,7 @@ import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, NotificationDropdownComponent, LoadingButtonComponent ],
+  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, NotificationDropdownComponent ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })

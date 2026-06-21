@@ -138,7 +138,8 @@
     "overrides": "Overrides & Emergency",
     "superAdmin": "Super Admin",
     "itemReview": "Item Review",
-    "idVerifications": "ID Verifications"
+    "idVerifications": "ID Verifications",
+    "verifications": "Verifications"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -863,24 +864,24 @@
         "success": "Transfer verified successfully!",
         "placeholder": "EX: 123456",
         "ReceiveFromOwner": {
-           "title": "Receive from Owner",
-           "desc": "Please enter the verification code provided by the Owner to confirm you received the item.",
-           "btn": "Confirm Receipt"
+          "title": "Receive from Owner",
+          "desc": "Please enter the verification code provided by the Owner to confirm you received the item.",
+          "btn": "Confirm Receipt"
         },
         "DeliveryToRenter": {
-           "title": "Deliver to Renter",
-           "desc": "Please enter the verification code provided by the Renter to confirm they received the item.",
-           "btn": "Confirm Delivery"
+          "title": "Deliver to Renter",
+          "desc": "Please enter the verification code provided by the Renter to confirm they received the item.",
+          "btn": "Confirm Delivery"
         },
         "ReceiveFromRenter": {
-           "title": "Receive from Renter",
-           "desc": "Please enter the verification code provided by the Renter to confirm you received the item back.",
-           "btn": "Confirm Return"
+          "title": "Receive from Renter",
+          "desc": "Please enter the verification code provided by the Renter to confirm you received the item back.",
+          "btn": "Confirm Return"
         },
         "DeliveryToOwner": {
-           "title": "Deliver to Owner",
-           "desc": "Please enter the verification code provided by the Owner to confirm they received the item back.",
-           "btn": "Confirm Delivery"
+          "title": "Deliver to Owner",
+          "desc": "Please enter the verification code provided by the Owner to confirm they received the item back.",
+          "btn": "Confirm Delivery"
         }
       }
     },
@@ -1160,7 +1161,8 @@
     "deleteConfirmation": "Are you sure you want to delete this conversation?",
     "lastSeenMinutes": "Last seen {{minutes}} min ago",
     "lastSeenHours": "Last seen {{hours}} hr ago",
-    "lastSeenDays": "Last seen {{days}} days ago"
+    "lastSeenDays": "Last seen {{days}} days ago",
+    "ticketClosed": "This ticket is closed or resolved. You cannot send new messages."
   },
   "notifications": {
     "title": "Notifications",

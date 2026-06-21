@@ -1055,6 +1055,13 @@
     "resolved": "مُحلول",
     "open": "مُفتح",
     "closed": "مُغلق",
+    "statuses": {
+      "open": "مُفتح",
+      "inprogress": "قيد المعالجة",
+      "awaitingcustomer": "في انتظار العميل",
+      "escalated": "مصعد إدارياً",
+      "resolved": "مُحلول"
+    },
     "user": "المستخدم",
     "agent": {
       "title": "مساحة عمل وكيل الدعم",
@@ -1163,7 +1170,8 @@
     "lastSeenDays": "آخر ظهور منذ {{days}} يوم",
     "unsupportedFileType": "نوع الملف غير مدعوم. يرجى رفع الصور أو مقاطع الفيديو أو ملفات PDF فقط.",
     "fileTooLarge": "لا يمكن أن يتجاوز حجم الملف 10 ميغابايت.",
-    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
+    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+    "ticketClosed": "هذه التذكرة مغلقة أو تم حلها. لا يمكنك إرسال رسائل جديدة."
   },
   "notifications": {
     "title": "الإشعارات",
@@ -1337,7 +1345,11 @@
       "withdrawal": "سحب",
       "escrow_hold": "حجز ضمان",
       "escrow_release": "تحرير ضمان",
-      "penalty": "غرامة"
+      "penalty": "غرامة",
+      "pending_earnings": "أرباح معلقة",
+      "rental_earnings": "أرباح إيجار",
+      "rental_income": "دخل إيجار",
+      "refund": "استرداد"
     },
     "tx_desc": {
       "top_up": "شحن المحفظة (محاكاة)",
@@ -1348,7 +1360,19 @@
       "cancellation_fee_generic": "رسوم إلغاء",
       "deposit_returned": "تحرير ضمان",
       "deposit_refund": "استرداد التأمين",
-      "rental_refund": "استرداد مبلغ الإيجار"
+      "rental_refund": "استرداد مبلغ الإيجار",
+      "pending_rental_income": "إيرادات إيجار معلقة للمنتج '{{item}}'",
+      "pending_extra_income": "إيرادات إضافية معلقة للمنتج '{{item}}'",
+      "late_fee": "غرامة تأخير للمنتج '{{item}}'",
+      "escrow_release_completed": "تحرير ضمان لإيجار مكتمل",
+      "rental_payment": "دفع رسوم إيجار",
+      "pending_income_reversal": "إلغاء إيرادات معلقة للمنتج '{{item}}'",
+      "dispute_compensation": "تسوية نزاع: تعويض",
+      "dispute_refund": "تسوية نزاع: استرداد",
+      "earnings_with_compensation": "أرباح بقيمة {{usedRent}} مدة مستخدمة + تعويض إلغاء للمنتج '{{item}}'. العمولة المخصومة: {{commission}}.",
+      "earnings_rental": "أرباح إيجار المنتج '{{item}}'. العمولة المخصومة: {{commission}}.",
+      "early_return_fee": "رسوم إلغاء بسبب الإرجاع المبكر (الطلب #{{id}})",
+      "early_return_refund": "استرداد قيمة أيام الإيجار غير المستخدمة للإرجاع المبكر (الطلب #{{id}})"
     },
     "transaction_history": "سجل المعاملات",
     "no_transactions": "ليس لديك أي معاملات في المحفظة حتى الآن.",

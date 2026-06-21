@@ -40,8 +40,8 @@
           </div>
 
           <div class="content-wrapper">
-            <div class="notif-title">{{ notif.title | localizedNotification }}</div>
-            <div class="notif-message">{{ notif.message | localizedNotification:true }}</div>
+            <div class="notif-title">{{ notif.title | localizedNotification:false:$any(notif).titleAr }}</div>
+            <div class="notif-message">{{ notif.message | localizedNotification:true:$any(notif).messageAr }}</div>
             <div class="notif-time">{{ getTimeAgo(notif.createdAt) }}</div>
           </div>
 

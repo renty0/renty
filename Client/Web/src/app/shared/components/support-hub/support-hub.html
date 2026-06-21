@@ -55,13 +55,13 @@
 
           <div class="actions-section">
             <div class="actions-grid">
-              <div class="action-card" routerLink="/support" (click)="closeHub()">
+              <div class="action-card" routerLink="/chats" (click)="closeHub()">
                 <div class="action-icon" style="background-color: #2ED573">
                   <mat-icon>dashboard</mat-icon>
                 </div>
                 <span>{{ 'support.hub.dashboard' | translate }}</span>
               </div>
-              <div class="action-card" routerLink="/support" [queryParams]="{filter: 'open'}" (click)="closeHub()">
+              <div class="action-card" routerLink="/chats" (click)="closeHub()">
                 <div class="action-icon" style="background-color: #1E90FF">
                   <mat-icon>assignment</mat-icon>
                 </div>
@@ -75,13 +75,13 @@
           <div class="recent-section">
             <div class="section-header">
               <span class="section-label">{{ 'support.hub.recent' | translate }}</span>
-              <a routerLink="/support" (click)="closeHub()">{{ 'common.viewAll' | translate }}</a>
+              <a routerLink="/chats" (click)="closeHub()">{{ 'common.viewAll' | translate }}</a>
             </div>
 
             <div class="tickets-list">
               @for (ticket of recentTickets(); track ticket.id) {
                 <div class="ticket-item">
-                  <div class="ticket-content" [routerLink]="['/support', ticket.id]" (click)="closeHub()">
+                  <div class="ticket-content" [routerLink]="['/chats', ticket.id]" [queryParams]="{ type: 'support' }" (click)="closeHub()">
                     <div class="ticket-info">
                       <span class="ticket-id">{{ ticket.id }}</span>
                       <span class="ticket-subject">{{ ticket.subject }}</span>
@@ -117,7 +117,7 @@
             {{ 'support.hub.startChat' | translate }}
           </button>
         } @else {
-          <button mat-flat-button color="primary" class="new-chat-btn" routerLink="/support" (click)="closeHub()">
+          <button mat-flat-button color="primary" class="new-chat-btn" routerLink="/chats" (click)="closeHub()">
             <mat-icon>dashboard</mat-icon>
             {{ 'support.hub.dashboard' | translate }}
           </button>

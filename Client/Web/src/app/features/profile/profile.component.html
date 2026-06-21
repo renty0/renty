@@ -13,6 +13,7 @@
         <p class="user-email">{{ currentUser()?.email }}</p>
       </div>
 
+      @if (authService.isUser()) {
       <div class="stats-grid">
         <div class="stat-item owner">
           <span class="stat-value">{{ ownerRating() | number:'1.1-1' }} <mat-icon>star</mat-icon></span>
@@ -23,16 +24,19 @@
           <span class="stat-label">{{ 'profile.renterRating' | translate }}</span>
         </div>
       </div>
+      }
 
       <nav class="side-nav">
         <button class="nav-link" [class.active]="activeTab === 'personal'" (click)="activeTab = 'personal'">
           <mat-icon>person_outline</mat-icon>
           <span>{{ 'profile.personalInfo' | translate }}</span>
         </button>
+        @if (authService.isUser()) {
         <button class="nav-link" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
           <mat-icon>rate_review</mat-icon>
           <span>{{ 'profile.reviews' | translate }}</span>
         </button>
+        }
       </nav>
     </div>
   </aside>
@@ -117,6 +121,7 @@
             </form>
           </div>
 
+          @if (authService.isUser()) {
           <div class="section-card danger">
             <div class="danger-header">
               <mat-icon>warning_amber</mat-icon>
@@ -128,9 +133,11 @@
               {{ 'profile.deleteAccount' | translate }}
             </button>
           </div>
+          }
         </div>
       }
 
+      @if (authService.isUser()) {
       @if (activeTab === 'reviews') {
         <div class="tab-content fade-in">
           <div class="section-card">
@@ -171,6 +178,7 @@
             }
           </div>
         </div>
+      }
       }
     </div>
   </main>

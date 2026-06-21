@@ -486,6 +486,7 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
             return new RentalActionResponse(false, "Rental must be in pending status to confirm.", null);
 
         rental.Status = RentalStatus.Confirmed;
+        rental.Item.Status = NewItemStatus.Rented;
         rental.UpdatedAt = DateTime.UtcNow;
 
         var renter = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.UserId, ct);

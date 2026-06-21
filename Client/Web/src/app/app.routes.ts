@@ -42,6 +42,10 @@ export const routes: Routes = [
     children: EXPERT_ROUTES
   },
   {
+    path: 'support/:id',
+    redirectTo: '/chats/support?type=support'
+  },
+  {
     path: 'support',
     children: SUPPORT_ROUTES
   },

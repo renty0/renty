@@ -11,8 +11,9 @@ export class LocalizedNotificationPipe implements PipeTransform {
   private translate = inject(TranslateService);
   private localizationService = inject(LocalizationService);
 
-  transform(value: string | undefined, isMessage: boolean = false): string {
+  transform(value: string | undefined, isMessage: boolean = false, arabicOverride?: string): string {
     if (!value) return '';
+    if (this.localizationService.language() === 'ar' && arabicOverride) return arabicOverride;
     if (this.localizationService.language() !== 'ar') return value;
 
     if (!isMessage) {

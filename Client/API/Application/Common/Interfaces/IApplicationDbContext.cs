@@ -49,6 +49,7 @@ public interface IApplicationDbContext
     // Support, Chat, Notifications, Recommendations, KPIs
     DbSet<SupportTicket> SupportTickets { get; }
     DbSet<SupportMessage> SupportMessages { get; }
+    DbSet<SupportTicketEvent> SupportTicketEvents { get; }
     DbSet<Chat> Chats { get; }
     DbSet<ChatMessage> ChatMessages { get; }
     DbSet<Notification> Notifications { get; }

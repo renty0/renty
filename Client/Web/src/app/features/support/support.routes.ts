@@ -7,20 +7,12 @@ export const SUPPORT_ROUTES: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: '',
-        loadComponent: () => import('./ticket-list/ticket-list').then(m => m.TicketListComponent)
-      },
-      {
         path: 'new',
         loadComponent: () => import('./create-ticket/create-ticket').then(m => m.CreateTicketComponent)
       },
       {
         path: 'agent',
         loadComponent: () => import('./agent-dashboard/agent-dashboard.component').then(m => m.AgentDashboardComponent)
-      },
-      {
-        path: ':id',
-        loadComponent: () => import('./ticket-details/ticket-details').then(m => m.TicketDetailsComponent)
       }
     ]
   }

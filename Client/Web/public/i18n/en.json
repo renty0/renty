@@ -1059,6 +1059,13 @@
     "resolved": "Resolved",
     "open": "Open",
     "closed": "Closed",
+    "statuses": {
+      "open": "Open",
+      "inprogress": "In Progress",
+      "awaitingcustomer": "Awaiting Customer",
+      "escalated": "Escalated",
+      "resolved": "Resolved"
+    },
     "user": "User",
     "agent": {
       "title": "Support Agent Workspace",
@@ -1167,7 +1174,8 @@
     "lastSeenDays": "Last seen {{days}} days ago",
     "unsupportedFileType": "Unsupported file type. Please upload images, videos, or PDFs only.",
     "fileTooLarge": "File size cannot exceed 10MB.",
-    "sendFailed": "Failed to send message. Please try again."
+    "sendFailed": "Failed to send message. Please try again.",
+    "ticketClosed": "This ticket is closed or resolved. You cannot send new messages."
   },
   "notifications": {
     "title": "Notifications",
@@ -1341,7 +1349,11 @@
       "withdrawal": "Withdrawal",
       "escrow_hold": "Escrow Hold",
       "escrow_release": "Escrow Release",
-      "penalty": "Penalty"
+      "penalty": "Penalty",
+      "pending_earnings": "Pending Earnings",
+      "rental_earnings": "Rental Earnings",
+      "rental_income": "Rental Income",
+      "refund": "Refund"
     },
     "tx_desc": {
       "top_up": "Wallet Top-Up (Simulation)",
@@ -1352,7 +1364,19 @@
       "cancellation_fee_generic": "Cancellation fee",
       "deposit_returned": "Deposit returned",
       "deposit_refund": "Deposit refund",
-      "rental_refund": "Rental refund"
+      "rental_refund": "Rental refund",
+      "pending_rental_income": "Pending rental income for '{{item}}'",
+      "pending_extra_income": "Pending extra income for '{{item}}'",
+      "late_fee": "Late fee for '{{item}}'",
+      "escrow_release_completed": "Escrow release for completed rental",
+      "rental_payment": "Payment for rental",
+      "pending_income_reversal": "Reversal of pending income for '{{item}}'",
+      "dispute_compensation": "Dispute Resolution: Compensation",
+      "dispute_refund": "Dispute Resolution: Refund",
+      "earnings_with_compensation": "Earnings for {{usedRent}} used rent + cancellation compensation for '{{item}}'. Commission deducted: {{commission}}.",
+      "earnings_rental": "Earnings for rental '{{item}}'. Commission deducted: {{commission}}.",
+      "early_return_fee": "Early return cancellation fee (Order #{{id}})",
+      "early_return_refund": "Refund for unused rent days due to early return (Order #{{id}})"
     },
     "transaction_history": "Transaction History",
     "no_transactions": "You have no wallet transactions yet.",

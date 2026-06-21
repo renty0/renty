@@ -1,0 +1,59 @@
+<div class="notifications-container">
+  <app-header-section [title]="'notifications.title' | translate" [showButton]="false" [showSearch]="false"
+    icon="notifications_active">
+    <div actions>
+      @if (notifications().length > 0) {
+      <button mat-flat-button color="primary" (click)="markAllAsRead()" [disabled]="unreadCount() === 0">
+        <mat-icon>done_all</mat-icon>
+        {{ 'notifications.markAllRead' | translate }}
+      </button>
+      }
+    </div>
+  </app-header-section>
+
+  <div class="notifications-content">
+    @if (isLoading()) {
+    <div class="loader-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else if (notifications().length > 0) {
+      @for (notif of notifications(); track notif.id) {
+        <div class="notification-item" [class.unread]="!notif.isRead">
+          
+          <div class="icon-wrapper" [ngClass]="notif.type || 'system'">
+            <mat-icon>{{ getIconForType(notif.type) }}</mat-icon>
+          </div>
+
+          <div class="content-wrapper">
+            <div class="title-row">
+              <div class="notif-title">{{ notif.title | localizedNotification }}</div>
+              <div class="notif-time">{{ getTimeAgo(notif.createdAt) }}</div>
+            </div>
+            
+            <div class="notif-message">{{ notif.message | localizedNotification:true }}</div>
+
+            <div class="actions-row">
+              @if (!notif.isRead) {
+                <button mat-button color="primary" (click)="markAsRead(notif.id)">
+                  <mat-icon>check</mat-icon>
+                  {{ 'notifications.markAsRead' | translate }}
+                </button>
+              }
+              @if (notif.actionUrl) {
+                <a mat-stroked-button [routerLink]="notif.actionUrl">
+                  {{ 'common.viewDetails' | translate }}
+                  <mat-icon>arrow_forward</mat-icon>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="empty-state">
+        <mat-icon>notifications_none</mat-icon>
+        <p>{{ 'notifications.empty' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>

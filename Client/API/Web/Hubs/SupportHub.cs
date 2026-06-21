@@ -109,4 +109,25 @@ public class SupportHub : Hub
             .Group($"ticket_{ticketId}")
             .SendAsync("ReceiveSupportMessage", message);
     }
+
+    public static async Task BroadcastStatusChange(
+        IHubContext<SupportHub> hubContext,
+        string ticketId,
+        string status)
+    {
+        await hubContext.Clients
+            .Group($"ticket_{ticketId}")
+            .SendAsync("TicketStatusChanged", status, ticketId);
+    }
+
+    public static async Task BroadcastAssignmentChange(
+        IHubContext<SupportHub> hubContext,
+        string ticketId,
+        long? assignedAgentId,
+        string? assignedAgentName)
+    {
+        await hubContext.Clients
+            .Group($"ticket_{ticketId}")
+            .SendAsync("TicketAssignmentChanged", new { AssignedAgentId = assignedAgentId, AssignedAgentName = assignedAgentName });
+    }
 }

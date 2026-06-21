@@ -18,7 +18,7 @@ import { NotificationDropdownComponent } from '../notification-dropdown/notifica
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, LoadingButtonComponent, NotificationDropdownComponent ],
+  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, NotificationDropdownComponent ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })

@@ -13,12 +13,30 @@ public static class SupportEndpoints
         var g = app.MapGroup("/api/v1/support").WithTags("Support").RequireAuthorization();
 
         // POST /support/tickets
-        g.MapPost("/tickets", async (CreateTicketCommand cmd, ISender sender) =>
+        g.MapPost("/tickets", async (CreateTicketCommand cmd, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
         {
             var r = await sender.Send(cmd);
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             // TicketId is Guid? — use .Value (it's non-null on success)
-            return Api.Created(new SupportCreateTicketData(r.TicketId!.Value, r.Status));
+            if (r.AutoReplyMessage != null)
+            {
+                var liveMessage = new {
+                    Id = r.AutoReplyMessage.Id.ToString(),
+                    TicketId = r.TicketId!.Value.ToString(),
+                    SenderId = r.AutoReplyMessage.SenderId,
+                    SenderName = "Support Team",
+                    SenderRole = "Support",
+                    Message = r.AutoReplyMessage.Message,
+                    MediaUrl = r.AutoReplyMessage.MediaUrl,
+                    MessageType = r.AutoReplyMessage.MessageType,
+                    CreatedAt = r.AutoReplyMessage.CreatedAt
+                };
+                
+                // Fire and forget broadcast, so we don't delay the HTTP response
+                _ = Web.Hubs.SupportHub.BroadcastMessage(hubContext, r.TicketId!.Value.ToString(), liveMessage);
+            }
+
+            return Api.Created(new SupportCreateTicketData(r.TicketId!.Value, r.Status, r.AutoReplyMessage));
         })
         .WithName("CreateSupportTicket")
         .Produces<ApiResponse<SupportCreateTicketData>>(StatusCodes.Status201Created)
@@ -65,26 +83,63 @@ public static class SupportEndpoints
                 SenderName = senderName,
                 SenderRole = isSupport ? "Support" : "User",
                 Message = r.Message,
+                MediaUrl = r.MediaUrl,
+                MessageType = r.MessageType,
                 CreatedAt = r.CreatedAt!.Value
             };
             await Web.Hubs.SupportHub.BroadcastMessage(hubContext, id.ToString(), liveMessage);
 
-            return Api.Created(new SupportMessageData(r.MessageId!.Value, r.Message ?? "", r.CreatedAt!.Value));
+            return Api.Created(new SupportMessageData(r.MessageId!.Value, r.Message ?? "", r.MediaUrl, r.MessageType, r.CreatedAt!.Value));
         })
         .WithName("PostSupportMessage")
         .Produces<ApiResponse<SupportMessageData>>(StatusCodes.Status201Created)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest);
 
         // PUT /support/tickets/:id/status
-        g.MapPut("/tickets/{id:guid}/status", async (Guid id, UpdateTicketStatusCommand cmd, ISender sender) =>
+        g.MapPut("/tickets/{id:guid}/status", async (Guid id, UpdateTicketStatusCommand cmd, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
         {
             var r = await sender.Send(cmd with { TicketId = id });
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+
+            // Broadcast status change
+            await Web.Hubs.SupportHub.BroadcastStatusChange(hubContext, id.ToString(), r.Status ?? "");
+
             return Api.Ok(new SupportTicketStatusData(r.TicketId, r.Status));
         })
         .WithName("UpdateSupportTicketStatus")
         .Produces<ApiResponse<SupportTicketStatusData>>(StatusCodes.Status200OK)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.SupportAccess); // Only support/admin can change status
+
+        // POST /support/tickets/:id/assign
+        g.MapPost("/tickets/{id:guid}/assign", async (Guid id, ClaimsPrincipal cp, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
+        {
+            var r = await sender.Send(new AssignTicketCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            
+            var agentName = cp.FindFirstValue("FullName") ?? cp.FindFirstValue(ClaimTypes.Name) ?? "Support Agent";
+            await Web.Hubs.SupportHub.BroadcastAssignmentChange(hubContext, id.ToString(), r.AssignedAgentId, agentName);
+            
+            return Api.Ok(new { AssignedAgentId = r.AssignedAgentId });
+        })
+        .WithName("AssignSupportTicket")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.SupportAccess);
+
+        // POST /support/tickets/:id/unassign
+        g.MapPost("/tickets/{id:guid}/unassign", async (Guid id, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
+        {
+            var r = await sender.Send(new UnassignTicketCommand(id));
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
+            
+            await Web.Hubs.SupportHub.BroadcastAssignmentChange(hubContext, id.ToString(), null, null);
+            
+            return Api.Ok(new { Success = true });
+        })
+        .WithName("UnassignSupportTicket")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.SupportAccess);
     }
 }

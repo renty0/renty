@@ -1119,7 +1119,8 @@
     "deleteConfirmation": "هل أنت متأكد من حذف هذه المحادثة؟",
     "lastSeenMinutes": "آخر ظهور منذ {{minutes}} دقيقة",
     "lastSeenHours": "آخر ظهور منذ {{hours}} ساعة",
-    "lastSeenDays": "آخر ظهور منذ {{days}} يوم"
+    "lastSeenDays": "آخر ظهور منذ {{days}} يوم",
+    "ticketClosed": "هذه التذكرة مغلقة أو تم حلها. لا يمكنك إرسال رسائل جديدة."
   },
   "notifications": {
     "title": "الإشعارات",

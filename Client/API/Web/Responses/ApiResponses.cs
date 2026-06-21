@@ -154,8 +154,8 @@ public record VerificationCreateData(Guid? VerificationId, string? Status);
 
 // ── Support ───────────────────────────────────────────────────────────────────
 
-public record SupportCreateTicketData(Guid TicketId, string Status);
-public record SupportMessageData(Guid MessageId, string Message, DateTime CreatedAt);
+public record SupportCreateTicketData(Guid TicketId, string Status, object? AutoReplyMessage = null);
+public record SupportMessageData(Guid MessageId, string Message, string? MediaUrl, Domain.Enums.MessageType MessageType, DateTime CreatedAt);
 public record SupportTicketStatusData(Guid? TicketId, string? Status);
 
 // ── Chat ─────────────────────────────────────────────────────────────────────

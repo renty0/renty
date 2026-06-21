@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WalletClient, RequestWithdrawalCommand } from '../../../core/api/api-client';
+import { WalletClient, RequestWithdrawalCommand, TopUpWalletCommand } from '../../../core/api/api-client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -134,7 +134,7 @@ export class WalletDashboardComponent implements OnInit {
     this.errorMsg.set(null);
     this.isSubmitting.set(true);
 
-    this.walletClient.topUpWallet({ amount: this.topUpAmount() ?? 0 }).subscribe({
+    this.walletClient.topUpWallet(new TopUpWalletCommand({ amount: this.topUpAmount() ?? 0 })).subscribe({
       next: () => {
         this.successMsg.set(this.translate.instant('wallet.top_up_success'));
         this.isSubmitting.set(false);
@@ -251,9 +251,35 @@ export class WalletDashboardComponent implements OnInit {
     } else if (desc.startsWith('Dispute Resolution: Compensation')) {
       res = this.translate.instant('wallet.tx_desc.dispute_compensation');
 
+    // Early return cancellation fee for rental <id>
+    } else if (desc.startsWith('Early return cancellation fee for rental ')) {
+      const id = desc.replace('Early return cancellation fee for rental ', '').trim();
+      const shortId = id.substring(0, 8);
+      res = this.translate.instant('wallet.tx_desc.early_return_fee', { id: shortId });
+
+    // Refund for unused rent days on early return of rental <id>
+    } else if (desc.startsWith('Refund for unused rent days on early return of rental ')) {
+      const id = desc.replace('Refund for unused rent days on early return of rental ', '').trim();
+      const shortId = id.substring(0, 8);
+      res = this.translate.instant('wallet.tx_desc.early_return_refund', { id: shortId });
+
     // Dispute Resolution: Refund for rental <id> - <reason>
     } else if (desc.startsWith('Dispute Resolution: Refund')) {
       res = this.translate.instant('wallet.tx_desc.dispute_refund');
+
+    // Earnings for ... used rent + cancellation compensation for '<item>' ... Commission deducted: ...
+    } else if (desc.startsWith('Earnings for ') && desc.includes('used rent + cancellation compensation')) {
+      const match = desc.match(/Earnings for (.*?) used rent \+ cancellation compensation for '(.*?)' \(Rental ID: .*?\)\. Commission deducted: (.*?)\./);
+      if (match) {
+        res = this.translate.instant('wallet.tx_desc.earnings_with_compensation', { usedRent: match[1], item: match[2], commission: match[3] });
+      }
+
+    // Earnings for rental '<item>' ... Commission deducted: ...
+    } else if (desc.startsWith('Earnings for rental')) {
+      const match = desc.match(/Earnings for rental '(.*?)' \(Rental ID: .*?\)\. Commission deducted: (.*?)\./);
+      if (match) {
+        res = this.translate.instant('wallet.tx_desc.earnings_rental', { item: match[1], commission: match[2] });
+      }
 
     // Cancellation fee (simple or with policy)
     } else if (desc.startsWith('Cancellation fee')) {

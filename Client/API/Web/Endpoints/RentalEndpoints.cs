@@ -201,6 +201,19 @@ public static class RentalEndpoints
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
         .RequireAuthorization(Policies.CanTransact);
 
+        // POST /rentals/:id/dispute
+        g.MapPost("/{id:guid}/dispute", async (Guid id, OpenDisputeBody body, ISender sender) =>
+        {
+            var cmd = new Application.Features.Disputes.OpenDisputeCommand(id, body.ReasonType, body.Description);
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request", 400);
+            return Api.Ok(new { Success = true });
+        })
+        .WithName("OpenRentalDispute")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
+        .RequireAuthorization(Policies.CanTransact);
+
         // PUT /rentals/:id/possession
         g.MapPut("/{id:guid}/possession", async (
             Guid id,
@@ -263,3 +276,4 @@ public record SetHandoffMethodBody(string HandoffMethod);
 public record InitiateReturnBody(string ReturnMethod);
 public record ExtendRentalBody(int ExtraDays);
 public record RespondExtensionBody(bool Approve);
+public record OpenDisputeBody(string ReasonType, string Description);

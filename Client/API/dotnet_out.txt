@@ -1,0 +1,818 @@
+Using launch settings from Web/Properties/launchSettings.json...
+Building...
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Web/Web.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Web/Web.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj : warning NU1903: Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+          "MigrationId" character varying(150) NOT NULL,
+          "ProductVersion" character varying(32) NOT NULL,
+          CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      LOCK TABLE "__EFMigrationsHistory" IN ACCESS EXCLUSIVE MODE
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Resetting database sequences (C# implementation)...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      
+                      SELECT table_name as TableName, column_name as ColumnName 
+                      FROM information_schema.columns 
+                      WHERE table_schema = 'public' 
+                      AND (column_default LIKE 'nextval(%' OR is_identity = 'YES')
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Roles"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Roles"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (171ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Roles_Id_seq"', 6, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Roles_Id_seq" for table Roles to 6
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"AspNetRoleClaims"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "AspNetRoleClaims"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (203ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."AspNetRoleClaims_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."AspNetRoleClaims_Id_seq" for table AspNetRoleClaims to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"AspNetUserClaims"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "AspNetUserClaims"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (193ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."AspNetUserClaims_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."AspNetUserClaims_Id_seq" for table AspNetUserClaims to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"RefreshTokens"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "RefreshTokens"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (187ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."RefreshTokens_Id_seq"', 97, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."RefreshTokens_Id_seq" for table RefreshTokens to 97
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Returns"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Returns"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (230ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Returns_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Returns_Id_seq" for table Returns to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Territories"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Territories"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (176ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Territories_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Territories_Id_seq" for table Territories to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Sales"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Sales"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (231ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Sales_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Sales_Id_seq" for table Sales to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"RentRequests"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "RentRequests"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (227ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."RentRequests_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."RentRequests_Id_seq" for table RentRequests to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Customers"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Customers"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (160ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Customers_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Customers_Id_seq" for table Customers to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"GapAnalysisResults"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "GapAnalysisResults"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (228ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."GapAnalysisResults_Id_seq"', 1166, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."GapAnalysisResults_Id_seq" for table GapAnalysisResults to 1166
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"RentableItems"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "RentableItems"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (180ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."RentableItems_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."RentableItems_Id_seq" for table RentableItems to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"RentableItemImages"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "RentableItemImages"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (204ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."RentableItemImages_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."RentableItemImages_Id_seq" for table RentableItemImages to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"ProductSubcategories"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "ProductSubcategories"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (98ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."ProductSubcategories_Id_seq"', 21, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."ProductSubcategories_Id_seq" for table ProductSubcategories to 21
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Products"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Products"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (15ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Products_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Products_Id_seq" for table Products to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"ProductImages"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "ProductImages"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."ProductImages_Id_seq"', 1, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."ProductImages_Id_seq" for table ProductImages to 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"ProductCategories"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "ProductCategories"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."ProductCategories_Id_seq"', 11, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."ProductCategories_Id_seq" for table ProductCategories to 11
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"brands"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "brands"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."brands_Id_seq"', 2, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."brands_Id_seq" for table brands to 2
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"permissions"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "permissions"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."permissions_Id_seq"', 26, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."permissions_Id_seq" for table permissions to 26
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"role_permissions"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "role_permissions"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."role_permissions_Id_seq"', 26, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."role_permissions_Id_seq" for table role_permissions to 26
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT pg_get_serial_sequence('"Users"', 'Id') AS "Value"
+      ) AS s
+      LIMIT 1
+warn: Microsoft.EntityFrameworkCore.Query[10103]
+      The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Value"
+      FROM (
+          SELECT COALESCE(MAX("Id"), 0) AS "Value" FROM "Users"
+      ) AS s
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT setval('public."Users_Id_seq"', 18, false) AS "Value"
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Reset sequence public."Users_Id_seq" for table Users to 18
+info: Infrastructure.Data.ApplicationDbContextInitialiser[0]
+      Database sequences reset completed.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@value='?'], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM permissions AS p
+          WHERE p."Value" = @value)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@normalizedName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r."ConcurrencyStamp", r."CreatedAt", r."Description", r."Name", r."NormalizedName"
+      FROM "Roles" AS r
+      WHERE r."NormalizedName" = @normalizedName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (25ms) [Parameters=[@superAdminRole_Id='?' (DbType = Int64)], CommandType='Text', CommandTimeout='30']
+      SELECT r."PermissionValue"
+      FROM role_permissions AS r
+      WHERE r."RoleId" = @superAdminRole_Id
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@normalizedEmail='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."AccessFailedCount", u."Address", u."Bio", u."City", u."ConcurrencyStamp", u."Country", u."CreatedAt", u."Email", u."EmailConfirmed", u."FirstName", u."FraudScore", u."IdVerified", u."IsActive", u."IsVerified", u."LastLoginAt", u."LastName", u."LockoutEnabled", u."LockoutEnd", u."NormalizedEmail", u."NormalizedUserName", u."OwnerRating", u."OwnerTotalRatings", u."PasswordHash", u."PendingBalance", u."PhoneNumber", u."PhoneNumberConfirmed", u."PhoneVerified", u."ProfilePictureUrl", u."Rating", u."RenterRating", u."RenterTotalRatings", u."SecurityStamp", u."TotalRatings", u."TwoFactorEnabled", u."UserName", u."WalletBalance"
+      FROM "Users" AS u
+      WHERE u."NormalizedEmail" = @normalizedEmail
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@normalizedEmail='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."AccessFailedCount", u."Address", u."Bio", u."City", u."ConcurrencyStamp", u."Country", u."CreatedAt", u."Email", u."EmailConfirmed", u."FirstName", u."FraudScore", u."IdVerified", u."IsActive", u."IsVerified", u."LastLoginAt", u."LastName", u."LockoutEnabled", u."LockoutEnd", u."NormalizedEmail", u."NormalizedUserName", u."OwnerRating", u."OwnerTotalRatings", u."PasswordHash", u."PendingBalance", u."PhoneNumber", u."PhoneNumberConfirmed", u."PhoneVerified", u."ProfilePictureUrl", u."Rating", u."RenterRating", u."RenterTotalRatings", u."SecurityStamp", u."TotalRatings", u."TwoFactorEnabled", u."UserName", u."WalletBalance"
+      FROM "Users" AS u
+      WHERE u."NormalizedEmail" = @normalizedEmail
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@normalizedUserName='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."AccessFailedCount", u."Address", u."Bio", u."City", u."ConcurrencyStamp", u."Country", u."CreatedAt", u."Email", u."EmailConfirmed", u."FirstName", u."FraudScore", u."IdVerified", u."IsActive", u."IsVerified", u."LastLoginAt", u."LastName", u."LockoutEnabled", u."LockoutEnd", u."NormalizedEmail", u."NormalizedUserName", u."OwnerRating", u."OwnerTotalRatings", u."PasswordHash", u."PendingBalance", u."PhoneNumber", u."PhoneNumberConfirmed", u."PhoneVerified", u."ProfilePictureUrl", u."Rating", u."RenterRating", u."RenterTotalRatings", u."SecurityStamp", u."TotalRatings", u."TwoFactorEnabled", u."UserName", u."WalletBalance"
+      FROM "Users" AS u
+      WHERE u."NormalizedUserName" = @normalizedUserName
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@normalizedEmail='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."AccessFailedCount", u."Address", u."Bio", u."City", u."ConcurrencyStamp", u."Country", u."CreatedAt", u."Email", u."EmailConfirmed", u."FirstName", u."FraudScore", u."IdVerified", u."IsActive", u."IsVerified", u."LastLoginAt", u."LastName", u."LockoutEnabled", u."LockoutEnd", u."NormalizedEmail", u."NormalizedUserName", u."OwnerRating", u."OwnerTotalRatings", u."PasswordHash", u."PendingBalance", u."PhoneNumber", u."PhoneNumberConfirmed", u."PhoneVerified", u."ProfilePictureUrl", u."Rating", u."RenterRating", u."RenterTotalRatings", u."SecurityStamp", u."TotalRatings", u."TwoFactorEnabled", u."UserName", u."WalletBalance"
+      FROM "Users" AS u
+      WHERE u."NormalizedEmail" = @normalizedEmail
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[@p36='?' (DbType = Int64), @p0='?' (DbType = Int32), @p1='?', @p2='?', @p3='?', @p4='?', @p37='?', @p5='?', @p6='?' (DbType = DateTime), @p7='?', @p8='?' (DbType = Boolean), @p9='?', @p10='?' (DbType = Double), @p11='?' (DbType = Boolean), @p12='?' (DbType = Boolean), @p13='?' (DbType = Boolean), @p14='?' (DbType = DateTime), @p15='?', @p16='?' (DbType = Boolean), @p17='?' (DbType = DateTime), @p18='?', @p19='?', @p20='?' (DbType = Double), @p21='?' (DbType = Int32), @p22='?', @p23='?' (DbType = Decimal), @p24='?', @p25='?' (DbType = Boolean), @p26='?' (DbType = Boolean), @p27='?', @p28='?' (DbType = Double), @p29='?' (DbType = Double), @p30='?' (DbType = Int32), @p31='?', @p32='?' (DbType = Int32), @p33='?' (DbType = Boolean), @p34='?', @p35='?' (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Users" SET "AccessFailedCount" = @p0, "Address" = @p1, "Bio" = @p2, "City" = @p3, "ConcurrencyStamp" = @p4, "Country" = @p5, "CreatedAt" = @p6, "Email" = @p7, "EmailConfirmed" = @p8, "FirstName" = @p9, "FraudScore" = @p10, "IdVerified" = @p11, "IsActive" = @p12, "IsVerified" = @p13, "LastLoginAt" = @p14, "LastName" = @p15, "LockoutEnabled" = @p16, "LockoutEnd" = @p17, "NormalizedEmail" = @p18, "NormalizedUserName" = @p19, "OwnerRating" = @p20, "OwnerTotalRatings" = @p21, "PasswordHash" = @p22, "PendingBalance" = @p23, "PhoneNumber" = @p24, "PhoneNumberConfirmed" = @p25, "PhoneVerified" = @p26, "ProfilePictureUrl" = @p27, "Rating" = @p28, "RenterRating" = @p29, "RenterTotalRatings" = @p30, "SecurityStamp" = @p31, "TotalRatings" = @p32, "TwoFactorEnabled" = @p33, "UserName" = @p34, "WalletBalance" = @p35
+      WHERE "Id" = @p36 AND "ConcurrencyStamp" = @p37;
+info: Infrastructure.Services.AnalysisSchedulerService[0]
+      Analysis Scheduler Service is starting.
+info: Infrastructure.Services.AnalysisSchedulerService[0]
+      Triggering Scheduled Gap Analysis...
+info: Infrastructure.Services.FundsReleaseService[0]
+      FundsReleaseService is starting.
+info: Infrastructure.Services.GapAnalysisService[0]
+      Starting Gap Analysis Pipeline with Real Data...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p."Created", p."CreatedBy", p."DescAr", p."DescEn", p."LastModified", p."LastModifiedBy", p."LogoId", p."NameAr", p."NameEn"
+      FROM "ProductCategories" AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT i.id, i.admin_note, i.brand_id, i.cancellation_policy, i.category_id, i.city, i.condition, i.created_at, i.default_deposit, i.desc_ar, i.desc_en, i."IsForSale", i.lat, i.lng, i.location, i.owner_id, i."SalePrice", i.status, i.subcategory_id, i.title_ar, i.title_en, i.type, i.updated_at, p."Id", p."Created", p."CreatedBy", p."DescAr", p."DescEn", p."LastModified", p."LastModifiedBy", p."LogoId", p."NameAr", p."NameEn"
+      FROM items AS i
+      LEFT JOIN "ProductCategories" AS p ON i.category_id = p."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[@now='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT w.id, w.amount, w.created_at, w.description, w."IsPending", w.reference_id, w.related_rental_id, w."ReleaseDate", w.type, w.user_id, u."Id", u."AccessFailedCount", u."Address", u."Bio", u."City", u."ConcurrencyStamp", u."Country", u."CreatedAt", u."Email", u."EmailConfirmed", u."FirstName", u."FraudScore", u."IdVerified", u."IsActive", u."IsVerified", u."LastLoginAt", u."LastName", u."LockoutEnabled", u."LockoutEnd", u."NormalizedEmail", u."NormalizedUserName", u."OwnerRating", u."OwnerTotalRatings", u."PasswordHash", u."PendingBalance", u."PhoneNumber", u."PhoneNumberConfirmed", u."PhoneVerified", u."ProfilePictureUrl", u."Rating", u."RenterRating", u."RenterTotalRatings", u."SecurityStamp", u."TotalRatings", u."TwoFactorEnabled", u."UserName", u."WalletBalance"
+      FROM wallet_transactions AS w
+      INNER JOIN "Users" AS u ON w.user_id = u."Id"
+      WHERE w."IsPending" AND w."ReleaseDate" IS NOT NULL AND w."ReleaseDate" <= @now
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT o.id, o.item_id, o.order_id, o.price_at_time, o.quantity, i.id, i.admin_note, i.brand_id, i.cancellation_policy, i.category_id, i.city, i.condition, i.created_at, i.default_deposit, i.desc_ar, i.desc_en, i."IsForSale", i.lat, i.lng, i.location, i.owner_id, i."SalePrice", i.status, i.subcategory_id, i.title_ar, i.title_en, i.type, i.updated_at, p."Id", p."Created", p."CreatedBy", p."DescAr", p."DescEn", p."LastModified", p."LastModifiedBy", p."LogoId", p."NameAr", p."NameEn"
+      FROM order_items AS o
+      INNER JOIN items AS i ON o.item_id = i.id
+      LEFT JOIN "ProductCategories" AS p ON i.category_id = p."Id"
+info: Infrastructure.Services.GapAnalysisService[0]
+      Live data exported to /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Gap_Analysis/data/live_data.json
+fail: Microsoft.Extensions.Hosting.Internal.Host[11]
+      Hosting failed to start
+      System.IO.IOException: Failed to bind to address http://127.0.0.1:5106: address already in use.
+       ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+       ---> System.Net.Sockets.SocketException (98): Address already in use
+         at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+         at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+         at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+         --- End of inner exception stack trace ---
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+         at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+         at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+fail: Microsoft.Extensions.Hosting.Internal.Host[9]
+      BackgroundService failed
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at Infrastructure.Services.FundsReleaseService.ExecuteAsync(CancellationToken stoppingToken) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/FundsReleaseService.cs:line 37
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+crit: Microsoft.Extensions.Hosting.Internal.Host[10]
+      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at Infrastructure.Services.FundsReleaseService.ExecuteAsync(CancellationToken stoppingToken) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/FundsReleaseService.cs:line 37
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+Unhandled exception. System.IO.IOException: Failed to bind to address http://127.0.0.1:5106: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (98): Address already in use
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at Program.<Main>$(String[] args) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Web/Program.cs:line 111
+   at Program.<Main>(String[] args)

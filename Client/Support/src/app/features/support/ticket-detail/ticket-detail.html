@@ -1,0 +1,97 @@
+<div class="premium-ticket-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <!-- Header Section -->
+  <div class="ticket-header">
+    <button mat-icon-button routerLink="/support/tickets" class="back-btn">
+      <i class="pi" [ngClass]="translate.currentLang === 'ar' ? 'pi-arrow-right' : 'pi-arrow-left'"></i>
+    </button>
+    <div class="header-info">
+      <h1 class="text-900 font-bold text-3xl m-0">{{ 'support.details' | translate }} <span class="ticket-id">#{{ ticketId.substring(0, 8) }}</span></h1>
+      <span class="ticket-type-badge" *ngIf="ticket()?.type">
+        {{ 'support.type.' + ticket()?.type?.toLowerCase() | translate }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="pi pi-spin pi-spinner text-primary" style="font-size: 3rem"></i>
+    <p>{{ 'common.loading' | translate }}</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading() && ticket()" class="ticket-layout">
+    
+    <!-- Sidebar: Status & Info (Shows on the side on desktop, top on mobile) -->
+    <div class="ticket-sidebar">
+
+      <!-- Status Card -->
+      <div class="glass-card mb-4" style="position: relative; z-index: 10;">
+        <h3 class="card-title"><i class="pi pi-tag mr-2"></i> {{ 'support.status' | translate }}</h3>
+        
+        <div class="status-content">
+          <div class="current-status-badge"
+                [ngClass]="{
+                  'status-open': ticket()?.status?.toLowerCase() === 'open',
+                  'status-inprogress': ticket()?.status?.toLowerCase() === 'inprogress',
+                  'status-escalated': ticket()?.status?.toLowerCase() === 'escalated',
+                  'status-resolved': ticket()?.status?.toLowerCase() === 'resolved',
+                  'status-waiting': ticket()?.status?.toLowerCase() === 'awaitingcustomer' || ticket()?.status?.toLowerCase() === 'awaitingsupport'
+                }">
+            <i class="pi pi-circle-fill"></i>
+            {{ 'support.statuses.' + ticket()?.status?.toLowerCase() | translate }}
+          </div>
+          
+          <div class="custom-select-container mt-3">
+            <div class="custom-select-header" (click)="toggleStatusDropdown($event)" [class.active]="statusDropdownOpen()">
+              <span>{{ 'support.statuses.' + ticket()?.status?.toLowerCase() | translate }}</span>
+              <i class="pi pi-chevron-down" [class.rotated]="statusDropdownOpen()"></i>
+            </div>
+            
+            <div class="custom-select-options" *ngIf="statusDropdownOpen()">
+              <div class="custom-option" (click)="selectStatus('open')" [class.selected]="ticket()?.status?.toLowerCase() === 'open'">
+                {{ 'support.statuses.open' | translate }}
+              </div>
+              <div class="custom-option" (click)="selectStatus('inprogress')" [class.selected]="ticket()?.status?.toLowerCase() === 'inprogress'">
+                {{ 'support.statuses.inprogress' | translate }}
+              </div>
+              <div class="custom-option" (click)="selectStatus('awaitingcustomer')" [class.selected]="ticket()?.status?.toLowerCase() === 'awaitingcustomer'">
+                {{ 'support.statuses.awaitingcustomer' | translate }}
+              </div>
+              <div class="custom-option" (click)="selectStatus('escalated')" [class.selected]="ticket()?.status?.toLowerCase() === 'escalated'">
+                {{ 'support.statuses.escalated' | translate }}
+              </div>
+              <div class="custom-option" (click)="selectStatus('resolved')" [class.selected]="ticket()?.status?.toLowerCase() === 'resolved'">
+                {{ 'support.statuses.resolved' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Card -->
+      <div class="glass-card flex-grow-1">
+        <h3 class="card-title"><i class="pi pi-history mr-2"></i> {{ 'support.timeline' | translate }}</h3>
+        
+        <div class="timeline-container">
+          <div *ngFor="let ev of ticket()?.events; let last = last" class="timeline-event">
+            <div *ngIf="!last" class="timeline-line"></div>
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="event-type">{{ ev.eventType }}</span>
+                <span class="event-time">{{ ev.createdAt | date:'shortTime' }}</span>
+              </div>
+              <div class="event-details">{{ ev.details }}</div>
+              <div class="event-actor"><i class="pi pi-user mr-1"></i> {{ ev.actorName || 'System' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Interface using the shared ChatRoomComponent -->
+    <div class="chat-interface glass-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <app-chat-room [isSupport]="true" [inputChatId]="ticketId" [disabled]="ticket()?.status?.toLowerCase() === 'resolved' || ticket()?.status?.toLowerCase() === 'closed'" style="flex-grow: 1; display: flex; flex-direction: column; height: 100%;"></app-chat-room>
+    </div>
+  </div>
+</div>

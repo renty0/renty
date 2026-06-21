@@ -55,6 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     // Support, Chat, Notifications, Recommendations, KPIs
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
     public DbSet<SupportMessage> SupportMessages => Set<SupportMessage>();
+    public DbSet<SupportTicketEvent> SupportTicketEvents => Set<SupportTicketEvent>();
     public DbSet<Chat> Chats => Set<Chat>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<Notification> Notifications => Set<Notification>();
@@ -355,6 +356,25 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+            entity.HasOne(st => st.AssignedAgent)
+                  .WithMany()
+                  .HasForeignKey(st => st.AssignedAgentId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<SupportTicketEvent>(entity =>
+        {
+            entity.ToTable("support_ticket_events");
+            
+            entity.HasOne(e => e.Ticket)
+                  .WithMany(t => t.Events)
+                  .HasForeignKey(e => e.TicketId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Actor)
+                  .WithMany()
+                  .HasForeignKey(e => e.ActorId)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<SupportMessage>(entity =>

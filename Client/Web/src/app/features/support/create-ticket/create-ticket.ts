@@ -80,7 +80,7 @@ export class CreateTicketComponent {
           tap(res => {
             if (res.data) {
               this.toast.showSuccess('support.create_success');
-              this.router.navigate(['/support', res.data.ticketId]);
+              this.router.navigate(['/chats', res.data.ticketId], { queryParams: { type: 'support' } });
             }
           }),
           catchError(() => {

@@ -12,6 +12,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { LoadingButtonComponent } from '../../../shared/components/loading-button/loading-button.component';
 import { MultiImageUploaderComponent, UploadedImage } from '../../../shared/components/multi-image-uploader/multi-image-uploader.component';
 import { InputComponent } from '../../../shared/components/input/input';
+import { RentalsClient, OpenDisputeBody } from '../../../core/api/api-client';
 
 @Component({
   selector: 'app-dispute-modal',
@@ -37,6 +38,7 @@ export class DisputeModalComponent {
   private fb = inject(FormBuilder);
   private toast = inject(ToastService);
   private dialogRef = inject(MatDialogRef<DisputeModalComponent>);
+  private rentalsClient = inject(RentalsClient);
   public data = inject<{ rentalId: string }>(MAT_DIALOG_DATA);
 
   disputeForm: FormGroup;
@@ -62,12 +64,23 @@ export class DisputeModalComponent {
 
     this.isSubmitting.set(true);
 
-    // Mock API call since CreateDisputeCommand is missing in the backend
-    setTimeout(() => {
-      this.toast.showSuccess('rentals.disputes.success');
-      this.isSubmitting.set(false);
-      this.dialogRef.close(true);
-    }, 1500);
+    const body = new OpenDisputeBody({
+      reasonType: this.disputeForm.value.reasonType,
+      description: this.disputeForm.value.description
+    });
+
+    this.rentalsClient.openRentalDispute(this.data.rentalId, body).subscribe({
+      next: () => {
+        this.toast.showSuccess('rentals.disputes.success');
+        this.isSubmitting.set(false);
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.toast.showError('rentals.disputes.error');
+        console.error(err);
+        this.isSubmitting.set(false);
+      }
+    });
   }
 
   onCancel() {
