@@ -51,9 +51,10 @@ namespace Infrastructure.Services
             var scriptPath = Path.Combine(repoRoot, "Gap_Analysis", "scripts", "run_pipeline.py");
             var resultPath = Path.Combine(repoRoot, "Gap_Analysis", "results", "data", "gap_summary.json");
 
+            var pythonCmd = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) ? "python" : "python3";
             var startInfo = new ProcessStartInfo
             {
-                FileName = "python3",
+                FileName = pythonCmd,
                 Arguments = $"\"{scriptPath}\" --live",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

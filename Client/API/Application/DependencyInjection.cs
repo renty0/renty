@@ -17,6 +17,9 @@ public static class DependencyInjection
             cfg.AddBehavior(typeof(MediatR.IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         });
 
+        services.AddHttpClient();
+
         return services;
     }
 }
+

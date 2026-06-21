@@ -11,7 +11,7 @@ public static class RecommendationV1Endpoints
     {
         var g = app.MapGroup("/api/v1/recommendations").WithTags("Recommendations");
 
-        // GET /recommendations
+        // GET /recommendations – public endpoint; returns trending items for guests
         g.MapGet("/", async (ISender sender) =>
         {
             var r = await sender.Send(new GetRecommendationsQuery());
@@ -19,7 +19,7 @@ public static class RecommendationV1Endpoints
         })
         .WithName("GetRecommendationsV1")
         .Produces<ApiResponse<GetRecommendationsResponse>>(StatusCodes.Status200OK)
-        .RequireAuthorization(Policies.CanTransact);
+        .AllowAnonymous();
 
         // PUT /recommendations/:id/click
         g.MapPut("/{id:guid}/click", async (Guid id, ISender sender) =>

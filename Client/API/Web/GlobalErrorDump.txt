@@ -1,24 +1,13 @@
-Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to read parameter "string code" from the request body as JSON.
- ---> System.Text.Json.JsonException: The JSON value could not be converted to System.String. Path: $ | LineNumber: 0 | BytePositionInLine: 1.
- ---> System.InvalidOperationException: Cannot get the value of a token type 'StartObject' as a string.
-   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ExpectedString(JsonTokenType tokenType)
-   at System.Text.Json.Utf8JsonReader.GetString()
-   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
-   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
-   --- End of inner exception stack trace ---
-   at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack& state, Utf8JsonReader& reader, Exception ex)
-   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
-   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
-   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
-   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(HttpRequest request, JsonTypeInfo jsonTypeInfo, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(HttpRequest request, JsonTypeInfo jsonTypeInfo, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<HandleRequestBodyAndCompileRequestDelegateForJson>g__TryReadBodyAsync|102_0(HttpContext httpContext, Type bodyType, String parameterTypeName, String parameterName, Boolean allowEmptyRequestBody, Boolean throwOnBadRequest, JsonTypeInfo jsonTypeInfo)
-   --- End of inner exception stack trace ---
-   at Microsoft.AspNetCore.Http.RequestDelegateFactory.Log.InvalidJsonRequestBody(HttpContext httpContext, String parameterTypeName, String parameterName, Exception exception, Boolean shouldThrow)
-   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<HandleRequestBodyAndCompileRequestDelegateForJson>g__TryReadBodyAsync|102_0(HttpContext httpContext, Type bodyType, String parameterTypeName, String parameterName, Boolean allowEmptyRequestBody, Boolean throwOnBadRequest, JsonTypeInfo jsonTypeInfo)
-   at Microsoft.AspNetCore.Http.RequestDelegateFactory.<>c__DisplayClass102_2.<<HandleRequestBodyAndCompileRequestDelegateForJson>b__2>d.MoveNext()
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Application.Features.ItemRecommendations.GetRecommendationsQueryHandler.<>c.<Handle>b__5_11(ItemImage i) in E:\Courses\Work\renty\Client\API\Application\Features\ItemRecommendations\ItemRecommendations.cs:line 101
+   at System.Linq.Enumerable.ArrayWhereSelectIterator`2.TryGetFirst(ReadOnlySpan`1 source, Func`2 predicate, Func`2 selector, Boolean& found)
+   at System.Linq.Enumerable.ListWhereSelectIterator`2.TryGetFirst(Boolean& found)
+   at System.Linq.Enumerable.FirstOrDefault[TSource](IEnumerable`1 source)
+   at Application.Features.ItemRecommendations.GetRecommendationsQueryHandler.Handle(GetRecommendationsQuery request, CancellationToken ct) in E:\Courses\Work\renty\Client\API\Application\Features\ItemRecommendations\ItemRecommendations.cs:line 95
+   at Application.Common.Behaviours.ValidationBehaviour`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in E:\Courses\Work\renty\Client\API\Application\Common\Behaviours\ValidationBehaviour.cs:line 36
+   at Web.Endpoints.RecommendationV1Endpoints.<>c.<<MapRecommendationV1Endpoints>b__0_0>d.MoveNext() in E:\Courses\Work\renty\Client\API\Web\Endpoints\RecommendationV1Endpoints.cs:line 17
 --- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
    at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
    at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
    at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
