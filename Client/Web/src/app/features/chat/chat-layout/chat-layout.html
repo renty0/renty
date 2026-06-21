@@ -19,12 +19,14 @@
               <div class="chat-info-content">
                 <div class="user-row">
                   <span class="user-name">{{ chat.otherUserFirstName }} {{ chat.otherUserLastName || '' }}</span>
-                  @if (chat.itemId) {
-                    <span class="item-tag">{{ chat.itemTitle }}</span>
-                  }
                 </div>
+                @if (chat.itemId) {
+                  <span class="item-tag">{{ chat.itemTitle }}</span>
+                }
                 @if (chat.lastMessage && chat.lastMessage.length > 0) {
                   <span class="last-msg">{{ chat.lastMessage }}</span>
+                } @else {
+                  <span class="last-msg empty-msg">{{ 'chat.startMessaging' | translate }}</span>
                 }
               </div>
               
@@ -32,9 +34,7 @@
                 <span class="unread-badge">{{ chat.unreadCount }}</span>
               }
               
-              @if (chat.itemId) {
-                <img [src]="chat.itemImage || 'assets/placeholder-product.png'" class="mini-product-thumb">
-              }
+
 
               <!-- Chat deletion intentionally disabled -->
             </a>

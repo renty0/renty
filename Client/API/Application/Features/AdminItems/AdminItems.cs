@@ -31,12 +31,16 @@ public class ReviewItemCommandHandler : IRequestHandler<ReviewItemCommand, Revie
 
         string notificationTitle;
         string notificationMessage;
+        string notificationTitleAr;
+        string notificationMessageAr;
         if (request.Status == "approved")
         {
             item.Status = NewItemStatus.Available;
             item.AdminNote = null;
             notificationTitle = "Item approved";
             notificationMessage = $"Your item \"{item.TitleEn}\" has been approved and is now live.";
+            notificationTitleAr = "تمت الموافقة على المنتج";
+            notificationMessageAr = $"تمت الموافقة على منتجك \"{item.TitleEn}\" وهو متاح الآن.";
         }
         else if (request.Status == "rejected")
         {
@@ -47,6 +51,11 @@ public class ReviewItemCommandHandler : IRequestHandler<ReviewItemCommand, Revie
                 ? string.Empty
                 : $" Reason: {request.RejectionReason}";
             notificationMessage = $"Your item \"{item.TitleEn}\" was rejected by admin.{reasonSuffix}";
+            notificationTitleAr = "تم رفض المنتج";
+            var reasonSuffixAr = string.IsNullOrWhiteSpace(request.RejectionReason)
+                ? string.Empty
+                : $" السبب: {request.RejectionReason}";
+            notificationMessageAr = $"تم رفض منتجك \"{item.TitleEn}\" من قبل الإدارة.{reasonSuffixAr}";
         }
         else
         {
@@ -63,7 +72,9 @@ public class ReviewItemCommandHandler : IRequestHandler<ReviewItemCommand, Revie
                 notificationMessage,
                 "item",
                 $"/items/{item.Id}",
-                ct);
+                ct,
+                titleAr: notificationTitleAr,
+                messageAr: notificationMessageAr);
         }
 
         return new ReviewItemResponse(true, null);

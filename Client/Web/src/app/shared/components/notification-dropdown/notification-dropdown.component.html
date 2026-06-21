@@ -40,12 +40,12 @@
           </div>
 
           <div class="content-wrapper">
-            <div class="notif-title">{{ notif.title }}</div>
-            <div class="notif-message">{{ notif.message }}</div>
+            <div class="notif-title">{{ (localizationService.language() === 'ar' && notif.titleAr) ? notif.titleAr : (notif.title | localizedNotification) }}</div>
+            <div class="notif-message">{{ (localizationService.language() === 'ar' && notif.messageAr) ? notif.messageAr : (notif.message | localizedNotification:true) }}</div>
             <div class="notif-time">{{ getTimeAgo(notif.createdAt) }}</div>
           </div>
 
-          @if (notif.isRead) {
+          @if (!notif.isRead) {
           <button mat-icon-button class="read-btn" (click)="markAsRead(notif, $event)"
             [title]="'notifications.markAsRead' | translate">
             <mat-icon>check_circle_outline</mat-icon>

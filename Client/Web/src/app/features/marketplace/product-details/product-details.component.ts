@@ -8,7 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ItemsClient, ItemDetailDto, ItemListDto, FavoritesClient, ReviewsClient, ReviewDto, ChatClient, CreateChatCommand } from '../../../core/api/api-client';
+import { ItemsClient, ItemDetailDto, ItemListDto, FavoritesClient, ReviewsClient, ReviewDto, ChatClient, CreateChatCommand, PostChatMessageCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -69,6 +69,7 @@ export class ProductDetailsComponent implements OnInit {
         return this.permissionService.hasPermission(PermissionType.Items_Delete);
     });
 
+    isOwnerRole = computed(() => this.authService.hasRole('Owner'));
     isOwner = computed(() => {
         const currentUserId = this.authService.getCurrentUserId();
         const itemOwnerId = this.item()?.owner?.id;
@@ -311,6 +312,12 @@ export class ProductDetailsComponent implements OnInit {
             return;
         }
 
+        if (!this.authService.isUserVerified()) {
+            this.toast.showInfo('profile.identityVerificationRequired');
+            this.router.navigate(['/profile'], { fragment: 'identity-verification-section' });
+            return;
+        }
+
         const itemData = this.item();
         if (!itemData) return;
 
@@ -328,6 +335,12 @@ export class ProductDetailsComponent implements OnInit {
     buyNow() {
         if (!this.isLoggedIn()) {
             this.router.navigate(['/login']);
+            return;
+        }
+
+        if (!this.authService.isUserVerified()) {
+            this.toast.showInfo('profile.identityVerificationRequired');
+            this.router.navigate(['/profile'], { fragment: 'identity-verification-section' });
             return;
         }
 
@@ -355,7 +368,7 @@ export class ProductDetailsComponent implements OnInit {
         return isAr ? (ref.nameAr || ref.nameEn || '') : (ref.nameEn || ref.nameAr || '');
     }
 
-    startChat() {
+  startChat() {
         if (!this.isLoggedIn()) {
             this.router.navigate(['/login']);
             return;
@@ -373,7 +386,26 @@ export class ProductDetailsComponent implements OnInit {
             next: (res: any) => {
                 const chatId = res?.data?.chatId || (res?.data as any)?.id;
                 if (chatId) {
-                    this.router.navigate(['/chats', chatId]);
+                    const productName = this.getLocalizedName(this.item());
+                    const messageText = `${this.translate.instant('marketplace.imInterestedIn')} ${productName}`;
+                    
+                    const postCmd = new PostChatMessageCommand({
+                        chatId: chatId,
+                        message: messageText,
+                        messageType: 0 as any, // Text
+                        contextItemId: this.item()?.id as any
+                    });
+                    
+                    this.chatClient.postChatMessage(chatId, postCmd).subscribe({
+                        next: () => {
+                            this.router.navigate(['/chats', chatId]);
+                        },
+                        error: (err) => {
+                            console.error('Failed to post initial message', err);
+                            // Navigate anyway so the user can send manually
+                            this.router.navigate(['/chats', chatId]);
+                        }
+                    });
                 }
             },
             error: (err: any) => {

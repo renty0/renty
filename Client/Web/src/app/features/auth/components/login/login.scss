@@ -92,18 +92,25 @@
   }
 }
 
-.forgot-password {
-  align-self: flex-end;
-  font-size: 13px;
-  color: $gray-500;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
+.form-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
   margin-top: -8px;
 
-  &:hover {
-    color: $accent-color;
-    transform: translateX(-2px);
+  .forgot-password,
+  .resend-verification {
+    font-size: 13px;
+    color: $gray-500;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $accent-color;
+      transform: translateY(-1px);
+    }
   }
 }
 

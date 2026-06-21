@@ -29,21 +29,6 @@
           }
         </mat-menu>
       }
-
-      @if (superAdminLinks().length > 0) {
-        <button class="nav-link dropdown-toggle sa-trigger" [matMenuTriggerFor]="saMenu">
-          {{ 'nav.superAdmin' | translate }}
-          <mat-icon class="dropdown-icon">expand_more</mat-icon>
-        </button>
-        <mat-menu #saMenu="matMenu" class="premium-menu sa-menu">
-          @for (link of superAdminLinks(); track link.path) {
-            <button mat-menu-item [routerLink]="link.path">
-              <mat-icon>{{ link.icon }}</mat-icon>
-              <span>{{ link.labelKey | translate }}</span>
-            </button>
-          }
-        </mat-menu>
-      }
     </nav>
 
     <div class="nav-search sm-hidden">
@@ -83,15 +68,17 @@
         </button>
 
       <!-- Authentication Specific Actions -->
-        <button
-          mat-stroked-button
-          color="accent"
-          routerLink="/items/new"
-          class="post-btn sm-hidden"
-        >
-          <mat-icon>add_a_photo</mat-icon>
-          <span>{{ 'nav.postProduct' | translate }}</span>
-        </button>
+        @if (isOwnerRole()) {
+          <button
+            mat-stroked-button
+            color="accent"
+            routerLink="/items/new"
+            class="post-btn sm-hidden"
+          >
+            <mat-icon>add_a_photo</mat-icon>
+            <span>{{ 'nav.postProduct' | translate }}</span>
+          </button>
+        }
 
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -116,33 +103,33 @@
               </button>
             </div>
 
-            <!-- 2-column grid: Orders, Rentals, Items, Favorites -->
-            <div class="section-group grid-layout">
-              <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
-                <mat-icon>shopping_bag</mat-icon>
-                <span>{{ 'nav.myOrders' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
-                <mat-icon>receipt_long</mat-icon>
-                <span>{{ 'nav.myRentals' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
-                <mat-icon>inventory_2</mat-icon>
-                <span>{{ 'nav.myItems' | translate }}</span>
-              </button>
-              <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
-                <mat-icon class="text-warn">favorite</mat-icon>
-                <span>{{ 'nav.favorites' | translate }}</span>
-              </button>
-            </div>
+              <!-- 2-column grid: Orders, Rentals, Items, Favorites -->
+              <div class="section-group grid-layout">
+                <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
+                  <mat-icon>shopping_bag</mat-icon>
+                  <span>{{ 'nav.myOrders' | translate }}</span>
+                </button>
+                <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+                  <mat-icon>receipt_long</mat-icon>
+                  <span>{{ 'nav.myRentals' | translate }}</span>
+                </button>
+                <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
+                  <mat-icon>inventory_2</mat-icon>
+                  <span>{{ 'nav.myItems' | translate }}</span>
+                </button>
+                <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
+                  <mat-icon class="text-warn">favorite</mat-icon>
+                  <span>{{ 'nav.favorites' | translate }}</span>
+                </button>
+              </div>
 
-            <!-- Wallet (full width) -->
-            <div class="section-group">
-              <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
-                <mat-icon color="primary">account_balance_wallet</mat-icon>
-                <span>{{ 'nav.wallet' | translate }}</span>
-              </button>
-            </div>
+              <!-- Wallet (full width) -->
+              <div class="section-group">
+                <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
+                  <mat-icon color="primary">account_balance_wallet</mat-icon>
+                  <span>{{ 'nav.wallet' | translate }}</span>
+                </button>
+              </div>
 
             @if (isExpert()) {
               <div class="section-group">
@@ -180,7 +167,7 @@
         </mat-menu>
       } @else {
         <div class="auth-buttons sm-hidden">
-          @if (canPostItems()) {
+          @if (isOwnerRole()) {
             <button
               mat-stroked-button
               color="accent"
@@ -222,7 +209,7 @@
           </div>
         </div>
 
-        @if (canPostItems()) {
+        @if (isOwnerRole()) {
           <a
             routerLink="/items/new"
             class="mobile-link highlight-link"
@@ -246,29 +233,7 @@
           </a>
         }
 
-        @if (managementLinks().length > 0) {
-          <div class="drawer-section">
-            <span class="section-label">{{ 'nav.management' | translate }}</span>
-            @for (link of managementLinks(); track link.path) {
-              <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
-                <mat-icon>{{ link.icon }}</mat-icon>
-                {{ link.labelKey | translate }}
-              </a>
-            }
-          </div>
-        }
 
-        @if (superAdminLinks().length > 0) {
-          <div class="drawer-section sa-section">
-            <span class="section-label sa-label">{{ 'nav.superAdmin' | translate }}</span>
-            @for (link of superAdminLinks(); track link.path) {
-              <a [routerLink]="link.path" class="mobile-link sub-link" (click)="closeMobileMenu()">
-                <mat-icon>{{ link.icon }}</mat-icon>
-                {{ link.labelKey | translate }}
-              </a>
-            }
-          </div>
-        }
 
         <hr class="drawer-divider" />
 

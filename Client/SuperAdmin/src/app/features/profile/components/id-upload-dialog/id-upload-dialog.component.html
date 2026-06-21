@@ -1,0 +1,60 @@
+<div class="id-upload-dialog">
+  <h2 mat-dialog-title>{{ 'profile.uploadIdTitle' | translate }}</h2>
+  <mat-dialog-content>
+    <p class="dialog-description">{{ 'profile.uploadIdDesc' | translate }}</p>
+
+    <div class="upload-section">
+      <div class="upload-item">
+        <label class="upload-label">{{ 'profile.frontSide' | translate }}</label>
+        @if (frontImage) {
+          <div class="image-preview">
+            <img [src]="frontImage" alt="Front ID">
+            <button class="remove-btn" (click)="removeFront()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        } @else {
+          <label class="upload-box">
+            <mat-icon>add_photo_alternate</mat-icon>
+            <span>{{ 'profile.chooseFile' | translate }}</span>
+            <input type="file" accept="image/*" (change)="onFrontSelected($event)" hidden>
+          </label>
+        }
+      </div>
+
+      <div class="upload-item">
+        <label class="upload-label">{{ 'profile.backSide' | translate }}</label>
+        @if (backImage) {
+          <div class="image-preview">
+            <img [src]="backImage" alt="Back ID">
+            <button class="remove-btn" (click)="removeBack()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        } @else {
+          <label class="upload-box">
+            <mat-icon>add_photo_alternate</mat-icon>
+            <span>{{ 'profile.chooseFile' | translate }}</span>
+            <input type="file" accept="image/*" (change)="onBackSelected($event)" hidden>
+          </label>
+        }
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()" [disabled]="isUploading">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button mat-raised-button color="primary" (click)="upload()" [disabled]="isUploading || !frontImage || !backImage">
+      @if (isUploading) {
+        <mat-progress-spinner diameter="20"></mat-progress-spinner>
+      } @else {
+        <ng-container>
+          <mat-icon>upload</mat-icon>
+          {{ 'profile.upload' | translate }}
+        </ng-container>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

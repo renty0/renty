@@ -44,6 +44,7 @@ export class CreateTicketComponent {
   private readonly toast = inject(ToastService);
 
   ticketType = signal('General');
+  subject = signal('');
   message = signal('');
   isSubmitting = signal(false);
 
@@ -71,11 +72,12 @@ export class CreateTicketComponent {
       exhaustMap(() => {
         const command = new CreateTicketCommand({
           type: this.ticketType(),
+          subject: this.subject(),
           message: this.message()
         });
 
         return this.supportClient.createSupportTicket(command).pipe(
-          tap((res: ApiResponse<SupportCreateTicketData>) => {
+          tap(res => {
             if (res.data) {
               this.toast.showSuccess('support.create_success');
               this.router.navigate(['/support', res.data.ticketId]);
@@ -93,7 +95,7 @@ export class CreateTicketComponent {
   }
 
   submit() {
-    if (!this.message().trim() || this.isSubmitting()) {
+    if (!this.subject().trim() || !this.message().trim() || this.isSubmitting()) {
       return;
     }
     this.submitSubject.next();

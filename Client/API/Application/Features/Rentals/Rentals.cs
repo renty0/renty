@@ -41,21 +41,36 @@ public record RentalDetailDto(
     string Status,
     string DepositStatus,
     string? Notes,
-    string? HandoffCode,
-    bool IsHandoffVerified,
     DateTime CreatedAt,
-    bool HasReview,
     bool RenterWantsExpertReview,
     bool OwnerWantsExpertReview,
     decimal ExpertReviewFee,
     long? AssignedExpertId,
     string? AssignedExpertName,
-    List<string> HandoverImageUrls,
-    List<string> ReturnImageUrls,
+    List<RentalImageDto> HandoverImages,
+    List<RentalImageDto> ReturnImages,
+    List<RentalTransferDto> Transfers,
     List<VerificationDto> Verifications,
-    string CurrentPossession
+    string CurrentPossession,
+    int CurrentTransferSequence,
+    string? DeliveryMethodFromExpert
 );
 
+public record RentalImageDto(string Url, bool CanDelete);
+
+public record RentalTransferDto(
+    Guid Id,
+    string Phase,
+    int Sequence,
+    string FromActorType,
+    long? FromActorId,
+    string ToActorType,
+    long? ToActorId,
+    string Status,
+    string? VerificationCode,
+    DateTime? CompletedAt,
+    DateTime CreatedAt
+);
 
 public record CreateRentalCommand(
     Guid ItemId,
@@ -132,7 +147,7 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
         if (pricing == null)
             return new CreateRentalResponse(false, $"No {request.PricingType} pricing available for this item.", null, null, null, null);
 
-        var days = (decimal)(request.EndDate - request.StartDate).TotalDays;
+        var days = (decimal)(request.EndDate - request.StartDate).TotalDays + 1;
         decimal rentalPrice = request.PricingType switch
         {
             "weekly"  => pricing.Price * Math.Ceiling(days / 7),
@@ -140,15 +155,72 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             _         => pricing.Price * Math.Ceiling(days)
         };
 
+        var expertFee = request.RequestExpertReview ? 100m : 0m;
+        var totalAmount = rentalPrice + item.DefaultDeposit + expertFee;
+
+        if (user.WalletBalance < totalAmount)
+        {
+            return new CreateRentalResponse(false, "Insufficient balance. Please recharge your wallet.", null, null, null, null);
+        }
+
         var order = new Order
         {
             UserId = _currentUser.Id.Value,
-            TotalAmount = rentalPrice + item.DefaultDeposit,
-            Status = OrderStatus.Pending,
+            TotalAmount = totalAmount,
+            Status = OrderStatus.Paid,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
         _context.Orders.Add(order);
+
+        // Escrow Hold (Separate conceptual buckets)
+        user.WalletBalance -= totalAmount;
+        user.PendingBalance += totalAmount;
+
+        _context.WalletTransactions.Add(new WalletTransaction
+        {
+            UserId = user.Id,
+            Amount = -rentalPrice,
+            Type = TransactionType.EscrowHold,
+            Description = $"Rental Escrow hold for rental order {order.Id}",
+            IsPending = true,
+            CreatedAt = DateTimeOffset.UtcNow
+        });
+
+        _context.WalletTransactions.Add(new WalletTransaction
+        {
+            UserId = user.Id,
+            Amount = -item.DefaultDeposit,
+            Type = TransactionType.EscrowHold,
+            Description = $"Deposit Escrow hold for rental order {order.Id}",
+            IsPending = true,
+            CreatedAt = DateTimeOffset.UtcNow
+        });
+
+        if (expertFee > 0)
+        {
+            _context.WalletTransactions.Add(new WalletTransaction
+            {
+                UserId = user.Id,
+                Amount = -expertFee,
+                Type = TransactionType.EscrowHold,
+                Description = $"Expert Escrow hold for rental order {order.Id}",
+                IsPending = true,
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+        }
+
+        // Add payment record
+        var payment = new Payment
+        {
+            OrderId = order.Id,
+            Amount = totalAmount,
+            Method = PaymentMethod.Wallet,
+            Status = PaymentStatus.Success,
+            TransactionRef = Guid.NewGuid().ToString("N")[..16].ToUpper(),
+            CreatedAt = DateTime.UtcNow
+        };
+        _context.Payments.Add(payment);
 
         var rental = new Rental
         {
@@ -161,7 +233,6 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             Status = RentalStatus.Pending,
             DepositAmount = item.DefaultDeposit,
             DepositStatus = DepositStatus.Held,
-            HandoffCode = Guid.NewGuid().ToString("N")[..6].ToUpper(),
             Notes = request.Notes,
             RenterWantsExpertReview = request.RequestExpertReview,
             ExpertReviewFee = request.RequestExpertReview ? 100 : 0, // Flat fee
@@ -178,7 +249,8 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             {
                 ItemId = request.ItemId,
                 CheckType = VerificationCheck.BeforeRent,
-                Status = VerificationStatus.Pending
+                Status = VerificationStatus.Pending,
+                VerificationCode = new Random().Next(100000, 999999).ToString()
             });
         }
         _context.Rentals.Add(rental);
@@ -200,7 +272,9 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
             $"You have a new rental request for '{item.TitleEn}'.",
             "rental",
             $"/rentals/{rental.Id}",
-            ct
+            ct,
+            titleAr: "طلب إيجار جديد",
+            messageAr: $"لديك طلب إيجار جديد للمنتج '{(!string.IsNullOrWhiteSpace(item.TitleAr) ? item.TitleAr : item.TitleEn)}'."
         );
 
         if (rental.RenterWantsExpertReview)
@@ -215,7 +289,10 @@ public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, C
                     $"A new item verification has been requested for '{item.TitleEn}'.",
                     "verification",
                     "/expert/assigned",
-                    ct);
+                    ct,
+                    titleAr: "مهمة خبير جديدة",
+                    messageAr: $"تم طلب تحقق جديد للمنتج '{(!string.IsNullOrWhiteSpace(item.TitleAr) ? item.TitleAr : item.TitleEn)}'."
+                );
             }
         }
 
@@ -276,7 +353,7 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
 
         var dtos = rentals.Select(r => {
             var storagePath = r.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? r.Item.Images.FirstOrDefault()?.Image?.StoragePath;
-            var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+            var fullUrl = !string.IsNullOrEmpty(storagePath) ? (storagePath.StartsWith("http") ? storagePath : $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}") : null;
             return new RentalListDto(
                 r.Id,
                 r.Item.TitleEn,
@@ -322,6 +399,7 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             .Include(r => r.Reviews)
             .Include(r => r.Verifications).ThenInclude(v => v.Expert)
             .Include(r => r.Images).ThenInclude(ri => ri.Image)
+            .Include(r => r.Transfers)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new GetRentalByIdResponse(false, "Rental not found.", null);
@@ -330,7 +408,7 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             return new GetRentalByIdResponse(false, "Forbidden.", null);
 
         var itemStoragePath = rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath;
-        var itemFullUrl = !string.IsNullOrEmpty(itemStoragePath) ? $"{baseUrl}/{itemStoragePath}" : null;
+        var itemFullUrl = !string.IsNullOrEmpty(itemStoragePath) ? (itemStoragePath.StartsWith("http") ? itemStoragePath : $"{baseUrl.TrimEnd('/')}/{itemStoragePath.Replace("\\\\", "/").TrimStart('/')}") : null;
 
         var dto = new RentalDetailDto(
             rental.Id, rental.ItemId, rental.Item.TitleEn,
@@ -343,22 +421,32 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             rental.RentalPrice, rental.DepositAmount, rental.LateFee,
             rental.Status.ToString(), rental.DepositStatus.ToString(),
             rental.Notes,
-            rental.HandoffCode,
-            rental.IsHandoffVerified,
             rental.CreatedAt,
-            rental.Reviews.Any(),
             rental.RenterWantsExpertReview,
             rental.OwnerWantsExpertReview,
             rental.ExpertReviewFee,
             rental.AssignedExpertId,
             rental.AssignedExpert?.FirstName,
-            rental.Images.Where(i => i.Type == RentalImageType.Handover).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList(),
-            rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => $"{baseUrl}/{i.Image.StoragePath}").ToList(),
+            rental.Images.Where(i => i.Type == RentalImageType.Handover).Select(i => new RentalImageDto(
+                i.Image.StoragePath.StartsWith("http") ? i.Image.StoragePath : $"{baseUrl.TrimEnd('/')}/{i.Image.StoragePath.Replace("\\\\", "/").TrimStart('/')}",
+                i.Image.CreatedBy == _currentUser.Id
+            )).ToList(),
+            rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => new RentalImageDto(
+                i.Image.StoragePath.StartsWith("http") ? i.Image.StoragePath : $"{baseUrl.TrimEnd('/')}/{i.Image.StoragePath.Replace("\\\\", "/").TrimStart('/')}",
+                i.Image.CreatedBy == _currentUser.Id
+            )).ToList(),
+            rental.Transfers.OrderBy(t => t.Sequence).Select(t => new RentalTransferDto(
+                t.Id, t.Phase.ToString(), t.Sequence, t.FromActorType.ToString(), t.FromActorId,
+                t.ToActorType.ToString(), t.ToActorId, t.Status.ToString(), 
+                t.VerificationCode, t.CompletedAt, t.CreatedAt
+            )).ToList(),
             rental.Verifications.OrderByDescending(v => v.CreatedAt).Select(v => new VerificationDto(
                 v.Id, v.CheckType.ToString(), v.Status.ToString(), v.Notes,
-                v.Expert?.FirstName, v.CreatedAt
+                v.Expert?.FirstName, v.CreatedAt, v.VerificationCode
             )).ToList(),
-            rental.CurrentPossession.ToString()
+            rental.CurrentPossession.ToString(),
+            rental.CurrentTransferSequence,
+            rental.DeliveryMethodFromExpert?.ToString()
         );
 
         return new GetRentalByIdResponse(true, null, dto);
@@ -400,6 +488,31 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
         rental.Status = RentalStatus.Confirmed;
         rental.UpdatedAt = DateTime.UtcNow;
 
+        var renter = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.UserId, ct);
+        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.Item.OwnerId, ct);
+        var payment = await _context.Payments.FirstOrDefaultAsync(p => p.OrderId == rental.OrderId && p.Method == PaymentMethod.Wallet && p.Status == PaymentStatus.Success, ct);
+
+        if (renter != null && owner != null && payment != null)
+        {
+            // At CreateRental, the FULL amount (RentalPrice + Deposit) was added to Renter's PendingBalance.
+            // Now that the owner confirmed, we transfer the RentalPrice part to the Owner's PendingEarnings.
+            // The DepositAmount stays in the Renter's PendingBalance.
+            
+            renter.PendingBalance -= rental.RentalPrice;
+            owner.PendingBalance += rental.RentalPrice;
+
+            _context.WalletTransactions.Add(new WalletTransaction {
+                UserId = owner.Id,
+                Amount = rental.RentalPrice,
+                Type = TransactionType.PendingEarnings,
+                Description = $"Pending rental income for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
+                RelatedRentalId = rental.Id,
+                IsPending = true,
+                ReleaseDate = DateTimeOffset.UtcNow.AddDays(14),
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+        }
+
         await _context.SaveChangesAsync(ct);
 
         await _notifier.SendToUserAsync(
@@ -408,68 +521,62 @@ public class ConfirmRentalCommandHandler : IRequestHandler<ConfirmRentalCommand,
             $"Your rental request for '{rental.Item.TitleEn}' has been confirmed by the owner.",
             "rental",
             $"/rentals/{rental.Id}",
-            ct);
+            ct,
+            titleAr: "تأكيد الإيجار",
+            messageAr: $"تم تأكيد طلب الإيجار الخاص بك للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}' من قبل المالك."
+        );
 
         return new RentalActionResponse(true, null, rental.Status.ToString());
     }
 }
 
+public record SetHandoffMethodCommand(Guid RentalId, DeliveryMethod Method) : IRequest<RentalActionResponse>;
 
-public record VerifyHandoffCommand(Guid RentalId, string Code) : IRequest<RentalActionResponse>;
-
-public class VerifyHandoffCommandHandler : IRequestHandler<VerifyHandoffCommand, RentalActionResponse>
+public class SetHandoffMethodCommandHandler : IRequestHandler<SetHandoffMethodCommand, RentalActionResponse>
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
-    private readonly INotificationSender _notifier;
+    private readonly ISender _sender;
 
-    public VerifyHandoffCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
+    public SetHandoffMethodCommandHandler(IApplicationDbContext context, IUser currentUser, ISender sender)
     {
         _context = context;
         _currentUser = currentUser;
-        _notifier = notifier;
+        _sender = sender;
     }
 
-    public async Task<RentalActionResponse> Handle(VerifyHandoffCommand request, CancellationToken ct)
+    public async Task<RentalActionResponse> Handle(SetHandoffMethodCommand request, CancellationToken ct)
     {
         var rental = await _context.Rentals
             .Include(r => r.Item)
-            .Include(r => r.Images)
+            .Include(r => r.Transfers)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
-        
-        if (rental.Item.OwnerId != _currentUser.Id!.Value)
-            return new RentalActionResponse(false, "Only the item owner can verify the handoff code.", null);
+        if (!_currentUser.Id.HasValue)
+            return new RentalActionResponse(false, "User session not found.", null);
 
+        if (rental.Item.OwnerId != _currentUser.Id.Value)
+            return new RentalActionResponse(false, "Only the item owner can set the handoff method.", null);
+            
         if (rental.Status != RentalStatus.Confirmed)
-            return new RentalActionResponse(false, "Rental must be confirmed before handoff.", null);
+            return new RentalActionResponse(false, "Rental must be confirmed before setting handoff method.", null);
 
-        if (rental.HandoffCode != request.Code?.ToUpper())
-            return new RentalActionResponse(false, "Invalid handoff code.", null);
+        if (rental.Transfers.Any())
+            return new RentalActionResponse(false, "Handoff method already configured.", null);
 
-        if (!rental.Images.Any(i => i.Type == RentalImageType.Handover))
-            return new RentalActionResponse(false, "Handover photos are required before verification.", null);
-
-        rental.IsHandoffVerified = true;
-        rental.Status = RentalStatus.Active;
+        rental.DeliveryMethod = request.Method;
+        rental.Status = RentalStatus.AwaitingPickup;
         rental.UpdatedAt = DateTime.UtcNow;
-        rental.Item.Status = NewItemStatus.Rented;
 
         await _context.SaveChangesAsync(ct);
-
-        await _notifier.SendToUserAsync(
-            rental.UserId,
-            "Rental Started",
-            $"Your rental for '{rental.Item.TitleEn}' is now active. Enjoy!",
-            "rental",
-            $"/rentals/{rental.Id}",
-            ct);
+        
+        // Generate handoff chain transfers based on owner's selected delivery method
+        await _sender.Send(new Application.Features.Transfers.GenerateHandoffTransfersCommand(rental.Id, request.Method), ct);
 
         return new RentalActionResponse(true, null, rental.Status.ToString());
     }
 }
-
 
 
 public record CompleteRentalCommand(Guid RentalId, bool Damaged = false) : IRequest<CompleteRentalResponse>;
@@ -499,8 +606,8 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         if (rental == null) return new CompleteRentalResponse(false, "Rental not found.", null, null, null, null);
         if (rental.Item.OwnerId != _currentUser.Id!.Value)
             return new CompleteRentalResponse(false, "Only the item owner can complete a rental.", null, null, null, null);
-        if (rental.Status != RentalStatus.Active && rental.Status != RentalStatus.Overdue)
-            return new CompleteRentalResponse(false, "Rental must be active or overdue to complete.", null, null, null, null);
+        if (rental.Status != RentalStatus.Active && rental.Status != RentalStatus.Overdue && rental.Status != RentalStatus.Returned && rental.Status != RentalStatus.Cancelled)
+            return new CompleteRentalResponse(false, "Rental must be active, overdue, returned, or cancelled to complete.", null, null, null, null);
 
         if (!rental.Images.Any(i => i.Type == RentalImageType.Return))
             return new CompleteRentalResponse(false, "Return photos are required before completion.", null, null, null, null);
@@ -517,7 +624,7 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         if (now > rental.EndDate + gracePeriod)
         {
             var overdueDays = (decimal)Math.Ceiling((now - rental.EndDate).TotalDays);
-            var dailyRate = rental.RentalPrice / (decimal)Math.Max(1, (rental.EndDate - rental.StartDate).TotalDays);
+            var dailyRate = rental.RentalPrice / (decimal)Math.Max(1, (rental.EndDate - rental.StartDate).TotalDays + 1);
             lateFee = Math.Round(overdueDays * dailyRate * 1.5m, 2); 
         }
         rental.LateFee = lateFee;
@@ -525,33 +632,191 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         rental.DepositStatus = request.Damaged ? DepositStatus.Forfeited : DepositStatus.Returned;
 
         var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.Item.OwnerId, ct);
-        var renter = rental.User;
+        var renter = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.UserId, ct);
 
-        if (owner != null && renter != null)
+        // -- Detect Early Return --
+        var returnTransfer = await _context.RentalTransfers
+            .Where(t => t.RentalId == rental.Id && t.Status == TransferStatus.Completed && t.ToActorType == TransferActorType.Owner)
+            .OrderByDescending(t => t.CompletedAt)
+            .FirstOrDefaultAsync(ct);
+            
+        DateTime actualReturnDate = returnTransfer?.CompletedAt ?? DateTime.UtcNow;
+        decimal totalRentalDays = (decimal)Math.Max(1, (rental.EndDate.Date - rental.StartDate.Date).TotalDays + 1);
+        decimal actualDaysPassed = (decimal)Math.Max(1, (actualReturnDate.Date - rental.StartDate.Date).TotalDays + 1);
+        
+        bool isEarlyReturn = actualDaysPassed < totalRentalDays;
+        
+        decimal usedRent = rental.RentalPrice;
+        decimal unusedRent = 0m;
+        decimal cancellationFee = 0m;
+        decimal ownerCancellationCompensation = 0m;
+
+        if (isEarlyReturn)
         {
-            var totalToOwner = rental.RentalPrice + lateFee;
-            owner.WalletBalance += totalToOwner;
-            _context.WalletTransactions.Add(new WalletTransaction {
-                UserId = owner.Id,
-                Amount = totalToOwner,
-                Type = TransactionType.RentalIncome,
-                Description = $"Rental income for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
-                RelatedRentalId = rental.Id,
-                CreatedAt = DateTimeOffset.UtcNow
-            });
+            decimal dailyRate = rental.RentalPrice / totalRentalDays;
+            usedRent = Math.Round(Math.Min(rental.RentalPrice, actualDaysPassed * dailyRate), 2);
+            unusedRent = rental.RentalPrice - usedRent;
+            
+            var cancellationFeeSetting = await _context.SystemSettings.FirstOrDefaultAsync(s => s.Key == "CancellationFee", ct);
+            if (cancellationFeeSetting != null && decimal.TryParse(cancellationFeeSetting.Value, out var parsedFee))
+                cancellationFee = parsedFee;
+            else
+                cancellationFee = 500m;
+                
+            ownerCancellationCompensation = Math.Round(cancellationFee * 0.85m, 2);
+        }
 
-            if (rental.DepositStatus == DepositStatus.Forfeited)
+        // Release Escrow if Wallet payment
+        var payment = await _context.Payments.FirstOrDefaultAsync(p => p.OrderId == rental.OrderId && p.Method == PaymentMethod.Wallet && p.Status == PaymentStatus.Success, ct);
+        if (payment != null && renter != null)
+        {
+            decimal renterExpertFeeShare = rental.RenterWantsExpertReview ? (rental.OwnerWantsExpertReview ? 50m : 100m) : 0m;
+
+            // The rental.RentalPrice was already deducted from PendingBalance at confirmation.
+            // Deduct DepositAmount. If expert was NOT paid (e.g. no verification completed?), deduct their share here so we can refund it.
+            decimal heldRenterPending = rental.DepositAmount + (!rental.IsExpertPaid ? renterExpertFeeShare : 0m);
+            renter.PendingBalance -= heldRenterPending;
+
+            // If the expert was NOT paid by the time the rental is completed, refund the expert fee share to the renter.
+            if (!rental.IsExpertPaid && renterExpertFeeShare > 0)
             {
-                var penaltyToOwner = rental.DepositAmount * 0.8m;
-                owner.WalletBalance += penaltyToOwner;
-                _context.WalletTransactions.Add(new WalletTransaction {
-                    UserId = owner.Id,
-                    Amount = penaltyToOwner,
-                    Type = TransactionType.Adjustment,
-                    Description = $"Damage compensation for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
+                renter.WalletBalance += renterExpertFeeShare;
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = renter.Id,
+                    Amount = renterExpertFeeShare,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Expert Review Escrow refunded for rental {rental.Id}",
                     RelatedRentalId = rental.Id,
                     CreatedAt = DateTimeOffset.UtcNow
                 });
+            }
+            
+            // Refund deposit if returned
+            if (rental.DepositStatus == DepositStatus.Returned && rental.DepositAmount > 0)
+            {
+                renter.WalletBalance += rental.DepositAmount;
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = renter.Id,
+                    Amount = rental.DepositAmount,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Deposit returned for rental {rental.Id}",
+                    RelatedRentalId = rental.Id,
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+
+                await _notifier.SendToUserAsync(
+                    renter.Id,
+                    "Deposit Returned",
+                    $"Your deposit of {rental.DepositAmount:C} has been returned to your wallet.",
+                    "wallet",
+                    "/wallet",
+                    ct,
+                    "إرجاع التأمين",
+                    $"تم إرجاع تأمينك بقيمة {rental.DepositAmount:C} إلى محفظتك."
+                );
+            }
+        }
+
+        await _notifier.SendToUserAsync(renter.Id, "DEBUG LOG", $"owner is {(owner != null ? "NOT null" : "NULL")}, renter is {(renter != null ? "NOT null" : "NULL")}, isEarly: {isEarlyReturn}", "wallet", null, ct, "DEBUG", "DEBUG");
+
+        if (owner != null && renter != null)
+        {
+            var penaltyToOwner = rental.DepositStatus == DepositStatus.Forfeited ? rental.DepositAmount * 0.8m : 0m;
+            var grandTotalExtra = lateFee + penaltyToOwner;
+
+            // --- PHASE 3: PLATFORM COMMISSION ---
+            var platformCommissionPercent = rental.PlatformCommissionPercent / 100m;
+            var platformCommissionAmount = Math.Round(usedRent * platformCommissionPercent, 2);
+            
+            decimal ownerExpertFeeShare = rental.OwnerWantsExpertReview ? (rental.RenterWantsExpertReview ? 50m : 100m) : 0m;
+
+            var ownerRentPayout = usedRent - platformCommissionAmount;
+            var totalOwnerPayout = ownerRentPayout + ownerCancellationCompensation;
+
+            // 1. Revert the initial hold on Owner's PendingBalance (created at confirmation)
+            // If expert was not paid, the Owner's pending balance still holds their expert fee share.
+            owner.PendingBalance -= rental.RentalPrice + (!rental.IsExpertPaid ? ownerExpertFeeShare : 0m);
+
+            // 2. Pay the owner their net earnings to Available Balance
+            owner.WalletBalance += totalOwnerPayout;
+
+            string earningsDesc = isEarlyReturn 
+                ? $"Earnings for {usedRent:C} used rent + cancellation compensation for '{rental.Item.TitleEn}' (Rental ID: {rental.Id}). Commission deducted: {platformCommissionAmount:C}."
+                : $"Earnings for rental '{rental.Item.TitleEn}' (Rental ID: {rental.Id}). Commission deducted: {platformCommissionAmount:C}.";
+
+            _context.WalletTransactions.Add(new WalletTransaction {
+                UserId = owner.Id,
+                Amount = totalOwnerPayout,
+                Type = TransactionType.RentalEarnings,
+                Description = earningsDesc,
+                RelatedRentalId = rental.Id,
+                IsPending = false,
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+
+            // 3. Refund unused rent to Renter
+            if (isEarlyReturn && unusedRent > 0)
+            {
+                renter.WalletBalance += unusedRent;
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = renter.Id,
+                    Amount = unusedRent,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Refund for unused rent days on early return of rental {rental.Id}",
+                    RelatedRentalId = rental.Id,
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+                
+                if (cancellationFee > 0)
+                {
+                    renter.WalletBalance -= cancellationFee;
+                    _context.WalletTransactions.Add(new WalletTransaction
+                    {
+                        UserId = renter.Id,
+                        Amount = -cancellationFee,
+                        Type = TransactionType.Penalty,
+                        Description = $"Early return cancellation fee for rental {rental.Id}",
+                        RelatedRentalId = rental.Id,
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+            }
+
+            // If expert was NOT paid, refund the owner their expert fee share
+            if (!rental.IsExpertPaid && ownerExpertFeeShare > 0)
+            {
+                owner.WalletBalance += ownerExpertFeeShare;
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = owner.Id,
+                    Amount = ownerExpertFeeShare,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Expert Review Escrow refunded for rental {rental.Id}",
+                    RelatedRentalId = rental.Id,
+                    IsPending = false,
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+            }
+
+            if (grandTotalExtra > 0)
+            {
+                owner.PendingBalance += grandTotalExtra;
+                _context.WalletTransactions.Add(new WalletTransaction {
+                    UserId = owner.Id,
+                    Amount = grandTotalExtra,
+                    Type = TransactionType.PendingEarnings,
+                    Description = $"Pending extra income (Late fee/Penalty) for '{rental.Item.TitleEn}' (Rental ID: {rental.Id})",
+                    RelatedRentalId = rental.Id,
+                    IsPending = true,
+                    ReleaseDate = DateTimeOffset.UtcNow.AddDays(14),
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+                
+                // Deduct extra from renter's wallet (in a real system, you'd try to charge card if balance is insufficient)
+                renter.WalletBalance -= lateFee;
             }
         }
 
@@ -561,7 +826,13 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         var renterMsg = lateFee > 0
             ? $"Your rental for '{rental.Item.TitleEn}' is complete. Late fee: {lateFee:C}. Deposit: {rental.DepositStatus}."
             : $"Your rental for '{rental.Item.TitleEn}' is complete. Thank you!";
-        await _notifier.SendToUserAsync(rental.UserId, "Rental Completed", renterMsg, "rental", $"/rentals/{rental.Id}", ct);
+            
+        var depositStatusAr = rental.DepositStatus == Domain.Enums.DepositStatus.Returned ? "تم الإرجاع" : "مخصوم";
+        var renterMsgAr = lateFee > 0
+            ? $"اكتمل إيجار '{rental.Item.TitleEn}'. رسوم التأخير: {lateFee:C}. التأمين: {depositStatusAr}."
+            : $"اكتمل إيجار '{rental.Item.TitleEn}'. شكراً لك!";
+            
+        await _notifier.SendToUserAsync(rental.UserId, "Rental Completed", renterMsg, "rental", $"/rentals/{rental.Id}", ct, "اكتمل الإيجار", renterMsgAr);
 
         // Notify favorited users
         var favUserIds = await _context.Favorites
@@ -590,7 +861,10 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
                 $"'{itemTitle}' is now available for rent again!",
                 "item",
                 itemUrl,
-                ct);
+                ct,
+                titleAr: "منتج متاح",
+                messageAr: $"المنتج '{itemTitle}' متاح للإيجار مرة أخرى!"
+            );
         }
 
         // Remove reminders for this item (already notified)
@@ -613,26 +887,37 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
     private readonly INotificationSender _notifier;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public CancelRentalCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
+    public CancelRentalCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
         _notifier = notifier;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<RentalActionResponse> Handle(CancelRentalCommand request, CancellationToken ct)
     {
         var rental = await _context.Rentals
             .Include(r => r.Item)
+            .Include(r => r.Verifications)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new RentalActionResponse(false, "Rental not found.", null);
-        if (rental.UserId != _currentUser.Id!.Value)
-            return new RentalActionResponse(false, "Only the renter can cancel.", null);
-        if (rental.Status != RentalStatus.Pending && rental.Status != RentalStatus.Confirmed)
-            return new RentalActionResponse(false, "Can only cancel pending or confirmed rentals.", null);
+        bool isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") == true || 
+                       _httpContextAccessor.HttpContext?.User?.IsInRole("SuperAdmin") == true;
+        bool isRenter = rental.UserId == _currentUser.Id!.Value;
+        bool isOwner = rental.Item.OwnerId == _currentUser.Id!.Value;
+        bool isExpert = _httpContextAccessor.HttpContext?.User?.IsInRole("Expert") == true || (rental.Verifications.Any(v => v.ExpertId == _currentUser.Id!.Value));
 
+        if (!isRenter && !isOwner && !isAdmin && !isExpert)
+            return new RentalActionResponse(false, "Only the renter, owner, expert, or admin can cancel.", null);
+            
+        if (rental.Status == RentalStatus.Completed || rental.Status == RentalStatus.Cancelled || rental.Status == RentalStatus.Active || rental.Status == RentalStatus.Returned || rental.Status == RentalStatus.Overdue)
+            return new RentalActionResponse(false, "Active or completed rentals cannot be cancelled. Please initiate a return instead.", null);
+
+        var previousStatus = rental.Status;
         rental.Status = RentalStatus.Cancelled;
         rental.UpdatedAt = DateTime.UtcNow;
 
@@ -642,15 +927,208 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
             rental.Item.UpdatedAt = DateTime.UtcNow;
         }
 
+        // Release Escrow if Wallet payment
+        var payment = await _context.Payments.FirstOrDefaultAsync(p => p.OrderId == rental.OrderId && p.Method == PaymentMethod.Wallet && p.Status == PaymentStatus.Success, ct);
+        if (payment != null)
+        {
+            var renterUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.UserId, ct);
+            if (renterUser != null)
+            {
+                // Determine if this is a "before receipt" cancellation (item was never received)
+                bool beforeReceipt = previousStatus == RentalStatus.Pending 
+                    || previousStatus == RentalStatus.Confirmed 
+                    || previousStatus == RentalStatus.AwaitingPickup;
+
+                // Read the fixed cancellation fee from system_settings
+                var cancellationFeeSetting = await _context.SystemSettings
+                    .FirstOrDefaultAsync(s => s.Key == "CancellationFee", ct);
+                decimal fixedCancellationFee = 500m; // default
+                if (cancellationFeeSetting != null && decimal.TryParse(cancellationFeeSetting.Value, out var parsedFee))
+                    fixedCancellationFee = parsedFee;
+
+                // Cancellation fee only applies when: renter cancels after owner confirmed (not from Pending)
+                decimal cancellationFee = 0m;
+                if (isRenter && previousStatus != RentalStatus.Pending && beforeReceipt)
+                {
+                    cancellationFee = fixedCancellationFee;
+                }
+                rental.CancellationFee = cancellationFee;
+
+                // Fee split: 85% to owner, 15% to platform
+                decimal ownerCompensation = cancellationFee > 0 ? Math.Round(cancellationFee * 0.85m, 2) : 0m;
+
+                decimal renterExpertFeeShare = rental.RenterWantsExpertReview ? (rental.OwnerWantsExpertReview ? 50m : 100m) : 0m;
+                decimal ownerExpertFeeShare = rental.OwnerWantsExpertReview ? (rental.RenterWantsExpertReview ? 50m : 100m) : 0m;
+
+                decimal depositRefund = rental.DepositAmount;
+                decimal rentalRefund = rental.RentalPrice - cancellationFee;
+                decimal expertRefund = !rental.IsExpertPaid ? renterExpertFeeShare : 0m;
+
+                decimal totalRenterRefund = depositRefund + rentalRefund + expertRefund;
+
+                // --- Revert PendingBalance ---
+                if (previousStatus != RentalStatus.Pending)
+                {
+                    // After confirmation: RentalPrice was moved to Owner's Pending, Renter still holds Deposit (+ expert fee) in Pending
+                    var ownerUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.Item.OwnerId, ct);
+                    if (ownerUser != null)
+                    {
+                        // 1. Revert the full rental price hold from owner's pending balance
+                        ownerUser.PendingBalance -= rental.RentalPrice;
+
+                        // 2. Give the owner their compensation as available balance
+                        if (ownerCompensation > 0)
+                        {
+                            ownerUser.WalletBalance += ownerCompensation;
+                            _context.WalletTransactions.Add(new WalletTransaction
+                            {
+                                UserId = ownerUser.Id,
+                                Amount = ownerCompensation,
+                                Type = TransactionType.RentalEarnings,
+                                Description = $"Cancellation compensation (85%) for '{rental.Item.TitleEn}' (Rental ID: {rental.Id}).",
+                                RelatedRentalId = rental.Id,
+                                IsPending = false,
+                                CreatedAt = DateTimeOffset.UtcNow
+                            });
+                        }
+
+                        // 3. Refund owner their expert fee share if expert was not paid
+                        if (!rental.IsExpertPaid && ownerExpertFeeShare > 0)
+                        {
+                            ownerUser.PendingBalance -= ownerExpertFeeShare;
+                            ownerUser.WalletBalance += ownerExpertFeeShare;
+                            _context.WalletTransactions.Add(new WalletTransaction
+                            {
+                                UserId = ownerUser.Id,
+                                Amount = ownerExpertFeeShare,
+                                Type = TransactionType.EscrowRelease,
+                                Description = $"Refund of Expert Escrow for cancelled rental {rental.Id}",
+                                RelatedRentalId = rental.Id,
+                                IsPending = false,
+                                CreatedAt = DateTimeOffset.UtcNow
+                            });
+                        }
+                    }
+
+                    // Renter's pending: Deposit + expert fee (RentalPrice was already moved to owner at confirmation)
+                    decimal heldRenterPending = rental.DepositAmount + (!rental.IsExpertPaid ? renterExpertFeeShare : 0m);
+                    renterUser.PendingBalance -= heldRenterPending;
+                }
+                else
+                {
+                    // From Pending: Renter's pending has everything (RentalPrice + Deposit + expert fee)
+                    decimal heldRenterPending = rental.RentalPrice + rental.DepositAmount + (!rental.IsExpertPaid ? renterExpertFeeShare : 0m);
+                    renterUser.PendingBalance -= heldRenterPending;
+                }
+
+                // --- Credit the renter ---
+                renterUser.WalletBalance += totalRenterRefund;
+
+                // Deposit refund transaction
+                if (depositRefund > 0)
+                {
+                    _context.WalletTransactions.Add(new WalletTransaction
+                    {
+                        UserId = renterUser.Id,
+                        Amount = depositRefund,
+                        Type = TransactionType.EscrowRelease,
+                        Description = $"Deposit refund for cancelled rental {rental.Id}",
+                        IsPending = false,
+                        RelatedRentalId = rental.Id,
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+
+                // Rental price refund transaction
+                if (rental.RentalPrice > 0)
+                {
+                    _context.WalletTransactions.Add(new WalletTransaction
+                    {
+                        UserId = renterUser.Id,
+                        Amount = rental.RentalPrice,
+                        Type = TransactionType.EscrowRelease,
+                        Description = $"Rental refund for cancelled rental {rental.Id}",
+                        IsPending = false,
+                        RelatedRentalId = rental.Id,
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+
+                // Expert fee refund transaction
+                if (expertRefund > 0)
+                {
+                    _context.WalletTransactions.Add(new WalletTransaction
+                    {
+                        UserId = renterUser.Id,
+                        Amount = expertRefund,
+                        Type = TransactionType.EscrowRelease,
+                        Description = $"Expert Review Escrow refunded for cancelled rental {rental.Id}",
+                        IsPending = false,
+                        RelatedRentalId = rental.Id,
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+
+                // Cancellation fee transaction
+                if (cancellationFee > 0)
+                {
+                    _context.WalletTransactions.Add(new WalletTransaction
+                    {
+                        UserId = renterUser.Id,
+                        Amount = -cancellationFee,
+                        Type = TransactionType.Penalty,
+                        Description = $"Cancellation fee",
+                        IsPending = false,
+                        RelatedRentalId = rental.Id,
+                        CreatedAt = DateTimeOffset.UtcNow
+                    });
+                }
+
+                await _notifier.SendToUserAsync(
+                    renterUser.Id,
+                    "Escrow Released",
+                    $"The funds held for cancelled rental {rental.Id} have been returned to your wallet.",
+                    "wallet",
+                    "/wallet",
+                    ct,
+                    "تم تحرير المبلغ المحجوز",
+                    $"تم إرجاع الأموال المحجوزة للإيجار الملغى رقم {rental.Id} إلى محفظتك."
+                );
+            }
+        }
+
         await _context.SaveChangesAsync(ct);
 
+        long userToNotify = isRenter ? rental.Item.OwnerId : rental.UserId;
+        string actor = isRenter ? "the renter" : (isOwner ? "the owner" : "an admin");
+        string actorAr = isRenter ? "المستأجر" : (isOwner ? "المالك" : "الإدارة");
+
         await _notifier.SendToUserAsync(
-            rental.Item.OwnerId,
+            userToNotify,
             "Rental Cancelled",
-            $"The rental request for '{rental.Item.TitleEn}' was cancelled by the renter.",
+            $"The rental request for '{rental.Item.TitleEn}' was cancelled by {actor}.",
             "rental",
             $"/rentals/{rental.Id}",
-            ct);
+            ct,
+            titleAr: "إلغاء الإيجار",
+            messageAr: $"تم إلغاء طلب الإيجار للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}' من قبل {actorAr}."
+        );
+
+        if (isAdmin)
+        {
+            // notify the other party as well
+            long otherUser = isRenter ? rental.UserId : rental.Item.OwnerId;
+            await _notifier.SendToUserAsync(
+                otherUser,
+                "Rental Cancelled",
+                $"The rental request for '{rental.Item.TitleEn}' was cancelled by an admin.",
+                "rental",
+                $"/rentals/{rental.Id}",
+                ct,
+                titleAr: "إلغاء الإيجار",
+                messageAr: $"تم إلغاء طلب الإيجار للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}' من قبل الإدارة."
+            );
+        }
 
         return new RentalActionResponse(true, null, "Rental cancelled");
     }
@@ -681,6 +1159,9 @@ public class UploadRentalPhotosCommandHandler : IRequestHandler<UploadRentalPhot
 
         if (rental == null) return false;
 
+        if (rental.Status == RentalStatus.Completed || rental.Status == RentalStatus.Cancelled || rental.Status == RentalStatus.Rejected)
+            return false;
+
         if (rental.UserId != _currentUser.Id!.Value && rental.Item.OwnerId != _currentUser.Id!.Value)
             return false;
 
@@ -697,6 +1178,39 @@ public class UploadRentalPhotosCommandHandler : IRequestHandler<UploadRentalPhot
             }
         }
 
+        await _context.SaveChangesAsync(ct);
+        return true;
+    }
+}
+
+public record DeleteRentalPhotoCommand(Guid RentalId, string ImageUrl) : IRequest<bool>;
+
+public class DeleteRentalPhotoCommandHandler : IRequestHandler<DeleteRentalPhotoCommand, bool>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public DeleteRentalPhotoCommandHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
+
+    public async Task<bool> Handle(DeleteRentalPhotoCommand request, CancellationToken ct)
+    {
+        var rentalImage = await _context.RentalImages
+            .Include(ri => ri.Image)
+            .Include(ri => ri.Rental)
+            .ThenInclude(r => r.Item)
+            .FirstOrDefaultAsync(ri => ri.RentalId == request.RentalId && request.ImageUrl.EndsWith(ri.Image.StoragePath), ct);
+
+        if (rentalImage == null) return false;
+
+        var rental = rentalImage.Rental;
+        if (rentalImage.Image.CreatedBy.HasValue && rentalImage.Image.CreatedBy.Value != _currentUser.Id!.Value)
+            return false;
+
+        _context.RentalImages.Remove(rentalImage);
         await _context.SaveChangesAsync(ct);
         return true;
     }
@@ -741,8 +1255,56 @@ public class RequestExpertReviewCommandHandler : IRequestHandler<RequestExpertRe
         if (rental.OwnerWantsExpertReview)
             return new RentalActionResponse(false, "Expert review already requested by owner.", null);
 
+        var owner = await _context.Users.FindAsync(rental.Item.OwnerId);
+        if (owner == null) return new RentalActionResponse(false, "Owner not found.", null);
+
+        decimal ownerShare = rental.RenterWantsExpertReview ? 50m : 100m;
+        
+        System.IO.File.AppendAllText("/tmp/renty_debug.txt", $"Owner: {owner.Id}, Balance: {owner.WalletBalance}, Share: {ownerShare}\n");
+        if (owner.WalletBalance < ownerShare)
+            return new RentalActionResponse(false, $"Insufficient balance. You need {ownerShare} EGP in your wallet to request an expert review.", null);
+
+        // Deduct from Owner
+        owner.WalletBalance -= ownerShare;
+        owner.PendingBalance += ownerShare;
+
+        _context.WalletTransactions.Add(new WalletTransaction
+        {
+            UserId = owner.Id,
+            Amount = -ownerShare,
+            Type = TransactionType.EscrowHold,
+            Description = $"Expert Escrow hold (Owner Share) for rental order {rental.OrderId}",
+            IsPending = true,
+            CreatedAt = DateTimeOffset.UtcNow
+        });
+
+        // Refund Renter if they already paid 100
+        if (rental.RenterWantsExpertReview)
+        {
+            var renter = await _context.Users.FindAsync(rental.UserId);
+            if (renter != null)
+            {
+                renter.PendingBalance -= 50m;
+                renter.WalletBalance += 50m;
+
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = renter.Id,
+                    Amount = 50m,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Expert Escrow partial refund (Owner requested expert too) for rental order {rental.OrderId}",
+                    IsPending = false,
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+            }
+        }
+        else
+        {
+            // If renter didn't request it, the total ExpertReviewFee on the rental becomes 100.
+            rental.ExpertReviewFee = 100;
+        }
+
         rental.OwnerWantsExpertReview = true;
-        rental.ExpertReviewFee += 100;
         rental.UpdatedAt = DateTime.UtcNow;
 
         if (rental.Status == RentalStatus.Pending || rental.Status == RentalStatus.Confirmed)
@@ -755,6 +1317,7 @@ public class RequestExpertReviewCommandHandler : IRequestHandler<RequestExpertRe
                     RentalId = rental.Id,
                     CheckType = VerificationCheck.BeforeRent,
                     Status = VerificationStatus.Pending,
+                    VerificationCode = new Random().Next(100000, 999999).ToString(),
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -777,7 +1340,10 @@ public class RequestExpertReviewCommandHandler : IRequestHandler<RequestExpertRe
                     $"A new item verification has been requested for '{rental.Item.TitleEn}'.",
                     "verification",
                     "/expert/assigned",
-                    ct);
+                    ct,
+                    titleAr: "مهمة خبير جديدة",
+                    messageAr: $"تم طلب تحقق جديد للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'."
+                );
             }
         }
         catch (DbUpdateConcurrencyException)
@@ -828,7 +1394,6 @@ public class CancelExpertReviewCommandHandler : IRequestHandler<CancelExpertRevi
         if (isOwner) rental.OwnerWantsExpertReview = false;
         else rental.RenterWantsExpertReview = false;
 
-        rental.ExpertReviewFee = Math.Max(0, rental.ExpertReviewFee - 100);
         rental.UpdatedAt = DateTime.UtcNow;
 
         // If no one wants it anymore, remove pending verifications
@@ -907,7 +1472,10 @@ public class UpdatePossessionCommandHandler : IRequestHandler<UpdatePossessionCo
                 $"The owner has sent the item for expert review.",
                 "rental",
                 $"/rentals/{rental.Id}",
-                ct);
+                ct,
+                titleAr: "تم إرسال المنتج للخبير",
+                messageAr: "قام المالك بإرسال المنتج لمراجعة الخبير."
+            );
         }
         else if (request.Action.ToLower() == "initiate_return")
         {
@@ -927,6 +1495,7 @@ public class UpdatePossessionCommandHandler : IRequestHandler<UpdatePossessionCo
                         RentalId = rental.Id,
                         CheckType = VerificationCheck.AfterReturn,
                         Status = VerificationStatus.Pending,
+                        VerificationCode = new Random().Next(100000, 999999).ToString(),
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     });
@@ -949,7 +1518,24 @@ public class UpdatePossessionCommandHandler : IRequestHandler<UpdatePossessionCo
                 $"The renter has initiated the return of '{rental.Item.TitleEn}'.",
                 "rental",
                 $"/rentals/{rental.Id}",
-                ct);
+                ct,
+                titleAr: "بدء الإرجاع",
+                messageAr: $"قام المستأجر ببدء عملية إرجاع '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'."
+            );
+
+            if (needsPostCheck && rental.AssignedExpertId.HasValue)
+            {
+                await _notifier.SendToUserAsync(
+                    rental.AssignedExpertId.Value,
+                    "Expert Review Required",
+                    $"The rental for '{rental.Item.TitleEn}' has finished and is ready for your After-Return evaluation.",
+                    "verification",
+                    "/expert/assigned",
+                    ct,
+                    titleAr: "مطلوب مراجعة الخبير",
+                    messageAr: $"لقد انتهى إيجار '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}' وهو جاهز لتقييمك بعد الإرجاع."
+                );
+            }
         }
         else if (request.Action.ToLower() == "confirm_receipt")
         {

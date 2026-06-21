@@ -35,4 +35,5 @@ public class ChatMessage
     // Navigation
     public Chat Chat { get; set; } = null!;
     public ApplicationUser Sender { get; set; } = null!;
+    public Item? ContextItem { get; set; }
 }

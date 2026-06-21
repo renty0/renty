@@ -10,13 +10,16 @@ import { NotificationsClient, NotificationDto } from '../../../core/api/api-clie
 import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ToastService } from '../../services/toast.service';
+import { LocalizedNotificationPipe } from '../../pipes/localized-notification.pipe';
+import { LocalizationService } from '../../../core/services/localization.service';
 
 @Component({
   selector: 'app-notification-dropdown',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule, TranslatePipe, LocalizedNotificationPipe],
   templateUrl: './notification-dropdown.component.html',
   styleUrl: './notification-dropdown.component.scss',
+  providers: [LocalizedNotificationPipe],
   animations: [
     trigger('dropdownAnimation', [
       transition(':enter', [
@@ -35,6 +38,8 @@ export class NotificationDropdownComponent implements OnInit {
   private router = inject(Router);
   private eRef = inject(ElementRef);
   private toastService = inject(ToastService);
+  private localizedNotificationPipe = inject(LocalizedNotificationPipe);
+  public localizationService = inject(LocalizationService);
 
   isOpen = signal(false);
   isLoading = signal(false);
@@ -52,14 +57,18 @@ export class NotificationDropdownComponent implements OnInit {
       const newNotif = this.signalrService.newNotification();
       if (newNotif) {
         untracked(() => {
+          const isActiveUrl = newNotif.actionUrl && this.router.url === newNotif.actionUrl;
+
           this.notifications.update(current => {
             const dto = new NotificationDto({
               id: newNotif.id,
               title: newNotif.title,
               message: newNotif.message,
+              titleAr: newNotif.titleAr,
+              messageAr: newNotif.messageAr,
               type: newNotif.type,
               actionUrl: newNotif.actionUrl,
-              isRead: newNotif.isRead,
+              isRead: isActiveUrl ? true : newNotif.isRead,
               createdAt: new Date(newNotif.createdAt)
             });
             
@@ -70,10 +79,21 @@ export class NotificationDropdownComponent implements OnInit {
           });
           this.updateUnreadCount();
           
-          this.toastService.showInfo(`${newNotif.title} - ${newNotif.message}`);
+          if (isActiveUrl) {
+            // Tell the backend it's read since the user is actively viewing it
+            this.notificationsClient.markNotificationRead(newNotif.id).subscribe();
+          }
+
+          // Show a toast unless it's a chat notification and we're actively in that chat room
+          if (!(isActiveUrl && newNotif.type === 'chat')) {
+            const isAr = this.localizationService.language() === 'ar';
+            const title = (isAr && newNotif.titleAr) ? newNotif.titleAr : this.localizedNotificationPipe.transform(newNotif.title);
+            const message = (isAr && newNotif.messageAr) ? newNotif.messageAr : this.localizedNotificationPipe.transform(newNotif.message, true);
+            this.toastService.showInfo(`${title} - ${message}`);
+          }
         });
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit() {
@@ -188,10 +208,11 @@ export class NotificationDropdownComponent implements OnInit {
     const now = new Date();
     const diff = Math.floor((now.getTime() - d.getTime()) / 1000);
     
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-    return d.toLocaleDateString();
+    const isAr = this.localizationService.language() === 'ar';
+    if (diff < 60) return isAr ? 'الآن' : 'Just now';
+    if (diff < 3600) return isAr ? `منذ ${Math.floor(diff / 60)} دقيقة` : `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return isAr ? `منذ ${Math.floor(diff / 3600)} ساعة` : `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 604800) return isAr ? `منذ ${Math.floor(diff / 86400)} يوم` : `${Math.floor(diff / 86400)}d ago`;
+    return d.toLocaleDateString(isAr ? 'ar-EG' : 'en-US');
   }
 }

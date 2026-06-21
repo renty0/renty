@@ -1,12 +1,8 @@
 import { Routes } from '@angular/router';
 import { NotFound } from './shared/components/not-found/not-found';
 import { AuthGuard } from './core/guards/auth.guard';
-import { AdminGuard } from './core/guards/admin.guard';
 import { AuthRoutes } from './features/auth/routes/auth.routes';
 import { HomeComponent } from './features/home/components/home/home.component';
-import { CategoriesRoutes } from './features/categories/categories.routes';
-import { SubcategoriesRoutes } from './features/subcategories/subcategories.routes';
-import { BrandsRoutes } from './features/brands/brands.routes';
 import { ProductDetailsComponent } from './features/marketplace/product-details/product-details.component';
 import { MarketplaceComponent } from './features/marketplace/marketplace.component';
 import { SearchResultsComponent } from './features/search-results/search-results.component';
@@ -15,19 +11,13 @@ import { FavoritesComponent } from './features/favorites/favorites';
 import { OrdersRoutes } from './features/orders/orders.routes';
 import { CHAT_ROUTES } from './features/chat/chat.routes';
 import { NOTIFICATIONS_ROUTES } from './features/notifications/notifications.routes';
-import { SUPPORT_ROUTES } from './features/support/support.routes';
 import { EXPERT_ROUTES } from './features/expert/expert.routes';
-import { ADMIN_ROUTES } from './features/admin/admin.routes';
-import { SUPER_ADMIN_ROUTES } from './features/super-admin/super-admin.routes';
 import { WalletRoutes } from './features/wallet/wallet.routes';
 import { ProfileRoutes } from './features/profile/profile.routes';
-
+import { SUPPORT_ROUTES } from './features/support/support.routes';
 
 export const routes: Routes = [
   ...AuthRoutes,
-  ...CategoriesRoutes,
-  ...SubcategoriesRoutes,
-  ...BrandsRoutes,
   ...ItemsRoutes,
   ...OrdersRoutes,
   ...ProfileRoutes,
@@ -48,20 +38,12 @@ export const routes: Routes = [
     children: NOTIFICATIONS_ROUTES
   },
   {
-    path: 'support',
-    children: SUPPORT_ROUTES
-  },
-  {
     path: 'expert',
     children: EXPERT_ROUTES
   },
   {
-    path: 'admin',
-    children: ADMIN_ROUTES
-  },
-  {
-    path: 'super-admin',
-    children: SUPER_ADMIN_ROUTES
+    path: 'support',
+    children: SUPPORT_ROUTES
   },
   {
     path: 'my-rentals',

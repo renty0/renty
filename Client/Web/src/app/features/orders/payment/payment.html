@@ -133,7 +133,7 @@
                     <p class="item-title">{{ item.title }}</p>
                     <p class="item-qty">× {{ item.quantity }}</p>
                   </div>
-                  <p class="item-price">{{ item.priceAtTime | currency:'EGP ' }}</p>
+                  <p class="item-price">{{ item.priceAtTime | currency:'EGP':'EGP ' }}</p>
                 </div>
               }
             </div>
@@ -142,11 +142,11 @@
           <div class="cost-rows">
             <div class="cost-row">
               <span>{{ 'checkout.subtotal' | translate }}</span>
-              <span>{{ orderTotal() | currency:'EGP ' }}</span>
+              <span>{{ orderTotal() | currency:'EGP':'EGP ' }}</span>
             </div>
             <div class="cost-row">
               <span>{{ 'checkout.delivery' | translate }}</span>
-              <span>{{ deliveryFee | currency:'EGP ' }}</span>
+              <span>{{ deliveryFee | currency:'EGP':'EGP ' }}</span>
             </div>
           </div>
 

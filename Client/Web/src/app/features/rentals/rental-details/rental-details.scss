@@ -464,3 +464,70 @@
     }
   }
 }
+
+.fullscreen-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: zoom-out;
+
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    cursor: default;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    background: rgba(255,255,255,0.2);
+    &:hover { background: rgba(255,255,255,0.3); }
+  }
+}
+
+.photo-thumb {
+  cursor: pointer;
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.photo-thumb-container {
+  position: relative;
+  display: inline-block;
+  
+  .delete-photo-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: white;
+    color: #f44336;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    padding: 0;
+    min-width: unset;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+    }
+  }
+}

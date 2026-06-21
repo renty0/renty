@@ -17,7 +17,7 @@ namespace Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -131,8 +131,17 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<double>("OwnerRating")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("OwnerTotalRatings")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
+
+                    b.Property<decimal>("PendingBalance")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
@@ -148,6 +157,12 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<double>("Rating")
                         .HasColumnType("double precision");
+
+                    b.Property<double>("RenterRating")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("RenterTotalRatings")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -363,6 +378,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
+
+                    b.HasIndex("ContextItemId");
 
                     b.HasIndex("SenderId");
 
@@ -651,6 +668,11 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
 
+                    b.Property<string>("CancellationPolicy")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("cancellation_policy");
+
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer")
                         .HasColumnName("category_id");
@@ -928,6 +950,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
+                    b.Property<string>("VerificationCode")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExpertId");
@@ -1076,11 +1101,20 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("message");
 
+                    b.Property<string>("MessageAr")
+                        .HasColumnType("text")
+                        .HasColumnName("message_ar");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("title");
+
+                    b.Property<string>("TitleAr")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title_ar");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -1845,6 +1879,11 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long?>("AssignedExpertId")
                         .HasColumnType("bigint");
 
+                    b.Property<decimal>("CancellationFee")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("cancellation_fee");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1852,8 +1891,18 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("CurrentPossession")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CurrentTransferSequence")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DeliveryMethod")
                         .HasColumnType("integer");
+
+                    b.Property<int?>("DeliveryMethodFromExpert")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DeliveryMethodToHubReturn")
+                        .HasColumnType("text")
+                        .HasColumnName("delivery_method_to_hub_return");
 
                     b.Property<string>("DeliveryNotes")
                         .HasColumnType("text");
@@ -1875,13 +1924,23 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_date");
 
+                    b.Property<string>("EvaluationPayer")
+                        .HasColumnType("text")
+                        .HasColumnName("evaluation_payer");
+
                     b.Property<decimal>("ExpertReviewFee")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("HandoffCode")
-                        .HasColumnType("text");
+                    b.Property<string>("GuaranteeMethod")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("guarantee_method");
 
-                    b.Property<bool>("IsHandoffVerified")
+                    b.Property<bool>("HasHubEvaluation")
+                        .HasColumnType("boolean")
+                        .HasColumnName("has_hub_evaluation");
+
+                    b.Property<bool>("IsExpertPaid")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("ItemId")
@@ -1903,6 +1962,20 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("OwnerWantsExpertReview")
                         .HasColumnType("boolean");
+
+                    b.Property<decimal>("PlatformCommissionPercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("platform_commission_percent");
+
+                    b.Property<string>("RejectionFault")
+                        .HasColumnType("text")
+                        .HasColumnName("rejection_fault");
+
+                    b.Property<decimal>("RejectionFeeAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("rejection_fee_amount");
 
                     b.Property<decimal>("RentalPrice")
                         .HasPrecision(10, 2)
@@ -1942,6 +2015,57 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("rentals", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.RentalExtension", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<decimal>("ExtraCost")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("extra_cost");
+
+                    b.Property<int>("ExtraDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("extra_days");
+
+                    b.Property<DateTime>("NewEndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("new_end_date");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("rental_id");
+
+                    b.Property<long>("RequestedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("requested_by");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.HasIndex("RequestedBy");
+
+                    b.ToTable("rental_extensions", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.RentalImage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1969,6 +2093,59 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("RentalId");
 
                     b.ToTable("rental_images", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.RentalTransfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("FromActorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FromActorType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Phase")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("ToActorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ToActorType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("VerificationCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalTransfers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Return", b =>
@@ -2390,6 +2567,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("character varying(500)")
                         .HasColumnName("description");
 
+                    b.Property<bool>("IsPending")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("ReferenceId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -2398,6 +2578,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<Guid?>("RelatedRentalId")
                         .HasColumnType("uuid")
                         .HasColumnName("related_rental_id");
+
+                    b.Property<DateTimeOffset?>("ReleaseDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -2561,6 +2744,11 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Item", "ContextItem")
+                        .WithMany()
+                        .HasForeignKey("ContextItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Domain.Entities.ApplicationUser", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
@@ -2568,6 +2756,8 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Chat");
+
+                    b.Navigation("ContextItem");
 
                     b.Navigation("Sender");
                 });
@@ -2963,6 +3153,25 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.RentalExtension", b =>
+                {
+                    b.HasOne("Domain.Entities.Rental", "Rental")
+                        .WithMany("Extensions")
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequestedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+
+                    b.Navigation("Requester");
+                });
+
             modelBuilder.Entity("Domain.Entities.RentalImage", b =>
                 {
                     b.HasOne("Domain.Entities.MediaFile", "Image")
@@ -2978,6 +3187,17 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Image");
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RentalTransfer", b =>
+                {
+                    b.HasOne("Domain.Entities.Rental", "Rental")
+                        .WithMany("Transfers")
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Rental");
                 });
@@ -3273,9 +3493,13 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Rental", b =>
                 {
+                    b.Navigation("Extensions");
+
                     b.Navigation("Images");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("Transfers");
 
                     b.Navigation("Verifications");
                 });

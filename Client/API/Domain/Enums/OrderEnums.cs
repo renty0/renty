@@ -22,7 +22,8 @@ public enum PaymentMethod
     Fawry,
     Paymob,
     CreditCard,
-    BankTransfer
+    BankTransfer,
+    Wallet
 }
 
 public enum DepositStatus

@@ -24,7 +24,7 @@ import { NotificationDropdownComponent } from '../notification-dropdown/notifica
 })
 export class NavbarComponent implements OnInit {
   private localizationService = inject(LocalizationService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private responsiveService = inject(ResponsiveService);
   private permissionService = inject(PermissionService);
   private router = inject(Router);
@@ -47,6 +47,7 @@ export class NavbarComponent implements OnInit {
 
   // Show standard user menu items for any logged-in user
   isUser = computed(() => this.isLoggedIn());
+  isOwnerRole = computed(() => this.authService.hasRole('Owner'));
 
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
@@ -54,9 +55,9 @@ export class NavbarComponent implements OnInit {
 
   private allNavLinks = [
     { path: '/', labelKey: 'nav.home', icon: 'home', public: true },
+    { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
     { path: '/about', labelKey: 'nav.about', icon: 'info', public: true },
     { path: '/contact', labelKey: 'nav.contact', icon: 'contact_support', public: true },
-    { path: '/marketplace', labelKey: 'nav.market', icon: 'shopping_bag', authRequired: true },
     { path: '/categories', labelKey: 'nav.categories', icon: 'category', permission: PermissionType.Items_View },
     { path: '/subcategories', labelKey: 'nav.subcategories', icon: 'account_tree', permission: PermissionType.Items_View },
     { path: '/brands', labelKey: 'nav.brands', icon: 'branding_watermark', permission: PermissionType.Items_View },
@@ -80,60 +81,9 @@ export class NavbarComponent implements OnInit {
 
     const links = [];
     
-    // Support
-    if (this.permissionService.hasPermission(PermissionType.Complaints_View)) {
-      links.push({ path: '/support', labelKey: 'nav.support', icon: 'support_agent' });
-    }
-
-    // Dashboards
-    if (this.permissionService.hasPermission(PermissionType.Dashboards_View)) {
-      links.push({ path: '/admin/gap-analysis', labelKey: 'nav.gap', icon: 'analytics' });
-    }
-
-    // User Management
-    if (this.permissionService.hasPermission(PermissionType.Users_View)) {
-      links.push({ path: '/admin/users', labelKey: 'nav.userManagement', icon: 'people' });
-    }
-
-    // Role Management
-    if (this.permissionService.hasPermission(PermissionType.Roles_View)) {
-      links.push({ path: '/admin/roles', labelKey: 'nav.roleManagement', icon: 'policy' });
-    }
-
-    // Catalog/Inventory Management
-    if (this.permissionService.hasPermission(PermissionType.Items_View)) {
-      links.push(...this.allNavLinks.filter((link) => link.permission === PermissionType.Items_View));
-    }
-
-    // Admin: Item review
-    if (this.authService.isAdmin() && this.permissionService.hasPermission(PermissionType.Items_View)) {
-      links.push({ path: '/admin/item-management', labelKey: 'nav.itemReview', icon: 'rule' });
-    }
-
     // Expert Actions
     if (this.isExpert()) {
       links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });
-    }
-
-    return links;
-  });
-
-  // Separate Super Admin dropdown — only visible to SuperAdmin users
-  superAdminLinks = computed(() => {
-    if (!this.isLoggedIn()) return [];
-    
-    const links = [];
-    
-    if (this.permissionService.hasPermission(PermissionType.Dashboards_View) && this.authService.isSuperAdmin()) {
-      links.push({ path: '/super-admin/dashboard', labelKey: 'nav.saDashboard', icon: 'shield' });
-    }
-
-    if (this.permissionService.hasPermission(PermissionType.Staff_View)) {
-      links.push({ path: '/super-admin/staff', labelKey: 'nav.staffManagement', icon: 'badge' });
-    }
-
-    if (this.permissionService.hasPermission(PermissionType.Overrides_Execute)) {
-      links.push({ path: '/super-admin/overrides', labelKey: 'nav.overrides', icon: 'warning' });
     }
 
     return links;
@@ -164,6 +114,11 @@ export class NavbarComponent implements OnInit {
   get isArabic(): boolean {
     return this.localizationService.language() === 'ar';
   }
+
+  userProfilePic = computed(() => {
+    const user = this.userData() as any;
+    return user?.profileImageUrl || user?.profilePictureUrl || null;
+  });
 
   toggleTheme() {
     this.themeService.toggleTheme();

@@ -100,7 +100,8 @@
     "unavailable": "Unavailable",
     "anonymous": "Anonymous",
     "remindMe": "Remind Me",
-    "removeReminder": "Remove Reminder"
+    "removeReminder": "Remove Reminder",
+    "imInterestedIn": "I am interested in this product:"
   },
   "nav": {
     "home": "Home",
@@ -171,6 +172,7 @@
     "welcomeBack": "Welcome Back!",
     "signInSubtitle": "Sign in to your account",
     "forgotPassword": "Forgot password?",
+    "resendVerification": "Resend Verification",
     "noAccount": "Don't have an account?",
     "signUp": "Register here",
     "emailNotConfirmed": "Your email is not confirmed. We have sent a new verification code.",
@@ -300,6 +302,7 @@
     "login": "Login",
     "verify": "Verify Code",
     "next": "Next",
+    "confirm": "Confirm",
     "back": "Back",
     "search": "Search",
     "replace": "Replace",
@@ -314,8 +317,8 @@
     "cancel": "Cancel",
     "browse": "Browse",
     "upload": "Upload",
-    "newProduct": "New Product"
-    ,"reactivate": "Reactivate"
+    "newProduct": "New Product",
+    "reactivate": "Reactivate"
   },
   "categories": {
     "title": "Categories",
@@ -355,9 +358,9 @@
     "deactivateSuccess": "Product removed from marketplace.",
     "permanentDeleteSuccess": "Product permanently deleted.",
     "reactivateSuccess": "Product reactivated and visible in marketplace.",
-    "removedFromMarket": "Temporarily removed from marketplace"
-    ,"reactivateConfirmation": "This will restore the product and make it visible in marketplace. Continue?"
-    ,"permanentDelete": "Permanent delete"
+    "removedFromMarket": "Temporarily removed from marketplace",
+    "reactivateConfirmation": "This will restore the product and make it visible in marketplace. Continue?",
+    "permanentDelete": "Permanent delete"
   },
   "info": {
     "additionalInfo": "Additional Information",
@@ -370,6 +373,9 @@
   },
   "rentals": {
     "title": "Rent Product",
+    "requestExpertReview": "Request Expert Review",
+    "expertReviewHint": "We'll have an expert inspect the item upon handover to guarantee its condition.",
+    "expertReviewFee": "Expert Review Fee",
     "pricingType": "Pricing Type",
     "estimatedPrice": "Estimated Price",
     "deposit": "Security Deposit",
@@ -382,8 +388,8 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "deliveryMethod": "Delivery Method",
-    "desiredDeliveryDate": "Desired Delivery Date",
-    "negotiatedDeliveryDate": "Negotiated Delivery Date (Agreed with Owner)",
+    "desiredDeliveryDate": "Desired Renter Receive Date (From Owner)",
+    "negotiatedDeliveryDate": "Final Agreed Delivery Date",
     "list": {
       "title": "My Rentals",
       "subtitle": "Track and manage your active and past rentals",
@@ -403,7 +409,9 @@
       "pending": "Pending",
       "approved": "Approved",
       "confirmed": "Confirmed",
+      "awaitingpickup": "Awaiting Pickup",
       "active": "Active",
+      "returned": "Returning",
       "completed": "Completed",
       "cancelled": "Cancelled",
       "overdue": "Overdue",
@@ -449,15 +457,37 @@
       "handoff_code": "Handoff Verification Code",
       "give_to_owner": "Show this code to the owner when you receive the item",
       "enter_code": "Enter Renter's Code",
+      "return_code": "Return Verification Code",
+      "give_to_renter": "Show this code to the renter when you receive the returned item",
+      "enter_return_code": "Enter Owner's Code to Confirm Return",
+      "transfer_code": "Transfer Verification Code",
+      "give_code_to_other": "Show this code to the other party to enter",
+      "transfer_code_owner": "Verification code to give to the renter when receiving your item",
+      "give_code_to_expert": "Show this code to the Expert",
+      "transfer_code_renter": "Verification code to give to the owner when receiving the item",
+      "enter_transfer_code": "Enter the provided code",
+      "transfer_history": "Transfer History",
+      "waiting_for_code": "Waiting for Verification",
+      "pending_transfer": "Pending Transfer",
       "condition_photos": "Condition Documentation",
-      "handover_photos": "Handover Photos (Owner)",
-      "return_photos": "Return Photos (Owner)"
+      "handover_photos": "Handover Photos (Renter)",
+      "return_photos": "Return Photos (Owner)",
+      "expert_review_before": "Expert Review (Before Rent)",
+      "expert_review_after": "Expert Review (Upon Return)"
+    },
+    "actors": {
+      "owner": "Owner",
+      "renter": "Renter",
+      "expert": "Expert",
+      "deliveryagent": "Delivery Agent"
     },
     "actions": {
       "title": "Actions",
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
+      "handoff_method": "Handoff Method",
+      "set_delivery": "Set Delivery Method",
       "request_expert": "Request Expert Review",
       "cancel_expert": "Cancel Expert Request",
       "cancel_assigned_expert": "Cancel Assigned Expert",
@@ -467,9 +497,12 @@
       "dispute": "Dispute",
       "damaged": "Forfeit Deposit",
       "verify": "Verify & Start Rental",
+      "verify_return": "Confirm & Receive",
       "no_actions": "No actions available for this rental."
     },
     "delivery": {
+      "how_to_expert": "Please choose how you want to deliver the item to the expert:",
+      "how_to_renter": "Please choose how you want to deliver the item to the renter:",
       "byHand": "By Hand",
       "nearestLocation": "Nearest Location",
       "deliveryService": "Delivery Service",
@@ -477,7 +510,13 @@
       "picked_up": "Package picked up by courier",
       "in_transit": "Package is in transit",
       "delivered": "Package delivered successfully",
-      "negotiation_info": "Set your desired start date. You can negotiate the exact delivery time with the owner via chat. Delivery time is not counted in your rental period."
+      "negotiation_info": "Set your desired start date. You can negotiate the exact delivery time with the owner via chat. Delivery time is not counted in your rental period.",
+      "receive_from_expert_title": "The item is ready at the expert hub. How would you like to receive it?",
+      "pickup_in_person": "Pick up in person",
+      "pickup_in_person_desc": "Go to the expert hub to pick up the item.",
+      "use_delivery_service": "Use Delivery Service",
+      "use_delivery_service_desc": "An agent will pick it up and deliver it to you. (+EGP 25 fee)",
+      "confirm_selection": "Confirm Selection"
     },
     "nearest_location": {
       "confirmed": "Nearest location handoff confirmed"
@@ -488,6 +527,7 @@
       "product_with_expert": "Product is currently with the expert for inspection. Expert will return it after evaluation.",
       "product_with_owner": "Product is with the owner. No return needed.",
       "select_method": "Select how you want to return the product:",
+      "select_method_from_expert": "Select how you want to receive the product from the expert:",
       "confirm": "Confirm Return",
       "confirmed": "Return process initiated successfully"
     },
@@ -566,17 +606,17 @@
       "speedDesc": "Get your items delivered to your doorstep within hours, not days."
     },
     "destinations": {
-      "badge": "Travel & Sport",
-      "title": "Top Sports Destinations in Egypt",
-      "subtitle": "Explore the best spots for your favorite activities, from the Red Sea to the heart of Cairo.",
+      "badge": "Our Branches",
+      "title": "Renty Branches in Egypt",
+      "subtitle": "Rent your sports equipment from any of our conveniently located branches.",
       "dahab": "Dahab",
-      "dahabDesc": "Kitesurfing & Diving Paradise",
+      "dahabDesc": "Diving & Surfing Gear",
       "gouna": "El Gouna",
-      "gounaDesc": "Luxury Sports Hub",
+      "gounaDesc": "Luxury Sports Equipment",
       "cairo": "Cairo",
-      "cairoDesc": "Padel & Fitness Center",
+      "cairoDesc": "Padel & Fitness Supplies",
       "somabay": "Soma Bay",
-      "somabayDesc": "Windsurfing Capital"
+      "somabayDesc": "Kitesurfing Equipment"
     },
     "categories": {
       "title": "Explore Sports Gear",
@@ -646,7 +686,7 @@
     },
     "popular": {
       "title": "Popular Equipment",
-      "subtitle": "The most rented items in your area"
+      "subtitle": "The most rented items"
     },
     "newest": {
       "title": "Newly Added",
@@ -726,7 +766,11 @@
     "imageAlt": "Profile Picture",
     "updatePhoto": "Update Photo",
     "uploadNewPhoto": "Upload New Photo",
+    "identityVerificationRequired": "Please verify your identity first to access this feature.",
     "save": "Save Changes",
+    "updated": "Profile updated successfully.",
+    "pendingVerification": "Verification Pending",
+    "pendingVerificationDesc": "Your ID has been submitted and is currently under review.",
     "uploading": "Uploading...",
     "rating": "Rating",
     "reviews": "Reviews",
@@ -992,6 +1036,7 @@
     "dashboard_subtitle": "Manage customer tickets and replies",
     "type": "Type",
     "subject": "Subject",
+    "subjectPlaceholder": "Reason for contacting",
     "noTickets": "You have no support tickets. Need help? Open a new ticket to get assistance.",
     "message": "Message",
     "message_placeholder": "Describe your issue in detail...",
@@ -1108,6 +1153,7 @@
     "typePlaceholder": "Type a message...",
     "noMessages": "Start a conversation!",
     "no_messages": "No messages yet.",
+    "startMessaging": "Start messaging",
     "selectToStart": "Select a chat to start messaging",
     "send": "Send",
     "online": "Online",
@@ -1118,7 +1164,10 @@
     "deleteConfirmation": "Are you sure you want to delete this conversation?",
     "lastSeenMinutes": "Last seen {{minutes}} min ago",
     "lastSeenHours": "Last seen {{hours}} hr ago",
-    "lastSeenDays": "Last seen {{days}} days ago"
+    "lastSeenDays": "Last seen {{days}} days ago",
+    "unsupportedFileType": "Unsupported file type. Please upload images, videos, or PDFs only.",
+    "fileTooLarge": "File size cannot exceed 10MB.",
+    "sendFailed": "Failed to send message. Please try again."
   },
   "notifications": {
     "title": "Notifications",
@@ -1147,6 +1196,8 @@
     "success": "Your order has been placed successfully!"
   },
   "errors": {
+    "insufficientBalance": "Insufficient balance. Please recharge your wallet.",
+    "invalidVerificationCode": "Invalid verification code",
     "unknownError": "An unexpected error occurred",
     "failedToLoadSubcategories": "Failed to load subcategories",
     "failedToLoadCategories": "Failed to load categories",
@@ -1160,10 +1211,25 @@
     "unexpectedError": "An unexpected error occurred",
     "fetchFailed": "Failed to fetch data",
     "generic": "Something went wrong. Please try again.",
+    "uploadRecentPhoto": "Please upload a recent photo of the item condition first (within the last 30 minutes). If you uploaded one earlier, please delete it and upload a new one.",
     "adminAccessDenied": "Access denied: Admin permissions required",
     "noProductsFound": "No products found",
     "productNotFound": "Product not found",
-    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for."
+    "loginRequired": "You must log in first to access this page",
+    "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for.",
+    "unauthenticated": "User not authenticated - redirecting to login",
+    "httpError": "HTTP Error occurred, with status: {{status}}, with message: {{message}}",
+    "noValidRefreshToken": "No valid refresh token - redirecting to login",
+    "tokenRefreshFailed": "Token refresh failed - no access token in response",
+    "tokenRefreshFailedDesc": "Token refresh failed: {{error}}",
+    "accessForbidden": "Access forbidden - Insufficient permissions",
+    "validationError": "Validation error: {{error}}",
+    "tooManyRequests": "Too many requests - Please try again later",
+    "serverError": "Server error occurred",
+    "serviceUnavailable": "Service temporarily unavailable",
+    "networkError": "Network error - Check your internet connection",
+    "unexpectedHttpError": "Unexpected HTTP Error, with status: {{status}}, with message: {{message}}",
+    "sessionExpired": "Your session has ended, please login again"
   },
   "terms": {
     "title": "Terms and Conditions",
@@ -1258,9 +1324,36 @@
   "wallet": {
     "title": "My Wallet",
     "subtitle": "Manage your earnings and withdraw funds to your mobile wallet.",
+    "total_balance": "Total Balance",
+    "withdrawable_balance": "Withdrawable Balance",
     "available_balance": "Available Balance",
+    "pending_balance": "Pending Balance",
     "total_earnings": "Total Earnings",
     "withdraw_funds": "Withdraw Funds",
+    "simulate_top_up": "Simulate Top-Up",
+    "simulate_top_up_title": "Simulate Wallet Top-Up",
+    "amount_to_charge": "Amount to Charge (EGP)",
+    "top_up_account": "Top Up Account",
+    "top_up_success": "Wallet topped up successfully!",
+    "top_up_error": "Failed to top up wallet.",
+    "tx_type": {
+      "adjustment": "Deposit",
+      "withdrawal": "Withdrawal",
+      "escrow_hold": "Escrow Hold",
+      "escrow_release": "Escrow Release",
+      "penalty": "Penalty"
+    },
+    "tx_desc": {
+      "top_up": "Wallet Top-Up (Simulation)",
+      "withdrawal": "Withdrawal requested to",
+      "escrow_hold": "Escrow hold for rental/order",
+      "escrow_release": "Escrow release for cancelled rental/order",
+      "cancellation_fee": "Cancellation fee ({{policy}}) for '{{item}}'",
+      "cancellation_fee_generic": "Cancellation fee",
+      "deposit_returned": "Deposit returned",
+      "deposit_refund": "Deposit refund",
+      "rental_refund": "Rental refund"
+    },
     "transaction_history": "Transaction History",
     "no_transactions": "You have no wallet transactions yet.",
     "request_withdrawal": "Request Withdrawal",
@@ -1401,5 +1494,59 @@
     "owner": "Item Owner",
     "renter": "Item Renter",
     "user": "Standard User"
-  }
+  },
+  "A file is required.": "A file is required.",
+  "Bad request": "Bad request",
+  "Category not found": "Category not found",
+  "Chat deletion is disabled.": "Chat deletion is disabled.",
+  "Email already registered": "Email already registered",
+  "Failed to create user": "Failed to create user",
+  "Failed to delete account": "Failed to delete account",
+  "Failed to upload photos": "Failed to upload photos",
+  "File exceeds the 20 MB limit.": "File exceeds the 20 MB limit.",
+  "Forbidden": "Forbidden",
+  "ID mismatch": "ID mismatch",
+  "Invalid credentials": "Invalid credentials",
+  "Invalid or expired reset code.": "Invalid or expired reset code.",
+  "Invalid or expired verification code.": "Invalid or expired verification code.",
+  "Invalid token": "Invalid token",
+  "Invalid token or email.": "Invalid token or email.",
+  "Item not found": "Item not found",
+  "Login failed": "Login failed",
+  "No KPI data available.": "No KPI data available.",
+  "Not found": "Not found",
+  "Query parameter 'q' is required.": "Query parameter 'q' is required.",
+  "Registration failed": "Registration failed",
+  "Role not found": "Role not found",
+  "Seed failed": "Seed failed",
+  "The email address is not registered.": "The email address is not registered.",
+  "Unauthorized": "Unauthorized",
+  "Unsupported file type.": "Unsupported file type.",
+  "Update failed": "Update failed",
+  "User not found": "User not found",
+  "User not found.": "User not found.",
+  "An error occurred. Check if you have SuperAdmin permissions.": "An error occurred. Check if you have SuperAdmin permissions.",
+  "Failed to create ticket": "Failed to create ticket",
+  "Failed to load pending items": "Failed to load pending items",
+  "Failed to load permissions for role": "Failed to load permissions for role",
+  "Failed to load system settings": "Failed to load system settings",
+  "Failed to request OTP": "Failed to request OTP",
+  "Failed to review item": "Failed to review item",
+  "Failed to send message": "Failed to send message",
+  "Failed to submit ID.": "Failed to submit ID.",
+  "Failed to unsuspend user": "Failed to unsuspend user",
+  "Failed to update permissions": "Failed to update permissions",
+  "Failed to update status": "Failed to update status",
+  "Failed to update user status": "Failed to update user status",
+  "ID Verification submitted!": "ID Verification submitted!",
+  "Invalid OTP": "Invalid OTP",
+  "Item reviewed successfully": "Item reviewed successfully",
+  "OTP Sent successfully!": "OTP Sent successfully!",
+  "Permissions updated successfully": "Permissions updated successfully",
+  "Phone verified successfully!": "Phone verified successfully!",
+  "Roles updated successfully": "Roles updated successfully",
+  "Status updated": "Status updated",
+  "User created successfully": "User created successfully",
+  "activated": "activated",
+  "deactivated": "deactivated"
 }

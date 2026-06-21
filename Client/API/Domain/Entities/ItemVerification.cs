@@ -11,6 +11,7 @@ public class ItemVerification
     public Guid? RentalId { get; set; }
     public VerificationCheck CheckType { get; set; }
     public VerificationStatus Status { get; set; } = VerificationStatus.Pending;
+    public string? VerificationCode { get; set; }
     public string? Notes { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

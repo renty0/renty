@@ -1,92 +1,83 @@
 [
   {
-    "category": "Padel & Tennis",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Diving & Snorkeling",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
     "category": "Water Sports",
-    "supply": 0,
+    "supply": 2,
     "demand": 0,
-    "gap_score": 1.0,
+    "gap_score": 0.33,
     "gap_status": "Low Gap",
     "normalized_gap": 1.0,
-    "gap_pct": 0.0
+    "gap_pct": -66.67
+  },
+  {
+    "category": "Fitness & Gym",
+    "supply": 2,
+    "demand": 0,
+    "gap_score": 0.33,
+    "gap_status": "Low Gap",
+    "normalized_gap": 1.0,
+    "gap_pct": -66.67
   },
   {
     "category": "Football & Team Sports",
-    "supply": 3,
-    "demand": 3,
-    "gap_score": 1.0,
+    "supply": 2,
+    "demand": 0,
+    "gap_score": 0.33,
     "gap_status": "Low Gap",
     "normalized_gap": 1.0,
-    "gap_pct": 0.0
+    "gap_pct": -66.67
   },
   {
     "category": "Action Photography",
     "supply": 2,
-    "demand": 2,
-    "gap_score": 1.0,
+    "demand": 0,
+    "gap_score": 0.33,
     "gap_status": "Low Gap",
     "normalized_gap": 1.0,
-    "gap_pct": 0.0
+    "gap_pct": -66.67
   },
   {
     "category": "Winter Sports",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "new category",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Fitness & Gym",
-    "supply": 1,
-    "demand": 0,
-    "gap_score": 0.5,
-    "gap_status": "Low Gap",
-    "normalized_gap": 0.2537,
-    "gap_pct": -50.0
-  },
-  {
-    "category": "Camping & Outdoors",
     "supply": 2,
     "demand": 0,
     "gap_score": 0.33,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 1.0,
     "gap_pct": -66.67
   },
   {
-    "category": "Cycling & Scooters",
-    "supply": 2,
+    "category": "Camping & Adventures",
+    "supply": 3,
     "demand": 0,
-    "gap_score": 0.33,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.3846,
+    "gap_pct": -75.0
+  },
+  {
+    "category": "Padel & Tennis",
+    "supply": 4,
+    "demand": 0,
+    "gap_score": 0.2,
     "gap_status": "Low Gap",
     "normalized_gap": 0.0,
-    "gap_pct": -66.67
+    "gap_pct": -80.0
+  },
+  {
+    "category": "Diving & Snorkeling",
+    "supply": 4,
+    "demand": 0,
+    "gap_score": 0.2,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0,
+    "gap_pct": -80.0
+  },
+  {
+    "category": "Bikes & Scooters",
+    "supply": 4,
+    "demand": 0,
+    "gap_score": 0.2,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0,
+    "gap_pct": -80.0
   }
 ]

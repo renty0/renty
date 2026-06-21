@@ -1,0 +1,320 @@
+<div class="data-container">
+  <app-header-section [title]="getPageTitle() | translate"
+    [placeholder]="'products.search' | translate" [showButton]="false"
+    (searchChange)="onSearchChange($event)">
+    <mat-button-toggle-group extra-actions [value]="viewMode()" (change)="viewMode.set($event.value)"
+      class="view-toggle">
+      <mat-button-toggle value="list" [aria-label]="'common.view.list' | translate">
+        <mat-icon>view_list</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="cards" [aria-label]="'common.view.cards' | translate">
+        <mat-icon>grid_view</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </app-header-section>
+
+  <div class="grid mt-4">
+    <aside class="col-12 lg:col-3 filters-sidebar">
+      <div class="filters-card">
+        <div class="card-header">
+          <div class="title-row">
+            <h3><mat-icon>tune</mat-icon> {{ 'marketplace.filters' | translate }}</h3>
+            @if (
+              searchTerm() || selectedCategoryId() || selectedCity() || minPrice() || maxPrice() ||
+              selectedType() || startDate() || endDate() || minRating()
+            ) {
+            <button mat-button color="warn" (click)="onFilterReset()" class="clear-btn">
+              {{ 'marketplace.clearFilters' | translate }}
+            </button>
+            }
+          </div>
+        </div>
+
+        <div class="filters-body">
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="full-width custom-field">
+              <mat-select panelClass="marketplace-select-panel" [placeholder]="'marketplace.category' | translate"
+                [ngModel]="selectedCategoryId()" (ngModelChange)="selectedCategoryId.set($event)">
+                <mat-option disabled class="list-header-option">
+                  {{ 'marketplace.category' | translate }}
+                </mat-option>
+                @for (cat of categories(); track cat.id) {
+                <mat-option [value]="cat.id">{{ getLocalizedCatName(cat) }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          @if (selectedCategoryId() && subcategories().length > 0) {
+          <div class="filter-group animate-in">
+            <mat-form-field appearance="outline" class="full-width custom-field">
+              <mat-select panelClass="marketplace-select-panel" [placeholder]="'marketplace.subcategory' | translate"
+                [ngModel]="selectedSubcategoryId()" (ngModelChange)="selectedSubcategoryId.set($event)">
+                <mat-option disabled class="list-header-option">
+                  {{ 'marketplace.subcategory' | translate }}
+                </mat-option>
+                @for (sub of subcategories(); track sub.id) {
+                <mat-option [value]="sub.id">{{ getLocalizedSubName(sub) }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          }
+
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="full-width custom-field">
+              <mat-select panelClass="marketplace-select-panel" [placeholder]="'items.city' | translate"
+                [ngModel]="selectedCity()" (ngModelChange)="selectedCity.set($event)">
+                <mat-option disabled class="list-header-option">
+                  {{ 'items.city' | translate }}
+                </mat-option>
+                @for (gov of governorates; track gov.code) {
+                <mat-option [value]="gov.code">{{ gov.name | translate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-group">
+            <label>
+              <mat-icon>payments</mat-icon>
+              {{ 'marketplace.priceRange' | translate }}
+            </label>
+            <div class="price-range-container">
+              <div class="price-field">
+                <span class="currency-label">EGP</span>
+                <input type="number" [placeholder]="'marketplace.minPrice' | translate" [ngModel]="minPrice()"
+                  (ngModelChange)="minPrice.set($event)" />
+              </div>
+              <div class="price-separator"></div>
+              <div class="price-field">
+                <span class="currency-label">EGP</span>
+                <input type="number" [placeholder]="'marketplace.maxPrice' | translate" [ngModel]="maxPrice()"
+                  (ngModelChange)="maxPrice.set($event)" />
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>
+              <mat-icon>calendar_today</mat-icon>
+              {{ 'marketplace.availability' | translate }}
+            </label>
+            <mat-form-field appearance="outline" class="full-width custom-field date-range-field">
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate [placeholder]="'marketplace.startDate' | translate" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)">
+                <input matEndDate [placeholder]="'marketplace.endDate' | translate" [ngModel]="endDate()" (ngModelChange)="endDate.set($event)">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-group">
+            <label>
+              <mat-icon>star_outline</mat-icon>
+              {{ 'items.rating' | translate }}
+            </label>
+            <div class="rating-filter">
+              @for (r of [4, 3, 2, 1]; track r) {
+                <button type="button" class="rating-opt" [class.active]="minRating() === r" (click)="minRating.set(minRating() === r ? undefined : r)">
+                  <div class="stars">
+                    @for (s of [1,2,3,4,5]; track s) {
+                      <mat-icon>{{ s <= r ? 'star' : 'star_border' }}</mat-icon>
+                    }
+                  </div>
+                  <span>& Up</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="full-width custom-field">
+              <mat-select panelClass="marketplace-select-panel" [placeholder]="'labels.type' | translate"
+                [ngModel]="selectedType()" (ngModelChange)="selectedType.set($event)">
+                <mat-option disabled class="list-header-option">
+                  {{ 'labels.type' | translate }}
+                </mat-option>
+                @for (type of itemTypes; track type.key) {
+                <mat-option [value]="type.key">{{ type.name | translate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-12 lg:col-9 results-area">
+      <div class="results-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <div class="results-count">
+          <span class="count">{{ totalCount() }} {{ 'marketplace.results' | translate }}</span>
+        </div>
+      </div>
+
+      @if (isLoading()) {
+      <mat-card class="table-card">
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      </mat-card>
+      } @else {
+      @if (viewMode() === 'list') {
+      <mat-card class="table-card">
+        <table mat-table [dataSource]="dataSource()" class="data-table" matSort (matSortChange)="onSort($event)"
+          [matSortActive]="sortBy() || 'newest'" [matSortDirection]="sortOrder() || 'desc'">
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.image' | translate }}</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="product-image">
+                @if (row.primaryImage) {
+                <img [src]="row.primaryImage" [alt]="getLocalizedTitle(row)" class="thumb" />
+                } @else {
+                <div class="thumb-placeholder">
+                  <mat-icon>image_not_supported</mat-icon>
+                </div>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ 'labels.name' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <div class="item-title-wrap">
+                <span>{{ getLocalizedTitle(row) }}</span>
+                @if (isRemoved(row)) {
+                  <small class="removed-note text-warn">{{ 'products.removedFromMarket' | translate }}</small>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ 'labels.price' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.dailyPrice }} EGP <small>{{ 'labels.perDay' | translate }}</small>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'labels.subcategory' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              @if (row.subcategory) {
+              <span class="chip">{{ getLocalizedName(row.subcategory) }}</span>
+              }
+              @if (row.category) {
+              <small class="category-hint">{{ getLocalizedName(row.category) }}</small>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>{{ 'labels.actions' | translate }}</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="actions-cell">
+                <app-loading-button color="accent" variant="stroked" size="sm" [routerLink]="['/items', row.id]"
+                  [title]="'buttons.view' | translate">
+                  <mat-icon>visibility</mat-icon>
+                </app-loading-button>
+                @if (isRemoved(row)) {
+                  <app-loading-button color="primary" variant="stroked" size="sm" (clicked)="reactivateItemWithConfirm(row.id!)"
+                    [title]="'buttons.reactivate' | translate">
+                    <mat-icon>restart_alt</mat-icon>
+                  </app-loading-button>
+                  <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
+                    [title]="'products.permanentDelete' | translate">
+                    <mat-icon>delete_forever</mat-icon>
+                  </app-loading-button>
+                } @else {
+                  <app-loading-button color="warn" variant="stroked" size="sm" (clicked)="deleteItem(row.id!)"
+                    [title]="'common.reject' | translate">
+                    <mat-icon>block</mat-icon>
+                  </app-loading-button>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+          [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)" aria-label="Select page">
+        </mat-paginator>
+      </mat-card>
+      } @else {
+      <div class="grid cards-grid">
+        @for (item of dataSource(); track item.id) {
+        <div class="col-12 sm:col-6 lg:col-4 xl:col-4 p-3">
+          <mat-card class="entity-card h-full shadow-1 hover:shadow-3 transition-all" [routerLink]="['/items', item.id]">
+            <div class="card-content">
+              <div class="card-image mb-3">
+                @if (item.primaryImage) {
+                <img [src]="item.primaryImage" [alt]="getLocalizedTitle(item)" class="w-full h-12rem border-round object-cover" />
+                } @else {
+                <div class="placeholder w-full h-12rem border-round bg-gray-100 flex align-items-center justify-content-center">
+                  <mat-icon class="text-4xl text-400">image_not_supported</mat-icon>
+                </div>
+                }
+              </div>
+              <div class="card-header-info mb-3">
+                @if (item.brand) {
+                <small class="sku-hint text-primary font-bold uppercase tracking-wider text-xs">{{ getLocalizedName(item.brand) }}</small>
+                }
+                <h3 class="text-lg font-bold text-900 m-0">{{ getLocalizedTitle(item) }}</h3>
+                @if (isRemoved(item)) {
+                  <small class="removed-note text-warn">{{ 'products.removedFromMarket' | translate }}</small>
+                }
+              </div>
+              <div class="price-tag mb-3">
+                <span class="text-xl font-black text-primary">{{ item.dailyPrice }} EGP <small class="text-sm font-medium text-600">{{ 'labels.perDay' | translate }}</small></span>
+              </div>
+              @if (item.subcategory || item.category) {
+              <p class="subcategory-info text-sm text-500 line-height-2 mb-4">
+                {{ getLocalizedName(item.subcategory)
+                }}{{ item.subcategory && item.category ? ' / ' : ''
+                }}{{ getLocalizedName(item.category) }}
+              </p>
+              }
+            </div>
+            <div class="card-actions mt-auto flex gap-2 border-top-1 border-100 pt-3">
+              <app-loading-button (click)="$event.stopPropagation()" color="accent" variant="stroked" size="sm" class="flex-1"
+                [routerLink]="['/items', item.id]">
+                <mat-icon>visibility</mat-icon>
+              </app-loading-button>
+              @if (isRemoved(item)) {
+                <app-loading-button (click)="$event.stopPropagation()" color="primary" variant="stroked" size="sm" class="flex-1"
+                  (clicked)="reactivateItemWithConfirm(item.id!)">
+                  <mat-icon>restart_alt</mat-icon>
+                </app-loading-button>
+                <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+                  (clicked)="deleteItem(item.id!)" [title]="'products.permanentDelete' | translate">
+                  <mat-icon>delete_forever</mat-icon>
+                </app-loading-button>
+              } @else {
+                <app-loading-button (click)="$event.stopPropagation()" color="warn" variant="stroked" size="sm" class="flex-1"
+                  (clicked)="deleteItem(item.id!)" [title]="'common.reject' | translate">
+                  <mat-icon>block</mat-icon>
+                </app-loading-button>
+              }
+            </div>
+          </mat-card>
+        </div>
+        }
+      </div>
+      <mat-paginator class="grid-paginator" [length]="totalCount()" [pageSize]="pageSize()" [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" aria-label="Select page">
+      </mat-paginator>
+      }
+      }
+    </main>
+  </div>
+</div>

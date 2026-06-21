@@ -1,7 +1,7 @@
-import { Component, computed, inject, signal, DestroyRef } from '@angular/core';
+import { Component, computed, inject, signal, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../shared/services/toast.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -38,13 +38,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private authClient = inject(AuthClient);
   private identityClient = inject(IdentityClient);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   private translate = inject(TranslateService);
@@ -90,39 +91,73 @@ export class ProfileComponent {
   });
 
   profileImageUrl = computed(() => {
-    return this.currentUser()?.profilePictureUrl || 'assets/profile.webp';
+    return this.currentUser()?.profileImageUrl || this.currentUser()?.profilePictureUrl || 'assets/profile.webp';
   });
 
   constructor() {
     this.loadUserData();
   }
 
-  loadUserData() {
-    const user = this.authService.getUserData() as any;
-    if (user) {
-      this.currentUser.set(user);
-      this.profileForm.patchValue({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        profilePictureUrl: user.profilePictureUrl,
-        address: user.address,
-        city: user.city?.toLowerCase() || 'cairo',
-        country: user.country?.toLowerCase() || 'egypt',
-        bio: user.bio,
-      });
-
-      // Fetch dynamic reviews
-      this.publicProfileClient.getPublicProfile(user.id)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: (res) => {
-            if (res.data && (res.data as any).reviews) {
-              this.reviews.set((res.data as any).reviews);
-            }
+  ngOnInit() {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      if (params['verify'] === 'true') {
+        this.activeTab = 'personal';
+        setTimeout(() => {
+          const el = document.getElementById('identity-verification-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Add a temporary highlight effect
+            el.classList.add('highlight-pulse');
+            setTimeout(() => el.classList.remove('highlight-pulse'), 3000);
           }
-        });
+        }, 300);
+      }
+    });
+  }
+
+  loadUserData() {
+    // 1. Optimistic load from cookie
+    const localUser = this.authService.getUserData() as any;
+    if (localUser) {
+      this.populateForm(localUser);
     }
+
+    // 2. Fetch fresh data from backend
+    this.authClient.authMe()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: any) => {
+          if (res?.data) {
+            this.authService.storeUserData(res.data as any);
+            this.populateForm(res.data);
+          }
+        }
+      });
+  }
+
+  private populateForm(user: any) {
+    this.currentUser.set(user);
+    this.profileForm.patchValue({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePictureUrl: user.profileImageUrl || user.profilePictureUrl,
+      address: user.address,
+      city: user.city?.toLowerCase() || 'cairo',
+      country: user.country?.toLowerCase() || 'egypt',
+      bio: user.bio,
+    });
+
+    // Fetch dynamic reviews
+    this.publicProfileClient.getPublicProfile(user.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.data && (res.data as any).reviews) {
+            this.reviews.set((res.data as any).reviews);
+          }
+        }
+      });
   }
 
   openImageDialog() {
@@ -183,7 +218,11 @@ export class ProfileComponent {
           this.profileForm.markAsPristine();
 
           const currentUserObj = this.currentUser();
-          const updatedUser = { ...currentUserObj, ...command };
+          const updatedUser = { 
+            ...currentUserObj, 
+            ...command,
+            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl 
+          };
           this.currentUser.set(updatedUser as AuthLoginUser);
           this.authService.storeUserData(updatedUser as AuthLoginUser);
         },
@@ -222,7 +261,11 @@ export class ProfileComponent {
 
           // Update currentUser signal and localStorage
           const currentUserObj = this.currentUser();
-          const updatedUser = { ...currentUserObj, ...command };
+          const updatedUser = { 
+            ...currentUserObj, 
+            ...command, 
+            profileImageUrl: command.profilePictureUrl || currentUserObj.profileImageUrl 
+          };
           this.currentUser.set(updatedUser as AuthLoginUser);
           this.authService.storeUserData(updatedUser as AuthLoginUser);
         },
@@ -292,8 +335,17 @@ export class ProfileComponent {
         next: (res: any) => {
           if (res?.data) {
             this.toastService.showSuccess('profile.idUploadSuccess');
-            // Reload user data to update verification status
-            this.loadUserData();
+            // Fetch the updated user data from the backend to get the latest verification status
+            this.authClient.authMe()
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe({
+                next: (meRes: any) => {
+                  if (meRes?.data) {
+                    this.authService.storeUserData(meRes.data as any);
+                    this.loadUserData();
+                  }
+                }
+              });
           } else {
             this.toastService.showError('error.updateFailed');
           }

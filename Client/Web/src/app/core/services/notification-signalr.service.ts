@@ -7,6 +7,8 @@ export interface NotificationPayload {
   id: string;
   title: string;
   message: string;
+  titleAr?: string;
+  messageAr?: string;
   type: string;
   actionUrl?: string;
   isRead: boolean;
@@ -24,17 +26,20 @@ export class NotificationSignalrService {
   newNotification = signal<NotificationPayload | null>(null);
   unreadCount = signal(0);
 
+  private connectionPromise: Promise<void> | null = null;
+
   constructor() {
     if (this.authService.isLoggedIn()) {
       this.startConnection();
     }
   }
 
-  async startConnection() {
-    if (this.hubConnection?.state === HubConnectionState.Connected) return;
+  startConnection(): Promise<void> {
+    if (this.hubConnection?.state === HubConnectionState.Connected) return Promise.resolve();
+    if (this.connectionPromise) return this.connectionPromise;
 
     const token = this.authService.getToken();
-    if (!token) return;
+    if (!token) return Promise.resolve();
 
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/hubs/notifications`, {
@@ -48,14 +53,19 @@ export class NotificationSignalrService {
       this.newNotification.set(payload);
     });
 
-    try {
-      await this.hubConnection.start();
-      this.isConnected.set(true);
-      console.log('Notification SignalR Connected.');
-    } catch (err) {
-      console.error('Notification SignalR Connection Error: ', err);
-      setTimeout(() => this.startConnection(), 5000);
-    }
+    this.connectionPromise = this.hubConnection.start()
+      .then(() => {
+        this.isConnected.set(true);
+        this.connectionPromise = null;
+        console.log('Notification SignalR Connected.');
+      })
+      .catch(err => {
+        console.error('Notification SignalR Connection Error: ', err);
+        this.connectionPromise = null;
+        setTimeout(() => this.startConnection(), 5000);
+      });
+
+    return this.connectionPromise;
   }
 
   stopConnection() {

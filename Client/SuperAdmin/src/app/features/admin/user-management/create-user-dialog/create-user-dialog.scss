@@ -1,0 +1,27 @@
+    .create-user-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        padding-top: 1rem;
+        min-width: 440px;
+    }
+
+    .row {
+        display: flex;
+        gap: 1rem;
+
+        app-input {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .create-user-form {
+            min-width: unset;
+        }
+
+        .row {
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+    }

@@ -13,6 +13,7 @@
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
     z-index: 10;
+    overflow-x: hidden;
 
     .sidebar-header {
       padding: 24px;
@@ -46,12 +47,14 @@
       }
 
       mat-nav-list {
-        padding: 0;
+        padding: 8px 12px;
 
         a[mat-list-item] {
           height: auto !important;
           padding: 16px !important;
-          margin: 4px 12px;
+          margin-bottom: 8px;
+          width: 100%;
+          box-sizing: border-box;
           border-radius: 12px;
           transition: all 0.2s ease;
           border: 1px solid transparent;
@@ -100,18 +103,21 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
               }
+            }
 
-              .item-tag {
-                font-size: 0.7rem;
-                background: #f1f3f5;
-                color: #6c757d;
-                padding: 2px 6px;
-                border-radius: 4px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100px;
-              }
+            .item-tag {
+              font-size: 0.7rem;
+              background: #f1f3f5;
+              color: #6c757d;
+              padding: 2px 6px;
+              border-radius: 4px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+              display: inline-block;
+              margin-bottom: 8px;
+              align-self: flex-start;
             }
 
             .last-msg {
@@ -133,14 +139,7 @@
             margin-right: 8px;
           }
 
-          .mini-product-thumb {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-            margin-right: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-          }
+
 
           .delete-chat-btn {
             opacity: 0;

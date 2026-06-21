@@ -8,8 +8,8 @@ public class UploadMediaCommandValidator : AbstractValidator<UploadMediaCommand>
     
     private static readonly string[] AllowedImageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
     private static readonly string[] AllowedDocumentExtensions = { ".pdf", ".doc", ".docx", ".txt" };
-    private static readonly string[] AllowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
-    private static readonly string[] AllowedAudioExtensions = { ".mp3", ".wav", ".ogg" };
+    private static readonly string[] AllowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv", ".webm" };
+    private static readonly string[] AllowedAudioExtensions = { ".mp3", ".wav", ".ogg", ".webm", ".m4a" };
 
     public UploadMediaCommandValidator()
     {

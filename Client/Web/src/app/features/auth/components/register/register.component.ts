@@ -131,8 +131,20 @@ export class RegisterComponent implements OnInit {
           this.toast.showError(response.messages?.[0] || this.translate.instant('register.failed'));
         }
       },
-      error: (error: { error?: { messages?: string[] }; message?: string }) => {
-        const msg = error?.error?.messages?.[0] ?? error?.message ?? this.translate.instant('login.serverError');
+      error: (error: any) => {
+        let msg = this.translate.instant('login.serverError');
+        if (error?.response) {
+          try {
+            const parsed = JSON.parse(error.response);
+            if (parsed.messages && parsed.messages.length > 0) {
+              msg = parsed.messages[0];
+            }
+          } catch (e) {}
+        } else if (error?.error?.messages?.[0]) {
+          msg = error.error.messages[0];
+        } else if (error?.message && error.message !== 'An unexpected server error occurred.') {
+          msg = error.message;
+        }
         this.toast.showError(msg);
       }
     });

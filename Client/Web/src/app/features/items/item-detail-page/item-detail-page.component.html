@@ -244,7 +244,7 @@
           <div class="price-main">
             <span class="amount">{{ dailyPrice }}</span>
             <span class="currency">EGP</span>
-            <span class="period">/ {{ 'items.day' | translate }}</span>
+            <span class="period">&nbsp;/ {{ 'items.day' | translate }}</span>
           </div>
 
           @if (weeklyPrice || monthlyPrice) {
@@ -306,7 +306,7 @@
         @if (item()?.owner) {
         <div class="owner-card" [routerLink]="['/user-profile', item()?.owner?.id]">
           <div class="owner-avatar">
-            <img [src]="item()?.owner?.profileImageUrl || 'assets/images/default-avatar.png'"
+            <img [src]="item()?.owner?.profileImageUrl || 'https://ui-avatars.com/api/?name=' + (item()?.owner?.firstName || 'User') + '&background=0D8ABC&color=fff'"
               [alt]="item()?.owner?.firstName" />
           </div>
           <div class="owner-info">
@@ -324,23 +324,25 @@
         }
         <div class="grid">
           @if (!isOwner() && item()?.status !== 'UnderReview' && isRegularUser()) {
-            <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
-              <mat-icon>flash_on</mat-icon>
-              {{ 'items.rentNow' | translate }}
-            </app-loading-button>
+            @if (isRoleOwner()) {
+              <app-loading-button class="col-12 flex justify-content-center" color="primary" [loading]="isRenting()" (clicked)="rentItem()" [title]="'items.rentNow' | translate">
+                <mat-icon>flash_on</mat-icon>
+                {{ 'items.rentNow' | translate }}
+              </app-loading-button>
 
-            @if (item()?.isForSale) {
-            <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
-              <mat-icon>shopping_cart</mat-icon>
-              {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
-            </app-loading-button>
-            }
+              @if (item()?.isForSale) {
+              <app-loading-button class="col-12 flex justify-content-center" color="accent" (clicked)="buyItem()" [title]="'items.buyNow' | translate">
+                <mat-icon>shopping_cart</mat-icon>
+                {{ 'items.buyNow' | translate }} ({{ item()?.salePrice }} EGP)
+              </app-loading-button>
+              }
 
-            @if (item()?.status === 'Rented') {
-            <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
-              <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
-              {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
-            </app-loading-button>
+              @if (item()?.status === 'Rented') {
+              <app-loading-button class="col-12 flex justify-content-center" [color]="isReminded() ? 'warn' : 'accent'" (clicked)="toggleReminder()" [title]="isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate)">
+                <mat-icon>{{ isReminded() ? 'notifications_off' : 'notifications_active' }}</mat-icon>
+                {{ isReminded() ? ('marketplace.removeReminder' | translate) : ('marketplace.remindMe' | translate) }}
+              </app-loading-button>
+              }
             }
 
             <app-loading-button class="col-12 md:col-6" variant="outlined" [loading]="isChatting()" (clicked)="startChat()"

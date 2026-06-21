@@ -92,6 +92,7 @@ export class ItemDetailPageComponent implements OnInit {
     });
 
     isAdmin = computed(() => this.authService.isAdmin());
+    isRoleOwner = computed(() => this.authService.hasRole('Owner'));
 
     isRegularUser = computed(() => this.authService.isUser());
 
@@ -248,6 +249,13 @@ export class ItemDetailPageComponent implements OnInit {
     rentItem(): void {
         const item = this.item();
         if (!item?.id) return;
+        
+        if (!this.authService.isUserVerified()) {
+            this.toast.showInfo('profile.identityVerificationRequired');
+            this.router.navigate(['/profile'], { queryParams: { verify: 'true' } });
+            return;
+        }
+
         this.router.navigate(['/rentals', 'new'], { queryParams: { itemId: item.id } });
     }
 

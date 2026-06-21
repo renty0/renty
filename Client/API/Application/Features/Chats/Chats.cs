@@ -30,6 +30,8 @@ public record ChatMessageDto(
     string? MediaUrl,
     MessageType MessageType,
     Guid? ContextItemId,
+    string? ContextItemTitle,
+    string? ContextItemImage,
     bool IsRead, 
     DateTime CreatedAt
 );
@@ -58,11 +60,13 @@ public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Creat
         var u2 = Math.Max(_currentUser.Id.Value, request.UserId);
 
         var existing = await _context.Chats
-            .FirstOrDefaultAsync(c => c.User1Id == u1 && c.User2Id == u2 && c.ItemId == request.ItemId, ct);
+            .Where(c => c.User1Id == u1 && c.User2Id == u2)
+            .OrderByDescending(c => c.CreatedAt)
+            .FirstOrDefaultAsync(ct);
 
         if (existing != null) return new CreateChatResponse(true, null, existing.Id);
 
-        var chat = new Chat { User1Id = u1, User2Id = u2, ItemId = request.ItemId, CreatedAt = DateTime.UtcNow };
+        var chat = new Chat { User1Id = u1, User2Id = u2, ItemId = null, CreatedAt = DateTime.UtcNow };
         _context.Chats.Add(chat);
         await _context.SaveChangesAsync(ct);
         return new CreateChatResponse(true, null, chat.Id);
@@ -115,7 +119,12 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}:{requestUrl.Host.Port}" : "";
         baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
 
-        var result = chats.Select(c => new ChatListDto(
+        var groupedChats = chats
+            .GroupBy(c => c.OtherUser.Id)
+            .Select(g => g.OrderByDescending(c => c.LastMsg?.CreatedAt ?? c.CreatedAt).First())
+            .ToList();
+
+        var result = groupedChats.Select(c => new ChatListDto(
             c.Id,
             c.OtherUser.FirstName,
             c.OtherUser.LastName,
@@ -124,13 +133,17 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
                     ? c.OtherUser.ProfilePictureUrl
                     : $"{baseUrl}/{c.OtherUser.ProfilePictureUrl.TrimStart('/')}")
                 : null,
-            c.LastMsg?.Message ?? (c.LastMsg?.MessageType != MessageType.Text ? $"[{c.LastMsg?.MessageType}]" : null),
+            c.LastMsg?.Message ?? (c.LastMsg != null && c.LastMsg.MessageType != MessageType.Text ? $"[{c.LastMsg.MessageType}]" : null),
             c.LastMsg?.MessageType ?? MessageType.Text,
             c.UnreadCount,
             c.LastMsg?.CreatedAt ?? c.CreatedAt,
             c.ItemId,
             c.ItemTitle,
-            !string.IsNullOrEmpty(c.ItemImage) ? $"{baseUrl}/{c.ItemImage.TrimStart('/')}" : null,
+            !string.IsNullOrEmpty(c.ItemImage)
+                ? (c.ItemImage.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? c.ItemImage
+                    : $"{baseUrl}/{c.ItemImage.Replace("\\", "/").TrimStart('/')}")
+                : null,
             c.OtherUser.LastLoginAt
         ))
         .OrderByDescending(c => c.LastMessageAt)
@@ -158,9 +171,10 @@ public record PostChatMessageResponse(
     DateTime? CreatedAt
 );
 
+
 public interface IChatNotifier
 {
-    Task SendMessageAsync(Guid chatId, object payload, CancellationToken ct);
+    Task SendMessageAsync(Guid chatId, IEnumerable<string> userIds, object payload, CancellationToken ct);
 }
 
 public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageCommand, PostChatMessageResponse>
@@ -213,9 +227,27 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
         var mediaUrl = !string.IsNullOrEmpty(msg.MediaUrl) ? $"{baseUrl}/{msg.MediaUrl.TrimStart('/')}" : msg.MediaUrl;
 
+        string? contextItemTitle = null;
+        string? contextItemImage = null;
+
+        if (msg.ContextItemId.HasValue)
+        {
+            var item = await _context.Items.Include(i => i.Images).ThenInclude(img => img.Image).FirstOrDefaultAsync(i => i.Id == msg.ContextItemId.Value, ct);
+            if (item != null)
+            {
+                contextItemTitle = item.TitleAr; // or TitleEn depending on logic, but TitleAr is safe fallback
+                var primaryImage = item.Images.OrderByDescending(img => img.IsPrimary).FirstOrDefault()?.Image?.StoragePath;
+                if (primaryImage != null)
+                {
+                    contextItemImage = primaryImage.StartsWith("http") ? primaryImage : $"{baseUrl}/{primaryImage.TrimStart('/')}";
+                }
+            }
+        }
+
         if (_notifier != null)
         {
-            await _notifier.SendMessageAsync(request.ChatId, new
+            var userIds = new[] { chat.User1Id.ToString(), chat.User2Id.ToString() };
+            await _notifier.SendMessageAsync(request.ChatId, userIds, new
             {
                 id = msg.Id,
                 chatId = msg.ChatId,
@@ -224,6 +256,8 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
                 mediaUrl = mediaUrl,
                 messageType = msg.MessageType,
                 contextItemId = msg.ContextItemId,
+                contextItemTitle = contextItemTitle,
+                contextItemImage = contextItemImage,
                 createdAt = msg.CreatedAt
             }, ct);
         }
@@ -239,7 +273,9 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
             $"{senderName} sent you a message: {msg.Message ?? "[Media]"}",
             "chat",
             $"/chats/{chat.Id}",
-            ct);
+            ct,
+            titleAr: "رسالة جديدة",
+            messageAr: $"{senderName} أرسل لك رسالة: {msg.Message ?? "[وسائط]"}");
 
         return new PostChatMessageResponse(true, null, msg.Id, msg.Message, mediaUrl, msg.MessageType, msg.CreatedAt);
     }
@@ -313,8 +349,10 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
         var primaryImage = chat.Item?.Images.OrderByDescending(i => i.IsPrimary).FirstOrDefault();
         if (primaryImage?.Image != null)
         {
-            var path = primaryImage.Image.StoragePath.Replace("\\", "/").TrimStart('/');
-            itemImage = $"{baseUrl}/{path}";
+            var path = primaryImage.Image.StoragePath;
+            itemImage = path.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
+                ? path 
+                : $"{baseUrl}/{path.Replace("\\", "/").TrimStart('/')}";
         }
 
         var metadata = new ChatListDto(
@@ -333,7 +371,9 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
         );
 
         var messages = await _context.ChatMessages
-            .Where(m => m.ChatId == request.ChatId)
+            .Include(m => m.ContextItem)
+                .ThenInclude(i => i.Images)
+            .Where(m => m.Chat.User1Id == chat.User1Id && m.Chat.User2Id == chat.User2Id)
             .OrderBy(m => m.CreatedAt)
             .Select(m => new ChatMessageDto(
                 m.Id, 
@@ -344,16 +384,26 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
                     : m.MediaUrl,
                 m.MessageType,
                 m.ContextItemId,
+                m.ContextItem != null ? m.ContextItem.TitleAr : null,
+                m.ContextItem != null ? (m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault() != null ? (m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()!.StartsWith("http") ? m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault() : $"{baseUrl}/{m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()!.TrimStart('/')}") : null) : null,
                 m.IsRead, 
                 m.CreatedAt))
             .ToListAsync(ct);
 
         var unread = await _context.ChatMessages
-            .Where(m => m.ChatId == request.ChatId && m.SenderId != uid && !m.IsRead)
+            .Where(m => m.Chat.User1Id == chat.User1Id && m.Chat.User2Id == chat.User2Id && m.SenderId != uid && !m.IsRead)
             .ToListAsync(ct);
             
         foreach (var m in unread) m.IsRead = true;
         if (unread.Any()) await _context.SaveChangesAsync(ct);
+
+        // Also mark related system notifications as read
+        var unreadNotifs = await _context.Notifications
+            .Where(n => n.UserId == uid && !n.IsRead && n.ActionUrl == $"/chats/{request.ChatId}")
+            .ToListAsync(ct);
+            
+        foreach (var n in unreadNotifs) n.IsRead = true;
+        if (unreadNotifs.Any()) await _context.SaveChangesAsync(ct);
 
         return new GetChatMessagesResponse(true, null, messages, metadata);
     }

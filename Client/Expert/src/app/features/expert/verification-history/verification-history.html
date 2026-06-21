@@ -1,0 +1,227 @@
+<div class="verification-history-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <app-header-section [title]="'expert.history.title' | translate" [showSearch]="false" [showButton]="false"
+    icon="history" />
+
+  <div class="content-wrapper">
+    @if (isLoading()) {
+    <div class="loader-container">
+      <div class="spinner-ring"></div>
+      <p class="loading-text">{{ 'common.loading' | translate }}</p>
+    </div>
+    } @else {
+
+    <div class="main-layout">
+      @if (itemDetails()) {
+      <div class="item-summary-card">
+        <div class="item-image-wrap">
+          <img [src]="itemDetails()?.imageUrl || 'assets/images/placeholder.png'" alt="Item Image"
+            (error)="$event.target.src='assets/images/placeholder.png'">
+          <div class="image-badge">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+        </div>
+        <div class="item-info">
+          <div class="item-header">
+            <h3 class="item-title">{{ translate.currentLang === 'ar' ? itemDetails()?.titleAr : itemDetails()?.titleEn }}</h3>
+            <div class="item-location">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ itemDetails()?.city || '-' }}</span>
+            </div>
+          </div>
+          <div class="parties-row">
+            <div class="party-mini owner">
+              <img [src]="itemDetails()?.owner?.profilePicture || 'assets/profile.webp'"
+                alt="Owner" (error)="$event.target.src='assets/profile.webp'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.ownerName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.owner?.fullName }}</span>
+              </div>
+              <mat-icon class="party-icon">person</mat-icon>
+            </div>
+            @if (itemDetails()?.activeRental) {
+            <div class="party-mini renter">
+              <img [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/profile.webp'"
+                alt="Renter" (error)="$event.target.src='assets/profile.webp'">
+              <div class="party-info">
+                <span class="party-role">{{ 'expert.history.renterName' | translate }}</span>
+                <span class="party-name">{{ itemDetails()?.activeRental?.renter?.fullName }}</span>
+              </div>
+              <mat-icon class="party-icon">person_outline</mat-icon>
+            </div>
+            }
+          </div>
+          @if (itemDetails()?.activeRental) {
+          <div class="rental-info-bar">
+            <div class="info-pill dates">
+              <div class="pill-icon">
+                <mat-icon>event</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalDates' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.startDate | date:'MMM d' }} - {{ itemDetails()?.activeRental?.endDate | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+            <div class="info-pill price">
+              <div class="pill-icon">
+                <mat-icon>payments</mat-icon>
+              </div>
+              <div class="pill-content">
+                <span class="pill-label">{{ 'expert.history.rentalPrice' | translate }}</span>
+                <span class="pill-value">{{ itemDetails()?.activeRental?.rentalPrice }} EGP</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-3" style="border-top: 1px dashed var(--surface-border);">
+            @if (itemDetails()?.activeRental?.pendingTransferType) {
+              <app-loading-button color="primary" [fullWidth]="true" (clicked)="openTransferVerify(itemDetails()?.activeRental?.pendingTransferType!)" matIcon="handshake" size="lg" class="w-full text-lg shadow-1" [disabled]="false">
+                @if (itemDetails()?.activeRental?.pendingTransferType === 'ReceiveFromOwner') {
+                  {{ 'expert.history.receive_from_owner' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'DeliveryToRenter') {
+                  {{ 'expert.history.delivery_to_renter' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'ReceiveFromRenter') {
+                  {{ 'expert.history.receive_from_renter' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'DeliveryToOwner') {
+                  {{ 'expert.history.delivery_to_owner' | translate }}
+                }
+              </app-loading-button>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <div class="content-grid">
+        <div class="history-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap accent pulse">
+              <mat-icon>history</mat-icon>
+            </div>
+            <div>
+              <h2 class="card-title">{{ 'expert.history.listTitle' | translate }}</h2>
+              <p class="card-subtitle">
+                @if (verifications().length > 0) {
+                <span class="record-count">{{ verifications().length }}</span> {{ 'expert.history.records' | translate }}
+                } @else {
+                {{ 'expert.history.noRecords' | translate }}
+                }
+              </p>
+            </div>
+          </div>
+
+          @if (verifications().length > 0) {
+          <div class="timeline compact">
+            @for (v of verifications(); track v.id) {
+            <div class="timeline-item" [class.fade-in]="true">
+              <div class="timeline-marker">
+                <div class="marker-dot" [class]="getStatusColor(v.status)">
+                  <mat-icon>
+                    {{ v.status?.toLowerCase() === 'approved' ? 'check_circle' :
+                    (v.status?.toLowerCase() === 'rejected' ? 'cancel' : 'pending') }}
+                  </mat-icon>
+                </div>
+              </div>
+
+              <div class="timeline-content">
+                <div class="content-header">
+                  <div class="type-badge">
+                    <mat-icon>
+                      {{ v.checkType?.includes('before') ? 'inventory_2' : 'assignment_return' }}
+                    </mat-icon>
+                    <span>{{ 'expert.checkTypes.' + v.checkType | translate }}</span>
+                  </div>
+                  <span class="status-pill" [class]="getStatusColor(v.status)">
+                    {{ 'expert.status.' + v.status?.toLowerCase() | translate }}
+                  </span>
+                </div>
+
+                <div class="content-meta">
+                  <div class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ v.createdAt | date:'mediumDate' }}</span>
+                  </div>
+                  @if (v.expertFirstName) {
+                  <div class="meta-item expert">
+                    <mat-icon>badge</mat-icon>
+                    <span>{{ v.expertFirstName }}</span>
+                  </div>
+                  }
+                </div>
+
+                @if (v.notes) {
+                <div class="notes-box">
+                  <mat-icon>format_quote</mat-icon>
+                  <p>{{ v.notes }}</p>
+                </div>
+                }
+
+              </div>
+            </div>
+            }
+          </div>
+          } @else {
+          <div class="empty-state compact">
+            <div class="empty-icon-wrap">
+              <mat-icon>hourglass_empty</mat-icon>
+            </div>
+            <h3>{{ 'expert.history.empty_title' | translate }}</h3>
+            <p>{{ 'expert.history.empty' | translate }}</p>
+          </div>
+          }
+        </div>
+      @if (pendingVerification()) {
+      <div class="form-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap primary pulse">
+              <mat-icon>fact_check</mat-icon>
+            </div>
+            <div>
+              <h2 class="card-title">{{ 'expert.verifyItem' | translate }}</h2>
+              <p class="card-subtitle">{{ 'expert.verifyItem.subtitle' | translate }}</p>
+            </div>
+          </div>
+
+          <form [formGroup]="verifyForm" class="verification-form compact">
+
+            @if (!canSubmitForm()) {
+            <div class="notes-box mb-4" style="background: var(--red-50); border: 1px solid var(--red-200);">
+              <div class="text-sm font-bold text-red-600 flex align-items-center gap-2">
+                <mat-icon>warning</mat-icon>
+                {{ 'expert.history.mustHavePossession' | translate }}
+              </div>
+            </div>
+            }
+
+            <div class="form-row full-width-row">
+              <app-input [formGroup]="verifyForm" controlName="notes" label="notes" type="textarea" [rows]="10" [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" class="wide-textarea" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="status" label="status" type="select" [options]="statusOptions" [translateOptions]="true" [required]="true" prefixIcon="verified" />
+            </div>
+            @if (verifyForm.get('status')?.value === 'rejected' && verifyForm.get('checkType')?.value === 'after_return') {
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="deductionAmount" label="expert.history.deductionAmount" type="number" prefixIcon="money_off" />
+            </div>
+            }
+            @if (verifyForm.get('status')?.value === 'approved' && verifyForm.get('checkType')?.value === 'before_rent' && itemDetails()?.activeRental?.depositAmount === 0) {
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="newDepositAmount" label="expert.history.newDepositAmount" type="number" prefixIcon="payments" />
+            </div>
+            }
+          </form>
+
+          <div class="form-actions">
+            <app-loading-button [loading]="isSubmitting()" [disabled]="verifyForm.invalid || !canSubmitForm()" color="primary" size="lg"
+              [fullWidth]="true" matIcon="send" (clicked)="onSubmit()">
+              {{ 'expert.verify.submit' | translate }}
+            </app-loading-button>
+          </div>
+        </div>
+      }
+
+      </div>
+    </div>
+    }
+  </div>
+</div>

@@ -64,19 +64,41 @@ export class AuthService {
     return decrypted || null;
   }
 
+  currentUser = signal<AuthLoginUser | null>(null);
+
+  private setSecureStorage(key: string, value: string): void {
+    const encrypted = this.encrypt(value);
+    localStorage.setItem(key, encrypted);
+  }
+
+  private getSecureStorage(key: string): string | null {
+    const encrypted = localStorage.getItem(key);
+    if (!encrypted) return null;
+    return this.decrypt(encrypted) || null;
+  }
+
+  private removeSecureStorage(key: string): void {
+    localStorage.removeItem(key);
+  }
+
   private loadFromStorage(): void {
     try {
-      const rolesData = this.getSecureCookie(this.ROLES_KEY);
+      const rolesData = this.getSecureStorage(this.ROLES_KEY) || this.getSecureCookie(this.ROLES_KEY);
       if (rolesData) {
         this.rolesSignal.set(JSON.parse(rolesData));
       }
-      const permissionsData = this.getSecureCookie(this.PERMISSIONS_KEY);
+      const permissionsData = this.getSecureStorage(this.PERMISSIONS_KEY) || this.getSecureCookie(this.PERMISSIONS_KEY);
       if (permissionsData) {
         this.permissionsSignal.set(JSON.parse(permissionsData));
+      }
+      const userData = this.getSecureStorage(this.USER_DATA_KEY) || this.getSecureCookie(this.USER_DATA_KEY);
+      if (userData) {
+        this.currentUser.set(JSON.parse(userData));
       }
     } catch {
       this.rolesSignal.set('user');
       this.permissionsSignal.set([]);
+      this.currentUser.set(null);
     }
   }
 
@@ -91,15 +113,7 @@ export class AuthService {
       expires,
     );
     if (loginResponse.user) {
-      const userData = JSON.stringify(loginResponse.user);
-      this.setSecureCookie(this.USER_DATA_KEY, userData, expires);
-      const roles = loginResponse.user.role || 'user';
-      this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), expires);
-      this.rolesSignal.set(roles);
-
-      const permissions = loginResponse.user.permissions || [];
-      this.setSecureCookie(this.PERMISSIONS_KEY, JSON.stringify(permissions), expires);
-      this.permissionsSignal.set(permissions);
+      this.storeUserData(loginResponse.user);
     }
 
     this.isLoggedIn.set(true);
@@ -154,13 +168,15 @@ export class AuthService {
   storeUserData(user: AuthLoginUser): void {
     if (user) {
       const userData = JSON.stringify(user);
-      this.setSecureCookie(this.USER_DATA_KEY, userData, 7);
+      this.setSecureStorage(this.USER_DATA_KEY, userData);
+      this.currentUser.set(user);
+
       const roles = user.role || 'user';
-      this.setSecureCookie(this.ROLES_KEY, JSON.stringify(roles), 7);
+      this.setSecureStorage(this.ROLES_KEY, JSON.stringify(roles));
       this.rolesSignal.set(roles);
 
       const permissions = user.permissions || [];
-      this.setSecureCookie(this.PERMISSIONS_KEY, JSON.stringify(permissions), 7);
+      this.setSecureStorage(this.PERMISSIONS_KEY, JSON.stringify(permissions));
       this.permissionsSignal.set(permissions);
     }
   }
@@ -171,13 +187,7 @@ export class AuthService {
     return this.getSecureCookie(this.REFRESH_TOKEN_KEY);
   }
   getUserData(): AuthLoginUser | null {
-    const userData = this.getSecureCookie(this.USER_DATA_KEY);
-    if (!userData) return null;
-    try {
-      return JSON.parse(userData) as AuthLoginUser;
-    } catch (error) {
-      return null;
-    }
+    return this.currentUser();
   }
   hasValidToken(): boolean {
     const token = this.getToken();
@@ -230,13 +240,19 @@ export class AuthService {
     this.cookieService.delete(this.USER_DATA_KEY, '/');
     this.cookieService.delete(this.ROLES_KEY, '/');
     this.cookieService.delete(this.PERMISSIONS_KEY, '/');
+
+    this.removeSecureStorage(this.USER_DATA_KEY);
+    this.removeSecureStorage(this.ROLES_KEY);
+    this.removeSecureStorage(this.PERMISSIONS_KEY);
+
     this.rolesSignal.set('user');
     this.permissionsSignal.set([]);
+    this.currentUser.set(null);
     this.isLoggedIn.set(false);
   }
   logout(): void {
     this.removeAuthData();
-    this.router.navigate(['/login']);
+    window.location.href = '/login';
   }
   isAuthenticated(): boolean {
     return this.isLoggedIn();
@@ -249,6 +265,11 @@ export class AuthService {
   }
   getCurrentUserFirstName(): string | null {
     return this.getUserData()?.firstName || null;
+  }
+
+  isUserVerified(): boolean {
+    const user = this.getUserData() as any;
+    return !!user && (user.isVerified === true || user.idVerified === true);
   }
 
   hasRole(role: string): boolean {

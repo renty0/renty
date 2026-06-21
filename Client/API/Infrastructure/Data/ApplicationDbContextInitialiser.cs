@@ -137,6 +137,42 @@ public class ApplicationDbContextInitialiser
                 _logger.LogWarning("Failed to create admin user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
+
+        // Create expert user
+        var expertEmail = Environment.GetEnvironmentVariable("SEED_EXPERT_EMAIL") ?? "expert@rently.com";
+        var expertPassword = Environment.GetEnvironmentVariable("SEED_EXPERT_PASSWORD") ?? "Password12!";
+
+        var expertUser = await _userManager.FindByEmailAsync(expertEmail);
+        if (expertUser == null)
+        {
+            expertUser = new ApplicationUser
+            {
+                UserName = expertEmail,
+                Email = expertEmail,
+                FirstName = "Test",
+                LastName = "Expert",
+                EmailConfirmed = true,
+                IsActive = true,
+                IsVerified = true
+            };
+
+            var result = await _userManager.CreateAsync(expertUser, expertPassword);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(expertUser, SecurityRoles.Expert.ToString());
+                _logger.LogInformation("Expert user created successfully.");
+            }
+            else
+            {
+                _logger.LogWarning("Failed to create expert user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            // Reset password to ensure it matches the requested seed password
+            var token = await _userManager.GeneratePasswordResetTokenAsync(expertUser);
+            await _userManager.ResetPasswordAsync(expertUser, token, expertPassword);
+        }
     }
 
     private async Task ResetSequencesAsync()

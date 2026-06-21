@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -56,6 +56,7 @@ export class ItemsListComponent implements OnInit {
   private http = inject(HttpClient);
 
   isOwnerMode = signal(false);
+  canCreateItem = computed(() => this.isOwnerMode());
 
   isOwner(item: ItemListDto): boolean {
     const currentUserId = this.authService.getCurrentUserId();

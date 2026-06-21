@@ -21,7 +21,7 @@ public static class OrderEndpoints
         .WithName("CreateOrder")
         .Produces<ApiResponse<OrderCreateData>>(StatusCodes.Status201Created)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(Policies.CanTransact);
+        .RequireAuthorization();
 
         // GET /orders
         g.MapGet("/", async (ISender sender) =>

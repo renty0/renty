@@ -1,0 +1,32 @@
+.icon-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.financial-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-top: 4px solid transparent;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+}
+
+.initial-card { border-top-color: var(--blue-500, #3b82f6); }
+.escrow-card { border-top-color: var(--orange-500, #f97316); }
+.distribution-card { border-top-color: var(--green-500, #22c55e); }
+
+.error-card {
+  border-left: 4px solid var(--red-500, #ef4444);
+}
+
+::ng-deep .mat-mdc-row {
+  &:hover {
+    background: #f8fafc;
+  }
+}

@@ -100,7 +100,9 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
             $"The dispute for '{rental.Item.TitleEn}' has been resolved. Compensation: {request.OwnerCompensation:C}",
             "rental",
             $"/rentals/{rental.Id}",
-            ct);
+            ct,
+            titleAr: "تم حل النزاع",
+            messageAr: $"تم حل النزاع للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'. التعويض: {request.OwnerCompensation:C}");
 
         await _notifier.SendToUserAsync(
             renterUser.Id,
@@ -108,7 +110,9 @@ public class ResolveDisputeCommandHandler : IRequestHandler<ResolveDisputeComman
             $"The dispute for '{rental.Item.TitleEn}' has been resolved. Refund: {request.RenterRefund:C}",
             "rental",
             $"/rentals/{rental.Id}",
-            ct);
+            ct,
+            titleAr: "تم حل النزاع",
+            messageAr: $"تم حل النزاع للمنتج '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'. الاسترداد: {request.RenterRefund:C}");
 
         return new ResolveDisputeResponse(true, null);
     }

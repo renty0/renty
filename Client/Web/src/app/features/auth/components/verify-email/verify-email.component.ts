@@ -39,8 +39,9 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
 
   loading = signal(false);
   verified = signal(false);
+  codeSent = signal(false);
 
-  countdown = signal(30);
+  countdown = signal(0);
   private resendInterval: any;
 
   verifyForm = this.fb.group({
@@ -52,6 +53,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     const email = this.route.snapshot.queryParamMap.get('email');
     const code = this.route.snapshot.queryParamMap.get('code');
     if (email) {
+      this.codeSent.set(true);
       this.verifyForm.patchValue({ email });
       this.startResendTimer();
     }
@@ -82,10 +84,13 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
   }
 
   resendCode() {
-    if (this.countdown() > 0) return;
+    if (this.countdown() > 0 && this.codeSent()) return;
 
     const email = this.verifyForm.value.email;
-    if (!email) return;
+    if (!email) {
+      this.verifyForm.get('email')?.markAsTouched();
+      return;
+    }
 
     this.loading.set(true);
     const command = new SendEmailConfirmationCommand({ email });
@@ -95,7 +100,8 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (!response.error) {
-            this.toast.showSuccess(this.translate.instant('verifyEmail.resendCode'));
+            this.codeSent.set(true);
+            this.toast.showSuccess(this.translate.instant('common.success'));
             this.startResendTimer();
           } else {
             this.toast.showError(response.messages?.[0] || this.translate.instant('common.error'));

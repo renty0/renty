@@ -160,7 +160,9 @@ public class UpdateRentRequestCommandHandler : IRequestHandler<UpdateRentRequest
             $"The rental request for {rentRequest.RentableItem.TitleEn} has been modified by the renter.",
             "rental",
             $"/rental-requests/{rentRequest.Id}",
-            cancellationToken
+            cancellationToken,
+            titleAr: "تم تعديل طلب الإيجار",
+            messageAr: $"تم تعديل طلب إيجار {(!string.IsNullOrWhiteSpace(rentRequest.RentableItem.TitleAr) ? rentRequest.RentableItem.TitleAr : rentRequest.RentableItem.TitleEn)} من قبل المستأجر."
         );
 
         return new UpdateRentRequestResponse(true, "Rent request updated successfully.");

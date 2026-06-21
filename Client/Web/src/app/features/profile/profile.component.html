@@ -76,34 +76,38 @@
               </div>
               <app-input class="form-col-full" label="bio" [formGroup]="profileForm" controlName="bio" type="textarea" />
 
-              <div class="section-divider"></div>
+                <div class="section-divider"></div>
 
-              <div class="section-header">
-                <div class="icon-box accent"><mat-icon>verified_user</mat-icon></div>
-                <h2>{{ 'profile.identityVerification' | translate }}</h2>
-              </div>
+                <div class="section-header" id="identity-verification-section">
+                  <div class="icon-box accent"><mat-icon>verified_user</mat-icon></div>
+                  <h2>{{ 'profile.identityVerification' | translate }}</h2>
+                </div>
 
-              <div class="verification-status-card">
-                @if (currentUser()?.idVerified) {
-                  <div class="status-badge verified">
-                    <mat-icon>check_circle</mat-icon>
-                    <span>{{ 'profile.verified' | translate }}</span>
-                  </div>
-                  <p class="status-text">{{ 'profile.idVerifiedDesc' | translate }}</p>
-                } @else {
-                  <div class="status-badge unverified">
-                    <mat-icon>error</mat-icon>
-                    <span>{{ 'profile.notVerified' | translate }}</span>
-                  </div>
-                  <p class="status-text">{{ 'profile.idNotVerifiedDesc' | translate }}</p>
-                  <p class="status-note">{{ 'profile.verificationNote' | translate }}</p>
-                  <button mat-flat-button color="primary" class="upload-id-btn" (click)="openIdUploadDialog()">
-                    <mat-icon>upload_file</mat-icon>
-                    {{ 'profile.uploadId' | translate }}
-                  </button>
-                }
-              </div>
-
+                <div class="verification-status-card">
+                  @if (currentUser()?.idVerified) {
+                    <div class="status-badge verified">
+                      <mat-icon>check_circle</mat-icon>
+                      <span>{{ 'profile.verified' | translate }}</span>
+                    </div>
+                  } @else if (currentUser()?.idVerificationStatus === 'Pending') {
+                    <div class="status-badge pending">
+                      <mat-icon>schedule</mat-icon>
+                      <span>{{ 'profile.pendingVerification' | translate }}</span>
+                    </div>
+                    <p class="status-text">{{ 'profile.pendingVerificationDesc' | translate }}</p>
+                  } @else {
+                    <div class="status-badge unverified">
+                      <mat-icon>error</mat-icon>
+                      <span>{{ 'profile.notVerified' | translate }}</span>
+                    </div>
+                    <p class="status-text">{{ 'profile.idNotVerifiedDesc' | translate }}</p>
+                    <p class="status-note">{{ 'profile.verificationNote' | translate }}</p>
+                    <button type="button" mat-flat-button color="primary" class="upload-id-btn" (click)="openIdUploadDialog()">
+                      <mat-icon>upload_file</mat-icon>
+                      {{ 'profile.uploadId' | translate }}
+                    </button>
+                  }
+                </div>
               <div class="form-actions">
                 <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine" type="submit" color="primary">
                   <mat-icon>save</mat-icon>

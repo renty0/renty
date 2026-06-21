@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
+import { Subject } from 'rxjs';
 
 export interface ChatMessage {
   id: string;
@@ -22,8 +23,10 @@ export class ChatSignalrService {
   private hubConnection: HubConnection | null = null;
   
   isConnected = signal(false);
-  newMessage = signal<ChatMessage | null>(null);
+  newMessage$ = new Subject<ChatMessage>();
   userTyping = signal<{chatId: string, userId: number} | null>(null);
+
+  private connectionPromise: Promise<void> | null = null;
 
   constructor() {
     // Automatically connect if user is logged in
@@ -32,11 +35,12 @@ export class ChatSignalrService {
     }
   }
 
-  async startConnection() {
-    if (this.hubConnection?.state === HubConnectionState.Connected) return;
+  startConnection(): Promise<void> {
+    if (this.hubConnection?.state === HubConnectionState.Connected) return Promise.resolve();
+    if (this.connectionPromise) return this.connectionPromise;
 
     const token = this.authService.getToken();
-    if (!token) return;
+    if (!token) return Promise.resolve();
 
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/hubs/chat`, {
@@ -47,21 +51,26 @@ export class ChatSignalrService {
       .build();
 
     this.hubConnection.on('ReceiveMessage', (payload: any) => {
-      this.newMessage.set(payload);
+      this.newMessage$.next(payload);
     });
 
     this.hubConnection.on('UserTyping', (userId: number, chatId: string) => {
       this.userTyping.set({ chatId, userId });
     });
 
-    try {
-      await this.hubConnection.start();
-      this.isConnected.set(true);
-      console.log('SignalR Connected.');
-    } catch (err) {
-      console.error('SignalR Connection Error: ', err);
-      setTimeout(() => this.startConnection(), 5000);
-    }
+    this.connectionPromise = this.hubConnection.start()
+      .then(() => {
+        this.isConnected.set(true);
+        this.connectionPromise = null;
+        console.log('SignalR Connected.');
+      })
+      .catch(err => {
+        console.error('SignalR Connection Error: ', err);
+        this.connectionPromise = null;
+        setTimeout(() => this.startConnection(), 5000);
+      });
+
+    return this.connectionPromise;
   }
 
   async joinChat(chatId: string) {

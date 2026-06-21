@@ -6,7 +6,8 @@ public record VerificationDto(
     string Status, 
     string? Notes,
     string? ExpertFirstName, 
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    string? VerificationCode
 );
 
 public record PersonInfoDto(string FullName, string? Phone, string? ProfilePicture);
@@ -16,7 +17,10 @@ public record RentalInfoDto(
     DateTime StartDate, DateTime EndDate,
     decimal RentalPrice, decimal DepositAmount,
     string Status,
-    PersonInfoDto Renter
+    PersonInfoDto Renter,
+    string CurrentPossession,
+    bool HasReturnTransfers,
+    string? PendingTransferType
 );
 
 public record ItemVerificationDetailsDto(

@@ -1,0 +1,81 @@
+  Determining projects to restore...
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1603: Tests depends on Microsoft.EntityFrameworkCore.InMemory (>= 10.0.0-preview.1.24081.2) but Microsoft.EntityFrameworkCore.InMemory 10.0.0-preview.1.24081.2 was not found. Microsoft.EntityFrameworkCore.InMemory 10.0.0-preview.1.25081.1 was resolved instead.
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1608: Detected package version outside of dependency constraint: Npgsql.EntityFrameworkCore.PostgreSQL 9.0.0 requires Microsoft.EntityFrameworkCore (>= 9.0.0 && < 10.0.0) but version Microsoft.EntityFrameworkCore 10.0.8 was resolved.
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1608: Detected package version outside of dependency constraint: Npgsql.EntityFrameworkCore.PostgreSQL 9.0.0 requires Microsoft.EntityFrameworkCore.Relational (>= 9.0.0 && < 10.0.0) but version Microsoft.EntityFrameworkCore.Relational 10.0.8 was resolved.
+  All projects are up-to-date for restore.
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1603: Tests depends on Microsoft.EntityFrameworkCore.InMemory (>= 10.0.0-preview.1.24081.2) but Microsoft.EntityFrameworkCore.InMemory 10.0.0-preview.1.24081.2 was not found. Microsoft.EntityFrameworkCore.InMemory 10.0.0-preview.1.25081.1 was resolved instead.
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1608: Detected package version outside of dependency constraint: Npgsql.EntityFrameworkCore.PostgreSQL 9.0.0 requires Microsoft.EntityFrameworkCore (>= 9.0.0 && < 10.0.0) but version Microsoft.EntityFrameworkCore 10.0.8 was resolved.
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/Tests.csproj : warning NU1608: Detected package version outside of dependency constraint: Npgsql.EntityFrameworkCore.PostgreSQL 9.0.0 requires Microsoft.EntityFrameworkCore.Relational (>= 9.0.0 && < 10.0.0) but version Microsoft.EntityFrameworkCore.Relational 10.0.8 was resolved.
+  Domain -> /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Domain/bin/Debug/net10.0/Domain.dll
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Chats/Chats.cs(101,35): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Chats/Chats.cs(328,35): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Chats/Chats.cs(375,35): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Verifications/Verifications.cs(165,92): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Verifications/Verifications.cs(242,59): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Products/GetProducts.cs(113,68): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Application.csproj]
+  Application -> /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/bin/Debug/net10.0/Application.dll
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/GapAnalysisService.cs(67,36): warning CS8602: Dereference of a possibly null reference. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/GapAnalysisService.cs(114,27): warning CS8618: Non-nullable property 'category' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/GapAnalysisService.cs(118,27): warning CS8618: Non-nullable property 'gap_status' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/EmailSender.cs(24,30): warning CS8604: Possible null reference argument for parameter 's' in 'int int.Parse(string s)'. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/EmailSender.cs(27,36): warning CS8604: Possible null reference argument for parameter 'value' in 'bool bool.Parse(string value)'. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Services/EmailSender.cs(39,40): warning CS8604: Possible null reference argument for parameter 'address' in 'MailAddress.MailAddress(string address, string? displayName)'. [/home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/Infrastructure.csproj]
+  Infrastructure -> /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Infrastructure/bin/Debug/net10.0/Infrastructure.dll
+  Tests -> /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/bin/Debug/net10.0/Tests.dll
+Test run for /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/bin/Debug/net10.0/Tests.dll (.NETCoreApp,Version=v10.0)
+VSTest version 18.0.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: False, ownerWantsExpert: False, phase: "CompletedSuccess") [959 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0
+Actual:   3000.0
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 225
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: True, ownerWantsExpert: False, phase: "CompletedSuccess") [331 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0
+Actual:   3000.0
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 225
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: True, ownerWantsExpert: True, phase: "CompletedSuccess") [280 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0
+Actual:   3000.0
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 225
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: True, ownerWantsExpert: False, phase: "RejectedAtVerification") [143 ms]
+  Error Message:
+   Cannot cancel a rental that is already completed or cancelled.
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 184
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: True, ownerWantsExpert: True, phase: "RejectedAtVerification") [123 ms]
+  Error Message:
+   Cannot cancel a rental that is already completed or cancelled.
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 184
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: False, ownerWantsExpert: True, phase: "CompletedSuccess") [241 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 0
+Actual:   3000.0
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 225
+--- End of stack trace from previous location ---
+  Failed Tests.RentalScenarioTests.RunLifecycleScenario(renterWantsExpert: False, ownerWantsExpert: True, phase: "RejectedAtVerification") [122 ms]
+  Error Message:
+   Cannot cancel a rental that is already completed or cancelled.
+  Stack Trace:
+     at Tests.RentalScenarioTests.RunLifecycleScenario(Boolean renterWantsExpert, Boolean ownerWantsExpert, String phase) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Tests/RentalScenarioTests.cs:line 184
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     7, Passed:     4, Skipped:     0, Total:    11, Duration: 2 s - Tests.dll (net10.0)

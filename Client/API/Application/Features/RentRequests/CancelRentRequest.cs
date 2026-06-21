@@ -80,7 +80,9 @@ public class CancelRentRequestCommandHandler : IRequestHandler<CancelRentRequest
             $"The rental request for {rentRequest.RentableItem.TitleEn} has been cancelled by the renter.",
             "rental",
             $"/rental-requests/{rentRequest.Id}",
-            cancellationToken
+            cancellationToken,
+            titleAr: "تم إلغاء طلب الإيجار",
+            messageAr: $"تم إلغاء طلب الإيجار لـ '{(!string.IsNullOrWhiteSpace(rentRequest.RentableItem.TitleAr) ? rentRequest.RentableItem.TitleAr : rentRequest.RentableItem.TitleEn)}' من قبل المستأجر."
         );
 
         return new CancelRentRequestResponse(true, "Request cancelled successfully.");

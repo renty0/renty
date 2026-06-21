@@ -43,31 +43,22 @@ export class RentModalComponent implements OnInit {
   policyExpanded = signal(false);
 
   availablePricingTypes = computed(() => {
-    return this.data.item.pricing?.map(p => p.pricingType) || [];
+    return this.data.item?.pricing?.map(p => p.pricingType) || ['daily'];
   });
 
   pricingTypeOptions = computed<SelectOption[]>(() =>
-    (this.data.item.pricing ?? []).map(p => ({
-      name: 'rentals.' + (p.pricingType ?? '').toLowerCase(),
-      code: p.pricingType ?? ''
+    (this.data.item?.pricing ?? [{ pricingType: 'daily' }]).map(p => ({
+      name: 'rentals.' + (p.pricingType ?? 'daily').toLowerCase(),
+      code: p.pricingType ?? 'daily'
     }))
   );
 
-  deliveryMethodOptions = computed<SelectOption[]>(() => [
-    { name: 'rentals.delivery.byHand', code: 'ByHand' },
-    { name: 'rentals.delivery.nearestLocation', code: 'NearestLocation' },
-    { name: 'rentals.delivery.deliveryService', code: 'DeliveryService' }
-  ]);
 
   rentalPrice = signal(0);
-  depositAmount = signal(this.data.item.defaultDeposit || 0);
-  expertFee = signal(100);
+  depositAmount = signal(this.data.item?.defaultDeposit || 0);
+  expertReviewFee = signal(0);
   totalAmount = computed(() => {
-    let total = this.rentalPrice() + this.depositAmount();
-    if (this.rentForm?.get('requiresExpert')?.value) {
-      total += this.expertFee();
-    }
-    return total;
+    return this.rentalPrice() + this.depositAmount() + this.expertReviewFee();
   });
 
   ngOnInit() {
@@ -75,11 +66,10 @@ export class RentModalComponent implements OnInit {
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
       pricingType: [this.availablePricingTypes()[0] || 'daily', Validators.required],
-      requiresExpert: [false],
-      deliveryMethod: ['ByHand', Validators.required],
       desiredDeliveryDate: [null],
       negotiatedDeliveryDate: [null],
-      notes: ['']
+      notes: [''],
+      requestExpertReview: [false]
     });
 
     this.rentForm.valueChanges.subscribe(() => {
@@ -88,6 +78,8 @@ export class RentModalComponent implements OnInit {
   }
 
   calculatePrice() {
+    this.expertReviewFee.set(this.rentForm.value.requestExpertReview ? 100 : 0);
+
     const { startDate, endDate, pricingType } = this.rentForm.value;
     if (!startDate || !endDate || !pricingType) {
       this.rentalPrice.set(0);
@@ -97,10 +89,13 @@ export class RentModalComponent implements OnInit {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    const pricing = this.data.item.pricing?.find(p => p.pricingType === pricingType);
-    if (!pricing) return;
+    const pricing = this.data.item?.pricing?.find(p => p.pricingType === pricingType);
+    if (!pricing) {
+      this.rentalPrice.set(0);
+      return;
+    }
 
     let price = 0;
     if (pricingType === 'weekly') {
@@ -125,8 +120,8 @@ export class RentModalComponent implements OnInit {
       startDate: formValue.startDate,
       endDate: formValue.endDate,
       pricingType: formValue.pricingType.toLowerCase(),
-      requestExpertReview: formValue.requiresExpert,
-      notes: formValue.notes || undefined
+      notes: formValue.notes || undefined,
+      requestExpertReview: formValue.requestExpertReview || false
     }) as any;
 
     this.rentalsClient.createRental(command).subscribe({
@@ -137,9 +132,7 @@ export class RentModalComponent implements OnInit {
         } else {
           this.toast.showSuccess('rentals.success');
           this.dialogRef.close(true);
-          if (res.data?.orderId) {
-            this.router.navigate(['/checkout', res.data.orderId, 'payment']);
-          }
+          this.router.navigate(['/my-rentals']);
         }
       },
       error: (err) => {

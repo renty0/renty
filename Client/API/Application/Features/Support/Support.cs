@@ -14,7 +14,7 @@ public record TicketDetailsDto(Guid Id, string Type, string Status, DateTime Cre
 
 // ── CREATE TICKET ─────────────────────────────────────────────────────────────
 
-public record CreateTicketCommand(string Type, string Message) : IRequest<CreateTicketResponse>;
+public record CreateTicketCommand(string Type, string Subject, string Message) : IRequest<CreateTicketResponse>;
 public record CreateTicketResponse(bool Success, string? Error, Guid? TicketId, string Status = "open");
 
 public class CreateTicketCommandValidator : AbstractValidator<CreateTicketCommand>
@@ -22,6 +22,7 @@ public class CreateTicketCommandValidator : AbstractValidator<CreateTicketComman
     public CreateTicketCommandValidator()
     {
         RuleFor(x => x.Type).NotEmpty();
+        RuleFor(x => x.Subject).NotEmpty().MaximumLength(255);
         RuleFor(x => x.Message).NotEmpty().MaximumLength(2000);
     }
 }
@@ -63,7 +64,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
         {
             TicketId = ticket.Id,
             SenderId = _currentUser.Id.Value,
-            Message = request.Message,
+            Message = $"**{request.Subject}**\n\n{request.Message}",
             CreatedAt = DateTime.UtcNow
         });
 
@@ -80,7 +81,9 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, C
             $"{userName} opened a new '{ticketType}' ticket.",
             "support",
             $"/support/{ticket.Id}",
-            ct);
+            ct,
+            titleAr: "تذكرة دعم جديدة",
+            messageAr: $"{userName} فتح تذكرة دعم جديدة من نوع '{ticketType}'.");
 
         return new CreateTicketResponse(true, null, ticket.Id);
     }
@@ -228,7 +231,9 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
                 "A support agent has replied to your ticket.",
                 "support",
                 $"/support/{ticket.Id}",
-                ct);
+                ct,
+                titleAr: "رد الدعم",
+                messageAr: "قام وكيل الدعم بالرد على تذكرتك.");
         }
         else
         {
@@ -240,7 +245,9 @@ public class PostSupportMessageCommandHandler : IRequestHandler<PostSupportMessa
                 $"New message on ticket #{ticket.Id.ToString().Substring(0, 8)}",
                 "support",
                 $"/support/{ticket.Id}",
-                ct);
+                ct,
+                titleAr: "رسالة تذكرة جديدة",
+                messageAr: $"رسالة جديدة على التذكرة #{ticket.Id.ToString().Substring(0, 8)}");
         }
 
         return new PostSupportMessageResponse(true, null, msg.Id, msg.Message, msg.CreatedAt);

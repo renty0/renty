@@ -18,6 +18,8 @@ public record UserDto(
     string? Country = null,
     string? Bio = null,
     string? PhoneNumber = null,
-    DateTimeOffset CreatedAt = default
+    DateTimeOffset CreatedAt = default,
+    string? IdVerificationStatus = null,
+    bool IdVerified = false
 );
 

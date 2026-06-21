@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  renty_postgres:
+    image: postgres:15
+    container_name: renty_postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=rentyDB
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:

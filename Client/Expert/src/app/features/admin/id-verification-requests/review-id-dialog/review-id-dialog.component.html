@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ 'idVerification.dialogTitle' | translate }}</h2>
+<mat-dialog-content>
+  <div class="user-details">
+    <p><strong>{{ 'idVerification.user' | translate }}:</strong> {{ request.firstName }} {{ request.lastName }}</p>
+    <p><strong>{{ 'idVerification.email' | translate }}:</strong> {{ request.email }}</p>
+    <p><strong>{{ 'idVerification.submittedAt' | translate }}:</strong> {{ request.createdAt | date:'medium' }}</p>
+  </div>
+
+  <div class="id-images-container">
+    <div class="id-image-wrapper">
+      <h3>{{ 'idVerification.frontOfId' | translate }}</h3>
+      <img [src]="request.frontImageUrl" alt="ID Front" class="id-image" />
+    </div>
+    <div class="id-image-wrapper">
+      <h3>{{ 'idVerification.backOfId' | translate }}</h3>
+      <img [src]="request.backImageUrl" alt="ID Back" class="id-image" />
+    </div>
+  </div>
+
+  <div class="notes-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'idVerification.notes' | translate }}</mat-label>
+      <textarea matInput [(ngModel)]="notes" rows="3" [placeholder]="'idVerification.notesPlaceholder' | translate"></textarea>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="gap: 12px;">
+  <button mat-button mat-dialog-close [disabled]="submittingAction() !== null">{{ 'idVerification.close' | translate }}</button>
+  <app-loading-button color="warn" [loading]="submittingAction() === 'rejected'" [disabled]="submittingAction() === 'approved'" (clicked)="reject()">
+    {{ 'idVerification.reject' | translate }}
+  </app-loading-button>
+  <app-loading-button color="primary" [loading]="submittingAction() === 'approved'" [disabled]="submittingAction() === 'rejected'" (clicked)="approve()">
+    {{ 'idVerification.approve' | translate }}
+  </app-loading-button>
+</mat-dialog-actions>

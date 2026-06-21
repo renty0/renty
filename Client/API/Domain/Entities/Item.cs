@@ -34,6 +34,9 @@ public class Item
     public decimal? SalePrice { get; set; }
     public string? AdminNote { get; set; }
 
+    /// <summary>Cancellation policy tier: flexible, moderate, strict. Defaults to flexible.</summary>
+    public CancellationPolicy CancellationPolicy { get; set; } = CancellationPolicy.Flexible;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

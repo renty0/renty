@@ -92,11 +92,13 @@ public class UploadIdVerificationCommandHandler : IRequestHandler<UploadIdVerifi
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notificationSender;
 
-    public UploadIdVerificationCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public UploadIdVerificationCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notificationSender)
     {
         _context = context;
         _currentUser = currentUser;
+        _notificationSender = notificationSender;
     }
 
     public async Task<UploadIdVerificationResponse> Handle(UploadIdVerificationCommand request, CancellationToken ct)
@@ -123,6 +125,9 @@ public class UploadIdVerificationCommandHandler : IRequestHandler<UploadIdVerifi
         _context.IdVerifications.Add(verification);
         await _context.SaveChangesAsync(ct);
 
+        // Notify Admins in real-time
+        await _notificationSender.SendToGroupAsync("Admins", "IdVerificationRequested", null, ct);
+
         return new UploadIdVerificationResponse(true, null, verification.Id);
     }
 }
@@ -147,11 +152,13 @@ public class ReviewIdVerificationCommandHandler : IRequestHandler<ReviewIdVerifi
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notificationSender;
 
-    public ReviewIdVerificationCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public ReviewIdVerificationCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notificationSender)
     {
         _context = context;
         _currentUser = currentUser;
+        _notificationSender = notificationSender;
     }
 
     public async Task<ReviewIdVerificationResponse> Handle(ReviewIdVerificationCommand request, CancellationToken ct)
@@ -171,13 +178,111 @@ public class ReviewIdVerificationCommandHandler : IRequestHandler<ReviewIdVerifi
         if (newStatus == VerificationStatus.Rejected)
         {
             idv.RejectionReason = request.RejectionReason;
+            await _notificationSender.SendToUserAsync(
+                idv.UserId,
+                "ID Verification Rejected",
+                $"Your identity verification request was rejected. Notes: {request.RejectionReason}",
+                "identity_verification",
+                null,
+                titleAr: "تم رفض توثيق الهوية",
+                messageAr: $"تم رفض طلب توثيق هويتك. ملاحظات: {request.RejectionReason}"
+            );
         }
         else if (newStatus == VerificationStatus.Approved)
         {
             idv.User.IdVerified = true;
+            await _notificationSender.SendToUserAsync(
+                idv.UserId,
+                "ID Verification Approved",
+                "Your identity verification request has been approved. You are now a verified member.",
+                "identity_verification",
+                null,
+                titleAr: "تم قبول توثيق الهوية",
+                messageAr: "تمت الموافقة على طلب توثيق هويتك. أنت الآن عضو موثق."
+            );
         }
 
         await _context.SaveChangesAsync(ct);
         return new ReviewIdVerificationResponse(true, null);
+    }
+}
+
+// ── ADMIN GET ID VERIFICATIONS ────────────────────────────────────────────────
+
+public record IdVerificationRequestDto(
+    Guid Id,
+    long UserId,
+    string FirstName,
+    string LastName,
+    string Email,
+    string FrontImageUrl,
+    string BackImageUrl,
+    string Status,
+    DateTimeOffset CreatedAt
+);
+
+public record GetIdVerificationRequestsResponse(
+    List<IdVerificationRequestDto> Requests,
+    int Total,
+    int Page,
+    int Pages
+);
+
+public record GetIdVerificationRequestsQuery(
+    int Page = 1,
+    int Limit = 10,
+    string? Status = null,
+    string? SortOrder = "desc"
+) : IRequest<GetIdVerificationRequestsResponse>;
+
+public class GetIdVerificationRequestsQueryHandler : IRequestHandler<GetIdVerificationRequestsQuery, GetIdVerificationRequestsResponse>
+{
+    private readonly IApplicationDbContext _context;
+
+    public GetIdVerificationRequestsQueryHandler(IApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<GetIdVerificationRequestsResponse> Handle(GetIdVerificationRequestsQuery request, CancellationToken ct)
+    {
+        var query = _context.IdVerifications
+            .Include(v => v.User)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(request.Status) && Enum.TryParse<VerificationStatus>(request.Status, true, out var statusEnum))
+        {
+            query = query.Where(v => v.Status == statusEnum);
+        }
+
+        if (request.SortOrder?.ToLower() == "asc")
+        {
+            query = query.OrderBy(v => v.CreatedAt);
+        }
+        else
+        {
+            query = query.OrderByDescending(v => v.CreatedAt);
+        }
+
+        var total = await query.CountAsync(ct);
+        var pages = (int)Math.Ceiling(total / (double)request.Limit);
+
+        var verifications = await query
+            .Skip((request.Page - 1) * request.Limit)
+            .Take(request.Limit)
+            .Select(v => new IdVerificationRequestDto(
+                v.Id,
+                v.UserId,
+                v.User.FirstName,
+                v.User.LastName,
+                v.User.Email!,
+                v.FrontImageUrl,
+                v.BackImageUrl,
+                v.Status.ToString(),
+                v.CreatedAt
+            ))
+            .ToListAsync(ct);
+
+        return new GetIdVerificationRequestsResponse(verifications, total, request.Page, pages);
     }
 }

@@ -5,7 +5,9 @@
         <mat-icon color="primary">mark_email_read</mat-icon>
       </div>
       <h1 class="title">{{ 'verifyEmail.title' | translate }}</h1>
+      @if (codeSent()) {
       <p class="subtitle">{{ 'verifyEmail.subtitle' | translate }}</p>
+      }
     </div>
 
     @if (verified()) {
@@ -21,21 +23,21 @@
     </div>
     } @else {
     <form [formGroup]="verifyForm" (ngSubmit)="submit()" class="verify-form">
+      @if (codeSent()) {
       <div class="email-sent-message">
         <p>{{ 'verifyEmail.codeSentTo' | translate }}</p>
-        <div class="email-badge">
-          <mat-icon>mail</mat-icon>
-          <strong>{{ verifyForm.value.email || 'Email' }}</strong>
-        </div>
       </div>
+      }
 
       <div class="input-group">
-        <!-- Hidden email input to keep form valid -->
-        <input type="hidden" formControlName="email">
+        <app-input [formGroup]="verifyForm" controlName="email" label="email" type="email" [readonly]="codeSent()" />
+        @if (codeSent()) {
         <app-input [formGroup]="verifyForm" controlName="code" label="code" type="text" />
+        }
       </div>
       
       <div class="actions-group">
+        @if (codeSent()) {
         <app-loading-button [loading]="loading()" type="submit" color="primary" [fullWidth]="true" class="verify-button">
           {{ 'verifyEmail.submit' | translate }}
           <mat-icon>verified</mat-icon>
@@ -49,6 +51,12 @@
             <span>{{ 'verifyEmail.resendCode' | translate }}</span>
           }
         </button>
+        } @else {
+        <app-loading-button [loading]="loading()" type="button" color="primary" [fullWidth]="true" class="verify-button" (click)="resendCode()">
+          {{ 'verifyEmail.resendCode' | translate }}
+          <mat-icon>send</mat-icon>
+        </app-loading-button>
+        }
       </div>
     </form>
     

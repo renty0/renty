@@ -39,5 +39,14 @@ public static class AdminKpiEndpoints
         .WithName("GetAdminGapAnalysis")
         .Produces<ApiResponse<GetGapAnalysisResponse>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
+        g.MapGet("/rentals/{id:guid}/financials", async (Guid id, ISender sender) =>
+        {
+            var r = await sender.Send(new GetRentalFinancialBreakdownQuery(id));
+            return r.Found ? Api.Ok(r.Breakdown) : Api.Fail(r.Error ?? "Not found", 404);
+        })
+        .WithName("GetAdminRentalFinancials")
+        .Produces<ApiResponse<RentalFinancialBreakdownDto>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
+        .RequireAuthorization(Policies.AdminAccess);
     }
 }

@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
 using MediatR;
@@ -57,6 +58,28 @@ public class CompleteRentalCommandHandler : IRequestHandler<CompleteRentalComman
         if (rentRequest.Status != RentRequestStatus.Active)
         {
             return new CompleteRentalResponse(false, "Only active rentals can be completed.");
+        }
+
+        var renter = await _context.Users.FirstOrDefaultAsync(u => u.Id == rentRequest.RenterId, cancellationToken);
+        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == rentRequest.RentableItem.OwnerId, cancellationToken);
+        
+        if (renter != null && owner != null)
+        {
+            // Refund the security deposit to the Renter's Available Balance from their Pending Balance
+            if (rentRequest.SecurityDeposit > 0)
+            {
+                renter.PendingBalance -= rentRequest.SecurityDeposit.Value;
+                renter.WalletBalance += rentRequest.SecurityDeposit.Value;
+                
+                _context.WalletTransactions.Add(new WalletTransaction
+                {
+                    UserId = renter.Id,
+                    Amount = rentRequest.SecurityDeposit.Value,
+                    Type = TransactionType.EscrowRelease,
+                    Description = $"Escrow release for completed rental {rentRequest.Id}",
+                    CreatedAt = DateTimeOffset.UtcNow
+                });
+            }
         }
 
         rentRequest.Status = RentRequestStatus.Completed;

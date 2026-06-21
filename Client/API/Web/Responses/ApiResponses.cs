@@ -122,9 +122,9 @@ public record PagedResult<T>(
 public record AuthRegisterData(string Message, long? UserId);
 public record AuthVerifyEmailData(string Message);
 public record AuthLoginData(string? AccessToken, string? RefreshToken, DateTimeOffset? RefreshTokenExpiresAt, AuthLoginUser? User);
-public record AuthLoginUser(long Id, string FirstName, string? LastName, string? Email, string? Role, string? ProfileImageUrl, IList<string>? Permissions = null);
+public record AuthLoginUser(long Id, string FirstName, string? LastName, string? Email, string? Role, string? ProfileImageUrl, IList<string>? Permissions = null, string? IdVerificationStatus = null, bool IdVerified = false, bool IsVerified = false);
 public record AuthRefreshData(string? AccessToken, string? RefreshToken);
-public record AuthMeData(long Id, string FirstName, string? LastName, string? Email, string? Phone, string? City, string? Role, string? ProfileImageUrl, bool IsVerified, DateTime CreatedAt, IList<string>? Permissions = null);
+public record AuthMeData(long Id, string FirstName, string? LastName, string? Email, string? Phone, string? City, string? Role, string? ProfileImageUrl, bool IsVerified, DateTime CreatedAt, IList<string>? Permissions = null, string? IdVerificationStatus = null, bool IdVerified = false);
 
 // ── Items ─────────────────────────────────────────────────────────────────────
 

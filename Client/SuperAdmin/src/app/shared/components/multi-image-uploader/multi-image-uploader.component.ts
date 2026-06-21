@@ -1,0 +1,155 @@
+import { Component, inject, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MediaClient } from '../../../core/api/api-client';
+import { ToastService } from '../../services/toast.service';
+import { firstValueFrom } from 'rxjs';
+
+export interface UploadedImage {
+    id: string | null; // null for new uploads (initially), or holds existing ProductImage.id
+    mediaFileId?: string; // ID from MediaFile service
+    imageUrl: string;
+    isPrimary: boolean;
+    displayOrder: number;
+    file?: File; // For local preview before upload
+    isUploading?: boolean;
+}
+
+@Component({
+    selector: 'app-multi-image-uploader',
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatProgressBarModule, TranslateModule],
+    templateUrl: './multi-image-uploader.component.html',
+    styleUrl: './multi-image-uploader.component.scss'
+})
+export class MultiImageUploaderComponent {
+    private apiClient = inject(MediaClient);
+    private toast = inject(ToastService);
+    private cdr = inject(ChangeDetectorRef);
+    private translate = inject(TranslateService);
+
+    @Input() images: UploadedImage[] = [];
+    @Output() imagesChange = new EventEmitter<UploadedImage[]>();
+
+    isUploading = false;
+
+    triggerFileInput(fileInput: HTMLInputElement) {
+        fileInput.click();
+    }
+
+    async onFilesSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (!input.files?.length) return;
+
+        const files = Array.from(input.files);
+
+        // Validate files
+        const validFiles = files.filter(file => {
+            if (!file.type.startsWith('image/')) {
+                this.toast.showError(
+                    this.translate.instant('uploader.invalidFileTypeWithName', { fileName: file.name })
+                );
+                return false;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                this.toast.showError(
+                    this.translate.instant('uploader.fileTooLargeWithName', { fileName: file.name })
+                );
+                return false;
+            }
+            return true;
+        });
+
+        if (validFiles.length === 0) return;
+
+        this.isUploading = true;
+
+        for (const file of validFiles) {
+            await this.uploadFile(file);
+        }
+
+        this.isUploading = false;
+        input.value = ''; // Reset input
+        this.cdr.markForCheck();
+    }
+
+    async uploadFile(file: File) {
+        const tempImage: UploadedImage = {
+            id: null, // New image
+            imageUrl: URL.createObjectURL(file), // Preview
+            isPrimary: this.images.length === 0,
+            displayOrder: this.images.length,
+            isUploading: true
+        };
+
+        this.images.push(tempImage);
+        this.cdr.markForCheck();
+
+        try {
+            const fileParam = {
+                data: file,
+                fileName: file.name
+            };
+
+            const response: any = await firstValueFrom(
+                this.apiClient.uploadMedia(undefined, undefined, fileParam)
+            );
+
+            const data = response?.data || response;
+
+            if (data && data.id) {
+                // Update temp image with real data
+                tempImage.mediaFileId = data.id;
+                tempImage.imageUrl = data.urls?.medium || data.url || '';
+                tempImage.isUploading = false;
+                // Only new images need to be communicated as "URLs" to the CreateProduct,
+                // but for UpdateProduct we need ProductImageDto structure.
+                // The parent component will handle the mapping.
+                this.emitChanges();
+            } else {
+                this.removeImage(tempImage);
+                this.toast.showError(
+                    this.translate.instant('uploader.uploadFailedWithName', { fileName: file.name })
+                );
+            }
+        } catch (error) {
+            this.removeImage(tempImage);
+            this.toast.showError(
+                this.translate.instant('uploader.uploadFailedWithName', { fileName: file.name })
+            );
+            console.error(error);
+        }
+    }
+
+    removeImage(image: UploadedImage) {
+        const index = this.images.indexOf(image);
+        if (index > -1) {
+            this.images.splice(index, 1);
+
+            // If primary was removed, make the first one primary
+            if (image.isPrimary && this.images.length > 0) {
+                this.images[0].isPrimary = true;
+            }
+
+            // Reorder
+            this.reorderImages();
+            this.emitChanges();
+        }
+    }
+
+    setPrimary(image: UploadedImage) {
+        this.images.forEach(img => img.isPrimary = false);
+        image.isPrimary = true;
+        this.emitChanges();
+    }
+
+    reorderImages() {
+        this.images.forEach((img, index) => img.displayOrder = index);
+    }
+
+    emitChanges() {
+        this.imagesChange.emit(this.images);
+    }
+}

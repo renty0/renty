@@ -10,7 +10,7 @@ namespace Application.Features.Wallets;
 // ── GET WALLET BALANCE ────────────────────────────────────────────────────────
 
 public record GetWalletBalanceQuery : IRequest<GetWalletBalanceResponse>;
-public record GetWalletBalanceResponse(bool Success, string? Error, decimal Balance);
+public record GetWalletBalanceResponse(bool Success, string? Error, decimal Balance, decimal PendingBalance);
 
 public class GetWalletBalanceQueryHandler : IRequestHandler<GetWalletBalanceQuery, GetWalletBalanceResponse>
 {
@@ -26,15 +26,15 @@ public class GetWalletBalanceQueryHandler : IRequestHandler<GetWalletBalanceQuer
     public async Task<GetWalletBalanceResponse> Handle(GetWalletBalanceQuery request, CancellationToken ct)
     {
         if (_currentUser.Id == null)
-            return new GetWalletBalanceResponse(false, "Unauthorized", 0);
+            return new GetWalletBalanceResponse(false, "Unauthorized", 0, 0);
 
         var user = await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
 
-        if (user == null) return new GetWalletBalanceResponse(false, "User not found", 0);
+        if (user == null) return new GetWalletBalanceResponse(false, "User not found", 0, 0);
 
-        return new GetWalletBalanceResponse(true, null, user.WalletBalance);
+        return new GetWalletBalanceResponse(true, null, user.WalletBalance, user.PendingBalance);
     }
 }
 
@@ -136,5 +136,59 @@ public class RequestWithdrawalCommandHandler : IRequestHandler<RequestWithdrawal
         await _context.SaveChangesAsync(ct);
 
         return new RequestWithdrawalResponse(true, null);
+    }
+}
+
+// ── TOP UP WALLET (SIMULATION) ────────────────────────────────────────────────
+
+public record TopUpWalletCommand(decimal Amount) : IRequest<TopUpWalletResponse>;
+public record TopUpWalletResponse(bool Success, string? Error);
+
+public class TopUpWalletCommandValidator : AbstractValidator<TopUpWalletCommand>
+{
+    public TopUpWalletCommandValidator()
+    {
+        RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Amount must be greater than zero.");
+    }
+}
+
+public class TopUpWalletCommandHandler : IRequestHandler<TopUpWalletCommand, TopUpWalletResponse>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUser _currentUser;
+
+    public TopUpWalletCommandHandler(IApplicationDbContext context, IUser currentUser)
+    {
+        _context = context;
+        _currentUser = currentUser;
+    }
+
+    public async Task<TopUpWalletResponse> Handle(TopUpWalletCommand request, CancellationToken ct)
+    {
+        if (_currentUser.Id == null)
+            return new TopUpWalletResponse(false, "Unauthorized");
+
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+
+        if (user == null) return new TopUpWalletResponse(false, "User not found");
+
+        // Add to balance
+        user.WalletBalance += request.Amount;
+
+        // Record the transaction
+        var transaction = new WalletTransaction
+        {
+            UserId = user.Id,
+            Amount = request.Amount,
+            Type = TransactionType.Adjustment,
+            Description = $"Wallet Top-Up (Simulation)",
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        _context.WalletTransactions.Add(transaction);
+        await _context.SaveChangesAsync(ct);
+
+        return new TopUpWalletResponse(true, null);
     }
 }

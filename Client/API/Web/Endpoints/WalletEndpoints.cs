@@ -14,7 +14,7 @@ public static class WalletEndpoints
         {
             var r = await sender.Send(new GetWalletBalanceQuery());
             if (!r.Success) return Api.Fail(r.Error ?? "Unauthorized", 401);
-            return Api.Ok(new { r.Balance });
+            return Api.Ok(new { r.Balance, r.PendingBalance });
         })
         .WithTags("Wallet").WithName("GetWalletBalance")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
@@ -25,7 +25,7 @@ public static class WalletEndpoints
         {
             var r = await sender.Send(new GetWalletTransactionsQuery());
             if (!r.Success) return Api.Fail(r.Error ?? "Unauthorized", 401);
-            return Api.Ok(r.Transactions);
+            return Api.Ok(new { transactions = r.Transactions });
         })
         .WithTags("Wallet").WithName("GetWalletTransactions")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
@@ -39,6 +39,17 @@ public static class WalletEndpoints
             return Api.Ok(new { message = "Withdrawal requested successfully." });
         })
         .WithTags("Wallet").WithName("RequestWithdrawal")
+        .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .RequireAuthorization();
+
+        // POST /wallet/topup (Simulation)
+        app.MapPost("/api/v1/wallet/topup", async (TopUpWalletCommand cmd, ISender sender) =>
+        {
+            var r = await sender.Send(cmd);
+            if (!r.Success) return Api.Fail(r.Error ?? "Bad request", 400);
+            return Api.Ok(new { message = "Wallet topped up successfully." });
+        })
+        .WithTags("Wallet").WithName("TopUpWallet")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .RequireAuthorization();
     }

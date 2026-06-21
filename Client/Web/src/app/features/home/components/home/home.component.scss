@@ -55,7 +55,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      text-align: left;
+      text-align: start;
       max-width: 100%;
       margin-bottom: 60px;
 
@@ -703,6 +703,11 @@
           &:hover {
             background: rgba($accent-color, 0.08);
             color: $accent-color;
+          }
+
+          [dir="rtl"] & mat-icon,
+          :host-context([dir="rtl"]) & mat-icon {
+            transform: scaleX(-1);
           }
         }
       }

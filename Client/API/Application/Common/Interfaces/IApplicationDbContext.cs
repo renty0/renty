@@ -59,9 +59,8 @@ public interface IApplicationDbContext
     // Admin — Fraud
     DbSet<FraudLog> FraudLogs { get; }
     DbSet<RentalImage> RentalImages { get; }
+    DbSet<RentalExtension> RentalExtensions { get; }
+    DbSet<RentalTransfer> RentalTransfers { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
-
-
-

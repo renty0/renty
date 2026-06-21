@@ -27,7 +27,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="badge">{{ 'home.features.badge' | translate }}</span>
-                <h2>{{ 'home.features.title' | translate }}</h2>
+                <h2 class="mb-2">{{ 'home.features.title' | translate }}</h2>
                 <p>{{ 'home.features.subtitle' | translate }}</p>
             </div>
             <div class="grid features-grid">
@@ -77,7 +77,8 @@
             <div class="categories-grid">
                 @for (cat of categories(); track cat.id; let i = $index) {
                 <div class="category-card reveal" [style.background-image]="'url(' + cat.image + ')'"
-                    [style.transition-delay]="(i * 0.1) + 's'">
+                    [style.transition-delay]="(i * 0.1) + 's'"
+                    [routerLink]="['/marketplace']" [queryParams]="{ category: cat.id }">
                     <div class="cat-overlay"></div>
                     <div class="cat-content">
                         <mat-icon>{{ cat.icon }}</mat-icon>
@@ -166,9 +167,9 @@
 
     <section class="destinations-section">
         <div class="container">
-            <div class="section-header reveal">
+            <div class="section-header reveal mb-5">
                 <span class="badge">{{ 'home.destinations.badge' | translate }}</span>
-                <h2>{{ 'home.destinations.title' | translate }}</h2>
+                <h2 class="mb-2">{{ 'home.destinations.title' | translate }}</h2>
                 <p>{{ 'home.destinations.subtitle' | translate }}</p>
             </div>
             <div class="destinations-grid">
@@ -177,7 +178,7 @@
                     <div class="dest-image" [style.background-image]="'url(' + dest.image + ')'"></div>
                     <div class="dest-overlay">
                         <div class="dest-info">
-                            <h3>{{ dest.nameKey | translate }}</h3>
+                            <h3 class="mb-4">{{ dest.nameKey | translate }}</h3>
                             <p>{{ dest.descKey | translate }}</p>
                         </div>
                     </div>
@@ -270,7 +271,7 @@
         <div class="container">
             <div class="section-header">
                 <span class="badge">{{ 'home.steps.badge' | translate }}</span>
-                <h2>{{ 'home.steps.title' | translate }}</h2>
+                <h2 class="mb-2">{{ 'home.steps.title' | translate }}</h2>
                 <p>{{ 'home.steps.subtitle' | translate }}</p>
             </div>
             <div class="process-steps">
@@ -345,7 +346,7 @@
         </div>
         <div class="footer-bottom container">
             <p>{{ 'home.footer.copyright' | translate }}</p>
-            <div class="footer-bottom-links">
+            <div class="footer-bottom-links flex gap-3">
                 <a routerLink="/terms" class="nav-link">
                     {{ 'home.footer.terms' | translate }}
                 </a>

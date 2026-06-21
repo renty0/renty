@@ -59,12 +59,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     calendarCells = computed<CalendarCell[]>(() => this.buildCalendarCells(this.calendarMonth(), this.selectedDate()));
 
     categories = signal([
-        { id: 1, nameKey: 'home.categories.watersports', icon: 'surfing', image: 'assets/images/category_watersports.png' },
+        { id: 5, nameKey: 'home.categories.watersports', icon: 'surfing', image: 'assets/images/category_watersports.png' },
         { id: 2, nameKey: 'home.categories.padel', icon: 'sports_tennis', image: 'assets/images/category_padel.png' },
-        { id: 3, nameKey: 'home.categories.fitness', icon: 'fitness_center', image: 'assets/images/category_fitness.png' },
-        { id: 4, nameKey: 'home.categories.football', icon: 'sports_soccer', image: 'assets/images/category_football.png' },
-        { id: 5, nameKey: 'home.categories.cycling', icon: 'pedal_bike', image: 'assets/images/category_cycling.png' },
-        { id: 6, nameKey: 'home.categories.camping', icon: 'terrain', image: 'assets/images/category_camping.png' }
+        { id: 6, nameKey: 'home.categories.fitness', icon: 'fitness_center', image: 'assets/images/category_fitness.png' },
+        { id: 8, nameKey: 'home.categories.football', icon: 'sports_soccer', image: 'assets/images/category_football.png' },
+        { id: 7, nameKey: 'home.categories.cycling', icon: 'pedal_bike', image: 'assets/images/category_cycling.png' },
+        { id: 4, nameKey: 'home.categories.camping', icon: 'terrain', image: 'assets/images/category_camping.png' }
     ]);
 
     stats = signal([

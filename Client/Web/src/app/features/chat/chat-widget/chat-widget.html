@@ -14,13 +14,19 @@
       </div>
 
       <div class="chat-body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-        @for (msg of chat.messages; track msg.id) {
-          <div class="message-row" [class.me]="msg.senderId === authService.getCurrentUserId()">
-            <div class="message-bubble">
-              {{ msg.message }}
-              <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
-            </div>
+        @if (chat.isLoading) {
+          <div class="loading-state" style="display:flex; justify-content:center; align-items:center; height:100%;">
+            <mat-spinner diameter="30"></mat-spinner>
           </div>
+        } @else {
+          @for (msg of chat.messages; track msg.id) {
+            <div class="message-row" [class.me]="msg.senderId === authService.getCurrentUserId()">
+              <div class="message-bubble">
+                {{ msg.message }}
+                <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+              </div>
+            </div>
+          }
         }
       </div>
 

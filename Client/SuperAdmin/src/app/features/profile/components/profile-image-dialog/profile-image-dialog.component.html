@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{ 'profile.updatePhoto' | translate }}</h2>
+<mat-dialog-content>
+    <div class="flex flex-column gap-4" style="margin-top: 1rem;">
+        <p class="info-text">{{ 'uploader.dragDrop' | translate }}</p>
+        <div class="w-full">
+            <app-image-uploader [formGroup]="form" controlName="imageId" [imgUrl]="data.currentImageUrl"
+                [allowedExtensions]="['.jpg', '.jpeg', '.png', '.webp']"
+                [label]="'profile.uploadNewPhoto' | translate" />
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="close()">{{ 'buttons.cancel' | translate }}</button>
+    <button mat-flat-button color="primary" (click)="save()">{{ 'buttons.save' | translate }}</button>
+</mat-dialog-actions>

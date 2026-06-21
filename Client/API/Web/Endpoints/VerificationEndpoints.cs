@@ -110,5 +110,15 @@ public static class VerificationEndpoints
         .WithTags("Identity").WithName("ReviewIdVerification")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
+
+        // GET /admin/id-verifications
+        app.MapGet("/api/v1/admin/id-verifications", async ([AsParameters] GetIdVerificationRequestsQuery query, ISender sender) =>
+        {
+            var r = await sender.Send(query);
+            return Api.Ok(r);
+        })
+        .WithTags("Identity").WithName("GetIdVerificationRequests")
+        .Produces<ApiResponse<GetIdVerificationRequestsResponse>>(StatusCodes.Status200OK)
+        .RequireAuthorization(Policies.AdminAccess);
     }
 }

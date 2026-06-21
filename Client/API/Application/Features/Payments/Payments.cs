@@ -14,7 +14,7 @@ public record CreatePaymentResponse(bool Success, string? Error, Guid? PaymentId
 
 public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
 {
-    private static readonly string[] ValidMethods = ["vodafone_cash", "fawry", "paymob", "credit_card", "bank_transfer"];
+    private static readonly string[] ValidMethods = ["vodafone_cash", "fawry", "paymob", "credit_card", "bank_transfer", "wallet"];
 
     public CreatePaymentCommandValidator()
     {
@@ -28,11 +28,13 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public CreatePaymentCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreatePaymentCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<CreatePaymentResponse> Handle(CreatePaymentCommand request, CancellationToken ct)
@@ -54,7 +56,8 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             ["fawry"] = PaymentMethod.Fawry,
             ["paymob"] = PaymentMethod.Paymob,
             ["credit_card"] = PaymentMethod.CreditCard,
-            ["bank_transfer"] = PaymentMethod.BankTransfer
+            ["bank_transfer"] = PaymentMethod.BankTransfer,
+            ["wallet"] = PaymentMethod.Wallet
         };
 
         var method = methodMap[request.Method];
@@ -69,15 +72,59 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             CreatedAt = DateTime.UtcNow
         };
         _context.Payments.Add(payment);
+
+        if (method == PaymentMethod.Wallet)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+            if (user == null) return new CreatePaymentResponse(false, "User not found.", null, null, null);
+            
+            if (user.WalletBalance < order.TotalAmount)
+            {
+                return new CreatePaymentResponse(false, "Insufficient wallet balance.", null, null, null);
+            }
+
+            // Escrow Hold
+            user.WalletBalance -= (order.TotalAmount ?? 0);
+            user.PendingBalance += (order.TotalAmount ?? 0);
+
+            _context.WalletTransactions.Add(new WalletTransaction
+            {
+                UserId = user.Id,
+                Amount = -(order.TotalAmount ?? 0), // We display holds as negative from available
+                Type = TransactionType.EscrowHold,
+                Description = $"Escrow hold for order {order.Id}",
+                IsPending = true,
+                CreatedAt = DateTimeOffset.UtcNow
+            });
+        }
+
         order.Status = OrderStatus.Paid;
         order.UpdatedAt = DateTime.UtcNow;
-        _context.Notifications.Add(new Notification
+
+        var rental = await _context.Rentals.Include(r => r.Item).FirstOrDefaultAsync(r => r.OrderId == request.OrderId, ct);
+        if (rental != null)
         {
-            UserId = order.UserId,
-            Title = "Payment Confirmed",
-            Message = $"Your payment of {payment.Amount:C} via {method} has been confirmed.",
-            CreatedAt = DateTime.UtcNow
-        });
+            var u1 = Math.Min(rental.UserId, rental.Item.OwnerId);
+            var u2 = Math.Max(rental.UserId, rental.Item.OwnerId);
+            var existingChat = await _context.Chats.FirstOrDefaultAsync(c => c.User1Id == u1 && c.User2Id == u2 && c.ItemId == rental.ItemId, ct);
+            if (existingChat == null && u1 != u2)
+            {
+                var chat = new Chat { User1Id = u1, User2Id = u2, ItemId = rental.ItemId, CreatedAt = DateTime.UtcNow };
+                _context.Chats.Add(chat);
+            }
+        }
+
+        await _notifier.SendToUserAsync(
+            order.UserId,
+            "Payment Confirmed",
+            $"Your payment of {payment.Amount:C} via {method} has been confirmed.",
+            "payment",
+            $"/orders/{request.OrderId}",
+            ct,
+            "تأكيد الدفع",
+            $"تم تأكيد دفعك بقيمة {payment.Amount:C} عبر {method}."
+        );
+        
         _context.DeliveryTrackings.Add(new DeliveryTracking
         {
             OrderId = request.OrderId,

@@ -53,7 +53,7 @@ namespace Infrastructure.Services
 
             var startInfo = new ProcessStartInfo
             {
-                FileName = "python",
+                FileName = "python3",
                 Arguments = $"\"{scriptPath}\" --live",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

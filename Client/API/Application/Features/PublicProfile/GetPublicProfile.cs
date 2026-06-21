@@ -27,6 +27,7 @@ public record PublicProfileDto(
     double Rating,
     int TotalRatings,
     DateTimeOffset JoinedAt,
+    bool IdVerified,
     List<ItemListDto> Items,
     List<ReviewDto> Reviews
 );
@@ -143,6 +144,7 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             user.Rating,
             user.TotalRatings,
             user.CreatedAt,
+            user.IdVerified,
             items,
             reviews
         );

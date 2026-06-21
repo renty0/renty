@@ -16,32 +16,48 @@
     <mat-card class="glass-card">
       <form (ngSubmit)="submit()">
         <div class="form-grid">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ 'support.type' | translate }}</mat-label>
-            <mat-select [ngModel]="ticketType()" (ngModelChange)="ticketType.set($event)" name="type" required panelClass="support-select-panel">
-              @for (t of types; track t.value) {
-                <mat-option [value]="t.value">{{ t.label | translate }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+          <div class="field-wrapper">
+            <h4 class="field-title">{{ 'support.type' | translate }}</h4>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-select [ngModel]="ticketType()" (ngModelChange)="ticketType.set($event)" name="type" required panelClass="support-select-panel">
+                @for (t of types; track t.value) {
+                  <mat-option [value]="t.value">{{ t.label | translate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="field-wrapper">
+            <h4 class="field-title">{{ 'support.subject' | translate }}</h4>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput
+                     [ngModel]="subject()"
+                     (ngModelChange)="subject.set($event)"
+                     name="subject"
+                     placeholder="{{ 'support.subjectPlaceholder' | translate }}"
+                     required />
+            </mat-form-field>
+          </div>
  
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ 'support.message' | translate }}</mat-label>
-            <textarea matInput
-                      rows="8"
-                      [ngModel]="message()"
-                      (ngModelChange)="message.set($event)"
-                      name="message"
-                      placeholder="{{ 'support.message_placeholder' | translate }}"
-                      required></textarea>
-          </mat-form-field>
+          <div class="field-wrapper">
+            <h4 class="field-title">{{ 'support.message' | translate }}</h4>
+            <mat-form-field appearance="outline" class="full-width">
+              <textarea matInput
+                        rows="8"
+                        [ngModel]="message()"
+                        (ngModelChange)="message.set($event)"
+                        name="message"
+                        placeholder="{{ 'support.message_placeholder' | translate }}"
+                        required></textarea>
+            </mat-form-field>
+          </div>
         </div>
  
         <div class="form-actions">
           <app-loading-button
             [matIcon]="'send'"
             [loading]="isSubmitting()"
-            [disabled]="!message().trim()"
+            [disabled]="!message().trim() || !subject().trim()"
             [color]="'primary'"
             [variant]="'filled'"
             [size]="'lg'"

@@ -106,7 +106,8 @@ public static class AuthEndpoints
                 r.User == null ? null : new AuthLoginUser(
                     r.User.Id, r.User.FirstName, r.User.LastName,
                     r.User.Email, r.User.Roles?.FirstOrDefault(),
-                    r.User.ProfilePictureUrl, r.User.Permissions));
+                    r.User.ProfilePictureUrl, r.User.Permissions,
+                    r.User.IdVerificationStatus, r.User.IdVerified, r.User.IsVerified));
 
             return Api.Ok(data);
         })
@@ -137,7 +138,7 @@ public static class AuthEndpoints
             return Api.Ok(new AuthMeData(
                 u.Id, u.FirstName, u.LastName, u.Email, u.PhoneNumber, u.City,
                 u.Roles?.FirstOrDefault(), u.ProfilePictureUrl, u.IsVerified,
-                u.CreatedAt.DateTime));
+                u.CreatedAt.DateTime, u.Permissions, u.IdVerificationStatus, u.IdVerified));
         })
         .WithName("AuthMe")
         .Produces<ApiResponse<AuthMeData>>(StatusCodes.Status200OK)

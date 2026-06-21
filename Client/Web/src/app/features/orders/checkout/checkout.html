@@ -99,11 +99,11 @@
             <div class="cost-breakdown">
               <div class="cost-row">
                 <span class="label">{{ 'checkout.subtotal' | translate }}</span>
-                <span class="value">{{ subtotal() | currency:'EGP ' }}</span>
+                <span class="value">{{ subtotal() | currency:'EGP':'EGP ' }}</span>
               </div>
               <div class="cost-row">
                 <span class="label">{{ 'checkout.delivery' | translate }}</span>
-                <span class="value">{{ deliveryFee | currency:'EGP ' }}</span>
+                <span class="value">{{ deliveryFee | currency:'EGP':'EGP ' }}</span>
               </div>
 
               <mat-divider></mat-divider>

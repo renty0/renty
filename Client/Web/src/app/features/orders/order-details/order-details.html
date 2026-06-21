@@ -58,7 +58,7 @@
                 <span class="item-name">{{ getLocalizedName(item) }}</span>
                 <span class="item-qty">x{{ item.quantity }}</span>
               </div>
-              <span class="item-price">{{ item.priceAtTime | currency:'EGP ' }}</span>
+              <span class="item-price">{{ item.priceAtTime | currency:'EGP':'EGP ' }}</span>
             </div>
             <mat-divider></mat-divider>
             }
@@ -67,7 +67,7 @@
           <div class="order-total-section">
             <div class="total-row large">
               <span>{{ 'checkout.total' | translate }}</span>
-              <span>{{ order()?.totalAmount | currency }}</span>
+              <span>{{ order()?.totalAmount | currency:'EGP':'EGP '}}</span>
             </div>
           </div>
         </mat-card-content>

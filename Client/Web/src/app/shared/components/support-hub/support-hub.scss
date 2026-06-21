@@ -22,32 +22,32 @@
   height: 64px;
   border-radius: 50%;
   border: none;
-  background: $primary-color;
-  color: $white !important;
-  box-shadow: $shadow-xl;
+  background: transparent;
+  color: $primary-color !important;
+  box-shadow: none;
   cursor: pointer;
   @include flex-center;
   transition: all $transition-base;
   position: relative;
 
   mat-icon {
-    font-size: 32px;
-    width: 32px;
-    height: 32px;
-    color: $white !important;
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: $primary-color !important;
     transition: transform 0.3s ease;
+    transform: translateX(4px);
   }
 
   &:hover {
     transform: scale(1.05) translateY(-2px);
-    background: color.adjust($primary-color, $lightness: -5%);
-    box-shadow: 0 12px 24px rgba($primary-color, 0.3);
   }
 
   &.active {
-    background: $text-dark;
+    background: transparent;
     mat-icon {
-      transform: rotate(90deg);
+      transform: rotate(90deg) translateX(4px);
+      color: $text-dark !important;
     }
   }
 

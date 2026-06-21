@@ -131,7 +131,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
             user.Country,
             user.Bio,
             user.PhoneNumber,
-            user.CreatedAt
+            user.CreatedAt,
+            null,
+            user.IdVerified
         );
 
         return new LoginResponse(true, "Login successful.", tokenData, userDto);

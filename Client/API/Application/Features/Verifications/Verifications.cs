@@ -28,7 +28,10 @@ public record CreateVerificationCommand(
     Guid? RentalId,
     string CheckType,
     string Status,
-    string? Notes
+    string? Notes = null,
+    decimal? DeductionAmount = null,
+    decimal? NewDepositAmount = null,
+    string? VerificationCode = null
 ) : IRequest<CreateVerificationResponse>;
 
 public record CreateVerificationResponse(bool Success, string? Error, Guid? VerificationId, string? Status);
@@ -75,23 +78,14 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
         Enum.TryParse<VerificationCheck>(request.CheckType.Replace("_", ""), true, out var checkType);
         Enum.TryParse<VerificationStatus>(request.Status, true, out var status);
 
-        var destination = "";
         var cleanNotes = request.Notes;
-        if (!string.IsNullOrEmpty(cleanNotes) && cleanNotes.StartsWith("[DESTINATION:"))
-        {
-            var endIdx = cleanNotes.IndexOf(']');
-            if (endIdx > 13)
-            {
-                destination = cleanNotes.Substring(13, endIdx - 13).ToLower();
-                cleanNotes = cleanNotes.Substring(endIdx + 1).Trim();
-            }
-        }
 
         var verification = await _context.ItemVerifications
             .FirstOrDefaultAsync(v => v.ItemId == request.ItemId && v.ExpertId == _currentUser.Id.Value && v.Status == VerificationStatus.Pending, ct);
 
         if (verification != null)
         {
+
             verification.Status = status;
             verification.Notes = cleanNotes;
             verification.CheckType = checkType;
@@ -108,6 +102,7 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                 CheckType = checkType,
                 Status = status,
                 Notes = cleanNotes,
+                VerificationCode = new Random().Next(100000, 999999).ToString(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -126,74 +121,120 @@ public class CreateVerificationCommandHandler : IRequestHandler<CreateVerificati
                 {
                     if (status == VerificationStatus.Approved)
                     {
-                        rental.IsHandoffVerified = true;
-                        rental.Status = Domain.Enums.RentalStatus.Active;
-                        item.Status = Domain.Enums.NewItemStatus.Rented;
+                        // The item is now safely with the Expert and approved.
+                        // The renter will now choose how to receive it.
+                        rental.CurrentPossession = ItemPossession.Expert;
+
+                        // Auto-assign AfterReturn verification to the same expert
+                        var existingAfterReturn = await _context.ItemVerifications
+                            .AnyAsync(v => v.RentalId == rental.Id && v.CheckType == VerificationCheck.AfterReturn, ct);
                         
-                        // Set possession based on destination chosen by expert
-                        if (destination == "renter")
+                        if (!existingAfterReturn)
                         {
-                            rental.CurrentPossession = ItemPossession.Renter;
+                            var afterReturnVerification = new ItemVerification
+                            {
+                                ItemId = request.ItemId,
+                                ExpertId = _currentUser.Id.Value,
+                                RentalId = rental.Id,
+                                CheckType = VerificationCheck.AfterReturn,
+                                Status = VerificationStatus.Pending,
+                                VerificationCode = new Random().Next(100000, 999999).ToString(),
+                                CreatedAt = DateTime.UtcNow,
+                                UpdatedAt = DateTime.UtcNow
+                            };
+                            _context.ItemVerifications.Add(afterReturnVerification);
                         }
-                        else if (destination == "owner")
+
+                        if (request.NewDepositAmount.HasValue)
                         {
-                            rental.CurrentPossession = ItemPossession.Owner;
-                        }
-                        else
-                        {
-                            rental.CurrentPossession = ItemPossession.Renter;
+                            rental.DepositAmount = request.NewDepositAmount.Value;
                         }
                     }
                     else if (status == VerificationStatus.Rejected)
                     {
-                        rental.Status = Domain.Enums.RentalStatus.Cancelled;
-                        rental.CurrentPossession = ItemPossession.Owner;
+                        rental.Status = Domain.Enums.RentalStatus.Rejected;
+                        rental.CurrentPossession = rental.DeliveryMethod == Domain.Enums.DeliveryMethod.DeliveryService 
+                            ? ItemPossession.InTransit 
+                            : ItemPossession.Owner;
+                    }
+
+                    // Pay the expert if they haven't been paid for this rental yet
+                    if ((status == VerificationStatus.Approved || status == VerificationStatus.Rejected) && 
+                        !rental.IsExpertPaid && rental.ExpertReviewFee > 0)
+                    {
+                        var expert = await _context.Users.FirstOrDefaultAsync(u => u.Id == verification.ExpertId, ct);
+                        if (expert != null)
+                        {
+                            expert.WalletBalance += rental.ExpertReviewFee;
+                            _context.WalletTransactions.Add(new WalletTransaction
+                            {
+                                UserId = expert.Id,
+                                Amount = rental.ExpertReviewFee,
+                                Type = TransactionType.RentalEarnings,
+                                Description = $"Expert Review Fee earned for rental {rental.Id}",
+                                RelatedRentalId = rental.Id,
+                                IsPending = false,
+                                CreatedAt = DateTimeOffset.UtcNow
+                            });
+
+                            // Deduct the held escrows from Renter and Owner
+                            decimal renterShare = rental.RenterWantsExpertReview ? (rental.OwnerWantsExpertReview ? 50m : 100m) : 0m;
+                            decimal ownerShare = rental.OwnerWantsExpertReview ? (rental.RenterWantsExpertReview ? 50m : 100m) : 0m;
+
+                            if (renterShare > 0)
+                            {
+                                var renter = await _context.Users.FirstOrDefaultAsync(u => u.Id == rental.UserId, ct);
+                                if (renter != null) renter.PendingBalance -= renterShare;
+                            }
+                            if (ownerShare > 0)
+                            {
+                                var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == item.OwnerId, ct);
+                                if (owner != null) owner.PendingBalance -= ownerShare;
+                            }
+
+                            rental.IsExpertPaid = true;
+                        }
                     }
                 }
                 else if (checkType == VerificationCheck.AfterReturn)
                 {
                     if (status == VerificationStatus.Approved)
                     {
-                        rental.Status = Domain.Enums.RentalStatus.Completed;
+                        rental.Status = Domain.Enums.RentalStatus.Returned;
                         rental.ActualReturnDate = DateTime.UtcNow;
                         rental.DepositStatus = Domain.Enums.DepositStatus.Returned;
                         
-                        // Set possession based on destination chosen by expert
-                        if (destination == "renter")
-                        {
-                            rental.CurrentPossession = ItemPossession.Renter;
-                        }
-                        else
-                        {
-                            rental.CurrentPossession = ItemPossession.Owner;
-                        }
+                        // Item stays with the expert until the owner selects a delivery method
+                        rental.CurrentPossession = ItemPossession.Expert;
                         item.Status = Domain.Enums.NewItemStatus.Available;
                     }
                     else if (status == VerificationStatus.Rejected)
                     {
                         rental.DepositStatus = Domain.Enums.DepositStatus.Forfeited;
+                        if (request.DeductionAmount.HasValue)
+                        {
+                            rental.RejectionFeeAmount = request.DeductionAmount.Value;
+                        }
                         
-                        // Set possession based on destination chosen by expert
-                        if (destination == "renter")
-                        {
-                            rental.CurrentPossession = ItemPossession.Renter;
-                        }
-                        else
-                        {
-                            rental.CurrentPossession = ItemPossession.Owner;
-                        }
+                        rental.CurrentPossession = rental.DeliveryMethod == Domain.Enums.DeliveryMethod.DeliveryService 
+                            ? ItemPossession.InTransit 
+                            : ItemPossession.Owner;
                     }
                 }
 
                 // Notify users
                 var notifyIds = new List<long> { rental.UserId, item.OwnerId }.Distinct().ToList();
+                var statusAr = status == VerificationStatus.Approved ? "مقبول" : "مرفوض";
                 await _notifier.SendToUsersAsync(
                     notifyIds,
                     "Expert Evaluation Complete",
                     $"The expert has completed the evaluation for '{item.TitleEn}'. Status: {status}.",
                     "rental",
                     $"/rentals/{rental.Id}",
-                    ct);
+                    ct,
+                    titleAr: "اكتمل تقييم الخبير",
+                    messageAr: $"أكمل الخبير تقييم '{(!string.IsNullOrWhiteSpace(item.TitleAr) ? item.TitleAr : item.TitleEn)}'. الحالة: {statusAr}."
+                );
             }
         }
 
@@ -242,7 +283,7 @@ public class GetVerificationsQueryHandler : IRequestHandler<GetVerificationsQuer
         var storagePath = item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
                 ?? item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
         var imageUrl = !string.IsNullOrEmpty(storagePath)
-            ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+            ? (storagePath.StartsWith("http") ? storagePath : $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}")
             : null;
 
         var ownerDto = new PersonInfoDto(item.Owner.FullName, item.Owner.PhoneNumber, item.Owner.ProfilePictureUrl);
@@ -251,7 +292,25 @@ public class GetVerificationsQueryHandler : IRequestHandler<GetVerificationsQuer
         if (rental != null)
         {
             var renterDto = new PersonInfoDto(rental.User.FullName, rental.User.PhoneNumber, rental.User.ProfilePictureUrl);
-            rentalDto = new RentalInfoDto(rental.Id, rental.StartDate, rental.EndDate, rental.RentalPrice, rental.DepositAmount, rental.Status.ToString(), renterDto);
+            bool hasReturnTransfers = await _context.RentalTransfers.AnyAsync(t => t.RentalId == rental.Id && t.Phase == TransferPhase.Return, ct);
+            
+            string? pendingTransferType = null;
+            var activeTransfer = await _context.RentalTransfers
+                .Where(t => t.RentalId == rental.Id && t.Sequence == rental.CurrentTransferSequence && (t.Status == TransferStatus.Pending || t.Status == TransferStatus.WaitingForCode))
+                .FirstOrDefaultAsync(ct);
+            if (activeTransfer != null) 
+            {
+                if (activeTransfer.FromActorType == TransferActorType.Owner && activeTransfer.ToActorType == TransferActorType.Expert)
+                    pendingTransferType = "ReceiveFromOwner";
+                else if (activeTransfer.FromActorType == TransferActorType.Expert && activeTransfer.ToActorType == TransferActorType.Renter)
+                    pendingTransferType = "DeliveryToRenter";
+                else if (activeTransfer.FromActorType == TransferActorType.Renter && activeTransfer.ToActorType == TransferActorType.Expert)
+                    pendingTransferType = "ReceiveFromRenter";
+                else if (activeTransfer.FromActorType == TransferActorType.Expert && activeTransfer.ToActorType == TransferActorType.Owner)
+                    pendingTransferType = "DeliveryToOwner";
+            }
+
+            rentalDto = new RentalInfoDto(rental.Id, rental.StartDate, rental.EndDate, rental.RentalPrice, rental.DepositAmount, rental.Status.ToString(), renterDto, rental.CurrentPossession.ToString(), hasReturnTransfers, pendingTransferType);
         }
 
         var itemDetails = new ItemVerificationDetailsDto(
@@ -265,7 +324,7 @@ public class GetVerificationsQueryHandler : IRequestHandler<GetVerificationsQuer
             .Select(v => new VerificationDto(
                 v.Id, v.CheckType.ToString(), v.Status.ToString(), v.Notes,
                 v.Expert != null ? v.Expert.FirstName : null,
-                v.CreatedAt
+                v.CreatedAt, v.VerificationCode
             ))
             .ToListAsync(ct);
 
@@ -300,6 +359,7 @@ public class GetExpertAssignedQueryHandler : IRequestHandler<GetExpertAssignedQu
             .Include(v => v.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .Include(v => v.Rental)
             .Where(v => v.ExpertId == _currentUser.Id!.Value && v.Status == VerificationStatus.Pending)
+            .Where(v => v.RentalId == null || (v.Rental!.Status != Domain.Enums.RentalStatus.Cancelled && v.Rental.Status != Domain.Enums.RentalStatus.Rejected))
             .OrderByDescending(v => v.CreatedAt)
             .ToListAsync(ct);
 
@@ -308,7 +368,7 @@ public class GetExpertAssignedQueryHandler : IRequestHandler<GetExpertAssignedQu
             var storagePath = v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
                 ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
             var imageUrl = !string.IsNullOrEmpty(storagePath)
-                ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+                ? (storagePath.StartsWith("http") ? storagePath : $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}")
                 : null;
             return new AssignedVerificationDto(
                 v.Id,
@@ -351,6 +411,7 @@ public class GetUnassignedVerificationsQueryHandler : IRequestHandler<GetUnassig
             .Include(v => v.Item).ThenInclude(i => i.Images).ThenInclude(ii => ii.Image)
             .Include(v => v.Rental)
             .Where(v => v.ExpertId == null && v.Status == VerificationStatus.Pending)
+            .Where(v => v.RentalId == null || (v.Rental!.Status != Domain.Enums.RentalStatus.Cancelled && v.Rental.Status != Domain.Enums.RentalStatus.Rejected))
             .OrderByDescending(v => v.CreatedAt)
             .ToListAsync(ct);
 
@@ -359,7 +420,7 @@ public class GetUnassignedVerificationsQueryHandler : IRequestHandler<GetUnassig
             var storagePath = v.Item.Images.Where(i => i.IsPrimary).Select(i => i.Image.StoragePath).FirstOrDefault()
                 ?? v.Item.Images.Select(i => i.Image.StoragePath).FirstOrDefault();
             var imageUrl = !string.IsNullOrEmpty(storagePath)
-                ? $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}"
+                ? (storagePath.StartsWith("http") ? storagePath : $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}")
                 : null;
             return new AssignedVerificationDto(
                 v.Id,
@@ -411,6 +472,28 @@ public class ClaimVerificationCommandHandler : IRequestHandler<ClaimVerification
 
         verification.ExpertId = _currentUser.Id.Value;
         verification.UpdatedAt = DateTime.UtcNow;
+
+        if (verification.RentalId.HasValue)
+        {
+            var rental = await _context.Rentals
+                .Include(r => r.Transfers)
+                .FirstOrDefaultAsync(r => r.Id == verification.RentalId.Value, ct);
+
+            if (rental != null)
+            {
+                rental.AssignedExpertId = _currentUser.Id.Value;
+                
+                // Update any existing transfers that should involve this expert
+                foreach (var transfer in rental.Transfers)
+                {
+                    if (transfer.FromActorType == Domain.Enums.TransferActorType.Expert)
+                        transfer.FromActorId = _currentUser.Id.Value;
+                    
+                    if (transfer.ToActorType == Domain.Enums.TransferActorType.Expert)
+                        transfer.ToActorId = _currentUser.Id.Value;
+                }
+            }
+        }
 
         await _context.SaveChangesAsync(ct);
         return new RentalActionResponse(true, "Verification claimed successfully.", null);

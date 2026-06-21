@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild, ElementRef, AfterViewChecked, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, ViewChild, ElementRef, AfterViewChecked, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -6,13 +6,17 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ChatClient, MediaClient, PostChatMessageCommand, FileParameter } from '../../../core/api/api-client';
+import { ChatClient, MediaClient, PostChatMessageCommand, FileParameter, NotificationsClient } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
 import { ChatSignalrService } from '../../../core/services/chat-signalr.service';
-import { catchError, finalize, of, tap, firstValueFrom } from 'rxjs';
+import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
+import { catchError, finalize, of, tap, firstValueFrom, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from '../../../../environments/environment';
 
 export interface QueuedImage {
   file: File;
@@ -30,12 +34,13 @@ export interface QueuedImage {
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './chat-room.html',
   styleUrl: './chat-room.scss'
 })
-export class ChatRoomComponent implements OnInit, AfterViewChecked {
+export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   private route = inject(ActivatedRoute);
@@ -43,8 +48,12 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private mediaClient = inject(MediaClient);
   private auth = inject(AuthService);
   private chatSignalr = inject(ChatSignalrService);
+  private notificationsClient = inject(NotificationsClient);
+  private notificationSignalr = inject(NotificationSignalrService);
   private router = inject(Router);
   private translate = inject(TranslateService);
+  private sanitizer = inject(DomSanitizer);
+  private snackBar = inject(MatSnackBar);
 
   chatId = signal('');
   messages = signal<any[]>([]);
@@ -57,10 +66,23 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   selectedImages = signal<QueuedImage[]>([]);
   previewImage = signal<string | null>(null);
 
+  private messageSubscription?: Subscription;
+
   constructor() {
-    effect(() => {
-      const msg = this.chatSignalr.newMessage();
-      if (msg && msg.chatId === this.chatId()) {
+    this.messageSubscription = this.chatSignalr.newMessage$.subscribe(rawMsg => {
+      if (rawMsg && rawMsg.chatId === this.chatId()) {
+        const msg = { ...rawMsg };
+        if (msg.mediaUrl) {
+          if (!msg.mediaUrl.startsWith('http')) {
+            msg.mediaUrl = `${environment.apiUrl}/${msg.mediaUrl.replace(/^\//, '')}`;
+          } else if (msg.mediaUrl.includes(`${environment.apiUrl}/${environment.apiUrl}`)) {
+            msg.mediaUrl = msg.mediaUrl.replace(`${environment.apiUrl}/${environment.apiUrl}`, environment.apiUrl);
+          } else if (msg.mediaUrl.includes(`${environment.apiUrl}/http`)) {
+            // Fix edge cases where it prepends to an already absolute URL
+            msg.mediaUrl = msg.mediaUrl.replace(`${environment.apiUrl}/http`, 'http');
+          }
+        }
+
         this.messages.update(msgs => {
           // If we already have the real message, ignore.
           if (msgs.some(m => m.id === msg.id)) return msgs;
@@ -68,11 +90,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
           // Try to "upgrade" an optimistic message instead of appending (prevents duplicates).
           const optimisticIdx = msgs.findIndex(m =>
             m?.isOptimistic === true &&
-            m?.senderId === msg.senderId &&
-            m?.messageType === msg.messageType &&
-            (m?.message ?? '') === (msg.message ?? '') &&
-            // For media messages the optimistic mediaUrl is usually a blob: preview, so don't require equality.
-            (msg.messageType === 0 || m?.mediaUrl === msg.mediaUrl || (typeof m?.mediaUrl === 'string' && m.mediaUrl.startsWith('blob:')))
+            m?.messageType === msg.messageType
           );
 
           if (optimisticIdx >= 0) {
@@ -105,7 +123,18 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.scrollToBottom();
   }
 
+  ngOnDestroy() {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    if (this.recordingInterval) {
+      clearInterval(this.recordingInterval);
+    }
+  }
+
   loadMessages() {
+    this.messages.set([]);
+    this.chatMetadata.set(null);
     this.isLoading.set(true);
     this.chatClient.getChatMessages(this.chatId() as any)
       .pipe(
@@ -114,6 +143,13 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
             this.messages.set(res.data.messages || []);
             this.chatMetadata.set(res.data.chatMetadata);
           }
+          // Sync notification counter after chat messages are loaded and marked as read
+          this.notificationsClient.getNotifications().subscribe((notifRes: any) => {
+            if (notifRes?.data?.notifications) {
+              const count = notifRes.data.notifications.filter((n: any) => !n.isRead).length;
+              this.notificationSignalr.unreadCount.set(count);
+            }
+          });
         }),
         catchError(err => {
             console.error('Failed to load messages', err);
@@ -132,20 +168,50 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   private audioChunks: any[] = [];
   private recordingInterval: any;
 
-  onImagesSelected(event: any) {
+  onFilesSelected(event: any) {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const newImages: QueuedImage[] = [];
+      const newFiles: QueuedImage[] = [];
+      let hasUnsupported = false;
+      let hasTooLarge = false;
+      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (file.type.startsWith('image/')) {
-          newImages.push({
+        
+        if (file.size > 10 * 1024 * 1024) {
+          hasTooLarge = true;
+          continue;
+        }
+
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/') || file.name.toLowerCase().endsWith('.webm');
+        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        
+        if (isImage || isVideo || isPdf) {
+          newFiles.push({
             file,
             previewUrl: URL.createObjectURL(file)
           });
+        } else {
+          hasUnsupported = true;
         }
       }
-      this.selectedImages.update(imgs => [...imgs, ...newImages]);
+      
+      if (hasTooLarge) {
+        this.snackBar.open(this.translate.instant('chat.fileTooLarge'), this.translate.instant('common.close'), {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+      } else if (hasUnsupported) {
+        this.snackBar.open(this.translate.instant('chat.unsupportedFileType'), this.translate.instant('common.close'), {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+      }
+      
+      this.selectedImages.update(imgs => [...imgs, ...newFiles]);
       // Reset input
       event.target.value = '';
     }
@@ -160,6 +226,14 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  isPdf(file: File): boolean {
+    return file.type === 'application/pdf';
+  }
+
+  isVideo(file: File): boolean {
+    return file.type.startsWith('video/');
+  }
+
   openPreview(url: string) {
     this.previewImage.set(url);
   }
@@ -172,7 +246,9 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     if (this.isRecording()) return;
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      this.mediaRecorder = new MediaRecorder(stream);
+      // Use higher bitrate for better quality
+      const options = { audioBitsPerSecond: 128000 };
+      this.mediaRecorder = new MediaRecorder(stream, options);
       this.audioChunks = [];
       this.recordingTime.set(0);
 
@@ -182,8 +258,13 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
       this.mediaRecorder.onstop = () => {
         clearInterval(this.recordingInterval);
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-        const file = new File([audioBlob], 'voice-message.wav', { type: 'audio/wav' });
+        
+        // Use the actual mime type the browser recorded in
+        const actualMimeType = this.mediaRecorder.mimeType || 'audio/webm';
+        const extension = actualMimeType.includes('mp4') ? 'mp4' : actualMimeType.includes('ogg') ? 'ogg' : 'webm';
+        
+        const audioBlob = new Blob(this.audioChunks, { type: actualMimeType });
+        const file = new File([audioBlob], `voice-message.${extension}`, { type: actualMimeType });
         this.uploadAudioAndSend(file);
         stream.getTracks().forEach(track => track.stop());
       };
@@ -219,11 +300,12 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     // Add optimistic message
     const optimisticId = `temp_${Date.now()}`;
     const localUrl = URL.createObjectURL(file);
+    const safeUrl = this.sanitizer.bypassSecurityTrustUrl(localUrl);
 
     this.messages.update(msgs => [...msgs, {
       id: optimisticId,
       message: null,
-      mediaUrl: localUrl,
+      mediaUrl: safeUrl,
       senderId: this.currentUserId(),
       createdAt: new Date().toISOString(),
       messageType: 3, // Audio
@@ -259,13 +341,29 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
         tap((res: any) => {
           const data = res?.data;
           if (data && data.success) {
-            // Replace optimistic message
             if (optimisticId) {
-              this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
-                ...m,
-                id: data.messageId,
-                isOptimistic: false
-              } : m));
+              let fullUrl = url;
+              if (!fullUrl.startsWith('http')) {
+                 fullUrl = `${environment.apiUrl}/${fullUrl.replace(/^\//, '')}`;
+              } else if (fullUrl.includes(`${environment.apiUrl}/${environment.apiUrl}`)) {
+                 fullUrl = fullUrl.replace(`${environment.apiUrl}/${environment.apiUrl}`, environment.apiUrl);
+              } else if (fullUrl.includes(`${environment.apiUrl}/http`)) {
+                 fullUrl = fullUrl.replace(`${environment.apiUrl}/http`, 'http');
+              }
+              
+              const realId = data.messageId;
+              this.messages.update(msgs => {
+                const alreadyExists = msgs.some(m => m.id === realId && !m.isOptimistic);
+                if (alreadyExists) {
+                  return msgs.filter(m => m.id !== optimisticId);
+                }
+                return msgs.map(m => m.id === optimisticId ? {
+                  ...m,
+                  id: realId,
+                  mediaUrl: fullUrl,
+                  isOptimistic: false
+                } : m);
+              });
             } else {
               this.messages.update(msgs => [...msgs, {
                   id: data.messageId,
@@ -282,7 +380,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
           }
         }),
         catchError(err => {
-          if (optimisticId) this.removeOptimisticMessage(optimisticId);
+          if (optimisticId) {
+             this.removeOptimisticMessage(optimisticId);
+             this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 4000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+          }
           return of(null);
         })
       ).subscribe();
@@ -313,7 +414,11 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
           const isFirstImage = i === 0;
           const caption = isFirstImage && messageToSend ? messageToSend : undefined;
 
-          // Add optimistic image message
+          const isPdf = queuedImg.file.type === 'application/pdf' || queuedImg.file.name.toLowerCase().endsWith('.pdf');
+          const isVideo = queuedImg.file.type.startsWith('video/') || queuedImg.file.name.toLowerCase().endsWith('.webm');
+          const msgType = isPdf ? 4 : isVideo ? 2 : 1; // 4 = Document, 2 = Video, 1 = Image
+
+          // Add optimistic message
           const optimisticId = `temp_${Date.now()}_${i}`;
           this.messages.update(msgs => [...msgs, {
             id: optimisticId,
@@ -321,19 +426,35 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
             mediaUrl: queuedImg.previewUrl,
             senderId: this.currentUserId(),
             createdAt: new Date().toISOString(),
-            messageType: 1, // Image
+            messageType: msgType,
             isOptimistic: true
           }]);
           setTimeout(() => this.scrollToBottom(), 50);
 
-          // Upload
-          const fileParam: FileParameter = { data: queuedImg.file, fileName: queuedImg.file.name };
-          const uploadRes = await firstValueFrom(this.mediaClient.uploadMedia(undefined, undefined, fileParam));
+          try {
+            // Upload
+            const fileParam: FileParameter = { data: queuedImg.file, fileName: queuedImg.file.name };
+            const uploadRes = await firstValueFrom(this.mediaClient.uploadMedia(undefined, undefined, fileParam));
 
-          if (uploadRes?.data?.url) {
-            this.sendMediaMessage(uploadRes.data.url, 1, caption, optimisticId);
-          } else {
+            if (uploadRes?.data?.url) {
+              this.sendMediaMessage(uploadRes.data.url, msgType, caption, optimisticId);
+            } else {
+              this.removeOptimisticMessage(optimisticId);
+              this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 4000, horizontalPosition: 'center', verticalPosition: 'bottom' });
+            }
+          } catch (uploadErr: any) {
+            console.error('Upload failed', uploadErr);
             this.removeOptimisticMessage(optimisticId);
+            
+            // Check if it's a file size error
+            const isSizeError = uploadErr?.response && (
+              uploadErr.response.includes('10MB') || 
+              uploadErr.response.includes('size cannot exceed') ||
+              uploadErr.status === 413
+            );
+            
+            const errorKey = isSizeError ? 'chat.fileTooLarge' : 'chat.sendFailed';
+            this.snackBar.open(this.translate.instant(errorKey), this.translate.instant('common.close'), { duration: 5000, horizontalPosition: 'center', verticalPosition: 'bottom' });
           }
         }
       } else if (messageToSend) {
@@ -357,17 +478,27 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
         const res = await firstValueFrom(this.chatClient.postChatMessage(this.chatId() as any, cmd));
         if (res?.data?.success) {
-          this.messages.update(msgs => msgs.map(m => m.id === optimisticId ? {
-            ...m,
-            id: res.data!.messageId,
-            isOptimistic: false
-          } : m));
+          const realId = res.data!.messageId;
+          this.messages.update(msgs => {
+            const alreadyExists = msgs.some(m => m.id === realId && !m.isOptimistic);
+            if (alreadyExists) {
+              return msgs.filter(m => m.id !== optimisticId);
+            }
+            return msgs.map(m => m.id === optimisticId ? {
+              ...m,
+              id: realId,
+              isOptimistic: false
+            } : m);
+          });
         } else {
           this.removeOptimisticMessage(optimisticId);
+          this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 4000, horizontalPosition: 'center', verticalPosition: 'bottom' });
         }
       }
     } catch (err) {
       console.error('Failed to send message', err);
+      // Catch any outer errors that weren't caught by inner catch blocks
+      this.snackBar.open(this.translate.instant('chat.sendFailed'), this.translate.instant('common.close'), { duration: 4000, horizontalPosition: 'center', verticalPosition: 'bottom' });
     } finally {
       this.isSending.set(false);
     }

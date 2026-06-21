@@ -66,7 +66,7 @@ public static class ItemEndpoints
         .WithName("CreateItem")
         .Produces<ApiResponse<ItemCreateData>>(StatusCodes.Status201Created)
         .Produces<ApiResponse<object>>(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(Policies.CanTransact);
+        .RequireAuthorization();
 
         // GET /items/:id
         g.MapGet("/{id:guid}", async (Guid id, ISender sender) =>

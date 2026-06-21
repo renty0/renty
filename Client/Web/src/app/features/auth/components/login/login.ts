@@ -1,4 +1,4 @@
-﻿import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -52,7 +52,9 @@ export class LoginComponent {
           this.snackbar.showInfo(this.translate.instant('login.emailNotConfirmed'));
           this.router.navigate(['/verify-email'], { queryParams: { email } });
         } else {
-          this.snackbar.showError(response.messages?.[0] || this.translate.instant('login.invalidCredentials'));
+          let msg = response.messages?.[0];
+          if (msg === 'Invalid email or password.') msg = this.translate.instant('login.invalidCredentials');
+          this.snackbar.showError(msg || this.translate.instant('login.invalidCredentials'));
         }
       },
       error: (error: { status?: number; error?: { messages?: string[] } }) => {
@@ -62,8 +64,13 @@ export class LoginComponent {
           this.snackbar.showInfo(this.translate.instant('login.emailNotConfirmed'));
           this.router.navigate(['/verify-email'], { queryParams: { email } });
         } else {
-          const msg = firstMessage ?? (error.status === 401 ? this.translate.instant('login.invalidCredentials') : this.translate.instant('login.serverError'));
-          this.snackbar.showError(msg);
+          let msg = firstMessage;
+          if (firstMessage === 'Invalid email or password.' || error.status === 401) {
+            msg = this.translate.instant('login.invalidCredentials');
+          } else {
+            msg = firstMessage ?? this.translate.instant('login.serverError');
+          }
+          this.snackbar.showError(msg || this.translate.instant('login.serverError'));
         }
       }
     });

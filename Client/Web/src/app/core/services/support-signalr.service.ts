@@ -32,12 +32,14 @@ export class SupportSignalrService {
   typingUser = signal<string | null>(null);
 
   private typingTimeout: any;
+  private connectionPromise: Promise<void> | null = null;
 
-  async startConnection() {
-    if (this.hubConnection?.state === HubConnectionState.Connected) return;
+  startConnection(): Promise<void> {
+    if (this.hubConnection?.state === HubConnectionState.Connected) return Promise.resolve();
+    if (this.connectionPromise) return this.connectionPromise;
 
     const token = this.authService.getToken();
-    if (!token) return;
+    if (!token) return Promise.resolve();
 
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/hubs/support`, {
@@ -81,16 +83,24 @@ export class SupportSignalrService {
       this.typingTimeout = setTimeout(() => this.typingUser.set(null), 2500);
     });
 
-    try {
-      await this.hubConnection.start();
-      this.isConnected.set(true);
-    } catch (err) {
-      console.error('SupportHub Connection Error:', err);
-      setTimeout(() => this.startConnection(), 5000);
-    }
+    this.connectionPromise = this.hubConnection.start()
+      .then(() => {
+        this.isConnected.set(true);
+        this.connectionPromise = null;
+      })
+      .catch(err => {
+        console.error('SupportHub Connection Error:', err);
+        this.connectionPromise = null;
+        setTimeout(() => this.startConnection(), 5000);
+      });
+
+    return this.connectionPromise;
   }
 
   async joinTicket(ticketId: string) {
+    if (this.hubConnection?.state !== HubConnectionState.Connected) {
+      await this.startConnection();
+    }
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       await this.hubConnection.invoke('JoinTicket', ticketId);
     }
@@ -104,6 +114,9 @@ export class SupportSignalrService {
   }
 
   async sendTyping(ticketId: string, senderName: string) {
+    if (this.hubConnection?.state !== HubConnectionState.Connected) {
+      await this.startConnection();
+    }
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       await this.hubConnection.invoke('TypingIndicator', ticketId, senderName);
     }

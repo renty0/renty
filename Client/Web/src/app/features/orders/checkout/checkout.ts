@@ -94,7 +94,7 @@ export class CheckoutComponent implements OnInit {
         tap((res: ApiResponse<OrderCreateData>) => {
           if (!res.error) {
             this.toast.showSuccess('checkout.success');
-            this.router.navigate(['/checkout', res.data?.orderId, 'payment']);
+            this.router.navigate(['/orders']);
           } else {
             const errorMsg = res.messages && res.messages.length > 0 ? res.messages[0] : 'checkout.error';
             this.toast.showError(errorMsg);

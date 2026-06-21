@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +11,8 @@ import { NotificationsClient, NotificationDto, ApiResponse, GetNotificationsResp
 import { HeaderSectionComponent } from '../../../shared/components/header-section/header-section.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
+import { LocalizedNotificationPipe } from '../../../shared/pipes/localized-notification.pipe';
+import { LocalizationService } from '../../../core/services/localization.service';
 import { finalize, tap } from 'rxjs';
 
 @Component({
@@ -25,7 +27,8 @@ import { finalize, tap } from 'rxjs';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    HeaderSectionComponent
+    HeaderSectionComponent,
+    LocalizedNotificationPipe
   ],
   templateUrl: './notification-list.html',
   styleUrl: './notification-list.scss'
@@ -34,12 +37,40 @@ export class NotificationListComponent implements OnInit {
   private notificationsClient = inject(NotificationsClient);
   private toast = inject(ToastService);
   private signalrService = inject(NotificationSignalrService);
+  public localizationService = inject(LocalizationService);
 
   notifications = signal<NotificationDto[]>([]);
   isLoading = signal(true);
 
   // Use shared unreadCount from service (keeps navbar badge in sync)
   unreadCount = this.signalrService.unreadCount;
+
+  constructor() {
+    effect(() => {
+      const newNotif = this.signalrService.newNotification();
+      if (newNotif) {
+        untracked(() => {
+          this.notifications.update(list => {
+            if (!list.find(n => n.id === newNotif.id)) {
+              const dto = new NotificationDto({
+                id: newNotif.id,
+                title: newNotif.title,
+                message: newNotif.message,
+                titleAr: newNotif.titleAr,
+                messageAr: newNotif.messageAr,
+                type: newNotif.type,
+                actionUrl: newNotif.actionUrl,
+                isRead: newNotif.isRead,
+                createdAt: new Date(newNotif.createdAt)
+              });
+              return [dto, ...list];
+            }
+            return list;
+          });
+        });
+      }
+    });
+  }
 
   ngOnInit() {
     this.loadNotifications();
@@ -111,10 +142,11 @@ export class NotificationListComponent implements OnInit {
     const now = new Date();
     const diff = Math.floor((now.getTime() - d.getTime()) / 1000);
     
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-    return d.toLocaleDateString();
+    const isAr = this.localizationService.language() === 'ar';
+    if (diff < 60) return isAr ? 'الآن' : 'Just now';
+    if (diff < 3600) return isAr ? `منذ ${Math.floor(diff / 60)} دقيقة` : `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return isAr ? `منذ ${Math.floor(diff / 3600)} ساعة` : `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 604800) return isAr ? `منذ ${Math.floor(diff / 86400)} يوم` : `${Math.floor(diff / 86400)}d ago`;
+    return d.toLocaleDateString(isAr ? 'ar-EG' : 'en-US');
   }
 }

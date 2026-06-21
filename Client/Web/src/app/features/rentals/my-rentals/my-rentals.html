@@ -50,7 +50,7 @@
     @for (rental of filteredRentals(); track rental.id) {
     <mat-card class="rental-card shadow-1 hover-lift" [routerLink]="['/rentals', rental.id]">
       <div class="card-image-wrap">
-        <img [src]="rental.itemImageUrl || 'assets/placeholder-product.png'" alt="Product" class="card-img">
+        <img [src]="rental.itemImageUrl || 'assets/placeholder-product.svg'" alt="Product" class="card-img">
         <div class="status-overlay">
           <span class="status-badge" [ngClass]="getStatusColor(rental.status)">
             {{ 'rentals.status.' + rental.status?.toLowerCase() | translate }}
@@ -68,13 +68,13 @@
         <div class="meta-row flex flex-column gap-2">
           <div class="meta-item flex align-items-center gap-2">
             <mat-icon class="text-primary text-sm">calendar_today</mat-icon>
-            <span class="text-800 text-sm font-medium">
+            <span class="text-800 text-sm font-medium" dir="ltr">
               {{ rental.startDate | date:'shortDate' }} - {{ rental.endDate | date:'shortDate' }}
             </span>
           </div>
           <div class="meta-item flex align-items-center gap-2">
             <mat-icon class="text-accent text-sm">payments</mat-icon>
-            <span class="text-900 font-bold">{{ rental.rentalPrice | currency:'EGP ':'symbol':'1.0-2' }}</span>
+            <span class="text-900 font-bold">{{ rental.rentalPrice | currency:'EGP':'EGP ':'1.0-2' }}</span>
           </div>
         </div>
       </mat-card-content>

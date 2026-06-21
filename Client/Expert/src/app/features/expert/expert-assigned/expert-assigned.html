@@ -1,0 +1,169 @@
+<div class="expert-assigned-container" [dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <app-header-section [title]="'expert.assigned.title' | translate" [showSearch]="false" [showButton]="false" />
+
+  <div class="content-wrapper">
+    <mat-tab-group class="glass-tabs">
+      <mat-tab [label]="'expert.tabs.my_tasks' | translate">
+        <div class="tab-content py-4">
+          @if (isLoading()) {
+          <div class="loader-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>{{ 'common.loading' | translate }}</p>
+          </div>
+          } @else if (assignments().length > 0) {
+          <div class="table-container">
+            <table mat-table [dataSource]="assignments()">
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.item' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="item-cell">
+                    <div class="img-wrapper">
+                      <img [src]="element.itemImage || 'assets/placeholder-product.svg'" alt="Item" (error)="$any($event.target).src='assets/placeholder-product.svg'">
+                    </div>
+                    <div class="item-info">
+                      <span class="item-name">{{ getLocalizedName(element) }}</span>
+                      <span class="item-id">ID: {{ element.itemId.toString().substring(0, 8) }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="checkType">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.type' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip-set>
+                    <mat-chip [class.primary-chip]="element.checkType === 'beforeRent'"
+                      [class.accent-chip]="element.checkType !== 'beforeRent'" selected>
+                      {{ 'expert.checkTypes.' + element.checkType | translate }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dates">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.rentalDates' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  @if (element.rentalStartDate && element.rentalEndDate) {
+                  <div class="dates-cell">
+                    <span class="date-box">{{ element.rentalStartDate | date:'mediumDate' }}</span>
+                    <mat-icon>arrow_forward</mat-icon>
+                    <span class="date-box">{{ element.rentalEndDate | date:'mediumDate' }}</span>
+                  </div>
+                  } @else {
+                  <span class="text-muted">{{ 'common.not_applicable' | translate }}</span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
+                <td mat-cell *matCellDef="let element"> {{ element.createdAt | date:'short' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-flat-button color="primary" [routerLink]="['/expert/verify', element.itemId]">
+                    <mat-icon>verified</mat-icon>
+                    {{ 'expert.actions.reviewProduct' | translate }}
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="verif-row"></tr>
+            </table>
+          </div>
+          } @else {
+          <div class="empty-state">
+            <div class="empty-icon-wrapper">
+              <mat-icon>fact_check</mat-icon>
+            </div>
+            <h3>{{ 'expert.assigned.empty_title' | translate }}</h3>
+            <p>{{ 'expert.assigned.empty' | translate }}</p>
+          </div>
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'expert.tabs.available' | translate">
+        <div class="tab-content py-4">
+          @if (availableTasks().length > 0) {
+          <div class="table-container">
+            <table mat-table [dataSource]="availableTasks()">
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.item' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="item-cell">
+                    <div class="img-wrapper">
+                      <img [src]="element.itemImage || 'assets/placeholder-product.svg'" alt="Item" (error)="$any($event.target).src='assets/placeholder-product.svg'">
+                    </div>
+                    <div class="item-info">
+                      <span class="item-name">{{ getLocalizedName(element) }}</span>
+                      <span class="item-id">ID: {{ element.itemId.toString().substring(0, 8) }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="checkType">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.type' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip-set>
+                    <mat-chip [class.primary-chip]="element.checkType === 'beforeRent'"
+                      [class.accent-chip]="element.checkType !== 'beforeRent'" selected>
+                      {{ 'expert.checkTypes.' + element.checkType | translate }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dates">
+                <th mat-header-cell *matHeaderCellDef>{{ 'expert.assigned.rentalDates' | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                  @if (element.rentalStartDate && element.rentalEndDate) {
+                  <div class="dates-cell">
+                    <span class="date-box">{{ element.rentalStartDate | date:'mediumDate' }}</span>
+                    <mat-icon>arrow_forward</mat-icon>
+                    <span class="date-box">{{ element.rentalEndDate | date:'mediumDate' }}</span>
+                  </div>
+                  } @else {
+                  <span class="text-muted">{{ 'common.not_applicable' | translate }}</span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.date' | translate }}</th>
+                <td mat-cell *matCellDef="let element"> {{ element.createdAt | date:'short' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-flat-button color="accent" (click)="claimTask(element.verificationId)"
+                    [disabled]="isActionLoading()">
+                    <mat-icon>add_task</mat-icon>
+                    {{ 'expert.actions.claim' | translate }}
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="availableColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: availableColumns;" class="verif-row"></tr>
+            </table>
+          </div>
+          } @else {
+          <div class="empty-state">
+            <div class="empty-icon-wrapper">
+              <mat-icon>view_list</mat-icon>
+            </div>
+            <h3>{{ 'expert.available.empty_title' | translate }}</h3>
+            <p>{{ 'expert.available.empty' | translate }}</p>
+          </div>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

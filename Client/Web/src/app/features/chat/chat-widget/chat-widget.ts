@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { ChatSignalrService, ChatMessage } from '../../../core/services/chat-sig
 import { ChatClient, PostChatMessageCommand } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 interface ActiveChat {
   id: string;
@@ -15,16 +16,19 @@ interface ActiveChat {
   messages: ChatMessage[];
   minimized: boolean;
   inputText: string;
+  isLoading?: boolean;
 }
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-chat-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, TranslateModule, MatProgressSpinnerModule],
   templateUrl: './chat-widget.html',
   styleUrl: './chat-widget.scss'
 })
-export class ChatWidgetComponent implements OnInit {
+export class ChatWidgetComponent implements OnInit, OnDestroy {
   private chatSignalr = inject(ChatSignalrService);
   private chatClient = inject(ChatClient);
   protected authService = inject(AuthService);
@@ -32,10 +36,11 @@ export class ChatWidgetComponent implements OnInit {
   activeChats = signal<ActiveChat[]>([]);
   isLoggedIn = this.authService.isLoggedIn;
 
+  private messageSubscription?: Subscription;
+
   constructor() {
     // Listen for new messages
-    effect(() => {
-      const msg = this.chatSignalr.newMessage();
+    this.messageSubscription = this.chatSignalr.newMessage$.subscribe(msg => {
       if (msg) {
         this.handleIncomingMessage(msg);
       }
@@ -44,6 +49,12 @@ export class ChatWidgetComponent implements OnInit {
 
   ngOnInit() {
     // We could load recent chats here if needed
+  }
+
+  ngOnDestroy() {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
   }
 
   handleIncomingMessage(msg: ChatMessage) {
@@ -69,16 +80,21 @@ export class ChatWidgetComponent implements OnInit {
       chats.shift(); // Limit to 3 floating chats
     }
 
+    this.activeChats.set([...chats, {
+      id,
+      name,
+      image,
+      messages: [],
+      minimized: false,
+      inputText: '',
+      isLoading: true
+    }]);
+
     (this.chatClient.getChatMessages(id) as any).subscribe((res: any) => {
-      const messages = (res?.data || res || []) as any[];
-      this.activeChats.set([...chats, {
-        id,
-        name,
-        image,
-        messages,
-        minimized: false,
-        inputText: ''
-      }]);
+      const messages = (res?.data?.messages || res?.data || res || []) as any[];
+      this.activeChats.update(curr => curr.map(c => 
+        c.id === id ? { ...c, messages, isLoading: false } : c
+      ));
       this.chatSignalr.joinChat(id);
     });
   }

@@ -17,7 +17,7 @@
           <div class="avatar-column">
             <div class="avatar-gradient-ring">
               <div class="avatar-inner">
-                <img [src]="p.profilePictureUrl || 'assets/profile.webp'" alt="Avatar">
+                <img [src]="p.profileImageUrl || p.profilePictureUrl || 'assets/profile.webp'" alt="Avatar">
               </div>
             </div>
           </div>
@@ -25,10 +25,12 @@
           <div class="bio-column">
             <div class="name-status-row">
               <h1>{{ p.firstName }} {{ p.lastName }}</h1>
+              @if (p.idVerified) {
               <div class="verified-badge-glow" title="Verified Member">
                 <mat-icon>verified</mat-icon>
                 <span>{{ ('profile.verified' | translate) || 'Verified' }}</span>
               </div>
+              }
             </div>
 
             <p class="location-text">
@@ -148,27 +150,6 @@
             </ul>
           </div>
 
-          <div class="sidebar-widget-card glass-card">
-            <h3 class="widget-title">
-              <mat-icon>workspace_premium</mat-icon>
-              <span>{{ ('profile.badges' | translate) || 'Renty Badges' }}</span>
-            </h3>
-
-            <div class="badges-wrapper">
-              <div class="badge-pill active-badge" title="Fast Responder">
-                <div class="badge-icon-wrap"><mat-icon>bolt</mat-icon></div>
-                <span class="badge-name">{{ ('profile.fastResponder' | translate) || 'Quick Responder' }}</span>
-              </div>
-              <div class="badge-pill active-badge" title="Highly Rated Owner">
-                <div class="badge-icon-wrap"><mat-icon>emoji_events</mat-icon></div>
-                <span class="badge-name">{{ ('profile.topOwner' | translate) || 'Super Owner' }}</span>
-              </div>
-              <div class="badge-pill active-badge" title="Clean Gear Provider">
-                <div class="badge-icon-wrap"><mat-icon>clean_hands</mat-icon></div>
-                <span class="badge-name">{{ ('profile.cleanGear' | translate) || 'Clean Gear' }}</span>
-              </div>
-            </div>
-          </div>
         </aside>
 
         <main class="profile-main-content">
@@ -201,9 +182,9 @@
                         </div>
                         <div class="listing-footer-price-row">
                           <div class="price-value-container">
-                            <span class="currency-symbol">$</span>
+                            <span class="currency-symbol">EGP </span>
                             <span class="price-digits">{{ item.dailyPrice }}</span>
-                            <span class="price-frequency">/ {{ 'items.day' | translate }}</span>
+                            <span class="price-frequency">&nbsp;/ {{ 'items.day' | translate }}</span>
                           </div>
                           <div class="card-action-arrow">
                             <mat-icon>arrow_forward</mat-icon>
@@ -315,24 +296,6 @@
                 <div class="about-content-card glass-card">
                   <h3 class="about-heading">{{ 'profile.bio' | translate }}</h3>
                   <p class="about-description-text">{{ p.bio || 'This user has not shared a biography yet.' }}</p>
-
-                  <div class="about-trust-signals-grid">
-                    <div class="trust-signal-item">
-                      <mat-icon class="signal-icon">verified_user</mat-icon>
-                      <div class="signal-text">
-                        <span class="signal-title">{{ ('profile.trustMember' | translate) || 'Trusted Member' }}</span>
-                        <span class="signal-desc">{{ ('profile.trustMemberDesc' | translate) || 'Successfully completed rentals with no disputes.' }}</span>
-                      </div>
-                    </div>
-
-                    <div class="trust-signal-item">
-                      <mat-icon class="signal-icon">schedule</mat-icon>
-                      <div class="signal-text">
-                        <span class="signal-title">{{ ('profile.responseTime' | translate) || 'Response Time' }}</span>
-                        <span class="signal-desc">{{ ('profile.responseTimeDesc' | translate) || 'Usually responds within a few minutes.' }}</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </mat-tab>

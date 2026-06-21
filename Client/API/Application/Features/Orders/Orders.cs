@@ -56,6 +56,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
         if (_currentUser.Id == null)
             return new CreateOrderResponse(false, "Unauthorized.", null, null);
 
+        var maintenanceSetting = await _context.SystemSettings.FirstOrDefaultAsync(s => s.Key == "MaintenanceMode", ct);
+        if (maintenanceSetting != null && maintenanceSetting.Value == "true")
+        {
+            return new CreateOrderResponse(false, "Platform is currently under maintenance. New orders are temporarily disabled.", null, null);
+        }
+
         // Evaluate fraud potential before finishing
         // (Simplified: we'll call it after save for velocity check)
 
@@ -72,15 +78,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
                 return new CreateOrderResponse(false, $"Item '{item.TitleEn}' is not available.", null, null);
         }
 
-        var order = new Order
-        {
-            UserId = _currentUser.Id.Value,
-            Status = OrderStatus.Pending,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        _context.Orders.Add(order);
-
         decimal total = 0;
         foreach (var i in request.Items)
         {
@@ -88,7 +85,30 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
             var dailyPrice = item.Pricing.FirstOrDefault(p => p.PricingType == "daily")?.Price ?? 0;
             var lineTotal = dailyPrice * i.Quantity;
             total += lineTotal;
+        }
 
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
+        if (user == null) return new CreateOrderResponse(false, "User not found.", null, null);
+
+        if (user.WalletBalance < total)
+        {
+            return new CreateOrderResponse(false, "Insufficient balance. Please recharge your wallet.", null, null);
+        }
+
+        var order = new Order
+        {
+            UserId = _currentUser.Id.Value,
+            Status = OrderStatus.Paid,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            TotalAmount = total
+        };
+        _context.Orders.Add(order);
+
+        foreach (var i in request.Items)
+        {
+            var item = items.First(x => x.Id == i.ItemId);
+            var dailyPrice = item.Pricing.FirstOrDefault(p => p.PricingType == "daily")?.Price ?? 0;
             order.Items.Add(new OrderItem
             {
                 OrderId = order.Id,
@@ -98,8 +118,44 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
             });
         }
 
-        order.TotalAmount = total;
+        // Escrow Hold
+        user.WalletBalance -= total;
+        user.PendingBalance += total;
+
+        _context.WalletTransactions.Add(new WalletTransaction
+        {
+            UserId = user.Id,
+            Amount = -total, // Displayed as negative hold
+            Type = TransactionType.EscrowHold,
+            Description = $"Escrow hold for order {order.Id}",
+            IsPending = true,
+            CreatedAt = DateTimeOffset.UtcNow
+        });
+
+        // Also add a payment record to signify it was paid via Wallet
+        var payment = new Payment
+        {
+            OrderId = order.Id,
+            Amount = total,
+            Method = PaymentMethod.Wallet,
+            Status = PaymentStatus.Success,
+            TransactionRef = Guid.NewGuid().ToString("N")[..16].ToUpper(),
+            CreatedAt = DateTime.UtcNow
+        };
+        _context.Payments.Add(payment);
+
         await _context.SaveChangesAsync(ct);
+
+        await _notifier.SendToUserAsync(
+            user.Id,
+            "Payment Confirmed",
+            $"Your payment of {total:C} via Wallet has been confirmed.",
+            "payment",
+            $"/orders/{order.Id}",
+            ct,
+            "تأكيد الدفع",
+            $"تم تأكيد دفعك بقيمة {total:C} عبر المحفظة."
+        );
 
         // Run background fraud check
         _ = _fraudService.EvaluateOrderAsync(order.Id);
@@ -115,9 +171,17 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
                 // Avoid notifying the buyer if they order their own item (shouldn't happen, but safe)
                 if (ownerId == _currentUser.Id.Value) continue;
 
-                var ownerItems = items
+            var ownerItems = items
                     .Where(i => i.OwnerId == ownerId)
                     .Select(i => i.TitleEn)
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+                    .Take(3)
+                    .ToList();
+
+                var ownerItemsAr = items
+                    .Where(i => i.OwnerId == ownerId)
+                    .Select(i => i.TitleAr)
                     .Where(t => !string.IsNullOrWhiteSpace(t))
                     .Distinct()
                     .Take(3)
@@ -130,13 +194,22 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
                     _ => $"You received a new order for {ownerItems.Count} items."
                 };
 
+                var msgAr = ownerItemsAr.Count switch
+                {
+                    0 => "لديك طلب جديد.",
+                    1 => $"لديك طلب جديد للمنتج '{ownerItemsAr[0]}'.",
+                    _ => $"لديك طلب جديد يحتوي على {ownerItemsAr.Count} منتجات."
+                };
+
                 await _notifier.SendToUserAsync(
                     ownerId,
                     title,
                     msg,
                     "order",
                     actionUrl: $"/orders/{order.Id}",
-                    ct: ct);
+                    ct: ct,
+                    titleAr: "طلب جديد",
+                    messageAr: msgAr);
             }
         }
         catch

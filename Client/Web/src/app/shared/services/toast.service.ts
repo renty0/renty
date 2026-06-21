@@ -45,7 +45,17 @@ export class ToastService {
     const finalConfig = { ...defaultConfig, ...config };
     
     const translatedSummary = this.translate.instant(summary);
-    const translatedDetail = this.translate.instant(finalConfig.detail || detail);
+    let detailKey = finalConfig.detail || detail;
+    if (detailKey === 'An unexpected server error occurred.') {
+      detailKey = 'errors.unexpectedError';
+    } else if (detailKey === 'Please upload a recent photo of the item condition first (within the last 30 minutes). If you uploaded one earlier, please delete it and upload a new one.') {
+      detailKey = 'errors.uploadRecentPhoto';
+    } else if (detailKey === 'Invalid verification code.' || detailKey === 'Invalid verification code provided.') {
+      detailKey = 'errors.invalidVerificationCode';
+    } else if (detailKey === 'Insufficient balance. Please recharge your wallet.') {
+      detailKey = 'errors.insufficientBalance';
+    }
+    const translatedDetail = this.translate.instant(detailKey);
     const message = `${translatedSummary}: ${translatedDetail}`;
     
     const options = {

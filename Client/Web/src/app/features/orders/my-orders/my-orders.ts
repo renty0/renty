@@ -47,7 +47,7 @@ export class MyOrdersComponent implements OnInit {
     this.isLoading.set(true);
     this.ordersClient.getOrders()
       .pipe(
-        tap((res: ApiResponse<GetOrdersResponse>) => {
+        tap(res => {
           if (res.data?.orders) {
             this.orders.set(res.data.orders);
           }

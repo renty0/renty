@@ -1,0 +1,146 @@
+<div class="profile-dashboard">
+  <aside class="profile-aside">
+    <div class="profile-summary-card">
+      <div class="image-wrapper">
+        <img [src]="profileImageUrl()" [alt]="'profile.imageAlt' | translate" class="avatar-large">
+        <button class="camera-fab" (click)="openImageDialog()" [title]="'profile.updatePhoto' | translate">
+          <mat-icon>camera_alt</mat-icon>
+        </button>
+      </div>
+
+      <div class="user-meta">
+        <h1>{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</h1>
+        <p class="user-email">{{ currentUser()?.email }}</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item owner">
+          <span class="stat-value">{{ ownerRating() | number:'1.1-1' }} <mat-icon>star</mat-icon></span>
+          <span class="stat-label">{{ 'profile.ownerRating' | translate }}</span>
+        </div>
+        <div class="stat-item renter">
+          <span class="stat-value">{{ renterRating() | number:'1.1-1' }} <mat-icon>star</mat-icon></span>
+          <span class="stat-label">{{ 'profile.renterRating' | translate }}</span>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-link" [class.active]="activeTab === 'personal'" (click)="activeTab = 'personal'">
+          <mat-icon>person_outline</mat-icon>
+          <span>{{ 'profile.personalInfo' | translate }}</span>
+        </button>
+        <button class="nav-link" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
+          <mat-icon>rate_review</mat-icon>
+          <span>{{ 'profile.reviews' | translate }}</span>
+        </button>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="profile-main">
+    <div class="content-animate-wrapper">
+
+      @if (activeTab === 'personal') {
+        <div class="tab-content fade-in">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="icon-box"><mat-icon>account_circle</mat-icon></div>
+              <h2>{{ 'info.accountInfo' | translate }}</h2>
+            </div>
+
+            <form [formGroup]="profileForm" (submit)="onSubmit()" class="modern-form">
+              <div class="form-grid">
+                <app-input class="form-col" label="firstName" [formGroup]="profileForm" controlName="firstName" />
+                <app-input class="form-col" label="lastName" [formGroup]="profileForm" controlName="lastName" />
+                <app-input class="form-col-full" label="email" [formGroup]="profileForm" controlName="email" type="email" [readonly]="true" />
+              </div>
+
+              <div class="section-divider"></div>
+
+              <div class="section-header">
+                <div class="icon-box secondary"><mat-icon>location_on</mat-icon></div>
+                <h2>{{ 'register.locationAbout' | translate }}</h2>
+              </div>
+
+              <div class="form-grid">
+                <app-input class="form-col" label="country" [formGroup]="profileForm" controlName="country" type="select" [options]="countryOptions" [translateOptions]="true" />
+                <app-input class="form-col" label="city" [formGroup]="profileForm" controlName="city" type="select" [options]="egyptianCities" [translateOptions]="true" />
+                <app-input class="form-col-full" label="address" [formGroup]="profileForm" controlName="address" />
+              </div>
+
+              <div class="section-divider"></div>
+
+              <div class="section-header">
+                <div class="icon-box info"><mat-icon>description</mat-icon></div>
+                <h2>{{ 'profile.bio' | translate }}</h2>
+              </div>
+              <app-input class="form-col-full" label="bio" [formGroup]="profileForm" controlName="bio" type="textarea" />
+
+
+              <div class="form-actions">
+                <app-loading-button [loading]="isLoading()" [disabled]="profileForm.invalid || profileForm.pristine" type="submit" color="primary">
+                  <mat-icon>save</mat-icon>
+                  {{ 'profile.save' | translate }}
+                </app-loading-button>
+              </div>
+            </form>
+          </div>
+
+          <div class="section-card danger">
+            <div class="danger-header">
+              <mat-icon>warning_amber</mat-icon>
+              <h3>{{ 'profile.deleteAccount' | translate }}</h3>
+            </div>
+            <p>{{ 'profile.deleteConfirmMessage' | translate }}</p>
+            <button mat-flat-button color="warn" (click)="deleteAccount()" [disabled]="isLoading()">
+              <mat-icon>delete_forever</mat-icon>
+              {{ 'profile.deleteAccount' | translate }}
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (activeTab === 'reviews') {
+        <div class="tab-content fade-in">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="icon-box accent"><mat-icon>star_outline</mat-icon></div>
+              <h2>{{ 'profile.reviews' | translate }}</h2>
+            </div>
+
+            @if (reviews().length > 0) {
+              <div class="modern-reviews-list">
+                @for (review of reviews(); track review.id) {
+                  <div class="modern-review-item">
+                    <div class="review-user">
+                      <img [src]="review.reviewerImage || 'assets/profile.webp'" alt="">
+                      <div class="review-user-info">
+                        <h4>{{ review.reviewerName }}</h4>
+                        <span class="role-pills" [class.owner]="review.role === 'owner'">
+                          {{ (review.role === 'owner' ? 'profile.ownerRating' : 'profile.renterRating') | translate }}
+                        </span>
+                      </div>
+                      <div class="review-rating">
+                        <mat-icon>star</mat-icon>
+                        <span>{{ review.rating }}</span>
+                      </div>
+                    </div>
+                    <p class="review-text">{{ review.comment }}</p>
+                    <div class="review-footer">
+                      <span>{{ review.createdAt | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <mat-icon>sentiment_dissatisfied</mat-icon>
+                <p>{{ 'profile.noReviews' | translate }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+</div>

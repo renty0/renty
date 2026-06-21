@@ -51,13 +51,13 @@
                 <div class="price-display mb-4">
                     @if (item()?.isForSale && hasRent()) {
                         <div class="flex flex-column gap-1">
-                            <div><span class="amount">{{ item()?.salePrice | currency:'EGP ':'symbol':'1.0-2' }}</span> <span class="per-day">{{ 'marketplace.salePrice' | translate }}</span></div>
-                            <div class="mt-2"><span class="text-3xl font-bold text-primary">{{ item()?.pricing?.[0]?.price | currency:'EGP ':'symbol':'1.0-2' }}</span> <span class="per-day">/ {{ 'marketplace.day' | translate }}</span></div>
+                            <div><span class="amount">{{ item()?.salePrice | currency:'EGP':'EGP ':'1.0-2' }}</span> <span class="per-day">{{ 'marketplace.salePrice' | translate }}</span></div>
+                            <div class="mt-2"><span class="text-3xl font-bold text-primary">{{ item()?.pricing?.[0]?.price | currency:'EGP':'EGP ':'1.0-2' }}</span> <span class="per-day">&nbsp;/ {{ 'marketplace.day' | translate }}</span></div>
                         </div>
                     } @else {
-                        <span class="amount">{{ displayPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+                        <span class="amount">{{ displayPrice() | currency:'EGP':'EGP ':'1.0-2' }}</span>
                         @if (!item()?.isForSale) {
-                            <span class="per-day">/ {{ 'marketplace.day' | translate }}</span>
+                            <span class="per-day">&nbsp;/ {{ 'marketplace.day' | translate }}</span>
                         } @else {
                             <span class="per-day">{{ 'marketplace.salePrice' | translate }}</span>
                         }
@@ -133,7 +133,7 @@
                             </div>
                         </div>
                         @if (!isOwner()) {
-                            <button mat-icon-button color="primary" (click)="startChat()" [title]="'profile.sendMessage' | translate">
+                            <button mat-mini-fab color="primary" (click)="startChat()" [title]="'profile.sendMessage' | translate" class="chat-fab-button shadow-2">
                                 <mat-icon>chat</mat-icon>
                             </button>
                         }
@@ -193,7 +193,7 @@
                         </div>
                         <div class="card-info p-3">
                             <h3 class="text-base font-semibold mb-1">{{ getLocalizedName(rItem) }}</h3>
-                            <p class="price text-primary font-bold">{{ rItem.dailyPrice | currency:'EGP ' }}</p>
+                            <p class="price text-primary font-bold">{{ rItem.dailyPrice | currency:'EGP':'EGP ' }}</p>
                         </div>
                     </div>
                 </div>

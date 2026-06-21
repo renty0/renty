@@ -21,7 +21,7 @@
             <span class="product-name">{{ chatMetadata()?.itemTitle }}</span>
             <span class="view-item">{{ 'chat.viewProduct' | translate }}</span>
           </div>
-          <img [src]="chatMetadata()?.itemImage || 'assets/placeholder-product.png'" class="product-thumb">
+          <img [src]="chatMetadata()?.itemImage || 'assets/images/placeholder.png'" (error)="$any($event.target).src='assets/images/placeholder.png'" class="product-thumb">
         </a>
       }
 
@@ -32,6 +32,15 @@
       @for (msg of messages(); track msg.id) {
         <div class="message-wrapper" [class.me]="isCurrentUser(msg.senderId)">
           <div class="message-bubble">
+            @if (msg.contextItemId) {
+              <a [routerLink]="['/marketplace/product', msg.contextItemId]" class="message-product-card">
+                <img [src]="msg.contextItemImage || 'assets/images/placeholder.png'" (error)="$any($event.target).src='assets/images/placeholder.png'" class="msg-product-thumb">
+                <div class="msg-product-info">
+                  <span class="msg-product-name">{{ msg.contextItemTitle || ('chat.viewProduct' | translate) }}</span>
+                  <span class="msg-product-link-text">{{ 'chat.viewProduct' | translate }}</span>
+                </div>
+              </a>
+            }
             @if (msg.messageType === 0) {
               <p class="text">{{ msg.message }}</p>
             } @else if (msg.messageType === 1) {
@@ -40,9 +49,23 @@
                 <p class="text mt-2">{{ msg.message }}</p>
               }
             } @else if (msg.messageType === 2) {
-              <video [src]="msg.mediaUrl" controls class="media-video"></video>
+              <video [src]="msg.mediaUrl" controls class="media-video" [style.opacity]="msg.isOptimistic ? 0.6 : 1"></video>
+              @if (msg.message) {
+                <p class="text mt-2">{{ msg.message }}</p>
+              }
             } @else if (msg.messageType === 3) {
               <audio [src]="msg.mediaUrl" controls class="media-audio"></audio>
+            } @else if (msg.messageType === 4) {
+              <a [href]="msg.mediaUrl" target="_blank" class="document-link" [style.opacity]="msg.isOptimistic ? 0.6 : 1">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <div class="doc-info">
+                  <span class="doc-name">Document.pdf</span>
+                  <span class="doc-view">{{ 'chat.viewDocument' | translate }}</span>
+                </div>
+              </a>
+              @if (msg.message) {
+                <p class="text mt-2">{{ msg.message }}</p>
+              }
             }
             <span class="time">
               {{ msg.createdAt | date:'shortTime' }}
@@ -64,7 +87,17 @@
       <div class="image-queue-strip">
         @for (img of selectedImages(); track img.previewUrl; let i = $index) {
           <div class="queued-img-wrapper fade-in-up">
-            <img [src]="img.previewUrl" alt="Queued Image">
+            @if (isPdf(img.file)) {
+              <div class="pdf-preview-icon">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span class="pdf-ext">PDF</span>
+              </div>
+            } @else if (isVideo(img.file)) {
+              <video [src]="img.previewUrl" class="video-preview"></video>
+              <div class="video-overlay"><mat-icon>play_circle_outline</mat-icon></div>
+            } @else {
+              <img [src]="img.previewUrl" alt="Queued Image">
+            }
             <button class="remove-btn" (click)="removeQueuedImage(i)">
               <mat-icon style="font-size: 14px; width: 14px; height: 14px;">close</mat-icon>
             </button>
@@ -90,9 +123,9 @@
         </div>
       } @else {
         <div class="input-actions">
-          <input type="file" #imageInput hidden accept="image/*" multiple (change)="onImagesSelected($event)">
+          <input type="file" #imageInput hidden accept="image/*,video/*,application/pdf" multiple (change)="onFilesSelected($event)">
           <button mat-icon-button type="button" class="action-btn" (click)="imageInput.click()">
-            <mat-icon>add_photo_alternate</mat-icon>
+            <mat-icon>attach_file</mat-icon>
           </button>
           <button mat-icon-button type="button" class="action-btn"
                   (mousedown)="startRecording()">

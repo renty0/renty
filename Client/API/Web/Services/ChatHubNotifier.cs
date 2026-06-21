@@ -14,10 +14,10 @@ public class ChatHubNotifier : IChatNotifier
 
     public ChatHubNotifier(IHubContext<ChatHub> hub) => _hub = hub;
 
-    public async Task SendMessageAsync(Guid chatId, object payload, CancellationToken ct)
+    public async Task SendMessageAsync(Guid chatId, IEnumerable<string> userIds, object payload, CancellationToken ct)
     {
         await _hub.Clients
-            .Group(chatId.ToString())
+            .Users(userIds)
             .SendAsync("ReceiveMessage", payload, ct);
     }
 }

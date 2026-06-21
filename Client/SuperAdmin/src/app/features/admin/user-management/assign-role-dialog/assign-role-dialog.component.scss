@@ -1,0 +1,215 @@
+@use "sass:color";
+@use "../../../../shared/styles" as *;
+
+
+.dialog-header {
+  padding: $spacing-md $spacing-md 0;
+  color: $primary-color;
+  flex-shrink: 0;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .header-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      opacity: 0.9;
+    }
+
+    .header-text {
+      h2 {
+        margin: 0;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        line-height: 1.2;
+      }
+
+      p {
+        margin: 2px 0 0;
+        font-size: $font-size-sm;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.loading-state {
+  @include flex-center;
+  padding: $spacing-3xl;
+  color: $primary-light;
+}
+
+.roles-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  .instruction-text {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-bottom: $spacing-sm;
+  }
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius-xl;
+  border: 2px solid $gray-100;
+  cursor: pointer;
+  transition: all $transition-base;
+  background: $white;
+  user-select: none;
+  margin-bottom: $spacing-sm;
+
+  &:hover {
+    background: $gray-50;
+    border-color: rgba($primary-light, 0.3);
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &.selected {
+    background: rgba($primary-color, 0.05);
+    border-color: $primary-color;
+    box-shadow: 0 4px 15px rgba($primary-color, 0.1);
+
+    .role-name {
+      color: $primary-color;
+      font-weight: $font-weight-bold;
+    }
+
+    .role-visual {
+      background: $white;
+      box-shadow: inset 0 0 0 1px rgba($primary-color, 0.1);
+    }
+  }
+
+  .role-visual {
+    width: 44px;
+    height: 44px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    background: $gray-50;
+    margin-inline-end: $spacing-md;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+
+    .role-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba($white, 1), 0 0 0 6px rgba($gray-200, 0.2);
+
+      &.admin {
+        background: $primary-light;
+        box-shadow: 0 0 12px rgba($primary-light, 0.5);
+      }
+
+      &.support {
+        background: $info;
+        box-shadow: 0 0 12px rgba($info, 0.5);
+      }
+
+      &.expert {
+        background: $success;
+        box-shadow: 0 0 12px rgba($success, 0.5);
+      }
+
+      &.superadmin {
+        background: $danger;
+        box-shadow: 0 0 12px rgba($danger, 0.5);
+      }
+
+      &.owner {
+        background: $warning;
+        box-shadow: 0 0 12px rgba($warning, 0.5);
+      }
+
+      &.renter {
+        background: $accent-color;
+        box-shadow: 0 0 12px rgba($accent-color, 0.5);
+      }
+
+      &.user {
+        background: $gray-400;
+        box-shadow: 0 0 12px rgba($gray-400, 0.5);
+      }
+    }
+  }
+
+  .role-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    .role-name {
+      font-size: $font-size-md;
+      color: $text-dark;
+      transition: color 0.2s ease;
+      font-weight: $font-weight-medium;
+    }
+
+    .role-desc {
+      font-size: $font-size-xs;
+      color: $text-muted;
+      line-height: 1.4;
+    }
+  }
+
+  ::ng-deep .mat-mdc-checkbox {
+    margin-inline-start: $spacing-md;
+    flex-shrink: 0;
+
+    .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+      background-color: $primary-color !important;
+      border-color: $primary-color !important;
+    }
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-top: $spacing-lg;
+  padding: $spacing-md;
+  background: rgba($danger, 0.05);
+  border: 1px solid rgba($danger, 0.1);
+  border-radius: $border-radius-lg;
+  color: $danger;
+  font-size: $font-size-sm;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.dialog-actions {
+  border-top: 1px solid $gray-100;
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

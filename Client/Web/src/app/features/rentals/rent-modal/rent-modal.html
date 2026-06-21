@@ -32,14 +32,6 @@
           [minDate]="rentForm.get('startDate')?.value || minDate" [required]="true" />
       </div>
 
-      <div class="expert-section mt-3">
-        <mat-checkbox formControlName="requiresExpert" color="primary">
-          {{ 'rentals.requiresExpert' | translate }}
-        </mat-checkbox>
-      </div>
-
-      <app-input [formGroup]="rentForm" controlName="deliveryMethod" label="rentals.deliveryMethod" type="select"
-        [options]="deliveryMethodOptions()" [translateOptions]="true" [required]="true" />
 
       <div class="delivery-info-box mb-3 p-3 border-round bg-blue-50">
         <p class="m-0 text-sm text-700">
@@ -49,13 +41,22 @@
       </div>
 
       <app-input [formGroup]="rentForm" controlName="desiredDeliveryDate" label="rentals.desiredDeliveryDate" type="date"
-        [minDate]="minDate" />
+        [minDate]="minDate" [maxDate]="rentForm.get('startDate')?.value" />
 
       <app-input [formGroup]="rentForm" controlName="negotiatedDeliveryDate" label="rentals.negotiatedDeliveryDate" type="date"
-        [minDate]="minDate" />
+        [minDate]="rentForm.get('endDate')?.value || rentForm.get('startDate')?.value || minDate" />
 
       <app-input [formGroup]="rentForm" controlName="notes" label="labels.message" type="textarea" [rows]="3"
         [placeholder]="'rentals.notesPlaceholder' | translate" />
+
+      <div class="field-checkbox mt-4 mb-2">
+        <mat-checkbox formControlName="requestExpertReview" color="primary">
+          {{ 'rentals.requestExpertReview' | translate }}
+        </mat-checkbox>
+        <p class="text-sm text-600 ml-5 mt-1" style="opacity: 0.8; font-size: 0.85rem;">
+          {{ 'rentals.expertReviewHint' | translate }}
+        </p>
+      </div>
     </div>
 
     <div class="price-breakdown">
@@ -66,22 +67,23 @@
 
       <div class="price-row">
         <span>{{ 'rentals.estimatedPrice' | translate }}</span>
-        <span class="amount">{{ rentalPrice() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+        <span class="amount">{{ rentalPrice() | currency:'EGP':'EGP ':'1.0-2' }}</span>
       </div>
       <div class="price-row">
         <span>{{ 'rentals.deposit' | translate }}</span>
-        <span class="amount">{{ depositAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+        <span class="amount">{{ depositAmount() | currency:'EGP':'EGP ':'1.0-2' }}</span>
       </div>
-      @if (rentForm.get('requiresExpert')?.value) {
-      <div class="price-row expert-fee">
-        <span>{{ 'rentals.requiresExpert' | translate }}</span>
-        <span class="amount text-accent font-bold">+{{ expertFee() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+      @if (expertReviewFee() > 0) {
+      <div class="price-row">
+        <span>{{ 'rentals.expertReviewFee' | translate }}</span>
+        <span class="amount">{{ expertReviewFee() | currency:'EGP':'EGP ':'1.0-2' }}</span>
       </div>
       }
+
       <div class="price-divider"></div>
       <div class="price-row total">
         <span>{{ 'rentals.total' | translate }}</span>
-        <span class="total-amount">{{ totalAmount() | currency:'EGP ':'symbol':'1.0-2' }}</span>
+        <span class="total-amount">{{ totalAmount() | currency:'EGP':'EGP ':'1.0-2' }}</span>
       </div>
     </div>
     <div class="policy-section mt-4">

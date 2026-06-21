@@ -124,9 +124,13 @@ export class PaymentComponent implements OnInit {
   private loadOrder() {
     this.ordersClient.getOrderById(this.orderId())
       .pipe(
-        tap((res: ApiResponse<OrderDetailDto>) => {
+        tap(res => {
           if (!res.error && res.data) {
             this.order.set(res.data);
+            if (res.data.status?.toLowerCase() === 'paid') {
+              this.toast.showSuccess('payment.alreadyPaid');
+              this.router.navigate(['/my-orders']);
+            }
           }
         }),
         catchError(() => of(null)),
@@ -150,7 +154,7 @@ export class PaymentComponent implements OnInit {
 
     this.paymentsClient.createPayment(command)
       .pipe(
-        tap((res: ApiResponse<PaymentCreateData>) => {
+        tap(res => {
           if (!res.error) {
             this.toast.showSuccess('payment.success');
             this.router.navigate(['/orders', this.orderId()]);

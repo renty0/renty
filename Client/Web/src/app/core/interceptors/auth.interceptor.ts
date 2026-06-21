@@ -28,11 +28,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authReq = addTokenToRequest(req, authService.getToken());
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // toastService.showError(`HTTP Error occurred, with satus: ${error.status}, with message: ${error.message}`);
-      // if (error.status === 401 && !isPublicEndpoint) return handle401Error(req, next, authService,
-        //  authClient,
-        //  router, toastService);
-      // handleOtherErrors(error, authService, router, toastService);
+      if (error.status === 401 && !isPublicEndpoint) {
+        toastService.showError('errors.sessionExpired');
+        handleTokenExpired(authService, router);
+      } else {
+        handleOtherErrors(error, authService, router, toastService);
+      }
       return throwError(() => error);
     })
   );
@@ -44,7 +45,7 @@ function addTokenToRequest(req: HttpRequest<any>, token: string | null): HttpReq
 // function handle401Error( req: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService, authClient: AuthClient, router: Router, toastService: ToastService ): Observable<HttpEvent<unknown>> {
 function handle401Error( req: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService, router: Router, toastService: ToastService ): Observable<HttpEvent<unknown>> {
   if (!authService.hasValidRefreshToken()) {
-    toastService.showWarning('No valid refresh token - redirecting to login');
+    toastService.showWarning('errors.noValidRefreshToken');
     handleTokenExpired(authService, router);
     return throwError(() => new Error('No valid refresh token'));
   }
@@ -81,29 +82,32 @@ function handle401Error( req: HttpRequest<any>, next: HttpHandlerFn, authService
 }
 function handleOtherErrors(error: HttpErrorResponse, authService: AuthService, router: Router, toastService: ToastService): void {
   switch (error.status) {
+    case 400:
+      // Validation errors are typically handled by the component.
+      break;
     case 403:
-      toastService.showWarning('Access forbidden - Insufficient permissions');
+      toastService.showWarning('errors.accessForbidden');
       handleForbidden(router);
       break;
     case 422:
-      toastService.showWarning('Validation error:', error.error);
+      toastService.showWarning('errors.validationError', { detail: typeof error.error === 'string' ? error.error : JSON.stringify(error.error) });
       break;
     case 429:
-      toastService.showWarning('Too many requests - Please try again later');
+      toastService.showWarning('errors.tooManyRequests');
       break;
     case 500:
-      toastService.showError('Server error occurred');
+      toastService.showError('errors.serverError');
       break;
     case 502:
     case 503:
     case 504:
-      toastService.showError('Service temporarily unavailable');
+      toastService.showError('errors.serviceUnavailable');
       break;
     case 0:
-      toastService.showError('Network error - Check your internet connection');
+      toastService.showError('errors.networkError');
       break;
     default:
-      toastService.showError(`Unexpected HTTP Error, with status: ${error.status}, with message ${error.message}` );
+      toastService.showError('errors.unexpectedHttpError', { detail: `${error.status} - ${error.message}` });
   }
 }
 function handleTokenExpired(authService: AuthService, router: Router): void {

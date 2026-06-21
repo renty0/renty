@@ -9,7 +9,10 @@
     <form [formGroup]="loginForm" (submit)="onSubmit()" class="login-form">
       <app-input [formGroup]="loginForm" controlName="email" label="email" type="email" />
       <app-input [formGroup]="loginForm" controlName="password" label="password" type="password" />
-      <a routerLink="/forgot-password" class="forgot-password">{{ 'login.forgotPassword' | translate }}</a>
+      <div class="form-links">
+        <a routerLink="/forgot-password" class="forgot-password">{{ 'login.forgotPassword' | translate }}</a>
+        <a routerLink="/verify-email" class="resend-verification">{{ 'login.resendVerification' | translate }}</a>
+      </div>
       <app-loading-button [loading]="isLoading()" type="submit" color="primary" [fullWidth]="true" class="login-button">
         {{ 'buttons.login' | translate }}
       </app-loading-button>

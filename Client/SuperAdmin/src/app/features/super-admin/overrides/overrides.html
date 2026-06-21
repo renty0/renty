@@ -1,0 +1,52 @@
+<div class="overrides-container">
+  <app-header-section [title]="'superAdmin.overridesTitle' | translate"
+    [subtitle]="'superAdmin.overridesSubtitle' | translate" [showSearch]="false" [showButton]="false" />
+
+  @if (!activeAction()) {
+  <div class="actions-grid fade-in">
+    @for (action of actions; track action.key) {
+    <mat-card class="action-card" (click)="selectAction(action)">
+      <div class="action-icon" [style.background]="action.gradient">
+        <mat-icon>{{ action.icon }}</mat-icon>
+      </div>
+      <div class="action-info">
+        <h3>{{ action.titleKey | translate }}</h3>
+        <p>{{ action.descKey | translate }}</p>
+      </div>
+      <mat-icon class="action-arrow">chevron_right</mat-icon>
+    </mat-card>
+    }
+  </div>
+  } @else {
+  <mat-card class="override-form-card fade-in">
+    <div class="form-header">
+      <div class="form-icon" [style.background]="activeAction()!.gradient">
+        <mat-icon>{{ activeAction()!.icon }}</mat-icon>
+      </div>
+      <div>
+        <h2>{{ activeAction()!.titleKey | translate }}</h2>
+        <p>{{ activeAction()!.descKey | translate }}</p>
+      </div>
+    </div>
+
+    <div>
+      <form [formGroup]="overrideForm" class="form-body">
+        <app-input [formGroup]="overrideForm" controlName="referenceId" label="referenceId" [placeholder]="'superAdmin.override.referenceIdPlaceholder' | translate" [required]="true" prefixIcon="fingerprint" />
+        <app-input [formGroup]="overrideForm" controlName="justification" type="textarea" [rows]="4" label="justification" [placeholder]="'superAdmin.override.justificationPlaceholder' | translate" [required]="true" prefixIcon="notes" />
+      </form>
+
+      <div class="warning-notice">
+        <mat-icon>warning</mat-icon>
+        <span>{{ 'superAdmin.override.warning' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-stroked-button (click)="cancelAction()"> {{ 'common.cancel' | translate }} </button>
+      <app-loading-button color="warn" [loading]="isExecuting()" [disabled]="overrideForm.invalid" (clicked)="executeOverride()" matIcon="bolt">
+        {{ 'superAdmin.override.execute' | translate }}
+      </app-loading-button>
+    </div>
+  </mat-card>
+  }
+</div>

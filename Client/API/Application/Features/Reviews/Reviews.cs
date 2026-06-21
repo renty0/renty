@@ -30,11 +30,13 @@ public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, C
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly INotificationSender _notifier;
 
-    public CreateReviewCommandHandler(IApplicationDbContext context, IUser currentUser)
+    public CreateReviewCommandHandler(IApplicationDbContext context, IUser currentUser, INotificationSender notifier)
     {
         _context = context;
         _currentUser = currentUser;
+        _notifier = notifier;
     }
 
     public async Task<CreateReviewResponse> Handle(CreateReviewCommand request, CancellationToken ct)
@@ -43,15 +45,20 @@ public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, C
             return new CreateReviewResponse(false, "Unauthorized.", null, null, null);
 
         var rental = await _context.Rentals
+            .Include(r => r.Item)
             .FirstOrDefaultAsync(r => r.Id == request.RentalId, ct);
 
         if (rental == null) return new CreateReviewResponse(false, "Rental not found.", null, null, null);
-        if (rental.UserId != _currentUser.Id.Value)
-            return new CreateReviewResponse(false, "Only the renter can review.", null, null, null);
+        
+        bool isRenter = rental.UserId == _currentUser.Id.Value;
+        bool isOwner = rental.Item.OwnerId == _currentUser.Id.Value;
+
+        if (!isRenter && !isOwner)
+            return new CreateReviewResponse(false, "Only the renter or owner can review this rental.", null, null, null);
         if (rental.Status != RentalStatus.Completed)
             return new CreateReviewResponse(false, "Can only review completed rentals.", null, null, null);
 
-        var alreadyReviewed = await _context.Reviews.AnyAsync(r => r.RentalId == request.RentalId, ct);
+        var alreadyReviewed = await _context.Reviews.AnyAsync(r => r.RentalId == request.RentalId && r.ReviewerId == _currentUser.Id.Value, ct);
         if (alreadyReviewed)
             return new CreateReviewResponse(false, "You have already reviewed this rental.", null, null, null);
 
@@ -72,6 +79,49 @@ public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, C
             Action = InteractionAction.Review,
             CreatedAt = DateTime.UtcNow
         });
+
+        long targetUserId = isRenter ? rental.Item.OwnerId : rental.UserId;
+        var targetUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == targetUserId, ct);
+        
+        if (targetUser != null)
+        {
+            if (isRenter)
+            {
+                // Renter is rating the owner
+                targetUser.OwnerTotalRatings += 1;
+                targetUser.OwnerRating = Math.Round(
+                    ((targetUser.OwnerRating * (targetUser.OwnerTotalRatings - 1)) + request.Rating) / targetUser.OwnerTotalRatings, 2);
+
+                // Update combined rating for backward compatibility
+                targetUser.TotalRatings += 1;
+                targetUser.Rating = Math.Round(
+                    ((targetUser.Rating * (targetUser.TotalRatings - 1)) + request.Rating) / targetUser.TotalRatings, 2);
+            }
+            else
+            {
+                // Owner is rating the renter
+                targetUser.RenterTotalRatings += 1;
+                targetUser.RenterRating = Math.Round(
+                    ((targetUser.RenterRating * (targetUser.RenterTotalRatings - 1)) + request.Rating) / targetUser.RenterTotalRatings, 2);
+
+                // Update combined rating for backward compatibility
+                targetUser.TotalRatings += 1;
+                targetUser.Rating = Math.Round(
+                    ((targetUser.Rating * (targetUser.TotalRatings - 1)) + request.Rating) / targetUser.TotalRatings, 2);
+            }
+            
+            // Send notification to the target user
+            await _notifier.SendToUserAsync(
+                targetUserId,
+                "New Review Received",
+                $"You have received a {request.Rating}-star review for the rental of '{rental.Item.TitleEn}'.",
+                "review",
+                $"/profile/{targetUserId}",
+                ct,
+                titleAr: "تم استلام تقييم جديد",
+                messageAr: $"لقد تلقيت تقييماً بـ {request.Rating} نجوم لإيجار '{(!string.IsNullOrWhiteSpace(rental.Item.TitleAr) ? rental.Item.TitleAr : rental.Item.TitleEn)}'."
+            );
+        }
 
         await _context.SaveChangesAsync(ct);
         return new CreateReviewResponse(true, null, review.Id, review.Rating, review.Comment);

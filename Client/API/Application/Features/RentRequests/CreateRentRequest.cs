@@ -146,7 +146,9 @@ public class CreateRentRequestCommandHandler : IRequestHandler<CreateRentRequest
             $"You have a new rental request for {item.TitleEn}.",
             "rental",
             $"/rental-requests/{rentRequest.Id}",
-            cancellationToken
+            cancellationToken,
+            titleAr: "طلب إيجار جديد",
+            messageAr: $"لديك طلب إيجار جديد للمنتج {(!string.IsNullOrWhiteSpace(item.TitleAr) ? item.TitleAr : item.TitleEn)}."
         );
 
         return new CreateRentRequestResponse(true, "Rent request submitted successfully.", rentRequest.Id);

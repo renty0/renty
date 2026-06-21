@@ -31,6 +31,7 @@ public static class DependencyInjection
         // Register interceptors
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, TransactionNotificationInterceptor>();
 
         // Register DbContext
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
@@ -129,6 +130,7 @@ public static class DependencyInjection
         services.AddScoped<IFraudDetectionService, FraudDetectionService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddHostedService<AnalysisSchedulerService>();
+        services.AddHostedService<FundsReleaseService>();
 
         return services;
     }

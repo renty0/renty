@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,6 +62,7 @@ export class MarketplaceComponent implements OnInit {
   private subcategoriesClient = inject(SubcategoriesClient);
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
+  private route = inject(ActivatedRoute);
 
   // Data
   items = signal<ItemListDto[]>([]);
@@ -133,6 +134,11 @@ export class MarketplaceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['category']) {
+        this.selectedCategoryId.set(Number(params['category']));
+      }
+    });
     this.loadCategories();
   }
 

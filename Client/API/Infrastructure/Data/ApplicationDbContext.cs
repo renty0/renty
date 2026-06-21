@@ -63,6 +63,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<KpiSnapshot> KpiSnapshots => Set<KpiSnapshot>();
     public DbSet<FraudLog> FraudLogs => Set<FraudLog>();
     public DbSet<RentalImage> RentalImages => Set<RentalImage>();
+    public DbSet<RentalExtension> RentalExtensions => Set<RentalExtension>();
+    public DbSet<RentalTransfer> RentalTransfers => Set<RentalTransfer>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -109,6 +111,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.Lat).HasColumnName("lat").HasPrecision(10, 7);
             entity.Property(e => e.Lng).HasColumnName("lng").HasPrecision(10, 7);
             entity.Property(e => e.AdminNote).HasColumnName("admin_note").HasMaxLength(1000);
+            entity.Property(e => e.CancellationPolicy).HasColumnName("cancellation_policy").HasConversion<string>();
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
@@ -199,6 +202,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.DepositAmount).HasColumnName("deposit_amount").HasPrecision(10, 2);
             entity.Property(e => e.DepositStatus).HasColumnName("deposit_status").HasConversion<string>();
             entity.Property(e => e.Notes).HasColumnName("notes");
+            entity.Property(e => e.PlatformCommissionPercent).HasColumnName("platform_commission_percent").HasPrecision(5, 2);
+            entity.Property(e => e.CancellationFee).HasColumnName("cancellation_fee").HasPrecision(10, 2);
+            entity.Property(e => e.HasHubEvaluation).HasColumnName("has_hub_evaluation");
+            entity.Property(e => e.EvaluationPayer).HasColumnName("evaluation_payer").HasConversion<string>();
+            entity.Property(e => e.GuaranteeMethod).HasColumnName("guarantee_method").HasConversion<string>();
+            entity.Property(e => e.DeliveryMethodToHubReturn).HasColumnName("delivery_method_to_hub_return").HasConversion<string>();
+            entity.Property(e => e.RejectionFeeAmount).HasColumnName("rejection_fee_amount").HasPrecision(10, 2);
+            entity.Property(e => e.RejectionFault).HasColumnName("rejection_fault").HasConversion<string>();
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
@@ -391,6 +402,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.HasOne(e => e.Chat).WithMany(c => c.Messages).HasForeignKey(e => e.ChatId);
             entity.HasOne(e => e.Sender).WithMany().HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.ContextItem).WithMany().HasForeignKey(e => e.ContextItemId).OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<Notification>(entity =>
@@ -401,6 +413,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(200);
             entity.Property(e => e.Message).HasColumnName("message");
+            entity.Property(e => e.TitleAr).HasColumnName("title_ar").HasMaxLength(200);
+            entity.Property(e => e.MessageAr).HasColumnName("message_ar");
             entity.Property(e => e.Type).HasColumnName("type").HasMaxLength(50);
             entity.Property(e => e.ActionUrl).HasColumnName("action_url").HasMaxLength(500);
             entity.Property(e => e.IsRead).HasColumnName("is_read");
@@ -476,6 +490,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.Type).HasConversion<int>();
             entity.HasOne(e => e.Rental).WithMany(r => r.Images).HasForeignKey(e => e.RentalId);
             entity.HasOne(e => e.Image).WithMany().HasForeignKey(e => e.ImageId);
+        });
+
+        builder.Entity<RentalExtension>(entity =>
+        {
+            entity.ToTable("rental_extensions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.RentalId).HasColumnName("rental_id");
+            entity.Property(e => e.RequestedBy).HasColumnName("requested_by");
+            entity.Property(e => e.NewEndDate).HasColumnName("new_end_date");
+            entity.Property(e => e.ExtraDays).HasColumnName("extra_days");
+            entity.Property(e => e.ExtraCost).HasColumnName("extra_cost").HasPrecision(10, 2);
+            entity.Property(e => e.Status).HasColumnName("status").HasConversion<string>();
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+            entity.HasOne(e => e.Rental).WithMany(r => r.Extensions).HasForeignKey(e => e.RentalId);
+            entity.HasOne(e => e.Requester).WithMany().HasForeignKey(e => e.RequestedBy);
         });
     }
 }

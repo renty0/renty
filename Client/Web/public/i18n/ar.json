@@ -106,7 +106,8 @@
     "owner": "المالك",
     "renter": "المستأجر",
     "remindMe": "ذكرني",
-    "removeReminder": "إزالة التذكير"
+    "removeReminder": "إزالة التذكير",
+    "imInterestedIn": "أنا مهتم بهذا المنتج:"
   },
   "nav": {
     "home": "الرئيسية",
@@ -177,6 +178,7 @@
     "welcomeBack": "مرحباً بك مجدداً!",
     "signInSubtitle": "سجل الدخول إلى حسابك",
     "forgotPassword": "هل نسيت كلمة المرور؟",
+    "resendVerification": "إعادة إرسال رمز التحقق",
     "noAccount": "ليس لديك حساب؟",
     "signUp": "سجل هنا",
     "emailNotConfirmed": "بريدك الإلكتروني غير مفعل. لقد أرسلنا رمز تفعيل جديد.",
@@ -226,7 +228,6 @@
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "checkType": "نوع الفحص",
-
     "status": "النتيجة",
     "referenceId": "رقم المرجع",
     "notes": "ملاحظات الخبير",
@@ -307,6 +308,7 @@
     "login": "دخول",
     "verify": "تحقق من الكود",
     "next": "التالي",
+    "confirm": "تأكيد",
     "back": "السابق",
     "replace": "استبدال",
     "search": "بحث",
@@ -362,9 +364,9 @@
     "deactivateSuccess": "تم إخفاء المنتج من السوق.",
     "permanentDeleteSuccess": "تم حذف المنتج نهائيًا.",
     "reactivateSuccess": "تمت إعادة تفعيل المنتج وظهر في السوق.",
-    "removedFromMarket": "مخفي مؤقتًا من السوق"
-    ,"reactivateConfirmation": "سيتم استعادة المنتج وإظهاره في السوق. هل تريد المتابعة؟"
-    ,"permanentDelete": "حذف نهائي"
+    "removedFromMarket": "مخفي مؤقتًا من السوق",
+    "reactivateConfirmation": "سيتم استعادة المنتج وإظهاره في السوق. هل تريد المتابعة؟",
+    "permanentDelete": "حذف نهائي"
   },
   "info": {
     "additionalInfo": "معلومات إضافية",
@@ -377,6 +379,9 @@
   },
   "rentals": {
     "title": "استئجار المنتج",
+    "requestExpertReview": "طلب فحص خبير",
+    "expertReviewHint": "سندع خبيراً يفحص المنتج عند التسليم لضمان حالته.",
+    "expertReviewFee": "رسوم فحص الخبير",
     "pricingType": "نوع التسعير",
     "estimatedPrice": "السعر التقديري",
     "notesPlaceholder": "أضف أي ملاحظات للمالك...",
@@ -389,14 +394,15 @@
     "weekly": "أسبوعي",
     "monthly": "شهري",
     "deliveryMethod": "طريقة التوصيل",
-    "desiredDeliveryDate": "تاريخ التسليم المطلوب",
-    "negotiatedDeliveryDate": "تاريخ التسليم المتفق عليه",
+    "desiredDeliveryDate": "تاريخ استلام المستأجر من المالك (المطلوب)",
+    "negotiatedDeliveryDate": "تاريخ التسليم النهائي المتفق عليه",
     "return": {
       "product_with_renter": "المنتج حالياً مع المستأجر.",
       "product_with_renter_overdue": "انتهت فترة الإيجار ويجب إرجاع المنتج.",
       "product_with_expert": "المنتج حاليًا مع الخبير للتفتيش. الخبير سيعوده بعد التقييم.",
       "product_with_owner": "المنتج مع المالك. لا حاجة لإرجاعه.",
       "select_method": "اختر الطريقة التي ترغب في إرجاع المنتج بها:",
+      "select_method_from_expert": "اختر الطريقة التي ترغب في استلام المنتج بها من الخبير:",
       "confirm": "تأكيد الإرجاع",
       "confirmed": "تم بدء عملية الإرجاع بنجاح"
     },
@@ -419,7 +425,9 @@
       "pending": "قيد الانتظار",
       "approved": "مقبول",
       "confirmed": "مؤكد",
+      "awaitingpickup": "في انتظار الاستلام",
       "active": "نشط",
+      "returned": "جاري الإرجاع",
       "completed": "مكتمل",
       "cancelled": "ملغي",
       "overdue": "متأخر",
@@ -463,15 +471,37 @@
       "handoff_code": "رمز تحقق الاستلام",
       "give_to_owner": "اعرض هذا الكود للمالك عند استلام المنتج",
       "enter_code": "أدخل كود المستأجر",
+      "return_code": "رمز تحقق الإرجاع",
+      "give_to_renter": "اعرض هذا الكود للمستأجر عند استلام المنتج المرتجع",
+      "enter_return_code": "أدخل كود المالك لتأكيد الإرجاع",
+      "transfer_code": "رمز التحقق للتحويل",
+      "give_code_to_other": "اعرض هذا الكود للطرف الآخر ليقوم بإدخاله",
+      "transfer_code_owner": "رمز التحقق لإعطائه للمستأجر عند استلام منتجك",
+      "give_code_to_expert": "اعرض هذا الكود للخبير",
+      "transfer_code_renter": "رمز التحقق لإعطائه للمالك عند استلام المنتج",
+      "enter_transfer_code": "أدخل الرمز المقدم لك",
+      "transfer_history": "سجل التحويلات",
+      "waiting_for_code": "في انتظار رمز التحقق",
+      "pending_transfer": "قيد الانتظار",
       "condition_photos": "توثيق حالة المنتج",
-      "handover_photos": "صور الاستلام (المالك)",
-      "return_photos": "صور الإرجاع (المالك)"
+      "handover_photos": "صور التسليم (المستأجر)",
+      "return_photos": "صور الإرجاع (المالك)",
+      "expert_review_before": "تقييم الخبير (قبل الإيجار)",
+      "expert_review_after": "تقييم الخبير (عند الإرجاع)"
+    },
+    "actors": {
+      "owner": "المالك",
+      "renter": "المستأجر",
+      "expert": "الخبير",
+      "deliveryagent": "مندوب التوصيل"
     },
     "actions": {
       "title": "الإجراءات",
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
+      "handoff_method": "طريقة التسليم",
+      "set_delivery": "تحديد طريقة التسليم",
       "request_expert": "طلب تقييم خبير",
       "cancel_expert": "إلغاء طلب الخبير",
       "cancel_assigned_expert": "إلغاء الخبير المكلف",
@@ -481,9 +511,12 @@
       "dispute": "نزاع",
       "damaged": "مصادرة التأمين",
       "verify": "التحقق وبدء الإيجار",
+      "verify_return": "تأكيد واستلام",
       "no_actions": "لا توجد إجراءات متاحة لهذا الإيجار."
     },
     "delivery": {
+      "how_to_expert": "الرجاء اختيار كيفية تسليم المنتج للخبير:",
+      "how_to_renter": "الرجاء اختيار كيفية تسليم المنتج للمستأجر:",
       "byHand": "تسليم باليد",
       "nearestLocation": "أقرب مكان",
       "deliveryService": "خدمة التوصيل",
@@ -491,7 +524,13 @@
       "picked_up": "تم استلام الطرد من قبل المندوب",
       "in_transit": "الطرد في الطريق",
       "delivered": "تم تسليم الطرد بنجاح",
-      "negotiation_info": "حدد تاريخ البدء المطلوب. يمكنك التفاوض حول وقت التسليم الدقيق مع المالك عبر الدردشة. وقت التسليم لا يُحسب في فترة الإيجار."
+      "negotiation_info": "حدد تاريخ البدء المطلوب. يمكنك التفاوض حول وقت التسليم الدقيق مع المالك عبر الدردشة. وقت التسليم لا يُحسب في فترة الإيجار.",
+      "receive_from_expert_title": "المنتج جاهز في مركز الخبراء. كيف تفضل استلامه؟",
+      "pickup_in_person": "استلام شخصي",
+      "pickup_in_person_desc": "اذهب إلى مركز الخبراء لاستلام المنتج بنفسك.",
+      "use_delivery_service": "استخدام خدمة توصيل",
+      "use_delivery_service_desc": "سيقوم مندوب باستلامه وتوصيله إليك. (+25 جنيه رسوم)",
+      "confirm_selection": "تأكيد الاختيار"
     },
     "nearest_location": {
       "confirmed": "تم تأكيد التسليم في أقرب مكان"
@@ -565,17 +604,17 @@
       "speedDesc": "احصل على أغراضك عند باب منزلك في غضون ساعات، وليس أياماً."
     },
     "destinations": {
-      "badge": "سفر ورياضة",
-      "title": "أفضل الوجهات الرياضية في مصر",
-      "subtitle": "استكشف أفضل الأماكن لممارسة أنشطتك المفضلة، من البحر الأحمر إلى قلب القاهرة.",
+      "badge": "فروعنا",
+      "title": "فروع رنتي في مصر",
+      "subtitle": "استأجر معداتك الرياضية من أي فرع من فروعنا المنتشرة لخدمتك.",
       "dahab": "دهب",
-      "dahabDesc": "جنة ركوب الأمواج والغوص",
+      "dahabDesc": "تجهيزات الغوص وركوب الأمواج",
       "gouna": "الجونة",
-      "gounaDesc": "مركز الرياضات الفاخر",
+      "gounaDesc": "المعدات الرياضية الفاخرة",
       "cairo": "القاهرة",
-      "cairoDesc": "مركز البادل واللياقة البدنية",
+      "cairoDesc": "مستلزمات البادل واللياقة البدنية",
       "somabay": "سوما باي",
-      "somabayDesc": "عاصمة ركوب الأمواج الشراعي"
+      "somabayDesc": "معدات التزلج الشراعي"
     },
     "categories": {
       "title": "استكشف المعدات الرياضية",
@@ -645,7 +684,7 @@
     },
     "popular": {
       "title": "الأكثر شيوعاً",
-      "subtitle": "السلع الأكثر تأجيراً في منطقتك"
+      "subtitle": "السلع الأكثر تأجيراً"
     },
     "newest": {
       "title": "أضيف حديثاً",
@@ -725,7 +764,11 @@
     "imageAlt": "صورة الملف الشخصي",
     "updatePhoto": "تحديث الصورة",
     "uploadNewPhoto": "رفع صورة جديدة",
+    "identityVerificationRequired": "يرجى التحقق من هويتك أولاً للوصول إلى هذه الميزة والمتابعة كعضو موثوق.",
     "save": "حفظ التغييرات",
+    "updated": "تم تحديث الملف الشخصي بنجاح.",
+    "pendingVerification": "قيد المراجعة",
+    "pendingVerificationDesc": "لقد تم إرسال هويتك وهي قيد المراجعة حالياً.",
     "uploading": "جاري الرفع...",
     "rating": "التقييم",
     "reviews": "التقييمات",
@@ -851,7 +894,7 @@
       "beforeRent": "قبل الإيجار",
       "afterReturn": "بعد الإرجاع",
       "BeforeRent": "قبل الإيجار",
-      "AterReturn": "بعد الإرجاع"
+      "AfterReturn": "بعد الإرجاع"
     },
     "status": {
       "approved": "مقبول",
@@ -989,6 +1032,7 @@
     "dashboard_subtitle": "إدارة تذاكر العملاء والردود",
     "type": "النوع",
     "subject": "الموضوع",
+    "subjectPlaceholder": "سبب التواصل",
     "noTickets": "ليس لديك أي تذاكر دعم. هل تحتاج للمساعدة؟ افتح تذكرة جديدة للحصول على المساعدة.",
     "message": "الرسالة",
     "message_placeholder": "اكتب تفاصيل المشكلة هنا...",
@@ -1103,8 +1147,9 @@
     "activeNow": "نشط الأن",
     "noChats": "لا توجد محادثات بعد.",
     "typePlaceholder": "اكتب رسالة...",
-    "noMessages": "ابدأ محادثة الآن!",
+    "noMessages": "ابدأ محادثة!",
     "no_messages": "لا توجد رسائل بعد.",
+    "startMessaging": "ابدأ المراسلة",
     "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",
@@ -1115,7 +1160,10 @@
     "deleteConfirmation": "هل أنت متأكد من حذف هذه المحادثة؟",
     "lastSeenMinutes": "آخر ظهور منذ {{minutes}} دقيقة",
     "lastSeenHours": "آخر ظهور منذ {{hours}} ساعة",
-    "lastSeenDays": "آخر ظهور منذ {{days}} يوم"
+    "lastSeenDays": "آخر ظهور منذ {{days}} يوم",
+    "unsupportedFileType": "نوع الملف غير مدعوم. يرجى رفع الصور أو مقاطع الفيديو أو ملفات PDF فقط.",
+    "fileTooLarge": "لا يمكن أن يتجاوز حجم الملف 10 ميغابايت.",
+    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
   },
   "notifications": {
     "title": "الإشعارات",
@@ -1144,6 +1192,8 @@
     "success": "تم تقديم طلبك بنجاح!"
   },
   "errors": {
+    "insufficientBalance": "رصيد المحفظة غير كافٍ. يرجى شحن محفظتك.",
+    "invalidVerificationCode": "رمز التحقق غير صحيح",
     "unknownError": "حدث خطأ غير متوقع",
     "failedToLoadSubcategories": "فشل في تحميل الفئات الفرعية",
     "failedToLoadCategories": "فشل في تحميل الفئات",
@@ -1157,10 +1207,25 @@
     "unexpectedError": "حدث خطأ غير متوقع",
     "fetchFailed": "فشل جلب البيانات",
     "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "uploadRecentPhoto": "يرجى تحميل صورة حديثة لحالة المنتج أولاً (خلال آخر 30 دقيقة). إذا قمت بتحميل واحدة سابقًا، يرجى حذفها وتحميل واحدة جديدة.",
     "adminAccessDenied": "تم الرفض: صلاحيات المدير مطلوبة",
     "noProductsFound": "لم يتم العثور على منتجات",
     "productNotFound": "المنتج غير موجود",
-    "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه."
+    "loginRequired": "يجب عليك تسجيل الدخول أولاً للوصول إلى هذه الصفحة",
+    "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه.",
+    "unauthenticated": "المستخدم غير مسجل دخول - توجيه لصفحة تسجيل الدخول",
+    "httpError": "حدث خطأ HTTP، برمز: {{status}}، ورسالة: {{message}}",
+    "noValidRefreshToken": "لا يوجد رمز تحديث صالح - توجيه لصفحة تسجيل الدخول",
+    "tokenRefreshFailed": "فشل تحديث الرمز - لم يتم العثور على رمز وصول في الاستجابة",
+    "tokenRefreshFailedDesc": "فشل تحديث الرمز: {{error}}",
+    "accessForbidden": "تم رفض الوصول - صلاحيات غير كافية",
+    "validationError": "خطأ في التحقق: {{error}}",
+    "tooManyRequests": "طلبات كثيرة جدًا - يرجى المحاولة مرة أخرى لاحقًا",
+    "serverError": "حدث خطأ في الخادم",
+    "serviceUnavailable": "الخدمة غير متاحة مؤقتًا",
+    "networkError": "خطأ في الشبكة - تحقق من اتصالك بالإنترنت",
+    "unexpectedHttpError": "خطأ HTTP غير متوقع، برمز: {{status}}، ورسالة: {{message}}",
+    "sessionExpired": "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى"
   },
   "terms": {
     "title": "الشروط والأحكام",
@@ -1255,9 +1320,36 @@
   "wallet": {
     "title": "محفظتي",
     "subtitle": "إدارة أرباحك وسحب الأموال إلى محفظة الهاتف المحمول الخاصة بك.",
+    "total_balance": "الرصيد الكلي",
+    "withdrawable_balance": "الرصيد القابل للسحب",
     "available_balance": "الرصيد المتاح",
+    "pending_balance": "الرصيد المعلق",
     "total_earnings": "إجمالي الأرباح",
     "withdraw_funds": "سحب الأموال",
+    "simulate_top_up": "محاكاة شحن الرصيد",
+    "simulate_top_up_title": "محاكاة شحن المحفظة",
+    "amount_to_charge": "المبلغ المراد شحنه (جنيه)",
+    "top_up_account": "شحن الحساب",
+    "top_up_success": "تم شحن المحفظة بنجاح!",
+    "top_up_error": "فشل شحن المحفظة.",
+    "tx_type": {
+      "adjustment": "إيداع",
+      "withdrawal": "سحب",
+      "escrow_hold": "حجز ضمان",
+      "escrow_release": "تحرير ضمان",
+      "penalty": "غرامة"
+    },
+    "tx_desc": {
+      "top_up": "شحن المحفظة (محاكاة)",
+      "withdrawal": "تم طلب سحب إلى",
+      "escrow_hold": "حجز ضمان للإيجار/الطلب",
+      "escrow_release": "تحرير ضمان للإيجار/الطلب الملغى",
+      "cancellation_fee": "رسوم إلغاء ({{policy}}) للمنتج '{{item}}'",
+      "cancellation_fee_generic": "رسوم إلغاء",
+      "deposit_returned": "تحرير ضمان",
+      "deposit_refund": "استرداد التأمين",
+      "rental_refund": "استرداد مبلغ الإيجار"
+    },
     "transaction_history": "سجل المعاملات",
     "no_transactions": "ليس لديك أي معاملات في المحفظة حتى الآن.",
     "request_withdrawal": "طلب سحب",
@@ -1391,5 +1483,59 @@
     "owner": "صاحب منتج",
     "renter": "مستأجر",
     "user": "مستخدم عادي"
-  }
+  },
+  "A file is required.": "مطلوب ملف.",
+  "Bad request": "طلب غير صالح",
+  "Category not found": "الفئة غير موجودة",
+  "Chat deletion is disabled.": "حذف المحادثات معطل.",
+  "Email already registered": "البريد الإلكتروني مسجل بالفعل",
+  "Failed to create user": "فشل في إنشاء المستخدم",
+  "Failed to delete account": "فشل في حذف الحساب",
+  "Failed to upload photos": "فشل في رفع الصور",
+  "File exceeds the 20 MB limit.": "يتجاوز الملف حد 20 ميغابايت.",
+  "Forbidden": "مرفوض",
+  "ID mismatch": "عدم تطابق المعرف",
+  "Invalid credentials": "بيانات الدخول غير صحيحة",
+  "Invalid or expired reset code.": "رمز إعادة التعيين غير صالح أو منتهي الصلاحية.",
+  "Invalid or expired verification code.": "رمز التحقق غير صالح أو منتهي الصلاحية.",
+  "Invalid token": "رمز مميز غير صالح",
+  "Invalid token or email.": "رمز مميز أو بريد إلكتروني غير صالح.",
+  "Item not found": "المنتج غير موجود",
+  "Login failed": "فشل تسجيل الدخول",
+  "No KPI data available.": "لا تتوفر بيانات أداء.",
+  "Not found": "غير موجود",
+  "Query parameter 'q' is required.": "معلمة البحث 'q' مطلوبة.",
+  "Registration failed": "فشل التسجيل",
+  "Role not found": "الدور غير موجود",
+  "Seed failed": "فشل التعبئة",
+  "The email address is not registered.": "عنوان البريد الإلكتروني غير مسجل.",
+  "Unauthorized": "غير مصرح",
+  "Unsupported file type.": "نوع الملف غير مدعوم.",
+  "Update failed": "فشل التحديث",
+  "User not found": "المستخدم غير موجود",
+  "User not found.": "المستخدم غير موجود.",
+  "An error occurred. Check if you have SuperAdmin permissions.": "حدث خطأ. تحقق من صلاحياتك كمشرف عام.",
+  "Failed to create ticket": "فشل إنشاء التذكرة",
+  "Failed to load pending items": "فشل تحميل المنتجات المعلقة",
+  "Failed to load permissions for role": "فشل تحميل الصلاحيات للدور",
+  "Failed to load system settings": "فشل تحميل إعدادات النظام",
+  "Failed to request OTP": "فشل طلب رمز التحقق (OTP)",
+  "Failed to review item": "فشل تقييم المنتج",
+  "Failed to send message": "فشل إرسال الرسالة",
+  "Failed to submit ID.": "فشل إرسال الهوية.",
+  "Failed to unsuspend user": "فشل إلغاء إيقاف المستخدم",
+  "Failed to update permissions": "فشل تحديث الصلاحيات",
+  "Failed to update status": "فشل تحديث الحالة",
+  "Failed to update user status": "فشل تحديث حالة المستخدم",
+  "ID Verification submitted!": "تم إرسال التحقق من الهوية بنجاح!",
+  "Invalid OTP": "رمز التحقق غير صالح",
+  "Item reviewed successfully": "تم تقييم المنتج بنجاح",
+  "OTP Sent successfully!": "تم إرسال رمز التحقق بنجاح!",
+  "Permissions updated successfully": "تم تحديث الصلاحيات بنجاح",
+  "Phone verified successfully!": "تم التحقق من رقم الهاتف بنجاح!",
+  "Roles updated successfully": "تم تحديث الأدوار بنجاح",
+  "Status updated": "تم تحديث الحالة",
+  "User created successfully": "تم إنشاء المستخدم بنجاح",
+  "activated": "مفعل",
+  "deactivated": "معطل"
 }

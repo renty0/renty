@@ -7,27 +7,54 @@
   </div>
 
   <div class="stats-grid">
+    <!-- Total Balance -->
+    <div class="stat-card">
+      <div class="icon-wrap">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+      <div class="details">
+        <span class="label">{{ 'wallet.total_balance' | translate }}</span>
+        <h2>{{ totalBalance() | currency:'EGP':'EGP ' }}</h2>
+      </div>
+    </div>
+
+    <!-- Withdrawable Balance -->
+    <div class="stat-card">
+      <div class="icon-wrap">
+        <mat-icon>price_check</mat-icon>
+      </div>
+      <div class="details">
+        <span class="label">{{ 'wallet.withdrawable_balance' | translate }}</span>
+        <h2>{{ withdrawableBalance() | currency:'EGP':'EGP ' }}</h2>
+      </div>
+    </div>
+
     <div class="stat-card balance">
       <div class="icon-wrap">
         <mat-icon>account_balance_wallet</mat-icon>
       </div>
       <div class="details">
         <span class="label">{{ 'wallet.available_balance' | translate }}</span>
-        <h2>{{ balance() | currency:'EGP ' }}</h2>
+        <h2>{{ balance() | currency:'EGP':'EGP ' }}</h2>
       </div>
       <button class="withdraw-btn" (click)="openWithdraw()" [disabled]="balance() <= 0">
         <mat-icon>payments</mat-icon>
         {{ 'wallet.withdraw_funds' | translate }}
       </button>
+      <button class="withdraw-btn" style="margin-top: 10px; background: rgba(56, 189, 248, 0.1); color: var(--accent-light);" (click)="openTopUp()">
+        <mat-icon>add_circle</mat-icon>
+        {{ 'wallet.simulate_top_up' | translate }}
+      </button>
     </div>
 
-    <div class="stat-card earnings">
+    <!-- Pending Balance -->
+    <div class="stat-card">
       <div class="icon-wrap">
-        <mat-icon>trending_up</mat-icon>
+        <mat-icon>pending_actions</mat-icon>
       </div>
       <div class="details">
-        <span class="label">{{ 'wallet.total_earnings' | translate }}</span>
-        <h2>{{ totalEarnings() | currency:'EGP ' }}</h2>
+        <span class="label">{{ 'wallet.pending_balance' | translate }}</span>
+        <h2>{{ pendingBalance() | currency:'EGP':'EGP ' }}</h2>
       </div>
     </div>
   </div>
@@ -54,12 +81,12 @@
             <mat-icon>{{ t.amount > 0 ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
           </div>
           <div class="info">
-            <p class="type">{{ t.type }}</p>
-            <p class="desc">{{ t.description }}</p>
+            <p class="type">{{ getLocalizedType(t.type) }}</p>
+            <p class="desc">{{ getLocalizedDescription(t) }}</p>
             <p class="date">{{ t.createdAt | date:'medium' }}</p>
           </div>
           <div class="amount" [class.positive]="t.amount > 0" [class.negative]="t.amount < 0">
-            {{ t.amount > 0 ? '+' : '' }}{{ t.amount | currency:'EGP ' }}
+            {{ t.amount > 0 ? '+' : '' }}{{ t.amount | currency:'EGP':'EGP ' }}
           </div>
         </li>
       </ul>
@@ -108,6 +135,45 @@
           <span>{{ 'wallet.processing' | translate }}</span>
           } @else {
           <span>{{ 'wallet.confirm_withdrawal' | translate }}</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Up Modal (Simulation) -->
+  <div class="modal-overlay" *ngIf="showTopUpForm()" (click)="$event.target === topUpOverlay && closeTopUp()" #topUpOverlay>
+    <div class="modal-content glass-card">
+      <div class="modal-header">
+        <h2>{{ 'wallet.simulate_top_up_title' | translate }}</h2>
+        <button class="close-btn" (click)="closeTopUp()"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <div *ngIf="errorMsg()" class="alert alert-error">{{ errorMsg() }}</div>
+      <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
+
+      <div class="form-body">
+        <div class="form-group">
+          <label>{{ 'wallet.amount_to_charge' | translate }}</label>
+          <div class="input-wrap">
+            <mat-icon>attach_money</mat-icon>
+            <input type="number" [ngModel]="topUpAmount()" (ngModelChange)="topUpAmount.set($event)"
+              placeholder="e.g. 1000" min="1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeTopUp()" [disabled]="isSubmitting()">
+          {{ 'wallet.cancel' | translate }}
+        </button>
+        <button class="btn-confirm" (click)="requestTopUp()"
+          [disabled]="isSubmitting() || !topUpAmount() || topUpAmount()! <= 0">
+          @if (isSubmitting()) {
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ 'wallet.processing' | translate }}</span>
+          } @else {
+          <span>{{ 'wallet.top_up_account' | translate }}</span>
           }
         </button>
       </div>
