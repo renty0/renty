@@ -15,6 +15,14 @@ public static class DependencyInjection
     {
         services.Configure<FileUploadSettings>(configuration.GetSection("FileUploadSettings"));
 
+        var cloudinaryUrl = Environment.GetEnvironmentVariable("CLOUDINARY_URL") ?? configuration["CloudinarySettings:Url"];
+        if (!string.IsNullOrEmpty(cloudinaryUrl))
+        {
+            var cloudinary = new CloudinaryDotNet.Cloudinary(cloudinaryUrl);
+            cloudinary.Api.Secure = true;
+            services.AddSingleton(cloudinary);
+        }
+
         services.AddHttpContextAccessor();
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();

@@ -8,6 +8,8 @@ using Application.Web.MediaFiles.DTOs;
 using Application.Common.Interfaces;
 using Ardalis.GuardClauses;
 using SixLabors.ImageSharp;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Application.Web.MediaFiles.Commands.UploadMedia;
 
@@ -46,18 +48,21 @@ public sealed class UploadMediaCommandHandler : IRequestHandler<UploadMediaComma
     private readonly ILogger<UploadMediaCommandHandler> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _uploadsPath;
+    private readonly Cloudinary? _cloudinary;
 
     public UploadMediaCommandHandler(
         IApplicationDbContext context,
         IUser currentUser,
         IOptions<FileUploadSettings> settings,
         ILogger<UploadMediaCommandHandler> logger,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IServiceProvider serviceProvider)
     {
         _context = context;
         _currentUser = currentUser;
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
+        _cloudinary = serviceProvider.GetService(typeof(Cloudinary)) as Cloudinary;
         
         // Get uploads path from configuration
         _uploadsPath = settings.Value.UploadPath;
@@ -101,36 +106,86 @@ public sealed class UploadMediaCommandHandler : IRequestHandler<UploadMediaComma
 
         try
         {
-            // Determine folder based on file type
-            var folder = GetFolderForFileType(fileType);
-            var folderPath = Path.Combine(_uploadsPath, folder);
-            Directory.CreateDirectory(folderPath);
-
-            // Generate unique filename
-            var uniqueFileName = $"{fileId}{extension}";
-            var filePath = Path.Combine(folderPath, uniqueFileName);
-
-            // Save file to disk
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            // If Cloudinary is configured, upload to Cloudinary
+            if (_cloudinary != null)
             {
-                await file.CopyToAsync(stream, cancellationToken);
-            }
-
-            // Set storage path (relative to uploads folder)
-            mediaFile.StoragePath = Path.Combine(folder, uniqueFileName).Replace("\\", "/");
-
-            // For images, try to get dimensions
-            if (fileType == FileType.Image)
-            {
-                try
+                await using var stream = file.OpenReadStream();
+                
+                if (fileType == FileType.Image)
                 {
-                    using var image = await Image.LoadAsync(filePath, cancellationToken);
-                    mediaFile.Width = image.Width;
-                    mediaFile.Height = image.Height;
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(fileName, stream),
+                        PublicId = fileId.ToString(),
+                        Folder = "renty/images"
+                    };
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    mediaFile.StoragePath = uploadResult.SecureUrl.ToString();
+                    
+                    try
+                    {
+                        stream.Position = 0;
+                        using var image = await Image.LoadAsync(stream, cancellationToken);
+                        mediaFile.Width = image.Width;
+                        mediaFile.Height = image.Height;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to read image dimensions for {FileName}", fileName);
+                    }
                 }
-                catch (Exception ex)
+                else if (fileType == FileType.Video || fileType == FileType.Audio)
                 {
-                    _logger.LogWarning(ex, "Failed to read image dimensions for {FileName}", fileName);
+                    var uploadParams = new VideoUploadParams
+                    {
+                        File = new FileDescription(fileName, stream),
+                        PublicId = fileId.ToString(),
+                        Folder = $"renty/{(fileType == FileType.Video ? "videos" : "audio")}"
+                    };
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    mediaFile.StoragePath = uploadResult.SecureUrl.ToString();
+                }
+                else
+                {
+                    var uploadParams = new RawUploadParams
+                    {
+                        File = new FileDescription(fileName, stream),
+                        PublicId = fileId.ToString(),
+                        Folder = "renty/documents"
+                    };
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    mediaFile.StoragePath = uploadResult.SecureUrl.ToString();
+                }
+            }
+            else
+            {
+                // Fallback to local storage
+                var folder = GetFolderForFileType(fileType);
+                var folderPath = Path.Combine(_uploadsPath, folder);
+                Directory.CreateDirectory(folderPath);
+
+                var uniqueFileName = $"{fileId}{extension}";
+                var filePath = Path.Combine(folderPath, uniqueFileName);
+
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream, cancellationToken);
+                }
+
+                mediaFile.StoragePath = Path.Combine(folder, uniqueFileName).Replace("\\", "/");
+
+                if (fileType == FileType.Image)
+                {
+                    try
+                    {
+                        using var image = await Image.LoadAsync(filePath, cancellationToken);
+                        mediaFile.Width = image.Width;
+                        mediaFile.Height = image.Height;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to read image dimensions for {FileName}", fileName);
+                    }
                 }
             }
 

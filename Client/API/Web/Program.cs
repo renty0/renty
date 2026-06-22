@@ -101,8 +101,6 @@ app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<SupportHub>("/hubs/support");
 
 // Health check
-app.MapGet("/", () => Results.Ok(new { Status = "Healthy", Service = "Renty API" }))
-    .WithTags("Health")
-    .ExcludeFromDescription();
+app.MapHealthEndpoints();
 
 app.Run();
