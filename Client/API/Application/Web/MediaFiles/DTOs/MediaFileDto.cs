@@ -19,9 +19,14 @@ public static class MediaFileExtensions
     public static MediaFileDto ToDto(this Domain.Entities.MediaFile mediaFile, string? baseUrl = null)
     {
         // Use the request base URL or a default
-        var url = !string.IsNullOrEmpty(baseUrl) 
-            ? mediaFile.GetFullUrl(baseUrl)
-            : $"/{mediaFile.StoragePath}";
+        var storagePath = mediaFile.StoragePath;
+        string url;
+        if (storagePath.StartsWith("http://") || storagePath.StartsWith("https://"))
+            url = storagePath;
+        else if (!string.IsNullOrEmpty(baseUrl))
+            url = $"{baseUrl.TrimEnd('/')}/{storagePath}";
+        else
+            url = $"/{storagePath}";
 
         return new MediaFileDto
         {

@@ -229,6 +229,9 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
                     ct);
             }
 
+            var requestUrl = _httpContextAccessor.HttpContext?.Request;
+            var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
             var dto = new ItemDetailDto(
                 item.Id, item.TitleAr, item.TitleEn, item.DescAr, item.DescEn,
                 item.Type.ToString(), item.Status.ToString(), item.AdminNote, item.Condition,
@@ -240,11 +243,18 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Updat
                     item.Owner.FirstName, 
                     item.Owner.LastName,
                     item.Owner.City, 
-                    item.Owner.ProfilePictureUrl,
+                    !string.IsNullOrEmpty(item.Owner.ProfilePictureUrl)
+                        ? (item.Owner.ProfilePictureUrl.StartsWith("http://") || item.Owner.ProfilePictureUrl.StartsWith("https://")
+                            ? item.Owner.ProfilePictureUrl
+                            : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{item.Owner.ProfilePictureUrl.TrimStart('/')}" : "/" + item.Owner.ProfilePictureUrl.TrimStart('/'))
+                        : null,
                     item.Owner.Rating,
                     item.Owner.TotalRatings),
                 item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
-                item.Images.Select(img => new ItemImageDto(img.ImageId, img.Image?.StoragePath ?? "", img.IsPrimary)).ToList(),
+                item.Images.Select(img => new ItemImageDto(
+                    img.ImageId, 
+                    img.Image != null ? img.Image.GetFullUrl(baseUrl ?? "") : "", 
+                    img.IsPrimary)).ToList(),
                 0, 0,
                 item.Category != null ? new ItemCategoryRef(item.Category.Id, item.Category.NameAr, item.Category.NameEn) : null,
                 item.Subcategory != null ? new ItemSubcategoryRef(item.Subcategory.Id, item.Subcategory.NameAr, item.Subcategory.NameEn) : null,

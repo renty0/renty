@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Search;
 
@@ -26,11 +27,13 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
 {
     private readonly IApplicationDbContext _context;
     private readonly IUser _currentUser;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public SearchItemsQueryHandler(IApplicationDbContext context, IUser currentUser)
+    public SearchItemsQueryHandler(IApplicationDbContext context, IUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _currentUser = currentUser;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<SearchItemsResponse> Handle(SearchItemsQuery request, CancellationToken ct)
@@ -54,31 +57,58 @@ public class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, SearchI
         var total = await query.CountAsync(ct);
         var pages = (int)Math.Ceiling((double)total / request.Limit);
 
-        var items = await query
+        var rawItems = await query
             .OrderByDescending(i => i.CreatedAt)
             .Skip((request.Page - 1) * request.Limit)
             .Take(request.Limit)
-            .Select(i => new ItemListDto(
+            .Select(i => new
+            {
                 i.Id,
                 i.TitleAr,
                 i.TitleEn,
-                i.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
+                DailyPrice = i.Pricing.Where(p => p.PricingType == "daily").Select(p => (decimal?)p.Price).FirstOrDefault(),
                 i.City,
-                i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
+                PrimaryImage = i.Images.Where(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()
                     ?? i.Images.Select(img => img.Image.StoragePath).FirstOrDefault(),
-                0, 0, // AvgRating, ReviewCount
-                i.Type.ToString(),
+                TypeStr = i.Type.ToString(),
                 i.Condition,
-                (long?)i.OwnerId,
+                OwnerId = (long?)i.OwnerId,
                 i.IsForSale,
                 i.SalePrice,
-                i.Status.ToString(),
+                StatusStr = i.Status.ToString(),
                 i.CreatedAt,
-                i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
-                i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
-                i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null
-            ))
+                i.Category,
+                i.Subcategory,
+                i.Brand
+            })
             .ToListAsync(ct);
+
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : null;
+
+        var items = rawItems.Select(i => new ItemListDto(
+            i.Id,
+            i.TitleAr,
+            i.TitleEn,
+            i.DailyPrice,
+            i.City,
+            i.PrimaryImage != null
+                ? (i.PrimaryImage.StartsWith("http://") || i.PrimaryImage.StartsWith("https://")
+                    ? i.PrimaryImage
+                    : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{i.PrimaryImage.TrimStart('/')}" : "/" + i.PrimaryImage.Replace("\\", "/").TrimStart('/'))
+                : null,
+            0, 0, // AvgRating, ReviewCount
+            i.TypeStr,
+            i.Condition,
+            i.OwnerId,
+            i.IsForSale,
+            i.SalePrice,
+            i.StatusStr,
+            i.CreatedAt,
+            i.Category    != null ? new ItemCategoryRef(i.Category.Id, i.Category.NameAr, i.Category.NameEn) : null,
+            i.Subcategory != null ? new ItemSubcategoryRef(i.Subcategory.Id, i.Subcategory.NameAr, i.Subcategory.NameEn) : null,
+            i.Brand       != null ? new ItemBrandRef(i.Brand.Id, i.Brand.NameAr, i.Brand.NameEn) : null
+        )).ToList();
 
         // Log search (fire-and-forget style, don't fail search if logging fails)
         try
