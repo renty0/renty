@@ -12472,6 +12472,8 @@ export class NotificationDto implements INotificationDto {
     id?: string;
     title?: string;
     message?: string;
+    titleAr?: string;
+    messageAr?: string;
     type?: string;
     actionUrl?: string | undefined;
     isRead?: boolean;
@@ -12491,6 +12493,8 @@ export class NotificationDto implements INotificationDto {
             this.id = _data["id"];
             this.title = _data["title"];
             this.message = _data["message"];
+            this.titleAr = _data["titleAr"];
+            this.messageAr = _data["messageAr"];
             this.type = _data["type"];
             this.actionUrl = _data["actionUrl"];
             this.isRead = _data["isRead"];
@@ -12510,6 +12514,8 @@ export class NotificationDto implements INotificationDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["message"] = this.message;
+        data["titleAr"] = this.titleAr;
+        data["messageAr"] = this.messageAr;
         data["type"] = this.type;
         data["actionUrl"] = this.actionUrl;
         data["isRead"] = this.isRead;
@@ -12522,6 +12528,8 @@ export interface INotificationDto {
     id?: string;
     title?: string;
     message?: string;
+    titleAr?: string;
+    messageAr?: string;
     type?: string;
     actionUrl?: string | undefined;
     isRead?: boolean;
