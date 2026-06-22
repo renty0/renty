@@ -1,1 +1,0 @@
-sed -i 's/(change)="ownerWantsExpertAtConfirm = $event.checked"/(change)="toggleExpert($event.checked)"/g' /home/hamza/All\ Data\ To\ Transfer/VIF/Materials/Fourth\ Year/Graduation\ Project/2nd\ semester/renty/renty/Client/Web/src/app/features/rentals/rental-details/rental-details.html

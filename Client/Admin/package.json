@@ -43,13 +43,13 @@
     "crypto-js": "^4.2.0",
     "leaflet": "^1.9.4",
     "ngx-cookie-service": "^20.1.1",
-    "ngx-mat-timepicker": "^21.0.0",
+    "ngx-mat-timepicker": "^20.0.1",
     "ngx-sonner": "^3.1.0",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "^0.16.2"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular/build": "^20.2.2",
