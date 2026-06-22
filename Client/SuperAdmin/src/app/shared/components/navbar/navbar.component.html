@@ -25,9 +25,6 @@
           <a routerLink="/admin/id-verifications" routerLinkActive="active" class="dropdown-item">
             {{ 'nav.idVerifications' | translate }}
           </a>
-          <a routerLink="/admin/rental-financials" routerLinkActive="active" class="dropdown-item">
-            {{ 'nav.rentalFinancials' | translate }}
-          </a>
           <a routerLink="/admin/roles" routerLinkActive="active" class="dropdown-item">
             {{ 'nav.roleManagement' | translate }}
           </a>
@@ -67,16 +64,9 @@
           <a routerLink="/admin/gap-analysis" routerLinkActive="active" class="dropdown-item">
             {{ 'nav.gap' | translate }}
           </a>
-          <a routerLink="/admin/fraud" routerLinkActive="active" class="dropdown-item">
-            {{ 'admin.fraudTitle' | translate }}
-          </a>
         </div>
       </div>
 
-      <!-- Settings -->
-      <a routerLink="/admin/settings" routerLinkActive="active" class="nav-link">
-        {{ 'admin.settingsTitle' | translate }}
-      </a>
     </nav>
     }
 
@@ -149,16 +139,13 @@
         <a routerLink="/super-admin/staff" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.staffManagement' | translate }}</a>
         <a routerLink="/admin/users" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.userManagement' | translate }}</a>
         <a routerLink="/admin/id-verifications" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.idVerifications' | translate }}</a>
-        <a routerLink="/admin/rental-financials" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.rentalFinancials' | translate }}</a>
         <a routerLink="/admin/roles" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.roleManagement' | translate }}</a>
         <a routerLink="/items" class="mobile-link" (click)="closeMobileMenu()">{{ 'products.title' | translate }}</a>
         <a routerLink="/admin/item-management" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.itemReview' | translate }}</a>
         <a routerLink="/admin/gap-analysis" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.gap' | translate }}</a>
-        <a routerLink="/admin/fraud" class="mobile-link" (click)="closeMobileMenu()">{{ 'admin.fraudTitle' | translate }}</a>
         <a routerLink="/categories" class="mobile-link" (click)="closeMobileMenu()">{{ 'categories.title' | translate }}</a>
         <a routerLink="/subcategories" class="mobile-link" (click)="closeMobileMenu()">{{ 'subcategories.title' | translate }}</a>
         <a routerLink="/brands" class="mobile-link" (click)="closeMobileMenu()">{{ 'brands.title' | translate }}</a>
-        <a routerLink="/admin/settings" class="mobile-link" (click)="closeMobileMenu()">{{ 'admin.settingsTitle' | translate }}</a>
         
         <hr class="mobile-divider" />
         <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
