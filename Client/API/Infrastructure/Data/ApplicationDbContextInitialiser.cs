@@ -209,6 +209,74 @@ public class ApplicationDbContextInitialiser
             var token = await _userManager.GeneratePasswordResetTokenAsync(supportUser);
             await _userManager.ResetPasswordAsync(supportUser, token, supportPassword);
         }
+
+        // Create Hamza user
+        var hamzaEmail = "hamza770440@gmail.com";
+        var hamzaPassword = "Password12!";
+        var hamzaUser = await _userManager.FindByEmailAsync(hamzaEmail);
+        if (hamzaUser == null)
+        {
+            hamzaUser = new ApplicationUser
+            {
+                UserName = hamzaEmail,
+                Email = hamzaEmail,
+                FirstName = "Hamza",
+                LastName = "Test",
+                EmailConfirmed = true,
+                IsActive = true,
+                IsVerified = true
+            };
+
+            var result = await _userManager.CreateAsync(hamzaUser, hamzaPassword);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(hamzaUser, SecurityRoles.User.ToString());
+                _logger.LogInformation("Hamza user created successfully.");
+            }
+            else
+            {
+                _logger.LogWarning("Failed to create Hamza user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(hamzaUser);
+            await _userManager.ResetPasswordAsync(hamzaUser, token, hamzaPassword);
+        }
+
+        // Create kboss user
+        var kbossEmail = "kboss2073@gmail.com";
+        var kbossPassword = "Password12!";
+        var kbossUser = await _userManager.FindByEmailAsync(kbossEmail);
+        if (kbossUser == null)
+        {
+            kbossUser = new ApplicationUser
+            {
+                UserName = kbossEmail,
+                Email = kbossEmail,
+                FirstName = "Kboss",
+                LastName = "Test",
+                EmailConfirmed = true,
+                IsActive = true,
+                IsVerified = true
+            };
+
+            var result = await _userManager.CreateAsync(kbossUser, kbossPassword);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(kbossUser, SecurityRoles.User.ToString());
+                _logger.LogInformation("Kboss user created successfully.");
+            }
+            else
+            {
+                _logger.LogWarning("Failed to create Kboss user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(kbossUser);
+            await _userManager.ResetPasswordAsync(kbossUser, token, kbossPassword);
+        }
     }
 
     private async Task ResetSequencesAsync()
