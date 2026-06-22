@@ -4,9 +4,9 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'disputes',
     children: [
-      { path: 'open', loadComponent: () => import('./disputes/open-disputes.component').then(m => m.OpenDisputesComponent) },
-      { path: 'resolved', loadComponent: () => import('./disputes/resolved-disputes.component').then(m => m.ResolvedDisputesComponent) },
-      { path: 'financials', loadComponent: () => import('./disputes/financial-resolution.component').then(m => m.FinancialResolutionComponent) },
+      { path: 'open', loadComponent: () => import('./disputes/open-disputes/open-disputes.component').then(m => m.OpenDisputesComponent) },
+      { path: 'resolved', loadComponent: () => import('./disputes/resolved-disputes/resolved-disputes.component').then(m => m.ResolvedDisputesComponent) },
+      { path: 'financials', loadComponent: () => import('./disputes/financial-resolution/financial-resolution.component').then(m => m.FinancialResolutionComponent) },
       { path: '', redirectTo: 'open', pathMatch: 'full' }
     ]
   },

@@ -66,7 +66,7 @@ export class NotificationDropdownComponent implements OnInit {
               actionUrl: newNotif.actionUrl,
               isRead: newNotif.isRead,
               createdAt: new Date(newNotif.createdAt)
-            });
+            } as any);
             
             if (!current.find(n => n.id === dto.id)) {
               return [dto, ...current];

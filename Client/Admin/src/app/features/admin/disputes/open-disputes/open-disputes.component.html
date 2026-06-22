@@ -1,0 +1,230 @@
+<div class="disputes-page-container fade-in">
+  <!-- Header Card -->
+  <div class="header-card mb-5">
+    <div class="header-content flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h1 class="page-title m-0 flex align-items-center gap-2">
+          <mat-icon class="title-icon">gavel</mat-icon>
+          {{ 'ADMIN.DISPUTES.OPEN_DISPUTES' | translate }}
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state flex flex-column justify-content-center align-items-center py-8">
+    <mat-spinner diameter="50" color="primary"></mat-spinner>
+    <p class="mt-4 text-gray-500 font-semibold text-lg">{{ 'ADMIN.DISPUTES.LOADING' | translate }}...</p>
+  </div>
+
+  <!-- Content Card -->
+  <div *ngIf="!isLoading" class="content-card">
+    <mat-tab-group class="custom-tab-group" animationDuration="200ms">
+
+      <!-- Tab 1: Available Disputes -->
+      <mat-tab>
+        <ng-template matTabLabel>
+          <div class="tab-label-wrapper flex align-items-center gap-2">
+            <mat-icon class="tab-icon">list_alt</mat-icon>
+            <span>{{ 'ADMIN.DISPUTES.AVAILABLE_DISPUTES' | translate }}</span>
+            <span class="badge badge-available">{{availableDisputes.length}}</span>
+          </div>
+        </ng-template>
+
+        <div class="tab-body-wrapper pt-4">
+          <div class="table-responsive">
+            <table mat-table [dataSource]="availableDisputes" class="w-full custom-table">
+
+              <!-- ID Column -->
+              <ng-container matColumnDef="ticketId">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.TICKET_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="ticket-id-tag">#{{dispute.id.substring(0, 8)}}</span>
+                </td>
+              </ng-container>
+
+              <!-- Related Item Column -->
+              <ng-container matColumnDef="relatedItem">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.RENTAL_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="rental-id-tag flex align-items-center gap-1">
+                    <mat-icon class="small-icon">receipt_long</mat-icon>
+                    #{{dispute.relatedRentalId?.substring(0, 8) || 'N/A'}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Reported By Column -->
+              <ng-container matColumnDef="reportedBy">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.REPORTED_BY' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute" class="font-medium text-gray-800">
+                  <div class="flex align-items-center gap-2">
+                    <div class="avatar-circle">{{dispute.userName?.substring(0, 2).toUpperCase()}}</div>
+                    {{dispute.userName}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.STATUS' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="status-badge" [ngClass]="dispute.status.toLowerCase()">
+                    <span class="status-dot"></span>
+                    {{ 'SUPPORT.TICKETS.STATUS_TYPES.' + dispute.status.toUpperCase() | translate }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Created At Column -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.CREATED_AT' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute" class="text-gray-600">
+                  <div class="flex align-items-center gap-1">
+                    <mat-icon class="small-icon text-gray-400">calendar_today</mat-icon>
+                    {{dispute.createdAt | date:'shortDate'}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let dispute" class="text-right">
+                  <button mat-flat-button class="btn-claim" (click)="assignToMe(dispute.id)">
+                    <mat-icon>person_add</mat-icon> {{ 'ADMIN.DISPUTES.ASSIGN_TO_ME' | translate }}
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="availableColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: availableColumns;" class="table-row"></tr>
+
+              <!-- No Data Row -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center py-6 text-gray-400" colspan="6">
+                  <div class="empty-state-wrapper py-5 flex flex-column align-items-center justify-content-center">
+                    <mat-icon class="empty-state-icon">inbox</mat-icon>
+                    <p class="font-medium text-lg mt-3">{{ 'ADMIN.DISPUTES.NO_AVAILABLE' | translate }}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 2: My Disputes -->
+      <mat-tab>
+        <ng-template matTabLabel>
+          <div class="tab-label-wrapper flex align-items-center gap-2">
+            <mat-icon class="tab-icon">assignment_ind</mat-icon>
+            <span>{{ 'ADMIN.DISPUTES.MY_DISPUTES' | translate }}</span>
+            <span class="badge badge-my">{{myDisputes.length}}</span>
+          </div>
+        </ng-template>
+
+        <div class="tab-body-wrapper pt-4">
+          <div class="table-responsive">
+            <table mat-table [dataSource]="myDisputes" class="w-full custom-table">
+
+              <!-- ID Column -->
+              <ng-container matColumnDef="ticketId">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.TICKET_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="ticket-id-tag">#{{dispute.id.substring(0, 8)}}</span>
+                </td>
+              </ng-container>
+
+              <!-- Related Item Column -->
+              <ng-container matColumnDef="relatedItem">
+                <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.RENTAL_ID' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="rental-id-tag flex align-items-center gap-1">
+                    <mat-icon class="small-icon">receipt_long</mat-icon>
+                    #{{dispute.relatedRentalId?.substring(0, 8) || 'N/A'}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Reported By Column -->
+              <ng-container matColumnDef="reportedBy">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.REPORTED_BY' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute" class="font-medium text-gray-800">
+                  <div class="flex align-items-center gap-2">
+                    <div class="avatar-circle my-avatar">{{dispute.userName?.substring(0, 2).toUpperCase()}}</div>
+                    {{dispute.userName}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.STATUS' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute">
+                  <span class="status-badge" [ngClass]="dispute.status.toLowerCase()">
+                    <span class="status-dot"></span>
+                    {{ 'SUPPORT.TICKETS.STATUS_TYPES.' + dispute.status.toUpperCase() | translate }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Created At Column -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.CREATED_AT' | translate }}</th>
+                <td mat-cell *matCellDef="let dispute" class="text-gray-600">
+                  <div class="flex align-items-center gap-1">
+                    <mat-icon class="small-icon text-gray-400">calendar_today</mat-icon>
+                    {{dispute.createdAt | date:'shortDate'}}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let dispute" class="text-right">
+                  <button mat-icon-button [matMenuTriggerFor]="actionsMenu" class="btn-menu-action"
+                    [disabled]="dispute.status?.toLowerCase() === 'open'">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #actionsMenu="matMenu" class="custom-mat-menu">
+                    <button mat-menu-item (click)="viewChatHistory(dispute)">
+                      <mat-icon color="primary">chat</mat-icon>
+                      <span>{{ 'ADMIN.DISPUTES.ACTION_VIEW_CHAT' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="resolveFinancials(dispute)">
+                      <mat-icon color="accent">account_balance_wallet</mat-icon>
+                      <span>{{ 'ADMIN.DISPUTES.ACTION_RESOLVE' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="returnToSupport(dispute)">
+                      <mat-icon color="warn">keyboard_return</mat-icon>
+                      <span>{{ 'ADMIN.DISPUTES.ACTION_RETURN_SUPPORT' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="closeDispute(dispute)">
+                      <mat-icon class="text-gray-500">close</mat-icon>
+                      <span>{{ 'ADMIN.DISPUTES.ACTION_CLOSE' | translate }}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="myColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: myColumns;" class="table-row"></tr>
+
+              <!-- No Data Row -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center py-6 text-gray-400" colspan="6">
+                  <div class="empty-state-wrapper py-5 flex flex-column align-items-center justify-content-center">
+                    <mat-icon class="empty-state-icon">assignment_late</mat-icon>
+                    <p class="font-medium text-lg mt-3">{{ 'ADMIN.DISPUTES.NO_ASSIGNED' | translate }}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

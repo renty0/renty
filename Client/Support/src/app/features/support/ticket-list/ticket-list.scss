@@ -2,12 +2,11 @@
 
 .expert-assigned-container {
   padding: $spacing-lg;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   min-height: 80vh;
 
   .content-wrapper {
-    margin-top: $spacing-lg;
     animation: fadeIn 0.5s ease-out;
   }
 

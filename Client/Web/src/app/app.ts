@@ -22,7 +22,7 @@ import { ToastService } from './shared/services/toast.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster, ChatWidgetComponent, SupportHubComponent],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster, ChatWidgetComponent],
   templateUrl: './app.html',
 })
 export class App implements OnDestroy {

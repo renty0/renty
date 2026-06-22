@@ -1,0 +1,95 @@
+<div class="disputes-page-container fade-in">
+  <!-- Header Card -->
+  <div class="header-card mb-5">
+    <div class="header-content flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h1 class="page-title m-0 flex align-items-center gap-2">
+          <mat-icon class="title-icon">task_alt</mat-icon>
+          {{ 'ADMIN.DISPUTES.RESOLVED_DISPUTES' | translate }}
+        </h1>
+        <p class="page-subtitle text-gray-500 mt-2">Archive and history of fully resolved or closed customer disputes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="content-card">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="resolvedDisputes" class="w-full custom-table">
+        
+        <!-- Ticket ID Column -->
+        <ng-container matColumnDef="ticketId">
+          <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.TICKET_ID' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute">
+            <span class="ticket-id-tag">#{{dispute.id.substring(0, 8)}}</span>
+          </td>
+        </ng-container>
+
+        <!-- Related Item Column -->
+        <ng-container matColumnDef="relatedItem">
+          <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.RENTAL_ID' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute">
+            <span class="rental-id-tag flex align-items-center gap-1">
+              <mat-icon class="small-icon">receipt_long</mat-icon>
+              #{{dispute.relatedRentalId?.substring(0, 8) || 'N/A'}}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Resolution Date Column -->
+        <ng-container matColumnDef="resolutionDate">
+          <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.RESOLUTION_DATE' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute" class="text-gray-600">
+            <div class="flex align-items-center gap-1">
+              <mat-icon class="small-icon text-gray-400">schedule</mat-icon>
+              {{dispute.updatedAt | date:'medium'}}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Resolved By Column -->
+        <ng-container matColumnDef="resolvedBy">
+          <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.RESOLVED_BY' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute" class="font-medium text-gray-800">
+            <div class="flex align-items-center gap-2">
+              <div class="avatar-circle">{{dispute.assignedAgentName?.substring(0, 2).toUpperCase() || 'AD'}}</div>
+              {{dispute.assignedAgentName || 'Admin'}}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Decision Column -->
+        <ng-container matColumnDef="decision">
+          <th mat-header-cell *matHeaderCellDef>{{ 'SUPPORT.TICKETS.STATUS' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute">
+            <span class="status-badge" [ngClass]="dispute.status.toLowerCase()">
+              <span class="status-dot"></span>
+              {{ 'SUPPORT.TICKETS.STATUS_TYPES.' + dispute.status.toUpperCase() | translate }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Reason Column -->
+        <ng-container matColumnDef="reason">
+          <th mat-header-cell *matHeaderCellDef>{{ 'ADMIN.DISPUTES.FINAL_MESSAGE' | translate }}</th>
+          <td mat-cell *matCellDef="let dispute" class="text-gray-500 max-w-20rem text-truncate" [title]="dispute.lastMessage">
+            {{dispute.lastMessage || ('ADMIN.DISPUTES.CLOSED_BY_ADMIN' | translate) }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+        
+        <!-- No Data Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center py-6 text-gray-400" colspan="6">
+            <div class="empty-state-wrapper py-5 flex flex-column align-items-center justify-content-center">
+              <mat-icon class="empty-state-icon">done_all</mat-icon>
+              <p class="font-medium text-lg mt-3">{{ 'ADMIN.DISPUTES.NO_RESOLVED' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
