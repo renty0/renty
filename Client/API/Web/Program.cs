@@ -18,12 +18,15 @@ builder.Services.AddWebServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Initialize database (runs in all environments - all seed ops are idempotent)
-using (var scope = app.Services.CreateScope())
+// Initialize database ONLY in development
+if (app.Environment.IsDevelopment())
 {
-    var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-    await initialiser.InitialiseAsync();
-    await initialiser.SeedAsync();
+    using (var scope = app.Services.CreateScope())
+    {
+        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        await initialiser.InitialiseAsync();
+        await initialiser.SeedAsync();
+    }
 }
 
 // Configure middleware

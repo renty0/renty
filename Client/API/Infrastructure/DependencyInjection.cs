@@ -23,8 +23,20 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION")
-            ?? configuration.GetConnectionString("DefaultConnection");
+        string connectionString;
+        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        
+        if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
+        {
+            var uri = new Uri(databaseUrl);
+            var userInfo = uri.UserInfo.Split(':');
+            connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};Ssl Mode=Require;Trust Server Certificate=true;";
+        }
+        else
+        {
+            connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION")
+                ?? configuration.GetConnectionString("DefaultConnection")!;
+        }
 
         Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
@@ -65,7 +77,7 @@ public static class DependencyInjection
 
         // Configure JWT
         var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()!;
-        jwtSettings.Key = Environment.GetEnvironmentVariable("JWT_KEY") ?? jwtSettings.Key;
+        jwtSettings.Key = Environment.GetEnvironmentVariable("JWT_SECRET") ?? Environment.GetEnvironmentVariable("JWT_KEY") ?? jwtSettings.Key;
         jwtSettings.Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? jwtSettings.Issuer;
         jwtSettings.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? jwtSettings.Audience;
 
