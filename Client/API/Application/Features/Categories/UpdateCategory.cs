@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -83,7 +84,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             {
                 var requestUrl = _httpContextAccessor.HttpContext?.Request;
                 var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
-                logoUrl = $"{baseUrl.TrimEnd('/')}/{logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+                logoUrl = logo.StoragePath.ToAbsoluteUrl(baseUrl);
             }
         }
 

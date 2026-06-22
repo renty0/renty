@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
@@ -202,11 +203,7 @@ public class GetItemsQueryHandler : IRequestHandler<GetItemsQuery, GetItemsRespo
                 x.Item.TitleEn,
                 x.DailyPrice,
                 x.Item.City,
-                x.PrimaryImage != null
-                    ? (x.PrimaryImage.StartsWith("http://") || x.PrimaryImage.StartsWith("https://")
-                        ? x.PrimaryImage
-                        : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{x.PrimaryImage.TrimStart('/')}" : "/" + x.PrimaryImage.Replace("\\", "/").TrimStart('/'))
-                    : null,
+                x.PrimaryImage.ToAbsoluteUrl(baseUrl),
                 x.AvgRating,  
                 x.ReviewCount,  
                 x.Item.Type.ToString(),

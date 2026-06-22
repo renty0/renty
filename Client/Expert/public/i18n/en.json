@@ -852,6 +852,7 @@
       "deductionAmount": "Deposit Deduction Amount",
       "newDepositAmount": "Required Deposit Amount",
       "mustHavePossession": "You must physically receive the item via the Transfer workflow before you can submit the Verification form.",
+      "mustHavePossessionBeforeRent": "You cannot submit a before-rent inspection because the item is currently with another party.",
       "delivery_to_renter": "Delivery to Renter",
       "receive_from_renter": "Receive from Renter",
       "receive_from_owner": "Receive from Owner",

@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Entities;
 using Domain.Enums;
 using Application.Common.Models;
@@ -353,7 +354,7 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
 
         var dtos = rentals.Select(r => {
             var storagePath = r.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? r.Item.Images.FirstOrDefault()?.Image?.StoragePath;
-            var fullUrl = !string.IsNullOrEmpty(storagePath) ? (storagePath.StartsWith("http") ? storagePath : $"{baseUrl.TrimEnd('/')}/{storagePath.Replace("\\\\", "/").TrimStart('/')}") : null;
+            var fullUrl = storagePath.ToAbsoluteUrl(baseUrl);
             return new RentalListDto(
                 r.Id,
                 r.Item.TitleEn,
@@ -408,7 +409,7 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             return new GetRentalByIdResponse(false, "Forbidden.", null);
 
         var itemStoragePath = rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath;
-        var itemFullUrl = !string.IsNullOrEmpty(itemStoragePath) ? (itemStoragePath.StartsWith("http") ? itemStoragePath : $"{baseUrl.TrimEnd('/')}/{itemStoragePath.Replace("\\\\", "/").TrimStart('/')}") : null;
+        var itemFullUrl = itemStoragePath.ToAbsoluteUrl(baseUrl);
 
         var dto = new RentalDetailDto(
             rental.Id, rental.ItemId, rental.Item.TitleEn,
@@ -428,11 +429,11 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
             rental.AssignedExpertId,
             rental.AssignedExpert?.FirstName,
             rental.Images.Where(i => i.Type == RentalImageType.Handover).Select(i => new RentalImageDto(
-                i.Image.StoragePath.StartsWith("http") ? i.Image.StoragePath : $"{baseUrl.TrimEnd('/')}/{i.Image.StoragePath.Replace("\\\\", "/").TrimStart('/')}",
+                i.Image.StoragePath.ToAbsoluteUrl(baseUrl) ?? "",
                 i.Image.CreatedBy == _currentUser.Id
             )).ToList(),
             rental.Images.Where(i => i.Type == RentalImageType.Return).Select(i => new RentalImageDto(
-                i.Image.StoragePath.StartsWith("http") ? i.Image.StoragePath : $"{baseUrl.TrimEnd('/')}/{i.Image.StoragePath.Replace("\\\\", "/").TrimStart('/')}",
+                i.Image.StoragePath.ToAbsoluteUrl(baseUrl) ?? "",
                 i.Image.CreatedBy == _currentUser.Id
             )).ToList(),
             rental.Transfers.OrderBy(t => t.Sequence).Select(t => new RentalTransferDto(

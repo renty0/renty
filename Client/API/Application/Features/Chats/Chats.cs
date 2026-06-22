@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
@@ -128,22 +129,14 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, GetChatsRespo
             c.Id,
             c.OtherUser.FirstName,
             c.OtherUser.LastName,
-            !string.IsNullOrEmpty(c.OtherUser.ProfilePictureUrl)
-                ? (c.OtherUser.ProfilePictureUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                    ? c.OtherUser.ProfilePictureUrl
-                    : $"{baseUrl}/{c.OtherUser.ProfilePictureUrl.TrimStart('/')}")
-                : null,
+            c.OtherUser.ProfilePictureUrl.ToAbsoluteUrl(baseUrl),
             c.LastMsg?.Message ?? (c.LastMsg != null && c.LastMsg.MessageType != MessageType.Text ? $"[{c.LastMsg.MessageType}]" : null),
             c.LastMsg?.MessageType ?? MessageType.Text,
             c.UnreadCount,
             c.LastMsg?.CreatedAt ?? c.CreatedAt,
             c.ItemId,
             c.ItemTitle,
-            !string.IsNullOrEmpty(c.ItemImage)
-                ? (c.ItemImage.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                    ? c.ItemImage
-                    : $"{baseUrl}/{c.ItemImage.Replace("\\", "/").TrimStart('/')}")
-                : null,
+            c.ItemImage.ToAbsoluteUrl(baseUrl),
             c.OtherUser.LastLoginAt
         ))
         .OrderByDescending(c => c.LastMessageAt)
@@ -225,7 +218,7 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
 
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
-        var mediaUrl = !string.IsNullOrEmpty(msg.MediaUrl) ? $"{baseUrl}/{msg.MediaUrl.TrimStart('/')}" : msg.MediaUrl;
+        var mediaUrl = msg.MediaUrl.ToAbsoluteUrl(baseUrl);
 
         string? contextItemTitle = null;
         string? contextItemImage = null;
@@ -239,7 +232,7 @@ public class PostChatMessageCommandHandler : IRequestHandler<PostChatMessageComm
                 var primaryImage = item.Images.OrderByDescending(img => img.IsPrimary).FirstOrDefault()?.Image?.StoragePath;
                 if (primaryImage != null)
                 {
-                    contextItemImage = primaryImage.StartsWith("http") ? primaryImage : $"{baseUrl}/{primaryImage.TrimStart('/')}";
+                    contextItemImage = primaryImage.ToAbsoluteUrl(baseUrl);
                 }
             }
         }
@@ -339,20 +332,13 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : "";
 
-        var otherUserProfileImage = otherUser.ProfilePictureUrl;
-        if (!string.IsNullOrEmpty(otherUserProfileImage) && !otherUserProfileImage.StartsWith("http"))
-        {
-            otherUserProfileImage = $"{baseUrl}/{otherUserProfileImage.TrimStart('/')}";
-        }
+        var otherUserProfileImage = otherUser.ProfilePictureUrl.ToAbsoluteUrl(baseUrl);
 
         string? itemImage = null;
         var primaryImage = chat.Item?.Images.OrderByDescending(i => i.IsPrimary).FirstOrDefault();
         if (primaryImage?.Image != null)
         {
-            var path = primaryImage.Image.StoragePath;
-            itemImage = path.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
-                ? path 
-                : $"{baseUrl}/{path.Replace("\\", "/").TrimStart('/')}";
+            itemImage = primaryImage.Image.StoragePath.ToAbsoluteUrl(baseUrl);
         }
 
         var metadata = new ChatListDto(
@@ -379,13 +365,11 @@ public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery,
                 m.Id, 
                 m.SenderId, 
                 m.Message, 
-                !string.IsNullOrEmpty(m.MediaUrl) 
-                    ? (m.MediaUrl.StartsWith("http") ? m.MediaUrl : $"{baseUrl}/{m.MediaUrl.TrimStart('/')}")
-                    : m.MediaUrl,
+                m.MediaUrl.ToAbsoluteUrl(baseUrl),
                 m.MessageType,
                 m.ContextItemId,
                 m.ContextItem != null ? m.ContextItem.TitleAr : null,
-                m.ContextItem != null ? (m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault() != null ? (m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()!.StartsWith("http") ? m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault() : $"{baseUrl}/{m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault()!.TrimStart('/')}") : null) : null,
+                m.ContextItem != null ? m.ContextItem.Images.OrderByDescending(img => img.IsPrimary).Select(img => img.Image.StoragePath).FirstOrDefault().ToAbsoluteUrl(baseUrl) : null,
                 m.IsRead, 
                 m.CreatedAt))
             .ToListAsync(ct);

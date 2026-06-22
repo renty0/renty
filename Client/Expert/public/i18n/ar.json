@@ -852,6 +852,7 @@
       "deductionAmount": "مبلغ الخصم من التأمين",
       "newDepositAmount": "قيمة التأمين المطلوبة (المالك لم يحدد)",
       "mustHavePossession": "يجب عليك استلام المنتج فعلياً وإدخال رمز التحقق قبل أن تتمكن من إرسال تقرير الفحص.",
+      "mustHavePossessionBeforeRent": "لا يمكنك تقديم فحص ما قبل الإيجار لأن المنتج حالياً لدى طرف آخر.",
       "delivery_to_renter": "التسليم للمستأجر",
       "receive_from_renter": "الاستلام من المستأجر",
       "receive_from_owner": "الاستلام من المالك",

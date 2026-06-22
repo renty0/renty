@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, text
 DB_URLS = [
     "postgresql://postgres:postgrespassword@localhost:5432/rentyDB",
     "postgresql://postgres:postgrespassword@localhost:5433/rentyDB",
-    "postgresql://neondb_owner:npg_0hBeijOPT4cL@ep-sweet-shadow-ag0l2dna-pooler.c-2.eu-central-1.aws.neon.tech:5432/rentyDB?sslmode=require"
+    "postgresql://dev-db-168548:AVNS_IVH87ja0r9i9TEnRzZn@app-dd4f79c4-c164-43f2-8618-0430cfe31cb8-do-user-29117682-0.g.db.ondigitalocean.com:25060/dev-db-168548?sslmode=require"
 ]
 MODEL_PATH = "renty_recommendation_artifacts.pkl"
 

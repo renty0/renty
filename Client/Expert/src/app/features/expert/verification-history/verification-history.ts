@@ -137,11 +137,8 @@ export class VerificationHistoryComponent implements OnInit {
               this.verifyForm.patchValue({ checkType: formType });
             }
             
-            if (this.canSubmitForm()) {
-              this.verifyForm.enable();
-            } else {
-              this.verifyForm.disable();
-            }
+            // Always keep the form enabled — canSubmitForm() gates the submit button only
+            this.verifyForm.enable();
           }
         }
         this.isLoading.set(false);
@@ -154,14 +151,21 @@ export class VerificationHistoryComponent implements OnInit {
   }
 
   canSubmitForm(): boolean {
-    const rental = this.itemDetails()?.activeRental;
-    if (!rental) return false;
-    
-    if (rental.currentPossession !== 'Expert') return false;
-    
     const formType = this.verifyForm.get('checkType')?.value;
-    if (formType === 'after_return' && !rental.hasReturnTransfers) return false;
-    
+    const rental = this.itemDetails()?.activeRental;
+
+    if (formType === 'after_return') {
+      // after_return requires an active rental that has return transfers and expert has possession
+      if (!rental) return false;
+      if (rental.currentPossession !== 'Expert') return false;
+      if (!rental.hasReturnTransfers) return false;
+      return true;
+    }
+
+    // before_rent: allowed even without active rental
+    // but if there IS an active rental, expert must have possession
+    if (rental && rental.currentPossession !== 'Expert') return false;
+
     return true;
   }
 

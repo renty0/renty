@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -43,10 +44,7 @@ public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, GetBrandsRe
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
 
         var brandDtos = brands.Select(b => {
-             string? logoUrl = null;
-             if (!string.IsNullOrEmpty(b.LogoPath)) {
-                 logoUrl = $"{baseUrl.TrimEnd('/')}/{b.LogoPath.Replace("\\", "/").TrimStart('/')}";
-             }
+             string? logoUrl = b.LogoPath.ToAbsoluteUrl(baseUrl);
              return new BrandDto(b.Id, b.NameAr, b.NameEn, b.DescAr, b.DescEn, b.LogoId, logoUrl, b.ItemCount);
         }).ToList();
 
@@ -82,10 +80,7 @@ public class GetBrandByIdQueryHandler : IRequestHandler<GetBrandByIdQuery, GetBr
         var requestUrl = _httpContextAccessor.HttpContext?.Request;
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
 
-        string? logoUrl = null;
-        if (!string.IsNullOrEmpty(b.LogoPath)) {
-            logoUrl = $"{baseUrl.TrimEnd('/')}/{b.LogoPath.Replace("\\", "/").TrimStart('/')}";
-        }
+        string? logoUrl = b.LogoPath.ToAbsoluteUrl(baseUrl);
 
         var dto = new BrandDto(b.Id, b.NameAr, b.NameEn, b.DescAr, b.DescEn, b.LogoId, logoUrl, b.ItemCount);
         return new GetBrandByIdResponse(true, null, dto);

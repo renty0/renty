@@ -996,6 +996,12 @@
     "sohag": "سوهاج"
   },
   "support": {
+    "customer": "عميل",
+    "customerName": "اسم العميل",
+    "owner": "مالك",
+    "rentalId": "رقم الإيجار",
+    "assignedAgent": "الموظف المعين",
+    "agent": "موظف",
     "dashboard": "لوحة القيادة",
     "openTickets": "التذاكر المفتوحة",
     "inProgress": "قيد المعالجة",

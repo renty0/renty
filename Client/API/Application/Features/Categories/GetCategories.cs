@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Application.Common.Mappings;
 using Application.Common.Models;
+using Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -99,9 +100,7 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
         foreach (var c in items)
         {
             var logoPath = logoPathByCategoryId.GetValueOrDefault(c.Id);
-            var logoUrl = !string.IsNullOrEmpty(logoPath)
-                ? $"{baseUrlNormalized}/{logoPath.Replace("\\", "/").TrimStart('/')}"
-                : (string?)null;
+            var logoUrl = logoPath.ToAbsoluteUrl(baseUrlNormalized);
             var subcategoryCount = subcategoryCounts.GetValueOrDefault(c.Id, 0);
             dtos.Add(new ProductCategoryDto(
                 c.Id,

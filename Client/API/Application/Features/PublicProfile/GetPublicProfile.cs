@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Application.Features.Items;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -72,16 +73,7 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             .Where(i => i.Status == Domain.Enums.NewItemStatus.Available)
             .Select(i => {
                 var primaryImage = i.Images.FirstOrDefault(img => img.IsPrimary) ?? i.Images.FirstOrDefault();
-                string? imageUrl = null;
-                if (primaryImage?.Image != null)
-                {
-                    var path = primaryImage.Image.StoragePath.Replace("\\", "/").TrimStart('/');
-                    imageUrl = path.StartsWith("http://") || path.StartsWith("https://")
-                        ? path
-                        : (!string.IsNullOrEmpty(baseUrl) 
-                            ? $"{baseUrl.TrimEnd('/')}/{path}" 
-                            : $"/{path}");
-                }
+                string? imageUrl = primaryImage?.Image?.StoragePath.ToAbsoluteUrl(baseUrl);
 
                 var dailyPrice = i.Pricing.FirstOrDefault(p => p.PricingType == "daily")?.Price 
                                ?? i.Pricing.FirstOrDefault()?.Price 
@@ -119,11 +111,7 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
                 r.Rating,
                 r.Comment,
                 r.Reviewer.FirstName + " " + r.Reviewer.LastName,
-                !string.IsNullOrEmpty(r.Reviewer.ProfilePictureUrl) 
-                    ? (r.Reviewer.ProfilePictureUrl.StartsWith("http://") || r.Reviewer.ProfilePictureUrl.StartsWith("https://")
-                        ? r.Reviewer.ProfilePictureUrl
-                        : (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{r.Reviewer.ProfilePictureUrl.TrimStart('/')}" : "/" + r.Reviewer.ProfilePictureUrl.TrimStart('/')))
-                    : null,
+                r.Reviewer.ProfilePictureUrl.ToAbsoluteUrl(baseUrl),
                 r.CreatedAt,
                 "owner"
             ))
@@ -133,11 +121,7 @@ public class GetPublicProfileQueryHandler : IRequestHandler<GetPublicProfileQuer
             user.Id,
             user.FirstName,
             user.LastName,
-            !string.IsNullOrEmpty(user.ProfilePictureUrl)
-                ? (user.ProfilePictureUrl.StartsWith("http://") || user.ProfilePictureUrl.StartsWith("https://")
-                    ? user.ProfilePictureUrl
-                    : (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" : "/" + user.ProfilePictureUrl.TrimStart('/')))
-                : null,
+            user.ProfilePictureUrl.ToAbsoluteUrl(baseUrl),
             user.Bio,
             user.City,
             user.Country,

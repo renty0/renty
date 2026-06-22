@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -51,9 +52,7 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
             category.DescAr,
             category.DescEn,
             category.LogoId,
-            !string.IsNullOrEmpty(category.LogoStoragePath) 
-                ? $"{baseUrl.TrimEnd('/')}/{category.LogoStoragePath.Replace("\\", "/").TrimStart('/')}" 
-                : null,
+            category.LogoStoragePath.ToAbsoluteUrl(baseUrl),
             category.SubcategoryCount,
             category.Created,
             category.LastModified

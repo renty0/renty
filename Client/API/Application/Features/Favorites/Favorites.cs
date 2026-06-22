@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Application.Features.Items;
 using Domain.Entities;
 using Domain.Enums;
@@ -132,11 +133,7 @@ public class GetMyFavoritesQueryHandler : IRequestHandler<GetMyFavoritesQuery, G
                 f.Id,
                 f.Title ?? "",
                 f.DailyPrice,
-                f.PrimaryImage != null
-                    ? (f.PrimaryImage.StartsWith("http://") || f.PrimaryImage.StartsWith("https://")
-                        ? f.PrimaryImage
-                        : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{f.PrimaryImage.TrimStart('/')}" : "/" + f.PrimaryImage.Replace("\\", "/").TrimStart('/'))
-                    : null,
+                f.PrimaryImage.ToAbsoluteUrl(baseUrl),
                 f.City
             )).ToList();
 

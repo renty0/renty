@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -66,11 +67,7 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, G
             user.FirstName,
             user.LastName,
             user.FullName,
-            !string.IsNullOrEmpty(user.ProfilePictureUrl)
-                ? (user.ProfilePictureUrl.StartsWith("http://") || user.ProfilePictureUrl.StartsWith("https://")
-                    ? user.ProfilePictureUrl
-                    : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{user.ProfilePictureUrl.TrimStart('/')}" : "/" + user.ProfilePictureUrl.TrimStart('/'))
-                : null,
+            user.ProfilePictureUrl.ToAbsoluteUrl(baseUrl),
             roles.FirstOrDefault() ?? Domain.Constants.Roles.User,
             user.IsVerified,
             user.EmailConfirmed,

@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
@@ -254,7 +255,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, GetOrdersRe
             var storagePath = firstItem?.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath 
                              ?? firstItem?.Images.FirstOrDefault()?.Image?.StoragePath;
             
-            var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+            var fullUrl = storagePath.ToAbsoluteUrl(baseUrl);
 
             return new OrderListDto(o.Id, o.TotalAmount, o.Status.ToString(), o.CreatedAt, o.Items.Count, fullUrl);
         }).ToList();
@@ -298,7 +299,7 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, GetOr
             order.Id, order.TotalAmount, order.Status.ToString(), order.CreatedAt,
             order.Items.Select(oi => {
                 var storagePath = oi.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? oi.Item.Images.FirstOrDefault()?.Image?.StoragePath;
-                var fullUrl = !string.IsNullOrEmpty(storagePath) ? $"{baseUrl}/{storagePath}" : null;
+                var fullUrl = storagePath.ToAbsoluteUrl(baseUrl);
                 return new OrderItemDetailDto(
                     oi.ItemId, oi.Item.TitleEn, oi.Quantity, oi.PriceAtTime,
                     fullUrl

@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.Common;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -89,21 +90,13 @@ public class GetItemByIdQueryHandler : IRequestHandler<GetItemByIdQuery, GetItem
                 item.Owner.FirstName, 
                 item.Owner.LastName,
                 item.Owner.City, 
-                !string.IsNullOrEmpty(item.Owner.ProfilePictureUrl)
-                    ? (item.Owner.ProfilePictureUrl.StartsWith("http://") || item.Owner.ProfilePictureUrl.StartsWith("https://")
-                        ? item.Owner.ProfilePictureUrl
-                        : !string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{item.Owner.ProfilePictureUrl.TrimStart('/')}" : "/" + item.Owner.ProfilePictureUrl.TrimStart('/'))
-                    : null,
+                item.Owner.ProfilePictureUrl.ToAbsoluteUrl(baseUrl),
                 item.Owner.Rating,
                 item.Owner.TotalRatings),
             item.Pricing.Select(p => new ItemPricingDto(p.PricingType, p.Price)).ToList(),
             item.Images.Select(img => new ItemImageDto(
                 img.ImageId, 
-                img.Image != null 
-                    ? (img.Image.StoragePath.StartsWith("http://") || img.Image.StoragePath.StartsWith("https://")
-                        ? img.Image.StoragePath
-                        : (!string.IsNullOrEmpty(baseUrl) ? $"{baseUrl.TrimEnd('/')}/{img.Image.StoragePath.TrimStart('/')}" : "/" + img.Image.StoragePath.Replace("\\", "/").TrimStart('/')))
-                    : "", 
+                img.Image != null ? img.Image.StoragePath.ToAbsoluteUrl(baseUrl) ?? "" : "", 
                 img.IsPrimary)).ToList(),
             await _context.Reviews.Where(r => r.Rental.ItemId == item.Id).AverageAsync(r => (double?)r.Rating, ct) ?? 0, 
             await _context.Reviews.CountAsync(r => r.Rental.ItemId == item.Id, ct), 

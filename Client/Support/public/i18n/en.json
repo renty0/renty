@@ -1000,6 +1000,12 @@
     "sohag": "Sohag"
   },
   "support": {
+    "customer": "Customer",
+    "customerName": "Customer Name",
+    "owner": "Owner",
+    "rentalId": "Rental ID",
+    "assignedAgent": "Assigned Agent",
+    "agent": "Agent",
     "dashboard": "Dashboard",
     "openTickets": "Open Tickets",
     "inProgress": "In Progress",

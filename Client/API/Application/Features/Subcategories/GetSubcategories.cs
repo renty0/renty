@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -76,11 +77,7 @@ public class GetSubcategoriesQueryHandler : IRequestHandler<GetSubcategoriesQuer
         var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
 
         var dtos = items.Select(s => {
-            string? logoUrl = null;
-            if (s.Logo != null)
-            {
-                logoUrl = $"{baseUrl.TrimEnd('/')}/{s.Logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
-            }
+            string? logoUrl = s.Logo?.StoragePath.ToAbsoluteUrl(baseUrl);
 
             return new ProductSubcategoryDto(
                 s.Id,

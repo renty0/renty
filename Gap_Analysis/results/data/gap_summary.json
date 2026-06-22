@@ -1,92 +1,56 @@
 [
   {
-    "category": "Padel & Tennis",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Diving & Snorkeling",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Water Sports",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Football & Team Sports",
-    "supply": 3,
-    "demand": 3,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Action Photography",
-    "supply": 2,
-    "demand": 2,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "Winter Sports",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
-    "category": "new category",
-    "supply": 0,
-    "demand": 0,
-    "gap_score": 1.0,
-    "gap_status": "Low Gap",
-    "normalized_gap": 1.0,
-    "gap_pct": 0.0
-  },
-  {
     "category": "Fitness & Gym",
     "supply": 2,
     "demand": 0,
     "gap_score": 0.33,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.1067,
+    "normalized_gap": 1.0,
     "gap_pct": -66.67
   },
   {
-    "category": "Cycling & Scooters",
+    "category": "Racket Sports",
     "supply": 2,
     "demand": 0,
     "gap_score": 0.33,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.1067,
+    "normalized_gap": 1.0,
     "gap_pct": -66.67
   },
   {
-    "category": "Camping & Outdoors",
+    "category": "Cycling",
     "supply": 3,
     "demand": 0,
     "gap_score": 0.25,
     "gap_status": "Low Gap",
-    "normalized_gap": 0.0,
+    "normalized_gap": 0.5789,
     "gap_pct": -75.0
+  },
+  {
+    "category": "Outdoor & Yard Games",
+    "supply": 3,
+    "demand": 0,
+    "gap_score": 0.25,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.5789,
+    "gap_pct": -75.0
+  },
+  {
+    "category": "Camping & Hiking",
+    "supply": 4,
+    "demand": 0,
+    "gap_score": 0.2,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.3158,
+    "gap_pct": -80.0
+  },
+  {
+    "category": "Water Sports & Diving",
+    "supply": 6,
+    "demand": 0,
+    "gap_score": 0.14,
+    "gap_status": "Low Gap",
+    "normalized_gap": 0.0,
+    "gap_pct": -85.71
   }
 ]

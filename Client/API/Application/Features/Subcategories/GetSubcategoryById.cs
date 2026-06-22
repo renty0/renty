@@ -1,8 +1,8 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Subcategories;
@@ -40,13 +40,9 @@ public class GetSubcategoryByIdQueryHandler : IRequestHandler<GetSubcategoryById
             return new GetSubcategoryByIdResponse(false, "Subcategory not found.", null);
         }
 
-        string? logoUrl = null;
-        if (item.Logo != null)
-        {
-            var requestUrl = _httpContextAccessor.HttpContext?.Request;
-            var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
-            logoUrl = $"{baseUrl.TrimEnd('/')}/{item.Logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
-        }
+        var requestUrl = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
+        string? logoUrl = item.Logo?.StoragePath.ToAbsoluteUrl(baseUrl);
 
         var dto = new ProductSubcategoryDto(
             item.Id,

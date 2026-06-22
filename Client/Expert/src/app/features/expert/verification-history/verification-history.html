@@ -188,7 +188,11 @@
             <div class="notes-box mb-4" style="background: var(--red-50); border: 1px solid var(--red-200);">
               <div class="text-sm font-bold text-red-600 flex align-items-center gap-2">
                 <mat-icon>warning</mat-icon>
-                {{ 'expert.history.mustHavePossession' | translate }}
+                @if (verifyForm.get('checkType')?.value === 'after_return') {
+                  {{ 'expert.history.mustHavePossession' | translate }}
+                } @else {
+                  {{ 'expert.history.mustHavePossessionBeforeRent' | translate }}
+                }
               </div>
             </div>
             }

@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -78,7 +79,7 @@ public class CreateSubcategoryCommandHandler : IRequestHandler<CreateSubcategory
             {
                 var requestUrl = _httpContextAccessor.HttpContext?.Request;
                 var baseUrl = requestUrl != null ? $"{requestUrl.Scheme}://{requestUrl.Host}" : string.Empty;
-                logoUrl = $"{baseUrl.TrimEnd('/')}/{logo.StoragePath.Replace("\\", "/").TrimStart('/')}";
+                logoUrl = logo.StoragePath.ToAbsoluteUrl(baseUrl);
             }
         }
 
