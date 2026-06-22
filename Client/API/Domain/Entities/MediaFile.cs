@@ -52,6 +52,9 @@ public class MediaFile
         if (string.IsNullOrEmpty(StoragePath))
             return string.Empty;
 
+        if (StoragePath.StartsWith("http://") || StoragePath.StartsWith("https://"))
+            return StoragePath;
+
         return $"{baseUrl?.TrimEnd('/')}/{StoragePath}";
     }
 }
