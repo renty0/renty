@@ -1,6 +1,7 @@
 using System.Reflection;
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Rently.Domain.Entities.Views;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // Support, Chat, Notifications, Recommendations, KPIs
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
+    public DbSet<SupportTicketSummaryView> SupportTicketSummaries => Set<SupportTicketSummaryView>();
     public DbSet<SupportMessage> SupportMessages => Set<SupportMessage>();
     public DbSet<SupportTicketEvent> SupportTicketEvents => Set<SupportTicketEvent>();
     public DbSet<Chat> Chats => Set<Chat>();
@@ -355,11 +357,28 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             entity.Property(e => e.Status).HasColumnName("status").HasConversion<string>();
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+            
+            // Financial Resolution
+            entity.Property(e => e.FinancialResolutionById).HasColumnName("financial_resolution_by_id");
+            entity.Property(e => e.FinancialResolutionAt).HasColumnName("financial_resolution_at");
+            entity.Property(e => e.FinancialResolutionReason).HasColumnName("financial_resolution_reason");
+
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
             entity.HasOne(st => st.AssignedAgent)
                   .WithMany()
                   .HasForeignKey(st => st.AssignedAgentId)
                   .OnDelete(DeleteBehavior.SetNull);
+                  
+            entity.HasOne(st => st.FinancialResolutionBy)
+                  .WithMany()
+                  .HasForeignKey(st => st.FinancialResolutionById)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<SupportTicketSummaryView>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_supportticketssummary");
         });
 
         builder.Entity<SupportTicketEvent>(entity =>

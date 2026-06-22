@@ -1,11 +1,17 @@
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at Application.Features.ItemRecommendations.GetRecommendationsQueryHandler.<>c.<Handle>b__5_11(ItemImage i) in E:\Courses\Work\renty\Client\API\Application\Features\ItemRecommendations\ItemRecommendations.cs:line 101
-   at System.Linq.Enumerable.ArrayWhereSelectIterator`2.TryGetFirst(ReadOnlySpan`1 source, Func`2 predicate, Func`2 selector, Boolean& found)
-   at System.Linq.Enumerable.ListWhereSelectIterator`2.TryGetFirst(Boolean& found)
-   at System.Linq.Enumerable.FirstOrDefault[TSource](IEnumerable`1 source)
-   at Application.Features.ItemRecommendations.GetRecommendationsQueryHandler.Handle(GetRecommendationsQuery request, CancellationToken ct) in E:\Courses\Work\renty\Client\API\Application\Features\ItemRecommendations\ItemRecommendations.cs:line 95
-   at Application.Common.Behaviours.ValidationBehaviour`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in E:\Courses\Work\renty\Client\API\Application\Common\Behaviours\ValidationBehaviour.cs:line 36
-   at Web.Endpoints.RecommendationV1Endpoints.<>c.<<MapRecommendationV1Endpoints>b__0_0>d.MoveNext() in E:\Courses\Work\renty\Client\API\Web\Endpoints\RecommendationV1Endpoints.cs:line 17
+System.InvalidCastException: Reading as 'System.Int32' is not supported for fields having DataTypeName 'text'
+   at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+   at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+   at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+   at Npgsql.NpgsqlDataReader.<GetInfo>g__Slow|133_0(ColumnInfo& info, PgConverter& converter, Size& bufferRequirement, Boolean& asObject, <>c__DisplayClass133_0&)
+   at Npgsql.NpgsqlDataReader.GetFieldValueCore[T](Int32 ordinal)
+   at Npgsql.NpgsqlDataReader.GetInt32(Int32 ordinal)
+   at lambda_method1757(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Application.Features.Support.GetTicketsQueryHandler.Handle(GetTicketsQuery request, CancellationToken ct) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Support/Support.cs:line 152
+   at Application.Common.Behaviours.ValidationBehaviour`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Common/Behaviours/ValidationBehaviour.cs:line 36
+   at Web.Endpoints.SupportEndpoints.<>c.<<MapSupportEndpoints>b__0_1>d.MoveNext() in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Web/Endpoints/SupportEndpoints.cs:line 49
 --- End of stack trace from previous location ---
    at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
    at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)

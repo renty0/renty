@@ -7,6 +7,8 @@ export interface NotificationPayload {
   id: string;
   title: string;
   message: string;
+  titleAr?: string;
+  messageAr?: string;
   type: string;
   actionUrl?: string;
   isRead: boolean;

@@ -1,10 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SupportClient, TicketListDto } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationSignalrService } from '../../../core/services/notification-signalr.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./ticket-list.scss']
 })
 export class TicketList implements OnInit {
+  private notificationService = inject(NotificationSignalrService);
+
   availableTickets = signal<TicketListDto[]>([]);
   myTickets = signal<TicketListDto[]>([]);
   isLoading = signal(true);
@@ -36,7 +39,15 @@ export class TicketList implements OnInit {
 
   displayedColumns = ['id', 'user', 'type', 'status', 'age', 'actions'];
 
-  constructor(private supportClient: SupportClient, private authService: AuthService, public translate: TranslateService) {}
+  constructor(private supportClient: SupportClient, private authService: AuthService, public translate: TranslateService) {
+    // Auto-reload ticket list when a new notification arrives (e.g. new dispute created)
+    effect(() => {
+      const notification = this.notificationService.newNotification();
+      if (notification && notification.type === 'support') {
+        this.loadTickets();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.loadTickets();
@@ -51,10 +62,14 @@ export class TicketList implements OnInit {
           this.availableTickets.set(res.data.tickets.filter(t => !t.assignedAgentId));
           this.myTickets.set(res.data.tickets.filter(t => t.assignedAgentId === currentUserId));
         }
-        this.isLoading.set(false);
+        setTimeout(() => {
+          this.isLoading.set(false);
+        });
       },
       error: () => {
-        this.isLoading.set(false);
+        setTimeout(() => {
+          this.isLoading.set(false);
+        });
       }
     });
   }

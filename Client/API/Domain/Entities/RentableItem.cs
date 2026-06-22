@@ -41,4 +41,14 @@ public class RentableItem : BaseAuditableEntity
     public ProductSubcategory? Subcategory { get; set; }
     public ICollection<RentableItemImage> Images { get; set; } = new List<RentableItemImage>();
     public ICollection<RentRequest> RentRequests { get; set; } = new List<RentRequest>();
+
+    // Approval/Rejection tracking
+    public long? ApprovedById { get; set; }
+    public DateTimeOffset? ApprovedAt { get; set; }
+    public ApplicationUser? ApprovedBy { get; set; }
+
+    public long? RejectedById { get; set; }
+    public DateTimeOffset? RejectedAt { get; set; }
+    public string? RejectionReason { get; set; }
+    public ApplicationUser? RejectedBy { get; set; }
 }

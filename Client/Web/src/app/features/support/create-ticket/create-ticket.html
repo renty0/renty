@@ -5,7 +5,7 @@
     [showSearch]="false"
     icon="add_task">
     <div extra-actions>
-      <button mat-stroked-button class="back-btn" routerLink="/chats">
+      <button mat-stroked-button class="back-btn" [routerLink]="['/chats', 'support']" [queryParams]="{ type: 'support' }">
         <mat-icon>arrow_back</mat-icon>
         {{ 'support.myTickets' | translate }}
       </button>

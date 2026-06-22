@@ -1,6 +1,7 @@
 using Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
+using Rently.Domain.Entities.Views;
 
 namespace Application.Common.Interfaces;
 
@@ -48,6 +49,7 @@ public interface IApplicationDbContext
 
     // Support, Chat, Notifications, Recommendations, KPIs
     DbSet<SupportTicket> SupportTickets { get; }
+    DbSet<SupportTicketSummaryView> SupportTicketSummaries { get; }
     DbSet<SupportMessage> SupportMessages { get; }
     DbSet<SupportTicketEvent> SupportTicketEvents { get; }
     DbSet<Chat> Chats { get; }

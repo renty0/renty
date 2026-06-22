@@ -60,6 +60,8 @@ export class NotificationDropdownComponent implements OnInit {
               id: newNotif.id,
               title: newNotif.title,
               message: newNotif.message,
+              titleAr: newNotif.titleAr,
+              messageAr: newNotif.messageAr,
               type: newNotif.type,
               actionUrl: newNotif.actionUrl,
               isRead: newNotif.isRead,

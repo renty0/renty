@@ -15,12 +15,12 @@ export class AuthService {
   private readonly cookieService = inject(CookieService);
 
   private readonly ENCRYPTION_KEY = 'renty-auth-secure-key-2026';
-  private readonly ACCESS_TOKEN_KEY = 'ex_atk';
-  private readonly REFRESH_TOKEN_KEY = 'ex_rtk';
-  private readonly REFRESH_TOKEN_EXP_KEY = 'ex_rtek';
-  private readonly USER_DATA_KEY = 'ex_udk';
-  private readonly ROLES_KEY = 'ex_urk';
-  private readonly PERMISSIONS_KEY = 'ex_upk';
+  private readonly ACCESS_TOKEN_KEY = 'expert_atk';
+  private readonly REFRESH_TOKEN_KEY = 'expert_rtk';
+  private readonly REFRESH_TOKEN_EXP_KEY = 'expert_rtek';
+  private readonly USER_DATA_KEY = 'expert_udk';
+  private readonly ROLES_KEY = 'expert_urk';
+  private readonly PERMISSIONS_KEY = 'expert_upk';
 
   isLoggedIn: WritableSignal<boolean>;
   private readonly rolesSignal = signal<string>('user');

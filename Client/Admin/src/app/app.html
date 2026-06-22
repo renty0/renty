@@ -1,0 +1,12 @@
+<ngx-sonner-toaster 
+  position="top-right" 
+  [duration]="4000" 
+  [richColors]="true" 
+  [closeButton]="true" 
+  [expand]="true" 
+/>
+<app-navbar></app-navbar>
+
+<main [style.padding-top]="'64px'">
+  <router-outlet />
+</main>

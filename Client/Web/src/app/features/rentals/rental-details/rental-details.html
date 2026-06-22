@@ -611,7 +611,7 @@
                 }
               }
 
-              @if ((isRenter() || isOwner()) && (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'overdue' || r.status?.toLowerCase() === 'disputed' || r.status?.toLowerCase() === 'returned')) {
+              @if ((isRenter() || isOwner()) && (r.status?.toLowerCase() === 'active' || r.status?.toLowerCase() === 'completed' || r.status?.toLowerCase() === 'overdue' || r.status?.toLowerCase() === 'returned')) {
                 <mat-divider class="my-1"></mat-divider>
                 <app-loading-button variant="stroked" color="warn" [fullWidth]="true" (clicked)="openDispute()" [loading]="loadingAction() === 'openDispute'" matIcon="gavel">
                   {{ 'rentals.actions.dispute' | translate }}

@@ -74,6 +74,16 @@ public class RentableItemConfiguration : IEntityTypeConfiguration<RentableItem>
             .HasForeignKey(r => r.SubcategoryId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        builder.HasOne(r => r.ApprovedBy)
+            .WithMany()
+            .HasForeignKey(r => r.ApprovedById)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(r => r.RejectedBy)
+            .WithMany()
+            .HasForeignKey(r => r.RejectedById)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(r => r.OwnerId);
         builder.HasIndex(r => r.Status);
         builder.HasIndex(r => r.CategoryId);

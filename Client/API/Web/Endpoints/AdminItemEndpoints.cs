@@ -1,5 +1,6 @@
 using Application.Features.AdminItems;
 using Application.Features.Items;
+using Application.Features.Admin;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Web.Responses;
@@ -30,6 +31,16 @@ public static class AdminItemEndpoints
         })
         .WithTags("AdminItems").WithName("ReviewItem")
         .Produces<ApiResponse<object>>(StatusCodes.Status200OK)
+        .RequireAuthorization(Policies.AdminAccess);
+
+        // GET /admin/approvals/history
+        app.MapGet("/api/v1/admin/approvals/history", async (ISender sender) =>
+        {
+            var result = await sender.Send(new GetApprovalHistoryQuery());
+            return Api.Ok(result);
+        })
+        .WithTags("AdminItems").WithName("GetApprovalHistory")
+        .Produces<ApiResponse<List<ApprovalHistoryDto>>>(StatusCodes.Status200OK)
         .RequireAuthorization(Policies.AdminAccess);
     }
 }

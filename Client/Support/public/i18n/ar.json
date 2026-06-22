@@ -1024,7 +1024,8 @@
       "rentalDispute": "نزاع إيجار",
       "rental": "إيجار",
       "general": "عام",
-      "overdue": "إيجار متأخر"
+      "overdue": "إيجار متأخر",
+      "technical": "تقني"
     },
     "statuses": {
       "open": "مفتوحة",
@@ -1035,7 +1036,8 @@
       "awaitingsupport": "في انتظار الدعم"
     },
     "timeline": "الجدول الزمني",
-    "noTickets": "لا توجد تذاكر."
+    "noTickets": "لا توجد تذاكر.",
+    "system": "النظام"
   },
   "myOrders": {
     "title": "طلباتي",

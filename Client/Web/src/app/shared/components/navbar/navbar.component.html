@@ -152,7 +152,7 @@
                 <mat-icon>notifications</mat-icon>
                 <span>{{ 'nav.notifications' | translate }}</span>
               </button>
-              <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
+              <button mat-menu-item [routerLink]="['/chats', 'support']" [queryParams]="{ type: 'support' }" (click)="closeMobileMenu()">
                 <mat-icon>support_agent</mat-icon>
                 <span>{{ 'nav.support' | translate }}</span>
               </button>
@@ -280,7 +280,7 @@
             {{ 'nav.notifications' | translate }}
           </a>
           @if (canViewSupport()) {
-            <a routerLink="/chats" class="mobile-link" (click)="closeMobileMenu()">
+            <a [routerLink]="['/chats', 'support']" [queryParams]="{ type: 'support' }" class="mobile-link" (click)="closeMobileMenu()">
               <mat-icon>support_agent</mat-icon>
               {{ 'nav.support' | translate }}
             </a>

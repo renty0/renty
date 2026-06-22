@@ -10,7 +10,8 @@ namespace Application.Features.Disputes;
 public record OpenDisputeCommand(
     Guid RentalId,
     string ReasonType,
-    string Description
+    string Description,
+    List<string>? MediaUrls = null
 ) : IRequest<OpenDisputeResponse>;
 
 public record OpenDisputeResponse(bool Success, string? Error);
@@ -22,6 +23,7 @@ public class OpenDisputeCommandValidator : AbstractValidator<OpenDisputeCommand>
         RuleFor(x => x.RentalId).NotEmpty();
         RuleFor(x => x.ReasonType).NotEmpty();
         RuleFor(x => x.Description).NotEmpty().MinimumLength(10);
+        RuleFor(x => x.MediaUrls).NotEmpty().WithMessage("At least one photo must be uploaded when opening a dispute.");
     }
 }
 
@@ -65,6 +67,7 @@ public class OpenDisputeCommandHandler : IRequestHandler<OpenDisputeCommand, Ope
             UserId = _currentUser.Id.Value,
             Type = SupportTicketType.Rental,
             Status = SupportTicketStatus.Open,
+            RelatedRentalId = request.RentalId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -78,6 +81,21 @@ public class OpenDisputeCommandHandler : IRequestHandler<OpenDisputeCommand, Ope
             Message = $"**Reason:** {request.ReasonType}\n\n**Description:**\n{request.Description}",
             CreatedAt = DateTime.UtcNow
         });
+
+        if (request.MediaUrls != null && request.MediaUrls.Any())
+        {
+            foreach (var url in request.MediaUrls)
+            {
+                _context.SupportMessages.Add(new SupportMessage
+                {
+                    TicketId = ticket.Id,
+                    SenderId = _currentUser.Id.Value,
+                    MediaUrl = url,
+                    MessageType = Domain.Enums.MessageType.Image,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
 
         // Add Event
         _context.SupportTicketEvents.Add(new SupportTicketEvent
@@ -93,18 +111,6 @@ public class OpenDisputeCommandHandler : IRequestHandler<OpenDisputeCommand, Ope
 
         var sender = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.Id.Value, ct);
         var userName = sender?.FirstName ?? "A user";
-
-        // Notify Support Agents
-        var agents = await _roleService.GetUserIdsInRoleAsync(SecurityRoles.Support.ToString());
-        await _notifier.SendToUsersAsync(
-            agents,
-            "New Rental Dispute",
-            $"{userName} opened a dispute for rental #{rental.Id.ToString().Substring(0, 8)}.",
-            "support",
-            $"/support/{ticket.Id}",
-            ct,
-            titleAr: "نزاع إيجار جديد",
-            messageAr: $"{userName} فتح نزاعًا للإيجار #{rental.Id.ToString().Substring(0, 8)}.");
 
         // Notify the other party
         var otherPartyId = rental.UserId == _currentUser.Id.Value ? rental.Item.OwnerId : rental.UserId;

@@ -204,7 +204,7 @@ public static class RentalEndpoints
         // POST /rentals/:id/dispute
         g.MapPost("/{id:guid}/dispute", async (Guid id, OpenDisputeBody body, ISender sender) =>
         {
-            var cmd = new Application.Features.Disputes.OpenDisputeCommand(id, body.ReasonType, body.Description);
+            var cmd = new Application.Features.Disputes.OpenDisputeCommand(id, body.ReasonType, body.Description, body.MediaUrls);
             var r = await sender.Send(cmd);
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request", 400);
             return Api.Ok(new { Success = true });
@@ -276,4 +276,4 @@ public record SetHandoffMethodBody(string HandoffMethod);
 public record InitiateReturnBody(string ReturnMethod);
 public record ExtendRentalBody(int ExtraDays);
 public record RespondExtensionBody(bool Approve);
-public record OpenDisputeBody(string ReasonType, string Description);
+public record OpenDisputeBody(string ReasonType, string Description, List<string>? MediaUrls);

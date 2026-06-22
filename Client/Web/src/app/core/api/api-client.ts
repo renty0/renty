@@ -11984,6 +11984,7 @@ export interface IRentalCompleteData {
 export class OpenDisputeBody implements IOpenDisputeBody {
     reasonType?: string;
     description?: string;
+    mediaUrls?: string[];
 
     constructor(data?: IOpenDisputeBody) {
         if (data) {
@@ -12012,6 +12013,11 @@ export class OpenDisputeBody implements IOpenDisputeBody {
         data = typeof data === 'object' ? data : {};
         data["reasonType"] = this.reasonType;
         data["description"] = this.description;
+        if (Array.isArray(this.mediaUrls)) {
+            data["mediaUrls"] = [];
+            for (let item of this.mediaUrls)
+                data["mediaUrls"].push(item);
+        }
         return data;
     }
 }
@@ -12019,6 +12025,7 @@ export class OpenDisputeBody implements IOpenDisputeBody {
 export interface IOpenDisputeBody {
     reasonType?: string;
     description?: string;
+    mediaUrls?: string[];
 }
 
 export class ExtendRentalBody implements IExtendRentalBody {

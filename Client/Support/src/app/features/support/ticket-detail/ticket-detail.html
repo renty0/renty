@@ -41,8 +41,13 @@
             {{ 'support.statuses.' + ticket()?.status?.toLowerCase() | translate }}
           </div>
           
-          <div class="custom-select-container mt-3">
-            <div class="custom-select-header" (click)="toggleStatusDropdown($event)" [class.active]="statusDropdownOpen()">
+          <div class="custom-select-container mt-3" [class.disabled-select]="ticket()?.status?.toLowerCase() === 'escalated'">
+            <div class="custom-select-header" 
+                 (click)="ticket()?.status?.toLowerCase() !== 'escalated' ? toggleStatusDropdown($event) : null" 
+                 [class.active]="statusDropdownOpen()"
+                 [class.opacity-50]="ticket()?.status?.toLowerCase() === 'escalated'"
+                 [style.cursor]="ticket()?.status?.toLowerCase() === 'escalated' ? 'not-allowed' : 'pointer'"
+                 [style.pointer-events]="ticket()?.status?.toLowerCase() === 'escalated' ? 'none' : 'auto'">
               <span>{{ 'support.statuses.' + ticket()?.status?.toLowerCase() | translate }}</span>
               <i class="pi pi-chevron-down" [class.rotated]="statusDropdownOpen()"></i>
             </div>
@@ -78,11 +83,11 @@
             <div class="timeline-marker"></div>
             <div class="timeline-content">
               <div class="timeline-header">
-                <span class="event-type">{{ ev.eventType }}</span>
+                <span class="event-type">{{ getLocalizedEventType(ev.eventType) }}</span>
                 <span class="event-time">{{ ev.createdAt | date:'shortTime' }}</span>
               </div>
-              <div class="event-details">{{ ev.details }}</div>
-              <div class="event-actor"><i class="pi pi-user mr-1"></i> {{ ev.actorName || 'System' }}</div>
+              <div class="event-details">{{ getLocalizedEventDetails(ev.details) }}</div>
+              <div class="event-actor"><i class="pi pi-user mr-1"></i> {{ ev.actorName || ('support.system' | translate) }}</div>
             </div>
           </div>
         </div>

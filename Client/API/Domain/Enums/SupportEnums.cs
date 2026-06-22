@@ -7,7 +7,8 @@ public enum SupportTicketStatus
     AwaitingCustomer,
     AwaitingSupport,
     Resolved,
-    Closed
+    Closed,
+    Escalated
 }
 
 public enum SupportTicketType

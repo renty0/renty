@@ -138,6 +138,9 @@ export class MarketplaceComponent implements OnInit {
       if (params['category']) {
         this.selectedCategoryId.set(Number(params['category']));
       }
+      if (params['q']) {
+        this.searchTerm.set(params['q']);
+      }
     });
     this.loadCategories();
   }

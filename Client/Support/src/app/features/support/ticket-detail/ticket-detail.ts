@@ -96,6 +96,14 @@ export class TicketDetail implements OnInit, OnDestroy {
       }
     });
 
+    this.hubConnection.on('ticketstatuschanged', (status: string) => {
+      const currentTicket = this.ticket();
+      if (currentTicket) {
+        currentTicket.status = status;
+        this.ticket.set({ ...currentTicket } as TicketDetailsDto);
+      }
+    });
+
     this.hubConnection.on('TicketAssignmentChanged', (data: any) => {
       const currentTicket = this.ticket();
       if (currentTicket) {
@@ -103,6 +111,20 @@ export class TicketDetail implements OnInit, OnDestroy {
         currentTicket.assignedAgentName = data.assignedAgentName;
         this.ticket.set({ ...currentTicket } as TicketDetailsDto);
       }
+    });
+
+    this.hubConnection.on('ticketassignmentchanged', (data: any) => {
+      const currentTicket = this.ticket();
+      if (currentTicket) {
+        currentTicket.assignedAgentId = data.assignedAgentId;
+        currentTicket.assignedAgentName = data.assignedAgentName;
+        this.ticket.set({ ...currentTicket } as TicketDetailsDto);
+      }
+    });
+
+    // Add empty listener for joinedticket to prevent warning
+    this.hubConnection.on('joinedticket', (ticketId: string) => {
+      console.log('Joined ticket', ticketId);
     });
 
     this.hubConnection.start()
@@ -122,7 +144,13 @@ export class TicketDetail implements OnInit, OnDestroy {
           this.ticket.set({ ...currentTicket } as TicketDetailsDto);
           // Refresh timeline by reloading ticket
           this.loadTicket();
+        } else {
+          alert('Failed to update status: ' + (res?.error || 'Unknown error'));
         }
+      },
+      error: (err) => {
+        alert('Error updating status: ' + (err?.message || 'Server error'));
+        console.error(err);
       }
     });
   }
@@ -138,6 +166,40 @@ export class TicketDetail implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  getLocalizedEventType(eventType: string | undefined): string {
+    if (!eventType) return '';
+    if (this.translate.currentLang !== 'ar') return eventType;
+    switch (eventType) {
+      case 'Created': return 'تم الإنشاء';
+      case 'Assigned': return 'تم التعيين';
+      case 'Unassigned': return 'إلغاء التعيين';
+      case 'Message': return 'رسالة';
+      case 'StatusChanged': return 'تغيير الحالة';
+      default: return eventType;
+    }
+  }
+
+  getLocalizedEventDetails(details: string | undefined): string {
+    if (!details) return '';
+    if (this.translate.currentLang !== 'ar') return details;
+    
+    if (details === 'Ticket created by user.') return 'تم إنشاء التذكرة بواسطة المستخدم.';
+    if (details === 'Ticket assigned to agent.') return 'تم تعيين التذكرة للموظف.';
+    if (details === 'Ticket unassigned due to escalation.') return 'تم إلغاء تعيين التذكرة بسبب التصعيد.';
+    if (details === 'Support agent replied.') return 'قام ممثل الدعم بالرد.';
+    
+    if (details.startsWith('Status changed from ')) {
+      const match = details.match(/Status changed from (.*) to (.*)\./);
+      if (match) {
+        const from = this.translate.instant('support.statuses.' + match[1].toLowerCase());
+        const to = this.translate.instant('support.statuses.' + match[2].toLowerCase());
+        return `تم تغيير الحالة من ${from} إلى ${to}.`;
+      }
+    }
+    
+    return details;
   }
 
   unassign(): void {

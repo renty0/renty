@@ -1,0 +1,38 @@
+<div class="uploader-container">
+    <div class="images-grid">
+        @for (image of images; track image.imageUrl) {
+        <div class="image-card" [class.primary]="image.isPrimary">
+            <img [src]="image.imageUrl" [alt]="'Product Image'" class="image-preview">
+
+            @if (image.isUploading) {
+            <div class="upload-overlay">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            }
+
+            <div class="actions-overlay">
+                @if (!image.isPrimary) {
+                <button type="button" class="action-btn primary-btn" (click)="setPrimary(image)" title="Set as Primary">
+                    <mat-icon>star_border</mat-icon>
+                </button>
+                } @else {
+                <div class="primary-badge">
+                    <mat-icon>star</mat-icon>
+                </div>
+                }
+
+                <button type="button" class="action-btn delete-btn" (click)="removeImage(image)" title="Remove">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+
+        <div class="add-image-card" (click)="triggerFileInput(fileInput)" [class.disabled]="isUploading">
+            <input #fileInput type="file" multiple accept="image/*" style="display: none"
+                (change)="onFilesSelected($event)">
+            <mat-icon>add_photo_alternate</mat-icon>
+            <span>{{ 'Add Images' }}</span>
+        </div>
+    </div>
+</div>

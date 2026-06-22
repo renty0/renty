@@ -1,0 +1,40 @@
+<div class="product-card" [routerLink]="['/marketplace/product', item.id]">
+  <div class="card-media">
+    <img
+      [src]="displayImage()"
+      [alt]="localizedTitle()"
+      loading="lazy"
+    />
+    <div class="card-badges">
+      @if (item.type === 'premium') {
+        <span class="type-badge premium">{{ 'labels.types.premium' | translate }}</span>
+      }
+      @if (item.avgRating && item.avgRating > 0) {
+        <span class="rating-badge">
+          <mat-icon>star</mat-icon> {{ item.avgRating | number: '1.1-1' }}
+        </span>
+      }
+    </div>
+    <div class="card-actions">
+      <button mat-icon-button class="wishlist-btn" (click)="$event.stopPropagation()">
+        <mat-icon>favorite_border</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="item-meta">
+      <span class="category">{{ localizedCategory() }}</span>
+      <span class="location"> <mat-icon>location_on</mat-icon> {{ item.city }} </span>
+    </div>
+    <h3 class="item-title">{{ localizedTitle() }}</h3>
+    <div class="card-footer">
+      <div class="price-info">
+        <span class="price">{{ displayPrice() }} <small>EGP</small></span>
+        <span class="period">/ {{ 'items.daily' | translate }}</span>
+      </div>
+      <button mat-flat-button class="view-btn">
+        {{ 'marketplace.viewDetails' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

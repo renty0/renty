@@ -43,7 +43,7 @@
     </button>
     <app-loading-button
       [loading]="isSubmitting()"
-      [disabled]="disputeForm.invalid || isSubmitting()"
+      [disabled]="disputeForm.invalid || isSubmitting() || uploadedPhotos().length === 0"
       (clicked)="onSubmit()"
       color="warn">
       <mat-icon>gavel</mat-icon>

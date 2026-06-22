@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
+import { Router } from '@angular/router';
 import { TermsAndConditionsComponent } from '../../../auth/components/terms-and-conditions/terms-and-conditions.component';
 import { ProductCardComponent, ProductCardItem } from '../../../../shared/components/product-card/product-card.component';
 import { ItemsClient, ItemListDto, RecommendationsClient } from '../../../../core/api/api-client';
@@ -24,6 +26,7 @@ type CalendarCell = {
         RouterModule,
         TranslateModule,
         MatIconModule,
+        FormsModule,
         LoadingButtonComponent,
         TermsAndConditionsComponent,
         ProductCardComponent
@@ -38,6 +41,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     isScrolled = signal(false);
     showTerms = signal(false);
+    searchQuery = signal('');
+    private router = inject(Router);
 
     // Product Signals
     suggestedItems = signal<ProductCardItem[]>([]);
@@ -122,6 +127,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     onWindowScroll(): void {
         const scrollOffset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
         this.isScrolled.set(scrollOffset > 50);
+    }
+
+    onSearch(): void {
+        const term = this.searchQuery().trim();
+        if (term) {
+            this.router.navigate(['/marketplace'], { queryParams: { q: term } });
+        }
     }
 
     prevMonth(): void {

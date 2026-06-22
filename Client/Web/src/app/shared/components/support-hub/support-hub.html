@@ -75,7 +75,7 @@
           <div class="recent-section">
             <div class="section-header">
               <span class="section-label">{{ 'support.hub.recent' | translate }}</span>
-              <a routerLink="/chats" (click)="closeHub()">{{ 'common.viewAll' | translate }}</a>
+              <a [routerLink]="['/chats', 'support']" [queryParams]="{ type: 'support' }" (click)="closeHub()">{{ 'common.viewAll' | translate }}</a>
             </div>
 
             <div class="tickets-list">

@@ -60,13 +60,17 @@ export class DisputeModalComponent {
   }
 
   onSubmit() {
-    if (this.disputeForm.invalid) return;
+    if (this.disputeForm.invalid || this.uploadedPhotos().length === 0) {
+      this.toast.showError('rentals.disputes.uploadPhotosHint');
+      return;
+    }
 
     this.isSubmitting.set(true);
 
     const body = new OpenDisputeBody({
       reasonType: this.disputeForm.value.reasonType,
-      description: this.disputeForm.value.description
+      description: this.disputeForm.value.description,
+      mediaUrls: this.uploadedPhotos().map(p => p.imageUrl)
     });
 
     this.rentalsClient.openRentalDispute(this.data.rentalId, body).subscribe({

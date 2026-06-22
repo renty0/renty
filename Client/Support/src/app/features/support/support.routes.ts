@@ -19,6 +19,10 @@ export const SUPPORT_ROUTES: Routes = [
         component: TicketDetail
       },
       {
+        path: ':id',
+        component: TicketDetail
+      },
+      {
         path: '',
         redirectTo: 'tickets',
         pathMatch: 'full'

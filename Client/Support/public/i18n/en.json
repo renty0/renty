@@ -1028,7 +1028,8 @@
       "rentalDispute": "Rental Dispute",
       "rental": "Rental",
       "general": "General",
-      "overdue": "Overdue Rental"
+      "overdue": "Overdue Rental",
+      "technical": "Technical"
     },
     "statuses": {
       "open": "Open",
@@ -1039,7 +1040,8 @@
       "awaitingsupport": "Awaiting Support"
     },
     "timeline": "Timeline",
-    "noTickets": "No tickets found."
+    "noTickets": "No tickets found.",
+    "system": "System"
   },
   "myOrders": {
     "title": "My Orders",
