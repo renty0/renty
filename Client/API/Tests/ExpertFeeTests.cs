@@ -68,7 +68,7 @@ public class ExpertFeeTests
             Status = RentalStatus.Active, // Fixed status
             OrderId = orderId,
             StartDate = DateTime.UtcNow.AddDays(-1),
-            EndDate = DateTime.UtcNow.AddDays(1),
+            EndDate = DateTime.UtcNow,
             RentalPrice = rentalPrice,
             DepositAmount = depositAmount,
             PlatformCommissionPercent = 10m,
@@ -107,6 +107,9 @@ public class ExpertFeeTests
         var favoritesMock = new DbSetMock<Favorite>(new List<Favorite>(), (x, _) => x.Id);
         var itemRemindersMock = new DbSetMock<ItemReminder>(new List<ItemReminder>(), (x, _) => x.Id);
 
+        var rentalTransfersMock = new DbSetMock<RentalTransfer>(new List<RentalTransfer>(), (x, _) => x.Id);
+        var systemSettingsMock = new DbSetMock<SystemSetting>(new List<SystemSetting> { new SystemSetting { Key = "CancellationFee", Value = "500" } }, (x, _) => x.Key);
+
         _contextMock.Setup(c => c.Users).Returns(usersMock.Object);
         _contextMock.Setup(c => c.Items).Returns(itemsMock.Object);
         _contextMock.Setup(c => c.Rentals).Returns(rentalsMock.Object);
@@ -114,6 +117,8 @@ public class ExpertFeeTests
         _contextMock.Setup(c => c.WalletTransactions).Returns(walletTransactionsMock.Object);
         _contextMock.Setup(c => c.Favorites).Returns(favoritesMock.Object);
         _contextMock.Setup(c => c.ItemReminders).Returns(itemRemindersMock.Object);
+        _contextMock.Setup(c => c.RentalTransfers).Returns(rentalTransfersMock.Object);
+        _contextMock.Setup(c => c.SystemSettings).Returns(systemSettingsMock.Object);
 
         var handler = new CompleteRentalCommandHandler(_contextMock.Object, _currentUserMock.Object, _notifierMock.Object);
 

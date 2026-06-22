@@ -130,6 +130,9 @@ public class RentalScenarioTests
 
         var favoritesMock = new DbSetMock<Favorite>(new List<Favorite>(), (x, _) => x.Id);
         var itemRemindersMock = new DbSetMock<ItemReminder>(new List<ItemReminder>(), (x, _) => x.Id);
+        var systemSettingsMock = new DbSetMock<SystemSetting>(new List<SystemSetting> { new SystemSetting { Key = "CancellationFee", Value = "500" } }, (x, _) => x.Key);
+
+        var rentalTransfersMock = new DbSetMock<RentalTransfer>(new List<RentalTransfer>(), (x, _) => x.Id);
 
         contextMock.Setup(c => c.Users).Returns(usersMock.Object);
         contextMock.Setup(c => c.Items).Returns(itemsMock.Object);
@@ -139,6 +142,8 @@ public class RentalScenarioTests
         contextMock.Setup(c => c.WalletTransactions).Returns(transactionsMock.Object);
         contextMock.Setup(c => c.Favorites).Returns(favoritesMock.Object);
         contextMock.Setup(c => c.ItemReminders).Returns(itemRemindersMock.Object);
+        contextMock.Setup(c => c.SystemSettings).Returns(systemSettingsMock.Object);
+        contextMock.Setup(c => c.RentalTransfers).Returns(rentalTransfersMock.Object);
 
         // Run Phases
         if (phase == "CancelledBeforeVerification")

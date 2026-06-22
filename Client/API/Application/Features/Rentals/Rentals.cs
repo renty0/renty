@@ -940,18 +940,30 @@ public class CancelRentalCommandHandler : IRequestHandler<CancelRentalCommand, R
                     || previousStatus == RentalStatus.Confirmed 
                     || previousStatus == RentalStatus.AwaitingPickup;
 
-                // Read the fixed cancellation fee from system_settings
-                var cancellationFeeSetting = await _context.SystemSettings
-                    .FirstOrDefaultAsync(s => s.Key == "CancellationFee", ct);
-                decimal fixedCancellationFee = 500m; // default
-                if (cancellationFeeSetting != null && decimal.TryParse(cancellationFeeSetting.Value, out var parsedFee))
-                    fixedCancellationFee = parsedFee;
-
                 // Cancellation fee only applies when: renter cancels after owner confirmed (not from Pending)
                 decimal cancellationFee = 0m;
                 if (isRenter && previousStatus != RentalStatus.Pending && beforeReceipt)
                 {
-                    cancellationFee = fixedCancellationFee;
+                    double hoursBeforeStart = (rental.StartDate - DateTime.UtcNow).TotalHours;
+                    decimal refundMultiplier = 1.0m;
+                    if (rental.Item.CancellationPolicy == CancellationPolicy.Flexible)
+                    {
+                        if (hoursBeforeStart < 24)
+                            refundMultiplier = 0.5m;
+                    }
+                    else if (rental.Item.CancellationPolicy == CancellationPolicy.Moderate)
+                    {
+                        if (hoursBeforeStart < 5 * 24)
+                            refundMultiplier = 0.5m;
+                    }
+                    else if (rental.Item.CancellationPolicy == CancellationPolicy.Strict)
+                    {
+                        if (hoursBeforeStart >= 7 * 24)
+                            refundMultiplier = 0.5m;
+                        else
+                            refundMultiplier = 0.0m;
+                    }
+                    cancellationFee = Math.Round(rental.RentalPrice * (1.0m - refundMultiplier), 2);
                 }
                 rental.CancellationFee = cancellationFee;
 

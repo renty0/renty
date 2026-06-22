@@ -92,11 +92,14 @@ public class CancelRentalTests
         var walletTransactionsMock = new DbSetMock<WalletTransaction>(walletTransactions, (x, _) => x.Id);
         walletTransactionsMock.Setup(d => d.Add(It.IsAny<WalletTransaction>())).Callback<WalletTransaction>(walletTransactions.Add);
 
+        var systemSettingsMock = new DbSetMock<SystemSetting>(new List<SystemSetting>(), (x, _) => x.Key);
+
         _contextMock.Setup(c => c.Users).Returns(usersMock.Object);
         _contextMock.Setup(c => c.Items).Returns(itemsMock.Object);
         _contextMock.Setup(c => c.Rentals).Returns(rentalsMock.Object);
         _contextMock.Setup(c => c.Payments).Returns(paymentsMock.Object);
         _contextMock.Setup(c => c.WalletTransactions).Returns(walletTransactionsMock.Object);
+        _contextMock.Setup(c => c.SystemSettings).Returns(systemSettingsMock.Object);
 
         var handler = new CancelRentalCommandHandler(_contextMock.Object, _currentUserMock.Object, _notifierMock.Object, _httpContextAccessorMock.Object);
 
