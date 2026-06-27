@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatListModule } from '@angular/material/list';
@@ -14,7 +14,6 @@ import { finalize, tap, forkJoin } from 'rxjs';
   selector: 'app-chat-list',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     TranslateModule,
     MatListModule,
@@ -22,7 +21,7 @@ import { finalize, tap, forkJoin } from 'rxjs';
     MatBadgeModule,
     MatProgressSpinnerModule,
     HeaderSectionComponent
-  ],
+],
   templateUrl: './chat-list.html',
   styleUrl: './chat-list.scss'
 })

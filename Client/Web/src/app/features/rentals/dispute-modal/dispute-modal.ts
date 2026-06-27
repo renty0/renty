@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,6 @@ import { RentalsClient, OpenDisputeBody } from '../../../core/api/api-client';
   selector: 'app-dispute-modal',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
@@ -30,7 +29,7 @@ import { RentalsClient, OpenDisputeBody } from '../../../core/api/api-client';
     LoadingButtonComponent,
     MultiImageUploaderComponent,
     InputComponent
-  ],
+],
   templateUrl: './dispute-modal.html',
   styleUrl: './dispute-modal.scss'
 })

@@ -1,44 +1,44 @@
-<div class="floating-chat-container" *ngIf="isLoggedIn()">
-  @for (chat of activeChats(); track chat.id) {
-    <div class="chat-window glass-card" [class.minimized]="chat.minimized">
-      <div class="chat-header" (click)="toggleMinimize(chat.id)">
-        <div class="user-info">
-          <img [src]="chat.image || 'assets/profile.webp'" alt="">
-          <span class="name">{{ chat.name }}</span>
+@if (isLoggedIn()) {
+  <div class="floating-chat-container">
+    @for (chat of activeChats(); track chat.id) {
+      <div class="chat-window glass-card" [class.minimized]="chat.minimized">
+        <div class="chat-header" (click)="toggleMinimize(chat.id)">
+          <div class="user-info">
+            <img [src]="chat.image || 'assets/profile.webp'" alt="">
+            <span class="name">{{ chat.name }}</span>
+          </div>
+          <div class="header-actions">
+            <button (click)="$event.stopPropagation(); closeChat(chat.id)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="header-actions">
-          <button (click)="$event.stopPropagation(); closeChat(chat.id)">
-            <mat-icon>close</mat-icon>
+        <div class="chat-body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+          @if (chat.isLoading) {
+            <div class="loading-state" style="display:flex; justify-content:center; align-items:center; height:100%;">
+              <mat-spinner diameter="30"></mat-spinner>
+            </div>
+          } @else {
+            @for (msg of chat.messages; track msg.id) {
+              <div class="message-row" [class.me]="msg.senderId === authService.getCurrentUserId()">
+                <div class="message-bubble">
+                  {{ msg.message }}
+                  <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+        <div class="chat-footer">
+          <input type="text"
+            [(ngModel)]="chat.inputText"
+            (keyup.enter)="sendMessage(chat)"
+            [placeholder]="'chat.typePlaceholder' | translate">
+          <button (click)="sendMessage(chat)" [disabled]="!chat.inputText.trim()">
+            <mat-icon>send</mat-icon>
           </button>
         </div>
       </div>
-
-      <div class="chat-body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-        @if (chat.isLoading) {
-          <div class="loading-state" style="display:flex; justify-content:center; align-items:center; height:100%;">
-            <mat-spinner diameter="30"></mat-spinner>
-          </div>
-        } @else {
-          @for (msg of chat.messages; track msg.id) {
-            <div class="message-row" [class.me]="msg.senderId === authService.getCurrentUserId()">
-              <div class="message-bubble">
-                {{ msg.message }}
-                <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
-              </div>
-            </div>
-          }
-        }
-      </div>
-
-      <div class="chat-footer">
-        <input type="text" 
-               [(ngModel)]="chat.inputText" 
-               (keyup.enter)="sendMessage(chat)"
-               [placeholder]="'chat.typePlaceholder' | translate">
-        <button (click)="sendMessage(chat)" [disabled]="!chat.inputText.trim()">
-          <mat-icon>send</mat-icon>
-        </button>
-      </div>
-    </div>
-  }
-</div>
+    }
+  </div>
+}

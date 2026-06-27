@@ -371,7 +371,7 @@ public class GetRentalsQueryHandler : IRequestHandler<GetRentalsQuery, GetRental
 }
 
 
-public record GetRentalByIdQuery(Guid RentalId) : IRequest<GetRentalByIdResponse>;
+public record GetRentalByIdQuery(Guid RentalId, bool IsAdminOrSupport = false) : IRequest<GetRentalByIdResponse>;
 public record GetRentalByIdResponse(bool Found, string? Error, RentalDetailDto? Rental);
 
 public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, GetRentalByIdResponse>
@@ -404,7 +404,7 @@ public class GetRentalByIdQueryHandler : IRequestHandler<GetRentalByIdQuery, Get
 
         if (rental == null) return new GetRentalByIdResponse(false, "Rental not found.", null);
 
-        if (rental.UserId != _currentUser.Id!.Value && rental.Item.OwnerId != _currentUser.Id!.Value)
+        if (!request.IsAdminOrSupport && rental.UserId != _currentUser.Id!.Value && rental.Item.OwnerId != _currentUser.Id!.Value)
             return new GetRentalByIdResponse(false, "Forbidden.", null);
 
         var itemStoragePath = rental.Item.Images.FirstOrDefault(i => i.IsPrimary)?.Image?.StoragePath ?? rental.Item.Images.FirstOrDefault()?.Image?.StoragePath;

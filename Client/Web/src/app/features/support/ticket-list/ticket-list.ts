@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { SupportClient } from '../../../core/api/api-client';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,6 +25,7 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
     MatIconModule,
     MatChipsModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
     HeaderSectionComponent
   ],
   templateUrl: './ticket-list.html',
@@ -41,6 +43,28 @@ export class TicketListComponent {
 
   tickets = computed(() => this.ticketsResource.value()?.data?.tickets || []);
   isLoading = computed(() => this.ticketsResource.isLoading());
+  
+  availableTickets = computed(() => this.tickets().filter(t => !t.assignedAgentId));
+  myTickets = computed(() => {
+    const currentUserId = this.auth.getCurrentUserId();
+    return this.tickets().filter(t => t.assignedAgentId === currentUserId);
+  });
+  
+  isActionLoading = signal<string | null>(null);
+
+  assignToMe(ticketId: string): void {
+    if (!ticketId) return;
+    this.isActionLoading.set(ticketId);
+    this.supportClient.assignSupportTicket(ticketId).subscribe({
+      next: () => {
+        this.ticketsResource.reload();
+        this.isActionLoading.set(null);
+      },
+      error: () => {
+        this.isActionLoading.set(null);
+      }
+    });
+  }
   
   displayedColumns = computed(() => {
     const base = ['id', 'type', 'status', 'createdAt', 'actions'];

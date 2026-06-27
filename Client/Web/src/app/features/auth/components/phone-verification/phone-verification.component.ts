@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../shared/services/toast.service';
@@ -10,7 +10,7 @@ import { finalize, catchError, of } from 'rxjs';
 @Component({
   selector: 'app-phone-verification',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './phone-verification.component.html',
   styleUrl: '../login/login.scss'
 })

@@ -15,20 +15,6 @@
         </a>
       }
 
-      @if (managementLinks().length > 0) {
-        <button class="nav-link dropdown-toggle" [matMenuTriggerFor]="mgmtMenu">
-          {{ 'nav.management' | translate }}
-          <mat-icon class="dropdown-icon">expand_more</mat-icon>
-        </button>
-        <mat-menu #mgmtMenu="matMenu" class="premium-menu">
-          @for (link of managementLinks(); track link.path) {
-            <button mat-menu-item [routerLink]="link.path">
-              <mat-icon>{{ link.icon }}</mat-icon>
-              <span>{{ link.labelKey | translate }}</span>
-            </button>
-          }
-        </mat-menu>
-      }
     </nav>
 
     <div class="nav-search sm-hidden">
@@ -67,18 +53,7 @@
           <mat-icon>chat</mat-icon>
         </button>
 
-      <!-- Authentication Specific Actions -->
-        @if (isOwnerRole()) {
-          <button
-            mat-stroked-button
-            color="accent"
-            routerLink="/items/new"
-            class="post-btn sm-hidden"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            <span>{{ 'nav.postProduct' | translate }}</span>
-          </button>
-        }
+
 
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
           <mat-icon>account_circle</mat-icon>
@@ -103,58 +78,40 @@
               </button>
             </div>
 
-              <!-- 2-column grid: Orders, Rentals, Items, Favorites -->
-              <div class="section-group grid-layout">
-                <button mat-menu-item routerLink="/my-orders" (click)="closeMobileMenu()">
-                  <mat-icon>shopping_bag</mat-icon>
-                  <span>{{ 'nav.myOrders' | translate }}</span>
-                </button>
-                <button mat-menu-item routerLink="/my-rentals" (click)="closeMobileMenu()">
+            <div class="section-group grid-layout secondary">
+              @if (canViewRentals()) {
+                <button mat-menu-item routerLink="/my-rentals">
                   <mat-icon>receipt_long</mat-icon>
                   <span>{{ 'nav.myRentals' | translate }}</span>
                 </button>
-                <button mat-menu-item routerLink="/my-items" (click)="closeMobileMenu()">
-                  <mat-icon>inventory_2</mat-icon>
-                  <span>{{ 'nav.myItems' | translate }}</span>
+              }
+              @if (canViewOrders()) {
+                <button mat-menu-item routerLink="/my-orders">
+                  <mat-icon>shopping_bag</mat-icon>
+                  <span>{{ 'nav.myOrders' | translate }}</span>
                 </button>
-                <button mat-menu-item routerLink="/favorites" (click)="closeMobileMenu()">
-                  <mat-icon class="text-warn">favorite</mat-icon>
-                  <span>{{ 'nav.favorites' | translate }}</span>
-                </button>
-              </div>
-
-              <!-- Wallet (full width) -->
-              <div class="section-group">
-                <button mat-menu-item routerLink="/wallet" (click)="closeMobileMenu()">
-                  <mat-icon color="primary">account_balance_wallet</mat-icon>
+              }
+              <button mat-menu-item routerLink="/my-items">
+                <mat-icon>inventory_2</mat-icon>
+                <span>{{ 'nav.myItems' | translate }}</span>
+              </button>
+              <button mat-menu-item routerLink="/favorites">
+                <mat-icon>favorite</mat-icon>
+                <span>{{ 'nav.favorites' | translate }}</span>
+              </button>
+              @if (canViewWallet()) {
+                <button mat-menu-item routerLink="/wallet">
+                  <mat-icon>account_balance_wallet</mat-icon>
                   <span>{{ 'nav.wallet' | translate }}</span>
                 </button>
-              </div>
-
-            @if (isExpert()) {
-              <div class="section-group">
-                <button mat-menu-item routerLink="/expert/assigned" (click)="closeMobileMenu()">
-                  <mat-icon color="accent">fact_check</mat-icon>
-                  <span>{{ 'expert.assigned.title' | translate }}</span>
-                </button>
-              </div>
-            }
-
-            <hr class="menu-divider" />
-
-            <!-- Secondary 3-column grid: Chats, Notifications, Support -->
-            <div class="section-group grid-layout secondary">
-              <button mat-menu-item routerLink="/chats" (click)="closeMobileMenu()">
+              }
+              <button mat-menu-item routerLink="/chats">
                 <mat-icon>chat</mat-icon>
                 <span>{{ 'nav.chats' | translate }}</span>
               </button>
-              <button mat-menu-item routerLink="/notifications" (click)="closeMobileMenu()">
+              <button mat-menu-item routerLink="/notifications">
                 <mat-icon>notifications</mat-icon>
                 <span>{{ 'nav.notifications' | translate }}</span>
-              </button>
-              <button mat-menu-item [routerLink]="['/chats', 'support']" [queryParams]="{ type: 'support' }" (click)="closeMobileMenu()">
-                <mat-icon>support_agent</mat-icon>
-                <span>{{ 'nav.support' | translate }}</span>
               </button>
             </div>
           </div>
@@ -166,21 +123,9 @@
           </button>
         </mat-menu>
       } @else {
+
+
         <div class="auth-buttons sm-hidden">
-          @if (isOwnerRole()) {
-            <button
-              mat-stroked-button
-              color="accent"
-              routerLink="/items/new"
-              class="post-btn sm-hidden"
-            >
-              <mat-icon>add_a_photo</mat-icon>
-              <span>{{ 'nav.postProduct' | translate }}</span>
-            </button>
-          }
-
-          <div class="divider sm-hidden"></div>
-
           <a routerLink="/login" class="nav-link login-link">{{ 'nav.login' | translate }}</a>
           <app-loading-button color="accent" size="sm" routerLink="/register">
             {{ 'nav.register' | translate }}
@@ -209,16 +154,7 @@
           </div>
         </div>
 
-        @if (isOwnerRole()) {
-          <a
-            routerLink="/items/new"
-            class="mobile-link highlight-link"
-            (click)="closeMobileMenu()"
-          >
-            <mat-icon>add_a_photo</mat-icon>
-            {{ 'nav.postProduct' | translate }}
-          </a>
-        }
+
 
         @for (link of filteredNavLinks(); track link.path) {
           <a
@@ -258,6 +194,14 @@
           <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
             <mat-icon>person</mat-icon>
             {{ 'nav.profile' | translate }}
+          </a>
+          <a routerLink="/my-items" class="mobile-link" (click)="closeMobileMenu()">
+            <mat-icon>inventory_2</mat-icon>
+            {{ 'nav.myItems' | translate }}
+          </a>
+          <a routerLink="/favorites" class="mobile-link" (click)="closeMobileMenu()">
+            <mat-icon>favorite</mat-icon>
+            {{ 'nav.favorites' | translate }}
           </a>
           @if (canViewWallet()) {
             <a routerLink="/wallet" class="mobile-link" (click)="closeMobileMenu()">

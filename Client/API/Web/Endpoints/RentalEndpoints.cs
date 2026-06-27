@@ -1,6 +1,7 @@
 using Application.Features.Rentals;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using Web.Responses;
 
 namespace Web.Endpoints;
@@ -40,9 +41,10 @@ public static class RentalEndpoints
         .RequireAuthorization(Policies.NonExpert);
 
         // GET /rentals/:id
-        g.MapGet("/{id:guid}", async (Guid id, ISender sender) =>
+        g.MapGet("/{id:guid}", async (Guid id, ClaimsPrincipal cp, ISender sender) =>
         {
-            var r = await sender.Send(new GetRentalByIdQuery(id));
+            var isAdminOrSupport = cp.IsInRole(Roles.Admin) || cp.IsInRole(Roles.SuperAdmin) || cp.IsInRole(Roles.Support);
+            var r = await sender.Send(new GetRentalByIdQuery(id, isAdminOrSupport));
             if (!r.Found) return r.Error == "Forbidden." ? Api.Fail("Forbidden", 403) : Api.Fail(r.Error ?? "Not found", 404);
             return Api.Ok(r.Rental);
         })

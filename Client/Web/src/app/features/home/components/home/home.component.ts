@@ -1,5 +1,5 @@
 import { Component, signal, HostListener, OnInit, AfterViewInit, ElementRef, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,15 +22,14 @@ type CalendarCell = {
     selector: 'app-home',
     standalone: true,
     imports: [
-        CommonModule,
-        RouterModule,
-        TranslateModule,
-        MatIconModule,
-        FormsModule,
-        LoadingButtonComponent,
-        TermsAndConditionsComponent,
-        ProductCardComponent
-    ],
+    RouterModule,
+    TranslateModule,
+    MatIconModule,
+    FormsModule,
+    LoadingButtonComponent,
+    TermsAndConditionsComponent,
+    ProductCardComponent
+],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })

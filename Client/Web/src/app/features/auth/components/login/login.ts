@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { InputComponent } from '../../../../shared/components/input/input';
@@ -15,7 +15,7 @@ import { ApiResponse, AuthLoginData } from '../../../../core/api/api-client';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RouterModule, LoadingButtonComponent, InputComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, RouterModule, LoadingButtonComponent, InputComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
@@ -47,7 +47,17 @@ export class LoginComponent {
     this.authService.login(email, password).pipe(finalize(() => this.isLoading.set(false))).subscribe({
       next: (response: ApiResponse<AuthLoginData>) => {
         if (!response.error && response.data) {
-          this.router.navigate(['/']);
+          if (this.authService.isSuperAdmin()) {
+            this.router.navigate(['/super-admin']);
+          } else if (this.authService.isAdmin()) {
+            this.router.navigate(['/admin']);
+          } else if (this.authService.isExpert()) {
+            this.router.navigate(['/expert']);
+          } else if (this.authService.isSupport()) {
+            this.router.navigate(['/support']);
+          } else {
+            this.router.navigate(['/']);
+          }
         } else if (response.messages?.[0] === 'EmailNotConfirmed') {
           this.snackbar.showInfo(this.translate.instant('login.emailNotConfirmed'));
           this.router.navigate(['/verify-email'], { queryParams: { email } });

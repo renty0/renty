@@ -30,8 +30,8 @@
           </div>
           <div class="parties-row">
             <div class="party-mini owner">
-              <img [src]="itemDetails()?.owner?.profilePicture || 'assets/images/avatar-placeholder.png'"
-                alt="Owner" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <img [src]="itemDetails()?.owner?.profilePicture || 'assets/profile.webp'"
+                alt="Owner" (error)="$event.target.src='assets/profile.webp'">
               <div class="party-info">
                 <span class="party-role">{{ 'expert.history.ownerName' | translate }}</span>
                 <span class="party-name">{{ itemDetails()?.owner?.fullName }}</span>
@@ -40,8 +40,8 @@
             </div>
             @if (itemDetails()?.activeRental) {
             <div class="party-mini renter">
-              <img [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/images/avatar-placeholder.png'"
-                alt="Renter" (error)="$event.target.src='assets/images/avatar-placeholder.png'">
+              <img [src]="itemDetails()?.activeRental?.renter?.profilePicture || 'assets/profile.webp'"
+                alt="Renter" (error)="$event.target.src='assets/profile.webp'">
               <div class="party-info">
                 <span class="party-role">{{ 'expert.history.renterName' | translate }}</span>
                 <span class="party-name">{{ itemDetails()?.activeRental?.renter?.fullName }}</span>
@@ -71,46 +71,28 @@
               </div>
             </div>
           </div>
+          
+          <div class="mt-4 pt-3" style="border-top: 1px dashed var(--surface-border);">
+            @if (itemDetails()?.activeRental?.pendingTransferType) {
+              <app-loading-button color="primary" [fullWidth]="true" (clicked)="openTransferVerify(itemDetails()?.activeRental?.pendingTransferType!)" matIcon="handshake" size="lg" class="w-full text-lg shadow-1" [disabled]="false">
+                @if (itemDetails()?.activeRental?.pendingTransferType === 'ReceiveFromOwner') {
+                  {{ 'expert.history.receive_from_owner' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'DeliveryToRenter') {
+                  {{ 'expert.history.delivery_to_renter' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'ReceiveFromRenter') {
+                  {{ 'expert.history.receive_from_renter' | translate }}
+                } @else if (itemDetails()?.activeRental?.pendingTransferType === 'DeliveryToOwner') {
+                  {{ 'expert.history.delivery_to_owner' | translate }}
+                }
+              </app-loading-button>
+            }
+          </div>
           }
         </div>
       </div>
       }
 
       <div class="content-grid">
-        <div class="form-card">
-          <div class="card-header compact">
-            <div class="card-icon-wrap primary pulse">
-              <mat-icon>fact_check</mat-icon>
-            </div>
-            <div>
-              <h2 class="card-title">{{ 'expert.verifyItem' | translate }}</h2>
-              <p class="card-subtitle">{{ 'expert.verifyItem.subtitle' | translate }}</p>
-            </div>
-          </div>
-
-          <form [formGroup]="verifyForm" class="verification-form compact">
-            <div class="form-row">
-              <app-input [formGroup]="verifyForm" controlName="checkType" label="checkType" type="select" [options]="checkTypeOptions" [translateOptions]="true" [required]="true" prefixIcon="assignment_turned_in" />
-            </div>
-            <div class="form-row">
-              <app-input [formGroup]="verifyForm" controlName="status" label="status" type="select" [options]="statusOptions" [translateOptions]="true" [required]="true" prefixIcon="verified" />
-            </div>
-            <div class="form-row">
-              <app-input [formGroup]="verifyForm" controlName="destination" label="expert.destination" type="select" [options]="destinationOptions" [translateOptions]="true" [required]="true" prefixIcon="local_shipping" />
-            </div>
-            <div class="form-row">
-              <app-input [formGroup]="verifyForm" controlName="notes" label="notes" type="textarea" [rows]="3" [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" />
-            </div>
-          </form>
-
-          <div class="form-actions">
-            <app-loading-button [loading]="isSubmitting()" [disabled]="verifyForm.invalid" color="primary" size="lg"
-              [fullWidth]="true" matIcon="send" (clicked)="onSubmit()">
-              {{ 'expert.verify.submit' | translate }}
-            </app-loading-button>
-          </div>
-        </div>
-
         <div class="history-card">
           <div class="card-header compact">
             <div class="card-icon-wrap accent pulse">
@@ -173,6 +155,7 @@
                   <p>{{ v.notes }}</p>
                 </div>
                 }
+
               </div>
             </div>
             }
@@ -187,6 +170,56 @@
           </div>
           }
         </div>
+      @if (pendingVerification()) {
+      <div class="form-card">
+          <div class="card-header compact">
+            <div class="card-icon-wrap primary pulse">
+              <mat-icon>fact_check</mat-icon>
+            </div>
+            <div>
+              <h2 class="card-title">{{ 'expert.verifyItem' | translate }}</h2>
+              <p class="card-subtitle">{{ 'expert.verifyItem.subtitle' | translate }}</p>
+            </div>
+          </div>
+
+          <form [formGroup]="verifyForm" class="verification-form compact">
+
+            @if (!canSubmitForm()) {
+            <div class="notes-box mb-4" style="background: var(--red-50); border: 1px solid var(--red-200);">
+              <div class="text-sm font-bold text-red-600 flex align-items-center gap-2">
+                <mat-icon>warning</mat-icon>
+                {{ 'expert.history.mustHavePossession' | translate }}
+              </div>
+            </div>
+            }
+
+            <div class="form-row full-width-row">
+              <app-input [formGroup]="verifyForm" controlName="notes" label="notes" type="textarea" [rows]="10" [placeholder]="'expert.verify.notesPlaceholder' | translate" prefixIcon="notes" class="wide-textarea" />
+            </div>
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="status" label="status" type="select" [options]="statusOptions" [translateOptions]="true" [required]="true" prefixIcon="verified" />
+            </div>
+            @if (verifyForm.get('status')?.value === 'rejected' && verifyForm.get('checkType')?.value === 'after_return') {
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="deductionAmount" label="expert.history.deductionAmount" type="number" prefixIcon="money_off" />
+            </div>
+            }
+            @if (verifyForm.get('status')?.value === 'approved' && verifyForm.get('checkType')?.value === 'before_rent' && itemDetails()?.activeRental?.depositAmount === 0) {
+            <div class="form-row">
+              <app-input [formGroup]="verifyForm" controlName="newDepositAmount" label="expert.history.newDepositAmount" type="number" prefixIcon="payments" />
+            </div>
+            }
+          </form>
+
+          <div class="form-actions">
+            <app-loading-button [loading]="isSubmitting()" [disabled]="verifyForm.invalid || !canSubmitForm()" color="primary" size="lg"
+              [fullWidth]="true" matIcon="send" (clicked)="onSubmit()">
+              {{ 'expert.verify.submit' | translate }}
+            </app-loading-button>
+          </div>
+        </div>
+      }
+
       </div>
     </div>
     }

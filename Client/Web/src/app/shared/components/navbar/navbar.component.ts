@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, HostListener, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ import { NotificationDropdownComponent } from '../notification-dropdown/notifica
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [ CommonModule, RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, NotificationDropdownComponent ],
+  imports: [RouterModule, TranslateModule, MatIconModule, MatButtonModule, MatMenuModule, FormsModule, NotificationDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
@@ -75,19 +75,7 @@ export class NavbarComponent implements OnInit {
     });
   });
 
-  managementLinks = computed(() => {
-    const loggedIn = this.isLoggedIn();
-    if (!loggedIn) return [];
 
-    const links = [];
-    
-    // Expert Actions
-    if (this.isExpert()) {
-      links.push({ path: '/expert/assigned', labelKey: 'expert.assigned.title', icon: 'fact_check' });
-    }
-
-    return links;
-  });
 
   onSearch() {
     const term = this.searchTerm().trim();

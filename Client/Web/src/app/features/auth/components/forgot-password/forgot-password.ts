@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,13 +13,12 @@ import { catchError, finalize, of } from 'rxjs';
   selector: 'app-forgot-password',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     TranslateModule,
     InputComponent,
-    LoadingButtonComponent,
-  ],
+    LoadingButtonComponent
+],
   templateUrl: './forgot-password.html',
   styleUrl: '../login/login.scss',
 })

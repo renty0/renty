@@ -1,0 +1,187 @@
+<header class="site-navbar" [class.scrolled]="isScrolled()">
+  <div class="navbar-content">
+    <a routerLink="/super-admin/dashboard" class="logo" (click)="closeMobileMenu()">
+      <span class="logo-text">RENTY ADMIN</span>
+    </a>
+    @if (isLoggedIn()) {
+    <nav class="desktop-nav">
+      <!-- Dashboard -->
+      <a routerLink="/super-admin/dashboard" routerLinkActive="active" class="nav-link">
+        {{ 'nav.saDashboard' | translate }}
+      </a>
+
+      <!-- Management Dropdown -->
+      <div class="nav-dropdown">
+        <span class="nav-link">
+          {{ 'nav.management' | translate }} <mat-icon class="dropdown-icon">expand_more</mat-icon>
+        </span>
+        <div class="dropdown-content">
+          <a routerLink="/super-admin/staff" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.staffManagement' | translate }}
+          </a>
+          <a routerLink="/admin/users" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.userManagement' | translate }}
+          </a>
+          <a routerLink="/admin/id-verifications" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.idVerifications' | translate }}
+          </a>
+          <a routerLink="/admin/rental-financials" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.rentalFinancials' | translate }}
+          </a>
+
+          <a routerLink="/admin/roles" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.roleManagement' | translate }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Content Dropdown -->
+      <div class="nav-dropdown">
+        <span class="nav-link">
+          {{ 'categories.title' | translate }} <mat-icon class="dropdown-icon">expand_more</mat-icon>
+        </span>
+        <div class="dropdown-content">
+          <a routerLink="/categories" routerLinkActive="active" class="dropdown-item">
+            {{ 'categories.title' | translate }}
+          </a>
+          <a routerLink="/subcategories" routerLinkActive="active" class="dropdown-item">
+            {{ 'subcategories.title' | translate }}
+          </a>
+          <a routerLink="/brands" routerLinkActive="active" class="dropdown-item">
+            {{ 'brands.title' | translate }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Products Dropdown -->
+      <div class="nav-dropdown">
+        <span class="nav-link">
+          {{ 'products.title' | translate }} <mat-icon class="dropdown-icon">expand_more</mat-icon>
+        </span>
+        <div class="dropdown-content">
+          <a routerLink="/items" routerLinkActive="active" class="dropdown-item">
+            {{ 'products.title' | translate }}
+          </a>
+          <a routerLink="/admin/item-management" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.itemReview' | translate }}
+          </a>
+          <a routerLink="/admin/gap-analysis" routerLinkActive="active" class="dropdown-item">
+            {{ 'nav.gap' | translate }}
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <a routerLink="/admin/settings" routerLinkActive="active" class="nav-link">
+        {{ 'admin.settingsTitle' | translate }}
+      </a>
+    </nav>
+    }
+
+    <div class="nav-actions">
+      <!-- Language Switcher -->
+      <button mat-button class="lang-btn" (click)="switchLang()" [attr.aria-label]="'nav.switchLang' | translate">
+        <mat-icon>language</mat-icon>
+        <span class="lang-text">{{ currentLang | uppercase }}</span>
+      </button>
+
+      @if (isLoggedIn()) {
+      <app-notification-dropdown></app-notification-dropdown>
+
+      <button mat-button class="profile-btn" [matMenuTriggerFor]="profileMenu">
+        <div class="user-avatar-container">
+          <img [src]="userProfilePic()" alt="User Avatar" class="user-avatar" *ngIf="userProfilePic() !== 'assets/images/default-avatar.png'; else defaultAvatarIcon" />
+          <ng-template #defaultAvatarIcon>
+            <mat-icon class="default-avatar">account_circle</mat-icon>
+          </ng-template>
+        </div>
+      </button>
+
+      <!-- Profile Dropdown -->
+      <mat-menu #profileMenu="matMenu" class="premium-menu profile-menu">
+        <div class="menu-header" (click)="$event.stopPropagation()">
+          <div class="user-avatar-circle">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+          <div class="user-info">
+            <span class="user-name">{{ userName() }}</span>
+            <span class="user-email">{{ authService.getCurrentUserEmail() }}</span>
+          </div>
+        </div>
+        
+        <div class="menu-sections">
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>person</mat-icon>
+            <span>{{ 'nav.profile' | translate }}</span>
+          </button>
+          <button mat-menu-item routerLink="/chats">
+            <mat-icon>chat</mat-icon>
+            <span>{{ 'chat.title' | translate }}</span>
+          </button>
+          <button mat-menu-item routerLink="/notifications">
+            <mat-icon>notifications</mat-icon>
+            <span>{{ 'nav.notifications' | translate }}</span>
+          </button>
+        </div>
+        <hr class="menu-divider" />
+
+        <button mat-menu-item (click)="logout()" class="logout-item text-warn">
+          <mat-icon color="warn">logout</mat-icon>
+          <span>{{ 'nav.logout' | translate }}</span>
+        </button>
+      </mat-menu>
+      }
+
+      <button mat-icon-button class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" [class.open]="mobileMenuOpen()">
+    <div class="mobile-nav-content">
+      @if (isLoggedIn()) {
+      <nav class="mobile-links">
+        <a routerLink="/super-admin/dashboard" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.saDashboard' | translate }}</a>
+        <a routerLink="/super-admin/staff" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.staffManagement' | translate }}</a>
+        <a routerLink="/admin/users" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.userManagement' | translate }}</a>
+        <a routerLink="/admin/id-verifications" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.idVerifications' | translate }}</a>
+        <a routerLink="/admin/rental-financials" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.rentalFinancials' | translate }}</a>
+
+        <a routerLink="/admin/roles" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.roleManagement' | translate }}</a>
+        <a routerLink="/items" class="mobile-link" (click)="closeMobileMenu()">{{ 'products.title' | translate }}</a>
+        <a routerLink="/admin/item-management" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.itemReview' | translate }}</a>
+        <a routerLink="/admin/gap-analysis" class="mobile-link" (click)="closeMobileMenu()">{{ 'nav.gap' | translate }}</a>
+
+        <a routerLink="/categories" class="mobile-link" (click)="closeMobileMenu()">{{ 'categories.title' | translate }}</a>
+        <a routerLink="/subcategories" class="mobile-link" (click)="closeMobileMenu()">{{ 'subcategories.title' | translate }}</a>
+        <a routerLink="/brands" class="mobile-link" (click)="closeMobileMenu()">{{ 'brands.title' | translate }}</a>
+        <a routerLink="/admin/settings" class="mobile-link" (click)="closeMobileMenu()">{{ 'admin.settingsTitle' | translate }}</a>
+        
+        <hr class="mobile-divider" />
+        <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
+          <mat-icon>person</mat-icon>
+          {{ 'nav.profile' | translate }}
+        </a>
+        <a routerLink="/chats" class="mobile-link" (click)="closeMobileMenu()">
+          <mat-icon>chat</mat-icon>
+          {{ 'chat.title' | translate }}
+        </a>
+        <a routerLink="/notifications" class="mobile-link" (click)="closeMobileMenu()">
+          <mat-icon>notifications</mat-icon>
+          {{ 'nav.notifications' | translate }}
+        </a>
+      </nav>
+      }
+
+      <div class="mobile-footer" *ngIf="isLoggedIn()">
+        <button mat-stroked-button color="warn" class="w-full" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          {{ 'nav.logout' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

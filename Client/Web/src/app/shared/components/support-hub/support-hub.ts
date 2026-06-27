@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,6 @@ import { catchError, of } from 'rxjs';
   selector: 'app-support-hub',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     TranslateModule,
     MatIconModule,
@@ -26,7 +25,7 @@ import { catchError, of } from 'rxjs';
     MatCardModule,
     FormsModule,
     LiveSupportChatComponent
-  ],
+],
   templateUrl: './support-hub.html',
   styleUrl: './support-hub.scss',
   animations: [

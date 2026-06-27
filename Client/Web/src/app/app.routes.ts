@@ -12,6 +12,8 @@ import { OrdersRoutes } from './features/orders/orders.routes';
 import { CHAT_ROUTES } from './features/chat/chat.routes';
 import { NOTIFICATIONS_ROUTES } from './features/notifications/notifications.routes';
 import { EXPERT_ROUTES } from './features/expert/expert.routes';
+import { ADMIN_ROUTES } from './features/admin/admin.routes';
+import { SUPER_ADMIN_ROUTES } from './features/super-admin/super-admin.routes';
 import { WalletRoutes } from './features/wallet/wallet.routes';
 import { ProfileRoutes } from './features/profile/profile.routes';
 import { SUPPORT_ROUTES } from './features/support/support.routes';
@@ -42,12 +44,20 @@ export const routes: Routes = [
     children: EXPERT_ROUTES
   },
   {
+    path: 'support',
+    children: SUPPORT_ROUTES
+  },
+  {
     path: 'support/:id',
     redirectTo: '/chats/support?type=support'
   },
   {
-    path: 'support',
-    children: SUPPORT_ROUTES
+    path: 'admin',
+    children: ADMIN_ROUTES
+  },
+  {
+    path: 'super-admin',
+    children: SUPER_ADMIN_ROUTES
   },
   {
     path: 'my-rentals',

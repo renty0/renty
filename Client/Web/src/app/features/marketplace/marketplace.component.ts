@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, effect, untracked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +34,6 @@ import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.cons
   selector: 'app-marketplace',
   standalone: true,
   imports: [
-    CommonModule,
     TranslateModule,
     RouterModule,
     FormsModule,
@@ -51,7 +50,7 @@ import { EGYPT_GOVERNORATES } from '../items/items-editor-page/items-editor.cons
     MatDatepickerModule,
     MatNativeDateModule,
     ProductCardComponent
-  ],
+],
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.scss'
 })

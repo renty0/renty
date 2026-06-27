@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed, effect, untracked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -21,14 +21,11 @@ import { LoadingButtonComponent } from '../../../shared/components/loading-butto
 import { ToastService } from '../../../shared/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-items-list',
   standalone: true,
   imports: [
-    CommonModule,
     TranslateModule,
     MatTableModule,
     MatSortModule,
@@ -41,7 +38,7 @@ import { environment } from '../../../../environments/environment';
     HeaderSectionComponent,
     LoadingButtonComponent,
     RouterModule
-  ],
+],
   templateUrl: './items-list.component.html',
   styleUrl: './items-list.component.scss',
 })
@@ -53,7 +50,6 @@ export class ItemsListComponent implements OnInit {
   private toast = inject(ToastService);
   public translate = inject(TranslateService);
   private authService = inject(AuthService);
-  private http = inject(HttpClient);
 
   isOwnerMode = signal(false);
   canCreateItem = computed(() => this.isOwnerMode());
@@ -258,8 +254,8 @@ export class ItemsListComponent implements OnInit {
     if (!confirmed) return;
 
     this.isLoading.set(true);
-    this.http
-      .post<any>(`${environment.apiUrl}/api/v1/items/${id}/reactivate`, {})
+    this.apiClient
+      .reactivateItem(id)
       .pipe(
         tap((res: any) => {
           if (res?.error) {

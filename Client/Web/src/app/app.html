@@ -5,9 +5,21 @@
   [closeButton]="true" 
   [expand]="true" 
 />
-<app-navbar></app-navbar>
+
+@if (authService.isSuperAdmin()) {
+  <app-super-admin-navbar></app-super-admin-navbar>
+} @else if (authService.isAdmin()) {
+  <app-admin-navbar></app-admin-navbar>
+} @else if (authService.isExpert()) {
+  <app-expert-navbar></app-expert-navbar>
+} @else if (authService.isSupport()) {
+  <app-support-navbar></app-support-navbar>
+} @else {
+  <app-navbar></app-navbar>
+}
 
 <main [style.padding-top]="'64px'">
-  <router-outlet />
+  <router-outlet></router-outlet>
 </main>
+
 <app-chat-widget></app-chat-widget>

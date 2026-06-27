@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Extensions;
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -82,34 +83,85 @@ public class ApplicationDbContextInitialiser
         }
         await _context.SaveChangesAsync();
 
-        // Assign all permissions to SuperAdmin role
-        var superAdminRole = await _roleManager.FindByNameAsync(SecurityRoles.SuperAdmin.ToString());
-        if (superAdminRole != null)
+        // Seed RolePermissions for ALL roles based on PermissionAttribute
+        foreach (var perm in permissions)
         {
-            var existingPerms = await _context.RolePermissions
-                .Where(rp => rp.RoleId == superAdminRole.Id)
-                .Select(rp => rp.PermissionValue)
-                .ToListAsync();
+            var value = perm.ToPermissionString();
+            var fieldInfo = typeof(PermissionType).GetField(perm.ToString());
+            var attr = fieldInfo?.GetCustomAttribute<Domain.Attributes.PermissionAttribute>();
 
-            foreach (var perm in permissions)
+            // Ensure SuperAdmin gets ALL permissions
+            var superAdminRole = await _roleManager.FindByNameAsync(SecurityRoles.SuperAdmin.ToString());
+            if (superAdminRole != null)
             {
-                var value = perm.ToPermissionString();
-                if (!existingPerms.Contains(value))
+                if (!await _context.RolePermissions.AnyAsync(rp => rp.RoleId == superAdminRole.Id && rp.PermissionValue == value))
                 {
-                    _context.RolePermissions.Add(new RolePermission
-                    {
-                        RoleId = superAdminRole.Id,
-                        RoleName = superAdminRole.Name!,
-                        PermissionValue = value
-                    });
+                    _context.RolePermissions.Add(new RolePermission { RoleId = superAdminRole.Id, RoleName = superAdminRole.Name!, PermissionValue = value });
                 }
             }
-            await _context.SaveChangesAsync();
+
+            // Assign permissions to other roles explicitly specified in the attribute
+            if (attr != null && attr.Roles != null)
+            {
+                foreach (var roleStr in attr.Roles)
+                {
+                    if (roleStr == SecurityRoles.SuperAdmin.ToString()) continue;
+
+                    var role = await _roleManager.FindByNameAsync(roleStr);
+                    if (role != null)
+                    {
+                        if (!await _context.RolePermissions.AnyAsync(rp => rp.RoleId == role.Id && rp.PermissionValue == value))
+                        {
+                            _context.RolePermissions.Add(new RolePermission { RoleId = role.Id, RoleName = role.Name!, PermissionValue = value });
+                        }
+                    }
+                }
+            }
         }
+        await _context.SaveChangesAsync();
 
         // Create super admin user
-        var adminEmail = Environment.GetEnvironmentVariable("SEED_ADMIN_EMAIL") ?? "admin@rently.com";
-        var adminPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "Admin@123!";
+        var superAdminEmail = Environment.GetEnvironmentVariable("SEED_SUPERADMIN_EMAIL") ?? "superadmin@renty.com";
+        var superAdminPassword = Environment.GetEnvironmentVariable("SEED_SUPERADMIN_PASSWORD") ?? "Password12!";
+
+        var superAdminUser = await _userManager.FindByEmailAsync(superAdminEmail);
+        if (superAdminUser == null)
+        {
+            superAdminUser = new ApplicationUser
+            {
+                UserName = superAdminEmail,
+                Email = superAdminEmail,
+                FirstName = "Super",
+                LastName = "Admin",
+                EmailConfirmed = true,
+                IsActive = true,
+                IsVerified = true
+            };
+
+            var result = await _userManager.CreateAsync(superAdminUser, superAdminPassword);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(superAdminUser, SecurityRoles.SuperAdmin.ToString());
+                _logger.LogInformation("Super Admin user created successfully.");
+            }
+            else
+            {
+                _logger.LogWarning("Failed to create super admin user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(superAdminUser);
+            var resetResult = await _userManager.ResetPasswordAsync(superAdminUser, token, superAdminPassword);
+            if (!resetResult.Succeeded) {
+                superAdminUser.PasswordHash = _userManager.PasswordHasher.HashPassword(superAdminUser, superAdminPassword);
+                await _userManager.UpdateAsync(superAdminUser);
+            }
+        }
+
+        // Create admin user
+        var adminEmail = Environment.GetEnvironmentVariable("SEED_ADMIN_EMAIL") ?? "admin@renty.com";
+        var adminPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "Password12!";
 
         var adminUser = await _userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
@@ -118,7 +170,7 @@ public class ApplicationDbContextInitialiser
             {
                 UserName = adminEmail,
                 Email = adminEmail,
-                FirstName = "Super",
+                FirstName = "Test",
                 LastName = "Admin",
                 EmailConfirmed = true,
                 IsActive = true,
@@ -128,18 +180,27 @@ public class ApplicationDbContextInitialiser
             var result = await _userManager.CreateAsync(adminUser, adminPassword);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(adminUser, SecurityRoles.SuperAdmin.ToString());
                 await _userManager.AddToRoleAsync(adminUser, SecurityRoles.Admin.ToString());
-                _logger.LogInformation("Super Admin user created successfully.");
+                _logger.LogInformation("Admin user created successfully.");
             }
             else
             {
                 _logger.LogWarning("Failed to create admin user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
+        else
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(adminUser);
+            var resetResult = await _userManager.ResetPasswordAsync(adminUser, token, adminPassword);
+            if (!resetResult.Succeeded) {
+                // Force hash if reset fails
+                adminUser.PasswordHash = _userManager.PasswordHasher.HashPassword(adminUser, adminPassword);
+                await _userManager.UpdateAsync(adminUser);
+            }
+        }
 
         // Create expert user
-        var expertEmail = Environment.GetEnvironmentVariable("SEED_EXPERT_EMAIL") ?? "expert@rently.com";
+        var expertEmail = Environment.GetEnvironmentVariable("SEED_EXPERT_EMAIL") ?? "expert@renty.com";
         var expertPassword = Environment.GetEnvironmentVariable("SEED_EXPERT_PASSWORD") ?? "Password12!";
 
         var expertUser = await _userManager.FindByEmailAsync(expertEmail);

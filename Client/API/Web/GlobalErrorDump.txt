@@ -1,19 +1,7 @@
-System.InvalidCastException: Reading as 'System.Int32' is not supported for fields having DataTypeName 'text'
-   at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
-   at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
-   at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
-   at Npgsql.NpgsqlDataReader.<GetInfo>g__Slow|133_0(ColumnInfo& info, PgConverter& converter, Size& bufferRequirement, Boolean& asObject, <>c__DisplayClass133_0&)
-   at Npgsql.NpgsqlDataReader.GetFieldValueCore[T](Int32 ordinal)
-   at Npgsql.NpgsqlDataReader.GetInt32(Int32 ordinal)
-   at lambda_method1757(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
-   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
-   at Application.Features.Support.GetTicketsQueryHandler.Handle(GetTicketsQuery request, CancellationToken ct) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Features/Support/Support.cs:line 152
-   at Application.Common.Behaviours.ValidationBehaviour`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Application/Common/Behaviours/ValidationBehaviour.cs:line 36
-   at Web.Endpoints.SupportEndpoints.<>c.<<MapSupportEndpoints>b__0_1>d.MoveNext() in /home/hamza/All Data To Transfer/VIF/Materials/Fourth Year/Graduation Project/2nd semester/renty/renty/Client/API/Web/Endpoints/SupportEndpoints.cs:line 49
---- End of stack trace from previous location ---
-   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
+Microsoft.AspNetCore.Http.BadHttpRequestException: Required parameter "int page" was not provided from query string.
+   at lambda_method1626(Closure, Object, HttpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.StaticFiles.DefaultFilesMiddleware.Invoke(HttpContext context)
    at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
    at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
    at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)

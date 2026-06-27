@@ -4,8 +4,12 @@
     <h2>Report Inappropriate Content</h2>
     <p>Reporting: <strong>{{ itemTitle }}</strong></p>
 
-    <div *ngIf="successMsg()" class="alert alert-success">{{ successMsg() }}</div>
-    <div *ngIf="errorMsg()" class="alert alert-error">{{ errorMsg() }}</div>
+    @if (successMsg()) {
+      <div class="alert alert-success">{{ successMsg() }}</div>
+    }
+    @if (errorMsg()) {
+      <div class="alert alert-error">{{ errorMsg() }}</div>
+    }
 
     <div class="form-group mt-3">
       <label>What's wrong with this item?</label>

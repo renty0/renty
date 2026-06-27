@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, signal, computed, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -57,7 +56,6 @@ export class RentalDetailsComponent implements OnInit, OnDestroy {
   private toast = inject(ToastService);
   private permissionService = inject(PermissionService);
   private dialog = inject(MatDialog);
-  private http = inject(HttpClient);
   private translate = inject(TranslateService);
   private signalrService = inject(NotificationSignalrService);
 
@@ -789,7 +787,7 @@ export class RentalDetailsComponent implements OnInit, OnDestroy {
     if (!confirm(this.translate.instant('common.confirm_delete') || 'Are you sure you want to delete this photo?')) return;
     
     this.isUploading.set(true);
-    this.http.delete(`${environment.apiUrl}/api/v1/rentals/${this.rentalId()}/photos?imageUrl=${encodeURIComponent(url)}`).subscribe({
+    this.rentalsClient.deleteRentalPhoto(this.rentalId(), url).subscribe({
       next: () => {
         this.toast.showSuccess('common.success');
         this.loadRental(true);

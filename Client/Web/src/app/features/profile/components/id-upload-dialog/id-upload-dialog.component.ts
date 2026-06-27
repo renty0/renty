@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,13 +13,12 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-id-upload-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     TranslateModule
-  ],
+],
   templateUrl: './id-upload-dialog.component.html',
   styleUrl: './id-upload-dialog.component.scss'
 })

@@ -10,8 +10,13 @@ import { ResponsiveService } from './core/services/responsive.service';
 import { AuthService } from './core/services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommonModule } from '@angular/common';
+
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { AdminNavbarComponent } from './shared/components/admin-navbar/admin-navbar';
+import { SuperAdminNavbarComponent } from './shared/components/super-admin-navbar/super-admin-navbar';
+import { ExpertNavbarComponent } from './shared/components/expert-navbar/expert-navbar';
+import { SupportNavbarComponent } from './shared/components/support-navbar/support-navbar';
+
 import { NgxSonnerToaster } from 'ngx-sonner';
 import { ChatWidgetComponent } from './features/chat/chat-widget/chat-widget';
 import { SupportHubComponent } from './shared/components/support-hub/support-hub';
@@ -22,7 +27,7 @@ import { ToastService } from './shared/services/toast.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButtonModule, MatTooltipModule, NavbarComponent, NgxSonnerToaster, ChatWidgetComponent],
+  imports: [RouterOutlet, MatButtonModule, MatTooltipModule, NgxSonnerToaster, NavbarComponent, AdminNavbarComponent, SuperAdminNavbarComponent, ExpertNavbarComponent, SupportNavbarComponent, ChatWidgetComponent],
   templateUrl: './app.html',
 })
 export class App implements OnDestroy {
@@ -30,7 +35,7 @@ export class App implements OnDestroy {
   private translate = inject(TranslateService);
   private localizationService = inject(LocalizationService);
   private responsiveService = inject(ResponsiveService);
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
   private router = inject(Router);
   private renderer = inject(Renderer2);
   private notificationSignalr = inject(NotificationSignalrService);

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, signal, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { Subscription, forkJoin } from 'rxjs';
 @Component({
   selector: 'app-chat-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterOutlet, MatListModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule, TranslateModule, MatDialogModule],
+  imports: [RouterModule, RouterOutlet, MatListModule, MatIconModule, MatButtonModule, MatBadgeModule, MatProgressSpinnerModule, TranslateModule, MatDialogModule],
   templateUrl: './chat-layout.html',
   styleUrl: './chat-layout.scss'
 })

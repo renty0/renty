@@ -1,5 +1,5 @@
 import { Component, inject, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -20,7 +20,7 @@ export interface UploadedImage {
 @Component({
     selector: 'app-multi-image-uploader',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatProgressBarModule, TranslateModule],
+    imports: [MatIconModule, MatProgressBarModule, TranslateModule],
     templateUrl: './multi-image-uploader.component.html',
     styleUrl: './multi-image-uploader.component.scss'
 })

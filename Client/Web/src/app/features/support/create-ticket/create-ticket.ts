@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,6 @@ import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
   selector: 'app-create-ticket',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     TranslateModule,
     FormsModule,
@@ -33,7 +32,7 @@ import { Subject, finalize, tap, exhaustMap, catchError, of } from 'rxjs';
     MatSelectModule,
     HeaderSectionComponent,
     LoadingButtonComponent
-  ],
+],
   templateUrl: './create-ticket.html',
   styleUrl: './create-ticket.scss'
 })

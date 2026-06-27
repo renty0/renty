@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -19,14 +19,13 @@ import { catchError, finalize, of, tap } from 'rxjs';
   selector: 'app-reset-password',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     TranslateModule,
     InputComponent,
     LoadingButtonComponent,
-    MatIconModule,
-  ],
+    MatIconModule
+],
   templateUrl: './reset-password.html',
   styleUrls: ['../login/login.scss', './reset-password.scss'],
 })

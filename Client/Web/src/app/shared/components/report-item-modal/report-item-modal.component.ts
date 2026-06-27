@@ -1,12 +1,12 @@
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { SupportClient, CreateTicketCommand } from '../../../core/api/api-client';
 
 @Component({
   selector: 'app-report-item-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './report-item-modal.component.html',
   styleUrls: ['./report-item-modal.component.scss']
 })

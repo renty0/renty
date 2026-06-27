@@ -1,7 +1,7 @@
 import { Component, inject, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { LoadingButtonComponent } from '../loading-button/loading-button.compone
 
 @Component({
   selector: 'app-header-section',
-  imports: [MatIconModule, FormsModule, CommonModule, RouterModule, LoadingButtonComponent],
+  imports: [MatIconModule, FormsModule, RouterModule, LoadingButtonComponent],
   templateUrl: './header-section.component.html',
   styleUrl: './header-section.component.scss',
 })

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +14,6 @@ import { LoadingButtonComponent } from '../../shared/components/loading-button/l
   selector: 'app-favorites',
   standalone: true,
   imports: [
-    CommonModule,
     TranslateModule,
     MatCardModule,
     MatProgressSpinnerModule,
@@ -22,7 +21,7 @@ import { LoadingButtonComponent } from '../../shared/components/loading-button/l
     HeaderSectionComponent,
     RouterModule,
     LoadingButtonComponent
-  ],
+],
   templateUrl: './favorites.html',
   styleUrl: './favorites.scss'
 })

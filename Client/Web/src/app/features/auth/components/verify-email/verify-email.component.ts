@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../shared/services/toast.service';
@@ -17,14 +17,13 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-verify-email',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     TranslatePipe,
     InputComponent,
     LoadingButtonComponent,
-    MatIconModule,
-  ],
+    MatIconModule
+],
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.scss',
 })

@@ -45,7 +45,7 @@ public static class SupportEndpoints
         // GET /support/tickets
         g.MapGet("/tickets", async (ClaimsPrincipal cp, ISender sender) =>
         {
-            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin) || cp.IsInRole(Roles.SuperAdmin);
             var r = await sender.Send(new GetTicketsQuery(isSupport));
             return Api.Ok(r);
         })
@@ -55,7 +55,7 @@ public static class SupportEndpoints
         // GET /support/tickets/:id
         g.MapGet("/tickets/{id:guid}", async (Guid id, ClaimsPrincipal cp, ISender sender) =>
         {
-            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin) || cp.IsInRole(Roles.SuperAdmin);
             var r = await sender.Send(new GetTicketQuery(id, isSupport));
             if (!r.Found) return Api.Fail(r.Error ?? "Not found", 404);
             return Api.Ok(r);
@@ -67,7 +67,7 @@ public static class SupportEndpoints
         // POST /support/tickets/:id/messages
         g.MapPost("/tickets/{id:guid}/messages", async (Guid id, PostSupportMessageCommand cmd, ClaimsPrincipal cp, ISender sender, Microsoft.AspNetCore.SignalR.IHubContext<Web.Hubs.SupportHub> hubContext) =>
         {
-            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin);
+            var isSupport = cp.IsInRole(Roles.Support) || cp.IsInRole(Roles.Admin) || cp.IsInRole(Roles.SuperAdmin);
             var r = await sender.Send(cmd with { TicketId = id, IsSupportAgent = isSupport });
             if (!r.Success) return Api.Fail(r.Error ?? "Bad request");
             // MessageId and CreatedAt are Guid?/DateTime? — use .Value on success

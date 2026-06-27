@@ -1,12 +1,14 @@
 <header class="header-section">
   <div class="header-left">
     <h1 class="page-title">{{ title }}</h1>
-    <div class="search-container" *ngIf="showSearch">
-      <mat-icon class="search-icon">search</mat-icon>
-      @if (showSearch) {
-        <input type="text" class="search-input" [placeholder]="placeholder" [(ngModel)]="searchTerm" (input)="onInputChange($event)" />
-      }
-    </div>
+    @if (showSearch) {
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        @if (showSearch) {
+          <input type="text" class="search-input" [placeholder]="placeholder" [(ngModel)]="searchTerm" (input)="onInputChange($event)" />
+        }
+      </div>
+    }
   </div>
   <div class="header-actions">
     <ng-content select="[extra-actions]"></ng-content>

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-terms-and-conditions',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   template: `
     @if (visible) {
     <div class="fixed top-0 left-0 w-full h-full bg-black-alpha-50 flex justify-content-center align-items-center z-5" (click)="closeDialog.emit()">

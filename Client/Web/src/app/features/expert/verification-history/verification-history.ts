@@ -14,6 +14,8 @@ import { LoadingButtonComponent } from '../../../shared/components/loading-butto
 import { InputComponent, SelectOption } from '../../../shared/components/input/input';
 import { VerificationsClient, VerificationDto, CreateVerificationCommand } from '../../../core/api/api-client';
 import { ToastService } from '../../../shared/services/toast.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TransferVerifyDialogComponent } from './transfer-verify-dialog';
 
 export interface IPersonInfoDto {
   fullName: string;
@@ -29,6 +31,9 @@ export interface IRentalInfoDto {
   depositAmount: number;
   status: string;
   renter: IPersonInfoDto;
+  currentPossession: string;
+  hasReturnTransfers: boolean;
+  pendingTransferType?: string;
 }
 
 export interface IItemVerificationDetailsDto {
@@ -57,7 +62,8 @@ export interface IItemVerificationDetailsDto {
     MatDividerModule,
     HeaderSectionComponent,
     LoadingButtonComponent,
-    InputComponent
+    InputComponent,
+    MatDialogModule
   ],
   templateUrl: './verification-history.html',
   styleUrl: './verification-history.scss'
@@ -67,6 +73,7 @@ export class VerificationHistoryComponent implements OnInit {
   private fb = inject(FormBuilder);
   private verificationsClient = inject(VerificationsClient);
   private toast = inject(ToastService);
+  private dialog = inject(MatDialog);
   public translate = inject(TranslateService);
 
   itemId = signal('');
@@ -75,12 +82,14 @@ export class VerificationHistoryComponent implements OnInit {
   isSubmitting = signal(false);
   itemDetails = signal<IItemVerificationDetailsDto | null>(null);
   verifications = signal<VerificationDto[]>([]);
+  pendingVerification = signal<any>(null);
 
   verifyForm = this.fb.group({
     status: ['', Validators.required],
     checkType: ['', Validators.required],
     notes: [''],
-    destination: ['', Validators.required]
+    deductionAmount: [null],
+    newDepositAmount: [null]
   });
 
   checkTypeOptions: SelectOption[] = [
@@ -107,6 +116,59 @@ export class VerificationHistoryComponent implements OnInit {
 
   loadHistory() {
     this.isLoading.set(true);
+
+    if (this.itemId() === 'mock-item-5678') {
+      setTimeout(() => {
+        this.itemDetails.set({
+          itemId: 'mock-item-5678',
+          titleEn: 'Sony A7III Camera (Example Task)',
+          titleAr: 'كاميرا سوني (مهمة تجريبية)',
+          imageUrl: 'assets/images/camera-mock.jpg',
+          city: 'Amman',
+          owner: { fullName: 'John Doe', profilePicture: 'assets/profile.webp' },
+          activeRental: {
+            rentalId: 'rent-123',
+            startDate: new Date().toISOString(),
+            endDate: new Date(Date.now() + 86400000 * 3).toISOString(),
+            rentalPrice: 150,
+            depositAmount: 50,
+            status: 'Active',
+            renter: { fullName: 'Jane Smith', profilePicture: 'assets/profile.webp' },
+            currentPossession: 'Expert',
+            hasReturnTransfers: false,
+            pendingTransferType: 'ReceiveFromOwner'
+          }
+        });
+        
+        const mockPendingVerif = {
+          id: 'mock-verification-task-1234',
+          checkType: 'BeforeRent',
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+        
+        this.verifications.set([
+          {
+            id: 'old-1',
+            checkType: 'Condition',
+            status: 'approved',
+            createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+            expertFirstName: 'Admin',
+            notes: 'Everything looks good'
+          } as any,
+          mockPendingVerif as any
+        ]);
+        
+        this.pendingVerification.set(mockPendingVerif);
+        this.verifyForm.patchValue({ checkType: 'before_rent' });
+        if (this.canSubmitForm()) this.verifyForm.enable();
+        else this.verifyForm.disable();
+
+        this.isLoading.set(false);
+      }, 500);
+      return;
+    }
+
     this.verificationsClient.getVerifications(this.itemId()).subscribe({
       next: (res) => {
         if (res.data) {
@@ -117,8 +179,21 @@ export class VerificationHistoryComponent implements OnInit {
           if (dataAny.verifications) {
             this.verifications.set(dataAny.verifications);
             const pending = dataAny.verifications.find((v: any) => v.status?.toLowerCase() === 'pending');
+            if (pending) {
+              this.pendingVerification.set(pending);
+            } else {
+              this.pendingVerification.set(null);
+            }
             if (pending && pending.checkType) {
-              this.verifyForm.patchValue({ checkType: pending.checkType });
+              const apiType = pending.checkType;
+              const formType = apiType.includes('BeforeRent') ? 'before_rent' : 'after_return';
+              this.verifyForm.patchValue({ checkType: formType });
+            }
+            
+            if (this.canSubmitForm()) {
+              this.verifyForm.enable();
+            } else {
+              this.verifyForm.disable();
             }
           }
         }
@@ -131,19 +206,32 @@ export class VerificationHistoryComponent implements OnInit {
     });
   }
 
+  canSubmitForm(): boolean {
+    const rental = this.itemDetails()?.activeRental;
+    if (!rental) return false;
+    
+    if (rental.currentPossession !== 'Expert') return false;
+    
+    const formType = this.verifyForm.get('checkType')?.value;
+    if (formType === 'after_return' && !rental.hasReturnTransfers) return false;
+    
+    return true;
+  }
+
   onSubmit() {
     if (this.verifyForm.invalid) return;
 
     this.isSubmitting.set(true);
     const formVal = this.verifyForm.value;
 
-    const destinationPrefix = `[DESTINATION:${formVal.destination}] `;
     const cmd = new CreateVerificationCommand({
       itemId: this.itemId(),
       rentalId: this.itemDetails()?.activeRental?.rentalId || undefined,
       checkType: formVal.checkType!,
       status: formVal.status!,
-      notes: destinationPrefix + (formVal.notes || '')
+      notes: formVal.notes || '',
+      deductionAmount: formVal.deductionAmount || undefined,
+      newDepositAmount: formVal.newDepositAmount || undefined
     });
 
     this.verificationsClient.createVerification(this.itemId(), cmd).subscribe({
@@ -171,5 +259,19 @@ export class VerificationHistoryComponent implements OnInit {
       case 'pending': return 'warn';
       default: return 'default';
     }
+  }
+
+  openTransferVerify(type: string) {
+    const activeRental = this.itemDetails()?.activeRental;
+    if (!activeRental) return;
+    const dialogRef = this.dialog.open(TransferVerifyDialogComponent, {
+      width: '400px',
+      data: { rentalId: activeRental.rentalId, type: type }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadHistory();
+      }
+    });
   }
 }

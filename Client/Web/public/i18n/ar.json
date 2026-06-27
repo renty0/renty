@@ -118,11 +118,13 @@
     "profile": "الملف الشخصي",
     "title": "المتجر",
     "gap": "تحليل الفجوات",
+    "rentalFinancials": "الماليات للإيجارات",
     "fraud": "كشف الاحتيال",
     "userManagement": "إدارة المستخدمين",
     "roleManagement": "إدارة الأدوار",
     "login": "تسجيل الدخول",
     "support": "الدعم",
+    "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
     "register": "التسجيل",
     "categories": "الفئات",
@@ -144,7 +146,11 @@
     "staffManagement": "إدارة الموظفين",
     "overrides": "تجاوزات وطوارئ",
     "superAdmin": "المسؤول الأعلى",
-    "itemReview": "مراجعة المنتجات"
+    "itemReview": "مراجعة المنتجات",
+    "idVerifications": "طلبات توثيق الهوية",
+    "verifications": "الفحوصات",
+    "approvals": "الموافقات",
+    "disputes": "النزاعات"
   },
   "register": {
     "welcomeMessage": "انضم إلى رنتي اليوم",
@@ -178,12 +184,12 @@
     "welcomeBack": "مرحباً بك مجدداً!",
     "signInSubtitle": "سجل الدخول إلى حسابك",
     "forgotPassword": "هل نسيت كلمة المرور؟",
-    "resendVerification": "إعادة إرسال رمز التحقق",
     "noAccount": "ليس لديك حساب؟",
     "signUp": "سجل هنا",
     "emailNotConfirmed": "بريدك الإلكتروني غير مفعل. لقد أرسلنا رمز تفعيل جديد.",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-    "serverError": "حدث خطأ في الخادم، يرجى المحاولة لاحقاً"
+    "serverError": "حدث خطأ في الخادم، يرجى المحاولة لاحقاً",
+    "resendVerification": "إعادة إرسال رمز التحقق"
   },
   "forgotPassword": {
     "title": "نسيت كلمة المرور",
@@ -308,7 +314,6 @@
     "login": "دخول",
     "verify": "تحقق من الكود",
     "next": "التالي",
-    "confirm": "تأكيد",
     "back": "السابق",
     "replace": "استبدال",
     "search": "بحث",
@@ -324,7 +329,8 @@
     "browse": "تصفح",
     "upload": "رفع",
     "newProduct": "منتج جديد",
-    "reactivate": "إعادة التفعيل"
+    "reactivate": "إعادة التفعيل",
+    "confirm": "تأكيد"
   },
   "categories": {
     "title": "الفئات",
@@ -379,9 +385,6 @@
   },
   "rentals": {
     "title": "استئجار المنتج",
-    "requestExpertReview": "طلب فحص خبير",
-    "expertReviewHint": "سندع خبيراً يفحص المنتج عند التسليم لضمان حالته.",
-    "expertReviewFee": "رسوم فحص الخبير",
     "pricingType": "نوع التسعير",
     "estimatedPrice": "السعر التقديري",
     "notesPlaceholder": "أضف أي ملاحظات للمالك...",
@@ -394,17 +397,17 @@
     "weekly": "أسبوعي",
     "monthly": "شهري",
     "deliveryMethod": "طريقة التوصيل",
-    "desiredDeliveryDate": "تاريخ استلام المستأجر من المالك (المطلوب)",
-    "negotiatedDeliveryDate": "تاريخ التسليم النهائي المتفق عليه",
+    "desiredDeliveryDate": "تاريخ التسليم المطلوب",
+    "negotiatedDeliveryDate": "تاريخ التسليم المتفق عليه",
     "return": {
       "product_with_renter": "المنتج حالياً مع المستأجر.",
       "product_with_renter_overdue": "انتهت فترة الإيجار ويجب إرجاع المنتج.",
       "product_with_expert": "المنتج حاليًا مع الخبير للتفتيش. الخبير سيعوده بعد التقييم.",
       "product_with_owner": "المنتج مع المالك. لا حاجة لإرجاعه.",
       "select_method": "اختر الطريقة التي ترغب في إرجاع المنتج بها:",
-      "select_method_from_expert": "اختر الطريقة التي ترغب في استلام المنتج بها من الخبير:",
       "confirm": "تأكيد الإرجاع",
-      "confirmed": "تم بدء عملية الإرجاع بنجاح"
+      "confirmed": "تم بدء عملية الإرجاع بنجاح",
+      "select_method_from_expert": "اختر الطريقة التي ترغب في استلام المنتج بها من الخبير:"
     },
     "list": {
       "title": "إيجاراتي",
@@ -425,14 +428,14 @@
       "pending": "قيد الانتظار",
       "approved": "مقبول",
       "confirmed": "مؤكد",
-      "awaitingpickup": "في انتظار الاستلام",
       "active": "نشط",
-      "returned": "جاري الإرجاع",
       "completed": "مكتمل",
       "cancelled": "ملغي",
       "overdue": "متأخر",
       "rejected": "مرفوض",
-      "disputed": "متنازع عليه"
+      "disputed": "متنازع عليه",
+      "awaitingpickup": "في انتظار الاستلام",
+      "returned": "جاري الإرجاع"
     },
     "expert": {
       "assigned": "تم التعيين",
@@ -471,6 +474,9 @@
       "handoff_code": "رمز تحقق الاستلام",
       "give_to_owner": "اعرض هذا الكود للمالك عند استلام المنتج",
       "enter_code": "أدخل كود المستأجر",
+      "condition_photos": "توثيق حالة المنتج",
+      "handover_photos": "صور الاستلام (المالك)",
+      "return_photos": "صور الإرجاع (المالك)",
       "return_code": "رمز تحقق الإرجاع",
       "give_to_renter": "اعرض هذا الكود للمستأجر عند استلام المنتج المرتجع",
       "enter_return_code": "أدخل كود المالك لتأكيد الإرجاع",
@@ -483,25 +489,14 @@
       "transfer_history": "سجل التحويلات",
       "waiting_for_code": "في انتظار رمز التحقق",
       "pending_transfer": "قيد الانتظار",
-      "condition_photos": "توثيق حالة المنتج",
-      "handover_photos": "صور التسليم (المستأجر)",
-      "return_photos": "صور الإرجاع (المالك)",
       "expert_review_before": "تقييم الخبير (قبل الإيجار)",
       "expert_review_after": "تقييم الخبير (عند الإرجاع)"
-    },
-    "actors": {
-      "owner": "المالك",
-      "renter": "المستأجر",
-      "expert": "الخبير",
-      "deliveryagent": "مندوب التوصيل"
     },
     "actions": {
       "title": "الإجراءات",
       "confirm": "تأكيد الإيجار",
       "complete": "إكمال وإرجاع",
       "cancel": "إلغاء الطلب",
-      "handoff_method": "طريقة التسليم",
-      "set_delivery": "تحديد طريقة التسليم",
       "request_expert": "طلب تقييم خبير",
       "cancel_expert": "إلغاء طلب الخبير",
       "cancel_assigned_expert": "إلغاء الخبير المكلف",
@@ -511,12 +506,12 @@
       "dispute": "نزاع",
       "damaged": "مصادرة التأمين",
       "verify": "التحقق وبدء الإيجار",
-      "verify_return": "تأكيد واستلام",
-      "no_actions": "لا توجد إجراءات متاحة لهذا الإيجار."
+      "no_actions": "لا توجد إجراءات متاحة لهذا الإيجار.",
+      "handoff_method": "طريقة التسليم",
+      "set_delivery": "تحديد طريقة التسليم",
+      "verify_return": "تأكيد واستلام"
     },
     "delivery": {
-      "how_to_expert": "الرجاء اختيار كيفية تسليم المنتج للخبير:",
-      "how_to_renter": "الرجاء اختيار كيفية تسليم المنتج للمستأجر:",
       "byHand": "تسليم باليد",
       "nearestLocation": "أقرب مكان",
       "deliveryService": "خدمة التوصيل",
@@ -525,6 +520,8 @@
       "in_transit": "الطرد في الطريق",
       "delivered": "تم تسليم الطرد بنجاح",
       "negotiation_info": "حدد تاريخ البدء المطلوب. يمكنك التفاوض حول وقت التسليم الدقيق مع المالك عبر الدردشة. وقت التسليم لا يُحسب في فترة الإيجار.",
+      "how_to_expert": "الرجاء اختيار كيفية تسليم المنتج للخبير:",
+      "how_to_renter": "الرجاء اختيار كيفية تسليم المنتج للمستأجر:",
       "receive_from_expert_title": "المنتج جاهز في مركز الخبراء. كيف تفضل استلامه؟",
       "pickup_in_person": "استلام شخصي",
       "pickup_in_person_desc": "اذهب إلى مركز الخبراء لاستلام المنتج بنفسك.",
@@ -557,7 +554,16 @@
     },
     "config": "الإعدادات",
     "paymentDetails": "تفاصيل الدفع",
-    "requiresExpert": "يتطلب فحص خبير"
+    "requiresExpert": "يتطلب فحص خبير",
+    "requestExpertReview": "طلب فحص خبير",
+    "expertReviewHint": "سندع خبيراً يفحص المنتج عند التسليم لضمان حالته.",
+    "expertReviewFee": "رسوم فحص الخبير",
+    "actors": {
+      "owner": "المالك",
+      "renter": "المستأجر",
+      "expert": "الخبير",
+      "deliveryagent": "مندوب التوصيل"
+    }
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -855,7 +861,8 @@
       "empty": "لا توجد طلبات فحص جديدة متاحة حالياً."
     },
     "actions": {
-      "claim": "استلام المهمة"
+      "claim": "استلام المهمة",
+      "reviewProduct": "مراجعة المنتج"
     },
     "assigned": {
       "title": "الفحوصات المخصصة",
@@ -870,6 +877,7 @@
       "title": "فحص المنتج",
       "subtitle": "مراجعة حالة المنتج التاريخية وإرسال فحص جديد",
       "listTitle": "الجدول الزمني للفحص",
+      "giveCodeToOwner": "أعط رمز التحقق هذا لمالك المنتج:",
       "verifiedBy": "تم الفحص بواسطة",
       "empty": "لم يتم العثور على فحوصات سابقة.",
       "empty_title": "لا توجد فحوصات بعد",
@@ -884,7 +892,42 @@
       "renterName": "اسم المستأجر",
       "renterPhone": "رقم المستأجر",
       "rentalDates": "تواريخ الإيجار",
-      "rentalPrice": "سعر الإيجار"
+      "rentalPrice": "سعر الإيجار",
+      "deductionAmount": "مبلغ الخصم من التأمين",
+      "newDepositAmount": "قيمة التأمين المطلوبة (المالك لم يحدد)",
+      "mustHavePossession": "يجب عليك استلام المنتج فعلياً وإدخال رمز التحقق قبل أن تتمكن من إرسال تقرير الفحص.",
+      "delivery_to_renter": "التسليم للمستأجر",
+      "receive_from_renter": "الاستلام من المستأجر",
+      "receive_from_owner": "الاستلام من المالك",
+      "delivery_to_owner": "التسليم للمالك",
+      "dialog": {
+        "title": "تأكيد التسليم (استلام / تسليم)",
+        "description": "يرجى إدخال رمز التأكيد لتأكيد نقل المنتج فعلياً.",
+        "cancel": "إلغاء",
+        "verify_btn": "تأكيد الرمز",
+        "success": "تم تأكيد التسليم بنجاح!",
+        "placeholder": "مثال: 123456",
+        "ReceiveFromOwner": {
+          "title": "استلام من المالك",
+          "desc": "يرجى إدخال رمز التحقق المقدم من المالك لتأكيد استلامك للمنتج.",
+          "btn": "تأكيد الاستلام"
+        },
+        "DeliveryToRenter": {
+          "title": "تسليم للمستأجر",
+          "desc": "يرجى إدخال رمز التحقق المقدم من المستأجر لتأكيد استلامه للمنتج.",
+          "btn": "تأكيد التسليم"
+        },
+        "ReceiveFromRenter": {
+          "title": "استلام من المستأجر",
+          "desc": "يرجى إدخال رمز التحقق المقدم من المستأجر لتأكيد استرجاعك للمنتج.",
+          "btn": "تأكيد الاسترجاع"
+        },
+        "DeliveryToOwner": {
+          "title": "تسليم للمالك",
+          "desc": "يرجى إدخال رمز التحقق المقدم من المالك لتأكيد استرجاعه للمنتج.",
+          "btn": "تأكيد التسليم"
+        }
+      }
     },
     "verify": {
       "notesPlaceholder": "أضف أي تفاصيل بخصوص حالة المنتج...",
@@ -997,6 +1040,39 @@
     "sohag": "سوهاج"
   },
   "support": {
+    "dashboard": "لوحة القيادة",
+    "openTickets": "التذاكر المفتوحة",
+    "inProgress": "قيد المعالجة",
+    "escalated": "تم التصعيد",
+    "resolved": "تم الحل اليوم",
+    "unassigned": "تذاكر غير معينة",
+    "overdue": "تذاكر متأخرة",
+    "fraudAlerts": "تنبيهات الاحتيال",
+    "tickets": "التذاكر",
+    "details": "تفاصيل التذكرة",
+    "status": "الحالة",
+    "assign": "تعيين لي",
+    "unassign": "إلغاء التعيين",
+    "assignedTo": "معين لـ",
+    "createdAt": "تاريخ الإنشاء",
+    "age": "العمر",
+    "source": "المصدر",
+    "manual": "يدوي",
+    "autoGenerated": "إنشاء تلقائي",
+    "reply": "رد",
+    "sendMessage": "إرسال رسالة",
+    "type": "النوع",
+    "statuses": {
+      "open": "مفتوحة",
+      "inprogress": "قيد المعالجة",
+      "escalated": "تم التصعيد",
+      "resolved": "تم الحل",
+      "awaitingcustomer": "في انتظار العميل",
+      "awaitingsupport": "في انتظار الدعم"
+    },
+    "timeline": "الجدول الزمني",
+    "noTickets": "لا توجد تذاكر.",
+    "system": "النظام",
     "hub": {
       "title": "مركز الدعم",
       "subtitle": "كيف يمكننا مساعدتك اليوم؟",
@@ -1030,16 +1106,11 @@
     "ticket_id": "رقم التذكرة",
     "ticket_info": "أنشئ تذكرتك وتابعها بسهولة",
     "dashboard_subtitle": "إدارة تذاكر العملاء والردود",
-    "type": "النوع",
     "subject": "الموضوع",
-    "subjectPlaceholder": "سبب التواصل",
-    "noTickets": "ليس لديك أي تذاكر دعم. هل تحتاج للمساعدة؟ افتح تذكرة جديدة للحصول على المساعدة.",
     "message": "الرسالة",
     "message_placeholder": "اكتب تفاصيل المشكلة هنا...",
-    "status": "الحالة",
     "create": "إنشاء تذكرة",
     "create_success": "تم إنشاء التذكرة بنجاح",
-    "reply": "رد",
     "reply_placeholder": "اكتب ردك...",
     "ticket_closed_notice": "هذه التذكرة مغلقة، لا يمكنك إرسال ردود جديدة.",
     "types": {
@@ -1052,16 +1123,8 @@
     },
     "awaitingSupport": "في انتظار الدعم",
     "awaitingCustomer": "في انتظار العميل",
-    "resolved": "مُحلول",
     "open": "مُفتح",
     "closed": "مُغلق",
-    "statuses": {
-      "open": "مُفتح",
-      "inprogress": "قيد المعالجة",
-      "awaitingcustomer": "في انتظار العميل",
-      "escalated": "مصعد إدارياً",
-      "resolved": "مُحلول"
-    },
     "user": "المستخدم",
     "agent": {
       "title": "مساحة عمل وكيل الدعم",
@@ -1081,7 +1144,8 @@
       "executeResolution": "تنفيذ الحل",
       "resolveSuccess": "تم حل النزاع بنجاح. تم تحديث المحافظ.",
       "resolveFailed": "فشل في حل النزاع."
-    }
+    },
+    "subjectPlaceholder": "سبب التواصل"
   },
   "myOrders": {
     "title": "طلباتي",
@@ -1154,9 +1218,8 @@
     "activeNow": "نشط الأن",
     "noChats": "لا توجد محادثات بعد.",
     "typePlaceholder": "اكتب رسالة...",
-    "noMessages": "ابدأ محادثة!",
+    "noMessages": "ابدأ محادثة الآن!",
     "no_messages": "لا توجد رسائل بعد.",
-    "startMessaging": "ابدأ المراسلة",
     "selectToStart": "اختر محادثة لبدء المراسلة",
     "send": "إرسال",
     "online": "متصل",
@@ -1168,10 +1231,11 @@
     "lastSeenMinutes": "آخر ظهور منذ {{minutes}} دقيقة",
     "lastSeenHours": "آخر ظهور منذ {{hours}} ساعة",
     "lastSeenDays": "آخر ظهور منذ {{days}} يوم",
+    "ticketClosed": "هذه التذكرة مغلقة أو تم حلها. لا يمكنك إرسال رسائل جديدة.",
+    "startMessaging": "ابدأ المراسلة",
     "unsupportedFileType": "نوع الملف غير مدعوم. يرجى رفع الصور أو مقاطع الفيديو أو ملفات PDF فقط.",
     "fileTooLarge": "لا يمكن أن يتجاوز حجم الملف 10 ميغابايت.",
-    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.",
-    "ticketClosed": "هذه التذكرة مغلقة أو تم حلها. لا يمكنك إرسال رسائل جديدة."
+    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
   },
   "notifications": {
     "title": "الإشعارات",
@@ -1200,8 +1264,7 @@
     "success": "تم تقديم طلبك بنجاح!"
   },
   "errors": {
-    "insufficientBalance": "رصيد المحفظة غير كافٍ. يرجى شحن محفظتك.",
-    "invalidVerificationCode": "رمز التحقق غير صحيح",
+    "uploadRecentPhoto": "يرجى رفع صورة حديثة لحالة المنتج أولاً (خلال آخر 30 دقيقة). إذا كنت قد رفعت واحدة من قبل، يرجى حذفها ورفع صورة جديدة.",
     "unknownError": "حدث خطأ غير متوقع",
     "failedToLoadSubcategories": "فشل في تحميل الفئات الفرعية",
     "failedToLoadCategories": "فشل في تحميل الفئات",
@@ -1215,11 +1278,9 @@
     "unexpectedError": "حدث خطأ غير متوقع",
     "fetchFailed": "فشل جلب البيانات",
     "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "uploadRecentPhoto": "يرجى تحميل صورة حديثة لحالة المنتج أولاً (خلال آخر 30 دقيقة). إذا قمت بتحميل واحدة سابقًا، يرجى حذفها وتحميل واحدة جديدة.",
     "adminAccessDenied": "تم الرفض: صلاحيات المدير مطلوبة",
     "noProductsFound": "لم يتم العثور على منتجات",
     "productNotFound": "المنتج غير موجود",
-    "loginRequired": "يجب عليك تسجيل الدخول أولاً للوصول إلى هذه الصفحة",
     "tryAdjustingFilters": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه.",
     "unauthenticated": "المستخدم غير مسجل دخول - توجيه لصفحة تسجيل الدخول",
     "httpError": "حدث خطأ HTTP، برمز: {{status}}، ورسالة: {{message}}",
@@ -1233,7 +1294,10 @@
     "serviceUnavailable": "الخدمة غير متاحة مؤقتًا",
     "networkError": "خطأ في الشبكة - تحقق من اتصالك بالإنترنت",
     "unexpectedHttpError": "خطأ HTTP غير متوقع، برمز: {{status}}، ورسالة: {{message}}",
-    "sessionExpired": "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى"
+    "sessionExpired": "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى",
+    "insufficientBalance": "رصيد المحفظة غير كافٍ. يرجى شحن محفظتك.",
+    "invalidVerificationCode": "رمز التحقق غير صحيح",
+    "loginRequired": "يجب عليك تسجيل الدخول أولاً للوصول إلى هذه الصفحة"
   },
   "terms": {
     "title": "الشروط والأحكام",
@@ -1328,12 +1392,22 @@
   "wallet": {
     "title": "محفظتي",
     "subtitle": "إدارة أرباحك وسحب الأموال إلى محفظة الهاتف المحمول الخاصة بك.",
-    "total_balance": "الرصيد الكلي",
-    "withdrawable_balance": "الرصيد القابل للسحب",
     "available_balance": "الرصيد المتاح",
-    "pending_balance": "الرصيد المعلق",
     "total_earnings": "إجمالي الأرباح",
     "withdraw_funds": "سحب الأموال",
+    "transaction_history": "سجل المعاملات",
+    "no_transactions": "ليس لديك أي معاملات في المحفظة حتى الآن.",
+    "request_withdrawal": "طلب سحب",
+    "amount": "المبلغ",
+    "mobile_number": "رقم محفظة الهاتف (فودافون كاش، إلخ.)",
+    "cancel": "إلغاء",
+    "confirm_withdrawal": "تأكيد السحب",
+    "processing": "جاري المعالجة...",
+    "success_message": "تم طلب السحب بنجاح.",
+    "error_message": "فشل تقديم طلب السحب.",
+    "total_balance": "الرصيد الكلي",
+    "withdrawable_balance": "الرصيد القابل للسحب",
+    "pending_balance": "الرصيد المعلق",
     "simulate_top_up": "محاكاة شحن الرصيد",
     "simulate_top_up_title": "محاكاة شحن المحفظة",
     "amount_to_charge": "المبلغ المراد شحنه (جنيه)",
@@ -1373,17 +1447,7 @@
       "earnings_rental": "أرباح إيجار المنتج '{{item}}'. العمولة المخصومة: {{commission}}.",
       "early_return_fee": "رسوم إلغاء بسبب الإرجاع المبكر (الطلب #{{id}})",
       "early_return_refund": "استرداد قيمة أيام الإيجار غير المستخدمة للإرجاع المبكر (الطلب #{{id}})"
-    },
-    "transaction_history": "سجل المعاملات",
-    "no_transactions": "ليس لديك أي معاملات في المحفظة حتى الآن.",
-    "request_withdrawal": "طلب سحب",
-    "amount": "المبلغ",
-    "mobile_number": "رقم محفظة الهاتف (فودافون كاش، إلخ.)",
-    "cancel": "إلغاء",
-    "confirm_withdrawal": "تأكيد السحب",
-    "processing": "جاري المعالجة...",
-    "success_message": "تم طلب السحب بنجاح.",
-    "error_message": "فشل تقديم طلب السحب."
+    }
   },
   "nameAr": "الاسم (العربية)",
   "nameEn": "الاسم (الإنجليزية)",
@@ -1561,5 +1625,129 @@
   "Status updated": "تم تحديث الحالة",
   "User created successfully": "تم إنشاء المستخدم بنجاح",
   "activated": "مفعل",
-  "deactivated": "معطل"
+  "deactivated": "معطل",
+  "idVerification": {
+    "title": "طلبات التحقق من الهوية",
+    "subtitle": "مراجعة طلبات التحقق من هوية المستخدمين",
+    "userName": "اسم المستخدم",
+    "email": "البريد الإلكتروني",
+    "submittedAt": "تاريخ التقديم",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "reviewRequest": "مراجعة الطلب",
+    "review": "مراجعة",
+    "noPendingRequests": "لا توجد طلبات معلقة",
+    "noPendingRequestsDesc": "لا توجد طلبات تحقق من الهوية بانتظار المراجعة في الوقت الحالي.",
+    "dialogTitle": "مراجعة التحقق من الهوية",
+    "user": "المستخدم",
+    "frontOfId": "الوجه الأمامي للهوية",
+    "backOfId": "الوجه الخلفي للهوية",
+    "rejectionReason": "سبب الرفض",
+    "rejectionPlaceholder": "اشرح سبب رفض الهوية...",
+    "close": "إغلاق",
+    "reject": "رفض",
+    "approve": "قبول",
+    "cancel": "إلغاء",
+    "confirmRejection": "تأكيد الرفض",
+    "statusPending": "قيد الانتظار",
+    "statusApproved": "مقبول",
+    "statusRejected": "مرفوض",
+    "sortByDate": "الترتيب حسب التاريخ",
+    "newestFirst": "الأحدث أولاً",
+    "oldestFirst": "الأقدم أولاً",
+    "notes": "ملاحظات (اختياري للقبول)",
+    "notesPlaceholder": "أضف أي ملاحظات ليتم إرسالها للمستخدم...",
+    "notesRequired": "الملاحظات مطلوبة في حالة الرفض.",
+    "approveSuccess": "تم قبول الطلب بنجاح.",
+    "rejectSuccess": "تم رفض الطلب بنجاح.",
+    "submitFailed": "فشل في إرسال المراجعة. يرجى المحاولة مرة أخرى.",
+    "loadFailed": "فشل في تحميل طلبات التحقق من الهوية.",
+    "newRequestReceived": "تم استلام طلب تحقق من الهوية جديد."
+  },
+  "ADMIN": {
+    "DISPUTES": {
+      "OPEN_DISPUTES": "النزاعات المفتوحة",
+      "RESOLVED_DISPUTES": "النزاعات المحلولة",
+      "AVAILABLE_DISPUTES": "النزاعات المتاحة",
+      "MY_DISPUTES": "نزاعاتي",
+      "RENTAL_ID": "رقم الإيجار",
+      "ASSIGN_TO_ME": "تعيين لي",
+      "RESOLVE_FINANCIALS": "تسوية مالية",
+      "RESOLUTION_DATE": "تاريخ الحل",
+      "RESOLVED_BY": "تم الحل بواسطة",
+      "FINAL_MESSAGE": "الرسالة النهائية",
+      "NO_AVAILABLE": "لا توجد نزاعات متاحة.",
+      "NO_ASSIGNED": "ليس لديك نزاعات معينة.",
+      "NO_RESOLVED": "لا توجد نزاعات محلولة.",
+      "CLOSED_BY_ADMIN": "مغلق بواسطة المشرف",
+      "LOADING": "جاري تحميل النزاعات",
+      "VIEW_DETAILS": "عرض التفاصيل",
+      "ACTIONS_TITLE": "إجراءات النزاع",
+      "ACTION_VIEW_CHAT": "عرض سجل المحادثة",
+      "ACTION_RESOLVE": "تسوية مالية",
+      "ACTION_RETURN_SUPPORT": "إرجاع للدعم",
+      "ACTION_CLOSE": "إغلاق النزاع",
+      "DISPUTE_DETAILS": "تفاصيل النزاع",
+      "RENTAL_DETAILS": "تفاصيل الإيجار",
+      "END_DATE": "تاريخ الانتهاء",
+      "RENTAL_PRICE": "سعر الإيجار",
+      "DEPOSIT": "التأمين",
+      "PARTIES_INVOLVED": "الأطراف المعنية",
+      "CHAT_HISTORY": "سجل المحادثة",
+      "NO_MESSAGES": "لا توجد رسائل في هذا النزاع حتى الآن.",
+      "RENTER": "المستأجر",
+      "OWNER": "المالك",
+      "EXPERT": "الخبير",
+      "DEPOSIT_STATUS": {
+        "HELD": "مُحتجز",
+        "RETURNED": "مُسترد",
+        "FORFEITED": "مُصادر"
+      }
+    },
+    "ITEMS": {
+      "APPROVAL_QUEUE": "قائمة انتظار الموافقة على العناصر",
+      "APPROVE_SELECTED": "الموافقة على المحدد",
+      "REJECT_SELECTED": "رفض المحدد",
+      "ITEM_TITLE": "عنوان العنصر",
+      "OWNER": "المالك",
+      "CATEGORY": "الفئة",
+      "PRICE_PER_DAY": "السعر / اليوم",
+      "DATE_SUBMITTED": "تاريخ التقديم",
+      "STATUS": "الحالة",
+      "PENDING": "قيد الانتظار",
+      "ACTIONS": "إجراءات",
+      "NO_ITEMS_PENDING": "لا توجد عناصر في انتظار الموافقة."
+    },
+    "IDS": {
+      "VERIFICATION_QUEUE": "قائمة انتظار التحقق من الهوية",
+      "VERIFY_SELECTED": "التحقق من المحدد",
+      "REJECT_SELECTED": "رفض المحدد",
+      "USER": "المستخدم",
+      "FRONT_ID": "الهوية الأمامية",
+      "BACK_ID": "الهوية الخلفية",
+      "SUBMISSION_DATE": "تاريخ التقديم",
+      "STATUS": "الحالة",
+      "PENDING_REVIEW": "في انتظار المراجعة",
+      "ACTIONS": "إجراءات",
+      "NO_VERIFICATIONS_PENDING": "لا توجد عمليات تحقق من الهوية معلقة."
+    }
+  },
+  "SUPPORT": {
+    "TICKETS": {
+      "TICKET_ID": "رقم التذكرة",
+      "REPORTED_BY": "مُبلغ بواسطة",
+      "STATUS": "الحالة",
+      "CREATED_AT": "تاريخ الإنشاء",
+      "ACTIONS": "إجراءات",
+      "STATUS_TYPES": {
+        "OPEN": "مفتوح",
+        "INPROGRESS": "قيد التقدم",
+        "RESOLVED": "تم الحل",
+        "CLOSED": "مغلق",
+        "AWAITINGSUPPORT": "في انتظار الدعم",
+        "AWAITINGCUSTOMER": "في انتظار العميل",
+        "ESCALATED": "تم التصعيد"
+      }
+    }
+  }
 }

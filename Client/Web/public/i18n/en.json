@@ -112,11 +112,13 @@
     "profile": "Profile",
     "title": "Store",
     "gap": "Gap Analysis",
+    "rentalFinancials": "Rental Financials",
     "fraud": "Fraud Detection",
     "userManagement": "User Management",
     "roleManagement": "Role Management",
     "login": "Login",
     "support": "Support",
+    "settings": "Settings",
     "logout": "Logout",
     "register": "Register",
     "categories": "Categories",
@@ -138,7 +140,11 @@
     "staffManagement": "Staff Management",
     "overrides": "Overrides & Emergency",
     "superAdmin": "Super Admin",
-    "itemReview": "Item Review"
+    "itemReview": "Item Review",
+    "idVerifications": "ID Verifications",
+    "verifications": "Verifications",
+    "approvals": "Approvals",
+    "disputes": "Disputes"
   },
   "register": {
     "welcomeMessage": "Join Renty Today",
@@ -172,12 +178,12 @@
     "welcomeBack": "Welcome Back!",
     "signInSubtitle": "Sign in to your account",
     "forgotPassword": "Forgot password?",
-    "resendVerification": "Resend Verification",
     "noAccount": "Don't have an account?",
     "signUp": "Register here",
     "emailNotConfirmed": "Your email is not confirmed. We have sent a new verification code.",
     "invalidCredentials": "Invalid email or password",
-    "serverError": "A server error occurred, please try again later"
+    "serverError": "A server error occurred, please try again later",
+    "resendVerification": "Resend Verification"
   },
   "forgotPassword": {
     "title": "Forgot Password",
@@ -302,7 +308,6 @@
     "login": "Login",
     "verify": "Verify Code",
     "next": "Next",
-    "confirm": "Confirm",
     "back": "Back",
     "search": "Search",
     "replace": "Replace",
@@ -318,7 +323,8 @@
     "browse": "Browse",
     "upload": "Upload",
     "newProduct": "New Product",
-    "reactivate": "Reactivate"
+    "reactivate": "Reactivate",
+    "confirm": "Confirm"
   },
   "categories": {
     "title": "Categories",
@@ -373,9 +379,6 @@
   },
   "rentals": {
     "title": "Rent Product",
-    "requestExpertReview": "Request Expert Review",
-    "expertReviewHint": "We'll have an expert inspect the item upon handover to guarantee its condition.",
-    "expertReviewFee": "Expert Review Fee",
     "pricingType": "Pricing Type",
     "estimatedPrice": "Estimated Price",
     "deposit": "Security Deposit",
@@ -388,8 +391,8 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "deliveryMethod": "Delivery Method",
-    "desiredDeliveryDate": "Desired Renter Receive Date (From Owner)",
-    "negotiatedDeliveryDate": "Final Agreed Delivery Date",
+    "desiredDeliveryDate": "Desired Delivery Date",
+    "negotiatedDeliveryDate": "Negotiated Delivery Date (Agreed with Owner)",
     "list": {
       "title": "My Rentals",
       "subtitle": "Track and manage your active and past rentals",
@@ -409,14 +412,14 @@
       "pending": "Pending",
       "approved": "Approved",
       "confirmed": "Confirmed",
-      "awaitingpickup": "Awaiting Pickup",
       "active": "Active",
-      "returned": "Returning",
       "completed": "Completed",
       "cancelled": "Cancelled",
       "overdue": "Overdue",
       "rejected": "Rejected",
-      "disputed": "Disputed"
+      "disputed": "Disputed",
+      "awaitingpickup": "Awaiting Pickup",
+      "returned": "Returning"
     },
     "expert": {
       "assigned": "Assigned",
@@ -457,6 +460,9 @@
       "handoff_code": "Handoff Verification Code",
       "give_to_owner": "Show this code to the owner when you receive the item",
       "enter_code": "Enter Renter's Code",
+      "condition_photos": "Condition Documentation",
+      "handover_photos": "Handover Photos (Owner)",
+      "return_photos": "Return Photos (Owner)",
       "return_code": "Return Verification Code",
       "give_to_renter": "Show this code to the renter when you receive the returned item",
       "enter_return_code": "Enter Owner's Code to Confirm Return",
@@ -469,25 +475,14 @@
       "transfer_history": "Transfer History",
       "waiting_for_code": "Waiting for Verification",
       "pending_transfer": "Pending Transfer",
-      "condition_photos": "Condition Documentation",
-      "handover_photos": "Handover Photos (Renter)",
-      "return_photos": "Return Photos (Owner)",
       "expert_review_before": "Expert Review (Before Rent)",
       "expert_review_after": "Expert Review (Upon Return)"
-    },
-    "actors": {
-      "owner": "Owner",
-      "renter": "Renter",
-      "expert": "Expert",
-      "deliveryagent": "Delivery Agent"
     },
     "actions": {
       "title": "Actions",
       "confirm": "Confirm Rental",
       "complete": "Complete & Return",
       "cancel": "Cancel Request",
-      "handoff_method": "Handoff Method",
-      "set_delivery": "Set Delivery Method",
       "request_expert": "Request Expert Review",
       "cancel_expert": "Cancel Expert Request",
       "cancel_assigned_expert": "Cancel Assigned Expert",
@@ -497,12 +492,12 @@
       "dispute": "Dispute",
       "damaged": "Forfeit Deposit",
       "verify": "Verify & Start Rental",
-      "verify_return": "Confirm & Receive",
-      "no_actions": "No actions available for this rental."
+      "no_actions": "No actions available for this rental.",
+      "handoff_method": "Handoff Method",
+      "set_delivery": "Set Delivery Method",
+      "verify_return": "Confirm & Receive"
     },
     "delivery": {
-      "how_to_expert": "Please choose how you want to deliver the item to the expert:",
-      "how_to_renter": "Please choose how you want to deliver the item to the renter:",
       "byHand": "By Hand",
       "nearestLocation": "Nearest Location",
       "deliveryService": "Delivery Service",
@@ -511,6 +506,8 @@
       "in_transit": "Package is in transit",
       "delivered": "Package delivered successfully",
       "negotiation_info": "Set your desired start date. You can negotiate the exact delivery time with the owner via chat. Delivery time is not counted in your rental period.",
+      "how_to_expert": "Please choose how you want to deliver the item to the expert:",
+      "how_to_renter": "Please choose how you want to deliver the item to the renter:",
       "receive_from_expert_title": "The item is ready at the expert hub. How would you like to receive it?",
       "pickup_in_person": "Pick up in person",
       "pickup_in_person_desc": "Go to the expert hub to pick up the item.",
@@ -527,9 +524,9 @@
       "product_with_expert": "Product is currently with the expert for inspection. Expert will return it after evaluation.",
       "product_with_owner": "Product is with the owner. No return needed.",
       "select_method": "Select how you want to return the product:",
-      "select_method_from_expert": "Select how you want to receive the product from the expert:",
       "confirm": "Confirm Return",
-      "confirmed": "Return process initiated successfully"
+      "confirmed": "Return process initiated successfully",
+      "select_method_from_expert": "Select how you want to receive the product from the expert:"
     },
     "disputes": {
       "title": "Dispute Rental",
@@ -559,6 +556,15 @@
       "cancel_and_recreate": "To modify your rental dates, please cancel this request and create a new one with your preferred dates.",
       "success": "Rental modified successfully",
       "error": "Failed to modify rental"
+    },
+    "requestExpertReview": "Request Expert Review",
+    "expertReviewHint": "We'll have an expert inspect the item upon handover to guarantee its condition.",
+    "expertReviewFee": "Expert Review Fee",
+    "actors": {
+      "owner": "Owner",
+      "renter": "Renter",
+      "expert": "Expert",
+      "deliveryagent": "Delivery Agent"
     }
   },
   "validation": {
@@ -855,7 +861,8 @@
       "empty": "No new verification requests available."
     },
     "actions": {
-      "claim": "Claim Task"
+      "claim": "Claim Task",
+      "reviewProduct": "Review Product"
     },
     "assigned": {
       "title": "Assigned Verifications",
@@ -870,6 +877,7 @@
       "title": "Item Verification",
       "subtitle": "Review item condition history and submit new verification",
       "listTitle": "Verification Timeline",
+      "giveCodeToOwner": "Give this verification code to the owner of the item:",
       "verifiedBy": "Verified By",
       "empty": "No previous verifications found.",
       "empty_title": "No Verifications Yet",
@@ -884,7 +892,42 @@
       "renterName": "Renter Name",
       "renterPhone": "Renter Phone",
       "rentalDates": "Rental Dates",
-      "rentalPrice": "Rental Price"
+      "rentalPrice": "Rental Price",
+      "deductionAmount": "Deposit Deduction Amount",
+      "newDepositAmount": "Required Deposit Amount",
+      "mustHavePossession": "You must physically receive the item via the Transfer workflow before you can submit the Verification form.",
+      "delivery_to_renter": "Delivery to Renter",
+      "receive_from_renter": "Receive from Renter",
+      "receive_from_owner": "Receive from Owner",
+      "delivery_to_owner": "Delivery to Owner",
+      "dialog": {
+        "title": "Verify Transfer (Receiving / Handing Over)",
+        "description": "Please enter the transfer code to confirm that the item has been physically transferred.",
+        "cancel": "Cancel",
+        "verify_btn": "Verify Code",
+        "success": "Transfer verified successfully!",
+        "placeholder": "EX: 123456",
+        "ReceiveFromOwner": {
+          "title": "Receive from Owner",
+          "desc": "Please enter the verification code provided by the Owner to confirm you received the item.",
+          "btn": "Confirm Receipt"
+        },
+        "DeliveryToRenter": {
+          "title": "Deliver to Renter",
+          "desc": "Please enter the verification code provided by the Renter to confirm they received the item.",
+          "btn": "Confirm Delivery"
+        },
+        "ReceiveFromRenter": {
+          "title": "Receive from Renter",
+          "desc": "Please enter the verification code provided by the Renter to confirm you received the item back.",
+          "btn": "Confirm Return"
+        },
+        "DeliveryToOwner": {
+          "title": "Deliver to Owner",
+          "desc": "Please enter the verification code provided by the Owner to confirm they received the item back.",
+          "btn": "Confirm Delivery"
+        }
+      }
     },
     "verify": {
       "notesPlaceholder": "Add any details regarding item condition...",
@@ -1001,6 +1044,39 @@
     "sohag": "Sohag"
   },
   "support": {
+    "dashboard": "Dashboard",
+    "openTickets": "Open Tickets",
+    "inProgress": "In Progress",
+    "escalated": "Escalated",
+    "resolved": "Resolved Today",
+    "unassigned": "Unassigned Tickets",
+    "overdue": "Overdue Tickets",
+    "fraudAlerts": "Fraud Alerts",
+    "tickets": "Tickets",
+    "details": "Ticket Details",
+    "status": "Status",
+    "assign": "Assign to me",
+    "unassign": "Unassign",
+    "assignedTo": "Assigned To",
+    "createdAt": "Created At",
+    "age": "Age",
+    "source": "Source",
+    "manual": "Manual",
+    "autoGenerated": "Auto Generated",
+    "reply": "Reply",
+    "sendMessage": "Send Message",
+    "type": "Type",
+    "statuses": {
+      "open": "Open",
+      "inprogress": "In Progress",
+      "escalated": "Escalated",
+      "resolved": "Resolved",
+      "awaitingcustomer": "Awaiting Customer",
+      "awaitingsupport": "Awaiting Support"
+    },
+    "timeline": "Timeline",
+    "noTickets": "No tickets found.",
+    "system": "System",
     "hub": {
       "title": "Support Hub",
       "subtitle": "How can we help you today?",
@@ -1034,16 +1110,11 @@
     "ticket_id": "Ticket ID",
     "ticket_info": "Create and track your support request",
     "dashboard_subtitle": "Manage customer tickets and replies",
-    "type": "Type",
     "subject": "Subject",
-    "subjectPlaceholder": "Reason for contacting",
-    "noTickets": "You have no support tickets. Need help? Open a new ticket to get assistance.",
     "message": "Message",
     "message_placeholder": "Describe your issue in detail...",
-    "status": "Status",
     "create": "Create Ticket",
     "create_success": "Ticket created successfully",
-    "reply": "Reply",
     "reply_placeholder": "Write your reply...",
     "ticket_closed_notice": "This ticket is closed. You cannot send new replies.",
     "types": {
@@ -1056,16 +1127,8 @@
     },
     "awaitingSupport": "Awaiting Support",
     "awaitingCustomer": "Awaiting Customer",
-    "resolved": "Resolved",
     "open": "Open",
     "closed": "Closed",
-    "statuses": {
-      "open": "Open",
-      "inprogress": "In Progress",
-      "awaitingcustomer": "Awaiting Customer",
-      "escalated": "Escalated",
-      "resolved": "Resolved"
-    },
     "user": "User",
     "agent": {
       "title": "Support Agent Workspace",
@@ -1085,7 +1148,8 @@
       "executeResolution": "Execute Resolution",
       "resolveSuccess": "Dispute resolved successfully. Wallets updated.",
       "resolveFailed": "Failed to resolve dispute."
-    }
+    },
+    "subjectPlaceholder": "Reason for contacting"
   },
   "myOrders": {
     "title": "My Orders",
@@ -1160,7 +1224,6 @@
     "typePlaceholder": "Type a message...",
     "noMessages": "Start a conversation!",
     "no_messages": "No messages yet.",
-    "startMessaging": "Start messaging",
     "selectToStart": "Select a chat to start messaging",
     "send": "Send",
     "online": "Online",
@@ -1172,10 +1235,11 @@
     "lastSeenMinutes": "Last seen {{minutes}} min ago",
     "lastSeenHours": "Last seen {{hours}} hr ago",
     "lastSeenDays": "Last seen {{days}} days ago",
+    "ticketClosed": "This ticket is closed or resolved. You cannot send new messages.",
+    "startMessaging": "Start messaging",
     "unsupportedFileType": "Unsupported file type. Please upload images, videos, or PDFs only.",
     "fileTooLarge": "File size cannot exceed 10MB.",
-    "sendFailed": "Failed to send message. Please try again.",
-    "ticketClosed": "This ticket is closed or resolved. You cannot send new messages."
+    "sendFailed": "Failed to send message. Please try again."
   },
   "notifications": {
     "title": "Notifications",
@@ -1204,8 +1268,7 @@
     "success": "Your order has been placed successfully!"
   },
   "errors": {
-    "insufficientBalance": "Insufficient balance. Please recharge your wallet.",
-    "invalidVerificationCode": "Invalid verification code",
+    "uploadRecentPhoto": "Please upload a recent photo of the item condition first (within the last 30 minutes). If you uploaded one earlier, please delete it and upload a new one.",
     "unknownError": "An unexpected error occurred",
     "failedToLoadSubcategories": "Failed to load subcategories",
     "failedToLoadCategories": "Failed to load categories",
@@ -1219,11 +1282,9 @@
     "unexpectedError": "An unexpected error occurred",
     "fetchFailed": "Failed to fetch data",
     "generic": "Something went wrong. Please try again.",
-    "uploadRecentPhoto": "Please upload a recent photo of the item condition first (within the last 30 minutes). If you uploaded one earlier, please delete it and upload a new one.",
     "adminAccessDenied": "Access denied: Admin permissions required",
     "noProductsFound": "No products found",
     "productNotFound": "Product not found",
-    "loginRequired": "You must log in first to access this page",
     "tryAdjustingFilters": "Try adjusting your search or filters to find what you're looking for.",
     "unauthenticated": "User not authenticated - redirecting to login",
     "httpError": "HTTP Error occurred, with status: {{status}}, with message: {{message}}",
@@ -1237,7 +1298,10 @@
     "serviceUnavailable": "Service temporarily unavailable",
     "networkError": "Network error - Check your internet connection",
     "unexpectedHttpError": "Unexpected HTTP Error, with status: {{status}}, with message: {{message}}",
-    "sessionExpired": "Your session has ended, please login again"
+    "sessionExpired": "Your session has ended, please login again",
+    "insufficientBalance": "Insufficient balance. Please recharge your wallet.",
+    "invalidVerificationCode": "Invalid verification code",
+    "loginRequired": "You must log in first to access this page"
   },
   "terms": {
     "title": "Terms and Conditions",
@@ -1332,12 +1396,22 @@
   "wallet": {
     "title": "My Wallet",
     "subtitle": "Manage your earnings and withdraw funds to your mobile wallet.",
-    "total_balance": "Total Balance",
-    "withdrawable_balance": "Withdrawable Balance",
     "available_balance": "Available Balance",
-    "pending_balance": "Pending Balance",
     "total_earnings": "Total Earnings",
     "withdraw_funds": "Withdraw Funds",
+    "transaction_history": "Transaction History",
+    "no_transactions": "You have no wallet transactions yet.",
+    "request_withdrawal": "Request Withdrawal",
+    "amount": "Amount",
+    "mobile_number": "Mobile Wallet Number (Vodafone Cash, etc.)",
+    "cancel": "Cancel",
+    "confirm_withdrawal": "Confirm Withdrawal",
+    "processing": "Processing...",
+    "success_message": "Withdrawal requested successfully.",
+    "error_message": "Failed to submit withdrawal request.",
+    "total_balance": "Total Balance",
+    "withdrawable_balance": "Withdrawable Balance",
+    "pending_balance": "Pending Balance",
     "simulate_top_up": "Simulate Top-Up",
     "simulate_top_up_title": "Simulate Wallet Top-Up",
     "amount_to_charge": "Amount to Charge (EGP)",
@@ -1377,17 +1451,7 @@
       "earnings_rental": "Earnings for rental '{{item}}'. Commission deducted: {{commission}}.",
       "early_return_fee": "Early return cancellation fee (Order #{{id}})",
       "early_return_refund": "Refund for unused rent days due to early return (Order #{{id}})"
-    },
-    "transaction_history": "Transaction History",
-    "no_transactions": "You have no wallet transactions yet.",
-    "request_withdrawal": "Request Withdrawal",
-    "amount": "Amount",
-    "mobile_number": "Mobile Wallet Number (Vodafone Cash, etc.)",
-    "cancel": "Cancel",
-    "confirm_withdrawal": "Confirm Withdrawal",
-    "processing": "Processing...",
-    "success_message": "Withdrawal requested successfully.",
-    "error_message": "Failed to submit withdrawal request."
+    }
   },
   "nameAr": "Name (Arabic)",
   "nameEn": "Name (English)",
@@ -1572,5 +1636,129 @@
   "Status updated": "Status updated",
   "User created successfully": "User created successfully",
   "activated": "activated",
-  "deactivated": "deactivated"
+  "deactivated": "deactivated",
+  "idVerification": {
+    "title": "ID Verification Requests",
+    "subtitle": "Review user identity verification requests",
+    "userName": "User Name",
+    "email": "Email",
+    "submittedAt": "Submitted At",
+    "status": "Status",
+    "actions": "Actions",
+    "reviewRequest": "Review Request",
+    "review": "Review",
+    "noPendingRequests": "No Pending Requests",
+    "noPendingRequestsDesc": "There are no ID verification requests pending review at this time.",
+    "dialogTitle": "Review Identity Verification",
+    "user": "User",
+    "frontOfId": "Front of ID",
+    "backOfId": "Back of ID",
+    "rejectionReason": "Rejection Reason",
+    "rejectionPlaceholder": "Explain why the ID was rejected...",
+    "close": "Close",
+    "reject": "Reject",
+    "approve": "Approve",
+    "cancel": "Cancel",
+    "confirmRejection": "Confirm Rejection",
+    "statusPending": "Pending",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "sortByDate": "Sort By Date",
+    "newestFirst": "Newest First",
+    "oldestFirst": "Oldest First",
+    "notes": "Notes (Optional for Approval)",
+    "notesPlaceholder": "Add any notes to be sent to the user...",
+    "notesRequired": "Notes are required for rejection.",
+    "approveSuccess": "Request approved successfully.",
+    "rejectSuccess": "Request rejected successfully.",
+    "submitFailed": "Failed to submit review. Please try again.",
+    "loadFailed": "Failed to load ID verification requests.",
+    "newRequestReceived": "New ID verification request received."
+  },
+  "ADMIN": {
+    "DISPUTES": {
+      "OPEN_DISPUTES": "Open Disputes",
+      "RESOLVED_DISPUTES": "Resolved Disputes",
+      "AVAILABLE_DISPUTES": "Available Disputes",
+      "MY_DISPUTES": "My Disputes",
+      "RENTAL_ID": "Rental ID",
+      "ASSIGN_TO_ME": "Assign To Me",
+      "RESOLVE_FINANCIALS": "Resolve Financials",
+      "RESOLUTION_DATE": "Resolution Date",
+      "RESOLVED_BY": "Resolved By",
+      "FINAL_MESSAGE": "Final Message",
+      "NO_AVAILABLE": "No available disputes.",
+      "NO_ASSIGNED": "You have no assigned disputes.",
+      "NO_RESOLVED": "No resolved disputes found.",
+      "CLOSED_BY_ADMIN": "Closed by admin",
+      "LOADING": "Loading disputes",
+      "VIEW_DETAILS": "View Details",
+      "ACTIONS_TITLE": "Dispute Actions",
+      "ACTION_VIEW_CHAT": "View Chat History",
+      "ACTION_RESOLVE": "Resolve Financials",
+      "ACTION_RETURN_SUPPORT": "Return to Support",
+      "ACTION_CLOSE": "Close Dispute",
+      "DISPUTE_DETAILS": "Dispute Details",
+      "RENTAL_DETAILS": "Rental Details",
+      "END_DATE": "End Date",
+      "RENTAL_PRICE": "Rental Price",
+      "DEPOSIT": "Deposit",
+      "PARTIES_INVOLVED": "Parties Involved",
+      "CHAT_HISTORY": "Chat History",
+      "NO_MESSAGES": "No messages in this dispute yet.",
+      "RENTER": "Renter",
+      "OWNER": "Owner",
+      "EXPERT": "Expert",
+      "DEPOSIT_STATUS": {
+        "HELD": "Held",
+        "RETURNED": "Returned",
+        "FORFEITED": "Forfeited"
+      }
+    },
+    "ITEMS": {
+      "APPROVAL_QUEUE": "Items Approval Queue",
+      "APPROVE_SELECTED": "Approve Selected",
+      "REJECT_SELECTED": "Reject Selected",
+      "ITEM_TITLE": "Item Title",
+      "OWNER": "Owner",
+      "CATEGORY": "Category",
+      "PRICE_PER_DAY": "Price / Day",
+      "DATE_SUBMITTED": "Date Submitted",
+      "STATUS": "Status",
+      "PENDING": "Pending",
+      "ACTIONS": "Actions",
+      "NO_ITEMS_PENDING": "No items pending approval."
+    },
+    "IDS": {
+      "VERIFICATION_QUEUE": "ID Verification Queue",
+      "VERIFY_SELECTED": "Verify Selected",
+      "REJECT_SELECTED": "Reject Selected",
+      "USER": "User",
+      "FRONT_ID": "Front ID",
+      "BACK_ID": "Back ID",
+      "SUBMISSION_DATE": "Submission Date",
+      "STATUS": "Status",
+      "PENDING_REVIEW": "Pending Review",
+      "ACTIONS": "Actions",
+      "NO_VERIFICATIONS_PENDING": "No ID verifications pending."
+    }
+  },
+  "SUPPORT": {
+    "TICKETS": {
+      "TICKET_ID": "Ticket ID",
+      "REPORTED_BY": "Reported By",
+      "STATUS": "Status",
+      "CREATED_AT": "Created At",
+      "ACTIONS": "Actions",
+      "STATUS_TYPES": {
+        "OPEN": "Open",
+        "INPROGRESS": "In Progress",
+        "RESOLVED": "Resolved",
+        "CLOSED": "Closed",
+        "AWAITINGSUPPORT": "Awaiting Support",
+        "AWAITINGCUSTOMER": "Awaiting Customer",
+        "ESCALATED": "Escalated"
+      }
+    }
+  }
 }

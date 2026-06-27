@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, Inject, Optional } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,14 +13,13 @@ import { catchError, finalize, of, tap } from 'rxjs';
   selector: 'app-search-results',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     TranslateModule,
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatPaginatorModule
-  ],
+],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss'
 })

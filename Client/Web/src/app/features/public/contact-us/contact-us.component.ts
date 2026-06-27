@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,13 +12,12 @@ import { ToastService } from '../../../shared/services/toast.service';
   selector: 'app-contact-us',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     TranslateModule,
     MatIconModule,
     InputComponent,
     LoadingButtonComponent
-  ],
+],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.scss'
 })

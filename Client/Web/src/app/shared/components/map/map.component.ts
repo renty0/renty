@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
     Component,
     EventEmitter,
@@ -36,14 +36,13 @@ export interface MapCoordinates {
     selector: 'app-map',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        MatIconModule,
-        MatButtonModule,
-        MatMenuModule
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule
+],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     templateUrl: './map.component.html',

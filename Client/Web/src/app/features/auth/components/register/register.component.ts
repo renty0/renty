@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -24,7 +24,6 @@ import { EGYPT_GOVERNORATES } from '../../../../features/items/items-editor-page
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule,
     RouterModule,
     TranslatePipe,
     MatStepperModule,
@@ -34,7 +33,7 @@ import { EGYPT_GOVERNORATES } from '../../../../features/items/items-editor-page
     InputComponent,
     LoadingButtonComponent,
     TermsAndConditionsComponent
-  ],
+],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

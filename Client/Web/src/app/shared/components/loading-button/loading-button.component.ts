@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter , ChangeDetectionStrategy } from '@angular/core'
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -11,7 +11,7 @@ export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 @Component({
   selector: 'app-loading-button',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatRippleModule, MatTooltipModule],
+  imports: [MatIconModule, MatRippleModule, MatTooltipModule],
   templateUrl: './loading-button.component.html',
   styleUrls: ['./loading-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

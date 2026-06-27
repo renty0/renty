@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal, ViewChild, ElementRef, AfterViewChecked, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, ViewChild, ElementRef, AfterViewChecked, effect, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -57,6 +57,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked, OnDestroy {
   private translate = inject(TranslateService);
   private sanitizer = inject(DomSanitizer);
   private snackBar = inject(MatSnackBar);
+
+  @Input() inputChatId?: string;
+  @Input() isSupportInput?: boolean;
+  @Input() disabled?: boolean;
 
   chatId = signal('');
   messages = signal<any[]>([]);

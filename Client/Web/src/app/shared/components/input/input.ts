@@ -2,7 +2,7 @@ import { Component, inject, Input, signal, ChangeDetectionStrategy, DestroyRef, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,7 +47,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, MatChipsModule, MatButtonModule, NgxMatTimepickerModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, MatChipsModule, MatButtonModule, NgxMatTimepickerModule],
   templateUrl: './input.html',
   styleUrls: ['./input.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, Input, Output, EventEmitter, computed, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ import { LocalizationService } from '../../../core/services/localization.service
 @Component({
   selector: 'app-items-editor-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
+  imports: [ReactiveFormsModule, RouterModule, TranslateModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, InputComponent, MultiImageUploaderComponent, HeaderSectionComponent, LoadingButtonComponent, MapComponent],
   templateUrl: './items-editor-page.component.html',
   styleUrl: './items-editor-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

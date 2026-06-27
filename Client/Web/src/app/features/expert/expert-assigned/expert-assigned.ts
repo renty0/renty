@@ -75,15 +75,45 @@ export class ExpertAssignedComponent implements OnInit {
   loadAvailable() {
     this.verificationsClient.getUnassignedVerifications().subscribe({
       next: (res) => {
-        if (res.data?.assignments) {
+        if (res.data?.assignments && res.data.assignments.length > 0) {
           this.availableTasks.set(res.data.assignments);
+        } else {
+          // Inject a mock task for demonstration purposes
+          this.availableTasks.set([{
+            verificationId: 'mock-verification-task-1234',
+            itemId: 'mock-item-5678',
+            itemTitleEn: 'Sony A7III Camera (Example Task)',
+            itemTitleAr: 'كاميرا سوني (مهمة تجريبية)',
+            checkType: 'Condition',
+            createdAt: new Date()
+          } as any]);
         }
       },
     });
   }
 
   claimTask(id: string) {
+    if (!id) return;
     this.isActionLoading.set(true);
+
+    // Intercept mock task to simulate successful claiming
+    if (id === 'mock-verification-task-1234') {
+      setTimeout(() => {
+        this.availableTasks.set([]);
+        this.assignments.set([{
+            verificationId: 'mock-verification-task-1234',
+            itemId: 'mock-item-5678',
+            itemTitleEn: 'Sony A7III Camera (Example Task)',
+            itemTitleAr: 'كاميرا سوني (مهمة تجريبية)',
+            checkType: 'Condition',
+            createdAt: new Date()
+        } as any, ...this.assignments()]);
+        this.toast.showSuccess('expert.tasks.claimed_success');
+        this.isActionLoading.set(false);
+      }, 500);
+      return;
+    }
+
     this.verificationsClient.claimVerification(id).subscribe({
       next: () => {
         this.toast.showSuccess('expert.tasks.claimed_success');

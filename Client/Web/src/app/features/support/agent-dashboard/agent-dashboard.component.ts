@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { DisputesClient, ResolveDisputeCommand } from '../../../core/api/api-client';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,9 +16,16 @@ import { HeaderSectionComponent } from '../../../shared/components/header-sectio
   selector: 'app-agent-dashboard',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatIconModule, MatCardModule, MatButtonModule,
-    MatFormFieldModule, MatInputModule, MatSelectModule, TranslateModule, HeaderSectionComponent
-  ],
+    FormsModule,
+    MatIconModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    TranslateModule,
+    HeaderSectionComponent
+],
   templateUrl: './agent-dashboard.component.html',
   styleUrl: './agent-dashboard.component.scss'
 })

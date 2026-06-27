@@ -1,0 +1,172 @@
+<div class="dispute-details-container fade-in">
+  <!-- Header Card -->
+  <div class="header-card mb-4">
+    <div class="flex justify-content-between align-items-center">
+      <div class="flex align-items-center gap-3">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="page-title m-0 flex align-items-center gap-2">
+          <mat-icon color="primary">assignment</mat-icon>
+          {{ 'ADMIN.DISPUTES.DISPUTE_DETAILS' | translate }} #{{ ticketId() | slice:0:8 }}
+        </h1>
+      </div>
+      <div>
+        <button mat-raised-button color="primary" class="solve-btn" (click)="openSolveDialog()" [disabled]="!ticket() || ticket()?.status?.toLowerCase() === 'resolved' || ticket()?.status?.toLowerCase() === 'closed'">
+          <mat-icon>gavel</mat-icon>
+          {{ 'ADMIN.DISPUTES.ACTION_RESOLVE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="flex flex-column align-items-center justify-content-center py-8">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="mt-4 text-gray-500 font-medium">{{ 'ADMIN.DISPUTES.LOADING' | translate }}...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMsg()) {
+    <div class="alert-banner error mb-4">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMsg() }}</span>
+    </div>
+  }
+
+  @if (!isLoading() && ticket()) {
+    <div class="content-grid">
+      <!-- LEFT COLUMN: Rental & User Details -->
+      <div class="details-column">
+        <!-- Rental Item Card -->
+        <mat-card class="detail-card mb-4">
+          <mat-card-header>
+            <mat-icon mat-card-avatar color="primary">inventory_2</mat-icon>
+            <mat-card-title>{{ 'ADMIN.DISPUTES.RENTAL_DETAILS' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="pt-3">
+            @if (rental()) {
+              <div>
+                <div class="flex gap-3 mb-3">
+                  @if (rental()?.itemImageUrl) {
+                    <div class="item-img-wrapper">
+                      <img [src]="rental()?.itemImageUrl" alt="Item Image" class="item-img">
+                    </div>
+                  }
+                  <div>
+                    <h3 class="m-0 font-bold text-lg">{{ rental()?.itemTitle }}</h3>
+                    <p class="text-gray-500 text-sm m-0 mt-1">ID: {{ rental()?.id }}</p>
+                    <div class="status-badge mt-2" [ngClass]="rental()?.status?.toLowerCase() || ''">
+                      {{ 'rentals.status.' + rental()?.status?.toLowerCase() | translate }}
+                    </div>
+                  </div>
+                </div>
+                <mat-divider class="my-3"></mat-divider>
+                <div class="grid">
+                  <div class="col-6 mb-3">
+                    <span class="text-gray-500 text-sm block">{{ 'SUPPORT.TICKETS.CREATED_AT' | translate }}</span>
+                    <span class="font-medium">{{ rental()?.startDate | date:'mediumDate' }}</span>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <span class="text-gray-500 text-sm block">{{ 'ADMIN.DISPUTES.END_DATE' | translate }}</span>
+                    <span class="font-medium">{{ rental()?.endDate | date:'mediumDate' }}</span>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <span class="text-gray-500 text-sm block">{{ 'ADMIN.DISPUTES.RENTAL_PRICE' | translate }}</span>
+                    <span class="font-bold text-green-600">{{ rental()?.rentalPrice | currency:'EGP':'symbol':'1.0-2' }}</span>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <span class="text-gray-500 text-sm block">{{ 'ADMIN.DISPUTES.DEPOSIT' | translate }}</span>
+                    <span class="font-medium">{{ rental()?.depositAmount | currency:'EGP':'symbol':'1.0-2' }} ({{ 'ADMIN.DISPUTES.DEPOSIT_STATUS.' + rental()?.depositStatus?.toUpperCase() | translate }})</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="text-center py-4 text-gray-500">
+                <mat-icon>link_off</mat-icon>
+                <p>{{ 'ADMIN.DISPUTES.NO_RENTAL_LINKED' | translate }}</p>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+        <!-- Parties Card -->
+        <mat-card class="detail-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar color="accent">group</mat-icon>
+            <mat-card-title>{{ 'ADMIN.DISPUTES.PARTIES_INVOLVED' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="pt-3">
+            @if (rental()) {
+              <div class="parties-list">
+                <!-- Renter -->
+                <div class="party-item mb-3 flex align-items-center gap-3">
+                  <div class="avatar-circle renter-avatar">{{ rental()?.renterFirstName?.substring(0, 2)?.toUpperCase() }}</div>
+                  <div>
+                    <span class="text-xs font-bold text-blue-600 uppercase block tracking-wider">{{ 'ADMIN.DISPUTES.RENTER' | translate }}</span>
+                    <span class="font-medium text-lg">{{ rental()?.renterFirstName }}</span>
+                  </div>
+                </div>
+                <mat-divider class="my-3"></mat-divider>
+                <!-- Owner -->
+                <div class="party-item mb-3 flex align-items-center gap-3">
+                  <div class="avatar-circle owner-avatar">{{ rental()?.ownerFirstName?.substring(0, 2)?.toUpperCase() }}</div>
+                  <div>
+                    <span class="text-xs font-bold text-orange-600 uppercase block tracking-wider">{{ 'ADMIN.DISPUTES.OWNER' | translate }}</span>
+                    <span class="font-medium text-lg">{{ rental()?.ownerFirstName }}</span>
+                  </div>
+                </div>
+                <!-- Expert (if any) -->
+                @if (rental()?.assignedExpertId) {
+                  <mat-divider class="my-3"></mat-divider>
+                  <div class="party-item flex align-items-center gap-3">
+                    <div class="avatar-circle expert-avatar">{{ rental()?.assignedExpertName?.substring(0, 2)?.toUpperCase() }}</div>
+                    <div>
+                      <span class="text-xs font-bold text-purple-600 uppercase block tracking-wider">{{ 'ADMIN.DISPUTES.EXPERT' | translate }}</span>
+                      <span class="font-medium text-lg">{{ rental()?.assignedExpertName }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-4 text-gray-500">
+                <p>User: {{ ticket()?.userName }}</p>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <!-- RIGHT COLUMN: Chat History -->
+      <div class="chat-column">
+        <mat-card class="detail-card h-full flex flex-column">
+          <mat-card-header class="chat-header pb-2 border-bottom-1 border-gray-200">
+            <mat-icon mat-card-avatar color="primary">forum</mat-icon>
+            <mat-card-title>{{ 'ADMIN.DISPUTES.CHAT_HISTORY' | translate }}</mat-card-title>
+            <mat-card-subtitle>{{ 'SUPPORT.TICKETS.STATUS' | translate }}: {{ 'SUPPORT.TICKETS.STATUS_TYPES.' + ticket()?.status?.toUpperCase() | translate }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="chat-body flex-grow-1 p-0 overflow-y-auto">
+            <div class="chat-messages p-4">
+              @if (!ticket()?.messages?.length) {
+                <div class="text-center py-5 text-gray-400">
+                  <mat-icon class="text-4xl mb-2">speaker_notes_off</mat-icon>
+                  <p>{{ 'ADMIN.DISPUTES.NO_MESSAGES' | translate }}</p>
+                </div>
+              }
+              @for (msg of ticket()?.messages; track msg) {
+                <div class="message-wrapper mb-4" [ngClass]="{'sender-user': isUserMessage(msg.senderId), 'sender-admin': !isUserMessage(msg.senderId)}">
+                  <div class="message-meta text-xs text-gray-500 mb-1 px-1">
+                    <span class="font-bold">{{ getSenderName(msg.senderId) }}</span> • {{ msg.createdAt | date:'shortTime' }}
+                  </div>
+                  <div class="message-bubble p-3 border-round-xl">
+                    {{ msg.message }}
+                  </div>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+</div>
