@@ -122,9 +122,9 @@ public record PagedResult<T>(
 public record AuthRegisterData(string Message, long? UserId);
 public record AuthVerifyEmailData(string Message);
 public record AuthLoginData(string? AccessToken, string? RefreshToken, DateTimeOffset? RefreshTokenExpiresAt, AuthLoginUser? User);
-public record AuthLoginUser(long Id, string FirstName, string? LastName, string? Email, string? Role, string? ProfileImageUrl, IList<string>? Permissions = null, string? IdVerificationStatus = null, bool IdVerified = false, bool IsVerified = false);
+public record AuthLoginUser(long Id, string FirstName, string? LastName, string? Email, string? Role, string? ProfileImageUrl, IList<string>? Permissions = null);
 public record AuthRefreshData(string? AccessToken, string? RefreshToken);
-public record AuthMeData(long Id, string FirstName, string? LastName, string? Email, string? Phone, string? City, string? Role, string? ProfileImageUrl, bool IsVerified, DateTime CreatedAt, IList<string>? Permissions = null, string? IdVerificationStatus = null, bool IdVerified = false);
+public record AuthMeData(long Id, string FirstName, string? LastName, string? Email, string? Phone, string? City, string? Role, string? ProfileImageUrl, bool IsVerified, DateTime CreatedAt, IList<string>? Permissions = null, string? Address = null, string? Country = null, string? Bio = null);
 
 // ── Items ─────────────────────────────────────────────────────────────────────
 
@@ -154,8 +154,8 @@ public record VerificationCreateData(Guid? VerificationId, string? Status);
 
 // ── Support ───────────────────────────────────────────────────────────────────
 
-public record SupportCreateTicketData(Guid TicketId, string Status, object? AutoReplyMessage = null);
-public record SupportMessageData(Guid MessageId, string Message, string? MediaUrl, Domain.Enums.MessageType MessageType, DateTime CreatedAt);
+public record SupportCreateTicketData(Guid TicketId, string Status);
+public record SupportMessageData(Guid MessageId, string Message, DateTime CreatedAt);
 public record SupportTicketStatusData(Guid? TicketId, string? Status);
 
 // ── Chat ─────────────────────────────────────────────────────────────────────

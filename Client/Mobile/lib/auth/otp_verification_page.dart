@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -51,7 +52,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         SnackBar(
           backgroundColor: AppColor.backgroundcolor2,
           content: Text(
-            "Please enter the complete 6-digit code",
+            "Please enter the complete 6-digit code".tr,
             style: TextStyle(color: AppColor.warningColor),
           ),
         ),
@@ -86,7 +87,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             content: Row(children: [
               Icon(Icons.check_circle, color: Colors.white, size: 20),
               SizedBox(width: 10),
-              Text('Email verified successfully!'),
+              Text('Email verified successfully!'.tr),
             ]),
             backgroundColor: AppColor.successColor,
             behavior: SnackBarBehavior.floating,
@@ -102,7 +103,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invalid verification code. Please try again.'),
+            content: Text('Invalid verification code. Please try again.'.tr),
             backgroundColor: Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -116,7 +117,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Verification failed. Please try again.'),
+          content: Text('Verification failed. Please try again.'.tr),
           backgroundColor: Color(0xFFDC2626),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -161,7 +162,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             content: Row(children: [
               Icon(Icons.check_circle, color: Colors.white, size: 20),
               SizedBox(width: 10),
-              Text('Verification code resent!'),
+              Text('Verification code resent!'.tr),
             ]),
             backgroundColor: AppColor.successColor,
             behavior: SnackBarBehavior.floating,
@@ -171,7 +172,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to resend code. Please try again.'),
+            content: Text('Failed to resend code. Please try again.'.tr),
             backgroundColor: Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -185,7 +186,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to resend code. Please try again.'),
+          content: Text('Failed to resend code. Please try again.'.tr),
           backgroundColor: Color(0xFFDC2626),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -235,7 +236,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
 
                 // Title
                 Text(
-                  "Enter Verification Code",
+                  "Enter Verification Code".tr,
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -247,7 +248,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
 
                 // Description
                 Text(
-                  "We've sent a 6-digit code to",
+                  "We've sent a 6-digit code to".tr,
                   style: TextStyle(fontSize: 16, color: AppColor.grey),
                 ),
 
@@ -301,7 +302,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
 
                 // Verify Button
                 Button(
-                  title: "Verify",
+                  title: "Verify".tr,
                   isLoading: _isLoading,
                   onpressed: _verifyOTP,
                 ),
@@ -314,7 +315,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                   child: Column(
                     children: [
                       Text(
-                        "Didn't receive the code?",
+                        "Didn't receive the code?".tr,
                         style: TextStyle(fontSize: 14, color: AppColor.grey),
                       ),
 
@@ -335,7 +336,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                                   ),
                                 )
                               : Text(
-                                  "Resend Code",
+                                  "Resend Code".tr,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -345,7 +346,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         )
                       else
                         Text(
-                          "Resend code in $_resendCountdown seconds",
+                          "Resend code in @sec seconds".trParams({'sec': _resendCountdown.toString()}),
                           style: TextStyle(
                             fontSize: 14,
                             color: AppColor.grey,

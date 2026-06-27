@@ -54,6 +54,7 @@ class TypingEvent {
 /// - Exposes joinChat, leaveChat, sendTypingIndicator
 class ChatSignalrService {
   static const String _hubPath = '/hubs/chat';
+  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
   static const String _baseUrl = 'https://renty.runasp.net';
 
   HubConnection? _hubConnection;

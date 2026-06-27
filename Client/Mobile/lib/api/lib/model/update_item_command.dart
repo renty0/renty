@@ -28,6 +28,8 @@ class UpdateItemCommand {
     this.categoryId,
     this.subcategoryId,
     this.brandId,
+    this.isForSale,
+    this.salePrice,
     this.pricing = const [],
     this.images = const [],
   });
@@ -74,6 +76,10 @@ class UpdateItemCommand {
 
   int? brandId;
 
+  bool? isForSale;
+
+  num? salePrice;
+
   List<CreateItemPricingCommand>? pricing;
 
   List<CreateItemImageCommand>? images;
@@ -95,6 +101,8 @@ class UpdateItemCommand {
     other.categoryId == categoryId &&
     other.subcategoryId == subcategoryId &&
     other.brandId == brandId &&
+    other.isForSale == isForSale &&
+    other.salePrice == salePrice &&
     _deepEquality.equals(other.pricing, pricing) &&
     _deepEquality.equals(other.images, images);
 
@@ -116,11 +124,13 @@ class UpdateItemCommand {
     (categoryId == null ? 0 : categoryId!.hashCode) +
     (subcategoryId == null ? 0 : subcategoryId!.hashCode) +
     (brandId == null ? 0 : brandId!.hashCode) +
+    (isForSale == null ? 0 : isForSale!.hashCode) +
+    (salePrice == null ? 0 : salePrice!.hashCode) +
     (pricing == null ? 0 : pricing!.hashCode) +
     (images == null ? 0 : images!.hashCode);
 
   @override
-  String toString() => 'UpdateItemCommand[itemId=$itemId, titleAr=$titleAr, titleEn=$titleEn, descAr=$descAr, descEn=$descEn, type=$type, condition=$condition, defaultDeposit=$defaultDeposit, location=$location, city=$city, lat=$lat, lng=$lng, categoryId=$categoryId, subcategoryId=$subcategoryId, brandId=$brandId, pricing=$pricing, images=$images]';
+  String toString() => 'UpdateItemCommand[itemId=$itemId, titleAr=$titleAr, titleEn=$titleEn, descAr=$descAr, descEn=$descEn, type=$type, condition=$condition, defaultDeposit=$defaultDeposit, location=$location, city=$city, lat=$lat, lng=$lng, categoryId=$categoryId, subcategoryId=$subcategoryId, brandId=$brandId, isForSale=$isForSale, salePrice=$salePrice, pricing=$pricing, images=$images]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -199,6 +209,16 @@ class UpdateItemCommand {
     } else {
       json[r'brandId'] = null;
     }
+    if (this.isForSale != null) {
+      json[r'isForSale'] = this.isForSale;
+    } else {
+      json[r'isForSale'] = null;
+    }
+    if (this.salePrice != null) {
+      json[r'salePrice'] = this.salePrice;
+    } else {
+      json[r'salePrice'] = null;
+    }
     if (this.pricing != null) {
       json[r'pricing'] = this.pricing;
     } else {
@@ -250,6 +270,10 @@ class UpdateItemCommand {
         categoryId: mapValueOfType<int>(json, r'categoryId'),
         subcategoryId: mapValueOfType<int>(json, r'subcategoryId'),
         brandId: mapValueOfType<int>(json, r'brandId'),
+        isForSale: mapValueOfType<bool>(json, r'isForSale'),
+        salePrice: json[r'salePrice'] == null
+            ? null
+            : num.parse('${json[r'salePrice']}'),
         pricing: CreateItemPricingCommand.listFromJson(json[r'pricing']),
         images: CreateItemImageCommand.listFromJson(json[r'images']),
       );

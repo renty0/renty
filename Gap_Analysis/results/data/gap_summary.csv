@@ -2,10 +2,10 @@ category,supply,demand,gap_score,gap_status,normalized_gap,gap_pct
 Padel & Tennis,0,0,1.0,Low Gap,1.0,0.0
 Diving & Snorkeling,0,0,1.0,Low Gap,1.0,0.0
 Water Sports,0,0,1.0,Low Gap,1.0,0.0
-Football & Team Sports,3,3,1.0,Low Gap,1.0,0.0
-Action Photography,2,2,1.0,Low Gap,1.0,0.0
 Winter Sports,0,0,1.0,Low Gap,1.0,0.0
+Action Photography,2,2,1.0,Low Gap,1.0,0.0
+Football & Team Sports,3,3,1.0,Low Gap,1.0,0.0
 new category,0,0,1.0,Low Gap,1.0,0.0
-Fitness & Gym,2,0,0.33,Low Gap,0.1067,-66.67
-Cycling & Scooters,2,0,0.33,Low Gap,0.1067,-66.67
-Camping & Outdoors,3,0,0.25,Low Gap,0.0,-75.0
+Fitness & Gym,1,0,0.5,Low Gap,0.2537,-50.0
+Cycling & Scooters,2,0,0.33,Low Gap,0.0,-66.67
+Camping & Outdoors,2,0,0.33,Low Gap,0.0,-66.67

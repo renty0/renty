@@ -50,6 +50,7 @@ class SupportSignalrMessage {
 /// - Exposes joinTicket, leaveTicket, sendTyping
 class SupportSignalrService {
   static const String _hubPath = '/hubs/support';
+  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
   static const String _baseUrl = 'https://renty.runasp.net';
 
   HubConnection? _hubConnection;

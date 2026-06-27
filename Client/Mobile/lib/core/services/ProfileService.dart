@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/main.dart';
@@ -19,8 +20,13 @@ class ProfileService {
           'lastName': data.lastName,
           'email': data.email,
           'phone': data.phone,
+          'phoneNumber': data.phone,
           'profileImageUrl': data.profileImageUrl,
+          'profilePictureUrl': data.profileImageUrl,
           'city': data.city,
+          'address': data.address,
+          'country': data.country,
+          'bio': data.bio,
           'isVerified': data.isVerified,
           'role': data.role,
         };
@@ -69,9 +75,19 @@ class ProfileService {
   /// Upload profile image via media API
   Future<String?> uploadProfileImage(File imageFile) async {
     try {
+      final filePath = imageFile.path;
+      final filename = filePath.split(Platform.pathSeparator).last;
+      final ext = filename.split('.').last.toLowerCase();
+      final mimeSubtype = const {
+        'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png',
+        'gif': 'gif', 'webp': 'webp', 'bmp': 'bmp', 'heic': 'heic',
+      }[ext] ?? 'jpeg';
+
       final multipartFile = await MultipartFile.fromPath(
         'file',
         imageFile.path,
+        filename: filename,
+        contentType: MediaType('image', mimeSubtype),
       );
       final response = await ApiService.media.uploadMedia(file: multipartFile);
       if (response != null && response.data != null) {

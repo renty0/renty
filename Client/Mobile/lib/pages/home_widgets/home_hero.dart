@@ -44,12 +44,7 @@ class _HomeHeroState extends State<HomeHero> {
     super.dispose();
   }
 
-  static const _stats = [
-    {'value': '10k+', 'label': 'Items'},
-    {'value': '20+',  'label': 'Cities'},
-    {'value': '15k+', 'label': 'Users'},
-    {'value': '4.9',  'label': 'Rating'},
-  ];
+  // Stats are built dynamically inside build() so .tr works at runtime
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +83,7 @@ class _HomeHeroState extends State<HomeHero> {
                           width: active ? 18 : 6,
                           height: 6,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(active ? 0.95 : 0.4),
+                            color: Colors.white.withValues(alpha: active ? 0.95 : 0.4),
                             borderRadius: BorderRadius.circular(3),
                           ),
                         );
@@ -124,12 +119,12 @@ class _HomeHeroState extends State<HomeHero> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Rent Anything,\nAnytime.',
-                  style: TextStyle(color: Colors.white, fontSize: 26,
+                Text('Rent Anything,\nAnytime.'.tr,
+                  style: const TextStyle(color: Colors.white, fontSize: 26,
                       fontWeight: FontWeight.w900, height: 1.15, letterSpacing: -0.6)),
                 const SizedBox(height: 6),
-                Text('Thousands of items available near you',
-                  style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 13)),
+                Text('Thousands of items available near you'.tr,
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13)),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
@@ -139,15 +134,15 @@ class _HomeHeroState extends State<HomeHero> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(13),
-                      border: Border.all(color: Colors.white.withOpacity(0.3)),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                     ),
                     child: Row(children: [
-                      Icon(Icons.search_rounded, color: Colors.white.withOpacity(0.8), size: 18),
+                      Icon(Icons.search_rounded, color: Colors.white.withValues(alpha: 0.8), size: 18),
                       const SizedBox(width: 10),
-                      Expanded(child: Text('Search for items to rent...',
-                        style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+                      Expanded(child: Text('Search items to rent...'.tr,
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
                         overflow: TextOverflow.ellipsis)),
                     ]),
                   ),
@@ -179,12 +174,12 @@ class _HomeHeroState extends State<HomeHero> {
             Positioned(right: -30, top: -20, child: Container(
               width: 180, height: 180,
               decoration: BoxDecoration(shape: BoxShape.circle,
-                color: AppColor.fourthColor.withOpacity(0.08)),
+                color: AppColor.fourthColor.withValues(alpha: 0.08)),
             )),
             Positioned(left: -20, bottom: -30, child: Container(
               width: 120, height: 120,
               decoration: BoxDecoration(shape: BoxShape.circle,
-                color: AppColor.primaryColor.withOpacity(0.06)),
+                color: AppColor.primaryColor.withValues(alpha: 0.06)),
             )),
 
             Padding(
@@ -196,23 +191,23 @@ class _HomeHeroState extends State<HomeHero> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [AppColor.primaryColor, AppColor.fourthColor]),
+                      gradient: const LinearGradient(colors: [AppColor.primaryColor, AppColor.fourthColor]),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.auto_awesome_rounded, size: 12, color: Colors.white),
-                      SizedBox(width: 5),
-                      Text('Picked For You', style: TextStyle(
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.auto_awesome_rounded, size: 12, color: Colors.white),
+                      const SizedBox(width: 5),
+                      Text('Picked For You'.tr, style: const TextStyle(
                           color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.3)),
                     ]),
                   ),
                   const SizedBox(height: 12),
-                  const Text('Recommended Items',
-                    style: TextStyle(color: Colors.white, fontSize: 22,
+                  Text('Recommended Items'.tr,
+                    style: const TextStyle(color: Colors.white, fontSize: 22,
                         fontWeight: FontWeight.w900, height: 1.15, letterSpacing: -0.5)),
                   const SizedBox(height: 4),
-                  Text('$count items curated just for you',
-                    style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13)),
+                  Text('$count ${'items curated just for you'.tr}',
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13)),
                   const Spacer(),
                   // CTA
                   Container(
@@ -221,11 +216,11 @@ class _HomeHeroState extends State<HomeHero> {
                       color: AppColor.fourthColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text('Explore Now', style: TextStyle(
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Text('Explore Now'.tr, style: const TextStyle(
                           color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
-                      SizedBox(width: 6),
-                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 16),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 16),
                     ]),
                   ),
                 ],
@@ -239,14 +234,20 @@ class _HomeHeroState extends State<HomeHero> {
 
   Widget _decorCircle(double size, double opacity) => Container(
     width: size, height: size,
-    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(opacity)),
+    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: opacity)),
   );
 
   Widget _buildStatsRow(bool isDark) {
+    final stats = [
+      {'value': '10k+', 'label': 'Items'.tr},
+      {'value': '20+',  'label': 'Cities'.tr},
+      {'value': '15k+', 'label': 'Users'.tr},
+      {'value': '4.9',  'label': 'Rating'.tr},
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        children: _stats.map((s) => Expanded(
+        children: stats.map((s) => Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 4),
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -254,12 +255,12 @@ class _HomeHeroState extends State<HomeHero> {
               color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [BoxShadow(
-                color: Colors.black.withOpacity(isDark ? 0.25 : 0.05),
+                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
                 blurRadius: 8, offset: const Offset(0, 2),
               )],
             ),
             child: Column(children: [
-              Text(s['value']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900,
+              Text(s['value']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900,
                   color: AppColor.primaryColor, letterSpacing: -0.3)),
               const SizedBox(height: 2),
               Text(s['label']!, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500,

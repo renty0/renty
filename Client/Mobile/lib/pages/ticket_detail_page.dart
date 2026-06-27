@@ -159,7 +159,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSending = false);
-      Get.snackbar('Error', 'Failed to send message',
+      Get.snackbar('Error'.tr, 'Failed to send message'.tr,
           backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
     }
   }
@@ -195,12 +195,12 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
 
   String _statusLabel(String? status) {
     switch (status?.toLowerCase()) {
-      case 'open': return 'Open';
-      case 'awaitingsupport': return 'Awaiting Support';
-      case 'awaitingcustomer': return 'Awaiting Response';
-      case 'resolved': return 'Resolved';
-      case 'closed': return 'Closed';
-      default: return status ?? 'Unknown';
+      case 'open': return 'Open'.tr;
+      case 'awaitingsupport': return 'Awaiting Support'.tr;
+      case 'awaitingcustomer': return 'Awaiting Response'.tr;
+      case 'resolved': return 'Resolved'.tr;
+      case 'closed': return 'Closed'.tr;
+      default: return status != null ? status.tr : 'Unknown'.tr;
     }
   }
 
@@ -213,8 +213,8 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
       appBar: AppBar(
         title: Text(
           _ticketId != null
-              ? 'Ticket #${_ticketId!.length > 8 ? _ticketId!.substring(0, 8) : _ticketId!}'
-              : 'Ticket Detail',
+              ? 'Ticket #@id'.trParams({'id': _ticketId!.length > 8 ? _ticketId!.substring(0, 8) : _ticketId!})
+              : 'Ticket Detail'.tr,
           style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
         ),
         backgroundColor: AppColor.primaryColor,
@@ -292,7 +292,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
           ),
         ),
         const SizedBox(width: 6),
-        Text(_supportSignalr.isConnected ? 'Live' : 'Offline',
+        Text(_supportSignalr.isConnected ? 'Live'.tr : 'Offline'.tr,
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600,
                 color: _supportSignalr.isConnected ? const Color(0xFF10B981) : Colors.grey)),
       ]),
@@ -305,9 +305,9 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.chat_bubble_outline, size: 48, color: Colors.grey[400]),
           const SizedBox(height: 12),
-          Text('No messages yet', style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText)),
+          Text('No messages yet'.tr, style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText)),
           const SizedBox(height: 4),
-          Text('Send the first message below',
+          Text('Send the first message below'.tr,
               style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.grey[400])),
         ]),
       );
@@ -330,16 +330,16 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
     final timeStr = _formatTime(createdAt);
 
     return Align(
-      alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isMine ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Container(
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: EdgeInsetsDirectional.only(bottom: 8, start: isMine ? 60 : 0, end: isMine ? 0 : 60),
         child: Column(
           crossAxisAlignment: isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (!isMine)
               Padding(
-                padding: const EdgeInsets.only(left: 12, bottom: 4),
+                padding: const EdgeInsetsDirectional.only(start: 12, bottom: 4),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Text(senderName,
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700,
@@ -352,7 +352,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                         color: const Color(0xFF059669).withOpacity(0.12),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Text(senderRole,
+                      child: Text(senderRole.tr,
                           style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFF059669))),
                     ),
                   ],
@@ -364,11 +364,11 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                 color: isMine
                     ? AppColor.primaryColor
                     : (isDark ? const Color(0xFF2C2C2C) : Colors.white),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(isMine ? 16 : 4),
-                  bottomRight: Radius.circular(isMine ? 4 : 16),
+                borderRadius: BorderRadiusDirectional.only(
+                  topStart: const Radius.circular(16),
+                  topEnd: const Radius.circular(16),
+                  bottomStart: Radius.circular(isMine ? 16 : 4),
+                  bottomEnd: Radius.circular(isMine ? 4 : 16),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -402,7 +402,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
           child: CircularProgressIndicator(strokeWidth: 2, color: AppColor.fourthColor),
         ),
         const SizedBox(width: 8),
-        Text('$_typingUser is typing...',
+        Text('@name is typing...'.trParams({'name': _typingUser ?? ''}),
             style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic,
                 color: isDark ? Colors.white54 : AppColor.lightText)),
       ]),
@@ -423,7 +423,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
         child: Row(children: [
           Icon(Icons.lock_outline, size: 18, color: isDark ? Colors.white38 : Colors.grey[400]),
           const SizedBox(width: 8),
-          Text('This ticket is closed',
+          Text('This ticket is closed'.tr,
               style: TextStyle(fontSize: 13, color: isDark ? Colors.white38 : Colors.grey[400])),
         ]),
       );
@@ -456,7 +456,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
               },
               style: TextStyle(fontSize: 15, color: isDark ? Colors.white : AppColor.darkText),
               decoration: InputDecoration(
-                hintText: 'Type a message...',
+                hintText: 'Type a message...'.tr,
                 hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[400]),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -490,7 +490,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
         const SizedBox(height: 16),
-        Text('Ticket not found',
+        Text('Ticket not found'.tr,
             style: TextStyle(fontSize: 16, color: isDark ? Colors.white70 : AppColor.mediumText)),
       ]),
     );

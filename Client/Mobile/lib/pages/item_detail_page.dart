@@ -27,7 +27,9 @@ class ItemDetailPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
+      backgroundColor: isDark
+          ? const Color(0xFF121212)
+          : AppColor.backgroundcolor,
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(
@@ -35,7 +37,8 @@ class ItemDetailPage extends StatelessWidget {
           );
         }
 
-        if (controller.errorMessage.value.isNotEmpty || controller.item.value == null) {
+        if (controller.errorMessage.value.isNotEmpty ||
+            controller.item.value == null) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -74,7 +77,11 @@ class ItemDetailPage extends StatelessWidget {
                     color: Colors.black38,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
                 onPressed: () => Get.back(),
               ),
@@ -83,49 +90,89 @@ class ItemDetailPage extends StatelessWidget {
                 IconButton(
                   icon: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
-                    child: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
+                    decoration: const BoxDecoration(
+                      color: Colors.black38,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.share_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                   onPressed: () {
                     final title = item.titleEn ?? item.titleAr ?? '';
-                    SharePlus.instance.share(ShareParams(text: 'Check out "$title" on Renty!\nhttps://renty.runasp.net/items/${item.id}'));
+                    SharePlus.instance.share(
+                      ShareParams(
+                        text:
+                            'Check out "$title" on Renty!\nhttps://renty.runasp.net/items/${item.id}',
+                      ),
+                    );
                   },
                 ),
                 // Reminder (only when rented)
                 if (item.status?.toLowerCase() == 'rented')
-                  Obx(() => IconButton(
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
-                      child: Icon(
-                        controller.isReminded.value ? Icons.notifications_active : Icons.notifications_outlined,
-                        color: controller.isReminded.value ? const Color(0xFFF59E0B) : Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    onPressed: controller.toggleReminder,
-                  )),
-                // Favorite
-                Obx(() => IconButton(
+                  Obx(
+                    () => IconButton(
                       icon: Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
+                        decoration: const BoxDecoration(
+                          color: Colors.black38,
+                          shape: BoxShape.circle,
+                        ),
                         child: Icon(
-                          controller.isFavorite.value ? Icons.favorite : Icons.favorite_border,
-                          color: controller.isFavorite.value ? Colors.red : Colors.white,
+                          controller.isReminded.value
+                              ? Icons.notifications_active
+                              : Icons.notifications_outlined,
+                          color: controller.isReminded.value
+                              ? const Color(0xFFF59E0B)
+                              : Colors.white,
                           size: 20,
                         ),
                       ),
-                      onPressed: controller.toggleFavorite,
-                    )),
+                      onPressed: controller.toggleReminder,
+                    ),
+                  ),
+                // Favorite
+                Obx(
+                  () => IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.black38,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        controller.isFavorite.value
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: controller.isFavorite.value
+                            ? Colors.red
+                            : Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    onPressed: controller.toggleFavorite,
+                  ),
+                ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: _ImageGallery(
-                  images: item.images ?? [],
-                  primaryImage: item.images?.firstWhere(
-                    (i) => i.isPrimary == true,
-                    orElse: () => item.images!.first,
-                  ),
+                  images: (() {
+                    final list = List<ItemImageDto>.from(item.images);
+                    list.sort((a, b) {
+                      if (a.isPrimary == true && b.isPrimary != true) return -1;
+                      if (a.isPrimary != true && b.isPrimary == true) return 1;
+                      return 0;
+                    });
+                    return list;
+                  })(),
+                  primaryImage: item.images.isEmpty
+                      ? null
+                      : item.images.firstWhere(
+                          (i) => i.isPrimary == true,
+                          orElse: () => item.images.first,
+                        ),
                 ),
               ),
             ),
@@ -135,7 +182,9 @@ class ItemDetailPage extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,10 +199,15 @@ class ItemDetailPage extends StatelessWidget {
                         children: [
                           if (item.status != null)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               margin: const EdgeInsets.only(bottom: 8),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(item.status!).withOpacity(0.1),
+                                color: _getStatusColor(
+                                  item.status!,
+                                ).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -170,7 +224,9 @@ class ItemDetailPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? Colors.white : AppColor.primaryColor,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColor.primaryColor,
                               letterSpacing: -0.5,
                               height: 1.2,
                             ),
@@ -180,33 +236,47 @@ class ItemDetailPage extends StatelessWidget {
                           Row(
                             children: [
                               if (controller.avgRating.value > 0) ...[
-                                Icon(Icons.star_rounded, color:   Color(0xFF1A1A1A), size: 18),
+                                Icon(
+                                  Icons.star_rounded,
+                                  color: Color(0xFF1A1A1A),
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   controller.avgRating.value.toStringAsFixed(1),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : AppColor.darkText,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColor.darkText,
                                   ),
                                 ),
                                 Text(
                                   ' (${controller.totalReviews.value} reviews)',
                                   style: TextStyle(
-                                    color: isDark ? Colors.white54 : AppColor.lightText,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.lightText,
                                     fontSize: 13,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                               ],
                               if (item.city != null) ...[
-                                Icon(Icons.location_on_outlined,
-                                    size: 16,
-                                    color: isDark ? Colors.white54 : AppColor.lightText),
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 16,
+                                  color: isDark
+                                      ? Colors.white54
+                                      : AppColor.lightText,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   item.city!,
                                   style: TextStyle(
-                                    color: isDark ? Colors.white54 : AppColor.lightText,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.lightText,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -221,7 +291,7 @@ class ItemDetailPage extends StatelessWidget {
                     _divider(isDark),
 
                     // ── Pricing ──
-                    if (item.pricing != null && item.pricing!.isNotEmpty) ...[
+                    if (item.pricing.isNotEmpty) ...[
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
@@ -232,21 +302,30 @@ class ItemDetailPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : AppColor.primaryColor,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColor.primaryColor,
                               ),
                             ),
                             const SizedBox(height: 12),
                             Wrap(
                               spacing: 12,
                               runSpacing: 12,
-                              children: item.pricing!.map((p) {
+                              children: item.pricing.map((p) {
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: AppColor.fourthColor.withOpacity(0.08),
+                                    color: AppColor.fourthColor.withOpacity(
+                                      0.08,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: AppColor.fourthColor.withOpacity(0.2),
+                                      color: AppColor.fourthColor.withOpacity(
+                                        0.2,
+                                      ),
                                     ),
                                   ),
                                   child: Column(
@@ -264,7 +343,9 @@ class ItemDetailPage extends StatelessWidget {
                                         '/ ${p.pricingType ?? 'day'}',
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: isDark ? Colors.white54 : AppColor.lightText,
+                                          color: isDark
+                                              ? Colors.white54
+                                              : AppColor.lightText,
                                         ),
                                       ),
                                     ],
@@ -272,12 +353,16 @@ class ItemDetailPage extends StatelessWidget {
                                 );
                               }).toList(),
                             ),
-                            if (item.defaultDeposit != null && item.defaultDeposit! > 0) ...[
+                            if (item.defaultDeposit != null &&
+                                item.defaultDeposit! > 0) ...[
                               const SizedBox(height: 12),
                               Row(
                                 children: [
-                                  Icon(Icons.shield_outlined,
-                                      size: 16, color: AppColor.successColor),
+                                  Icon(
+                                    Icons.shield_outlined,
+                                    size: 16,
+                                    color: AppColor.successColor,
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     'Deposit: ${item.defaultDeposit!.toStringAsFixed(0)} EGP',
@@ -298,25 +383,43 @@ class ItemDetailPage extends StatelessWidget {
 
                     // ── Availability Calendar ──
                     Obx(() {
+                      // Register GetX dependency by accessing observables directly
+                      controller.bookedRanges.length;
+                      controller.isLoadingAvailability.value;
+
                       return Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Availability', style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : AppColor.primaryColor,
-                            )),
+                            Text(
+                              'Availability',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColor.primaryColor,
+                              ),
+                            ),
                             const SizedBox(height: 12),
                             Container(
                               decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
+                                color: isDark
+                                    ? const Color(0xFF2A2A2A)
+                                    : Colors.grey[50],
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                                border: Border.all(
+                                  color: isDark
+                                      ? Colors.grey[800]!
+                                      : Colors.grey[200]!,
+                                ),
                               ),
                               child: TableCalendar(
                                 firstDay: DateTime.now(),
-                                lastDay: DateTime.now().add(const Duration(days: 365)),
+                                lastDay: DateTime.now().add(
+                                  const Duration(days: 365),
+                                ),
                                 focusedDay: DateTime.now(),
                                 calendarFormat: CalendarFormat.month,
                                 headerStyle: HeaderStyle(
@@ -324,36 +427,103 @@ class ItemDetailPage extends StatelessWidget {
                                   titleCentered: true,
                                   titleTextStyle: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : AppColor.darkText,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColor.darkText,
                                   ),
-                                  leftChevronIcon: Icon(Icons.chevron_left, color: isDark ? Colors.white54 : AppColor.mediumText),
-                                  rightChevronIcon: Icon(Icons.chevron_right, color: isDark ? Colors.white54 : AppColor.mediumText),
+                                  leftChevronIcon: Icon(
+                                    Icons.chevron_left,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.mediumText,
+                                  ),
+                                  rightChevronIcon: Icon(
+                                    Icons.chevron_right,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.mediumText,
+                                  ),
                                 ),
                                 calendarStyle: CalendarStyle(
-                                  defaultTextStyle: TextStyle(color: isDark ? Colors.white70 : AppColor.darkText),
-                                  weekendTextStyle: TextStyle(color: isDark ? Colors.white54 : AppColor.mediumText),
-                                  outsideTextStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[400]!),
+                                  defaultTextStyle: TextStyle(
+                                    color: isDark
+                                        ? Colors.white70
+                                        : AppColor.darkText,
+                                  ),
+                                  weekendTextStyle: TextStyle(
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.mediumText,
+                                  ),
+                                  outsideTextStyle: TextStyle(
+                                    color: isDark
+                                        ? Colors.white24
+                                        : Colors.grey[400]!,
+                                  ),
                                   todayDecoration: BoxDecoration(
-                                    color: AppColor.fourthColor.withOpacity(0.3),
+                                    color: AppColor.fourthColor.withOpacity(
+                                      0.3,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
-                                  todayTextStyle: TextStyle(color: isDark ? Colors.white : AppColor.darkText, fontWeight: FontWeight.w700),
-                                  disabledTextStyle: const TextStyle(color: Colors.red, decoration: TextDecoration.lineThrough),
+                                  todayTextStyle: TextStyle(
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColor.darkText,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  disabledTextStyle: const TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
                                 ),
-                                enabledDayPredicate: (day) => !controller.isDateBooked(day),
+                                enabledDayPredicate: (day) =>
+                                    !controller.isDateBooked(day),
                                 onDaySelected: (_, __) {},
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Row(children: [
-                              Container(width: 10, height: 10, decoration: BoxDecoration(color: AppColor.successColor, shape: BoxShape.circle)),
-                              const SizedBox(width: 6),
-                              Text('Available', style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText)),
-                              const SizedBox(width: 16),
-                              Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),
-                              const SizedBox(width: 6),
-                              Text('Booked', style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText)),
-                            ]),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: AppColor.successColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Available',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.mediumText,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Booked',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : AppColor.mediumText,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       );
@@ -371,15 +541,21 @@ class ItemDetailPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : AppColor.primaryColor,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColor.primaryColor,
                             ),
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            item.descEn ?? item.descAr ?? 'No description available.',
+                            item.descEn ??
+                                item.descAr ??
+                                'No description available.',
                             style: TextStyle(
                               fontSize: 15,
-                              color: isDark ? Colors.white70 : AppColor.mediumText,
+                              color: isDark
+                                  ? Colors.white70
+                                  : AppColor.mediumText,
                               height: 1.6,
                             ),
                           ),
@@ -399,21 +575,40 @@ class ItemDetailPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : AppColor.primaryColor,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColor.primaryColor,
                             ),
                           ),
                           const SizedBox(height: 12),
                           _detailRow('Type', item.type ?? 'N/A', isDark),
-                          _detailRow('Condition', item.condition ?? 'N/A', isDark),
+                          _detailRow(
+                            'Condition',
+                            item.condition ?? 'N/A',
+                            isDark,
+                          ),
                           if (item.category != null)
-                            _detailRow('Category',
-                                item.category!.nameEn ?? item.category!.nameAr ?? '', isDark),
+                            _detailRow(
+                              'Category',
+                              item.category!.nameEn ??
+                                  item.category!.nameAr ??
+                                  '',
+                              isDark,
+                            ),
                           if (item.subcategory != null)
-                            _detailRow('Subcategory',
-                                item.subcategory!.nameEn ?? item.subcategory!.nameAr ?? '', isDark),
+                            _detailRow(
+                              'Subcategory',
+                              item.subcategory!.nameEn ??
+                                  item.subcategory!.nameAr ??
+                                  '',
+                              isDark,
+                            ),
                           if (item.brand != null)
-                            _detailRow('Brand',
-                                item.brand!.nameEn ?? item.brand!.nameAr ?? '', isDark),
+                            _detailRow(
+                              'Brand',
+                              item.brand!.nameEn ?? item.brand!.nameAr ?? '',
+                              isDark,
+                            ),
                         ],
                       ),
                     ),
@@ -441,12 +636,19 @@ class ItemDetailPage extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundColor: AppColor.fourthColor.withOpacity(0.1),
-                                backgroundImage: item.owner!.profileImageUrl != null
-                                    ? CachedNetworkImageProvider(item.owner!.profileImageUrl!)
+                                backgroundColor: AppColor.fourthColor
+                                    .withOpacity(0.1),
+                                backgroundImage:
+                                    item.owner!.profileImageUrl != null
+                                    ? CachedNetworkImageProvider(
+                                        item.owner!.profileImageUrl!,
+                                      )
                                     : null,
                                 child: item.owner!.profileImageUrl == null
-                                    ? Icon(Icons.person, color: AppColor.fourthColor)
+                                    ? Icon(
+                                        Icons.person,
+                                        color: AppColor.fourthColor,
+                                      )
                                     : null,
                               ),
                               const SizedBox(width: 12),
@@ -459,7 +661,9 @@ class ItemDetailPage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
-                                        color: isDark ? Colors.white : AppColor.darkText,
+                                        color: isDark
+                                            ? Colors.white
+                                            : AppColor.darkText,
                                       ),
                                     ),
                                     if (item.owner!.city != null)
@@ -467,47 +671,67 @@ class ItemDetailPage extends StatelessWidget {
                                         item.owner!.city!,
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: isDark ? Colors.white54 : AppColor.lightText,
+                                          color: isDark
+                                              ? Colors.white54
+                                              : AppColor.lightText,
                                         ),
                                       ),
                                   ],
                                 ),
                               ),
                               // Chat with Owner button (only when ownerId available)
-                              Obx(() => controller.ownerId.value != null
-                                ? SizedBox(
-                                    height: 36,
-                                    child: ElevatedButton.icon(
-                                      onPressed: controller.isChatting.value
-                                          ? null
-                                          : controller.startChat,
-                                      icon: controller.isChatting.value
-                                          ? SizedBox(
-                                              width: 16,
-                                              height: 16,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color: Colors.white,
-                                              ),
-                                            )
-                                          : Icon(Icons.chat_bubble_outline, size: 16),
-                                      label: Text(
-                                        controller.isChatting.value ? 'Opening...' : 'Chat',
-                                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColor.fourthColor,
-                                        foregroundColor: Colors.white,
-                                        padding: EdgeInsets.symmetric(horizontal: 12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                              Obx(
+                                () => controller.ownerId.value != null
+                                    ? SizedBox(
+                                        height: 36,
+                                        child: ElevatedButton.icon(
+                                          onPressed: controller.isChatting.value
+                                              ? null
+                                              : controller.startChat,
+                                          icon: controller.isChatting.value
+                                              ? SizedBox(
+                                                  width: 16,
+                                                  height: 16,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: Colors.white,
+                                                      ),
+                                                )
+                                              : Icon(
+                                                  Icons.chat_bubble_outline,
+                                                  size: 16,
+                                                ),
+                                          label: Text(
+                                            controller.isChatting.value
+                                                ? 'Opening...'
+                                                : 'Chat',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColor.fourthColor,
+                                            foregroundColor: Colors.white,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            elevation: 0,
+                                          ),
                                         ),
-                                        elevation: 0,
+                                      )
+                                    : Icon(
+                                        Icons.chevron_right_rounded,
+                                        color: isDark
+                                            ? Colors.white38
+                                            : Colors.grey[400],
                                       ),
-                                    ),
-                                  )
-                                : Icon(Icons.chevron_right_rounded,
-                                    color: isDark ? Colors.white38 : Colors.grey[400]),
                               ),
                             ],
                           ),
@@ -527,7 +751,9 @@ class ItemDetailPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : AppColor.primaryColor,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColor.primaryColor,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -539,28 +765,36 @@ class ItemDetailPage extends StatelessWidget {
                                 Column(
                                   children: [
                                     Text(
-                                      controller.avgRating.value.toStringAsFixed(1),
+                                      controller.avgRating.value
+                                          .toStringAsFixed(1),
                                       style: TextStyle(
                                         fontSize: 42,
                                         fontWeight: FontWeight.w800,
-                                        color: isDark ? Colors.white : AppColor.darkText,
+                                        color: isDark
+                                            ? Colors.white
+                                            : AppColor.darkText,
                                       ),
                                     ),
                                     Row(
-                                      children: List.generate(5, (i) => Icon(
-                                        i < controller.avgRating.value.round()
-                                            ? Icons.star_rounded
-                                            : Icons.star_outline_rounded,
-                                        size: 16,
-                                        color: const Color(0xFFFFB800),
-                                      )),
+                                      children: List.generate(
+                                        5,
+                                        (i) => Icon(
+                                          i < controller.avgRating.value.round()
+                                              ? Icons.star_rounded
+                                              : Icons.star_outline_rounded,
+                                          size: 16,
+                                          color: const Color(0xFFFFB800),
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${controller.totalReviews.value} reviews',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: isDark ? Colors.white54 : AppColor.lightText,
+                                        color: isDark
+                                            ? Colors.white54
+                                            : AppColor.lightText,
                                       ),
                                     ),
                                   ],
@@ -571,9 +805,13 @@ class ItemDetailPage extends StatelessWidget {
                                   child: Column(
                                     children: List.generate(5, (index) {
                                       final star = 5 - index;
-                                      final pct = controller.getStarPercent(star);
+                                      final pct = controller.getStarPercent(
+                                        star,
+                                      );
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 2),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 2,
+                                        ),
                                         child: Row(
                                           children: [
                                             SizedBox(
@@ -583,21 +821,31 @@ class ItemDetailPage extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w600,
-                                                  color: isDark ? Colors.white54 : AppColor.lightText,
+                                                  color: isDark
+                                                      ? Colors.white54
+                                                      : AppColor.lightText,
                                                 ),
                                               ),
                                             ),
-                                            Icon(Icons.star_rounded, size: 12, color: const Color(0xFFFFB800)),
+                                            Icon(
+                                              Icons.star_rounded,
+                                              size: 12,
+                                              color: const Color(0xFFFFB800),
+                                            ),
                                             const SizedBox(width: 6),
                                             Expanded(
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(4),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
                                                 child: LinearProgressIndicator(
                                                   value: pct / 100,
-                                                  backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                                                  valueColor: AlwaysStoppedAnimation(
-                                                    const Color(0xFFFFB800),
-                                                  ),
+                                                  backgroundColor: isDark
+                                                      ? Colors.grey[800]
+                                                      : Colors.grey[200],
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                        const Color(0xFFFFB800),
+                                                      ),
                                                   minHeight: 8,
                                                 ),
                                               ),
@@ -609,7 +857,9 @@ class ItemDetailPage extends StatelessWidget {
                                                 '${pct.round()}%',
                                                 style: TextStyle(
                                                   fontSize: 11,
-                                                  color: isDark ? Colors.white54 : AppColor.lightText,
+                                                  color: isDark
+                                                      ? Colors.white54
+                                                      : AppColor.lightText,
                                                 ),
                                               ),
                                             ),
@@ -622,8 +872,13 @@ class ItemDetailPage extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            ...controller.reviews.take(5).map(
-                                  (review) => _ReviewCard(review: review, isDark: isDark),
+                            ...controller.reviews
+                                .take(5)
+                                .map(
+                                  (review) => _ReviewCard(
+                                    review: review,
+                                    isDark: isDark,
+                                  ),
                                 ),
                           ],
                         ),
@@ -632,18 +887,25 @@ class ItemDetailPage extends StatelessWidget {
 
                     // ── Write a Review (only if user has rented) ──
                     Obx(() {
-                      if (!controller.hasRentedItem.value) return const SizedBox.shrink();
+                      if (!controller.hasRentedItem.value) {
+                        return const SizedBox.shrink();
+                      }
                       return Column(
                         children: [
                           _divider(isDark),
-                          _WriteReviewSection(controller: controller, isDark: isDark),
+                          _WriteReviewSection(
+                            controller: controller,
+                            isDark: isDark,
+                          ),
                         ],
                       );
                     }),
 
                     // ── Similar Items ──
                     Obx(() {
-                      if (controller.similarItems.isEmpty) return const SizedBox.shrink();
+                      if (controller.similarItems.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -655,7 +917,9 @@ class ItemDetailPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : AppColor.primaryColor,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColor.primaryColor,
                               ),
                             ),
                           ),
@@ -663,20 +927,27 @@ class ItemDetailPage extends StatelessWidget {
                             height: 200,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               itemCount: controller.similarItems.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 12),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 12),
                               itemBuilder: (context, index) {
                                 final si = controller.similarItems[index];
                                 return GestureDetector(
                                   onTap: () {
-                                    Get.off(() => const ItemDetailPage(),
-                                        arguments: {'itemId': si.id});
+                                    Get.off(
+                                      () => const ItemDetailPage(),
+                                      arguments: {'itemId': si.id},
+                                    );
                                   },
                                   child: Container(
                                     width: 150,
                                     decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+                                      color: isDark
+                                          ? const Color(0xFF2A2A2A)
+                                          : Colors.white,
                                       borderRadius: BorderRadius.circular(14),
                                       boxShadow: [
                                         BoxShadow(
@@ -687,11 +958,14 @@ class ItemDetailPage extends StatelessWidget {
                                       ],
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         ClipRRect(
-                                          borderRadius: const BorderRadius.vertical(
-                                              top: Radius.circular(14)),
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                top: Radius.circular(14),
+                                              ),
                                           child: CachedNetworkImage(
                                             imageUrl: si.primaryImage ?? '',
                                             height: 110,
@@ -700,21 +974,28 @@ class ItemDetailPage extends StatelessWidget {
                                             placeholder: (_, __) => Container(
                                               color: Colors.grey[200],
                                               child: const Center(
-                                                child: CircularProgressIndicator(strokeWidth: 2),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                    ),
                                               ),
                                             ),
-                                            errorWidget: (_, __, ___) => Container(
-                                              color: Colors.grey[200],
-                                              height: 110,
-                                              child: const Icon(Icons.image_outlined,
-                                                  color: Colors.grey),
-                                            ),
+                                            errorWidget: (_, __, ___) =>
+                                                Container(
+                                                  color: Colors.grey[200],
+                                                  height: 110,
+                                                  child: const Icon(
+                                                    Icons.image_outlined,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(10),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 si.titleEn ?? si.titleAr ?? '',
@@ -723,7 +1004,9 @@ class ItemDetailPage extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600,
-                                                  color: isDark ? Colors.white : AppColor.darkText,
+                                                  color: isDark
+                                                      ? Colors.white
+                                                      : AppColor.darkText,
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
@@ -763,7 +1046,7 @@ class ItemDetailPage extends StatelessWidget {
       bottomNavigationBar: Obx(() {
         if (controller.item.value == null) return const SizedBox.shrink();
         final item = controller.item.value!;
-        final price = item.pricing?.firstOrNull?.price;
+        final price = item.pricing.firstOrNull?.price;
 
         return Container(
           padding: EdgeInsets.fromLTRB(
@@ -798,7 +1081,7 @@ class ItemDetailPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '/ ${item.pricing!.first.pricingType ?? 'day'}',
+                      '/ ${item.pricing.first.pricingType ?? 'day'}',
                       style: TextStyle(
                         fontSize: 13,
                         color: isDark ? Colors.white54 : AppColor.lightText,
@@ -812,7 +1095,8 @@ class ItemDetailPage extends StatelessWidget {
                   item.type?.toLowerCase() == 'both')
                 Padding(
                   padding: EdgeInsets.only(
-                      right: item.type?.toLowerCase() == 'both' ? 8 : 0),
+                    right: item.type?.toLowerCase() == 'both' ? 8 : 0,
+                  ),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -822,10 +1106,11 @@ class ItemDetailPage extends StatelessWidget {
                             items: [
                               CheckoutItem(
                                 itemId: item.id ?? '',
-                                title: item.titleEn ?? item.titleAr ?? 'Untitled',
+                                title:
+                                    item.titleEn ?? item.titleAr ?? 'Untitled',
                                 price: price?.toDouble() ?? 0,
                                 quantity: 1,
-                                imageUrl: item.images?.firstOrNull?.imageUrl,
+                                imageUrl: item.images.firstOrNull?.imageUrl,
                               ),
                             ],
                           ),
@@ -835,7 +1120,10 @@ class ItemDetailPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primaryColor,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -843,7 +1131,10 @@ class ItemDetailPage extends StatelessWidget {
                     ),
                     child: const Text(
                       'Buy Now',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -853,11 +1144,17 @@ class ItemDetailPage extends StatelessWidget {
                   onPressed: () {
                     Get.put(RentalsController());
                     num? dailyP, weeklyP, monthlyP;
-                    for (final p in (item.pricing ?? [])) {
+                    for (final p in item.pricing) {
                       switch (p.pricingType?.toLowerCase()) {
-                        case 'daily': dailyP = p.price; break;
-                        case 'weekly': weeklyP = p.price; break;
-                        case 'monthly': monthlyP = p.price; break;
+                        case 'daily':
+                          dailyP = p.price;
+                          break;
+                        case 'weekly':
+                          weeklyP = p.price;
+                          break;
+                        case 'monthly':
+                          monthlyP = p.price;
+                          break;
                       }
                     }
                     dailyP ??= price;
@@ -877,7 +1174,10 @@ class ItemDetailPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.fourthColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -996,11 +1296,17 @@ class _ImageGalleryState extends State<_ImageGallery> {
               fit: BoxFit.cover,
               placeholder: (_, __) => Container(
                 color: Colors.grey[200],
-                child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
               ),
               errorWidget: (_, __, ___) => Container(
                 color: Colors.grey[200],
-                child: const Icon(Icons.broken_image, size: 60, color: Colors.grey),
+                child: const Icon(
+                  Icons.broken_image,
+                  size: 60,
+                  color: Colors.grey,
+                ),
               ),
             );
           },
@@ -1078,7 +1384,9 @@ class _ReviewCard extends StatelessWidget {
                 radius: 16,
                 backgroundColor: AppColor.fourthColor.withOpacity(0.1),
                 backgroundImage: review.reviewer?.profileImageUrl != null
-                    ? CachedNetworkImageProvider(review.reviewer!.profileImageUrl!)
+                    ? CachedNetworkImageProvider(
+                        review.reviewer!.profileImageUrl!,
+                      )
                     : null,
                 child: review.reviewer?.profileImageUrl == null
                     ? Icon(Icons.person, size: 16, color: AppColor.fourthColor)
@@ -1096,7 +1404,9 @@ class _ReviewCard extends StatelessWidget {
               ...List.generate(
                 5,
                 (i) => Icon(
-                  i < (review.rating ?? 0) ? Icons.star_rounded : Icons.star_outline_rounded,
+                  i < (review.rating ?? 0)
+                      ? Icons.star_rounded
+                      : Icons.star_outline_rounded,
                   size: 16,
                   color: Color(0xFF1A1A1A),
                 ),
@@ -1146,10 +1456,14 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Leave a Review', style: TextStyle(
-            fontSize: 18, fontWeight: FontWeight.w700,
-            color: widget.isDark ? Colors.white : AppColor.primaryColor,
-          )),
+          Text(
+            'Leave a Review',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: widget.isDark ? Colors.white : AppColor.primaryColor,
+            ),
+          ),
           const SizedBox(height: 14),
           // Star selector
           Row(
@@ -1160,9 +1474,13 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: Icon(
-                    star <= _selectedStar ? Icons.star_rounded : Icons.star_outline_rounded,
+                    star <= _selectedStar
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
                     size: 36,
-                    color: star <= _selectedStar ? const Color(0xFFFFB800) : (widget.isDark ? Colors.grey[600] : Colors.grey[400]),
+                    color: star <= _selectedStar
+                        ? const Color(0xFFFFB800)
+                        : (widget.isDark ? Colors.grey[600] : Colors.grey[400]),
                   ),
                 ),
               );
@@ -1174,19 +1492,29 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
             controller: _commentCtrl,
             maxLines: 4,
             maxLength: 500,
-            style: TextStyle(color: widget.isDark ? Colors.white : AppColor.darkText),
+            style: TextStyle(
+              color: widget.isDark ? Colors.white : AppColor.darkText,
+            ),
             decoration: InputDecoration(
               hintText: 'Share your experience...',
-              hintStyle: TextStyle(color: widget.isDark ? Colors.white38 : Colors.grey[400]),
+              hintStyle: TextStyle(
+                color: widget.isDark ? Colors.white38 : Colors.grey[400],
+              ),
               filled: true,
-              fillColor: widget.isDark ? const Color(0xFF2A2A2A) : Colors.grey[50],
+              fillColor: widget.isDark
+                  ? const Color(0xFF2A2A2A)
+                  : Colors.grey[50],
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!),
+                borderSide: BorderSide(
+                  color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!),
+                borderSide: BorderSide(
+                  color: widget.isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
@@ -1198,26 +1526,49 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
           // Submit button
           Align(
             alignment: Alignment.centerRight,
-            child: Obx(() => ElevatedButton(
-              onPressed: (_selectedStar == 0 || _commentCtrl.text.trim().length < 10 || widget.controller.isSubmittingReview.value)
-                  ? null
-                  : () async {
-                      await widget.controller.submitReview(_selectedStar, _commentCtrl.text.trim());
-                      setState(() => _selectedStar = 0);
-                      _commentCtrl.clear();
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.fourthColor,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: Colors.grey[400],
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                elevation: 0,
+            child: Obx(
+              () => ElevatedButton(
+                onPressed:
+                    (_selectedStar == 0 ||
+                        _commentCtrl.text.trim().length < 10 ||
+                        widget.controller.isSubmittingReview.value)
+                    ? null
+                    : () async {
+                        await widget.controller.submitReview(
+                          _selectedStar,
+                          _commentCtrl.text.trim(),
+                        );
+                        setState(() => _selectedStar = 0);
+                        _commentCtrl.clear();
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.fourthColor,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.grey[400],
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: widget.controller.isSubmittingReview.value
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text(
+                        'Submit Review',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
               ),
-              child: widget.controller.isSubmittingReview.value
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Submit Review', style: TextStyle(fontWeight: FontWeight.w700)),
-            )),
+            ),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -68,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      Get.snackbar('Error', 'Failed to load profile',
+      Get.snackbar('Error'.tr, 'Failed to load profile'.tr,
           backgroundColor: Colors.red.withValues(alpha: 0.9),
           colorText: Colors.white);
     }
@@ -95,22 +96,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
       // Update locally stored profile data
       if (_firstNameCtrl.text.trim().isNotEmpty) {
         await sharedPref.setString('user_firstName', _firstNameCtrl.text.trim());
+        await sharedPref.setString('user_name', _firstNameCtrl.text.trim());
       }
       if (_lastNameCtrl.text.trim().isNotEmpty) {
         await sharedPref.setString('user_lastName', _lastNameCtrl.text.trim());
       }
 
       if (!mounted) return;
-      Get.snackbar('Success', 'Profile updated successfully',
+      Get.snackbar('Success'.tr, 'Profile updated successfully'.tr,
           backgroundColor: Colors.green.withValues(alpha: 0.9),
           colorText: Colors.white);
       Navigator.pop(context, true); // Return true to trigger parent refresh
     } on ApiException catch (e) {
-      Get.snackbar('Error', 'Failed to update: ${e.message ?? e.code}',
+      Get.snackbar('Error'.tr, '${'Failed to update'.tr}: ${e.message ?? e.code}',
           backgroundColor: Colors.red.withValues(alpha: 0.9),
           colorText: Colors.white);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to update profile',
+      Get.snackbar('Error'.tr, 'Failed to update profile'.tr,
           backgroundColor: Colors.red.withValues(alpha: 0.9),
           colorText: Colors.white);
     } finally {
@@ -127,8 +129,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Edit Profile',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Edit Profile'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -142,8 +144,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       height: 20,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white))
-                  : const Text('Save',
-                      style: TextStyle(
+                  : Text('Save'.tr,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16)),
@@ -165,7 +167,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     const SizedBox(height: 24),
 
                     // Personal Info section
-                    _buildSectionHeader('Personal Information', Icons.person_outline, isDark),
+                    _buildSectionHeader('Personal Information'.tr, Icons.person_outline, isDark),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(16),
@@ -182,17 +184,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       child: Column(
                         children: [
-                          _buildField('First Name', _firstNameCtrl, isDark,
+                          _buildField('First Name'.tr, _firstNameCtrl, isDark,
                               validator: (v) => v == null || v.trim().isEmpty
-                                  ? 'First name is required'
+                                  ? 'First name is required'.tr
                                   : null),
                           const SizedBox(height: 16),
-                          _buildField('Last Name', _lastNameCtrl, isDark,
+                          _buildField('Last Name'.tr, _lastNameCtrl, isDark,
                               validator: (v) => v == null || v.trim().isEmpty
-                                  ? 'Last name is required'
+                                  ? 'Last name is required'.tr
                                   : null),
                           const SizedBox(height: 16),
-                          _buildField('Phone Number', _phoneCtrl, isDark,
+                          _buildField('Phone Number'.tr, _phoneCtrl, isDark,
                               keyboardType: TextInputType.phone,
                               icon: Icons.phone_outlined),
                         ],
@@ -202,7 +204,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     const SizedBox(height: 24),
 
                     // Location section
-                    _buildSectionHeader('Location', Icons.location_on_outlined, isDark),
+                    _buildSectionHeader('Location'.tr, Icons.location_on_outlined, isDark),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(16),
@@ -219,17 +221,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       child: Column(
                         children: [
-                          _buildField('Address', _addressCtrl, isDark,
+                          _buildField('Address'.tr, _addressCtrl, isDark,
                               icon: Icons.home_outlined),
                           const SizedBox(height: 16),
                           Row(
                             children: [
                               Expanded(
-                                  child: _buildField('City', _cityCtrl, isDark)),
+                                  child: _buildField('City'.tr, _cityCtrl, isDark)),
                               const SizedBox(width: 12),
                               Expanded(
                                   child: _buildField(
-                                      'Country', _countryCtrl, isDark)),
+                                      'Country'.tr, _countryCtrl, isDark)),
                             ],
                           ),
                         ],
@@ -239,7 +241,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     const SizedBox(height: 24),
 
                     // Bio section
-                    _buildSectionHeader('About Me', Icons.info_outline, isDark),
+                    _buildSectionHeader('About Me'.tr, Icons.info_outline, isDark),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(16),
@@ -254,9 +256,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                         ],
                       ),
-                      child: _buildField('Bio', _bioCtrl, isDark,
+                      child: _buildField('Bio'.tr, _bioCtrl, isDark,
                           maxLines: 4,
-                          hint: 'Tell others about yourself...'),
+                          hint: 'Tell others about yourself...'.tr),
                     ),
 
                     const SizedBox(height: 32),
@@ -281,8 +283,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 height: 22,
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2, color: Colors.white))
-                            : const Text('Save Changes',
-                                style: TextStyle(
+                            : Text('Save Changes'.tr,
+                                style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                     ),
@@ -392,11 +394,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     setState(() => _isUploadingPhoto = true);
     try {
-      final bytes = await picked.readAsBytes();
-      final multipartFile = http.MultipartFile.fromBytes(
+      final filePath = picked.path;
+      final filename = picked.name;
+      final ext = filename.split('.').last.toLowerCase();
+      final mimeSubtype = const {
+        'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png',
+        'gif': 'gif', 'webp': 'webp', 'bmp': 'bmp', 'heic': 'heic',
+      }[ext] ?? 'jpeg';
+
+      final multipartFile = await http.MultipartFile.fromPath(
         'file',
-        bytes,
-        filename: picked.name,
+        filePath,
+        filename: filename,
+        contentType: MediaType('image', mimeSubtype),
       );
       final resp = await ApiService.media.uploadMedia(
         entityType: 'profile',

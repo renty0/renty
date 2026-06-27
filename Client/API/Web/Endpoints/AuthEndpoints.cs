@@ -138,7 +138,10 @@ public static class AuthEndpoints
             return Api.Ok(new AuthMeData(
                 u.Id, u.FirstName, u.LastName, u.Email, u.PhoneNumber, u.City,
                 u.Roles?.FirstOrDefault(), u.ProfilePictureUrl, u.IsVerified,
-                u.CreatedAt.DateTime, u.Permissions, u.IdVerificationStatus, u.IdVerified));
+                u.CreatedAt.DateTime,
+                Address: u.Address,
+                Country: u.Country,
+                Bio: u.Bio));
         })
         .WithName("AuthMe")
         .Produces<ApiResponse<AuthMeData>>(StatusCodes.Status200OK)

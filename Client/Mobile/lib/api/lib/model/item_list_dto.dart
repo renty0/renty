@@ -26,6 +26,8 @@ class ItemListDto {
     this.category,
     this.subcategory,
     this.brand,
+    this.status,
+    this.ownerId,
   });
 
   ///
@@ -90,6 +92,10 @@ class ItemListDto {
 
   ItemListDtoBrand? brand;
 
+  String? status;
+
+  String? ownerId;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ItemListDto &&
     other.id == id &&
@@ -104,7 +110,9 @@ class ItemListDto {
     other.condition == condition &&
     other.category == category &&
     other.subcategory == subcategory &&
-    other.brand == brand;
+    other.brand == brand &&
+    other.status == status &&
+    other.ownerId == ownerId;
 
   @override
   int get hashCode =>
@@ -121,10 +129,12 @@ class ItemListDto {
     (condition == null ? 0 : condition!.hashCode) +
     (category == null ? 0 : category!.hashCode) +
     (subcategory == null ? 0 : subcategory!.hashCode) +
-    (brand == null ? 0 : brand!.hashCode);
+    (brand == null ? 0 : brand!.hashCode) +
+    (status == null ? 0 : status!.hashCode) +
+    (ownerId == null ? 0 : ownerId!.hashCode);
 
   @override
-  String toString() => 'ItemListDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, dailyPrice=$dailyPrice, city=$city, primaryImage=$primaryImage, avgRating=$avgRating, reviewCount=$reviewCount, type=$type, condition=$condition, category=$category, subcategory=$subcategory, brand=$brand]';
+  String toString() => 'ItemListDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, dailyPrice=$dailyPrice, city=$city, primaryImage=$primaryImage, avgRating=$avgRating, reviewCount=$reviewCount, type=$type, condition=$condition, category=$category, subcategory=$subcategory, brand=$brand, status=$status, ownerId=$ownerId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -222,7 +232,7 @@ class ItemListDto {
             ? null
             : num.parse('${json[r'dailyPrice']}'),
         city: mapValueOfType<String>(json, r'city'),
-        primaryImage: mapValueOfType<String>(json, r'primaryImage'),
+        primaryImage: _sanitizeImageUrl(mapValueOfType<String>(json, r'primaryImage')),
         avgRating: mapValueOfType<double>(json, r'avgRating'),
         reviewCount: mapValueOfType<int>(json, r'reviewCount'),
         type: mapValueOfType<String>(json, r'type'),
@@ -230,6 +240,8 @@ class ItemListDto {
         category: ItemListDtoCategory.fromJson(json[r'category']),
         subcategory: ItemListDtoSubcategory.fromJson(json[r'subcategory']),
         brand: ItemListDtoBrand.fromJson(json[r'brand']),
+        status: mapValueOfType<String>(json, r'status'),
+        ownerId: mapValueOfType<String>(json, r'ownerId'),
       );
     }
     return null;

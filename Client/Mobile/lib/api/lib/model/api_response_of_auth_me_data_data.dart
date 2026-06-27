@@ -23,6 +23,9 @@ class ApiResponseOfAuthMeDataData {
     this.profileImageUrl,
     this.isVerified,
     this.createdAt,
+    this.address,
+    this.country,
+    this.bio,
   });
 
   ///
@@ -53,6 +56,12 @@ class ApiResponseOfAuthMeDataData {
 
   String? profileImageUrl;
 
+  String? address;
+
+  String? country;
+
+  String? bio;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -80,7 +89,10 @@ class ApiResponseOfAuthMeDataData {
     other.role == role &&
     other.profileImageUrl == profileImageUrl &&
     other.isVerified == isVerified &&
-    other.createdAt == createdAt;
+    other.createdAt == createdAt &&
+    other.address == address &&
+    other.country == country &&
+    other.bio == bio;
 
   @override
   int get hashCode =>
@@ -94,10 +106,13 @@ class ApiResponseOfAuthMeDataData {
     (role == null ? 0 : role!.hashCode) +
     (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
     (isVerified == null ? 0 : isVerified!.hashCode) +
-    (createdAt == null ? 0 : createdAt!.hashCode);
+    (createdAt == null ? 0 : createdAt!.hashCode) +
+    (address == null ? 0 : address!.hashCode) +
+    (country == null ? 0 : country!.hashCode) +
+    (bio == null ? 0 : bio!.hashCode);
 
   @override
-  String toString() => 'ApiResponseOfAuthMeDataData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt]';
+  String toString() => 'ApiResponseOfAuthMeDataData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt, address=$address, country=$country, bio=$bio]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -151,6 +166,21 @@ class ApiResponseOfAuthMeDataData {
     } else {
       json[r'createdAt'] = null;
     }
+    if (this.address != null) {
+      json[r'address'] = this.address;
+    } else {
+      json[r'address'] = null;
+    }
+    if (this.country != null) {
+      json[r'country'] = this.country;
+    } else {
+      json[r'country'] = null;
+    }
+    if (this.bio != null) {
+      json[r'bio'] = this.bio;
+    } else {
+      json[r'bio'] = null;
+    }
     return json;
   }
 
@@ -183,6 +213,9 @@ class ApiResponseOfAuthMeDataData {
         profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
         isVerified: mapValueOfType<bool>(json, r'isVerified'),
         createdAt: mapDateTime(json, r'createdAt', r''),
+        address: mapValueOfType<String>(json, r'address'),
+        country: mapValueOfType<String>(json, r'country'),
+        bio: mapValueOfType<String>(json, r'bio'),
       );
     }
     return null;

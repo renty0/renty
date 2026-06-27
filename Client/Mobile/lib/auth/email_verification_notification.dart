@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -47,7 +48,7 @@ class _EmailVerificationNotificationState
             content: Row(children: [
               Icon(Icons.check_circle, color: Colors.white, size: 20),
               SizedBox(width: 10),
-              Text('Verification code resent successfully!'),
+              Text('Verification code resent successfully!'.tr),
             ]),
             backgroundColor: AppColor.successColor,
             behavior: SnackBarBehavior.floating,
@@ -57,7 +58,7 @@ class _EmailVerificationNotificationState
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to resend code. Please try again.'),
+            content: Text('Failed to resend code. Please try again.'.tr),
             backgroundColor: Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -71,7 +72,7 @@ class _EmailVerificationNotificationState
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to resend code. Please try again.'),
+          content: Text('Failed to resend code. Please try again.'.tr),
           backgroundColor: Color(0xFFDC2626),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -126,7 +127,7 @@ class _EmailVerificationNotificationState
 
               // Title
               Text(
-                "Verification Email Sent",
+                "Verification Email Sent".tr,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -139,7 +140,7 @@ class _EmailVerificationNotificationState
 
               // Description
               Text(
-                "We've sent a verification code to your email address. Please check your inbox and enter the code to verify your account.",
+                "We've sent a verification code to your email address. Please check your inbox and enter the code to verify your account.".tr,
                 style: TextStyle(
                   fontSize: 16,
                   color: AppColor.grey,
@@ -191,19 +192,19 @@ class _EmailVerificationNotificationState
                   children: [
                     _buildInstruction(
                       icon: Icons.check_circle_outline,
-                      text: "Check your inbox for the verification code",
+                      text: "Check your inbox for the verification code".tr,
                       color: AppColor.successColor,
                     ),
                     SizedBox(height: 12),
                     _buildInstruction(
                       icon: Icons.schedule_outlined,
-                      text: "Code expires in 30 minutes",
+                      text: "Code expires in 30 minutes".tr,
                       color:  Color(0xFF1A1A1A),
                     ),
                     SizedBox(height: 12),
                     _buildInstruction(
                       icon: Icons.warning_amber_outlined,
-                      text: "Don't forget to check your spam folder",
+                      text: "Don't forget to check your spam folder".tr,
                       color: AppColor.warningColor,
                     ),
                   ],
@@ -214,7 +215,7 @@ class _EmailVerificationNotificationState
 
               // Continue Button
               Button(
-                title: "Enter Verification Code",
+                title: "Enter Verification Code".tr,
                 onpressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -243,7 +244,7 @@ class _EmailVerificationNotificationState
                         ),
                       )
                     : Text(
-                        "Didn't receive the code? Resend",
+                        "Didn't receive the code? Resend".tr,
                         style: TextStyle(
                           color: AppColor.primaryColor,
                           fontSize: 14,

@@ -56,7 +56,7 @@ Future<bool> alertExitApp(BuildContext context) async {
 
               // Title
               Text(
-                "Exit App",
+                "Exit App".tr,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ Future<bool> alertExitApp(BuildContext context) async {
 
               // Message
               Text(
-                "Are you sure you want to exit?",
+                "Are you sure you want to exit?".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -100,7 +100,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                         ),
                       ),
                       child: Text(
-                        "cancel",
+                        "cancel".tr,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -144,7 +144,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                           ),
                         ),
                         child: Text(
-                          "yes",
+                          "yes".tr,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -174,13 +174,13 @@ Future<bool> alertExitApp(BuildContext context) async {
 Future<bool> alertExitAppGetX() {
   final isDark = Get.isDarkMode;
   return Get.defaultDialog<bool>(
-    title: "Exit App",
+    title: "Exit App".tr,
     titleStyle: TextStyle(
       color: isDark ? Colors.white : AppColor.primaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 20,
     ),
-    middleText: "Are you sure you want to exit?",
+    middleText: "Are you sure you want to exit?".tr,
     middleTextStyle: TextStyle(
       color: isDark ? Colors.white70 : AppColor.darkText,
     ),
@@ -198,7 +198,7 @@ Future<bool> alertExitAppGetX() {
           ),
         ),
         child: Text(
-          "Cancel",
+          "Cancel".tr,
           style: TextStyle(color: isDark ? Colors.white : AppColor.primaryColor),
         ),
       ),
@@ -213,7 +213,7 @@ Future<bool> alertExitAppGetX() {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text("Exit"),
+        child: Text("Exit".tr),
       ),
     ],
   ).then((value) {

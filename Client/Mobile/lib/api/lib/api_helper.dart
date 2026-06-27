@@ -105,3 +105,27 @@ DateTime? mapDateTime(dynamic map, String key, [String? pattern]) {
   }
   return null;
 }
+
+String? _sanitizeImageUrl(String? url) {
+  if (url == null || url.isEmpty) return null;
+  
+  String cleanUrl = url;
+  const String defaultBase = 'https://renty.runasp.net';
+  
+  if (cleanUrl.contains('http://localhost:5106')) {
+    cleanUrl = cleanUrl.replaceAll(RegExp(r'.*http://localhost:5106'), defaultBase);
+  } else if (cleanUrl.contains('http://localhost:5106/')) {
+    cleanUrl = cleanUrl.replaceAll('http://localhost:5106/', '$defaultBase/');
+  } else if (cleanUrl.startsWith('/')) {
+    cleanUrl = '$defaultBase$cleanUrl';
+  } else if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+    cleanUrl = '$defaultBase/$cleanUrl';
+  }
+  
+  const String doubleBase = '$defaultBase/$defaultBase';
+  if (cleanUrl.startsWith(doubleBase)) {
+    cleanUrl = cleanUrl.substring(defaultBase.length + 1);
+  }
+  
+  return cleanUrl;
+}

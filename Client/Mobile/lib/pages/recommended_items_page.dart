@@ -71,7 +71,7 @@ class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: const Text('Recommended Items'),
+        title: Text('Recommended Items'.tr),
         centerTitle: true,
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         foregroundColor: isDark ? Colors.white : AppColor.primaryColor,
@@ -92,7 +92,7 @@ class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
                     children: [
                       Icon(Icons.auto_awesome_outlined, size: 56, color: Colors.grey[400]),
                       const SizedBox(height: 12),
-                      Text('No items found',
+                      Text('No items found'.tr,
                           style: TextStyle(color: Colors.grey[500], fontSize: 15)),
                     ],
                   ),

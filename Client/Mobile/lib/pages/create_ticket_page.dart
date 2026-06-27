@@ -34,7 +34,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
   Future<void> _submit() async {
     final message = _messageController.text.trim();
     if (message.isEmpty) {
-      _showSnackbar('Please enter a message', isError: true);
+      _showSnackbar('Please enter a message'.tr, isError: true);
       return;
     }
     if (_isSubmitting) return;
@@ -49,7 +49,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
       final response = await ApiService.support.createSupportTicket(command);
       if (!mounted) return;
 
-      _showSnackbar('Ticket created successfully', isError: false);
+      _showSnackbar('Ticket created successfully'.tr, isError: false);
 
       // Navigate to ticket detail if we got an ID, otherwise go back
       if (response?.data?.ticketId != null) {
@@ -61,12 +61,12 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      _showSnackbar('Failed to create ticket', isError: true);
+      _showSnackbar('Failed to create ticket'.tr, isError: true);
       print('CreateTicket error: ${e.code} ${e.message}');
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      _showSnackbar('Failed to create ticket', isError: true);
+      _showSnackbar('Failed to create ticket'.tr, isError: true);
     }
   }
 
@@ -77,7 +77,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
         Icon(isError ? Icons.error_outline : Icons.check_circle_outline,
             color: Colors.white, size: 20),
         const SizedBox(width: 10),
-        Expanded(child: Text(msg)),
+        Expanded(child: Text(msg.tr)),
       ]),
       backgroundColor:
           isError ? const Color(0xFFDC2626) : AppColor.primaryColor,
@@ -95,8 +95,8 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
       backgroundColor:
           isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: const Text('New Ticket',
-            style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('New Ticket'.tr,
+            style: const TextStyle(fontWeight: FontWeight.w700)),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -120,7 +120,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Type Selector ──
-              Text('Ticket Type',
+              Text('Ticket Type'.tr,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -147,7 +147,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                     items: _types
                         .map((t) => DropdownMenuItem(
                               value: t['value'],
-                              child: Text(t['label']!),
+                              child: Text(t['label']!.tr),
                             ))
                         .toList(),
                     onChanged: (v) {
@@ -159,7 +159,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
               const SizedBox(height: 24),
 
               // ── Message ──
-              Text('Message',
+              Text('Message'.tr,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -173,7 +173,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                   color: isDark ? Colors.white : AppColor.darkText,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Describe your issue or question...',
+                  hintText: 'Describe your issue or question...'.tr,
                   hintStyle: TextStyle(
                       color: isDark ? Colors.white38 : Colors.grey[400]),
                   filled: true,
@@ -181,12 +181,14 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                        color: isDark ? Colors.white12 : Colors.grey[300]!),
+                      color: isDark ? Colors.white12 : Colors.grey[300]!,
+                    ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                        color: isDark ? Colors.white12 : Colors.grey[300]!),
+                      color: isDark ? Colors.white12 : Colors.grey[300]!,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -210,7 +212,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                           child: CircularProgressIndicator(
                               strokeWidth: 2, color: Colors.white))
                       : const Icon(Icons.send_rounded, size: 20),
-                  label: Text(_isSubmitting ? 'Submitting...' : 'Submit Ticket',
+                  label: Text(_isSubmitting ? 'Submitting...'.tr : 'Submit Ticket'.tr,
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(

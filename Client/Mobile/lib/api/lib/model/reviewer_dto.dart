@@ -76,7 +76,7 @@ class ReviewerDto {
 
       return ReviewerDto(
         firstName: mapValueOfType<String>(json, r'firstName'),
-        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
+        profileImageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
       );
     }
     return null;

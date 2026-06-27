@@ -46,7 +46,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Failed to load favorites';
+        _errorMessage = 'Failed to load favorites'.tr;
         _isLoading = false;
       });
     }
@@ -77,7 +77,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 removedIndex.clamp(0, _favorites.length), removedItem!);
           });
         }
-        _showSnackbar('Failed to remove favorite', isError: true);
+        _showSnackbar('Failed to remove favorite'.tr, isError: true);
         return;
       }
     } catch (e) {
@@ -88,7 +88,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               removedIndex.clamp(0, _favorites.length), removedItem!);
         });
       }
-      _showSnackbar('Failed to remove favorite', isError: true);
+      _showSnackbar('Failed to remove favorite'.tr, isError: true);
       return;
     }
 
@@ -96,7 +96,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     FavoritesManager.syncFavoritesFromServer();
 
     if (showFeedback && mounted) {
-      _showSnackbar('Removed from favorites', isError: false);
+      _showSnackbar('Removed from favorites'.tr, isError: false);
     }
   }
 
@@ -127,8 +127,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: const Text('My Favorites',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('My Favorites'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -167,12 +167,12 @@ class _FavoritesPageState extends State<FavoritesPage> {
           ),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, color: Colors.white, size: 28),
-            SizedBox(height: 4),
-            Text('Remove', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+            const Icon(Icons.delete_outline, color: Colors.white, size: 28),
+            const SizedBox(height: 4),
+            Text('Remove'.tr, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -227,7 +227,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      favorite.title ?? 'Untitled',
+                      favorite.title ?? 'Untitled'.tr,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -239,7 +239,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     const SizedBox(height: 6),
                     if (favorite.dailyPrice != null)
                       Text(
-                        '${favorite.dailyPrice!.toStringAsFixed(0)} EGP / day',
+                        '@price EGP / day'.trParams({
+                          'price': favorite.dailyPrice!.toStringAsFixed(0),
+                        }),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -319,13 +321,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 size: 56, color: Colors.red.withOpacity(0.4)),
           ),
           const SizedBox(height: 20),
-          Text('No Favorites Yet',
+          Text('No Favorites Yet'.tr,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColor.darkText)),
           const SizedBox(height: 8),
-          Text('Items you favorite will appear here',
+          Text('Items you favorite will appear here'.tr,
               style: TextStyle(
                   fontSize: 14,
                   color: isDark ? Colors.white54 : AppColor.mediumText)),
@@ -339,7 +341,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               } catch (_) {}
             },
             icon: const Icon(Icons.storefront_rounded, size: 20),
-            label: const Text('Browse Items'),
+            label: Text('Browse Items'.tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.fourthColor,
               foregroundColor: Colors.white,
@@ -369,7 +371,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           ElevatedButton.icon(
             onPressed: _loadFavorites,
             icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Retry'),
+            label: Text('Retry'.tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.fourthColor,
               foregroundColor: Colors.white,

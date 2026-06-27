@@ -18,8 +18,8 @@ class MyRentalsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: Text('My Rentals',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('My Rentals'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -91,11 +91,11 @@ class MyRentalsPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final statuses = ['All', 'Pending', 'Confirmed', 'Active', 'Completed', 'Cancelled', 'Overdue', 'Disputed'];
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       color: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Obx(() => Row(
               children: statuses.map((status) {
                 final isSelected = (status == 'All' &&
@@ -103,9 +103,9 @@ class MyRentalsPage extends StatelessWidget {
                     controller.selectedStatus.value.toLowerCase() ==
                         status.toLowerCase();
                 return Padding(
-                  padding: EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
-                    label: Text(status),
+                    label: Text(status.tr),
                     selected: isSelected,
                     onSelected: (_) {
                       controller.filterByStatus(
@@ -222,7 +222,7 @@ class MyRentalsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    rental.itemTitle ?? 'Untitled Item',
+                    rental.itemTitle ?? 'Untitled Item'.tr,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -277,7 +277,7 @@ class MyRentalsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'Deposit: ${rental.depositStatus}',
+                            'Deposit: ${rental.depositStatus}'.tr,
                             style: TextStyle(
                               fontSize: 11,
                               color: isDark ? const Color(0xFFD4D4D8) : AppColor.earthBrown,
@@ -303,14 +303,14 @@ class MyRentalsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.receipt_long_outlined, size: 80, color: isDark ? const Color(0xFF334155) : AppColor.borderGray),
-          SizedBox(height: 16),
-          Text('No Rentals Yet',
+          const SizedBox(height: 16),
+          Text('No Rentals Yet'.tr,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColor.darkText)),
-          SizedBox(height: 8),
-          Text('Your rental history will appear here',
+          const SizedBox(height: 8),
+          Text('Your rental history will appear here'.tr,
               style: TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColor.mediumText)),
         ],
       ),
@@ -332,7 +332,7 @@ class MyRentalsPage extends StatelessWidget {
             onPressed: controller.refreshRentals,
             style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.primaryColor),
-            child: Text('Retry', style: TextStyle(color: Colors.white)),
+            child: Text('Retry'.tr, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

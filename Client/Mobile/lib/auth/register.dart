@@ -72,24 +72,24 @@ class _registerState extends State<register> {
     switch (step) {
       case 0:
         if (firstNameController.text.trim().isEmpty)
-          return 'First name is required';
+          return 'First name is required'.tr;
         if (lastNameController.text.trim().isEmpty)
-          return 'Last name is required';
-        if (emailController.text.trim().isEmpty) return 'Email is required';
+          return 'Last name is required'.tr;
+        if (emailController.text.trim().isEmpty) return 'Email is required'.tr;
         if (!GetUtils.isEmail(emailController.text.trim()))
-          return 'Please enter a valid email';
+          return 'Please enter a valid email'.tr;
         break;
       case 1:
         if (passController.text.trim().length < 6)
-          return 'Password must be at least 6 characters';
+          return 'Password must be at least @min characters'.trParams({'min': '6'});
         if (passController.text != confirmController.text)
-          return 'Passwords do not match';
+          return 'Passwords do not match'.tr;
         break;
       case 2:
         if (!acceptTerms)
-          return 'You must agree to the Terms & Conditions to continue';
+          return 'You must agree to the Terms & Conditions to continue'.tr;
         if (!acceptPrivacy)
-          return 'You must agree to the Privacy Policy to continue';
+          return 'You must agree to the Privacy Policy to continue'.tr;
         break;
     }
     return null;
@@ -129,13 +129,13 @@ class _registerState extends State<register> {
     } catch (_) {}
     switch (e.code) {
       case 409:
-        return 'An account with this email already exists.';
+        return 'An account with this email already exists.'.tr;
       case 422:
-        return 'Please check your input and try again.';
+        return 'Please check your input and try again.'.tr;
       case 429:
-        return 'Too many attempts. Please wait and try again.';
+        return 'Too many attempts. Please wait and try again.'.tr;
       default:
-        return 'Registration failed. Please try again.';
+        return 'Registration failed. Please try again.'.tr;
     }
   }
 
@@ -183,12 +183,12 @@ class _registerState extends State<register> {
 
       if (response != null && response.error != true) {
         Get.snackbar(
-          'Success',
-          'Account created! Please verify your email.',
+          'Success'.tr,
+          'Account created! Please verify your email.'.tr,
           backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
         Navigator.pushReplacement(
           context,
@@ -204,7 +204,7 @@ class _registerState extends State<register> {
           isLoading = false;
           errorMessage = messages.isNotEmpty
               ? messages.first
-              : 'Registration failed. Please try again.';
+              : 'Registration failed. Please try again.'.tr;
         });
       }
     } on ApiException catch (e) {
@@ -222,7 +222,7 @@ class _registerState extends State<register> {
       setState(() {
         isLoading = false;
         errorMessage =
-            'Connection error. Please check your internet and try again.';
+            'Connection error. Please check your internet and try again.'.tr;
       });
     }
   }
@@ -243,7 +243,7 @@ class _registerState extends State<register> {
               Logo(),
               SizedBox(height: 20),
               Text(
-                'Create Account',
+                'Create Account'.tr,
                 style: TextStyle(
                   color: isDark ? Colors.white : AppColor.primaryColor,
                   fontSize: 28,
@@ -251,9 +251,9 @@ class _registerState extends State<register> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
-                'Step ${_currentStep + 1} of 3',
+                'Step @step of 3'.trParams({'step': (_currentStep + 1).toString()}),
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColor.mediumText,
@@ -261,28 +261,28 @@ class _registerState extends State<register> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildStepIndicator(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               if (errorMessage != null) _buildError(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               if (_currentStep == 0) _buildAccountStep(),
               if (_currentStep == 1) _buildProfileStep(),
               if (_currentStep == 2) _buildAdditionalStep(),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               _buildStepButtons(),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already have an account? ',
+                    'Already have an account? '.tr,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   InkWell(
                     onTap: () => Navigator.of(context).pop(),
                     child: Text(
-                      'Login',
+                      'Login'.tr,
                       style: TextStyle(
                         fontSize: 16,
                         color: isDark
@@ -366,40 +366,40 @@ class _registerState extends State<register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Personal Information',
+          'Personal Information'.tr,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : AppColor.darkText,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
-          'Tell us your name and email address',
+          'Tell us your name and email address'.tr,
           style: TextStyle(fontSize: 13, color: AppColor.mediumText),
         ),
-        SizedBox(height: 20),
-        Text('First Name *', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 20),
+        Text('First Name *'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('firstName'),
-          hintText: 'Enter your first name',
+          hintText: 'Enter your first name'.tr,
           controller: firstNameController,
         ),
-        SizedBox(height: 16),
-        Text('Last Name *', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 16),
+        Text('Last Name *'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('lastName'),
-          hintText: 'Enter your last name',
+          hintText: 'Enter your last name'.tr,
           controller: lastNameController,
         ),
-        SizedBox(height: 16),
-        Text('Email *', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 16),
+        Text('Email *'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('email'),
-          hintText: 'Enter your email',
+          hintText: 'Enter your email'.tr,
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
         ),
@@ -414,44 +414,44 @@ class _registerState extends State<register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Account Security',
+          'Account Security'.tr,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : AppColor.darkText,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
-          'Set your phone number and create a password',
+          'Set your phone number and create a password'.tr,
           style: TextStyle(fontSize: 13, color: AppColor.mediumText),
         ),
-        SizedBox(height: 20),
-        Text('Phone Number', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 20),
+        Text('Phone Number'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('phone'),
-          hintText: 'Optional',
+          hintText: 'Optional'.tr,
           controller: phoneController,
           keyboardType: TextInputType.phone,
         ),
-        SizedBox(height: 16),
-        Text('Password *', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 16),
+        Text('Password *'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('password'),
-          hintText: 'Min 6 characters',
+          hintText: 'Min 6 characters'.tr,
           controller: passController,
           obscureText: true,
           isPassword: true,
         ),
-        SizedBox(height: 16),
-        Text('Confirm Password *',
+        const SizedBox(height: 16),
+        Text('Confirm Password *'.tr,
             style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('confirmPassword'),
-          hintText: 'Re-enter your password',
+          hintText: 'Re-enter your password'.tr,
           controller: confirmController,
           obscureText: true,
           isPassword: true,
@@ -467,23 +467,23 @@ class _registerState extends State<register> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Additional Info',
+          'Additional Info'.tr,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : AppColor.darkText,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
-          'Almost done — a few more optional details',
+          'Almost done — a few more optional details'.tr,
           style: TextStyle(fontSize: 13, color: AppColor.mediumText),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
 
         // City — required dropdown (Egypt governorates)
-        Text('City *', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        Text('City *'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
@@ -496,7 +496,7 @@ class _registerState extends State<register> {
             child: DropdownButton<String>(
               value: _selectedCity,
               isExpanded: true,
-              padding: EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               borderRadius: BorderRadius.circular(12),
               dropdownColor:
                   isDark ? const Color(0xFF1E293B) : Colors.white,
@@ -514,13 +514,13 @@ class _registerState extends State<register> {
           ),
         ),
 
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Country — hardcoded to Egypt (same as web: disabled field)
-        Text('Country', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        Text('Country'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           decoration: BoxDecoration(
             color: isDark
                 ? const Color(0xFF1E293B).withValues(alpha: 0.5)
@@ -533,41 +533,41 @@ class _registerState extends State<register> {
           child: Row(
             children: [
               Text(
-                'Egypt',
+                'Egypt'.tr,
                 style: TextStyle(
                   fontSize: 15,
                   color: isDark ? Colors.white60 : AppColor.mediumText,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Icon(Icons.lock_outline, size: 16,
                   color: isDark ? Colors.white38 : AppColor.mediumText),
             ],
           ),
         ),
 
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Address — optional (web sends this field)
-        Text('Address', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        Text('Address'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
           key: const ValueKey('address'),
-          hintText: 'Optional',
+          hintText: 'Optional'.tr,
           controller: addressController,
         ),
 
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Bio — optional
-        Text('Bio', style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8),
+        Text('Bio'.tr, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
         CustomTextForm(
-          hintText: 'Tell us about yourself (optional)',
+          hintText: 'Tell us about yourself (optional)'.tr,
           controller: bioController,
         ),
 
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
 
         // ── Terms & Privacy Agreement ──
         Container(
@@ -583,7 +583,7 @@ class _registerState extends State<register> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Before creating your account',
+                'Before creating your account'.tr,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -594,16 +594,16 @@ class _registerState extends State<register> {
               _buildAgreementRow(
                 value: acceptTerms,
                 onChanged: (v) => setState(() => acceptTerms = v ?? false),
-                label: 'I agree to the ',
-                linkText: 'Terms & Conditions',
+                label: 'I agree to the '.tr,
+                linkText: 'Terms & Conditions'.tr,
                 url: 'https://appforyou.store/Renty/terms.html',
               ),
               const SizedBox(height: 10),
               _buildAgreementRow(
                 value: acceptPrivacy,
                 onChanged: (v) => setState(() => acceptPrivacy = v ?? false),
-                label: 'I agree to the ',
-                linkText: 'Privacy Policy',
+                label: 'I agree to the '.tr,
+                linkText: 'Privacy Policy'.tr,
                 url: 'https://appforyou.store/Renty/privacy.html',
               ),
             ],
@@ -678,7 +678,7 @@ class _registerState extends State<register> {
 
   Widget _buildStepButtons() {
     if (_currentStep == 0) {
-      return Button(title: 'Next', isLoading: false, onpressed: _nextStep);
+      return Button(title: 'Next'.tr, isLoading: false, onpressed: _nextStep);
     } else if (_currentStep == 1) {
       return Row(
         children: [
@@ -686,22 +686,22 @@ class _registerState extends State<register> {
             child: OutlinedButton(
               onPressed: _prevStep,
               style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: AppColor.primaryColor),
               ),
               child: Text(
-                'Back',
+                'Back'.tr,
                 style: TextStyle(
                     color: AppColor.primaryColor, fontWeight: FontWeight.w600),
               ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child:
-                Button(title: 'Next', isLoading: false, onpressed: _nextStep),
+                Button(title: 'Next'.tr, isLoading: false, onpressed: _nextStep),
           ),
         ],
       );
@@ -712,22 +712,22 @@ class _registerState extends State<register> {
             child: OutlinedButton(
               onPressed: _prevStep,
               style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: AppColor.primaryColor),
               ),
               child: Text(
-                'Back',
+                'Back'.tr,
                 style: TextStyle(
                     color: AppColor.primaryColor, fontWeight: FontWeight.w600),
               ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Button(
-                title: 'Register', isLoading: isLoading, onpressed: _signUp),
+                title: 'Register'.tr, isLoading: isLoading, onpressed: _signUp),
           ),
         ],
       );

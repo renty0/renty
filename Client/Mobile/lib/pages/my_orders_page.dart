@@ -17,8 +17,8 @@ class MyOrdersPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: Text('My Orders',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('My Orders'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -114,11 +114,11 @@ class MyOrdersPage extends StatelessWidget {
                             color: isDark ? Colors.white : AppColor.darkText,
                           ),
                         ),
-                        SizedBox(height: 2),
+                        const SizedBox(height: 2),
                         Text(
                           order.createdAt != null
                               ? dateFormat.format(order.createdAt!)
-                              : 'Unknown date',
+                              : 'Unknown date'.tr,
                           style: TextStyle(
                               fontSize: 12, color: isDark ? Colors.white70 : AppColor.mediumText),
                         ),
@@ -161,7 +161,7 @@ class MyOrdersPage extends StatelessWidget {
                         size: 16, color: isDark ? Colors.white54 : AppColor.grey),
                     SizedBox(width: 4),
                     Text(
-                      '${order.itemCount ?? 0} item${(order.itemCount ?? 0) > 1 ? 's' : ''}',
+                      '${order.itemCount ?? 0} ${(order.itemCount ?? 0) > 1 ? 'items'.tr : 'item'.tr}',
                       style: TextStyle(
                           fontSize: 13, color: isDark ? Colors.white70 : AppColor.mediumText),
                     ),
@@ -191,14 +191,14 @@ class MyOrdersPage extends StatelessWidget {
         children: [
           Icon(Icons.shopping_bag_outlined,
               size: 80, color: isDark ? const Color(0xFF334155) : AppColor.borderGray),
-          SizedBox(height: 16),
-          Text('No Orders Yet',
+          const SizedBox(height: 16),
+          Text('No Orders Yet'.tr,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColor.darkText)),
-          SizedBox(height: 8),
-          Text('Your order history will appear here',
+          const SizedBox(height: 8),
+          Text('Your order history will appear here'.tr,
               style:
                   TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColor.mediumText)),
         ],
@@ -224,7 +224,7 @@ class MyOrdersPage extends StatelessWidget {
             style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.primaryColor),
             child:
-                Text('Retry', style: TextStyle(color: Colors.white)),
+                Text('Retry'.tr, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

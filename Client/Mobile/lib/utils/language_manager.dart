@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageManager {
@@ -18,7 +19,7 @@ class LanguageManager {
   }
 
   static Locale getCurrentLocale() {
-    final languageCode = _prefs.getString(_getLanguageKey()) ?? 'en';
+    final languageCode = getCurrentLanguageCode();
     return Locale(languageCode);
   }
 
@@ -27,7 +28,18 @@ class LanguageManager {
   }
 
   static String getCurrentLanguageCode() {
-    return _prefs.getString(_getLanguageKey()) ?? 'en';
+    final savedLanguage = _prefs.getString(_getLanguageKey());
+    if (savedLanguage != null) {
+      return savedLanguage;
+    }
+    // Fallback to mobile system language
+    try {
+      final systemLanguage = ui.PlatformDispatcher.instance.locale.languageCode;
+      if (systemLanguage == 'ar') {
+        return 'ar';
+      }
+    } catch (_) {}
+    return 'en';
   }
 
   static bool isArabic() {

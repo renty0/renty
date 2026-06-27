@@ -87,7 +87,7 @@ class OwnerDto {
       return OwnerDto(
         firstName: mapValueOfType<String>(json, r'firstName'),
         city: mapValueOfType<String>(json, r'city'),
-        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
+        profileImageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
       );
     }
     return null;

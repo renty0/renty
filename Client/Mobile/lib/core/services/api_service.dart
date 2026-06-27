@@ -5,6 +5,7 @@ import 'package:renty/main.dart';
 /// Centralized API service that configures the OpenAPI client
 /// with the correct base URL and authentication token.
 class ApiService {
+  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
   static const String _baseUrl = 'https://renty.runasp.net';
 
   static ApiClient? _apiClient;

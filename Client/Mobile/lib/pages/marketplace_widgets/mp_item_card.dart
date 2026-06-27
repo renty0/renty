@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/utils/language_manager.dart';
 
 class MpItemCard extends StatelessWidget {
   final ItemListDto item;
@@ -11,12 +12,12 @@ class MpItemCard extends StatelessWidget {
 
   String _formatCondition(String raw) {
     switch (raw.toLowerCase()) {
-      case 'new': return 'New';
-      case 'used': return 'Used';
+      case 'new': return 'New'.tr;
+      case 'used': return 'Used'.tr;
       case 'like_new':
-      case 'likenew': return 'Like New';
-      case 'good': return 'Good';
-      case 'fair': return 'Fair';
+      case 'likenew': return 'Like New'.tr;
+      case 'good': return 'Good'.tr;
+      case 'fair': return 'Fair'.tr;
       default: return raw.split('_').map((w) => w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}').join(' ');
     }
   }
@@ -60,12 +61,16 @@ class MpItemCard extends StatelessWidget {
           Expanded(flex: 2, child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(item.titleEn ?? item.titleAr ?? 'Untitled',
+              Text(
+                LanguageManager.isArabic()
+                    ? (item.titleAr ?? item.titleEn ?? 'Untitled'.tr)
+                    : (item.titleEn ?? item.titleAr ?? 'Untitled'.tr),
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: isDark ? Colors.white : AppColor.darkText, height: 1.2),
                 maxLines: 2, overflow: TextOverflow.ellipsis),
               const Spacer(),
               if (item.dailyPrice != null)
-                Text('${item.dailyPrice!.toStringAsFixed(0)} EGP/day',
+                Text(
+                  '@price EGP / day'.trParams({'price': item.dailyPrice!.toStringAsFixed(0)}),
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.fourthColor)),
               const SizedBox(height: 4),
               Row(children: [

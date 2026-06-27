@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/controllers/marketplace_controller.dart';
 
@@ -57,7 +58,7 @@ class _MpSearchBarState extends State<MpSearchBar> {
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
-        hintText: 'What do you want to rent?',
+        hintText: 'What do you want to rent?'.tr,
         hintStyle: TextStyle(
           color: isDark ? Colors.white30 : Colors.grey[400],
           fontSize: 14,

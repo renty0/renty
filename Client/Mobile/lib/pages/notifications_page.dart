@@ -49,7 +49,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       });
       // Show in-app snackbar for real-time notification
       Get.snackbar(
-        notif.title ?? 'Notification',
+        notif.title ?? 'Notification'.tr,
         notif.message ?? '',
         backgroundColor: AppColor.primaryColor.withOpacity(0.9),
         colorText: Colors.white,
@@ -116,11 +116,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
         }
         _unreadCount = 0;
       });
-      Get.snackbar('Done', 'All notifications marked as read',
-          backgroundColor: AppColor.successColor.withOpacity(0.9),
+      Get.snackbar('Done'.tr, 'All notifications marked as read'.tr,
+          backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
           colorText: Colors.white);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to mark all as read');
+      Get.snackbar('Error'.tr, 'Failed to mark all as read'.tr);
     }
   }
 
@@ -130,8 +130,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: Text('Notifications',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Notifications'.tr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -139,8 +139,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
           if (_unreadCount > 0)
             TextButton(
               onPressed: _markAllRead,
-              child: Text('Mark all read',
-                  style: TextStyle(color: Colors.white70, fontSize: 13)),
+              child: Text('Mark all read'.tr,
+                  style: const TextStyle(color: Colors.white70, fontSize: 13)),
             ),
         ],
       ),
@@ -219,7 +219,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    notification.title ?? 'Notification',
+                    notification.title ?? 'Notification'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: isUnread ? FontWeight.bold : FontWeight.w500,
@@ -266,10 +266,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   String _formatTimeAgo(DateTime date) {
     final diff = DateTime.now().difference(date);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    if (diff.inMinutes < 1) return 'Just now'.tr;
+    if (diff.inMinutes < 60) return '${'@min m ago'.trParams({'min': '${diff.inMinutes}'})}' ;
+    if (diff.inHours < 24) return '${'@hours h ago'.trParams({'hours': '${diff.inHours}'})}' ;
+    if (diff.inDays < 7) return '${'@days d ago'.trParams({'days': '${diff.inDays}'})}' ;
     return DateFormat('MMM dd').format(date);
   }
 
@@ -280,11 +280,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.notifications_off_outlined, size: 80, color: isDark ? const Color(0xFF334155) : AppColor.borderGray),
-          SizedBox(height: 16),
-          Text('No Notifications',
+          const SizedBox(height: 16),
+          Text('No Notifications'.tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColor.darkText)),
-          SizedBox(height: 8),
-          Text("You're all caught up!",
+          const SizedBox(height: 8),
+          Text('You\'re all caught up!'.tr,
               style: TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColor.mediumText)),
         ],
       ),
@@ -299,12 +299,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           Icon(Icons.error_outline, size: 64, color: AppColor.warningColor),
           SizedBox(height: 16),
-          Text(_errorMessage!, style: TextStyle(fontSize: 16, color: isDark ? Colors.white70 : AppColor.mediumText)),
+          Text(_errorMessage!.tr, style: TextStyle(fontSize: 16, color: isDark ? Colors.white70 : AppColor.mediumText)),
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadNotifications,
             style: ElevatedButton.styleFrom(backgroundColor: AppColor.primaryColor),
-            child: Text('Retry', style: TextStyle(color: Colors.white)),
+            child: Text('Retry'.tr, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

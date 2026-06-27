@@ -109,18 +109,18 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
                 decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(2))),
             )),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('Filters', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800,
+              Text('Filters'.tr, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800,
                 color: isDark ? Colors.white : AppColor.primaryColor)),
-              TextButton(onPressed: _clear, child: Text('Clear All', style: TextStyle(color: AppColor.fourthColor))),
+              TextButton(onPressed: _clear, child: Text('Clear All'.tr, style: TextStyle(color: AppColor.fourthColor))),
             ]),
             const SizedBox(height: 20),
 
             // ── City (Governorate dropdown)
-            _label('City / Governorate', isDark),
+            _label('City / Governorate'.tr, isDark),
             const SizedBox(height: 8),
             _dropdown(
               value: _city,
-              hint: 'Select governorate',
+              hint: 'Select governorate'.tr,
               items: _governorates,
               isDark: isDark,
               onChanged: (v) => setState(() => _city = v),
@@ -128,10 +128,16 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
             const SizedBox(height: 20),
 
             // ── Condition
-            _label('Condition', isDark),
+            _label('Condition'.tr, isDark),
             const SizedBox(height: 8),
             _chipGroup(
-              options: const {'New': 'new', 'Like New': 'like_new', 'Good': 'good', 'Used': 'used', 'Fair': 'fair'},
+              options: {
+                'New'.tr: 'new',
+                'Like New'.tr: 'like_new',
+                'Good'.tr: 'good',
+                'Used'.tr: 'used',
+                'Fair'.tr: 'fair',
+              },
               selected: _condition,
               isDark: isDark,
               onTap: (v) => setState(() => _condition = _condition == v ? null : v),
@@ -139,10 +145,13 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
             const SizedBox(height: 20),
 
             // ── Type
-            _label('Listing Type', isDark),
+            _label('Listing Type'.tr, isDark),
             const SizedBox(height: 8),
             _chipGroup(
-              options: const {'Standard': 'standard', 'Premium': 'premium'},
+              options: {
+                'Standard'.tr: 'standard',
+                'Premium'.tr: 'premium',
+              },
               selected: _type,
               isDark: isDark,
               onTap: (v) => setState(() => _type = _type == v ? null : v),
@@ -150,22 +159,22 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
             const SizedBox(height: 20),
 
             // ── Price Range
-            _label('Price Range (EGP/day)', isDark),
+            _label('Price Range (EGP/day)'.tr, isDark),
             const SizedBox(height: 8),
             Row(children: [
-              Expanded(child: _priceField(_minCtrl, 'Min', isDark)),
+              Expanded(child: _priceField(_minCtrl, 'Min'.tr, isDark)),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text('–', style: TextStyle(color: Colors.grey[500], fontSize: 20))),
-              Expanded(child: _priceField(_maxCtrl, 'Max', isDark)),
+              Expanded(child: _priceField(_maxCtrl, 'Max'.tr, isDark)),
             ]),
             const SizedBox(height: 20),
 
             // ── Availability (Date Range)
-            _label('Availability', isDark),
+            _label('Availability'.tr, isDark),
             const SizedBox(height: 8),
             Row(children: [
               Expanded(child: _datePicker(
-                label: _startDate == null ? 'Start date' : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                label: _startDate == null ? 'Start date'.tr : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
                 isDark: isDark,
                 onTap: () async {
                   final d = await showDatePicker(
@@ -180,7 +189,7 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
               )),
               const SizedBox(width: 10),
               Expanded(child: _datePicker(
-                label: _endDate == null ? 'End date' : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                label: _endDate == null ? 'End date'.tr : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
                 isDark: isDark,
                 onTap: _startDate == null ? null : () async {
                   final d = await showDatePicker(
@@ -197,7 +206,7 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
             const SizedBox(height: 20),
 
             // ── Min Rating
-            _label('Minimum Rating', isDark),
+            _label('Minimum Rating'.tr, isDark),
             const SizedBox(height: 8),
             Row(children: List.generate(5, (i) {
               final star = i + 1;
@@ -214,7 +223,8 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
             if (_minRating != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
-                child: Text('$_minRating★ & above', style: TextStyle(color: AppColor.fourthColor, fontSize: 12, fontWeight: FontWeight.w600)),
+                child: Text('@stars★ & above'.trParams({'stars': _minRating.toString()}),
+                    style: TextStyle(color: AppColor.fourthColor, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
             const SizedBox(height: 32),
 
@@ -228,7 +238,7 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
-              child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+              child: Text('Apply Filters'.tr, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
             )),
           ]),
         ),
@@ -259,7 +269,7 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
           style: TextStyle(color: isDark ? Colors.white : AppColor.darkText, fontSize: 14),
           onChanged: onChanged,
           items: [
-            DropdownMenuItem<String?>(value: null, child: Text('All cities', style: TextStyle(color: isDark ? Colors.white54 : Colors.grey[500]))),
+            DropdownMenuItem<String?>(value: null, child: Text('All cities'.tr, style: TextStyle(color: isDark ? Colors.white54 : Colors.grey[500]))),
             ...items.map((g) => DropdownMenuItem<String?>(value: g, child: Text(g))),
           ],
         ),

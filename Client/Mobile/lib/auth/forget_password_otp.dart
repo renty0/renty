@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -64,20 +65,20 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
     } catch (_) {}
     switch (e.code) {
       case 400:
-        return 'Invalid or expired verification code.';
+        return 'Invalid or expired verification code.'.tr;
       case 404:
-        return 'No reset request found. Please request a new code.';
+        return 'No reset request found. Please request a new code.'.tr;
       case 429:
-        return 'Too many attempts. Please wait a few minutes.';
+        return 'Too many attempts. Please wait a few minutes.'.tr;
       default:
-        return 'Verification failed. Please try again.';
+        return 'Verification failed. Please try again.'.tr;
     }
   }
 
   Future<void> _verifyOTP() async {
     final code = _otpController.text.trim();
     if (code.length < 6) {
-      setState(() => _errorMessage = 'Please enter the full 6-digit code');
+      setState(() => _errorMessage = 'Please enter the full 6-digit code'.tr);
       return;
     }
 
@@ -118,7 +119,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
           _isLoading = false;
           _errorMessage = messages.isNotEmpty
               ? messages.first
-              : 'Invalid verification code. Please try again.';
+              : 'Invalid verification code. Please try again.'.tr;
         });
       }
     } on ApiException catch (e) {
@@ -136,7 +137,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
       setState(() {
         _isLoading = false;
         _errorMessage =
-            'Connection error. Please check your internet and try again.';
+            'Connection error. Please check your internet and try again.'.tr;
       });
     }
   }
@@ -165,7 +166,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
             content: Row(children: [
               Icon(Icons.check_circle, color: Colors.white, size: 20),
               SizedBox(width: 10),
-              Text("Verification code resent!"),
+              Text("Verification code resent!".tr),
             ]),
             backgroundColor: AppColor.successColor,
             behavior: SnackBarBehavior.floating,
@@ -176,7 +177,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to resend code. Please try again."),
+            content: Text("Failed to resend code. Please try again.".tr),
             backgroundColor: Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
             shape:
@@ -188,7 +189,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to resend code. Please try again."),
+          content: Text("Failed to resend code. Please try again.".tr),
           backgroundColor: Color(0xFFDC2626),
           behavior: SnackBarBehavior.floating,
           shape:
@@ -254,14 +255,14 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Enter Verification Code",
+                  "Enter Verification Code".tr,
                   style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: isDark ? Colors.white : AppColor.primaryColor),
                 ),
                 SizedBox(height: 8),
-                Text("We've sent a 6-digit code to",
+                Text("We've sent a 6-digit code to".tr,
                     style: TextStyle(fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey)),
                 SizedBox(height: 4),
                 Text(widget.email,
@@ -324,7 +325,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     children: [
-                      Text("Didn't receive the code?",
+                      Text("Didn't receive the code?".tr,
                           style:
                               TextStyle(fontSize: 14, color: isDark ? Colors.white70 : AppColor.grey)),
                       SizedBox(height: 8),
@@ -341,7 +342,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                                         AppColor.primaryColor),
                                   ),
                                 )
-                              : Text("Resend Code",
+                              : Text("Resend Code".tr,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -349,7 +350,7 @@ class _ForgetPasswordOTPPageState extends State<ForgetPasswordOTPPage> {
                         )
                       else
                         Text(
-                          "Resend code in $_resendCountdown seconds",
+                          'Resend code in @sec seconds'.trParams({'sec': _resendCountdown.toString()}),
                           style: TextStyle(
                               fontSize: 14,
                               color: isDark ? Colors.white70 : AppColor.grey,

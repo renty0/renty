@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -39,7 +40,7 @@ class _ChatListPageState extends State<ChatListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Failed to load conversations';
+        _error = 'Failed to load conversations'.tr;
         _isLoading = false;
       });
     }
@@ -53,7 +54,7 @@ class _ChatListPageState extends State<ChatListPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Messages', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Messages'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -102,7 +103,7 @@ class _ChatListPageState extends State<ChatListPage> {
             : null,
       ),
       title: Text(
-        chat.otherUserFirstName ?? 'User',
+        chat.otherUserFirstName ?? 'User'.tr,
         style: TextStyle(
           fontWeight: (chat.unreadCount ?? 0) > 0 ? FontWeight.w700 : FontWeight.w600,
           fontSize: 16,
@@ -140,7 +141,7 @@ class _ChatListPageState extends State<ChatListPage> {
           MaterialPageRoute(
             builder: (_) => ChatRoomPage(
               chatId: chat.id ?? '',
-              otherUserName: chat.otherUserFirstName ?? 'User',
+              otherUserName: chat.otherUserFirstName ?? 'User'.tr,
               otherUserImage: chat.otherUserProfileImage,
             ),
           ),
@@ -158,12 +159,12 @@ class _ChatListPageState extends State<ChatListPage> {
           Icon(Icons.chat_bubble_outline, size: 64,
               color: isDark ? Colors.white24 : Colors.grey[300]),
           const SizedBox(height: 16),
-          Text('No conversations yet',
+          Text('No conversations yet'.tr,
               style: TextStyle(
                   fontSize: 18, fontWeight: FontWeight.w600,
                   color: isDark ? Colors.white54 : AppColor.mediumText)),
           const SizedBox(height: 8),
-          Text('Start a chat from an item listing',
+          Text('Start a chat from an item listing'.tr,
               style: TextStyle(
                   fontSize: 14, color: isDark ? Colors.white30 : AppColor.lightText)),
         ],
@@ -183,7 +184,7 @@ class _ChatListPageState extends State<ChatListPage> {
           ElevatedButton(
             onPressed: _loadChats,
             style: ElevatedButton.styleFrom(backgroundColor: AppColor.primaryColor),
-            child: const Text('Retry', style: TextStyle(color: Colors.white)),
+            child: Text('Retry'.tr, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

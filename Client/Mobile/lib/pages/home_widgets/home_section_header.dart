@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
 
 class HomeSectionHeader extends StatelessWidget {
@@ -32,13 +33,13 @@ class HomeSectionHeader extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                     decoration: BoxDecoration(
-                      color: AppColor.primaryColor.withOpacity(0.1),
+                      color: AppColor.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColor.primaryColor.withOpacity(0.2)),
+                      border: Border.all(color: AppColor.primaryColor.withValues(alpha: 0.2)),
                     ),
                     child: Text(
                       badge!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: AppColor.primaryColor,
@@ -75,15 +76,15 @@ class HomeSectionHeader extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'See All',
-                    style: TextStyle(
+                    'See All'.tr,
+                    style: const TextStyle(
                       color: AppColor.fourthColor,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
                   ),
                   const SizedBox(width: 2),
-                  Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColor.fourthColor),
+                  const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColor.fourthColor),
                 ],
               ),
             ),

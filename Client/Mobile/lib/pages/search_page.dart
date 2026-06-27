@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/controllers/search_controller.dart';
+import 'package:renty/utils/language_manager.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -56,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
                 color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -85,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                         onChanged: (query) => controller.onSearchChanged(query),
                         onSubmitted: (query) => controller.performSearch(query),
                         decoration: InputDecoration(
-                          hintText: 'Search items to rent...',
+                          hintText: 'Search items to rent...'.tr,
                           hintStyle: TextStyle(
                             color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF94A3B8),
                             fontSize: 15,
@@ -170,8 +171,8 @@ class _SearchPageState extends State<SearchPage> {
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: controller.resetFilters,
-                      child: Text('Clear all',
-                          style: TextStyle(fontSize: 12, color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
+                      child: Text('Clear all'.tr,
+                          style: const TextStyle(fontSize: 12, color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
                     ),
                   ]),
                 ),
@@ -201,7 +202,7 @@ class _SearchPageState extends State<SearchPage> {
                         ElevatedButton.icon(
                           onPressed: () => controller.performSearch(controller.searchQuery.value),
                           icon: const Icon(Icons.refresh, size: 18),
-                          label: const Text('Retry'),
+                          label: Text('Retry'.tr),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColor.fourthColor,
                             foregroundColor: Colors.white,
@@ -224,10 +225,10 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         Icon(Icons.search_off_rounded, size: 80, color: Colors.grey[300]),
                         const SizedBox(height: 16),
-                        Text('No results found',
+                        Text('No results found'.tr,
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[600])),
                         const SizedBox(height: 8),
-                        Text('Try different keywords or adjust filters',
+                        Text('Try different keywords or adjust filters'.tr,
                             style: TextStyle(color: Colors.grey[500])),
                       ],
                     ),
@@ -240,7 +241,10 @@ class _SearchPageState extends State<SearchPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                       child: Text(
-                        '${controller.totalResults.value} results for "${controller.searchQuery.value}"',
+                        '@count results for "@query"'.trParams({
+                          'count': controller.totalResults.value.toString(),
+                          'query': controller.searchQuery.value,
+                        }),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -290,9 +294,9 @@ class _SearchPageState extends State<SearchPage> {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColor.fourthColor.withOpacity(0.1),
+        color: AppColor.fourthColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColor.fourthColor.withOpacity(0.3)),
+        border: Border.all(color: AppColor.fourthColor.withValues(alpha: 0.3)),
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColor.fourthColor)),
@@ -307,10 +311,10 @@ class _SearchPageState extends State<SearchPage> {
 
   String _sortLabel(String key) {
     switch (key) {
-      case 'price_low': return 'Price: Low→High';
-      case 'price_high': return 'Price: High→Low';
-      case 'rating': return 'Top Rated';
-      default: return 'Newest';
+      case 'price_low': return 'Price: Low→High'.tr;
+      case 'price_high': return 'Price: High→Low'.tr;
+      case 'rating': return 'Top Rated'.tr;
+      default: return 'Newest'.tr;
     }
   }
 
@@ -322,16 +326,16 @@ class _SearchPageState extends State<SearchPage> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColor.fourthColor.withOpacity(0.08),
+              color: AppColor.fourthColor.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.search_rounded, size: 48, color: AppColor.fourthColor.withOpacity(0.6)),
+            child: Icon(Icons.search_rounded, size: 48, color: AppColor.fourthColor.withValues(alpha: 0.6)),
           ),
           const SizedBox(height: 20),
-          Text('Find what you need',
+          Text('Find what you need'.tr,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: isDark ? Colors.white : AppColor.primaryColor)),
           const SizedBox(height: 8),
-          Text('Start typing to search for items',
+          Text('Start typing to search for items'.tr,
               style: TextStyle(fontSize: 15, color: isDark ? Colors.white54 : AppColor.lightText)),
         ],
       ),
@@ -385,14 +389,14 @@ class _FilterSheetState extends State<_FilterSheet> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
           child: Row(children: [
-            Text('Filters', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
+            Text('Filters'.tr, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white : AppColor.darkText)),
             const Spacer(),
             TextButton(
               onPressed: () {
                 setState(() { _catId = null; _catName = ''; _city = ''; _sort = 'newest'; });
               },
-              child: const Text('Reset', style: TextStyle(color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
+              child: Text('Reset'.tr, style: const TextStyle(color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
             ),
           ]),
         ),
@@ -404,35 +408,39 @@ class _FilterSheetState extends State<_FilterSheet> {
             padding: const EdgeInsets.all(20),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // ── Sort By ──
-              _sectionTitle('Sort By', isDark),
+              _sectionTitle('Sort By'.tr, isDark),
               const SizedBox(height: 10),
               Wrap(spacing: 8, runSpacing: 8, children: [
-                _sortChip('Newest', 'newest', isDark),
-                _sortChip('Price: Low→High', 'price_low', isDark),
-                _sortChip('Price: High→Low', 'price_high', isDark),
-                _sortChip('Top Rated', 'rating', isDark),
+                _sortChip('Newest'.tr, 'newest', isDark),
+                _sortChip('Price: Low→High'.tr, 'price_low', isDark),
+                _sortChip('Price: High→Low'.tr, 'price_high', isDark),
+                _sortChip('Top Rated'.tr, 'rating', isDark),
               ]),
 
               const SizedBox(height: 24),
 
               // ── Category ──
-              _sectionTitle('Category', isDark),
+              _sectionTitle('Category'.tr, isDark),
               const SizedBox(height: 10),
               Obx(() {
                 if (widget.controller.categories.isEmpty) {
-                  return Text('Loading...', style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText));
+                  return Text('Loading...'.tr, style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText));
                 }
                 return Wrap(spacing: 8, runSpacing: 8, children: [
-                  _catChip('All', null, isDark),
+                  _catChip('All'.tr, null, isDark),
                   ...widget.controller.categories.map((cat) =>
-                    _catChip(cat.nameEn ?? cat.nameAr ?? '', cat.id, isDark)),
+                    _catChip(
+                      LanguageManager.isArabic()
+                          ? (cat.nameAr ?? cat.nameEn ?? '')
+                          : (cat.nameEn ?? cat.nameAr ?? ''),
+                      cat.id, isDark)),
                 ]);
               }),
 
               const SizedBox(height: 24),
 
               // ── City ──
-              _sectionTitle('City', isDark),
+              _sectionTitle('City'.tr, isDark),
               const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -445,11 +453,11 @@ class _FilterSheetState extends State<_FilterSheet> {
                   child: DropdownButton<String>(
                     isExpanded: true,
                     value: _city.isEmpty ? null : _city,
-                    hint: Text('All Cities', style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText)),
+                    hint: Text('All Cities'.tr, style: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText)),
                     dropdownColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
                     style: TextStyle(color: isDark ? Colors.white : AppColor.darkText, fontSize: 14),
                     items: [
-                      DropdownMenuItem<String>(value: '', child: Text('All Cities')),
+                      DropdownMenuItem<String>(value: '', child: Text('All Cities'.tr)),
                       ...AppSearchController.governorates.map((g) =>
                         DropdownMenuItem<String>(value: g, child: Text(g))),
                     ],
@@ -468,7 +476,7 @@ class _FilterSheetState extends State<_FilterSheet> {
           padding: EdgeInsets.fromLTRB(20, 12, 20, 12 + MediaQuery.of(context).padding.bottom),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -2))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2))],
           ),
           child: SizedBox(
             width: double.infinity,
@@ -488,7 +496,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
-              child: const Text('Apply Filters', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              child: Text('Apply Filters'.tr, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             ),
           ),
         ),
@@ -561,7 +569,7 @@ class _SearchResultCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -602,7 +610,9 @@ class _SearchResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.titleEn ?? item.titleAr ?? '',
+                      LanguageManager.isArabic()
+                          ? (item.titleAr ?? item.titleEn ?? '')
+                          : (item.titleEn ?? item.titleAr ?? ''),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -614,14 +624,14 @@ class _SearchResultCard extends StatelessWidget {
                     const Spacer(),
                     if (item.dailyPrice != null)
                       Text(
-                        '${item.dailyPrice!.toStringAsFixed(0)} EGP/day',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.fourthColor),
+                        '@price EGP / day'.trParams({'price': item.dailyPrice!.toStringAsFixed(0)}),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.fourthColor),
                       ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         if (item.avgRating != null && item.avgRating! > 0) ...[
-                          Icon(Icons.star_rounded, size: 14, color: const Color(0xFFFBBF24)),
+                          const Icon(Icons.star_rounded, size: 14, color: Color(0xFFFBBF24)),
                           const SizedBox(width: 2),
                           Text(item.avgRating!.toStringAsFixed(1),
                               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600,

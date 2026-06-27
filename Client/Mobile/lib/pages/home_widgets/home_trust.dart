@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeTrust extends StatelessWidget {
   const HomeTrust({super.key});
@@ -17,7 +18,7 @@ class HomeTrust extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
+            color: Colors.black.withValues(alpha: 0.25),
             blurRadius: 16, offset: const Offset(0, 6),
           ),
         ],
@@ -29,7 +30,7 @@ class HomeTrust extends StatelessWidget {
           Container(
             width: 56, height: 56,
             decoration: BoxDecoration(
-              color: const Color(0xFF2563EB).withOpacity(0.15),
+              color: const Color(0xFF2563EB).withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(Icons.gpp_good_outlined, color: Color(0xFF60A5FA), size: 30),
@@ -39,9 +40,9 @@ class HomeTrust extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Rented with Confidence',
-                  style: TextStyle(
+                Text(
+                  'Rented with Confidence'.tr,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -50,9 +51,9 @@ class HomeTrust extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Every transaction is protected with identity verification and secure payments.',
+                  'Every transaction is protected with identity verification and secure payments.'.tr,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.65),
+                    color: Colors.white.withValues(alpha: 0.65),
                     fontSize: 12,
                     height: 1.4,
                   ),
@@ -62,8 +63,8 @@ class HomeTrust extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 8,
                   children: [
-                    _badge(Icons.handshake_outlined, 'Verified Users'),
-                    _badge(Icons.policy_outlined, 'Secure Payments'),
+                    _badge(Icons.handshake_outlined, 'Verified Users'.tr),
+                    _badge(Icons.policy_outlined, 'Secure Payments'.tr),
                   ],
                 ),
               ],
@@ -78,9 +79,9 @@ class HomeTrust extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF2563EB).withOpacity(0.15),
+        color: const Color(0xFF2563EB).withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF2563EB).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFF2563EB).withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -126,7 +126,7 @@ class AuthLoginUser {
         lastName: mapValueOfType<String>(json, r'lastName'),
         email: mapValueOfType<String>(json, r'email'),
         role: mapValueOfType<String>(json, r'role'),
-        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
+        profileImageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
       );
     }
     return null;

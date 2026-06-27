@@ -41,7 +41,7 @@ class HomeDestinations extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: colors[0].withOpacity(0.3),
+                  color: colors[0].withValues(alpha: 0.3),
                   blurRadius: 10, offset: const Offset(0, 4),
                 ),
               ],

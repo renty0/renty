@@ -36,39 +36,46 @@ class HomePage extends StatelessWidget {
                 backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 surfaceTintColor: Colors.transparent,
                 elevation: 0,
-                title: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [AppColor.primaryColor, AppColor.fourthColor],
+                automaticallyImplyLeading: false,
+                titleSpacing: 0,
+                title: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [AppColor.primaryColor, AppColor.fourthColor],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.home_outlined, color: Colors.white, size: 20),
                         ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.home_outlined, color: Colors.white, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Renty'.tr,
+                          style: TextStyle(
+                            color: isDark ? Colors.white : AppColor.primaryColor,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            Icons.notifications_outlined,
+                            color: isDark ? Colors.white70 : AppColor.primaryColor,
+                          ),
+                          onPressed: () => Get.toNamed('/notifications'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Renty',
-                      style: TextStyle(
-                        color: isDark ? Colors.white : AppColor.primaryColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.notifications_outlined,
-                      color: isDark ? Colors.white70 : AppColor.primaryColor,
-                    ),
-                    onPressed: () => Get.toNamed('/notifications'),
                   ),
-                ],
+                ),
               ),
 
               // ── Body ────────────────────────────────────────────
@@ -91,9 +98,9 @@ class HomePage extends StatelessWidget {
 
                     // 2. Features
                     HomeSectionHeader(
-                      badge: 'WHY RENTY',
-                      title: 'Built for You',
-                      subtitle: 'Trusted, affordable and fast',
+                      badge: 'WHY RENTY'.tr,
+                      title: 'Built for You'.tr,
+                      subtitle: 'Trusted, affordable and fast'.tr,
                     ),
                     const SizedBox(height: 12),
                     const HomeFeatures(),
@@ -101,8 +108,8 @@ class HomePage extends StatelessWidget {
 
                     // 3. Categories
                     HomeSectionHeader(
-                      badge: 'CATEGORIES',
-                      title: 'Browse by Category',
+                      badge: 'CATEGORIES'.tr,
+                      title: 'Browse by Category'.tr,
                       onSeeAll: () => _goToMarketplace(),
                     ),
                     const SizedBox(height: 12),
@@ -117,9 +124,9 @@ class HomePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               HomeSectionHeader(
-                                badge: 'TRENDING',
-                                title: 'Most Popular',
-                                subtitle: 'What everyone is renting',
+                                badge: 'TRENDING'.tr,
+                                title: 'Most Popular'.tr,
+                                subtitle: 'What everyone is renting'.tr,
                                 onSeeAll: () => _goToMarketplace(),
                               ),
                               const SizedBox(height: 12),
@@ -135,8 +142,8 @@ class HomePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               HomeSectionHeader(
-                                badge: 'JUST ADDED',
-                                title: 'New Arrivals',
+                                badge: 'JUST ADDED'.tr,
+                                title: 'New Arrivals'.tr,
                                 onSeeAll: () => _goToMarketplace(),
                               ),
                               const SizedBox(height: 12),
@@ -147,10 +154,10 @@ class HomePage extends StatelessWidget {
                         : const SizedBox.shrink()),
 
                     // 7. Top Destinations
-                    const HomeSectionHeader(
-                      badge: 'TOP SPOTS',
-                      title: 'Top Destinations',
-                      subtitle: 'Popular rental locations in Egypt',
+                    HomeSectionHeader(
+                      badge: 'TOP SPOTS'.tr,
+                      title: 'Top Destinations'.tr,
+                      subtitle: 'Popular rental locations in Egypt'.tr,
                     ),
                     const SizedBox(height: 12),
                     const HomeDestinations(),
@@ -158,8 +165,8 @@ class HomePage extends StatelessWidget {
 
                     // 8. How It Works
                     HomeSectionHeader(
-                      badge: 'HOW IT WORKS',
-                      title: 'Rent in 3 Steps',
+                      badge: 'HOW IT WORKS'.tr,
+                      title: 'Rent in 3 Steps'.tr,
                     ),
                     const SizedBox(height: 16),
                     const HomeHowItWorks(),
@@ -200,7 +207,7 @@ class HomePage extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: controller.refreshHome,
             icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            label: Text('Retry'.tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.fourthColor,
               foregroundColor: Colors.white,

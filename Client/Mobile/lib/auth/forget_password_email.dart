@@ -45,22 +45,22 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
     } catch (_) {}
     switch (e.code) {
       case 404:
-        return 'No account found with this email address.';
+        return 'No account found with this email address.'.tr;
       case 429:
-        return 'Too many attempts. Please wait a few minutes.';
+        return 'Too many attempts. Please wait a few minutes.'.tr;
       default:
-        return 'Failed to send reset code. Please try again.';
+        return 'Failed to send reset code. Please try again.'.tr;
     }
   }
 
   Future<void> sendResetOTP() async {
     final email = emailController.text.trim();
     if (email.isEmpty) {
-      setState(() => errorMessage = 'Please enter your email');
+      setState(() => errorMessage = 'Please enter your email'.tr);
       return;
     }
     if (!GetUtils.isEmail(email)) {
-      setState(() => errorMessage = 'Please enter a valid email address');
+      setState(() => errorMessage = 'Please enter a valid email address'.tr);
       return;
     }
 
@@ -95,7 +95,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
           isLoading = false;
           errorMessage = messages.isNotEmpty
               ? messages.first
-              : 'Failed to send reset code. Please try again.';
+              : 'Failed to send reset code. Please try again.'.tr;
         });
       }
     } on ApiException catch (e) {
@@ -113,7 +113,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
       setState(() {
         isLoading = false;
         errorMessage =
-            'Connection error. Please check your internet and try again.';
+            'Connection error. Please check your internet and try again.'.tr;
       });
     }
   }
@@ -162,7 +162,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Forgot Password",
+                    "Forgot Password".tr,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -172,7 +172,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Enter your email to receive a reset code",
+                    "Enter your email to receive a reset code".tr,
                     style: TextStyle(
                         fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey, height: 1.5),
                     textAlign: TextAlign.center,
@@ -183,7 +183,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
                   ],
                   SizedBox(height: 40),
                   Text(
-                    "Email",
+                    "Email".tr,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -192,13 +192,13 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
                   ),
                   SizedBox(height: 10),
                   CustomTextForm(
-                    hintText: "Enter your email",
+                    hintText: "Enter your email".tr,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 30),
                   Button(
-                    title: "Send Reset Code",
+                    title: "Send Reset Code".tr,
                     isLoading: isLoading,
                     onpressed: sendResetOTP,
                   ),
@@ -208,7 +208,7 @@ class _ForgetPasswordEmailPageState extends State<ForgetPasswordEmailPage> {
                     child: TextButton(
                       onPressed: () => Navigator.pop(context),
                       child: Text(
-                        "Back to Login",
+                        "Back to Login".tr,
                         style:
                             TextStyle(fontSize: 16, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor),
                       ),

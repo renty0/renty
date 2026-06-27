@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
 
 class Button extends StatelessWidget {
@@ -62,7 +63,7 @@ class Button extends StatelessWidget {
               Icon(icon, size: 20),
               const SizedBox(width: 8),
             ],
-            Text(title),
+            Text(title.tr),
           ],
         ),
       ),

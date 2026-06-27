@@ -6,6 +6,7 @@ import 'package:renty/core/controllers/marketplace_controller.dart';
 import 'package:renty/pages/marketplace_widgets/mp_filter_sheet.dart';
 import 'package:renty/pages/marketplace_widgets/mp_item_card.dart';
 import 'package:renty/pages/marketplace_widgets/mp_search_bar.dart';
+import 'package:renty/utils/language_manager.dart';
 
 class MarketplacePage extends StatelessWidget {
   const MarketplacePage({super.key});
@@ -66,7 +67,7 @@ class _Header extends StatelessWidget {
           // Title row + action buttons
           Row(
             children: [
-              Text('Marketplace',
+              Text('Marketplace'.tr,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800,
                   color: isDark ? Colors.white : AppColor.primaryColor, letterSpacing: -0.5)),
               const Spacer(),
@@ -83,7 +84,7 @@ class _Header extends StatelessWidget {
 
           // Results count
           Obx(() => Text(
-            '${controller.totalItems.value} items found',
+            '@count items found'.trParams({'count': controller.totalItems.value.toString()}),
             style: TextStyle(fontSize: 12, color: isDark ? Colors.white54 : AppColor.mediumText),
           )),
           const SizedBox(height: 8),
@@ -125,7 +126,7 @@ class _CategoryChips extends StatelessWidget {
               return Obx(() => Padding(
                 padding: const EdgeInsets.only(right: 6),
                 child: ChoiceChip(
-                  label: const Text('All'),
+                  label: Text('All'.tr),
                   selected: controller.selectedCategoryId.value == null,
                   onSelected: (_) => controller.setCategory(null),
                   selectedColor: AppColor.fourthColor,
@@ -143,7 +144,11 @@ class _CategoryChips extends StatelessWidget {
             return Obx(() => Padding(
               padding: const EdgeInsets.only(right: 6),
               child: ChoiceChip(
-                label: Text(cat.nameEn ?? cat.nameAr ?? ''),
+                label: Text(
+                  LanguageManager.isArabic()
+                      ? (cat.nameAr ?? cat.nameEn ?? '')
+                      : (cat.nameEn ?? cat.nameAr ?? ''),
+                ),
                 selected: controller.selectedCategoryId.value == cat.id,
                 onSelected: (_) => controller.setCategory(cat.id),
                 selectedColor: AppColor.fourthColor,
@@ -182,7 +187,11 @@ class _SubcategoryChips extends StatelessWidget {
           return Obx(() => Padding(
             padding: const EdgeInsets.only(right: 6),
             child: ChoiceChip(
-              label: Text(sub.nameEn ?? sub.nameAr ?? ''),
+              label: Text(
+                LanguageManager.isArabic()
+                    ? (sub.nameAr ?? sub.nameEn ?? '')
+                    : (sub.nameEn ?? sub.nameAr ?? ''),
+              ),
               selected: controller.selectedSubcategoryId.value == sub.id,
               onSelected: (_) {
                 controller.selectedSubcategoryId.value =
@@ -223,10 +232,10 @@ class _SortButton extends StatelessWidget {
         elevation: 6,
         onSelected: controller.setSort,
         itemBuilder: (_) => [
-          _sortItem('newest',     'Newest First',        Icons.schedule,       active, isDark),
-          _sortItem('price_low',  'Price: Low to High',  Icons.arrow_upward,   active, isDark),
-          _sortItem('price_high', 'Price: High to Low',  Icons.arrow_downward, active, isDark),
-          _sortItem('rating',     'Highest Rated',       Icons.star_rounded,   active, isDark),
+          _sortItem('newest',     'Newest First'.tr,        Icons.schedule,       active, isDark),
+          _sortItem('price_low',  'Price: Low to High'.tr,  Icons.arrow_upward,   active, isDark),
+          _sortItem('price_high', 'Price: High to Low'.tr,  Icons.arrow_downward, active, isDark),
+          _sortItem('rating',     'Highest Rated'.tr,       Icons.star_rounded,   active, isDark),
         ],
       );
     });
@@ -333,7 +342,7 @@ class _ErrorState extends StatelessWidget {
       const SizedBox(height: 16),
       ElevatedButton.icon(
         onPressed: () => controller.loadItems(),
-        icon: const Icon(Icons.refresh), label: const Text('Retry'),
+        icon: const Icon(Icons.refresh), label: Text('Retry'.tr),
         style: ElevatedButton.styleFrom(backgroundColor: AppColor.fourthColor, foregroundColor: Colors.white),
       ),
     ]));
@@ -351,11 +360,11 @@ class _EmptyState extends StatelessWidget {
     return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
       Icon(Icons.inventory_2_outlined, size: 80, color: Colors.grey[300]),
       const SizedBox(height: 16),
-      Text('No items found', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[600])),
+      Text('No items found'.tr, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[600])),
       const SizedBox(height: 8),
-      Text('Try adjusting your filters', style: TextStyle(color: Colors.grey[500])),
+      Text('Try adjusting your filters'.tr, style: TextStyle(color: Colors.grey[500])),
       const SizedBox(height: 16),
-      TextButton(onPressed: controller.clearFilters, child: const Text('Clear Filters')),
+      TextButton(onPressed: controller.clearFilters, child: Text('Clear Filters'.tr)),
     ]));
   }
 }

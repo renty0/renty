@@ -51,20 +51,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         return AlertDialog(
           title: Row(
             children: [
-              Icon(Icons.check_circle, color: AppColor.successColor),
-              SizedBox(width: 12),
-              Text("Success", style: TextStyle(color: AppColor.successColor)),
+              const Icon(Icons.check_circle, color: AppColor.successColor),
+              const SizedBox(width: 12),
+              Text('Success'.tr, style: const TextStyle(color: AppColor.successColor)),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Password changed successfully!"),
-              SizedBox(height: 8),
+              Text('Password changed successfully!'.tr),
+              const SizedBox(height: 8),
               Text(
-                "For security reasons, you will be logged out and need to login again with your new password.",
-                style: TextStyle(fontSize: 14, color: AppColor.grey),
+                'For security reasons, you will be logged out and need to login again with your new password.'.tr,
+                style: const TextStyle(fontSize: 14, color: AppColor.grey),
               ),
             ],
           ),
@@ -74,7 +74,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Navigator.of(context).pop();
                 _logoutAndNavigate();
               },
-              child: Text("OK", style: TextStyle(color: AppColor.primaryColor)),
+              child: Text('OK'.tr, style: const TextStyle(color: AppColor.primaryColor)),
             ),
           ],
         );
@@ -110,7 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: Text('Change Password'.tr),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
       ),
@@ -140,9 +140,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'For security reasons, you will be logged out\nafter changing your password.',
+                      'For security reasons, you will be logged out\nafter changing your password.'.tr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColor.secondColor,
                         fontSize: 14,
                       ),
@@ -155,9 +155,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Current Password
               CustomTextField(
                 controller: currentPasswordController,
-                label: 'Current Password',
-                hint: 'Enter your current password',
-                prefixIcon: Icon(Icons.lock, color: AppColor.primaryColor),
+                label: 'Current Password'.tr,
+                hint: 'Enter your current password'.tr,
+                prefixIcon: const Icon(Icons.lock, color: AppColor.primaryColor),
                 obscureText: !showCurrentPassword,
                 validator: (value) => Validators.validateRequired(value, 'Current password'),
                 suffixIcon: IconButton(
@@ -177,9 +177,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // New Password
               CustomTextField(
                 controller: newPasswordController,
-                label: 'New Password',
-                hint: 'Enter new password',
-                prefixIcon: Icon(Icons.lock_outline, color: AppColor.primaryColor),
+                label: 'New Password'.tr,
+                hint: 'Enter new password'.tr,
+                prefixIcon: const Icon(Icons.lock_outline, color: AppColor.primaryColor),
                 obscureText: !showNewPassword,
                 validator: Validators.validatePassword,
                 suffixIcon: IconButton(
@@ -199,16 +199,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // Confirm Password
               CustomTextField(
                 controller: confirmPasswordController,
-                label: 'Confirm New Password',
-                hint: 'Confirm your new password',
-                prefixIcon: Icon(Icons.lock_outline, color: AppColor.primaryColor),
+                label: 'Confirm New Password'.tr,
+                hint: 'Confirm your new password'.tr,
+                prefixIcon: const Icon(Icons.lock_outline, color: AppColor.primaryColor),
                 obscureText: !showConfirmPassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
+                    return 'Please confirm your password'.tr;
                   }
                   if (value != newPasswordController.text) {
-                    return 'Passwords do not match';
+                    return 'Passwords do not match'.tr;
                   }
                   return null;
                 },
@@ -244,8 +244,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'You will be automatically logged out after password change for security purposes.',
-                        style: TextStyle(
+                        'You will be automatically logged out after password change for security purposes.'.tr,
+                        style: const TextStyle(
                           color: AppColor.warningColor,
                           fontSize: 13,
                         ),
@@ -268,16 +268,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Password Requirements:',
-                      style: TextStyle(
+                      'Password Requirements:'.tr,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColor.primaryColor,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text('• At least 6 characters long', style: TextStyle(fontSize: 14)),
-                    Text('• Include uppercase and lowercase letters', style: TextStyle(fontSize: 14)),
-                    Text('• Include numbers and special characters', style: TextStyle(fontSize: 14)),
+                    Text('• At least 6 characters long'.tr, style: const TextStyle(fontSize: 14)),
+                    Text('• Include uppercase and lowercase letters'.tr, style: const TextStyle(fontSize: 14)),
+                    Text('• Include numbers and special characters'.tr, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -285,7 +285,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               // Update Button
               Obx(() => CustomButton(
-                text: 'Update Password & Logout',
+                text: 'Update Password & Logout'.tr,
                 onPressed: _controller.isLoading.value ? null : _changePassword,
                 isLoading: _controller.isLoading.value,
                 backgroundColor: AppColor.primaryColor,

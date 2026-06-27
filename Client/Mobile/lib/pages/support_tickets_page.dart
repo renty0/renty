@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/utils/language_manager.dart';
 
 class SupportTicketsPage extends StatefulWidget {
   const SupportTicketsPage({super.key});
@@ -44,14 +45,14 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Failed to load tickets';
+        _error = 'Failed to load tickets'.tr;
         _isLoading = false;
       });
       print('SupportTickets error: ${e.code} ${e.message}');
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Failed to load tickets';
+        _error = 'Failed to load tickets'.tr;
         _isLoading = false;
       });
     }
@@ -79,20 +80,20 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
   String _statusLabel(String? status) {
     switch (status?.toLowerCase()) {
       case 'open':
-        return 'Open';
+        return 'Open'.tr;
       case 'in_progress':
       case 'inprogress':
-        return 'In Progress';
+        return 'In Progress'.tr;
       case 'awaitingsupport':
-        return 'Awaiting Support';
+        return 'Awaiting Support'.tr;
       case 'awaitingcustomer':
-        return 'Awaiting Response';
+        return 'Awaiting Response'.tr;
       case 'resolved':
-        return 'Resolved';
+        return 'Resolved'.tr;
       case 'closed':
-        return 'Closed';
+        return 'Closed'.tr;
       default:
-        return status ?? 'Unknown';
+        return status ?? 'Unknown'.tr;
     }
   }
 
@@ -106,8 +107,8 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Support',
-            style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Support'.tr,
+            style: const TextStyle(fontWeight: FontWeight.w700)),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -120,8 +121,8 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
         backgroundColor: AppColor.fourthColor,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
-        label: const Text('New Ticket',
-            style: TextStyle(fontWeight: FontWeight.w600)),
+        label: Text('New Ticket'.tr,
+            style: const TextStyle(fontWeight: FontWeight.w600)),
       ),
       body: _isLoading
           ? const Center(
@@ -202,7 +203,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    ticket.type ?? 'General',
+                    (ticket.type ?? 'General').tr,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -211,9 +212,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                   ),
                 ),
                 const Spacer(),
-                Icon(Icons.chevron_right_rounded,
-                    color: isDark ? Colors.white30 : Colors.grey[350],
-                    size: 22),
+                Icon(
+                  LanguageManager.isArabic()
+                      ? Icons.chevron_left_rounded
+                      : Icons.chevron_right_rounded,
+                  color: isDark ? Colors.white30 : Colors.grey[350],
+                  size: 22,
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -268,13 +273,13 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
                 size: 56, color: AppColor.fourthColor.withOpacity(0.5)),
           ),
           const SizedBox(height: 20),
-          Text('No Tickets Yet',
+          Text('No Tickets Yet'.tr,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColor.darkText)),
           const SizedBox(height: 8),
-          Text('Tap + to create a support ticket',
+          Text('Tap + to create a support ticket'.tr,
               style: TextStyle(
                   fontSize: 14,
                   color: isDark ? Colors.white54 : AppColor.mediumText)),
@@ -298,7 +303,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
           ElevatedButton.icon(
             onPressed: _loadTickets,
             icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Retry'),
+            label: Text('Retry'.tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.fourthColor,
               foregroundColor: Colors.white,

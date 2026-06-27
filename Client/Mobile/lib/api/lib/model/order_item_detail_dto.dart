@@ -127,7 +127,7 @@ class OrderItemDetailDto {
         title: mapValueOfType<String>(json, r'title'),
         quantity: mapValueOfType<int>(json, r'quantity'),
         priceAtTime: num.parse('${json[r'priceAtTime']}'),
-        primaryImage: mapValueOfType<String>(json, r'primaryImage'),
+        primaryImage: _sanitizeImageUrl(mapValueOfType<String>(json, r'primaryImage')),
       );
     }
     return null;

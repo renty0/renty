@@ -14,8 +14,7 @@ class AuthInterceptorClient extends http.BaseClient {
   static bool _isRefreshing = false;
   static final List<Completer<void>> _waitingQueue = [];
 
-  AuthInterceptorClient([http.Client? inner])
-      : _inner = inner ?? http.Client();
+  AuthInterceptorClient([http.Client? inner]) : _inner = inner ?? http.Client();
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -97,9 +96,7 @@ class AuthInterceptorClient extends http.BaseClient {
       if (currentToken == null || refreshToken == null) return false;
 
       // Use a separate client to avoid infinite recursion
-      final plainClient = ApiClient(
-        basePath: 'https://renty.runasp.net',
-      );
+      final plainClient = ApiClient(basePath: 'https://renty.runasp.net');
 
       final authApi = AuthApi(plainClient);
       final command = RefreshTokenCommand(

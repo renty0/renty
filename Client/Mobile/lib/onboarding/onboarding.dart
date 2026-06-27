@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/constant/imgaeasset.dart';
 import 'package:renty/main.dart';
+import 'package:get/get.dart';
 
 class OnBoarding extends StatelessWidget {
   const OnBoarding({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class OnBoarding extends StatelessWidget {
 
               // App Title
               Text(
-                "Welcome to Renty",
+                "Welcome to Renty".tr,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -45,7 +46,7 @@ class OnBoarding extends StatelessWidget {
               Text(
                 "Your go-to platform for renting anything you need — "
                 "from electronics and clothing to tools and vehicles. "
-                "Save money, earn passive income, and access more with less.",
+                "Save money, earn passive income, and access more with less.".tr,
                 style: TextStyle(
                   fontSize: 16,
                   color: AppColor.grey,
@@ -74,9 +75,9 @@ class OnBoarding extends StatelessWidget {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    "Continue",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  child: Text(
+                    "Continue".tr,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

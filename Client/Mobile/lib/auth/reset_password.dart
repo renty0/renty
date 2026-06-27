@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -51,13 +52,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     } catch (_) {}
     switch (e.code) {
       case 400:
-        return 'Invalid or expired reset token. Please request a new code.';
+        return 'Invalid or expired reset token. Please request a new code.'.tr;
       case 422:
-        return 'Password does not meet requirements. Please try again.';
+        return 'Password does not meet requirements. Please try again.'.tr;
       case 429:
-        return 'Too many attempts. Please wait a few minutes.';
+        return 'Too many attempts. Please wait a few minutes.'.tr;
       default:
-        return 'Failed to reset password. Please try again.';
+        return 'Failed to reset password. Please try again.'.tr;
     }
   }
 
@@ -66,15 +67,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     final confirmPass = confirmPasswordController.text.trim();
 
     if (newPass.isEmpty || confirmPass.isEmpty) {
-      setState(() => errorMessage = 'Please fill in all fields');
+      setState(() => errorMessage = 'Please fill in all fields'.tr);
       return;
     }
     if (newPass.length < 6) {
-      setState(() => errorMessage = 'Password must be at least 6 characters');
+      setState(() => errorMessage = 'Password must be at least 6 characters'.tr);
       return;
     }
     if (newPass != confirmPass) {
-      setState(() => errorMessage = 'Passwords do not match');
+      setState(() => errorMessage = 'Passwords do not match'.tr);
       return;
     }
 
@@ -109,7 +110,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           isLoading = false;
           errorMessage = messages.isNotEmpty
               ? messages.first
-              : 'Failed to reset password. Please try again.';
+              : 'Failed to reset password. Please try again.'.tr;
         });
       }
     } on ApiException catch (e) {
@@ -127,7 +128,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       setState(() {
         isLoading = false;
         errorMessage =
-            'Connection error. Please check your internet and try again.';
+            'Connection error. Please check your internet and try again.'.tr;
       });
     }
   }
@@ -156,14 +157,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       color: AppColor.successColor, size: 40),
                 ),
                 SizedBox(height: 16),
-                Text("Password Reset!",
+                Text("Password Reset!".tr,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColor.primaryColor)),
                 SizedBox(height: 8),
                 Text(
-                  "Your password has been reset successfully.\nPlease login with your new password.",
+                  "Your password has been reset successfully.\nPlease login with your new password.".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 14, color: AppColor.grey, height: 1.5),
@@ -183,7 +184,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text("Go to Login",
+                    child: Text("Go to Login".tr,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
@@ -237,7 +238,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Create New Password",
+                    "Create New Password".tr,
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -246,7 +247,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Enter your new password below",
+                    "Enter your new password below".tr,
                     style: TextStyle(
                         fontSize: 16, color: isDark ? Colors.white70 : AppColor.grey, height: 1.5),
                     textAlign: TextAlign.center,
@@ -257,7 +258,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ],
                   SizedBox(height: 40),
                   Text(
-                    "New Password",
+                    "New Password".tr,
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -265,14 +266,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   SizedBox(height: 10),
                   CustomTextForm(
-                    hintText: "Enter new password",
+                    hintText: "Enter new password".tr,
                     controller: newPasswordController,
                     obscureText: true,
                     isPassword: true,
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Confirm Password",
+                    "Confirm Password".tr,
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -280,14 +281,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   SizedBox(height: 10),
                   CustomTextForm(
-                    hintText: "Confirm new password",
+                    hintText: "Confirm new password".tr,
                     controller: confirmPasswordController,
                     obscureText: true,
                     isPassword: true,
                   ),
                   SizedBox(height: 30),
                   Button(
-                    title: "Reset Password",
+                    title: "Reset Password".tr,
                     isLoading: isLoading,
                     onpressed: resetPassword,
                   ),
@@ -299,7 +300,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         Navigator.pushNamedAndRemoveUntil(
                             context, "/login", (route) => false);
                       },
-                      child: Text("Back to Login",
+                      child: Text("Back to Login".tr,
                           style: TextStyle(
                               fontSize: 16, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor)),
                     ),

@@ -54,7 +54,7 @@ class _WalletPageState extends State<WalletPage> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to load wallet data';
+        _errorMessage = 'Failed to load wallet data'.tr;
         _isLoading = false;
       });
     }
@@ -71,18 +71,18 @@ class _WalletPageState extends State<WalletPage> {
         {'Content-Type': 'application/json'}, {}, 'application/json',
       );
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        Get.snackbar('Success', 'Withdrawal requested successfully!',
+        Get.snackbar('Success'.tr, 'Withdrawal requested successfully!'.tr,
             backgroundColor: AppColor.successColor.withOpacity(0.9),
             colorText: Colors.white);
         await _loadWallet();
       } else {
         final errBody = jsonDecode(response.body);
-        Get.snackbar('Error', errBody['title'] ?? errBody['detail'] ?? 'Withdrawal failed',
+        Get.snackbar('Error'.tr, errBody['title'] ?? errBody['detail'] ?? 'Withdrawal failed'.tr,
             backgroundColor: AppColor.warningColor.withOpacity(0.9),
             colorText: Colors.white);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Withdrawal request failed',
+      Get.snackbar('Error'.tr, 'Withdrawal request failed'.tr,
           backgroundColor: AppColor.warningColor.withOpacity(0.9),
           colorText: Colors.white);
     }
@@ -95,7 +95,7 @@ class _WalletPageState extends State<WalletPage> {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : AppColor.backgroundcolor,
       appBar: AppBar(
-        title: Text('Wallet', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Wallet'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppColor.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -148,7 +148,7 @@ class _WalletPageState extends State<WalletPage> {
             children: [
               Icon(Icons.account_balance_wallet_outlined, color: Colors.white70, size: 20),
               SizedBox(width: 8),
-              Text('Available Balance',
+              Text('Available Balance'.tr,
                   style: TextStyle(color: Colors.white70, fontSize: 14)),
             ],
           ),
@@ -169,7 +169,7 @@ class _WalletPageState extends State<WalletPage> {
             child: ElevatedButton.icon(
               onPressed: _balance > 0 ? () => _showWithdrawDialog() : null,
               icon: Icon(Icons.arrow_upward_rounded, size: 18),
-              label: Text('Withdraw', style: TextStyle(fontWeight: FontWeight.w600)),
+              label: Text('Withdraw'.tr, style: const TextStyle(fontWeight: FontWeight.w600)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: AppColor.primaryColor,
@@ -213,7 +213,7 @@ class _WalletPageState extends State<WalletPage> {
         ),
         SizedBox(width: 14),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Total Earnings',
+          Text('Total Earnings'.tr,
               style: TextStyle(fontSize: 13, color: isDark ? Colors.white54 : AppColor.mediumText)),
           SizedBox(height: 2),
           Text('EGP ${totalEarnings.toStringAsFixed(2)}',
@@ -233,7 +233,7 @@ class _WalletPageState extends State<WalletPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Transaction History',
+          Text('Transaction History'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -248,7 +248,7 @@ class _WalletPageState extends State<WalletPage> {
                   children: [
                     Icon(Icons.receipt_long_outlined, size: 48, color: AppColor.borderGray),
                     SizedBox(height: 12),
-                    Text('No transactions yet',
+                    Text('No transactions yet'.tr,
                         style: TextStyle(color: AppColor.mediumText, fontSize: 14)),
                   ],
                 ),
@@ -299,7 +299,7 @@ class _WalletPageState extends State<WalletPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx.type.isNotEmpty ? tx.type : 'Transaction',
+                  tx.type.isNotEmpty ? tx.type.tr : 'Transaction'.tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -372,22 +372,22 @@ class _WalletPageState extends State<WalletPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text('Request Withdrawal',
+                Text('Request Withdrawal'.tr,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
                         color: AppColor.darkText)),
                 SizedBox(height: 6),
-                Text('Available: EGP ${_balance.toStringAsFixed(2)}',
+                Text('Available: EGP @balance'.trParams({'balance': _balance.toStringAsFixed(2)}),
                     style: TextStyle(fontSize: 14, color: AppColor.mediumText)),
                 SizedBox(height: 20),
                 // Amount
-                Text('Amount', style: TextStyle(
+                Text('Amount'.tr, style: TextStyle(
                     fontSize: 14, fontWeight: FontWeight.w600, color: AppColor.darkText)),
                 SizedBox(height: 8),
                 TextField(
                   controller: amountController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    hintText: 'Enter amount',
+                    hintText: 'Enter amount'.tr,
                     prefixText: 'EGP ',
                     filled: true,
                     fillColor: AppColor.backgroundcolor,
@@ -403,14 +403,14 @@ class _WalletPageState extends State<WalletPage> {
                 ),
                 SizedBox(height: 16),
                 // Mobile Wallet Number
-                Text('Mobile Wallet Number', style: TextStyle(
+                Text('Mobile Wallet Number'.tr, style: TextStyle(
                     fontSize: 14, fontWeight: FontWeight.w600, color: AppColor.darkText)),
                 SizedBox(height: 8),
                 TextField(
                   controller: mobileController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    hintText: 'Enter mobile wallet number',
+                    hintText: 'Enter mobile wallet number'.tr,
                     filled: true,
                     fillColor: AppColor.backgroundcolor,
                     border: OutlineInputBorder(
@@ -434,15 +434,15 @@ class _WalletPageState extends State<WalletPage> {
                             final amount = double.tryParse(amountController.text.trim());
                             final mobile = mobileController.text.trim();
                             if (amount == null || amount <= 0) {
-                              Get.snackbar('Error', 'Please enter a valid amount');
+                              Get.snackbar('Error'.tr, 'Please enter a valid amount'.tr);
                               return;
                             }
                             if (amount > _balance) {
-                              Get.snackbar('Error', 'Amount exceeds available balance');
+                              Get.snackbar('Error'.tr, 'Amount exceeds available balance'.tr);
                               return;
                             }
                             if (mobile.isEmpty) {
-                              Get.snackbar('Error', 'Please enter mobile wallet number');
+                              Get.snackbar('Error'.tr, 'Please enter mobile wallet number'.tr);
                               return;
                             }
                             setModalState(() => isSubmitting = true);
@@ -457,8 +457,8 @@ class _WalletPageState extends State<WalletPage> {
                     child: isSubmitting
                         ? SizedBox(width: 22, height: 22,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : Text('Request Withdrawal',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        : Text('Request Withdrawal'.tr,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -476,12 +476,12 @@ class _WalletPageState extends State<WalletPage> {
         children: [
           Icon(Icons.error_outline, size: 64, color: AppColor.warningColor),
           SizedBox(height: 16),
-          Text(_errorMessage!, style: TextStyle(fontSize: 16, color: AppColor.mediumText)),
+          Text(_errorMessage!, style: const TextStyle(fontSize: 16, color: AppColor.mediumText)),
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadWallet,
             style: ElevatedButton.styleFrom(backgroundColor: AppColor.primaryColor),
-            child: Text('Retry', style: TextStyle(color: Colors.white)),
+            child: Text('Retry'.tr, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),

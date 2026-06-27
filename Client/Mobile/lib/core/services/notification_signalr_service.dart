@@ -43,6 +43,7 @@ class SignalrNotification {
 /// Connects to /hubs/notifications and listens for ReceiveNotification.
 class NotificationSignalrService {
   static const String _hubPath = '/hubs/notifications';
+  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
   static const String _baseUrl = 'https://renty.runasp.net';
 
   HubConnection? _hubConnection;

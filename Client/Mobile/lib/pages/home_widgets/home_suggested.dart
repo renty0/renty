@@ -109,14 +109,14 @@ class _HomeSuggestedState extends State<HomeSuggested> {
                               ),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.auto_awesome_rounded, size: 11, color: Colors.white),
-                                SizedBox(width: 4),
+                                const Icon(Icons.auto_awesome_rounded, size: 11, color: Colors.white),
+                                const SizedBox(width: 4),
                                 Text(
-                                  'Recommended',
-                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.3),
+                                  'Recommended'.tr,
+                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.3),
                                 ),
                               ],
                             ),
@@ -203,7 +203,7 @@ class _HomeSuggestedState extends State<HomeSuggested> {
               width: active ? 20 : 6,
               height: 6,
               decoration: BoxDecoration(
-                color: active ? AppColor.fourthColor : (AppColor.fourthColor.withOpacity(0.25)),
+                color: active ? AppColor.fourthColor : (AppColor.fourthColor.withValues(alpha: 0.25)),
                 borderRadius: BorderRadius.circular(3),
               ),
             );

@@ -12,6 +12,7 @@ import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/services/chat_signalr_service.dart';
 import 'package:renty/main.dart';
+import 'package:renty/utils/language_manager.dart';
 
 /// A local message model that supports optimistic updates and media types.
 class _ChatMsg {
@@ -204,7 +205,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         }
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to send message',
+      Get.snackbar('Error'.tr, 'Failed to send message'.tr,
           backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
     } finally {
       if (mounted) setState(() => _isSending = false);
@@ -314,14 +315,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Conversation'),
-        content: const Text('Are you sure you want to delete this conversation? This cannot be undone.'),
+        title: Text('Delete Conversation'.tr),
+        content: Text('Are you sure you want to delete this conversation? This cannot be undone.'.tr),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel'.tr)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -332,7 +333,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         await ApiService.client.invokeAPI('/api/v1/chats/${widget.chatId}', 'DELETE', [], null, {}, {}, null);
         if (mounted) Navigator.pop(context);
       } catch (e) {
-        Get.snackbar('Error', 'Failed to delete chat');
+        Get.snackbar('Error'.tr, 'Failed to delete chat'.tr);
       }
     }
   }
@@ -408,7 +409,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: isDark ? Colors.white70 : AppColor.darkText),
               maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
-        Text('View Item', style: TextStyle(fontSize: 12, color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
+        Text('View Item'.tr, style: TextStyle(fontSize: 12, color: AppColor.fourthColor, fontWeight: FontWeight.w600)),
       ]),
     );
   }
@@ -422,7 +423,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.chat_bubble_outline, size: 64, color: isDark ? Colors.white24 : Colors.grey[300]),
           const SizedBox(height: 16),
-          Text('No messages yet. Say hello!',
+          Text('No messages yet. Say hello!'.tr,
               style: TextStyle(color: isDark ? Colors.white30 : AppColor.lightText)),
         ]),
       );
@@ -476,15 +477,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(bottom: 8, left: isMine ? 60 : 0, right: isMine ? 0 : 60),
+        margin: EdgeInsetsDirectional.only(bottom: 8, start: isMine ? 60 : 0, end: isMine ? 0 : 60),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
           color: bubbleColor,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isMine ? 16 : 4),
-            bottomRight: Radius.circular(isMine ? 4 : 16),
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: const Radius.circular(16),
+            topEnd: const Radius.circular(16),
+            bottomStart: Radius.circular(isMine ? 16 : 4),
+            bottomEnd: Radius.circular(isMine ? 4 : 16),
           ),
           boxShadow: [BoxShadow(color: Colors.black.withOpacity(isDark ? 0.3 : 0.05), blurRadius: 4, offset: const Offset(0, 2))],
         ),
@@ -519,7 +520,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   )),
                 ),
                 const SizedBox(width: 8),
-                Text('Voice', style: TextStyle(fontSize: 12, color: isMine ? Colors.white60 : AppColor.mediumText)),
+                Text('Voice'.tr, style: TextStyle(fontSize: 12, color: isMine ? Colors.white60 : AppColor.mediumText)),
               ]),
             ),
           // Text content
@@ -593,7 +594,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           Text(_formatDuration(_recordingSeconds),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.red)),
           const SizedBox(width: 10),
-          const Expanded(child: Text('Recording...', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500))),
+          Expanded(child: Text('Recording...'.tr, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500))),
           GestureDetector(
             onTap: _stopRecording,
             child: Container(
@@ -632,8 +633,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               controller: _msgCtrl,
               style: TextStyle(color: isDark ? Colors.white : AppColor.darkText),
               decoration: InputDecoration(
-                hintText: 'Type a message...',
-                hintStyle: TextStyle(color: isDark ? Colors.white54 : AppColor.lightText),
+                hintText: 'Type a message...'.tr,
+                hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400]),
                 border: InputBorder.none,
               ),
               onSubmitted: (_) => _sendMessage(),

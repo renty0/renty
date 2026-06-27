@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/utils/language_manager.dart';
 
 class HomeHowItWorks extends StatelessWidget {
   const HomeHowItWorks({super.key});
 
-  static const _steps = [
-    {'icon': Icons.search_rounded,       'title': 'Find',   'desc': 'Browse thousands of items near you'},
-    {'icon': Icons.calendar_today_rounded,'title': 'Book',   'desc': 'Pick dates & confirm instantly'},
-    {'icon': Icons.celebration_rounded,  'title': 'Enjoy',  'desc': 'Receive your item & have fun'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final steps = [
+      {'icon': Icons.search_rounded,        'title': 'Find'.tr,   'desc': 'Browse thousands of items near you'.tr},
+      {'icon': Icons.calendar_today_rounded, 'title': 'Book'.tr,   'desc': 'Pick dates & confirm instantly'.tr},
+      {'icon': Icons.celebration_rounded,   'title': 'Enjoy'.tr,  'desc': 'Receive your item & have fun'.tr},
+    ];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        children: List.generate(_steps.length * 2 - 1, (i) {
+        children: List.generate(steps.length * 2 - 1, (i) {
           if (i.isOdd) {
             // Connector arrow — fixed-width so it sits between Expanded children
             return SizedBox(
               width: 24,
               child: Icon(
-                Icons.arrow_forward_rounded,
+                LanguageManager.isArabic()
+                    ? Icons.arrow_back_rounded
+                    : Icons.arrow_forward_rounded,
                 size: 18,
-                color: AppColor.primaryColor.withOpacity(0.4),
+                color: AppColor.primaryColor.withValues(alpha: 0.4),
               ),
             );
           }
-          final step = _steps[i ~/ 2];
+          final step = steps[i ~/ 2];
           return Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,8 +50,8 @@ class HomeHowItWorks extends StatelessWidget {
                           width: 52, height: 52,
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AppColor.primaryColor.withOpacity(0.15)
-                                : AppColor.primaryColor.withOpacity(0.08),
+                                ? AppColor.primaryColor.withValues(alpha: 0.15)
+                                : AppColor.primaryColor.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Icon(
@@ -58,7 +63,7 @@ class HomeHowItWorks extends StatelessWidget {
                       ),
                       Container(
                         width: 18, height: 18,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColor.fourthColor,
                           shape: BoxShape.circle,
                         ),

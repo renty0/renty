@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:renty/routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:renty/utils/translations.dart';
 
 late SharedPreferences sharedPref;
 
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
 
   void changeLanguage(String languageCode) async {
     await LanguageManager.setLanguage(languageCode);
+    Get.updateLocale(Locale(languageCode));
     setState(() {
       _locale = Locale(languageCode);
     });
@@ -111,6 +113,9 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('ar', ''), // Arabic
       ],
+
+      // Translations configuration
+      translations: AppTranslations(),
 
       // Current locale
       locale: _locale,

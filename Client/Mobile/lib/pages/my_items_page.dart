@@ -5,6 +5,7 @@ import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/pages/edit_item_page.dart';
+import 'package:renty/utils/language_manager.dart';
 
 /// Displays items owned by the currently logged-in user.
 /// Mirrors the Web's /my-items route (ItemsListComponent with ownerMode='me').
@@ -52,10 +53,16 @@ class _MyItemsPageState extends State<MyItemsPage> {
       if (!mounted) return;
 
       if (response != null && response.data != null) {
+        // Filter out soft-deleted items (status == 'Removed')
+        final activeItems = response.data!
+            .where((item) => item.status?.toLowerCase() != 'removed')
+            .toList();
         setState(() {
           if (reset || _page == 1) _items.clear();
-          _items.addAll(response.data!);
+          _items.addAll(activeItems);
           _totalCount = response.total ?? _items.length;
+          // Adjust totalCount to exclude removed items
+          _totalCount -= (response.data!.length - activeItems.length);
           _isLoading = false;
           _isLoadingMore = false;
         });
@@ -68,7 +75,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'Failed to load your items';
+        _error = 'Failed to load your items'.tr;
         _isLoading = false;
         _isLoadingMore = false;
       });
@@ -88,13 +95,15 @@ class _MyItemsPageState extends State<MyItemsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Item'),
-        content: Text('Are you sure you want to delete "${item.titleEn ?? item.titleAr ?? 'this item'}"? This cannot be undone.'),
+        title: Text('Delete Item'.tr),
+        content: Text('Are you sure you want to delete "@title"? This cannot be undone.'.trParams({
+          'title': item.titleEn ?? item.titleAr ?? 'this item'.tr
+        })),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel'.tr)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('Delete'.tr, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -104,14 +113,17 @@ class _MyItemsPageState extends State<MyItemsPage> {
     try {
       await ApiService.items.deleteItem(item.id!);
       if (!mounted) return;
-      setState(() => _items.remove(item));
-      Get.snackbar('Deleted', 'Item has been deleted.',
+      setState(() {
+        _items.remove(item);
+        _totalCount = (_totalCount - 1).clamp(0, _totalCount);
+      });
+      Get.snackbar('Deleted'.tr, 'Item has been deleted.'.tr,
           backgroundColor: Colors.green.withValues(alpha: 0.9), colorText: Colors.white);
     } on ApiException catch (e) {
-      Get.snackbar('Error', 'Failed to delete: ${e.message ?? e.code}',
+      Get.snackbar('Error'.tr, '${'Failed to delete'.tr}: ${e.message ?? e.code}',
           backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to delete item.',
+      Get.snackbar('Error'.tr, 'Failed to delete item.'.tr,
           backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
     }
   }
@@ -119,16 +131,16 @@ class _MyItemsPageState extends State<MyItemsPage> {
   String _formatCondition(String raw) {
     switch (raw.toLowerCase()) {
       case 'new':
-        return 'New';
+        return 'New'.tr;
       case 'used':
-        return 'Used';
+        return 'Used'.tr;
       case 'like_new':
       case 'likenew':
-        return 'Like New';
+        return 'Like New'.tr;
       case 'good':
-        return 'Good';
+        return 'Good'.tr;
       case 'fair':
-        return 'Fair';
+        return 'Fair'.tr;
       default:
         return raw
             .split('_')
@@ -158,7 +170,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'My Items',
+          'My Items'.tr,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,
@@ -179,7 +191,9 @@ class _MyItemsPageState extends State<MyItemsPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '$_totalCount ${_totalCount == 1 ? 'item' : 'items'}',
+                  _totalCount == 1
+                      ? '@count item'.trParams({'count': '$_totalCount'})
+                      : '@count items'.trParams({'count': '$_totalCount'}),
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -235,7 +249,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
               ElevatedButton.icon(
                 onPressed: () => _loadItems(reset: true),
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Retry'),
+                label: Text('Retry'.tr),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.fourthColor,
                   foregroundColor: Colors.white,
@@ -274,7 +288,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
               ),
               const SizedBox(height: 24),
               Text(
-                'No Items Yet',
+                'No Items Yet'.tr,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
@@ -284,7 +298,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'You haven\'t listed any items for rent.\nStart sharing your items with others!',
+                'You haven\'t listed any items for rent.\nStart sharing your items with others!'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -299,7 +313,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
                   if (created == true) _loadItems(reset: true);
                 },
                 icon: const Icon(Icons.add_rounded, size: 20),
-                label: const Text('Add Your First Item'),
+                label: Text('Add Your First Item'.tr),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.fourthColor,
                   foregroundColor: Colors.white,
@@ -331,9 +345,9 @@ class _MyItemsPageState extends State<MyItemsPage> {
         onRefresh: () => _loadItems(reset: true),
         child: GridView.builder(
           padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.62,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+            childAspectRatio: 0.60,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
           ),
@@ -484,7 +498,7 @@ class _MyItemCard extends StatelessWidget {
                   children: [
                     // Title
                     Text(
-                      item.titleEn ?? item.titleAr ?? 'Untitled',
+                      item.titleEn ?? item.titleAr ?? 'Untitled'.tr,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -513,7 +527,7 @@ class _MyItemCard extends StatelessWidget {
                     // Price
                     if (item.dailyPrice != null)
                       Text(
-                        '${item.dailyPrice!.toStringAsFixed(0)} EGP/day',
+                        '@price EGP / day'.trParams({'price': item.dailyPrice!.toStringAsFixed(0)}),
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
@@ -549,7 +563,7 @@ class _MyItemCard extends StatelessWidget {
                         if (item.city != null)
                           Expanded(
                             child: Text(
-                              item.city!,
+                              item.city!.tr,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: isDark
@@ -563,21 +577,35 @@ class _MyItemCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
 
-                    // Action button row
+                    // ── Action buttons row (icon-only, never wrap) ──
                     Row(
                       children: [
-                        _actionBtn('View', Icons.visibility_outlined,
-                            AppColor.fourthColor, AppColor.fourthColor.withValues(alpha: 0.4),
-                            () => Get.toNamed('/item-detail', arguments: {'itemId': item.id})),
-                        const SizedBox(width: 4),
-                        _actionBtn('Edit', Icons.edit_outlined,
-                            isDark ? Colors.white60 : AppColor.mediumText,
-                            isDark ? Colors.white24 : Colors.grey[300]!,
-                            () => onEdit(item)),
-                        const SizedBox(width: 4),
-                        _actionBtn('Delete', Icons.delete_outline,
-                            Colors.red[400]!, Colors.red.withValues(alpha: 0.4),
-                            () => onDelete(item)),
+                        _iconBtn(
+                          icon: Icons.visibility_outlined,
+                          label: 'View'.tr,
+                          fg: AppColor.fourthColor,
+                          bg: AppColor.fourthColor.withValues(alpha: 0.1),
+                          onTap: () => Get.toNamed('/item-detail',
+                              arguments: {'itemId': item.id}),
+                        ),
+                        const SizedBox(width: 6),
+                        _iconBtn(
+                          icon: Icons.edit_outlined,
+                          label: 'Edit'.tr,
+                          fg: isDark ? Colors.white70 : AppColor.mediumText,
+                          bg: isDark
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : Colors.grey.withValues(alpha: 0.1),
+                          onTap: () => onEdit(item),
+                        ),
+                        const SizedBox(width: 6),
+                        _iconBtn(
+                          icon: Icons.delete_outline,
+                          label: 'Delete'.tr,
+                          fg: Colors.red[400]!,
+                          bg: Colors.red.withValues(alpha: 0.08),
+                          onTap: () => onDelete(item),
+                        ),
                       ],
                     ),
                   ],
@@ -590,20 +618,26 @@ class _MyItemCard extends StatelessWidget {
     );
   }
 
-  Widget _actionBtn(String label, IconData icon, Color fg, Color border, VoidCallback onTap) {
+  Widget _iconBtn({
+    required IconData icon,
+    required String label,
+    required Color fg,
+    required Color bg,
+    required VoidCallback onTap,
+  }) {
     return Expanded(
-      child: SizedBox(
-        height: 28,
-        child: OutlinedButton.icon(
-          onPressed: onTap,
-          icon: Icon(icon, size: 12),
-          label: Text(label),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: fg,
-            side: BorderSide(color: border),
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Tooltip(
+        message: label,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 34,
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 16, color: fg),
           ),
         ),
       ),
@@ -646,8 +680,12 @@ class _MyItemCard extends StatelessWidget {
   }
 
   String _categoryLabel() {
-    final sub = item.subcategory?.nameEn ?? item.subcategory?.nameAr;
-    final cat = item.category?.nameEn ?? item.category?.nameAr;
+    final sub = LanguageManager.isArabic()
+        ? (item.subcategory?.nameAr ?? item.subcategory?.nameEn)
+        : (item.subcategory?.nameEn ?? item.subcategory?.nameAr);
+    final cat = LanguageManager.isArabic()
+        ? (item.category?.nameAr ?? item.category?.nameEn)
+        : (item.category?.nameEn ?? item.category?.nameAr);
     if (sub != null && cat != null) return '$sub / $cat';
     return sub ?? cat ?? '';
   }

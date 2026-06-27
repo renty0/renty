@@ -19,7 +19,7 @@ class HomeItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -75,7 +75,7 @@ class HomeItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.titleEn ?? item.titleAr ?? 'Untitled',
+                      item.titleEn ?? item.titleAr ?? 'Untitled'.tr,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

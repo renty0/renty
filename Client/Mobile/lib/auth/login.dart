@@ -73,11 +73,11 @@ class _loginState extends State<login> {
     final password = passController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() => errorMessage = 'Please fill in all fields');
+      setState(() => errorMessage = 'Please fill in all fields'.tr);
       return;
     }
     if (!GetUtils.isEmail(email)) {
-      setState(() => errorMessage = 'Please enter a valid email address');
+      setState(() => errorMessage = 'Please enter a valid email address'.tr);
       return;
     }
 
@@ -149,8 +149,8 @@ class _loginState extends State<login> {
           if (messages.isNotEmpty && messages.first == 'EmailNotConfirmed') {
             setState(() => isLoading = false);
             Get.snackbar(
-              'Verify Your Email',
-              'Please verify your email to continue.',
+              'Verify Your Email'.tr,
+              'Please verify your email to continue.'.tr,
               backgroundColor: Colors.orange.withValues(alpha: 0.9),
               colorText: Colors.white,
               snackPosition: SnackPosition.TOP,
@@ -165,7 +165,7 @@ class _loginState extends State<login> {
             isLoading = false;
             errorMessage = messages.isNotEmpty
                 ? messages.first
-                : 'Login failed. Please check your credentials.';
+                : 'Login failed. Please check your credentials.'.tr;
           });
           return;
         }
@@ -173,7 +173,7 @@ class _loginState extends State<login> {
         if (!mounted) return;
         setState(() {
           isLoading = false;
-          errorMessage = 'Login failed. Please check your credentials.';
+          errorMessage = 'Login failed. Please check your credentials.'.tr;
         });
         return;
       }
@@ -184,8 +184,8 @@ class _loginState extends State<login> {
       if (parsed == 'EmailNotConfirmed' || e.message?.contains('EmailNotConfirmed') == true) {
         setState(() => isLoading = false);
         Get.snackbar(
-          'Verify Your Email',
-          'Please verify your email to continue.',
+          'Verify Your Email'.tr,
+          'Please verify your email to continue.'.tr,
           backgroundColor: Colors.orange.withValues(alpha: 0.9),
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
@@ -207,7 +207,7 @@ class _loginState extends State<login> {
       if (!mounted) return;
       setState(() {
         isLoading = false;
-        errorMessage = 'Connection error. Please check your internet and try again.';
+        errorMessage = 'Connection error. Please check your internet and try again.'.tr;
       });
     }
   }
@@ -227,7 +227,7 @@ class _loginState extends State<login> {
               Logo(),
               SizedBox(height: 30),
               Text(
-                "Welcome Back",
+                "Welcome Back".tr,
                 style: TextStyle(
                   color: isDark ? Colors.white : AppColor.primaryColor,
                   fontSize: 28,
@@ -235,34 +235,34 @@ class _loginState extends State<login> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
-                "Login to continue",
+                "Login to continue".tr,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               if (errorMessage != null) ...[
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildErrorBanner(errorMessage!),
               ],
-              SizedBox(height: 40),
-              Text("Email", style: Theme.of(context).textTheme.titleMedium),
-              SizedBox(height: 10),
+              const SizedBox(height: 40),
+              Text("Email".tr, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
               CustomTextForm(
-                hintText: "Enter your email",
+                hintText: "Enter your email".tr,
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 20),
-              Text("Password", style: Theme.of(context).textTheme.titleMedium),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
+              Text("Password".tr, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
               CustomTextForm(
-                hintText: "Enter your password",
+                hintText: "Enter your password".tr,
                 controller: passController,
                 obscureText: true,
                 isPassword: true,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -274,22 +274,22 @@ class _loginState extends State<login> {
                       ? Alignment.topRight
                       : Alignment.topLeft,
                   child: Text(
-                    "Forgot Password?",
+                    "Forgot Password?".tr,
                     style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor),
                   ),
                 ),
               ),
-              SizedBox(height: 30),
-              Button(title: "Login", isLoading: isLoading, onpressed: signIn),
-              SizedBox(height: 40),
+              const SizedBox(height: 30),
+              Button(title: "Login".tr, isLoading: isLoading, onpressed: signIn),
+              const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? ",
+                  Text("Don't have an account? ".tr,
                       style: Theme.of(context).textTheme.bodyMedium),
                   InkWell(
                     onTap: () => Navigator.of(context).pushNamed("/register"),
-                    child: Text("Register",
+                    child: Text("Register".tr,
                         style: TextStyle(
                             fontSize: 16,
                             color: isDark ? const Color(0xFF93C5FD) : AppColor.primaryColor,
