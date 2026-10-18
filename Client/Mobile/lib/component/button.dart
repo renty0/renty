@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class Button extends StatelessWidget {
   final void Function()? onpressed;

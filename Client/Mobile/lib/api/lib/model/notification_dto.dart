@@ -16,6 +16,10 @@ class NotificationDto {
     this.id,
     this.title,
     this.message,
+    this.titleAr,
+    this.messageAr,
+    this.type,
+    this.actionUrl,
     this.isRead,
     this.createdAt,
   });
@@ -44,6 +48,20 @@ class NotificationDto {
   ///
   String? message;
 
+  String? titleAr;
+
+  String? messageAr;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? type;
+
+  String? actionUrl;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -65,6 +83,10 @@ class NotificationDto {
     other.id == id &&
     other.title == title &&
     other.message == message &&
+    other.titleAr == titleAr &&
+    other.messageAr == messageAr &&
+    other.type == type &&
+    other.actionUrl == actionUrl &&
     other.isRead == isRead &&
     other.createdAt == createdAt;
 
@@ -74,11 +96,15 @@ class NotificationDto {
     (id == null ? 0 : id!.hashCode) +
     (title == null ? 0 : title!.hashCode) +
     (message == null ? 0 : message!.hashCode) +
+    (titleAr == null ? 0 : titleAr!.hashCode) +
+    (messageAr == null ? 0 : messageAr!.hashCode) +
+    (type == null ? 0 : type!.hashCode) +
+    (actionUrl == null ? 0 : actionUrl!.hashCode) +
     (isRead == null ? 0 : isRead!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
-  String toString() => 'NotificationDto[id=$id, title=$title, message=$message, isRead=$isRead, createdAt=$createdAt]';
+  String toString() => 'NotificationDto[id=$id, title=$title, message=$message, titleAr=$titleAr, messageAr=$messageAr, type=$type, actionUrl=$actionUrl, isRead=$isRead, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -96,6 +122,26 @@ class NotificationDto {
       json[r'message'] = this.message;
     } else {
       json[r'message'] = null;
+    }
+    if (this.titleAr != null) {
+      json[r'titleAr'] = this.titleAr;
+    } else {
+      json[r'titleAr'] = null;
+    }
+    if (this.messageAr != null) {
+      json[r'messageAr'] = this.messageAr;
+    } else {
+      json[r'messageAr'] = null;
+    }
+    if (this.type != null) {
+      json[r'type'] = this.type;
+    } else {
+      json[r'type'] = null;
+    }
+    if (this.actionUrl != null) {
+      json[r'actionUrl'] = this.actionUrl;
+    } else {
+      json[r'actionUrl'] = null;
     }
     if (this.isRead != null) {
       json[r'isRead'] = this.isRead;
@@ -132,6 +178,10 @@ class NotificationDto {
         id: mapValueOfType<String>(json, r'id'),
         title: mapValueOfType<String>(json, r'title'),
         message: mapValueOfType<String>(json, r'message'),
+        titleAr: mapValueOfType<String>(json, r'titleAr'),
+        messageAr: mapValueOfType<String>(json, r'messageAr'),
+        type: mapValueOfType<String>(json, r'type'),
+        actionUrl: mapValueOfType<String>(json, r'actionUrl'),
         isRead: mapValueOfType<bool>(json, r'isRead'),
         createdAt: mapDateTime(json, r'createdAt', r''),
       );

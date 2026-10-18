@@ -30,12 +30,18 @@ class SignalrChatMessage {
     return SignalrChatMessage(
       id: json['id']?.toString(),
       chatId: json['chatId']?.toString(),
-      senderId: json['senderId'] is int ? json['senderId'] : int.tryParse(json['senderId']?.toString() ?? ''),
+      senderId: json['senderId'] is int
+          ? json['senderId']
+          : int.tryParse(json['senderId']?.toString() ?? ''),
       message: json['message']?.toString(),
       mediaUrl: json['mediaUrl']?.toString(),
-      messageType: json['messageType'] is int ? json['messageType'] : int.tryParse(json['messageType']?.toString() ?? '0'),
+      messageType: json['messageType'] is int
+          ? json['messageType']
+          : int.tryParse(json['messageType']?.toString() ?? '0'),
       contextItemId: json['contextItemId']?.toString(),
-      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt'].toString()) : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString())
+          : null,
     );
   }
 }
@@ -54,8 +60,9 @@ class TypingEvent {
 /// - Exposes joinChat, leaveChat, sendTypingIndicator
 class ChatSignalrService {
   static const String _hubPath = '/hubs/chat';
-  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
-  static const String _baseUrl = 'https://renty.runasp.net';
+  // 🔧 LOCAL DEV: change back to 'https://starfish-app-vavqt.ondigitalocean.app' before pushing
+  static const String _baseUrl =
+      'https://starfish-app-vavqt.ondigitalocean.app';
 
   HubConnection? _hubConnection;
   bool _isConnected = false;
@@ -80,7 +87,7 @@ class ChatSignalrService {
   Future<void> startConnection() async {
     if (_isConnected) return;
 
-    final token = sharedPref.getString('token');
+    final token = cachedToken; // SECURITY: in-memory cache from Keystore/Keychain
     if (token == null || token.isEmpty) return;
 
     try {
@@ -203,7 +210,9 @@ class ChatSignalrService {
       await _hubConnection?.stop();
     } catch (_) {}
     _isConnected = false;
-    _connectionController.add(false);
+    if (!_connectionController.isClosed) {
+      _connectionController.add(false);
+    }
   }
 
   /// Dispose all stream controllers.

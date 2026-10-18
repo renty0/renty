@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 /// Show exit confirmation dialog with app theme styling
 Future<bool> alertExitApp(BuildContext context) async {
@@ -78,7 +78,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                 ),
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Buttons
               Row(
@@ -110,13 +110,13 @@ Future<bool> alertExitApp(BuildContext context) async {
                     ),
                   ),
 
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
 
                   // Exit Button
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             AppColor.primaryColor,
                             AppColor.secondColor,
@@ -127,7 +127,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                           BoxShadow(
                             color: AppColor.primaryColor.withOpacity(0.3),
                             blurRadius: 8,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -145,7 +145,7 @@ Future<bool> alertExitApp(BuildContext context) async {
                         ),
                         child: Text(
                           "yes".tr,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -168,58 +168,4 @@ Future<bool> alertExitApp(BuildContext context) async {
   }
 
   return Future.value(false);
-}
-
-/// Show exit confirmation dialog using GetX (Alternative method)
-Future<bool> alertExitAppGetX() {
-  final isDark = Get.isDarkMode;
-  return Get.defaultDialog<bool>(
-    title: "Exit App".tr,
-    titleStyle: TextStyle(
-      color: isDark ? Colors.white : AppColor.primaryColor,
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-    ),
-    middleText: "Are you sure you want to exit?".tr,
-    middleTextStyle: TextStyle(
-      color: isDark ? Colors.white70 : AppColor.darkText,
-    ),
-    backgroundColor: isDark ? const Color(0xFF1E293B) : AppColor.cardBackground,
-    radius: 20,
-    actions: [
-      OutlinedButton(
-        onPressed: () {
-          Get.back(result: false);
-        },
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: isDark ? Colors.white54 : AppColor.primaryColor),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          "Cancel".tr,
-          style: TextStyle(color: isDark ? Colors.white : AppColor.primaryColor),
-        ),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          Get.back(result: true);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isDark ? AppColor.fourthColor : AppColor.primaryColor,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text("Exit".tr),
-      ),
-    ],
-  ).then((value) {
-    if (value == true) {
-      exit(0);
-    }
-    return Future.value(false);
-  });
 }

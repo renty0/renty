@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -115,7 +115,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final result = await Get.toNamed('/support/new');
+          final result = await AppNavigator.pushNamed('/support/new');
           if (result == true) _loadTickets();
         },
         backgroundColor: AppColor.fourthColor,
@@ -155,7 +155,7 @@ class _SupportTicketsPageState extends State<SupportTicketsPage> {
       onTap: () async {
         if (ticket.id != null) {
           final result =
-              await Get.toNamed('/support/detail', arguments: ticket.id);
+              await AppNavigator.pushNamed('/support/detail', arguments: ticket.id);
           if (result == true) _loadTickets();
         }
       },

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/core/constant/app_colors.dart';
 
 class HomeFeatures extends StatelessWidget {

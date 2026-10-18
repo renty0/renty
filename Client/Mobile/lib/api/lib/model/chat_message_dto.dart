@@ -16,6 +16,11 @@ class ChatMessageDto {
     this.id,
     this.senderId,
     this.message,
+    this.mediaUrl,
+    this.messageType,
+    this.contextItemId,
+    this.contextItemTitle,
+    this.contextItemImage,
     this.isRead,
     this.createdAt,
   });
@@ -36,13 +41,23 @@ class ChatMessageDto {
   ///
   int? senderId;
 
+  String? message;
+
+  String? mediaUrl;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? message;
+  MessageType? messageType;
+
+  String? contextItemId;
+
+  String? contextItemTitle;
+
+  String? contextItemImage;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -65,6 +80,11 @@ class ChatMessageDto {
     other.id == id &&
     other.senderId == senderId &&
     other.message == message &&
+    other.mediaUrl == mediaUrl &&
+    other.messageType == messageType &&
+    other.contextItemId == contextItemId &&
+    other.contextItemTitle == contextItemTitle &&
+    other.contextItemImage == contextItemImage &&
     other.isRead == isRead &&
     other.createdAt == createdAt;
 
@@ -74,11 +94,16 @@ class ChatMessageDto {
     (id == null ? 0 : id!.hashCode) +
     (senderId == null ? 0 : senderId!.hashCode) +
     (message == null ? 0 : message!.hashCode) +
+    (mediaUrl == null ? 0 : mediaUrl!.hashCode) +
+    (messageType == null ? 0 : messageType!.hashCode) +
+    (contextItemId == null ? 0 : contextItemId!.hashCode) +
+    (contextItemTitle == null ? 0 : contextItemTitle!.hashCode) +
+    (contextItemImage == null ? 0 : contextItemImage!.hashCode) +
     (isRead == null ? 0 : isRead!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
-  String toString() => 'ChatMessageDto[id=$id, senderId=$senderId, message=$message, isRead=$isRead, createdAt=$createdAt]';
+  String toString() => 'ChatMessageDto[id=$id, senderId=$senderId, message=$message, mediaUrl=$mediaUrl, messageType=$messageType, contextItemId=$contextItemId, contextItemTitle=$contextItemTitle, contextItemImage=$contextItemImage, isRead=$isRead, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -96,6 +121,31 @@ class ChatMessageDto {
       json[r'message'] = this.message;
     } else {
       json[r'message'] = null;
+    }
+    if (this.mediaUrl != null) {
+      json[r'mediaUrl'] = this.mediaUrl;
+    } else {
+      json[r'mediaUrl'] = null;
+    }
+    if (this.messageType != null) {
+      json[r'messageType'] = this.messageType;
+    } else {
+      json[r'messageType'] = null;
+    }
+    if (this.contextItemId != null) {
+      json[r'contextItemId'] = this.contextItemId;
+    } else {
+      json[r'contextItemId'] = null;
+    }
+    if (this.contextItemTitle != null) {
+      json[r'contextItemTitle'] = this.contextItemTitle;
+    } else {
+      json[r'contextItemTitle'] = null;
+    }
+    if (this.contextItemImage != null) {
+      json[r'contextItemImage'] = this.contextItemImage;
+    } else {
+      json[r'contextItemImage'] = null;
     }
     if (this.isRead != null) {
       json[r'isRead'] = this.isRead;
@@ -132,6 +182,11 @@ class ChatMessageDto {
         id: mapValueOfType<String>(json, r'id'),
         senderId: mapValueOfType<int>(json, r'senderId'),
         message: mapValueOfType<String>(json, r'message'),
+        mediaUrl: mapValueOfType<String>(json, r'mediaUrl'),
+        messageType: MessageType.fromJson(json[r'messageType']),
+        contextItemId: mapValueOfType<String>(json, r'contextItemId'),
+        contextItemTitle: mapValueOfType<String>(json, r'contextItemTitle'),
+        contextItemImage: mapValueOfType<String>(json, r'contextItemImage'),
         isRead: mapValueOfType<bool>(json, r'isRead'),
         createdAt: mapDateTime(json, r'createdAt', r''),
       );

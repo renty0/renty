@@ -13,10 +13,22 @@ part of openapi.api;
 class OwnerDto {
   /// Returns a new [OwnerDto] instance.
   OwnerDto({
+    this.id,
     this.firstName,
+    this.lastName,
     this.city,
     this.profileImageUrl,
+    this.rating,
+    this.totalRatings,
   });
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? id;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -26,32 +38,74 @@ class OwnerDto {
   ///
   String? firstName;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? lastName;
+
   String? city;
 
   String? profileImageUrl;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  double? rating;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? totalRatings;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is OwnerDto &&
+    other.id == id &&
     other.firstName == firstName &&
+    other.lastName == lastName &&
     other.city == city &&
-    other.profileImageUrl == profileImageUrl;
+    other.profileImageUrl == profileImageUrl &&
+    other.rating == rating &&
+    other.totalRatings == totalRatings;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
     (firstName == null ? 0 : firstName!.hashCode) +
+    (lastName == null ? 0 : lastName!.hashCode) +
     (city == null ? 0 : city!.hashCode) +
-    (profileImageUrl == null ? 0 : profileImageUrl!.hashCode);
+    (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
+    (rating == null ? 0 : rating!.hashCode) +
+    (totalRatings == null ? 0 : totalRatings!.hashCode);
 
   @override
-  String toString() => 'OwnerDto[firstName=$firstName, city=$city, profileImageUrl=$profileImageUrl]';
+  String toString() => 'OwnerDto[id=$id, firstName=$firstName, lastName=$lastName, city=$city, profileImageUrl=$profileImageUrl, rating=$rating, totalRatings=$totalRatings]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.id != null) {
+      json[r'id'] = this.id;
+    } else {
+      json[r'id'] = null;
+    }
     if (this.firstName != null) {
       json[r'firstName'] = this.firstName;
     } else {
       json[r'firstName'] = null;
+    }
+    if (this.lastName != null) {
+      json[r'lastName'] = this.lastName;
+    } else {
+      json[r'lastName'] = null;
     }
     if (this.city != null) {
       json[r'city'] = this.city;
@@ -62,6 +116,16 @@ class OwnerDto {
       json[r'profileImageUrl'] = this.profileImageUrl;
     } else {
       json[r'profileImageUrl'] = null;
+    }
+    if (this.rating != null) {
+      json[r'rating'] = this.rating;
+    } else {
+      json[r'rating'] = null;
+    }
+    if (this.totalRatings != null) {
+      json[r'totalRatings'] = this.totalRatings;
+    } else {
+      json[r'totalRatings'] = null;
     }
     return json;
   }
@@ -85,9 +149,13 @@ class OwnerDto {
       }());
 
       return OwnerDto(
+        id: mapValueOfType<int>(json, r'id'),
         firstName: mapValueOfType<String>(json, r'firstName'),
+        lastName: mapValueOfType<String>(json, r'lastName'),
         city: mapValueOfType<String>(json, r'city'),
-        profileImageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
+        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
+        rating: mapValueOfType<double>(json, r'rating'),
+        totalRatings: mapValueOfType<int>(json, r'totalRatings'),
       );
     }
     return null;

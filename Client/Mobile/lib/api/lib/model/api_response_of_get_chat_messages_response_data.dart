@@ -16,6 +16,7 @@ class ApiResponseOfGetChatMessagesResponseData {
     this.found,
     this.error,
     this.messages = const [],
+    this.chatMetadata,
   });
 
   ///
@@ -30,21 +31,25 @@ class ApiResponseOfGetChatMessagesResponseData {
 
   List<ChatMessageDto>? messages;
 
+  GetChatMessagesResponseChatMetadata? chatMetadata;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ApiResponseOfGetChatMessagesResponseData &&
     other.found == found &&
     other.error == error &&
-    _deepEquality.equals(other.messages, messages);
+    _deepEquality.equals(other.messages, messages) &&
+    other.chatMetadata == chatMetadata;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (found == null ? 0 : found!.hashCode) +
     (error == null ? 0 : error!.hashCode) +
-    (messages == null ? 0 : messages!.hashCode);
+    (messages == null ? 0 : messages!.hashCode) +
+    (chatMetadata == null ? 0 : chatMetadata!.hashCode);
 
   @override
-  String toString() => 'ApiResponseOfGetChatMessagesResponseData[found=$found, error=$error, messages=$messages]';
+  String toString() => 'ApiResponseOfGetChatMessagesResponseData[found=$found, error=$error, messages=$messages, chatMetadata=$chatMetadata]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -62,6 +67,11 @@ class ApiResponseOfGetChatMessagesResponseData {
       json[r'messages'] = this.messages;
     } else {
       json[r'messages'] = null;
+    }
+    if (this.chatMetadata != null) {
+      json[r'chatMetadata'] = this.chatMetadata;
+    } else {
+      json[r'chatMetadata'] = null;
     }
     return json;
   }
@@ -88,6 +98,7 @@ class ApiResponseOfGetChatMessagesResponseData {
         found: mapValueOfType<bool>(json, r'found'),
         error: mapValueOfType<String>(json, r'error'),
         messages: ChatMessageDto.listFromJson(json[r'messages']),
+        chatMetadata: GetChatMessagesResponseChatMetadata.fromJson(json[r'chatMetadata']),
       );
     }
     return null;

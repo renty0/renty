@@ -20,12 +20,15 @@ class ItemDetailDto {
     this.descEn,
     this.type,
     this.status,
+    this.adminNote,
     this.condition,
     this.defaultDeposit,
     this.location,
     this.city,
     this.lat,
     this.lng,
+    this.isForSale,
+    this.salePrice,
     this.createdAt,
     this.owner,
     this.pricing = const [],
@@ -81,6 +84,8 @@ class ItemDetailDto {
   ///
   String? status;
 
+  String? adminNote;
+
   String? condition;
 
   ///
@@ -98,6 +103,16 @@ class ItemDetailDto {
   num? lat;
 
   num? lng;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isForSale;
+
+  num? salePrice;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -150,12 +165,15 @@ class ItemDetailDto {
     other.descEn == descEn &&
     other.type == type &&
     other.status == status &&
+    other.adminNote == adminNote &&
     other.condition == condition &&
     other.defaultDeposit == defaultDeposit &&
     other.location == location &&
     other.city == city &&
     other.lat == lat &&
     other.lng == lng &&
+    other.isForSale == isForSale &&
+    other.salePrice == salePrice &&
     other.createdAt == createdAt &&
     other.owner == owner &&
     _deepEquality.equals(other.pricing, pricing) &&
@@ -176,12 +194,15 @@ class ItemDetailDto {
     (descEn == null ? 0 : descEn!.hashCode) +
     (type == null ? 0 : type!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
+    (adminNote == null ? 0 : adminNote!.hashCode) +
     (condition == null ? 0 : condition!.hashCode) +
     (defaultDeposit == null ? 0 : defaultDeposit!.hashCode) +
     (location == null ? 0 : location!.hashCode) +
     (city == null ? 0 : city!.hashCode) +
     (lat == null ? 0 : lat!.hashCode) +
     (lng == null ? 0 : lng!.hashCode) +
+    (isForSale == null ? 0 : isForSale!.hashCode) +
+    (salePrice == null ? 0 : salePrice!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
     (owner == null ? 0 : owner!.hashCode) +
     (pricing.hashCode) +
@@ -193,7 +214,7 @@ class ItemDetailDto {
     (brand == null ? 0 : brand!.hashCode);
 
   @override
-  String toString() => 'ItemDetailDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, descAr=$descAr, descEn=$descEn, type=$type, status=$status, condition=$condition, defaultDeposit=$defaultDeposit, location=$location, city=$city, lat=$lat, lng=$lng, createdAt=$createdAt, owner=$owner, pricing=$pricing, images=$images, avgRating=$avgRating, reviewCount=$reviewCount, category=$category, subcategory=$subcategory, brand=$brand]';
+  String toString() => 'ItemDetailDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, descAr=$descAr, descEn=$descEn, type=$type, status=$status, adminNote=$adminNote, condition=$condition, defaultDeposit=$defaultDeposit, location=$location, city=$city, lat=$lat, lng=$lng, isForSale=$isForSale, salePrice=$salePrice, createdAt=$createdAt, owner=$owner, pricing=$pricing, images=$images, avgRating=$avgRating, reviewCount=$reviewCount, category=$category, subcategory=$subcategory, brand=$brand]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -232,6 +253,11 @@ class ItemDetailDto {
     } else {
       json[r'status'] = null;
     }
+    if (this.adminNote != null) {
+      json[r'adminNote'] = this.adminNote;
+    } else {
+      json[r'adminNote'] = null;
+    }
     if (this.condition != null) {
       json[r'condition'] = this.condition;
     } else {
@@ -261,6 +287,16 @@ class ItemDetailDto {
       json[r'lng'] = this.lng;
     } else {
       json[r'lng'] = null;
+    }
+    if (this.isForSale != null) {
+      json[r'isForSale'] = this.isForSale;
+    } else {
+      json[r'isForSale'] = null;
+    }
+    if (this.salePrice != null) {
+      json[r'salePrice'] = this.salePrice;
+    } else {
+      json[r'salePrice'] = null;
     }
     if (this.createdAt != null) {
       json[r'createdAt'] = this.createdAt!.toUtc().toIso8601String();
@@ -328,6 +364,7 @@ class ItemDetailDto {
         descEn: mapValueOfType<String>(json, r'descEn'),
         type: mapValueOfType<String>(json, r'type'),
         status: mapValueOfType<String>(json, r'status'),
+        adminNote: mapValueOfType<String>(json, r'adminNote'),
         condition: mapValueOfType<String>(json, r'condition'),
         defaultDeposit: num.parse('${json[r'defaultDeposit']}'),
         location: mapValueOfType<String>(json, r'location'),
@@ -338,6 +375,10 @@ class ItemDetailDto {
         lng: json[r'lng'] == null
             ? null
             : num.parse('${json[r'lng']}'),
+        isForSale: mapValueOfType<bool>(json, r'isForSale'),
+        salePrice: json[r'salePrice'] == null
+            ? null
+            : num.parse('${json[r'salePrice']}'),
         createdAt: mapDateTime(json, r'createdAt', r''),
         owner: OwnerDto.fromJson(json[r'owner']),
         pricing: ItemPricingDto.listFromJson(json[r'pricing']),

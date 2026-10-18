@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/controllers/marketplace_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class MpSearchBar extends StatefulWidget {
-  final MarketplaceController controller;
+  final MarketplaceCubit controller;
   final bool isDark;
   const MpSearchBar({super.key, required this.controller, required this.isDark});
 
@@ -19,7 +19,7 @@ class _MpSearchBarState extends State<MpSearchBar> {
   @override
   void initState() {
     super.initState();
-    _ctrl = TextEditingController(text: widget.controller.searchTerm.value);
+    _ctrl = TextEditingController(text: widget.controller.state.searchTerm);
     _hasText = _ctrl.text.isNotEmpty;
     _ctrl.addListener(() {
       final has = _ctrl.text.isNotEmpty;
@@ -34,14 +34,14 @@ class _MpSearchBarState extends State<MpSearchBar> {
   }
 
   void _submit() {
-    widget.controller.searchTerm.value = _ctrl.text.trim();
+    widget.controller.setSearchTerm(_ctrl.text.trim());
     widget.controller.applyFilters();
     FocusScope.of(context).unfocus();
   }
 
   void _clear() {
     _ctrl.clear();
-    widget.controller.searchTerm.value = '';
+    widget.controller.setSearchTerm('');
     widget.controller.applyFilters();
   }
 

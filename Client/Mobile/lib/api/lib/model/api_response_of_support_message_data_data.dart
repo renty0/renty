@@ -15,6 +15,8 @@ class ApiResponseOfSupportMessageDataData {
   ApiResponseOfSupportMessageDataData({
     this.messageId,
     this.message,
+    this.mediaUrl,
+    this.messageType,
     this.createdAt,
   });
 
@@ -34,6 +36,16 @@ class ApiResponseOfSupportMessageDataData {
   ///
   String? message;
 
+  String? mediaUrl;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  MessageType? messageType;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -46,6 +58,8 @@ class ApiResponseOfSupportMessageDataData {
   bool operator ==(Object other) => identical(this, other) || other is ApiResponseOfSupportMessageDataData &&
     other.messageId == messageId &&
     other.message == message &&
+    other.mediaUrl == mediaUrl &&
+    other.messageType == messageType &&
     other.createdAt == createdAt;
 
   @override
@@ -53,10 +67,12 @@ class ApiResponseOfSupportMessageDataData {
     // ignore: unnecessary_parenthesis
     (messageId == null ? 0 : messageId!.hashCode) +
     (message == null ? 0 : message!.hashCode) +
+    (mediaUrl == null ? 0 : mediaUrl!.hashCode) +
+    (messageType == null ? 0 : messageType!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
-  String toString() => 'ApiResponseOfSupportMessageDataData[messageId=$messageId, message=$message, createdAt=$createdAt]';
+  String toString() => 'ApiResponseOfSupportMessageDataData[messageId=$messageId, message=$message, mediaUrl=$mediaUrl, messageType=$messageType, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -69,6 +85,16 @@ class ApiResponseOfSupportMessageDataData {
       json[r'message'] = this.message;
     } else {
       json[r'message'] = null;
+    }
+    if (this.mediaUrl != null) {
+      json[r'mediaUrl'] = this.mediaUrl;
+    } else {
+      json[r'mediaUrl'] = null;
+    }
+    if (this.messageType != null) {
+      json[r'messageType'] = this.messageType;
+    } else {
+      json[r'messageType'] = null;
     }
     if (this.createdAt != null) {
       json[r'createdAt'] = this.createdAt!.toUtc().toIso8601String();
@@ -99,6 +125,8 @@ class ApiResponseOfSupportMessageDataData {
       return ApiResponseOfSupportMessageDataData(
         messageId: mapValueOfType<String>(json, r'messageId'),
         message: mapValueOfType<String>(json, r'message'),
+        mediaUrl: mapValueOfType<String>(json, r'mediaUrl'),
+        messageType: MessageType.fromJson(json[r'messageType']),
         createdAt: mapDateTime(json, r'createdAt', r''),
       );
     }

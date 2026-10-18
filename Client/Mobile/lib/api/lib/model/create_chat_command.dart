@@ -14,6 +14,7 @@ class CreateChatCommand {
   /// Returns a new [CreateChatCommand] instance.
   CreateChatCommand({
     this.userId,
+    this.itemId,
   });
 
   ///
@@ -24,17 +25,21 @@ class CreateChatCommand {
   ///
   int? userId;
 
+  String? itemId;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateChatCommand &&
-    other.userId == userId;
+    other.userId == userId &&
+    other.itemId == itemId;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (userId == null ? 0 : userId!.hashCode);
+    (userId == null ? 0 : userId!.hashCode) +
+    (itemId == null ? 0 : itemId!.hashCode);
 
   @override
-  String toString() => 'CreateChatCommand[userId=$userId]';
+  String toString() => 'CreateChatCommand[userId=$userId, itemId=$itemId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -42,6 +47,11 @@ class CreateChatCommand {
       json[r'userId'] = this.userId;
     } else {
       json[r'userId'] = null;
+    }
+    if (this.itemId != null) {
+      json[r'itemId'] = this.itemId;
+    } else {
+      json[r'itemId'] = null;
     }
     return json;
   }
@@ -66,6 +76,7 @@ class CreateChatCommand {
 
       return CreateChatCommand(
         userId: mapValueOfType<int>(json, r'userId'),
+        itemId: mapValueOfType<String>(json, r'itemId'),
       );
     }
     return null;

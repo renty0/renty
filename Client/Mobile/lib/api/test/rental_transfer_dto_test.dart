@@ -1,0 +1,77 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.18
+
+// ignore_for_file: unused_element, unused_import
+// ignore_for_file: always_put_required_named_parameters_first
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'package:renty_api/api.dart';
+import 'package:test/test.dart';
+
+// tests for RentalTransferDto
+void main() {
+  // final instance = RentalTransferDto();
+
+  group('test RentalTransferDto', () {
+    // String id
+    test('to test the property `id`', () async {
+      // TODO
+    });
+
+    // String phase
+    test('to test the property `phase`', () async {
+      // TODO
+    });
+
+    // int sequence
+    test('to test the property `sequence`', () async {
+      // TODO
+    });
+
+    // String fromActorType
+    test('to test the property `fromActorType`', () async {
+      // TODO
+    });
+
+    // int fromActorId
+    test('to test the property `fromActorId`', () async {
+      // TODO
+    });
+
+    // String toActorType
+    test('to test the property `toActorType`', () async {
+      // TODO
+    });
+
+    // int toActorId
+    test('to test the property `toActorId`', () async {
+      // TODO
+    });
+
+    // String status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
+    // String verificationCode
+    test('to test the property `verificationCode`', () async {
+      // TODO
+    });
+
+    // DateTime completedAt
+    test('to test the property `completedAt`', () async {
+      // TODO
+    });
+
+    // DateTime createdAt
+    test('to test the property `createdAt`', () async {
+      // TODO
+    });
+
+
+  });
+
+}

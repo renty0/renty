@@ -23,6 +23,8 @@ Name | Type | Description | Notes
 **categoryId** | **int** |  | [optional] 
 **subcategoryId** | **int** |  | [optional] 
 **brandId** | **int** |  | [optional] 
+**isForSale** | **bool** |  | [optional] 
+**salePrice** | **num** |  | [optional] 
 **pricing** | [**List<CreateItemPricingCommand>**](CreateItemPricingCommand.md) |  | [optional] [default to const []]
 **images** | [**List<CreateItemImageCommand>**](CreateItemImageCommand.md) |  | [optional] [default to const []]
 

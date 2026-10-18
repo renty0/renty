@@ -9,6 +9,7 @@ import 'package:renty_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **verificationId** | **String** |  | [optional] 
+**itemId** | **String** |  | [optional] 
 **itemTitleAr** | **String** |  | [optional] 
 **itemTitleEn** | **String** |  | [optional] 
 **itemImage** | **String** |  | [optional] 

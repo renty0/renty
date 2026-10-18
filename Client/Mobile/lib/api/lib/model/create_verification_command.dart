@@ -18,6 +18,9 @@ class CreateVerificationCommand {
     this.checkType,
     this.status,
     this.notes,
+    this.deductionAmount,
+    this.newDepositAmount,
+    this.verificationCode,
   });
 
   ///
@@ -48,13 +51,22 @@ class CreateVerificationCommand {
 
   String? notes;
 
+  num? deductionAmount;
+
+  num? newDepositAmount;
+
+  String? verificationCode;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateVerificationCommand &&
     other.itemId == itemId &&
     other.rentalId == rentalId &&
     other.checkType == checkType &&
     other.status == status &&
-    other.notes == notes;
+    other.notes == notes &&
+    other.deductionAmount == deductionAmount &&
+    other.newDepositAmount == newDepositAmount &&
+    other.verificationCode == verificationCode;
 
   @override
   int get hashCode =>
@@ -63,10 +75,13 @@ class CreateVerificationCommand {
     (rentalId == null ? 0 : rentalId!.hashCode) +
     (checkType == null ? 0 : checkType!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
-    (notes == null ? 0 : notes!.hashCode);
+    (notes == null ? 0 : notes!.hashCode) +
+    (deductionAmount == null ? 0 : deductionAmount!.hashCode) +
+    (newDepositAmount == null ? 0 : newDepositAmount!.hashCode) +
+    (verificationCode == null ? 0 : verificationCode!.hashCode);
 
   @override
-  String toString() => 'CreateVerificationCommand[itemId=$itemId, rentalId=$rentalId, checkType=$checkType, status=$status, notes=$notes]';
+  String toString() => 'CreateVerificationCommand[itemId=$itemId, rentalId=$rentalId, checkType=$checkType, status=$status, notes=$notes, deductionAmount=$deductionAmount, newDepositAmount=$newDepositAmount, verificationCode=$verificationCode]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -95,6 +110,21 @@ class CreateVerificationCommand {
     } else {
       json[r'notes'] = null;
     }
+    if (this.deductionAmount != null) {
+      json[r'deductionAmount'] = this.deductionAmount;
+    } else {
+      json[r'deductionAmount'] = null;
+    }
+    if (this.newDepositAmount != null) {
+      json[r'newDepositAmount'] = this.newDepositAmount;
+    } else {
+      json[r'newDepositAmount'] = null;
+    }
+    if (this.verificationCode != null) {
+      json[r'verificationCode'] = this.verificationCode;
+    } else {
+      json[r'verificationCode'] = null;
+    }
     return json;
   }
 
@@ -122,6 +152,13 @@ class CreateVerificationCommand {
         checkType: mapValueOfType<String>(json, r'checkType'),
         status: mapValueOfType<String>(json, r'status'),
         notes: mapValueOfType<String>(json, r'notes'),
+        deductionAmount: json[r'deductionAmount'] == null
+            ? null
+            : num.parse('${json[r'deductionAmount']}'),
+        newDepositAmount: json[r'newDepositAmount'] == null
+            ? null
+            : num.parse('${json[r'newDepositAmount']}'),
+        verificationCode: mapValueOfType<String>(json, r'verificationCode'),
       );
     }
     return null;

@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **notes** | **String** |  | [optional] 
 **expertFirstName** | **String** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**verificationCode** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

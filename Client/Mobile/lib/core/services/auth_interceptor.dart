@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/main.dart';
 import 'package:renty/api/lib/api.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
 
 /// An HTTP client wrapper that intercepts 401 responses and
 /// automatically attempts to refresh the access token.
 ///
-/// If the refresh succeeds, the original request is retried with
-/// the new token. If it fails, the user is redirected to login.
+/// SECURITY: Token reads use the in-memory cache ([cachedToken]) populated
+/// from Keystore/Keychain at startup. Writes after refresh update both the
+/// Keystore/Keychain AND the in-memory cache via [SecureStorageService].
 class AuthInterceptorClient extends http.BaseClient {
   final http.Client _inner;
   static bool _isRefreshing = false;
@@ -18,28 +20,28 @@ class AuthInterceptorClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    // Attach the current token to every request
-    final token = sharedPref.getString("token");
+    // Attach the current token to every request (reads from memory cache)
+    final token = cachedToken;
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
     }
 
     final response = await _inner.send(request);
 
-    // If 401, try refreshing the token — BUT skip for auth endpoints
-    // where 401 means "wrong credentials", not "expired token"
+    // If 401, try refreshing the token — skip auth endpoints where 401
+    // means "wrong credentials", not "expired token"
     if (response.statusCode == 401 && !_isAuthEndpoint(request.url)) {
       final refreshed = await _handleTokenRefresh();
       if (refreshed) {
-        // Clone and retry the request with the new token
+        // Retry with the freshly cached token
         final retryRequest = _copyRequest(request);
-        final newToken = sharedPref.getString("token");
+        final newToken = cachedToken;
         if (newToken != null && newToken.isNotEmpty) {
           retryRequest.headers['Authorization'] = 'Bearer $newToken';
         }
         return await _inner.send(retryRequest);
       } else {
-        // Refresh failed — redirect to login
+        // Refresh failed — clear secure storage and redirect to login
         _redirectToLogin();
       }
     }
@@ -60,24 +62,19 @@ class AuthInterceptorClient extends http.BaseClient {
         path.contains('/auth/send-verification');
   }
 
-  /// Handles token refresh with queue-based deduplication.
-  /// If a refresh is already in progress, subsequent 401s wait
-  /// for that refresh to complete rather than spawning multiple.
+  /// Queue-based deduplication: if a refresh is already running,
+  /// subsequent 401s wait for it rather than spawning multiple refreshes.
   Future<bool> _handleTokenRefresh() async {
     if (_isRefreshing) {
-      // Wait for the ongoing refresh to finish
       final completer = Completer<void>();
       _waitingQueue.add(completer);
       await completer.future;
-      // After waiting, check if we have a valid token
-      final token = sharedPref.getString("token");
-      return token != null && token.isNotEmpty;
+      return cachedToken != null && cachedToken!.isNotEmpty;
     }
 
     _isRefreshing = true;
     try {
       final success = await _refreshTokens();
-      // Notify all waiting requests
       for (final c in _waitingQueue) {
         c.complete();
       }
@@ -88,15 +85,18 @@ class AuthInterceptorClient extends http.BaseClient {
     }
   }
 
-  /// Performs the actual token refresh using the refresh token.
+  /// Performs the actual token refresh — reads from / writes to
+  /// Keystore/Keychain via [SecureStorageService].
   Future<bool> _refreshTokens() async {
     try {
-      final currentToken = sharedPref.getString("token");
-      final refreshToken = sharedPref.getString("refresh_token");
+      final currentToken = cachedToken;
+      final refreshToken = cachedRefreshToken;
       if (currentToken == null || refreshToken == null) return false;
 
-      // Use a separate client to avoid infinite recursion
-      final plainClient = ApiClient(basePath: 'https://renty.runasp.net');
+      // Use a plain client to avoid infinite recursion
+      final plainClient = ApiClient(
+        basePath: 'https://starfish-app-vavqt.ondigitalocean.app',
+      );
 
       final authApi = AuthApi(plainClient);
       final command = RefreshTokenCommand(
@@ -109,25 +109,30 @@ class AuthInterceptorClient extends http.BaseClient {
       if (response != null && response.data != null) {
         final data = response.data!;
         if (data.accessToken != null && data.refreshToken != null) {
-          await sharedPref.setString("token", data.accessToken!);
-          await sharedPref.setString("refresh_token", data.refreshToken!);
-          print('AuthInterceptor: Token refreshed successfully');
+          // Persist to Keystore/Keychain AND update memory cache
+          await SecureStorageService.setToken(data.accessToken!);
+          await SecureStorageService.setRefreshToken(data.refreshToken!);
+          cachedToken        = data.accessToken!;
+          cachedRefreshToken = data.refreshToken!;
           return true;
         }
       }
       return false;
-    } catch (e) {
-      print('AuthInterceptor: Token refresh failed: $e');
+    } catch (_) {
+      // Do NOT log token values in production
       return false;
     }
   }
 
-  /// Redirect to login and clear stored tokens.
+  /// Redirect to login and clear ALL sensitive data from Keystore/Keychain.
   void _redirectToLogin() {
-    sharedPref.remove("token");
-    sharedPref.remove("refresh_token");
-    sharedPref.remove("user_id");
-    Get.offAllNamed('/login');
+    // Fire-and-forget — we don't await inside void to avoid blocking
+    SecureStorageService.clearAll().then((_) {
+      cachedToken        = null;
+      cachedRefreshToken = null;
+      cachedUserId       = null;
+    });
+    AppNavigator.pushNamedAndRemoveUntil('/login');
   }
 
   /// Creates a copy of the original request for retry.
@@ -138,9 +143,6 @@ class AuthInterceptorClient extends http.BaseClient {
         ..body = original.body;
       return request;
     }
-    // For other request types (StreamedRequest, MultipartRequest),
-    // we return as-is since they can't be easily cloned.
-    // In practice, 401s on file uploads are rare.
     return original;
   }
 

@@ -1,18 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class HomeItemCard extends StatelessWidget {
   final ItemListDto item;
-  const HomeItemCard({super.key, required this.item});
+  final VoidCallback? onTap;
+  const HomeItemCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
-      onTap: () => Get.toNamed('/item-detail', arguments: {'itemId': item.id}),
+      onTap: onTap ?? () => AppNavigator.pushNamed('/item-detail', arguments: {'itemId': item.id}),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E1E) : Colors.white,

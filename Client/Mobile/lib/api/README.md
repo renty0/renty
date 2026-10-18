@@ -48,30 +48,45 @@ import 'package:renty_api/api.dart';
 //defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = AdminApi();
-final limit = 56; // int | 
-final period = period_example; // String | 
+final id = 789; // int | 
+final assignUserRolesCommand = AssignUserRolesCommand(); // AssignUserRolesCommand | 
 
 try {
-    final result = api_instance.getAdminGapAnalysis(limit, period);
+    final result = api_instance.assignUserRoles(id, assignUserRolesCommand);
     print(result);
 } catch (e) {
-    print('Exception when calling AdminApi->getAdminGapAnalysis: $e\n');
+    print('Exception when calling AdminApi->assignUserRoles: $e\n');
 }
 
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:5106*
+All URIs are relative to *https://starfish-app-vavqt.ondigitalocean.app*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AdminApi* | [**assignUserRoles**](doc//AdminApi.md#assignuserroles) | **PUT** /api/v1/admin/users/{id}/roles | 
+*AdminApi* | [**createAdminUser**](doc//AdminApi.md#createadminuser) | **POST** /api/v1/admin/users | 
+*AdminApi* | [**createRole**](doc//AdminApi.md#createrole) | **POST** /api/v1/admin/roles | 
+*AdminApi* | [**deleteRole**](doc//AdminApi.md#deleterole) | **DELETE** /api/v1/admin/roles/{id} | 
 *AdminApi* | [**getAdminGapAnalysis**](doc//AdminApi.md#getadmingapanalysis) | **GET** /api/v1/admin/gap | 
 *AdminApi* | [**getAdminKpis**](doc//AdminApi.md#getadminkpis) | **GET** /api/v1/admin/kpis | 
 *AdminApi* | [**getAdminLatestKpi**](doc//AdminApi.md#getadminlatestkpi) | **GET** /api/v1/admin/kpis/latest | 
+*AdminApi* | [**getAdminRentalFinancials**](doc//AdminApi.md#getadminrentalfinancials) | **GET** /api/v1/admin/rentals/{id}/financials | 
+*AdminApi* | [**getAdminRoles**](doc//AdminApi.md#getadminroles) | **GET** /api/v1/admin/roles | 
 *AdminApi* | [**getAdminUsers**](doc//AdminApi.md#getadminusers) | **GET** /api/v1/admin/users | 
+*AdminApi* | [**getAvailablePermissions**](doc//AdminApi.md#getavailablepermissions) | **GET** /api/v1/admin/permissions | 
 *AdminApi* | [**getFraudLogs**](doc//AdminApi.md#getfraudlogs) | **GET** /api/v1/admin/fraud | 
+*AdminApi* | [**getRoleDetails**](doc//AdminApi.md#getroledetails) | **GET** /api/v1/admin/roles/{id} | 
+*AdminApi* | [**updateRole**](doc//AdminApi.md#updaterole) | **PUT** /api/v1/admin/roles/{id} | 
 *AdminApi* | [**updateUserStatus**](doc//AdminApi.md#updateuserstatus) | **PUT** /api/v1/admin/users/{id}/status | 
+*AdminItemsApi* | [**getApprovalHistory**](doc//AdminItemsApi.md#getapprovalhistory) | **GET** /api/v1/admin/approvals/history | 
+*AdminItemsApi* | [**getPendingItems**](doc//AdminItemsApi.md#getpendingitems) | **GET** /api/v1/admin/items/pending | 
+*AdminItemsApi* | [**reviewItem**](doc//AdminItemsApi.md#reviewitem) | **POST** /api/v1/admin/items/{id}/review | 
+*AdminSettingsApi* | [**getAdminSettings**](doc//AdminSettingsApi.md#getadminsettings) | **GET** /api/v1/admin/settings | 
+*AdminSettingsApi* | [**updateAdminSetting**](doc//AdminSettingsApi.md#updateadminsetting) | **POST** /api/v1/admin/settings | 
+*AuthApi* | [**authDeleteMe**](doc//AuthApi.md#authdeleteme) | **DELETE** /api/v1/auth/me | 
 *AuthApi* | [**authForgotPassword**](doc//AuthApi.md#authforgotpassword) | **POST** /api/v1/auth/forgot-password | 
 *AuthApi* | [**authLogin**](doc//AuthApi.md#authlogin) | **POST** /api/v1/auth/login | 
 *AuthApi* | [**authMe**](doc//AuthApi.md#authme) | **GET** /api/v1/auth/me | 
@@ -93,18 +108,42 @@ Class | Method | HTTP request | Description
 *CategoriesApi* | [**getCategoryById**](doc//CategoriesApi.md#getcategorybyid) | **GET** /api/v1/categories/{id} | 
 *CategoriesApi* | [**updateCategory**](doc//CategoriesApi.md#updatecategory) | **PUT** /api/v1/categories/{id} | 
 *ChatApi* | [**createChat**](doc//ChatApi.md#createchat) | **POST** /api/v1/chats | 
+*ChatApi* | [**deleteChat**](doc//ChatApi.md#deletechat) | **DELETE** /api/v1/chats/{id} | 
 *ChatApi* | [**getChatMessages**](doc//ChatApi.md#getchatmessages) | **GET** /api/v1/chats/{id}/messages | 
 *ChatApi* | [**getChats**](doc//ChatApi.md#getchats) | **GET** /api/v1/chats | 
 *ChatApi* | [**postChatMessage**](doc//ChatApi.md#postchatmessage) | **POST** /api/v1/chats/{id}/messages | 
+*DefaultApi* | [**getApiHealth**](doc//DefaultApi.md#getapihealth) | **GET** /api/health | 
 *DeliveryApi* | [**getDelivery**](doc//DeliveryApi.md#getdelivery) | **GET** /api/v1/orders/{id}/delivery | 
 *DeliveryApi* | [**updateDelivery**](doc//DeliveryApi.md#updatedelivery) | **PUT** /api/v1/orders/{id}/delivery | 
+*DisputesApi* | [**resolveDispute**](doc//DisputesApi.md#resolvedispute) | **POST** /api/v1/support/disputes/resolve | 
 *FavoritesApi* | [**addFavorite**](doc//FavoritesApi.md#addfavorite) | **POST** /api/v1/items/{id}/favorite | 
 *FavoritesApi* | [**getMyFavorites**](doc//FavoritesApi.md#getmyfavorites) | **GET** /api/v1/users/me/favorites | 
 *FavoritesApi* | [**removeFavorite**](doc//FavoritesApi.md#removefavorite) | **DELETE** /api/v1/items/{id}/favorite | 
+*GapAnalysisApi* | [**getCategoryGapAnalysis**](doc//GapAnalysisApi.md#getcategorygapanalysis) | **GET** /api/gap-analysis/categories | 
+*GapAnalysisApi* | [**getDeadStockAnalysis**](doc//GapAnalysisApi.md#getdeadstockanalysis) | **GET** /api/gap-analysis/dead-stock | 
+*GapAnalysisApi* | [**getGapAnalysisActionPlan**](doc//GapAnalysisApi.md#getgapanalysisactionplan) | **GET** /api/gap-analysis/actions | 
+*GapAnalysisApi* | [**getGapAnalysisSummary**](doc//GapAnalysisApi.md#getgapanalysissummary) | **GET** /api/gap-analysis/summary | 
+*GapAnalysisApi* | [**getGapAnalysisTrends**](doc//GapAnalysisApi.md#getgapanalysistrends) | **GET** /api/gap-analysis/trends | 
+*GapAnalysisApi* | [**getGeographicGapHeatmap**](doc//GapAnalysisApi.md#getgeographicgapheatmap) | **GET** /api/gap-analysis/heatmap | 
+*GapAnalysisApi* | [**getOpportunityLoss**](doc//GapAnalysisApi.md#getopportunityloss) | **GET** /api/gap-analysis/opportunity-loss | 
+*GapAnalysisApi* | [**getSmartInsights**](doc//GapAnalysisApi.md#getsmartinsights) | **GET** /api/gap-analysis/smart-insights | 
+*GapAnalysisApi* | [**getSubcategoryGapAnalysis**](doc//GapAnalysisApi.md#getsubcategorygapanalysis) | **GET** /api/gap-analysis/subcategories | 
+*GapAnalysisApi* | [**getTerritoryGapAnalysis**](doc//GapAnalysisApi.md#getterritorygapanalysis) | **GET** /api/gap-analysis/territories | 
+*GapAnalysisApi* | [**triggerGapAnalysis**](doc//GapAnalysisApi.md#triggergapanalysis) | **POST** /api/gap-analysis/trigger | 
+*IdentityApi* | [**confirmPhoneVerification**](doc//IdentityApi.md#confirmphoneverification) | **POST** /api/v1/user/phone/confirm | 
+*IdentityApi* | [**getIdVerificationRequests**](doc//IdentityApi.md#getidverificationrequests) | **GET** /api/v1/admin/id-verifications | 
+*IdentityApi* | [**requestPhoneVerification**](doc//IdentityApi.md#requestphoneverification) | **POST** /api/v1/user/phone/request | 
+*IdentityApi* | [**reviewIdVerification**](doc//IdentityApi.md#reviewidverification) | **POST** /api/v1/admin/id-verifications/{id}/review | 
+*IdentityApi* | [**uploadIdVerification**](doc//IdentityApi.md#uploadidverification) | **POST** /api/v1/user/id/upload | 
+*ItemsApi* | [**addItemReminder**](doc//ItemsApi.md#additemreminder) | **POST** /api/v1/items/{id}/remind | 
 *ItemsApi* | [**createItem**](doc//ItemsApi.md#createitem) | **POST** /api/v1/items | 
 *ItemsApi* | [**deleteItem**](doc//ItemsApi.md#deleteitem) | **DELETE** /api/v1/items/{id} | 
+*ItemsApi* | [**getItemAvailability**](doc//ItemsApi.md#getitemavailability) | **GET** /api/v1/items/{id}/availability | 
 *ItemsApi* | [**getItemById**](doc//ItemsApi.md#getitembyid) | **GET** /api/v1/items/{id} | 
+*ItemsApi* | [**getItemReminderStatus**](doc//ItemsApi.md#getitemreminderstatus) | **GET** /api/v1/items/{id}/remind | 
 *ItemsApi* | [**getItems**](doc//ItemsApi.md#getitems) | **GET** /api/v1/items | 
+*ItemsApi* | [**reactivateItem**](doc//ItemsApi.md#reactivateitem) | **POST** /api/v1/items/{id}/reactivate | 
+*ItemsApi* | [**removeItemReminder**](doc//ItemsApi.md#removeitemreminder) | **DELETE** /api/v1/items/{id}/remind | 
 *ItemsApi* | [**updateItem**](doc//ItemsApi.md#updateitem) | **PUT** /api/v1/items/{id} | 
 *MediaApi* | [**uploadMedia**](doc//MediaApi.md#uploadmedia) | **POST** /api/v1/media | 
 *NotificationsApi* | [**getNotifications**](doc//NotificationsApi.md#getnotifications) | **GET** /api/v1/notifications | 
@@ -115,15 +154,28 @@ Class | Method | HTTP request | Description
 *OrdersApi* | [**getOrders**](doc//OrdersApi.md#getorders) | **GET** /api/v1/orders | 
 *PaymentsApi* | [**createPayment**](doc//PaymentsApi.md#createpayment) | **POST** /api/v1/payments | 
 *PaymentsApi* | [**getPaymentByOrder**](doc//PaymentsApi.md#getpaymentbyorder) | **GET** /api/v1/payments/{orderId} | 
+*PublicProfileApi* | [**getPublicProfile**](doc//PublicProfileApi.md#getpublicprofile) | **GET** /api/v1/public-profile/{userId} | 
 *RecommendationsApi* | [**getRecommendationsV1**](doc//RecommendationsApi.md#getrecommendationsv1) | **GET** /api/v1/recommendations | 
 *RecommendationsApi* | [**recordRecommendationClick**](doc//RecommendationsApi.md#recordrecommendationclick) | **PUT** /api/v1/recommendations/{id}/click | 
-*RentalsApi* | [**activateRental**](doc//RentalsApi.md#activaterental) | **PUT** /api/v1/rentals/{id}/activate | 
+*RentalsApi* | [**cancelExpertReview**](doc//RentalsApi.md#cancelexpertreview) | **DELETE** /api/v1/rentals/{id}/request-expert | 
 *RentalsApi* | [**cancelRental**](doc//RentalsApi.md#cancelrental) | **PUT** /api/v1/rentals/{id}/cancel | 
 *RentalsApi* | [**completeRental**](doc//RentalsApi.md#completerental) | **PUT** /api/v1/rentals/{id}/complete | 
 *RentalsApi* | [**confirmRental**](doc//RentalsApi.md#confirmrental) | **PUT** /api/v1/rentals/{id}/confirm | 
 *RentalsApi* | [**createRental**](doc//RentalsApi.md#createrental) | **POST** /api/v1/rentals | 
+*RentalsApi* | [**deleteRentalPhoto**](doc//RentalsApi.md#deleterentalphoto) | **DELETE** /api/v1/rentals/{id}/photos | 
+*RentalsApi* | [**generateExpertToOwnerTransfers**](doc//RentalsApi.md#generateexperttoownertransfers) | **POST** /api/v1/rentals/{id}/transfers/expert-return | 
+*RentalsApi* | [**generateHandoffFromHubTransfers**](doc//RentalsApi.md#generatehandofffromhubtransfers) | **POST** /api/v1/rentals/{id}/transfers/handoff-from-hub | 
+*RentalsApi* | [**generateTransfers**](doc//RentalsApi.md#generatetransfers) | **POST** /api/v1/rentals/{id}/transfers/generate | 
 *RentalsApi* | [**getRentalById**](doc//RentalsApi.md#getrentalbyid) | **GET** /api/v1/rentals/{id} | 
 *RentalsApi* | [**getRentals**](doc//RentalsApi.md#getrentals) | **GET** /api/v1/rentals | 
+*RentalsApi* | [**openRentalDispute**](doc//RentalsApi.md#openrentaldispute) | **POST** /api/v1/rentals/{id}/dispute | 
+*RentalsApi* | [**requestExpertReview**](doc//RentalsApi.md#requestexpertreview) | **PUT** /api/v1/rentals/{id}/request-expert | 
+*RentalsApi* | [**requestRentalExtension**](doc//RentalsApi.md#requestrentalextension) | **POST** /api/v1/rentals/{id}/extend | 
+*RentalsApi* | [**respondToExtension**](doc//RentalsApi.md#respondtoextension) | **PUT** /api/v1/rentals/{id}/extend/{extId}/respond | 
+*RentalsApi* | [**setHandoffMethod**](doc//RentalsApi.md#sethandoffmethod) | **PUT** /api/v1/rentals/{id}/handoff | 
+*RentalsApi* | [**updatePossession**](doc//RentalsApi.md#updatepossession) | **PUT** /api/v1/rentals/{id}/possession | 
+*RentalsApi* | [**uploadRentalPhotos**](doc//RentalsApi.md#uploadrentalphotos) | **POST** /api/v1/rentals/{id}/photos | 
+*RentalsApi* | [**verifyTransfer**](doc//RentalsApi.md#verifytransfer) | **PUT** /api/v1/rentals/{id}/verify-transfer | 
 *ReviewsApi* | [**createReview**](doc//ReviewsApi.md#createreview) | **POST** /api/v1/rentals/{id}/review | 
 *ReviewsApi* | [**getItemReviews**](doc//ReviewsApi.md#getitemreviews) | **GET** /api/v1/items/{id}/reviews | 
 *SearchApi* | [**searchItems**](doc//SearchApi.md#searchitems) | **GET** /api/v1/search | 
@@ -133,17 +185,27 @@ Class | Method | HTTP request | Description
 *SubcategoriesApi* | [**getSubcategoriesByCategory**](doc//SubcategoriesApi.md#getsubcategoriesbycategory) | **GET** /api/v1/categories/{categoryId}/subcategories | 
 *SubcategoriesApi* | [**getSubcategoryById**](doc//SubcategoriesApi.md#getsubcategorybyid) | **GET** /api/v1/subcategories/{id} | 
 *SubcategoriesApi* | [**updateSubcategory**](doc//SubcategoriesApi.md#updatesubcategory) | **PUT** /api/v1/subcategories/{id} | 
+*SupportApi* | [**assignSupportTicket**](doc//SupportApi.md#assignsupportticket) | **POST** /api/v1/support/tickets/{id}/assign | 
 *SupportApi* | [**createSupportTicket**](doc//SupportApi.md#createsupportticket) | **POST** /api/v1/support/tickets | 
+*SupportApi* | [**getSupportTicketDetails**](doc//SupportApi.md#getsupportticketdetails) | **GET** /api/v1/support/tickets/{id} | 
 *SupportApi* | [**getSupportTickets**](doc//SupportApi.md#getsupporttickets) | **GET** /api/v1/support/tickets | 
 *SupportApi* | [**postSupportMessage**](doc//SupportApi.md#postsupportmessage) | **POST** /api/v1/support/tickets/{id}/messages | 
+*SupportApi* | [**unassignSupportTicket**](doc//SupportApi.md#unassignsupportticket) | **POST** /api/v1/support/tickets/{id}/unassign | 
 *SupportApi* | [**updateSupportTicketStatus**](doc//SupportApi.md#updatesupportticketstatus) | **PUT** /api/v1/support/tickets/{id}/status | 
+*VerificationsApi* | [**claimVerification**](doc//VerificationsApi.md#claimverification) | **POST** /api/v1/verifications/{id}/claim | 
 *VerificationsApi* | [**createVerification**](doc//VerificationsApi.md#createverification) | **POST** /api/v1/items/{id}/verify | 
 *VerificationsApi* | [**getExpertAssigned**](doc//VerificationsApi.md#getexpertassigned) | **GET** /api/v1/expert/assigned | 
+*VerificationsApi* | [**getUnassignedVerifications**](doc//VerificationsApi.md#getunassignedverifications) | **GET** /api/v1/verifications/unassigned | 
 *VerificationsApi* | [**getVerifications**](doc//VerificationsApi.md#getverifications) | **GET** /api/v1/items/{id}/verifications | 
+*WalletApi* | [**getWalletBalance**](doc//WalletApi.md#getwalletbalance) | **GET** /api/v1/wallet/balance | 
+*WalletApi* | [**getWalletTransactions**](doc//WalletApi.md#getwallettransactions) | **GET** /api/v1/wallet/transactions | 
+*WalletApi* | [**requestWithdrawal**](doc//WalletApi.md#requestwithdrawal) | **POST** /api/v1/wallet/withdraw | 
+*WalletApi* | [**topUpWallet**](doc//WalletApi.md#topupwallet) | **POST** /api/v1/wallet/topup | 
 
 
 ## Documentation For Models
 
+ - [AdminUserDto](doc//AdminUserDto.md)
  - [ApiResponseOfAuthLoginData](doc//ApiResponseOfAuthLoginData.md)
  - [ApiResponseOfAuthLoginDataData](doc//ApiResponseOfAuthLoginDataData.md)
  - [ApiResponseOfAuthMeData](doc//ApiResponseOfAuthMeData.md)
@@ -156,18 +218,30 @@ Class | Method | HTTP request | Description
  - [ApiResponseOfAuthVerifyEmailDataData](doc//ApiResponseOfAuthVerifyEmailDataData.md)
  - [ApiResponseOfBrandDto](doc//ApiResponseOfBrandDto.md)
  - [ApiResponseOfBrandDtoData](doc//ApiResponseOfBrandDtoData.md)
- - [ApiResponseOfChatCreateData](doc//ApiResponseOfChatCreateData.md)
- - [ApiResponseOfChatCreateDataData](doc//ApiResponseOfChatCreateDataData.md)
- - [ApiResponseOfChatMessageData](doc//ApiResponseOfChatMessageData.md)
- - [ApiResponseOfChatMessageDataData](doc//ApiResponseOfChatMessageDataData.md)
+ - [ApiResponseOfCreateAdminUserResponse](doc//ApiResponseOfCreateAdminUserResponse.md)
+ - [ApiResponseOfCreateAdminUserResponseData](doc//ApiResponseOfCreateAdminUserResponseData.md)
+ - [ApiResponseOfCreateChatResponse](doc//ApiResponseOfCreateChatResponse.md)
+ - [ApiResponseOfCreateChatResponseData](doc//ApiResponseOfCreateChatResponseData.md)
+ - [ApiResponseOfDeleteUserResponse](doc//ApiResponseOfDeleteUserResponse.md)
+ - [ApiResponseOfDeleteUserResponseData](doc//ApiResponseOfDeleteUserResponseData.md)
+ - [ApiResponseOfGetAdminUsersResponse](doc//ApiResponseOfGetAdminUsersResponse.md)
+ - [ApiResponseOfGetAdminUsersResponseData](doc//ApiResponseOfGetAdminUsersResponseData.md)
  - [ApiResponseOfGetChatMessagesResponse](doc//ApiResponseOfGetChatMessagesResponse.md)
  - [ApiResponseOfGetChatMessagesResponseData](doc//ApiResponseOfGetChatMessagesResponseData.md)
  - [ApiResponseOfGetChatsResponse](doc//ApiResponseOfGetChatsResponse.md)
  - [ApiResponseOfGetChatsResponseData](doc//ApiResponseOfGetChatsResponseData.md)
  - [ApiResponseOfGetExpertAssignedResponse](doc//ApiResponseOfGetExpertAssignedResponse.md)
  - [ApiResponseOfGetExpertAssignedResponseData](doc//ApiResponseOfGetExpertAssignedResponseData.md)
+ - [ApiResponseOfGetFraudLogsResponse](doc//ApiResponseOfGetFraudLogsResponse.md)
+ - [ApiResponseOfGetFraudLogsResponseData](doc//ApiResponseOfGetFraudLogsResponseData.md)
+ - [ApiResponseOfGetGapAnalysisResponse](doc//ApiResponseOfGetGapAnalysisResponse.md)
+ - [ApiResponseOfGetGapAnalysisResponseData](doc//ApiResponseOfGetGapAnalysisResponseData.md)
+ - [ApiResponseOfGetIdVerificationRequestsResponse](doc//ApiResponseOfGetIdVerificationRequestsResponse.md)
+ - [ApiResponseOfGetIdVerificationRequestsResponseData](doc//ApiResponseOfGetIdVerificationRequestsResponseData.md)
  - [ApiResponseOfGetItemReviewsResponse](doc//ApiResponseOfGetItemReviewsResponse.md)
  - [ApiResponseOfGetItemReviewsResponseData](doc//ApiResponseOfGetItemReviewsResponseData.md)
+ - [ApiResponseOfGetKpisResponse](doc//ApiResponseOfGetKpisResponse.md)
+ - [ApiResponseOfGetKpisResponseData](doc//ApiResponseOfGetKpisResponseData.md)
  - [ApiResponseOfGetMyFavoritesResponse](doc//ApiResponseOfGetMyFavoritesResponse.md)
  - [ApiResponseOfGetMyFavoritesResponseData](doc//ApiResponseOfGetMyFavoritesResponseData.md)
  - [ApiResponseOfGetNotificationsResponse](doc//ApiResponseOfGetNotificationsResponse.md)
@@ -178,6 +252,8 @@ Class | Method | HTTP request | Description
  - [ApiResponseOfGetRecommendationsResponseData](doc//ApiResponseOfGetRecommendationsResponseData.md)
  - [ApiResponseOfGetRentalsResponse](doc//ApiResponseOfGetRentalsResponse.md)
  - [ApiResponseOfGetRentalsResponseData](doc//ApiResponseOfGetRentalsResponseData.md)
+ - [ApiResponseOfGetTicketResponse](doc//ApiResponseOfGetTicketResponse.md)
+ - [ApiResponseOfGetTicketResponseData](doc//ApiResponseOfGetTicketResponseData.md)
  - [ApiResponseOfGetTicketsResponse](doc//ApiResponseOfGetTicketsResponse.md)
  - [ApiResponseOfGetTicketsResponseData](doc//ApiResponseOfGetTicketsResponseData.md)
  - [ApiResponseOfGetVerificationsResponse](doc//ApiResponseOfGetVerificationsResponse.md)
@@ -186,10 +262,16 @@ Class | Method | HTTP request | Description
  - [ApiResponseOfItemCreateDataData](doc//ApiResponseOfItemCreateDataData.md)
  - [ApiResponseOfItemDetailDto](doc//ApiResponseOfItemDetailDto.md)
  - [ApiResponseOfItemDetailDtoData](doc//ApiResponseOfItemDetailDtoData.md)
+ - [ApiResponseOfKpiSnapshotDto](doc//ApiResponseOfKpiSnapshotDto.md)
+ - [ApiResponseOfKpiSnapshotDtoData](doc//ApiResponseOfKpiSnapshotDtoData.md)
+ - [ApiResponseOfListOfApprovalHistoryDto](doc//ApiResponseOfListOfApprovalHistoryDto.md)
+ - [ApiResponseOfListOfBookedRangeDto](doc//ApiResponseOfListOfBookedRangeDto.md)
  - [ApiResponseOfListOfBrandDto](doc//ApiResponseOfListOfBrandDto.md)
  - [ApiResponseOfListOfItemListDto](doc//ApiResponseOfListOfItemListDto.md)
+ - [ApiResponseOfListOfPermissionMetadataDto](doc//ApiResponseOfListOfPermissionMetadataDto.md)
  - [ApiResponseOfListOfProductCategoryDto](doc//ApiResponseOfListOfProductCategoryDto.md)
  - [ApiResponseOfListOfProductSubcategoryDto](doc//ApiResponseOfListOfProductSubcategoryDto.md)
+ - [ApiResponseOfListOfRoleDto](doc//ApiResponseOfListOfRoleDto.md)
  - [ApiResponseOfListOfTrackingEntryDto](doc//ApiResponseOfListOfTrackingEntryDto.md)
  - [ApiResponseOfMediaUploadData](doc//ApiResponseOfMediaUploadData.md)
  - [ApiResponseOfMediaUploadDataData](doc//ApiResponseOfMediaUploadDataData.md)
@@ -204,30 +286,49 @@ Class | Method | HTTP request | Description
  - [ApiResponseOfPaymentCreateDataData](doc//ApiResponseOfPaymentCreateDataData.md)
  - [ApiResponseOfPaymentDto](doc//ApiResponseOfPaymentDto.md)
  - [ApiResponseOfPaymentDtoData](doc//ApiResponseOfPaymentDtoData.md)
+ - [ApiResponseOfPostChatMessageResponse](doc//ApiResponseOfPostChatMessageResponse.md)
+ - [ApiResponseOfPostChatMessageResponseData](doc//ApiResponseOfPostChatMessageResponseData.md)
  - [ApiResponseOfProductCategoryDto](doc//ApiResponseOfProductCategoryDto.md)
  - [ApiResponseOfProductCategoryDtoData](doc//ApiResponseOfProductCategoryDtoData.md)
  - [ApiResponseOfProductSubcategoryDto](doc//ApiResponseOfProductSubcategoryDto.md)
  - [ApiResponseOfProductSubcategoryDtoData](doc//ApiResponseOfProductSubcategoryDtoData.md)
+ - [ApiResponseOfPublicProfileDto](doc//ApiResponseOfPublicProfileDto.md)
+ - [ApiResponseOfPublicProfileDtoData](doc//ApiResponseOfPublicProfileDtoData.md)
+ - [ApiResponseOfReminderResponse](doc//ApiResponseOfReminderResponse.md)
+ - [ApiResponseOfReminderResponseData](doc//ApiResponseOfReminderResponseData.md)
+ - [ApiResponseOfReminderStatusResponse](doc//ApiResponseOfReminderStatusResponse.md)
+ - [ApiResponseOfReminderStatusResponseData](doc//ApiResponseOfReminderStatusResponseData.md)
  - [ApiResponseOfRentalCompleteData](doc//ApiResponseOfRentalCompleteData.md)
  - [ApiResponseOfRentalCompleteDataData](doc//ApiResponseOfRentalCompleteDataData.md)
  - [ApiResponseOfRentalCreateData](doc//ApiResponseOfRentalCreateData.md)
  - [ApiResponseOfRentalCreateDataData](doc//ApiResponseOfRentalCreateDataData.md)
  - [ApiResponseOfRentalDetailDto](doc//ApiResponseOfRentalDetailDto.md)
  - [ApiResponseOfRentalDetailDtoData](doc//ApiResponseOfRentalDetailDtoData.md)
+ - [ApiResponseOfRentalFinancialBreakdownDto](doc//ApiResponseOfRentalFinancialBreakdownDto.md)
+ - [ApiResponseOfRentalFinancialBreakdownDtoData](doc//ApiResponseOfRentalFinancialBreakdownDtoData.md)
  - [ApiResponseOfRentalStatusData](doc//ApiResponseOfRentalStatusData.md)
  - [ApiResponseOfRentalStatusDataData](doc//ApiResponseOfRentalStatusDataData.md)
+ - [ApiResponseOfResult](doc//ApiResponseOfResult.md)
+ - [ApiResponseOfResultData](doc//ApiResponseOfResultData.md)
  - [ApiResponseOfReviewCreateData](doc//ApiResponseOfReviewCreateData.md)
  - [ApiResponseOfReviewCreateDataData](doc//ApiResponseOfReviewCreateDataData.md)
+ - [ApiResponseOfRoleDetailsResponse](doc//ApiResponseOfRoleDetailsResponse.md)
+ - [ApiResponseOfRoleDetailsResponseData](doc//ApiResponseOfRoleDetailsResponseData.md)
  - [ApiResponseOfSearchItemsResponse](doc//ApiResponseOfSearchItemsResponse.md)
  - [ApiResponseOfSearchItemsResponseData](doc//ApiResponseOfSearchItemsResponseData.md)
+ - [ApiResponseOfString](doc//ApiResponseOfString.md)
  - [ApiResponseOfSupportCreateTicketData](doc//ApiResponseOfSupportCreateTicketData.md)
  - [ApiResponseOfSupportCreateTicketDataData](doc//ApiResponseOfSupportCreateTicketDataData.md)
  - [ApiResponseOfSupportMessageData](doc//ApiResponseOfSupportMessageData.md)
  - [ApiResponseOfSupportMessageDataData](doc//ApiResponseOfSupportMessageDataData.md)
  - [ApiResponseOfSupportTicketStatusData](doc//ApiResponseOfSupportTicketStatusData.md)
  - [ApiResponseOfSupportTicketStatusDataData](doc//ApiResponseOfSupportTicketStatusDataData.md)
+ - [ApiResponseOfUpdateUserStatusResponse](doc//ApiResponseOfUpdateUserStatusResponse.md)
+ - [ApiResponseOfUpdateUserStatusResponseData](doc//ApiResponseOfUpdateUserStatusResponseData.md)
  - [ApiResponseOfVerificationCreateData](doc//ApiResponseOfVerificationCreateData.md)
  - [ApiResponseOfVerificationCreateDataData](doc//ApiResponseOfVerificationCreateDataData.md)
+ - [ApprovalHistoryDto](doc//ApprovalHistoryDto.md)
+ - [AssignUserRolesCommand](doc//AssignUserRolesCommand.md)
  - [AssignedVerificationDto](doc//AssignedVerificationDto.md)
  - [AuthLoginData](doc//AuthLoginData.md)
  - [AuthLoginDataUser](doc//AuthLoginDataUser.md)
@@ -236,38 +337,57 @@ Class | Method | HTTP request | Description
  - [AuthRefreshData](doc//AuthRefreshData.md)
  - [AuthRegisterData](doc//AuthRegisterData.md)
  - [AuthVerifyEmailData](doc//AuthVerifyEmailData.md)
+ - [BookedRangeDto](doc//BookedRangeDto.md)
  - [BrandDto](doc//BrandDto.md)
- - [ChatCreateData](doc//ChatCreateData.md)
  - [ChatListDto](doc//ChatListDto.md)
- - [ChatMessageData](doc//ChatMessageData.md)
  - [ChatMessageDto](doc//ChatMessageDto.md)
  - [ConfirmEmailCommand](doc//ConfirmEmailCommand.md)
+ - [ConfirmPhoneVerificationCommand](doc//ConfirmPhoneVerificationCommand.md)
+ - [CreateAdminUserCommand](doc//CreateAdminUserCommand.md)
+ - [CreateAdminUserResponse](doc//CreateAdminUserResponse.md)
  - [CreateBrandCommand](doc//CreateBrandCommand.md)
  - [CreateCategoryCommand](doc//CreateCategoryCommand.md)
  - [CreateChatCommand](doc//CreateChatCommand.md)
+ - [CreateChatResponse](doc//CreateChatResponse.md)
  - [CreateItemCommand](doc//CreateItemCommand.md)
  - [CreateItemImageCommand](doc//CreateItemImageCommand.md)
  - [CreateItemPricingCommand](doc//CreateItemPricingCommand.md)
  - [CreateOrderCommand](doc//CreateOrderCommand.md)
  - [CreatePaymentCommand](doc//CreatePaymentCommand.md)
- - [CreateRentalCommand](doc//CreateRentalCommand.md)
+ - [CreateRentalRequest](doc//CreateRentalRequest.md)
  - [CreateReviewCommand](doc//CreateReviewCommand.md)
+ - [CreateRoleCommand](doc//CreateRoleCommand.md)
  - [CreateSubcategoryCommand](doc//CreateSubcategoryCommand.md)
  - [CreateTicketCommand](doc//CreateTicketCommand.md)
  - [CreateVerificationCommand](doc//CreateVerificationCommand.md)
+ - [DeleteUserResponse](doc//DeleteUserResponse.md)
+ - [ExtendRentalBody](doc//ExtendRentalBody.md)
  - [FavoriteItemDto](doc//FavoriteItemDto.md)
  - [ForgotPasswordCommand](doc//ForgotPasswordCommand.md)
+ - [FraudLogDto](doc//FraudLogDto.md)
+ - [FraudUserDto](doc//FraudUserDto.md)
+ - [GapDto](doc//GapDto.md)
+ - [GetAdminUsersResponse](doc//GetAdminUsersResponse.md)
  - [GetChatMessagesResponse](doc//GetChatMessagesResponse.md)
+ - [GetChatMessagesResponseChatMetadata](doc//GetChatMessagesResponseChatMetadata.md)
  - [GetChatsResponse](doc//GetChatsResponse.md)
  - [GetExpertAssignedResponse](doc//GetExpertAssignedResponse.md)
+ - [GetFraudLogsResponse](doc//GetFraudLogsResponse.md)
+ - [GetGapAnalysisResponse](doc//GetGapAnalysisResponse.md)
+ - [GetIdVerificationRequestsResponse](doc//GetIdVerificationRequestsResponse.md)
  - [GetItemReviewsResponse](doc//GetItemReviewsResponse.md)
+ - [GetKpisResponse](doc//GetKpisResponse.md)
  - [GetMyFavoritesResponse](doc//GetMyFavoritesResponse.md)
  - [GetNotificationsResponse](doc//GetNotificationsResponse.md)
  - [GetOrdersResponse](doc//GetOrdersResponse.md)
  - [GetRecommendationsResponse](doc//GetRecommendationsResponse.md)
  - [GetRentalsResponse](doc//GetRentalsResponse.md)
+ - [GetTicketResponse](doc//GetTicketResponse.md)
+ - [GetTicketResponseTicket](doc//GetTicketResponseTicket.md)
  - [GetTicketsResponse](doc//GetTicketsResponse.md)
  - [GetVerificationsResponse](doc//GetVerificationsResponse.md)
+ - [GetVerificationsResponseItemDetails](doc//GetVerificationsResponseItemDetails.md)
+ - [IdVerificationRequestDto](doc//IdVerificationRequestDto.md)
  - [ItemBrandRef](doc//ItemBrandRef.md)
  - [ItemCategoryRef](doc//ItemCategoryRef.md)
  - [ItemCreateData](doc//ItemCreateData.md)
@@ -279,10 +399,15 @@ Class | Method | HTTP request | Description
  - [ItemListDtoSubcategory](doc//ItemListDtoSubcategory.md)
  - [ItemPricingDto](doc//ItemPricingDto.md)
  - [ItemSubcategoryRef](doc//ItemSubcategoryRef.md)
+ - [ItemVerificationDetailsDto](doc//ItemVerificationDetailsDto.md)
+ - [ItemVerificationDetailsDtoActiveRental](doc//ItemVerificationDetailsDtoActiveRental.md)
+ - [KpiSnapshotDto](doc//KpiSnapshotDto.md)
  - [LoginCommand](doc//LoginCommand.md)
  - [MediaUploadData](doc//MediaUploadData.md)
+ - [MessageType](doc//MessageType.md)
  - [NotificationDto](doc//NotificationDto.md)
  - [NotificationMarkAllData](doc//NotificationMarkAllData.md)
+ - [OpenDisputeBody](doc//OpenDisputeBody.md)
  - [OrderCreateData](doc//OrderCreateData.md)
  - [OrderDetailDto](doc//OrderDetailDto.md)
  - [OrderItemDetailDto](doc//OrderItemDetailDto.md)
@@ -291,42 +416,74 @@ Class | Method | HTTP request | Description
  - [OwnerDto](doc//OwnerDto.md)
  - [PaymentCreateData](doc//PaymentCreateData.md)
  - [PaymentDto](doc//PaymentDto.md)
+ - [PermissionItemDto](doc//PermissionItemDto.md)
+ - [PermissionMetadataDto](doc//PermissionMetadataDto.md)
+ - [PersonInfoDto](doc//PersonInfoDto.md)
  - [PostChatMessageCommand](doc//PostChatMessageCommand.md)
+ - [PostChatMessageResponse](doc//PostChatMessageResponse.md)
  - [PostSupportMessageCommand](doc//PostSupportMessageCommand.md)
  - [ProductCategoryDto](doc//ProductCategoryDto.md)
  - [ProductSubcategoryDto](doc//ProductSubcategoryDto.md)
+ - [PublicProfileDto](doc//PublicProfileDto.md)
  - [RecommendationEntryDto](doc//RecommendationEntryDto.md)
  - [RecommendationItemDto](doc//RecommendationItemDto.md)
  - [RefreshTokenCommand](doc//RefreshTokenCommand.md)
  - [RegisterCommand](doc//RegisterCommand.md)
+ - [ReminderResponse](doc//ReminderResponse.md)
+ - [ReminderStatusResponse](doc//ReminderStatusResponse.md)
  - [RentalCompleteData](doc//RentalCompleteData.md)
  - [RentalCreateData](doc//RentalCreateData.md)
  - [RentalDetailDto](doc//RentalDetailDto.md)
+ - [RentalFinancialBreakdownDto](doc//RentalFinancialBreakdownDto.md)
+ - [RentalImageDto](doc//RentalImageDto.md)
+ - [RentalImageType](doc//RentalImageType.md)
+ - [RentalInfoDto](doc//RentalInfoDto.md)
  - [RentalListDto](doc//RentalListDto.md)
  - [RentalStatusData](doc//RentalStatusData.md)
+ - [RentalTransferDto](doc//RentalTransferDto.md)
+ - [RequestPhoneVerificationCommand](doc//RequestPhoneVerificationCommand.md)
+ - [RequestWithdrawalCommand](doc//RequestWithdrawalCommand.md)
  - [ResetPasswordCommand](doc//ResetPasswordCommand.md)
+ - [ResolveDisputeCommand](doc//ResolveDisputeCommand.md)
+ - [RespondExtensionBody](doc//RespondExtensionBody.md)
+ - [Result](doc//Result.md)
  - [ReviewCreateData](doc//ReviewCreateData.md)
  - [ReviewDto](doc//ReviewDto.md)
+ - [ReviewDto2](doc//ReviewDto2.md)
+ - [ReviewIdVerificationCommand](doc//ReviewIdVerificationCommand.md)
+ - [ReviewItemCommand](doc//ReviewItemCommand.md)
  - [ReviewerDto](doc//ReviewerDto.md)
+ - [RoleDetailsResponse](doc//RoleDetailsResponse.md)
+ - [RoleDto](doc//RoleDto.md)
  - [SearchItemsResponse](doc//SearchItemsResponse.md)
  - [SendEmailConfirmationCommand](doc//SendEmailConfirmationCommand.md)
+ - [SetHandoffMethodBody](doc//SetHandoffMethodBody.md)
  - [SupportCreateTicketData](doc//SupportCreateTicketData.md)
  - [SupportMessageData](doc//SupportMessageData.md)
+ - [SupportMessageDto](doc//SupportMessageDto.md)
+ - [SupportTicketEventDto](doc//SupportTicketEventDto.md)
  - [SupportTicketStatusData](doc//SupportTicketStatusData.md)
+ - [TicketDetailsDto](doc//TicketDetailsDto.md)
  - [TicketListDto](doc//TicketListDto.md)
+ - [TopUpWalletCommand](doc//TopUpWalletCommand.md)
  - [TrackingEntryDto](doc//TrackingEntryDto.md)
  - [UpdateBrandCommand](doc//UpdateBrandCommand.md)
  - [UpdateCategoryCommand](doc//UpdateCategoryCommand.md)
  - [UpdateDeliveryCommand](doc//UpdateDeliveryCommand.md)
  - [UpdateItemCommand](doc//UpdateItemCommand.md)
+ - [UpdateRoleCommand](doc//UpdateRoleCommand.md)
+ - [UpdateSettingCommand](doc//UpdateSettingCommand.md)
  - [UpdateSubcategoryCommand](doc//UpdateSubcategoryCommand.md)
  - [UpdateTicketStatusCommand](doc//UpdateTicketStatusCommand.md)
  - [UpdateUserCommand](doc//UpdateUserCommand.md)
  - [UpdateUserStatusCommand](doc//UpdateUserStatusCommand.md)
- - [UserType](doc//UserType.md)
+ - [UpdateUserStatusResponse](doc//UpdateUserStatusResponse.md)
+ - [UploadIdVerificationCommand](doc//UploadIdVerificationCommand.md)
+ - [UploadRentalPhotosBody](doc//UploadRentalPhotosBody.md)
  - [VerificationCreateData](doc//VerificationCreateData.md)
  - [VerificationDto](doc//VerificationDto.md)
  - [VerifyResetTokenCommand](doc//VerifyResetTokenCommand.md)
+ - [WalletTransactionDto](doc//WalletTransactionDto.md)
 
 
 ## Documentation For Authorization

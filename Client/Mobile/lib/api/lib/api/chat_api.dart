@@ -48,7 +48,7 @@ class ChatApi {
   /// Parameters:
   ///
   /// * [CreateChatCommand] createChatCommand (required):
-  Future<ApiResponseOfChatCreateData?> createChat(CreateChatCommand createChatCommand,) async {
+  Future<ApiResponseOfCreateChatResponse?> createChat(CreateChatCommand createChatCommand,) async {
     final response = await createChatWithHttpInfo(createChatCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -57,7 +57,55 @@ class ChatApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfChatCreateData',) as ApiResponseOfChatCreateData;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfCreateChatResponse',) as ApiResponseOfCreateChatResponse;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'DELETE /api/v1/chats/{id}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> deleteChatWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/chats/{id}'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfString?> deleteChat(String id,) async {
+    final response = await deleteChatWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfString',) as ApiResponseOfString;
     
     }
     return null;
@@ -189,7 +237,7 @@ class ChatApi {
   /// * [String] id (required):
   ///
   /// * [PostChatMessageCommand] postChatMessageCommand (required):
-  Future<ApiResponseOfChatMessageData?> postChatMessage(String id, PostChatMessageCommand postChatMessageCommand,) async {
+  Future<ApiResponseOfPostChatMessageResponse?> postChatMessage(String id, PostChatMessageCommand postChatMessageCommand,) async {
     final response = await postChatMessageWithHttpInfo(id, postChatMessageCommand,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -198,7 +246,7 @@ class ChatApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfChatMessageData',) as ApiResponseOfChatMessageData;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfPostChatMessageResponse',) as ApiResponseOfPostChatMessageResponse;
     
     }
     return null;

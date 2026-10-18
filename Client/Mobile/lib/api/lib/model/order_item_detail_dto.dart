@@ -17,7 +17,7 @@ class OrderItemDetailDto {
     this.title,
     this.quantity,
     this.priceAtTime,
-    this.primaryImage,
+    this.primaryImageUrl,
   });
 
   ///
@@ -52,7 +52,7 @@ class OrderItemDetailDto {
   ///
   num? priceAtTime;
 
-  String? primaryImage;
+  String? primaryImageUrl;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is OrderItemDetailDto &&
@@ -60,7 +60,7 @@ class OrderItemDetailDto {
     other.title == title &&
     other.quantity == quantity &&
     other.priceAtTime == priceAtTime &&
-    other.primaryImage == primaryImage;
+    other.primaryImageUrl == primaryImageUrl;
 
   @override
   int get hashCode =>
@@ -69,10 +69,10 @@ class OrderItemDetailDto {
     (title == null ? 0 : title!.hashCode) +
     (quantity == null ? 0 : quantity!.hashCode) +
     (priceAtTime == null ? 0 : priceAtTime!.hashCode) +
-    (primaryImage == null ? 0 : primaryImage!.hashCode);
+    (primaryImageUrl == null ? 0 : primaryImageUrl!.hashCode);
 
   @override
-  String toString() => 'OrderItemDetailDto[itemId=$itemId, title=$title, quantity=$quantity, priceAtTime=$priceAtTime, primaryImage=$primaryImage]';
+  String toString() => 'OrderItemDetailDto[itemId=$itemId, title=$title, quantity=$quantity, priceAtTime=$priceAtTime, primaryImageUrl=$primaryImageUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -96,10 +96,10 @@ class OrderItemDetailDto {
     } else {
       json[r'priceAtTime'] = null;
     }
-    if (this.primaryImage != null) {
-      json[r'primaryImage'] = this.primaryImage;
+    if (this.primaryImageUrl != null) {
+      json[r'primaryImageUrl'] = this.primaryImageUrl;
     } else {
-      json[r'primaryImage'] = null;
+      json[r'primaryImageUrl'] = null;
     }
     return json;
   }
@@ -127,7 +127,7 @@ class OrderItemDetailDto {
         title: mapValueOfType<String>(json, r'title'),
         quantity: mapValueOfType<int>(json, r'quantity'),
         priceAtTime: num.parse('${json[r'priceAtTime']}'),
-        primaryImage: _sanitizeImageUrl(mapValueOfType<String>(json, r'primaryImage')),
+        primaryImageUrl: mapValueOfType<String>(json, r'primaryImageUrl'),
       );
     }
     return null;

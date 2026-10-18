@@ -10,11 +10,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **email** | **String** |  | [optional] 
 **password** | **String** |  | [optional] 
-**confirmPassword** | **String** |  | [optional] 
 **firstName** | **String** |  | [optional] 
 **lastName** | **String** |  | [optional] 
 **phoneNumber** | **String** |  | [optional] 
-**userType** | [**UserType**](UserType.md) |  | [optional] 
 **address** | **String** |  | [optional] 
 **city** | **String** |  | [optional] 
 **country** | **String** |  | [optional] 

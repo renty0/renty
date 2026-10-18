@@ -16,9 +16,12 @@ class RentalDetailDto {
     this.id,
     this.itemId,
     this.itemTitle,
-    this.itemImage,
+    this.itemImageUrl,
+    this.ownerId,
     this.ownerFirstName,
     this.ownerCity,
+    this.renterId,
+    this.renterFirstName,
     this.startDate,
     this.endDate,
     this.actualReturnDate,
@@ -29,7 +32,18 @@ class RentalDetailDto {
     this.depositStatus,
     this.notes,
     this.createdAt,
-    this.hasReview,
+    this.renterWantsExpertReview,
+    this.ownerWantsExpertReview,
+    this.expertReviewFee,
+    this.assignedExpertId,
+    this.assignedExpertName,
+    this.handoverImages = const [],
+    this.returnImages = const [],
+    this.transfers = const [],
+    this.verifications = const [],
+    this.currentPossession,
+    this.currentTransferSequence,
+    this.deliveryMethodFromExpert,
   });
 
   ///
@@ -56,7 +70,15 @@ class RentalDetailDto {
   ///
   String? itemTitle;
 
-  String? itemImage;
+  String? itemImageUrl;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? ownerId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -67,6 +89,22 @@ class RentalDetailDto {
   String? ownerFirstName;
 
   String? ownerCity;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? renterId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? renterFirstName;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -142,16 +180,65 @@ class RentalDetailDto {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? hasReview;
+  bool? renterWantsExpertReview;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? ownerWantsExpertReview;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  num? expertReviewFee;
+
+  int? assignedExpertId;
+
+  String? assignedExpertName;
+
+  List<RentalImageDto> handoverImages;
+
+  List<RentalImageDto> returnImages;
+
+  List<RentalTransferDto> transfers;
+
+  List<VerificationDto> verifications;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? currentPossession;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? currentTransferSequence;
+
+  String? deliveryMethodFromExpert;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is RentalDetailDto &&
     other.id == id &&
     other.itemId == itemId &&
     other.itemTitle == itemTitle &&
-    other.itemImage == itemImage &&
+    other.itemImageUrl == itemImageUrl &&
+    other.ownerId == ownerId &&
     other.ownerFirstName == ownerFirstName &&
     other.ownerCity == ownerCity &&
+    other.renterId == renterId &&
+    other.renterFirstName == renterFirstName &&
     other.startDate == startDate &&
     other.endDate == endDate &&
     other.actualReturnDate == actualReturnDate &&
@@ -162,7 +249,18 @@ class RentalDetailDto {
     other.depositStatus == depositStatus &&
     other.notes == notes &&
     other.createdAt == createdAt &&
-    other.hasReview == hasReview;
+    other.renterWantsExpertReview == renterWantsExpertReview &&
+    other.ownerWantsExpertReview == ownerWantsExpertReview &&
+    other.expertReviewFee == expertReviewFee &&
+    other.assignedExpertId == assignedExpertId &&
+    other.assignedExpertName == assignedExpertName &&
+    _deepEquality.equals(other.handoverImages, handoverImages) &&
+    _deepEquality.equals(other.returnImages, returnImages) &&
+    _deepEquality.equals(other.transfers, transfers) &&
+    _deepEquality.equals(other.verifications, verifications) &&
+    other.currentPossession == currentPossession &&
+    other.currentTransferSequence == currentTransferSequence &&
+    other.deliveryMethodFromExpert == deliveryMethodFromExpert;
 
   @override
   int get hashCode =>
@@ -170,9 +268,12 @@ class RentalDetailDto {
     (id == null ? 0 : id!.hashCode) +
     (itemId == null ? 0 : itemId!.hashCode) +
     (itemTitle == null ? 0 : itemTitle!.hashCode) +
-    (itemImage == null ? 0 : itemImage!.hashCode) +
+    (itemImageUrl == null ? 0 : itemImageUrl!.hashCode) +
+    (ownerId == null ? 0 : ownerId!.hashCode) +
     (ownerFirstName == null ? 0 : ownerFirstName!.hashCode) +
     (ownerCity == null ? 0 : ownerCity!.hashCode) +
+    (renterId == null ? 0 : renterId!.hashCode) +
+    (renterFirstName == null ? 0 : renterFirstName!.hashCode) +
     (startDate == null ? 0 : startDate!.hashCode) +
     (endDate == null ? 0 : endDate!.hashCode) +
     (actualReturnDate == null ? 0 : actualReturnDate!.hashCode) +
@@ -183,10 +284,21 @@ class RentalDetailDto {
     (depositStatus == null ? 0 : depositStatus!.hashCode) +
     (notes == null ? 0 : notes!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
-    (hasReview == null ? 0 : hasReview!.hashCode);
+    (renterWantsExpertReview == null ? 0 : renterWantsExpertReview!.hashCode) +
+    (ownerWantsExpertReview == null ? 0 : ownerWantsExpertReview!.hashCode) +
+    (expertReviewFee == null ? 0 : expertReviewFee!.hashCode) +
+    (assignedExpertId == null ? 0 : assignedExpertId!.hashCode) +
+    (assignedExpertName == null ? 0 : assignedExpertName!.hashCode) +
+    (handoverImages.hashCode) +
+    (returnImages.hashCode) +
+    (transfers.hashCode) +
+    (verifications.hashCode) +
+    (currentPossession == null ? 0 : currentPossession!.hashCode) +
+    (currentTransferSequence == null ? 0 : currentTransferSequence!.hashCode) +
+    (deliveryMethodFromExpert == null ? 0 : deliveryMethodFromExpert!.hashCode);
 
   @override
-  String toString() => 'RentalDetailDto[id=$id, itemId=$itemId, itemTitle=$itemTitle, itemImage=$itemImage, ownerFirstName=$ownerFirstName, ownerCity=$ownerCity, startDate=$startDate, endDate=$endDate, actualReturnDate=$actualReturnDate, rentalPrice=$rentalPrice, depositAmount=$depositAmount, lateFee=$lateFee, status=$status, depositStatus=$depositStatus, notes=$notes, createdAt=$createdAt, hasReview=$hasReview]';
+  String toString() => 'RentalDetailDto[id=$id, itemId=$itemId, itemTitle=$itemTitle, itemImageUrl=$itemImageUrl, ownerId=$ownerId, ownerFirstName=$ownerFirstName, ownerCity=$ownerCity, renterId=$renterId, renterFirstName=$renterFirstName, startDate=$startDate, endDate=$endDate, actualReturnDate=$actualReturnDate, rentalPrice=$rentalPrice, depositAmount=$depositAmount, lateFee=$lateFee, status=$status, depositStatus=$depositStatus, notes=$notes, createdAt=$createdAt, renterWantsExpertReview=$renterWantsExpertReview, ownerWantsExpertReview=$ownerWantsExpertReview, expertReviewFee=$expertReviewFee, assignedExpertId=$assignedExpertId, assignedExpertName=$assignedExpertName, handoverImages=$handoverImages, returnImages=$returnImages, transfers=$transfers, verifications=$verifications, currentPossession=$currentPossession, currentTransferSequence=$currentTransferSequence, deliveryMethodFromExpert=$deliveryMethodFromExpert]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -205,10 +317,15 @@ class RentalDetailDto {
     } else {
       json[r'itemTitle'] = null;
     }
-    if (this.itemImage != null) {
-      json[r'itemImage'] = this.itemImage;
+    if (this.itemImageUrl != null) {
+      json[r'itemImageUrl'] = this.itemImageUrl;
     } else {
-      json[r'itemImage'] = null;
+      json[r'itemImageUrl'] = null;
+    }
+    if (this.ownerId != null) {
+      json[r'ownerId'] = this.ownerId;
+    } else {
+      json[r'ownerId'] = null;
     }
     if (this.ownerFirstName != null) {
       json[r'ownerFirstName'] = this.ownerFirstName;
@@ -219,6 +336,16 @@ class RentalDetailDto {
       json[r'ownerCity'] = this.ownerCity;
     } else {
       json[r'ownerCity'] = null;
+    }
+    if (this.renterId != null) {
+      json[r'renterId'] = this.renterId;
+    } else {
+      json[r'renterId'] = null;
+    }
+    if (this.renterFirstName != null) {
+      json[r'renterFirstName'] = this.renterFirstName;
+    } else {
+      json[r'renterFirstName'] = null;
     }
     if (this.startDate != null) {
       json[r'startDate'] = this.startDate!.toUtc().toIso8601String();
@@ -270,10 +397,49 @@ class RentalDetailDto {
     } else {
       json[r'createdAt'] = null;
     }
-    if (this.hasReview != null) {
-      json[r'hasReview'] = this.hasReview;
+    if (this.renterWantsExpertReview != null) {
+      json[r'renterWantsExpertReview'] = this.renterWantsExpertReview;
     } else {
-      json[r'hasReview'] = null;
+      json[r'renterWantsExpertReview'] = null;
+    }
+    if (this.ownerWantsExpertReview != null) {
+      json[r'ownerWantsExpertReview'] = this.ownerWantsExpertReview;
+    } else {
+      json[r'ownerWantsExpertReview'] = null;
+    }
+    if (this.expertReviewFee != null) {
+      json[r'expertReviewFee'] = this.expertReviewFee;
+    } else {
+      json[r'expertReviewFee'] = null;
+    }
+    if (this.assignedExpertId != null) {
+      json[r'assignedExpertId'] = this.assignedExpertId;
+    } else {
+      json[r'assignedExpertId'] = null;
+    }
+    if (this.assignedExpertName != null) {
+      json[r'assignedExpertName'] = this.assignedExpertName;
+    } else {
+      json[r'assignedExpertName'] = null;
+    }
+      json[r'handoverImages'] = this.handoverImages;
+      json[r'returnImages'] = this.returnImages;
+      json[r'transfers'] = this.transfers;
+      json[r'verifications'] = this.verifications;
+    if (this.currentPossession != null) {
+      json[r'currentPossession'] = this.currentPossession;
+    } else {
+      json[r'currentPossession'] = null;
+    }
+    if (this.currentTransferSequence != null) {
+      json[r'currentTransferSequence'] = this.currentTransferSequence;
+    } else {
+      json[r'currentTransferSequence'] = null;
+    }
+    if (this.deliveryMethodFromExpert != null) {
+      json[r'deliveryMethodFromExpert'] = this.deliveryMethodFromExpert;
+    } else {
+      json[r'deliveryMethodFromExpert'] = null;
     }
     return json;
   }
@@ -300,9 +466,12 @@ class RentalDetailDto {
         id: mapValueOfType<String>(json, r'id'),
         itemId: mapValueOfType<String>(json, r'itemId'),
         itemTitle: mapValueOfType<String>(json, r'itemTitle'),
-        itemImage: mapValueOfType<String>(json, r'itemImage'),
+        itemImageUrl: mapValueOfType<String>(json, r'itemImageUrl'),
+        ownerId: mapValueOfType<int>(json, r'ownerId'),
         ownerFirstName: mapValueOfType<String>(json, r'ownerFirstName'),
         ownerCity: mapValueOfType<String>(json, r'ownerCity'),
+        renterId: mapValueOfType<int>(json, r'renterId'),
+        renterFirstName: mapValueOfType<String>(json, r'renterFirstName'),
         startDate: mapDateTime(json, r'startDate', r''),
         endDate: mapDateTime(json, r'endDate', r''),
         actualReturnDate: mapDateTime(json, r'actualReturnDate', r''),
@@ -313,7 +482,18 @@ class RentalDetailDto {
         depositStatus: mapValueOfType<String>(json, r'depositStatus'),
         notes: mapValueOfType<String>(json, r'notes'),
         createdAt: mapDateTime(json, r'createdAt', r''),
-        hasReview: mapValueOfType<bool>(json, r'hasReview'),
+        renterWantsExpertReview: mapValueOfType<bool>(json, r'renterWantsExpertReview'),
+        ownerWantsExpertReview: mapValueOfType<bool>(json, r'ownerWantsExpertReview'),
+        expertReviewFee: num.parse('${json[r'expertReviewFee']}'),
+        assignedExpertId: mapValueOfType<int>(json, r'assignedExpertId'),
+        assignedExpertName: mapValueOfType<String>(json, r'assignedExpertName'),
+        handoverImages: RentalImageDto.listFromJson(json[r'handoverImages']),
+        returnImages: RentalImageDto.listFromJson(json[r'returnImages']),
+        transfers: RentalTransferDto.listFromJson(json[r'transfers']),
+        verifications: VerificationDto.listFromJson(json[r'verifications']),
+        currentPossession: mapValueOfType<String>(json, r'currentPossession'),
+        currentTransferSequence: mapValueOfType<int>(json, r'currentTransferSequence'),
+        deliveryMethodFromExpert: mapValueOfType<String>(json, r'deliveryMethodFromExpert'),
       );
     }
     return null;

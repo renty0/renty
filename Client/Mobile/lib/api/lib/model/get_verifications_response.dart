@@ -15,6 +15,7 @@ class GetVerificationsResponse {
   GetVerificationsResponse({
     this.success,
     this.error,
+    this.itemDetails,
     this.verifications = const [],
   });
 
@@ -28,12 +29,15 @@ class GetVerificationsResponse {
 
   String? error;
 
+  GetVerificationsResponseItemDetails? itemDetails;
+
   List<VerificationDto>? verifications;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is GetVerificationsResponse &&
     other.success == success &&
     other.error == error &&
+    other.itemDetails == itemDetails &&
     _deepEquality.equals(other.verifications, verifications);
 
   @override
@@ -41,10 +45,11 @@ class GetVerificationsResponse {
     // ignore: unnecessary_parenthesis
     (success == null ? 0 : success!.hashCode) +
     (error == null ? 0 : error!.hashCode) +
+    (itemDetails == null ? 0 : itemDetails!.hashCode) +
     (verifications == null ? 0 : verifications!.hashCode);
 
   @override
-  String toString() => 'GetVerificationsResponse[success=$success, error=$error, verifications=$verifications]';
+  String toString() => 'GetVerificationsResponse[success=$success, error=$error, itemDetails=$itemDetails, verifications=$verifications]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -57,6 +62,11 @@ class GetVerificationsResponse {
       json[r'error'] = this.error;
     } else {
       json[r'error'] = null;
+    }
+    if (this.itemDetails != null) {
+      json[r'itemDetails'] = this.itemDetails;
+    } else {
+      json[r'itemDetails'] = null;
     }
     if (this.verifications != null) {
       json[r'verifications'] = this.verifications;
@@ -87,6 +97,7 @@ class GetVerificationsResponse {
       return GetVerificationsResponse(
         success: mapValueOfType<bool>(json, r'success'),
         error: mapValueOfType<String>(json, r'error'),
+        itemDetails: GetVerificationsResponseItemDetails.fromJson(json[r'itemDetails']),
         verifications: VerificationDto.listFromJson(json[r'verifications']),
       );
     }

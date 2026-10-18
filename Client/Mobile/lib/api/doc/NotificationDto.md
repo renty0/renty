@@ -11,6 +11,10 @@ Name | Type | Description | Notes
 **id** | **String** |  | [optional] 
 **title** | **String** |  | [optional] 
 **message** | **String** |  | [optional] 
+**titleAr** | **String** |  | [optional] 
+**messageAr** | **String** |  | [optional] 
+**type** | **String** |  | [optional] 
+**actionUrl** | **String** |  | [optional] 
 **isRead** | **bool** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 

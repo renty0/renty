@@ -23,9 +23,9 @@ class ApiResponseOfAuthMeDataData {
     this.profileImageUrl,
     this.isVerified,
     this.createdAt,
-    this.address,
-    this.country,
-    this.bio,
+    this.permissions = const [],
+    this.idVerificationStatus,
+    this.idVerified,
   });
 
   ///
@@ -56,12 +56,6 @@ class ApiResponseOfAuthMeDataData {
 
   String? profileImageUrl;
 
-  String? address;
-
-  String? country;
-
-  String? bio;
-
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -78,6 +72,18 @@ class ApiResponseOfAuthMeDataData {
   ///
   DateTime? createdAt;
 
+  List<String>? permissions;
+
+  String? idVerificationStatus;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? idVerified;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ApiResponseOfAuthMeDataData &&
     other.id == id &&
@@ -90,9 +96,9 @@ class ApiResponseOfAuthMeDataData {
     other.profileImageUrl == profileImageUrl &&
     other.isVerified == isVerified &&
     other.createdAt == createdAt &&
-    other.address == address &&
-    other.country == country &&
-    other.bio == bio;
+    _deepEquality.equals(other.permissions, permissions) &&
+    other.idVerificationStatus == idVerificationStatus &&
+    other.idVerified == idVerified;
 
   @override
   int get hashCode =>
@@ -107,12 +113,12 @@ class ApiResponseOfAuthMeDataData {
     (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
     (isVerified == null ? 0 : isVerified!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
-    (address == null ? 0 : address!.hashCode) +
-    (country == null ? 0 : country!.hashCode) +
-    (bio == null ? 0 : bio!.hashCode);
+    (permissions == null ? 0 : permissions!.hashCode) +
+    (idVerificationStatus == null ? 0 : idVerificationStatus!.hashCode) +
+    (idVerified == null ? 0 : idVerified!.hashCode);
 
   @override
-  String toString() => 'ApiResponseOfAuthMeDataData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt, address=$address, country=$country, bio=$bio]';
+  String toString() => 'ApiResponseOfAuthMeDataData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt, permissions=$permissions, idVerificationStatus=$idVerificationStatus, idVerified=$idVerified]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -166,20 +172,20 @@ class ApiResponseOfAuthMeDataData {
     } else {
       json[r'createdAt'] = null;
     }
-    if (this.address != null) {
-      json[r'address'] = this.address;
+    if (this.permissions != null) {
+      json[r'permissions'] = this.permissions;
     } else {
-      json[r'address'] = null;
+      json[r'permissions'] = null;
     }
-    if (this.country != null) {
-      json[r'country'] = this.country;
+    if (this.idVerificationStatus != null) {
+      json[r'idVerificationStatus'] = this.idVerificationStatus;
     } else {
-      json[r'country'] = null;
+      json[r'idVerificationStatus'] = null;
     }
-    if (this.bio != null) {
-      json[r'bio'] = this.bio;
+    if (this.idVerified != null) {
+      json[r'idVerified'] = this.idVerified;
     } else {
-      json[r'bio'] = null;
+      json[r'idVerified'] = null;
     }
     return json;
   }
@@ -213,9 +219,11 @@ class ApiResponseOfAuthMeDataData {
         profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
         isVerified: mapValueOfType<bool>(json, r'isVerified'),
         createdAt: mapDateTime(json, r'createdAt', r''),
-        address: mapValueOfType<String>(json, r'address'),
-        country: mapValueOfType<String>(json, r'country'),
-        bio: mapValueOfType<String>(json, r'bio'),
+        permissions: json[r'permissions'] is Iterable
+            ? (json[r'permissions'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
+        idVerificationStatus: mapValueOfType<String>(json, r'idVerificationStatus'),
+        idVerified: mapValueOfType<bool>(json, r'idVerified'),
       );
     }
     return null;

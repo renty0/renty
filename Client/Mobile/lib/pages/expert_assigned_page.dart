@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -106,12 +107,17 @@ class _ExpertAssignedPageState extends State<ExpertAssignedPage> {
             ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               child: assignment.itemImage != null
-                  ? Image.network(
-                      assignment.itemImage!,
+                  ? CachedNetworkImage(
+                      imageUrl: assignment.itemImage!,
                       height: 160,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _buildImagePlaceholder(),
+                      placeholder: (_, __) => Container(
+                        height: 160,
+                        color: AppColor.borderGray,
+                        child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                      ),
+                      errorWidget: (_, __, ___) => _buildImagePlaceholder(),
                     )
                   : _buildImagePlaceholder(),
             ),
@@ -335,14 +341,14 @@ class _ExpertAssignedPageState extends State<ExpertAssignedPage> {
                                 ),
                               );
                               Navigator.pop(ctx);
-                              Get.snackbar('Success', 'Verification submitted!',
+                              AppNavigator.showSnackBar('Success', 'Verification submitted!',
                                   backgroundColor: AppColor.successColor.withOpacity(0.9),
-                                  colorText: Colors.white);
+                                  textColor: Colors.white);
                               await _loadAssignments();
                             } catch (e) {
-                              Get.snackbar('Error', 'Failed to submit verification',
+                              AppNavigator.showSnackBar('Error', 'Failed to submit verification',
                                   backgroundColor: AppColor.warningColor.withOpacity(0.9),
-                                  colorText: Colors.white);
+                                  textColor: Colors.white, isError: true);
                             } finally {
                               setModalState(() => _isSubmitting = false);
                             }

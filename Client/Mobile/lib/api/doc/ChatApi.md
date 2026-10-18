@@ -5,18 +5,19 @@
 import 'package:renty_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:5106*
+All URIs are relative to *https://starfish-app-vavqt.ondigitalocean.app*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createChat**](ChatApi.md#createchat) | **POST** /api/v1/chats | 
+[**deleteChat**](ChatApi.md#deletechat) | **DELETE** /api/v1/chats/{id} | 
 [**getChatMessages**](ChatApi.md#getchatmessages) | **GET** /api/v1/chats/{id}/messages | 
 [**getChats**](ChatApi.md#getchats) | **GET** /api/v1/chats | 
 [**postChatMessage**](ChatApi.md#postchatmessage) | **POST** /api/v1/chats/{id}/messages | 
 
 
 # **createChat**
-> ApiResponseOfChatCreateData createChat(createChatCommand)
+> ApiResponseOfCreateChatResponse createChat(createChatCommand)
 
 
 
@@ -49,7 +50,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ApiResponseOfChatCreateData**](ApiResponseOfChatCreateData.md)
+[**ApiResponseOfCreateChatResponse**](ApiResponseOfCreateChatResponse.md)
 
 ### Authorization
 
@@ -58,6 +59,53 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteChat**
+> ApiResponseOfString deleteChat(id)
+
+
+
+### Example
+```dart
+import 'package:renty_api/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = ChatApi();
+final id = id_example; // String | 
+
+try {
+    final result = api_instance.deleteChat(id);
+    print(result);
+} catch (e) {
+    print('Exception when calling ChatApi->deleteChat: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**ApiResponseOfString**](ApiResponseOfString.md)
+
+### Authorization
+
+[JWT](../README.md#JWT)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -153,7 +201,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **postChatMessage**
-> ApiResponseOfChatMessageData postChatMessage(id, postChatMessageCommand)
+> ApiResponseOfPostChatMessageResponse postChatMessage(id, postChatMessageCommand)
 
 
 
@@ -188,7 +236,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ApiResponseOfChatMessageData**](ApiResponseOfChatMessageData.md)
+[**ApiResponseOfPostChatMessageResponse**](ApiResponseOfPostChatMessageResponse.md)
 
 ### Authorization
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -76,7 +76,7 @@ class _registerState extends State<register> {
         if (lastNameController.text.trim().isEmpty)
           return 'Last name is required'.tr;
         if (emailController.text.trim().isEmpty) return 'Email is required'.tr;
-        if (!GetUtils.isEmail(emailController.text.trim()))
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text.trim()))
           return 'Please enter a valid email'.tr;
         break;
       case 1:
@@ -161,7 +161,6 @@ class _registerState extends State<register> {
       final command = RegisterCommand(
         email: emailController.text.trim(),
         password: passController.text.trim(),
-        confirmPassword: confirmController.text.trim(),
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
         phoneNumber: phoneController.text.trim().isEmpty
@@ -182,12 +181,11 @@ class _registerState extends State<register> {
       if (!mounted) return;
 
       if (response != null && response.error != true) {
-        Get.snackbar(
+        AppNavigator.showSnackBar(
           'Success'.tr,
           'Account created! Please verify your email.'.tr,
           backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
           colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
           duration: const Duration(seconds: 3),
         );
         Navigator.pushReplacement(

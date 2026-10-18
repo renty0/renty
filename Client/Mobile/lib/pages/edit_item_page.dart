@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -132,7 +132,7 @@ class _EditItemPageState extends State<EditItemPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      Get.snackbar('Error', 'Failed to load item', backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error', 'Failed to load item', backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
     }
   }
 
@@ -209,7 +209,7 @@ class _EditItemPageState extends State<EditItemPage> {
       // Upload new images
       final newImgCmds = await _uploadNewImages();
       if (newImgCmds == null && _pickedImages.isNotEmpty) {
-        Get.snackbar('Error', 'Image upload failed', backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+        AppNavigator.showSnackBar('Error', 'Image upload failed', backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
         setState(() => _isSaving = false);
         return;
       }
@@ -241,12 +241,12 @@ class _EditItemPageState extends State<EditItemPage> {
 
       await ApiService.items.updateItem(widget.itemId, cmd);
       if (!mounted) return;
-      Get.snackbar('Success', 'Item updated', backgroundColor: Colors.green.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Success', 'Item updated', backgroundColor: Colors.green.withOpacity(0.9), textColor: Colors.white);
       Navigator.pop(context, true);
     } on ApiException catch (e) {
-      Get.snackbar('Error', 'Update failed: ${e.message ?? e.code}', backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error', 'Update failed: ${e.message ?? e.code}', backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
     } catch (_) {
-      Get.snackbar('Error', 'Failed to update item', backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error', 'Failed to update item', backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

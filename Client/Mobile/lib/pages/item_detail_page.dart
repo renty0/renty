@@ -1,67 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/controllers/item_detail_controller.dart';
-import 'package:renty/core/controllers/rentals_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/pages/create_rental_page.dart';
 import 'package:renty/pages/public_profile_page.dart';
 import 'package:renty/pages/checkout_page.dart';
 
 class ItemDetailPage extends StatelessWidget {
-  const ItemDetailPage({super.key});
+  final String? itemId;
+  const ItemDetailPage({super.key, this.itemId});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ItemDetailController());
-    final args = Get.arguments as Map<String, dynamic>?;
-    final itemId = args?['itemId'] as String?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final effectiveItemId = itemId ?? (args?['itemId'] as String?);
 
-    if (itemId != null) {
-      controller.loadItem(itemId);
-    }
+    return BlocProvider(
+      create: (_) {
+        final cubit = ItemDetailCubit();
+        if (effectiveItemId != null) {
+          cubit.loadItem(effectiveItemId);
+        }
+        return cubit;
+      },
+      child: const _ItemDetailPageContent(),
+    );
+  }
+}
 
+class _ItemDetailPageContent extends StatelessWidget {
+  const _ItemDetailPageContent();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.read<ItemDetailCubit>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark
           ? const Color(0xFF121212)
           : AppColor.backgroundcolor,
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColor.fourthColor),
-          );
-        }
+      body: BlocBuilder<ItemDetailCubit, ItemDetailState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColor.fourthColor),
+            );
+          }
 
-        if (controller.errorMessage.value.isNotEmpty ||
-            controller.item.value == null) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                Text(
-                  controller.errorMessage.value.isNotEmpty
-                      ? controller.errorMessage.value
-                      : 'Item not found',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => Get.back(),
-                  child: const Text('Go Back'),
-                ),
-              ],
-            ),
-          );
-        }
+          if (state.errorMessage.isNotEmpty || state.item == null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.errorMessage.isNotEmpty
+                        ? state.errorMessage
+                        : 'Item not found'.tr,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Go Back'.tr),
+                  ),
+                ],
+              ),
+            );
+          }
 
-        final item = controller.item.value!;
+          final item = state.item!;
 
         return CustomScrollView(
           slivers: [
@@ -83,7 +99,7 @@ class ItemDetailPage extends StatelessWidget {
                     size: 20,
                   ),
                 ),
-                onPressed: () => Get.back(),
+                onPressed: () => Navigator.of(context).pop(),
               ),
               actions: [
                 // Share
@@ -105,15 +121,16 @@ class ItemDetailPage extends StatelessWidget {
                     SharePlus.instance.share(
                       ShareParams(
                         text:
-                            'Check out "$title" on Renty!\nhttps://renty.runasp.net/items/${item.id}',
+                            'Check out "$title" on Renty!\nhttps://starfish-app-vavqt.ondigitalocean.app/items/${item.id}',
                       ),
                     );
                   },
                 ),
                 // Reminder (only when rented)
                 if (item.status?.toLowerCase() == 'rented')
-                  Obx(
-                    () => IconButton(
+                  BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                    buildWhen: (p, c) => p.isReminded != c.isReminded,
+                    builder: (context, s) => IconButton(
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: const BoxDecoration(
@@ -121,10 +138,10 @@ class ItemDetailPage extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          controller.isReminded.value
+                          s.isReminded
                               ? Icons.notifications_active
                               : Icons.notifications_outlined,
-                          color: controller.isReminded.value
+                          color: s.isReminded
                               ? const Color(0xFFF59E0B)
                               : Colors.white,
                           size: 20,
@@ -134,8 +151,9 @@ class ItemDetailPage extends StatelessWidget {
                     ),
                   ),
                 // Favorite
-                Obx(
-                  () => IconButton(
+                BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                  buildWhen: (p, c) => p.isFavorite != c.isFavorite,
+                  builder: (context, s) => IconButton(
                     icon: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
@@ -143,10 +161,10 @@ class ItemDetailPage extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        controller.isFavorite.value
+                        s.isFavorite
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: controller.isFavorite.value
+                        color: s.isFavorite
                             ? Colors.red
                             : Colors.white,
                         size: 20,
@@ -235,7 +253,7 @@ class ItemDetailPage extends StatelessWidget {
                           // Rating row
                           Row(
                             children: [
-                              if (controller.avgRating.value > 0) ...[
+                              if (state.avgRating > 0) ...[
                                 Icon(
                                   Icons.star_rounded,
                                   color: Color(0xFF1A1A1A),
@@ -243,7 +261,7 @@ class ItemDetailPage extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  controller.avgRating.value.toStringAsFixed(1),
+                                  state.avgRating.toStringAsFixed(1),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: isDark
@@ -252,7 +270,7 @@ class ItemDetailPage extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  ' (${controller.totalReviews.value} reviews)',
+                                  ' (${state.totalReviews} reviews)',
                                   style: TextStyle(
                                     color: isDark
                                         ? Colors.white54
@@ -298,7 +316,7 @@ class ItemDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Pricing',
+                              'Pricing'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -382,152 +400,153 @@ class ItemDetailPage extends StatelessWidget {
                     ],
 
                     // ── Availability Calendar ──
-                    Obx(() {
-                      // Register GetX dependency by accessing observables directly
-                      controller.bookedRanges.length;
-                      controller.isLoadingAvailability.value;
-
-                      return Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Availability',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? Colors.white
-                                    : AppColor.primaryColor,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? const Color(0xFF2A2A2A)
-                                    : Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
+                    BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                      buildWhen: (p, c) =>
+                          p.bookedRanges != c.bookedRanges ||
+                          p.isLoadingAvailability != c.isLoadingAvailability,
+                      builder: (context, availState) {
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Availability'.tr,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
                                   color: isDark
-                                      ? Colors.grey[800]!
-                                      : Colors.grey[200]!,
+                                      ? Colors.white
+                                      : AppColor.primaryColor,
                                 ),
                               ),
-                              child: TableCalendar(
-                                firstDay: DateTime.now(),
-                                lastDay: DateTime.now().add(
-                                  const Duration(days: 365),
-                                ),
-                                focusedDay: DateTime.now(),
-                                calendarFormat: CalendarFormat.month,
-                                headerStyle: HeaderStyle(
-                                  formatButtonVisible: false,
-                                  titleCentered: true,
-                                  titleTextStyle: TextStyle(
-                                    fontWeight: FontWeight.w700,
+                              const SizedBox(height: 12),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF2A2A2A)
+                                      : Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
                                     color: isDark
-                                        ? Colors.white
-                                        : AppColor.darkText,
-                                  ),
-                                  leftChevronIcon: Icon(
-                                    Icons.chevron_left,
-                                    color: isDark
-                                        ? Colors.white54
-                                        : AppColor.mediumText,
-                                  ),
-                                  rightChevronIcon: Icon(
-                                    Icons.chevron_right,
-                                    color: isDark
-                                        ? Colors.white54
-                                        : AppColor.mediumText,
+                                        ? Colors.grey[800]!
+                                        : Colors.grey[200]!,
                                   ),
                                 ),
-                                calendarStyle: CalendarStyle(
-                                  defaultTextStyle: TextStyle(
-                                    color: isDark
-                                        ? Colors.white70
-                                        : AppColor.darkText,
+                                child: TableCalendar(
+                                  firstDay: DateTime.now(),
+                                  lastDay: DateTime.now().add(
+                                    const Duration(days: 365),
                                   ),
-                                  weekendTextStyle: TextStyle(
-                                    color: isDark
-                                        ? Colors.white54
-                                        : AppColor.mediumText,
-                                  ),
-                                  outsideTextStyle: TextStyle(
-                                    color: isDark
-                                        ? Colors.white24
-                                        : Colors.grey[400]!,
-                                  ),
-                                  todayDecoration: BoxDecoration(
-                                    color: AppColor.fourthColor.withOpacity(
-                                      0.3,
+                                  focusedDay: DateTime.now(),
+                                  calendarFormat: CalendarFormat.month,
+                                  headerStyle: HeaderStyle(
+                                    formatButtonVisible: false,
+                                    titleCentered: true,
+                                    titleTextStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppColor.darkText,
                                     ),
-                                    shape: BoxShape.circle,
+                                    leftChevronIcon: Icon(
+                                      Icons.chevron_left,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : AppColor.mediumText,
+                                    ),
+                                    rightChevronIcon: Icon(
+                                      Icons.chevron_right,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : AppColor.mediumText,
+                                    ),
                                   ),
-                                  todayTextStyle: TextStyle(
-                                    color: isDark
-                                        ? Colors.white
-                                        : AppColor.darkText,
-                                    fontWeight: FontWeight.w700,
+                                  calendarStyle: CalendarStyle(
+                                    defaultTextStyle: TextStyle(
+                                      color: isDark
+                                          ? Colors.white70
+                                          : AppColor.darkText,
+                                    ),
+                                    weekendTextStyle: TextStyle(
+                                      color: isDark
+                                          ? Colors.white54
+                                          : AppColor.mediumText,
+                                    ),
+                                    outsideTextStyle: TextStyle(
+                                      color: isDark
+                                          ? Colors.white24
+                                          : Colors.grey[400]!,
+                                    ),
+                                    todayDecoration: BoxDecoration(
+                                      color: AppColor.fourthColor.withOpacity(
+                                        0.3,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    todayTextStyle: TextStyle(
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppColor.darkText,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    disabledTextStyle: const TextStyle(
+                                      color: Colors.red,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
                                   ),
-                                  disabledTextStyle: const TextStyle(
-                                    color: Colors.red,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
+                                  enabledDayPredicate: (day) =>
+                                      !availState.isDateBooked(day),
+                                  onDaySelected: (_, __) {},
                                 ),
-                                enabledDayPredicate: (day) =>
-                                    !controller.isDateBooked(day),
-                                onDaySelected: (_, __) {},
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: AppColor.successColor,
-                                    shape: BoxShape.circle,
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.successColor,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Available',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark
-                                        ? Colors.white54
-                                        : AppColor.mediumText,
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Available'.tr,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : AppColor.mediumText,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16),
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
+                                  const SizedBox(width: 16),
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Booked',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark
-                                        ? Colors.white54
-                                        : AppColor.mediumText,
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Booked'.tr,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : AppColor.mediumText,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     _divider(isDark),
 
                     // ── Description ──
@@ -537,7 +556,7 @@ class ItemDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Description',
+                            'Description'.tr,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -571,7 +590,7 @@ class ItemDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Details',
+                            'Details'.tr,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -581,15 +600,15 @@ class ItemDetailPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          _detailRow('Type', item.type ?? 'N/A', isDark),
+                          _detailRow('Type'.tr, item.type ?? 'N/A', isDark),
                           _detailRow(
-                            'Condition',
+                            'Condition'.tr,
                             item.condition ?? 'N/A',
                             isDark,
                           ),
                           if (item.category != null)
                             _detailRow(
-                              'Category',
+                              'Category'.tr,
                               item.category!.nameEn ??
                                   item.category!.nameAr ??
                                   '',
@@ -597,7 +616,7 @@ class ItemDetailPage extends StatelessWidget {
                             ),
                           if (item.subcategory != null)
                             _detailRow(
-                              'Subcategory',
+                              'Subcategory'.tr,
                               item.subcategory!.nameEn ??
                                   item.subcategory!.nameAr ??
                                   '',
@@ -605,7 +624,7 @@ class ItemDetailPage extends StatelessWidget {
                             ),
                           if (item.brand != null)
                             _detailRow(
-                              'Brand',
+                              'Brand'.tr,
                               item.brand!.nameEn ?? item.brand!.nameAr ?? '',
                               isDark,
                             ),
@@ -680,58 +699,63 @@ class ItemDetailPage extends StatelessWidget {
                                 ),
                               ),
                               // Chat with Owner button (only when ownerId available)
-                              Obx(
-                                () => controller.ownerId.value != null
-                                    ? SizedBox(
-                                        height: 36,
-                                        child: ElevatedButton.icon(
-                                          onPressed: controller.isChatting.value
-                                              ? null
-                                              : controller.startChat,
-                                          icon: controller.isChatting.value
-                                              ? SizedBox(
-                                                  width: 16,
-                                                  height: 16,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                        color: Colors.white,
-                                                      ),
-                                                )
-                                              : Icon(
-                                                  Icons.chat_bubble_outline,
-                                                  size: 16,
-                                                ),
-                                          label: Text(
-                                            controller.isChatting.value
-                                                ? 'Opening...'
-                                                : 'Chat',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
+                              BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                                buildWhen: (p, c) =>
+                                    p.ownerId != c.ownerId ||
+                                    p.isChatting != c.isChatting,
+                                builder: (context, chatState) {
+                                  if (chatState.ownerId == null) {
+                                    return Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: isDark
+                                          ? Colors.white38
+                                          : Colors.grey[400],
+                                    );
+                                  }
+                                  return SizedBox(
+                                    height: 36,
+                                    child: ElevatedButton.icon(
+                                      onPressed: chatState.isChatting
+                                          ? null
+                                          : controller.startChat,
+                                      icon: chatState.isChatting
+                                          ? const SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.chat_bubble_outline,
+                                              size: 16,
                                             ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppColor.fourthColor,
-                                            foregroundColor: Colors.white,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            elevation: 0,
-                                          ),
+                                      label: Text(
+                                        chatState.isChatting
+                                            ? 'Opening...'
+                                            : 'Chat'.tr,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                      )
-                                    : Icon(
-                                        Icons.chevron_right_rounded,
-                                        color: isDark
-                                            ? Colors.white38
-                                            : Colors.grey[400],
                                       ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppColor.fourthColor,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        elevation: 0,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -739,7 +763,7 @@ class ItemDetailPage extends StatelessWidget {
                       ),
 
                     // ── Reviews with Star Distribution ──
-                    if (controller.reviews.isNotEmpty) ...[
+                    if (state.reviews.isNotEmpty) ...[
                       _divider(isDark),
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -747,7 +771,7 @@ class ItemDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Reviews (${controller.totalReviews.value})',
+                              'Reviews (${state.totalReviews})',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -765,7 +789,7 @@ class ItemDetailPage extends StatelessWidget {
                                 Column(
                                   children: [
                                     Text(
-                                      controller.avgRating.value
+                                      state.avgRating
                                           .toStringAsFixed(1),
                                       style: TextStyle(
                                         fontSize: 42,
@@ -779,7 +803,7 @@ class ItemDetailPage extends StatelessWidget {
                                       children: List.generate(
                                         5,
                                         (i) => Icon(
-                                          i < controller.avgRating.value.round()
+                                          i < state.avgRating.round()
                                               ? Icons.star_rounded
                                               : Icons.star_outline_rounded,
                                           size: 16,
@@ -789,7 +813,7 @@ class ItemDetailPage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${controller.totalReviews.value} reviews',
+                                      '${state.totalReviews} reviews',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: isDark
@@ -805,7 +829,7 @@ class ItemDetailPage extends StatelessWidget {
                                   child: Column(
                                     children: List.generate(5, (index) {
                                       final star = 5 - index;
-                                      final pct = controller.getStarPercent(
+                                      final pct = state.getStarPercent(
                                         star,
                                       );
                                       return Padding(
@@ -872,7 +896,7 @@ class ItemDetailPage extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            ...controller.reviews
+                            ...state.reviews
                                 .take(5)
                                 .map(
                                   (review) => _ReviewCard(
@@ -886,152 +910,160 @@ class ItemDetailPage extends StatelessWidget {
                     ],
 
                     // ── Write a Review (only if user has rented) ──
-                    Obx(() {
-                      if (!controller.hasRentedItem.value) {
-                        return const SizedBox.shrink();
-                      }
-                      return Column(
-                        children: [
-                          _divider(isDark),
-                          _WriteReviewSection(
-                            controller: controller,
-                            isDark: isDark,
-                          ),
-                        ],
-                      );
-                    }),
+                    BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                      buildWhen: (p, c) => p.hasRentedItem != c.hasRentedItem,
+                      builder: (context, rentState) {
+                        if (!rentState.hasRentedItem) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          children: [
+                            _divider(isDark),
+                            _WriteReviewSection(
+                              cubit: controller,
+                              isDark: isDark,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
 
                     // ── Similar Items ──
-                    Obx(() {
-                      if (controller.similarItems.isEmpty) {
-                        return const SizedBox.shrink();
-                      }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _divider(isDark),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-                            child: Text(
-                              'Similar Items',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? Colors.white
-                                    : AppColor.primaryColor,
+                    BlocBuilder<ItemDetailCubit, ItemDetailState>(
+                      buildWhen: (p, c) => p.similarItems != c.similarItems,
+                      builder: (context, simState) {
+                        if (simState.similarItems.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _divider(isDark),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                              child: Text(
+                                'Similar Items'.tr,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark
+                                      ? Colors.white
+                                      : AppColor.primaryColor,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 200,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              itemCount: controller.similarItems.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                final si = controller.similarItems[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.off(
-                                      () => const ItemDetailPage(),
-                                      arguments: {'itemId': si.id},
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? const Color(0xFF2A2A2A)
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(14),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.06),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
+                            SizedBox(
+                              height: 200,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                itemCount: simState.similarItems.length,
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(width: 12),
+                                itemBuilder: (context, index) {
+                                  final si = simState.similarItems[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ItemDetailPage(itemId: si.id),
                                         ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                top: Radius.circular(14),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? const Color(0xFF2A2A2A)
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.06),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.vertical(
+                                                  top: Radius.circular(14),
+                                                ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: si.primaryImage ?? '',
+                                              height: 110,
+                                              width: 150,
+                                              fit: BoxFit.cover,
+                                              placeholder: (_, __) => Container(
+                                                color: Colors.grey[200],
+                                                child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                ),
                                               ),
-                                          child: CachedNetworkImage(
-                                            imageUrl: si.primaryImage ?? '',
-                                            height: 110,
-                                            width: 150,
-                                            fit: BoxFit.cover,
-                                            placeholder: (_, __) => Container(
-                                              color: Colors.grey[200],
-                                              child: const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
+                                              errorWidget: (_, __, ___) =>
+                                                  Container(
+                                                    color: Colors.grey[200],
+                                                    height: 110,
+                                                    child: const Icon(
+                                                      Icons.image_outlined,
+                                                      color: Colors.grey,
                                                     ),
-                                              ),
+                                                  ),
                                             ),
-                                            errorWidget: (_, __, ___) =>
-                                                Container(
-                                                  color: Colors.grey[200],
-                                                  height: 110,
-                                                  child: const Icon(
-                                                    Icons.image_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                si.titleEn ?? si.titleAr ?? '',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: isDark
-                                                      ? Colors.white
-                                                      : AppColor.darkText,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              if (si.dailyPrice != null)
+                                          Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
                                                 Text(
-                                                  '${si.dailyPrice!.toStringAsFixed(0)} EGP',
+                                                  si.titleEn ?? si.titleAr ?? '',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w800,
-                                                    color: AppColor.fourthColor,
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDark
+                                                        ? Colors.white
+                                                        : AppColor.darkText,
                                                   ),
                                                 ),
-                                            ],
+                                                const SizedBox(height: 4),
+                                                if (si.dailyPrice != null)
+                                                  Text(
+                                                    '${si.dailyPrice!.toStringAsFixed(0)} EGP',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w800,
+                                                      color: AppColor.fourthColor,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
+                          ],
+                        );
+                      },
+                    ),
 
                     const SizedBox(height: 100),
                   ],
@@ -1043,82 +1075,142 @@ class ItemDetailPage extends StatelessWidget {
       }),
 
       // ── Bottom Action Bar ──
-      bottomNavigationBar: Obx(() {
-        if (controller.item.value == null) return const SizedBox.shrink();
-        final item = controller.item.value!;
-        final price = item.pricing.firstOrNull?.price;
+      bottomNavigationBar: BlocBuilder<ItemDetailCubit, ItemDetailState>(
+        buildWhen: (p, c) => p.item != c.item,
+        builder: (context, bState) {
+          if (bState.item == null) return const SizedBox.shrink();
+          final item = bState.item!;
+          final price = item.pricing.firstOrNull?.price;
 
-        return Container(
-          padding: EdgeInsets.fromLTRB(
-            20,
-            12,
-            20,
-            12 + MediaQuery.of(context).padding.bottom,
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 20,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              if (price != null)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${price.toStringAsFixed(0)} EGP',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: AppColor.fourthColor,
-                      ),
-                    ),
-                    Text(
-                      '/ ${item.pricing.first.pricingType ?? 'day'}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: isDark ? Colors.white54 : AppColor.lightText,
-                      ),
-                    ),
-                  ],
+          return Container(
+            padding: EdgeInsets.fromLTRB(
+              20,
+              12,
+              20,
+              12 + MediaQuery.of(context).padding.bottom,
+            ),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, -4),
                 ),
-              const Spacer(),
-              // Show Buy Now for sell/both items
-              if (item.type?.toLowerCase() == 'sell' ||
-                  item.type?.toLowerCase() == 'both')
-                Padding(
-                  padding: EdgeInsets.only(
-                    right: item.type?.toLowerCase() == 'both' ? 8 : 0,
+              ],
+            ),
+            child: Row(
+              children: [
+                if (price != null)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${price.toStringAsFixed(0)} EGP',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: AppColor.fourthColor,
+                        ),
+                      ),
+                      Text(
+                        '/ ${item.pricing.first.pricingType ?? 'day'}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? Colors.white54 : AppColor.lightText,
+                        ),
+                      ),
+                    ],
                   ),
-                  child: ElevatedButton(
+                const Spacer(),
+                // Show Buy Now for sell/both items
+                if (item.type?.toLowerCase() == 'sell' ||
+                    item.type?.toLowerCase() == 'both')
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: item.type?.toLowerCase() == 'both' ? 8 : 0,
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CheckoutPage(
+                              items: [
+                                CheckoutItem(
+                                  itemId: item.id ?? '',
+                                  title:
+                                      item.titleEn ?? item.titleAr ?? 'Untitled',
+                                  price: price?.toDouble() ?? 0,
+                                  quantity: 1,
+                                  imageUrl: item.images.firstOrNull?.imageUrl,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Buy Now'.tr,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                // Show Rent Now for rent/both items
+                if (item.type?.toLowerCase() != 'sell')
+                  ElevatedButton(
                     onPressed: () {
+                      num? dailyP, weeklyP, monthlyP;
+                      for (final p in item.pricing) {
+                        switch (p.pricingType?.toLowerCase()) {
+                          case 'daily':
+                            dailyP = p.price;
+                            break;
+                          case 'weekly':
+                            weeklyP = p.price;
+                            break;
+                          case 'monthly':
+                            monthlyP = p.price;
+                            break;
+                        }
+                      }
+                      dailyP ??= price;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => CheckoutPage(
-                            items: [
-                              CheckoutItem(
-                                itemId: item.id ?? '',
-                                title:
-                                    item.titleEn ?? item.titleAr ?? 'Untitled',
-                                price: price?.toDouble() ?? 0,
-                                quantity: 1,
-                                imageUrl: item.images.firstOrNull?.imageUrl,
-                              ),
-                            ],
+                          builder: (_) => CreateRentalPage(
+                            itemId: item.id ?? '',
+                            itemTitle: item.titleEn ?? item.titleAr ?? 'Untitled',
+                            itemImageUrl: item.images.firstOrNull?.imageUrl,
+                            ownerName: item.owner?.firstName != null
+                                ? '${item.owner!.firstName} ${item.owner?.lastName ?? ''}'.trim()
+                                : null,
+                            dailyPrice: dailyP,
+                            weeklyPrice: weeklyP,
+                            monthlyPrice: monthlyP,
+                            depositAmount: item.defaultDeposit,
                           ),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.primaryColor,
+                      backgroundColor: AppColor.fourthColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
@@ -1129,69 +1221,16 @@ class ItemDetailPage extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Text(
+                      'Rent Now'.tr,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),
                   ),
-                ),
-              // Show Rent Now for rent/both items
-              if (item.type?.toLowerCase() != 'sell')
-                ElevatedButton(
-                  onPressed: () {
-                    Get.put(RentalsController());
-                    num? dailyP, weeklyP, monthlyP;
-                    for (final p in item.pricing) {
-                      switch (p.pricingType?.toLowerCase()) {
-                        case 'daily':
-                          dailyP = p.price;
-                          break;
-                        case 'weekly':
-                          weeklyP = p.price;
-                          break;
-                        case 'monthly':
-                          monthlyP = p.price;
-                          break;
-                      }
-                    }
-                    dailyP ??= price;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => CreateRentalPage(
-                          itemId: item.id ?? '',
-                          itemTitle: item.titleEn ?? item.titleAr ?? 'Untitled',
-                          dailyPrice: dailyP,
-                          weeklyPrice: weeklyP,
-                          monthlyPrice: monthlyP,
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.fourthColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 14,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Rent Now',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                ),
-            ],
-          ),
-        );
-      }),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -1431,9 +1470,9 @@ class _ReviewCard extends StatelessWidget {
 }
 
 class _WriteReviewSection extends StatefulWidget {
-  final ItemDetailController controller;
+  final ItemDetailCubit cubit;
   final bool isDark;
-  const _WriteReviewSection({required this.controller, required this.isDark});
+  const _WriteReviewSection({required this.cubit, required this.isDark});
 
   @override
   State<_WriteReviewSection> createState() => _WriteReviewSectionState();
@@ -1457,7 +1496,7 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Leave a Review',
+            'Leave a Review'.tr,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -1526,48 +1565,52 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
           // Submit button
           Align(
             alignment: Alignment.centerRight,
-            child: Obx(
-              () => ElevatedButton(
-                onPressed:
-                    (_selectedStar == 0 ||
-                        _commentCtrl.text.trim().length < 10 ||
-                        widget.controller.isSubmittingReview.value)
-                    ? null
-                    : () async {
-                        await widget.controller.submitReview(
-                          _selectedStar,
-                          _commentCtrl.text.trim(),
-                        );
-                        setState(() => _selectedStar = 0);
-                        _commentCtrl.clear();
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.fourthColor,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.grey[400],
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
+            child: BlocBuilder<ItemDetailCubit, ItemDetailState>(
+              buildWhen: (p, c) => p.isSubmittingReview != c.isSubmittingReview,
+              builder: (context, revState) {
+                final isSubmitting = revState.isSubmittingReview;
+                return ElevatedButton(
+                  onPressed:
+                      (_selectedStar == 0 ||
+                          _commentCtrl.text.trim().length < 10 ||
+                          isSubmitting)
+                      ? null
+                      : () async {
+                          await widget.cubit.submitReview(
+                            _selectedStar,
+                            _commentCtrl.text.trim(),
+                          );
+                          setState(() => _selectedStar = 0);
+                          _commentCtrl.clear();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.fourthColor,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: Colors.grey[400],
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: widget.controller.isSubmittingReview.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Submit Review'.tr,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
-                      )
-                    : const Text(
-                        'Submit Review',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-              ),
+                );
+              },
             ),
           ),
         ],

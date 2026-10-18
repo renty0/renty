@@ -116,7 +116,7 @@ class FavoriteItemDto {
         dailyPrice: json[r'dailyPrice'] == null
             ? null
             : num.parse('${json[r'dailyPrice']}'),
-        primaryImage: _sanitizeImageUrl(mapValueOfType<String>(json, r'primaryImage')),
+        primaryImage: mapValueOfType<String>(json, r'primaryImage'),
         city: mapValueOfType<String>(json, r'city'),
       );
     }

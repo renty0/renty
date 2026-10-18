@@ -1,5 +1,5 @@
 import 'package:renty/core/constant/constants.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class Validators {
   static String? validateEmail(String? value) {

@@ -15,6 +15,7 @@ class ApiResponseOfSupportCreateTicketDataData {
   ApiResponseOfSupportCreateTicketDataData({
     this.ticketId,
     this.status,
+    this.autoReplyMessage,
   });
 
   ///
@@ -33,19 +34,23 @@ class ApiResponseOfSupportCreateTicketDataData {
   ///
   String? status;
 
+  Object? autoReplyMessage;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ApiResponseOfSupportCreateTicketDataData &&
     other.ticketId == ticketId &&
-    other.status == status;
+    other.status == status &&
+    other.autoReplyMessage == autoReplyMessage;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (ticketId == null ? 0 : ticketId!.hashCode) +
-    (status == null ? 0 : status!.hashCode);
+    (status == null ? 0 : status!.hashCode) +
+    (autoReplyMessage == null ? 0 : autoReplyMessage!.hashCode);
 
   @override
-  String toString() => 'ApiResponseOfSupportCreateTicketDataData[ticketId=$ticketId, status=$status]';
+  String toString() => 'ApiResponseOfSupportCreateTicketDataData[ticketId=$ticketId, status=$status, autoReplyMessage=$autoReplyMessage]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -58,6 +63,11 @@ class ApiResponseOfSupportCreateTicketDataData {
       json[r'status'] = this.status;
     } else {
       json[r'status'] = null;
+    }
+    if (this.autoReplyMessage != null) {
+      json[r'autoReplyMessage'] = this.autoReplyMessage;
+    } else {
+      json[r'autoReplyMessage'] = null;
     }
     return json;
   }
@@ -83,6 +93,7 @@ class ApiResponseOfSupportCreateTicketDataData {
       return ApiResponseOfSupportCreateTicketDataData(
         ticketId: mapValueOfType<String>(json, r'ticketId'),
         status: mapValueOfType<String>(json, r'status'),
+        autoReplyMessage: mapValueOfType<Object>(json, r'autoReplyMessage'),
       );
     }
     return null;

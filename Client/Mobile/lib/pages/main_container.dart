@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/functions/alertexitapp.dart';
-import 'package:renty/core/controllers/main_navigation_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/component/internet_checker_widget.dart';
 import 'package:renty/pages/home_page.dart';
 import 'package:renty/pages/marketplace_page.dart';
-import 'package:renty/pages/search_page.dart';
+import 'package:renty/pages/my_rentals_page.dart';
 import 'package:renty/pages/profile_page.dart';
 import 'package:renty/pages/chat_list_page.dart';
+import 'package:renty/core/services/notification_signalr_service.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'dart:async';
 
 class MainContainer extends StatefulWidget {
   final int initialIndex;
@@ -21,33 +25,55 @@ class MainContainer extends StatefulWidget {
 
 class _MainContainerState extends State<MainContainer>
     with WidgetsBindingObserver {
-  late final MainNavigationController _navController;
-
   final List<Widget> _pages = [
     const ChatListPage(),      // 0
     const MarketplacePage(),   // 1
     const HomePage(),          // 2
-    const SearchPage(),        // 3
+    const MyRentalsPage(),     // 3
     const ProfilePage(),       // 4
   ];
+
+  final _signalr = NotificationSignalrService();
+  StreamSubscription? _notifSub;
+
+  int _currentIndex = 2;
 
   @override
   void initState() {
     super.initState();
-    _navController = Get.put(MainNavigationController());
-    _navController.currentIndex.value =
-        widget.initialIndex.clamp(0, _pages.length - 1);
+    _currentIndex = widget.initialIndex.clamp(0, _pages.length - 1);
     WidgetsBinding.instance.addObserver(this);
 
-    // Listen to tab changes from the controller
-    ever(_navController.currentIndex, (int index) {
-      if (mounted) setState(() {});
+    // Ensure cubit starts at initialIndex if specified
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<NavigationCubit>().switchToTab(_currentIndex);
+      }
+    });
+
+    _initGlobalNotifications();
+  }
+
+  Future<void> _initGlobalNotifications() async {
+    await _signalr.startConnection();
+    _notifSub = _signalr.onNotification.listen((notif) {
+      AppNavigator.showSnackBar(
+        notif.title ?? 'Notification'.tr,
+        notif.message ?? '',
+        backgroundColor: AppColor.primaryColor.withOpacity(0.9),
+        duration: const Duration(seconds: 4),
+        icon: const Icon(Icons.notifications_active, color: Colors.white),
+      );
+
+      FlutterRingtonePlayer().playNotification();
     });
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _notifSub?.cancel();
+    _signalr.stopConnection();
     super.dispose();
   }
 
@@ -55,27 +81,33 @@ class _MainContainerState extends State<MainContainer>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop) {
-          // If not on Home tab, go to Home first
-          if (_navController.currentIndex.value != 2) {
-            _navController.currentIndex.value = 2;
-            return;
-          }
-          // Already on Home — show exit dialog
-          final shouldPop = await alertExitApp(context);
-          if (shouldPop && context.mounted) {
-            Navigator.of(context).pop();
-          }
-        }
+    return BlocConsumer<NavigationCubit, NavigationState>(
+      listener: (context, navState) {
+        setState(() => _currentIndex = navState.selectedIndex);
       },
-      child: InternetCheckerWidget(
-        showOnlineMessage: true,
-        child: Obx(() => Scaffold(
+      builder: (context, navState) {
+        _currentIndex = navState.selectedIndex;
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (!didPop) {
+              // If not on Home tab, go to Home first
+              if (_currentIndex != 2) {
+                context.read<NavigationCubit>().switchToTab(2);
+                return;
+              }
+              // Already on Home — show exit dialog
+              final shouldPop = await alertExitApp(context);
+              if (shouldPop && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            }
+          },
+          child: InternetCheckerWidget(
+            showOnlineMessage: true,
+            child: Scaffold(
               body: IndexedStack(
-                index: _navController.currentIndex.value,
+                index: _currentIndex,
                 children: _pages,
               ),
               bottomNavigationBar: Container(
@@ -89,9 +121,9 @@ class _MainContainerState extends State<MainContainer>
                   ],
                 ),
                 child: NavigationBar(
-                  selectedIndex: _navController.currentIndex.value,
+                  selectedIndex: _currentIndex,
                   onDestinationSelected: (index) {
-                    _navController.currentIndex.value = index;
+                    context.read<NavigationCubit>().switchToTab(index);
                   },
                   backgroundColor:
                       isDark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -123,11 +155,11 @@ class _MainContainerState extends State<MainContainer>
                       label: 'Home'.tr,
                     ),
                     NavigationDestination(
-                      icon: Icon(Icons.search_outlined,
+                      icon: Icon(Icons.receipt_long_outlined,
                           color: isDark ? Colors.white54 : AppColor.grey),
-                      selectedIcon: Icon(Icons.search_rounded,
+                      selectedIcon: Icon(Icons.receipt_long_rounded,
                           color: AppColor.fourthColor),
-                      label: 'Search'.tr,
+                      label: 'Rentals'.tr,
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.person_outline,
@@ -139,8 +171,10 @@ class _MainContainerState extends State<MainContainer>
                   ],
                 ),
               ),
-            )),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

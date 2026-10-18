@@ -15,7 +15,9 @@ class RentalListDto {
   RentalListDto({
     this.id,
     this.itemTitle,
-    this.itemImage,
+    this.itemImageUrl,
+    this.ownerId,
+    this.ownerFirstName,
     this.startDate,
     this.endDate,
     this.rentalPrice,
@@ -39,7 +41,23 @@ class RentalListDto {
   ///
   String? itemTitle;
 
-  String? itemImage;
+  String? itemImageUrl;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? ownerId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? ownerFirstName;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -85,7 +103,9 @@ class RentalListDto {
   bool operator ==(Object other) => identical(this, other) || other is RentalListDto &&
     other.id == id &&
     other.itemTitle == itemTitle &&
-    other.itemImage == itemImage &&
+    other.itemImageUrl == itemImageUrl &&
+    other.ownerId == ownerId &&
+    other.ownerFirstName == ownerFirstName &&
     other.startDate == startDate &&
     other.endDate == endDate &&
     other.rentalPrice == rentalPrice &&
@@ -97,7 +117,9 @@ class RentalListDto {
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
     (itemTitle == null ? 0 : itemTitle!.hashCode) +
-    (itemImage == null ? 0 : itemImage!.hashCode) +
+    (itemImageUrl == null ? 0 : itemImageUrl!.hashCode) +
+    (ownerId == null ? 0 : ownerId!.hashCode) +
+    (ownerFirstName == null ? 0 : ownerFirstName!.hashCode) +
     (startDate == null ? 0 : startDate!.hashCode) +
     (endDate == null ? 0 : endDate!.hashCode) +
     (rentalPrice == null ? 0 : rentalPrice!.hashCode) +
@@ -105,7 +127,7 @@ class RentalListDto {
     (depositStatus == null ? 0 : depositStatus!.hashCode);
 
   @override
-  String toString() => 'RentalListDto[id=$id, itemTitle=$itemTitle, itemImage=$itemImage, startDate=$startDate, endDate=$endDate, rentalPrice=$rentalPrice, status=$status, depositStatus=$depositStatus]';
+  String toString() => 'RentalListDto[id=$id, itemTitle=$itemTitle, itemImageUrl=$itemImageUrl, ownerId=$ownerId, ownerFirstName=$ownerFirstName, startDate=$startDate, endDate=$endDate, rentalPrice=$rentalPrice, status=$status, depositStatus=$depositStatus]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -119,10 +141,20 @@ class RentalListDto {
     } else {
       json[r'itemTitle'] = null;
     }
-    if (this.itemImage != null) {
-      json[r'itemImage'] = this.itemImage;
+    if (this.itemImageUrl != null) {
+      json[r'itemImageUrl'] = this.itemImageUrl;
     } else {
-      json[r'itemImage'] = null;
+      json[r'itemImageUrl'] = null;
+    }
+    if (this.ownerId != null) {
+      json[r'ownerId'] = this.ownerId;
+    } else {
+      json[r'ownerId'] = null;
+    }
+    if (this.ownerFirstName != null) {
+      json[r'ownerFirstName'] = this.ownerFirstName;
+    } else {
+      json[r'ownerFirstName'] = null;
     }
     if (this.startDate != null) {
       json[r'startDate'] = this.startDate!.toUtc().toIso8601String();
@@ -173,7 +205,9 @@ class RentalListDto {
       return RentalListDto(
         id: mapValueOfType<String>(json, r'id'),
         itemTitle: mapValueOfType<String>(json, r'itemTitle'),
-        itemImage: mapValueOfType<String>(json, r'itemImage'),
+        itemImageUrl: mapValueOfType<String>(json, r'itemImageUrl'),
+        ownerId: mapValueOfType<int>(json, r'ownerId'),
+        ownerFirstName: mapValueOfType<String>(json, r'ownerFirstName'),
         startDate: mapDateTime(json, r'startDate', r''),
         endDate: mapDateTime(json, r'endDate', r''),
         rentalPrice: num.parse('${json[r'rentalPrice']}'),

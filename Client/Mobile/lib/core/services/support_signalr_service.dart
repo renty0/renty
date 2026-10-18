@@ -50,13 +50,15 @@ class SupportSignalrMessage {
 /// - Exposes joinTicket, leaveTicket, sendTyping
 class SupportSignalrService {
   static const String _hubPath = '/hubs/support';
-  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
-  static const String _baseUrl = 'https://renty.runasp.net';
+  // 🔧 LOCAL DEV: change back to 'https://starfish-app-vavqt.ondigitalocean.app' before pushing
+  static const String _baseUrl =
+      'https://starfish-app-vavqt.ondigitalocean.app';
 
   HubConnection? _hubConnection;
   bool _isConnected = false;
 
-  final _messageController = StreamController<SupportSignalrMessage>.broadcast();
+  final _messageController =
+      StreamController<SupportSignalrMessage>.broadcast();
   final _typingController = StreamController<String>.broadcast(); // senderName
   final _connectionController = StreamController<bool>.broadcast();
 
@@ -68,7 +70,7 @@ class SupportSignalrService {
   Future<void> startConnection() async {
     if (_isConnected) return;
 
-    final token = sharedPref.getString('token');
+    final token = cachedToken; // SECURITY: in-memory cache from Keystore/Keychain
     if (token == null || token.isEmpty) return;
 
     try {
@@ -160,7 +162,10 @@ class SupportSignalrService {
   Future<void> sendTyping(String ticketId, String senderName) async {
     if (_hubConnection != null && _isConnected) {
       try {
-        await _hubConnection!.invoke('TypingIndicator', args: [ticketId, senderName]);
+        await _hubConnection!.invoke(
+          'TypingIndicator',
+          args: [ticketId, senderName],
+        );
       } catch (e) {
         debugPrint('SupportSignalR sendTyping error: $e');
       }
@@ -168,9 +173,13 @@ class SupportSignalrService {
   }
 
   Future<void> stopConnection() async {
-    try { await _hubConnection?.stop(); } catch (_) {}
+    try {
+      await _hubConnection?.stop();
+    } catch (_) {}
     _isConnected = false;
-    _connectionController.add(false);
+    if (!_connectionController.isClosed) {
+      _connectionController.add(false);
+    }
   }
 
   void dispose() {

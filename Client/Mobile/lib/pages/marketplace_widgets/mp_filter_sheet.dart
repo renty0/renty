@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/controllers/marketplace_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 // Egypt governorates — matches EGYPT_GOVERNORATES on the web
 const _governorates = [
@@ -13,10 +13,10 @@ const _governorates = [
 ];
 
 class MpFilterSheet extends StatefulWidget {
-  final MarketplaceController controller;
+  final MarketplaceCubit controller;
   const MpFilterSheet({super.key, required this.controller});
 
-  static Future<void> show(BuildContext context, MarketplaceController controller) {
+  static Future<void> show(BuildContext context, MarketplaceCubit controller) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -44,15 +44,15 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
   @override
   void initState() {
     super.initState();
-    final c = widget.controller;
-    _city      = c.selectedCity.value;
-    _condition = c.selectedCondition.value;
-    _type      = c.selectedType.value;
-    _minPrice  = c.minPrice.value;
-    _maxPrice  = c.maxPrice.value;
-    _startDate = c.startDate.value;
-    _endDate   = c.endDate.value;
-    _minRating = c.minRating.value;
+    final s    = widget.controller.state;
+    _city      = s.selectedCity;
+    _condition = s.selectedCondition;
+    _type      = s.selectedType;
+    _minPrice  = s.minPrice;
+    _maxPrice  = s.maxPrice;
+    _startDate = s.startDate;
+    _endDate   = s.endDate;
+    _minRating = s.minRating;
     _minCtrl   = TextEditingController(text: _minPrice?.toStringAsFixed(0) ?? '');
     _maxCtrl   = TextEditingController(text: _maxPrice?.toStringAsFixed(0) ?? '');
   }
@@ -66,14 +66,15 @@ class _MpFilterSheetState extends State<MpFilterSheet> {
 
   void _apply() {
     final c = widget.controller;
-    c.selectedCity.value      = _city;
-    c.selectedCondition.value = _condition;
-    c.selectedType.value      = _type;
-    c.minPrice.value          = _minCtrl.text.isNotEmpty ? double.tryParse(_minCtrl.text) : null;
-    c.maxPrice.value          = _maxCtrl.text.isNotEmpty ? double.tryParse(_maxCtrl.text) : null;
-    c.startDate.value         = _startDate;
-    c.endDate.value           = _endDate;
-    c.minRating.value         = _minRating;
+    c.setCity(_city);
+    c.setCondition(_condition);
+    c.setType(_type);
+    c.setPriceRange(
+      _minCtrl.text.isNotEmpty ? double.tryParse(_minCtrl.text) : null,
+      _maxCtrl.text.isNotEmpty ? double.tryParse(_maxCtrl.text) : null,
+    );
+    c.setDates(_startDate, _endDate);
+    c.setMinRating(_minRating);
     c.applyFilters();
     Navigator.pop(context);
   }

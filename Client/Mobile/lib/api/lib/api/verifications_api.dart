@@ -16,6 +16,54 @@ class VerificationsApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'POST /api/v1/verifications/{id}/claim' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> claimVerificationWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/verifications/{id}/claim'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfObject?> claimVerification(String id,) async {
+    final response = await claimVerificationWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfObject',) as ApiResponseOfObject;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/items/{id}/verify' operation and returns the [Response].
   /// Parameters:
   ///
@@ -96,6 +144,47 @@ class VerificationsApi {
 
   Future<ApiResponseOfGetExpertAssignedResponse?> getExpertAssigned() async {
     final response = await getExpertAssignedWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfGetExpertAssignedResponse',) as ApiResponseOfGetExpertAssignedResponse;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/verifications/unassigned' operation and returns the [Response].
+  Future<Response> getUnassignedVerificationsWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/verifications/unassigned';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  Future<ApiResponseOfGetExpertAssignedResponse?> getUnassignedVerifications() async {
+    final response = await getUnassignedVerificationsWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

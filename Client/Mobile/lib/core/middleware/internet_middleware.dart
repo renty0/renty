@@ -1,25 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/core/functions/checkinternet.dart';
 import 'package:renty/core/constant/app_colors.dart';
-
-/// Middleware to check internet before navigating to pages
-class InternetMiddleware extends GetMiddleware {
-  @override
-  int? get priority => 1;
-
-  @override
-  RouteSettings? redirect(String? route) {
-    // Check internet connection before navigating
-    return null;
-  }
-
-  @override
-  GetPage? onPageCalled(GetPage? page) {
-    // You can add internet check here if needed
-    return super.onPageCalled(page);
-  }
-}
 
 /// Show no internet dialog
 void showNoInternetDialog(BuildContext context) {

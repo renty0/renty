@@ -14,6 +14,7 @@ class AssignedVerificationDto {
   /// Returns a new [AssignedVerificationDto] instance.
   AssignedVerificationDto({
     this.verificationId,
+    this.itemId,
     this.itemTitleAr,
     this.itemTitleEn,
     this.itemImage,
@@ -30,6 +31,14 @@ class AssignedVerificationDto {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   String? verificationId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? itemId;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -72,6 +81,7 @@ class AssignedVerificationDto {
   @override
   bool operator ==(Object other) => identical(this, other) || other is AssignedVerificationDto &&
     other.verificationId == verificationId &&
+    other.itemId == itemId &&
     other.itemTitleAr == itemTitleAr &&
     other.itemTitleEn == itemTitleEn &&
     other.itemImage == itemImage &&
@@ -84,6 +94,7 @@ class AssignedVerificationDto {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (verificationId == null ? 0 : verificationId!.hashCode) +
+    (itemId == null ? 0 : itemId!.hashCode) +
     (itemTitleAr == null ? 0 : itemTitleAr!.hashCode) +
     (itemTitleEn == null ? 0 : itemTitleEn!.hashCode) +
     (itemImage == null ? 0 : itemImage!.hashCode) +
@@ -93,7 +104,7 @@ class AssignedVerificationDto {
     (createdAt == null ? 0 : createdAt!.hashCode);
 
   @override
-  String toString() => 'AssignedVerificationDto[verificationId=$verificationId, itemTitleAr=$itemTitleAr, itemTitleEn=$itemTitleEn, itemImage=$itemImage, rentalStartDate=$rentalStartDate, rentalEndDate=$rentalEndDate, checkType=$checkType, createdAt=$createdAt]';
+  String toString() => 'AssignedVerificationDto[verificationId=$verificationId, itemId=$itemId, itemTitleAr=$itemTitleAr, itemTitleEn=$itemTitleEn, itemImage=$itemImage, rentalStartDate=$rentalStartDate, rentalEndDate=$rentalEndDate, checkType=$checkType, createdAt=$createdAt]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -101,6 +112,11 @@ class AssignedVerificationDto {
       json[r'verificationId'] = this.verificationId;
     } else {
       json[r'verificationId'] = null;
+    }
+    if (this.itemId != null) {
+      json[r'itemId'] = this.itemId;
+    } else {
+      json[r'itemId'] = null;
     }
     if (this.itemTitleAr != null) {
       json[r'itemTitleAr'] = this.itemTitleAr;
@@ -160,6 +176,7 @@ class AssignedVerificationDto {
 
       return AssignedVerificationDto(
         verificationId: mapValueOfType<String>(json, r'verificationId'),
+        itemId: mapValueOfType<String>(json, r'itemId'),
         itemTitleAr: mapValueOfType<String>(json, r'itemTitleAr'),
         itemTitleEn: mapValueOfType<String>(json, r'itemTitleEn'),
         itemImage: mapValueOfType<String>(json, r'itemImage'),

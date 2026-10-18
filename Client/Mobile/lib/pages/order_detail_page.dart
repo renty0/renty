@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -233,13 +234,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           // Item image
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: item.primaryImage != null
-                ? Image.network(
-                    item.primaryImage!,
+            child: item.primaryImageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: item.primaryImageUrl!,
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    placeholder: (_, __) => Container(
+                      width: 60,
+                      height: 60,
+                      color: AppColor.borderGray,
+                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                    ),
+                    errorWidget: (_, __, ___) => Container(
                       width: 60,
                       height: 60,
                       color: AppColor.borderGray,
@@ -504,7 +511,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                (step.status ?? 'Unknown').replaceAll('_', ' ').capitalize ?? '',
+                (step.status ?? 'Unknown').replaceAll('_', ' ').capitalize,
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: isFirst ? AppColor.darkText : AppColor.mediumText),
               ),
               if (step.location != null && step.location!.isNotEmpty)

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -184,7 +184,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   onPressed: () {
                     Navigator.of(ctx).pop();
                     // Navigate back to home
-                    Get.offAllNamed('/home');
+                    AppNavigator.pushNamedAndRemoveUntil('/home');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.fourthColor,
@@ -203,7 +203,7 @@ class _PaymentPageState extends State<PaymentPage> {
               TextButton(
                 onPressed: () {
                   Navigator.of(ctx).pop();
-                  Get.offAllNamed('/orders');
+                  AppNavigator.pushNamedAndRemoveUntil('/orders');
                 },
                 child: Text('View My Orders',
                     style: TextStyle(
@@ -274,7 +274,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   const SizedBox(height: 14),
                   SizedBox(
-                    height: 110,
+                    height: 125,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _methods.length,
@@ -739,7 +739,7 @@ class _PaymentPageState extends State<PaymentPage> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: 100,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
               ? method.color.withValues(alpha: 0.08)

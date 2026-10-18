@@ -23,11 +23,14 @@ class ItemListDto {
     this.reviewCount,
     this.type,
     this.condition,
+    this.ownerId,
+    this.isForSale,
+    this.salePrice,
+    this.status,
+    this.createdAt,
     this.category,
     this.subcategory,
     this.brand,
-    this.status,
-    this.ownerId,
   });
 
   ///
@@ -86,15 +89,33 @@ class ItemListDto {
 
   String? condition;
 
+  int? ownerId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isForSale;
+
+  num? salePrice;
+
+  String? status;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  DateTime? createdAt;
+
   ItemListDtoCategory? category;
 
   ItemListDtoSubcategory? subcategory;
 
   ItemListDtoBrand? brand;
-
-  String? status;
-
-  String? ownerId;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is ItemListDto &&
@@ -108,11 +129,14 @@ class ItemListDto {
     other.reviewCount == reviewCount &&
     other.type == type &&
     other.condition == condition &&
+    other.ownerId == ownerId &&
+    other.isForSale == isForSale &&
+    other.salePrice == salePrice &&
+    other.status == status &&
+    other.createdAt == createdAt &&
     other.category == category &&
     other.subcategory == subcategory &&
-    other.brand == brand &&
-    other.status == status &&
-    other.ownerId == ownerId;
+    other.brand == brand;
 
   @override
   int get hashCode =>
@@ -127,14 +151,17 @@ class ItemListDto {
     (reviewCount == null ? 0 : reviewCount!.hashCode) +
     (type == null ? 0 : type!.hashCode) +
     (condition == null ? 0 : condition!.hashCode) +
+    (ownerId == null ? 0 : ownerId!.hashCode) +
+    (isForSale == null ? 0 : isForSale!.hashCode) +
+    (salePrice == null ? 0 : salePrice!.hashCode) +
+    (status == null ? 0 : status!.hashCode) +
+    (createdAt == null ? 0 : createdAt!.hashCode) +
     (category == null ? 0 : category!.hashCode) +
     (subcategory == null ? 0 : subcategory!.hashCode) +
-    (brand == null ? 0 : brand!.hashCode) +
-    (status == null ? 0 : status!.hashCode) +
-    (ownerId == null ? 0 : ownerId!.hashCode);
+    (brand == null ? 0 : brand!.hashCode);
 
   @override
-  String toString() => 'ItemListDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, dailyPrice=$dailyPrice, city=$city, primaryImage=$primaryImage, avgRating=$avgRating, reviewCount=$reviewCount, type=$type, condition=$condition, category=$category, subcategory=$subcategory, brand=$brand, status=$status, ownerId=$ownerId]';
+  String toString() => 'ItemListDto[id=$id, titleAr=$titleAr, titleEn=$titleEn, dailyPrice=$dailyPrice, city=$city, primaryImage=$primaryImage, avgRating=$avgRating, reviewCount=$reviewCount, type=$type, condition=$condition, ownerId=$ownerId, isForSale=$isForSale, salePrice=$salePrice, status=$status, createdAt=$createdAt, category=$category, subcategory=$subcategory, brand=$brand]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -188,6 +215,31 @@ class ItemListDto {
     } else {
       json[r'condition'] = null;
     }
+    if (this.ownerId != null) {
+      json[r'ownerId'] = this.ownerId;
+    } else {
+      json[r'ownerId'] = null;
+    }
+    if (this.isForSale != null) {
+      json[r'isForSale'] = this.isForSale;
+    } else {
+      json[r'isForSale'] = null;
+    }
+    if (this.salePrice != null) {
+      json[r'salePrice'] = this.salePrice;
+    } else {
+      json[r'salePrice'] = null;
+    }
+    if (this.status != null) {
+      json[r'status'] = this.status;
+    } else {
+      json[r'status'] = null;
+    }
+    if (this.createdAt != null) {
+      json[r'createdAt'] = this.createdAt!.toUtc().toIso8601String();
+    } else {
+      json[r'createdAt'] = null;
+    }
     if (this.category != null) {
       json[r'category'] = this.category;
     } else {
@@ -232,16 +284,21 @@ class ItemListDto {
             ? null
             : num.parse('${json[r'dailyPrice']}'),
         city: mapValueOfType<String>(json, r'city'),
-        primaryImage: _sanitizeImageUrl(mapValueOfType<String>(json, r'primaryImage')),
+        primaryImage: mapValueOfType<String>(json, r'primaryImage'),
         avgRating: mapValueOfType<double>(json, r'avgRating'),
         reviewCount: mapValueOfType<int>(json, r'reviewCount'),
         type: mapValueOfType<String>(json, r'type'),
         condition: mapValueOfType<String>(json, r'condition'),
+        ownerId: mapValueOfType<int>(json, r'ownerId'),
+        isForSale: mapValueOfType<bool>(json, r'isForSale'),
+        salePrice: json[r'salePrice'] == null
+            ? null
+            : num.parse('${json[r'salePrice']}'),
+        status: mapValueOfType<String>(json, r'status'),
+        createdAt: mapDateTime(json, r'createdAt', r''),
         category: ItemListDtoCategory.fromJson(json[r'category']),
         subcategory: ItemListDtoSubcategory.fromJson(json[r'subcategory']),
         brand: ItemListDtoBrand.fromJson(json[r'brand']),
-        status: mapValueOfType<String>(json, r'status'),
-        ownerId: mapValueOfType<String>(json, r'ownerId'),
       );
     }
     return null;

@@ -23,9 +23,9 @@ class AuthMeData {
     this.profileImageUrl,
     this.isVerified,
     this.createdAt,
-    this.address,
-    this.country,
-    this.bio,
+    this.permissions = const [],
+    this.idVerificationStatus,
+    this.idVerified,
   });
 
   ///
@@ -56,12 +56,6 @@ class AuthMeData {
 
   String? profileImageUrl;
 
-  String? address;
-
-  String? country;
-
-  String? bio;
-
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -78,44 +72,53 @@ class AuthMeData {
   ///
   DateTime? createdAt;
 
+  List<String>? permissions;
+
+  String? idVerificationStatus;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? idVerified;
+
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthMeData &&
-          other.id == id &&
-          other.firstName == firstName &&
-          other.lastName == lastName &&
-          other.email == email &&
-          other.phone == phone &&
-          other.city == city &&
-          other.role == role &&
-          other.profileImageUrl == profileImageUrl &&
-          other.isVerified == isVerified &&
-          other.createdAt == createdAt &&
-          other.address == address &&
-          other.country == country &&
-          other.bio == bio;
+  bool operator ==(Object other) => identical(this, other) || other is AuthMeData &&
+    other.id == id &&
+    other.firstName == firstName &&
+    other.lastName == lastName &&
+    other.email == email &&
+    other.phone == phone &&
+    other.city == city &&
+    other.role == role &&
+    other.profileImageUrl == profileImageUrl &&
+    other.isVerified == isVerified &&
+    other.createdAt == createdAt &&
+    _deepEquality.equals(other.permissions, permissions) &&
+    other.idVerificationStatus == idVerificationStatus &&
+    other.idVerified == idVerified;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id == null ? 0 : id!.hashCode) +
-      (firstName == null ? 0 : firstName!.hashCode) +
-      (lastName == null ? 0 : lastName!.hashCode) +
-      (email == null ? 0 : email!.hashCode) +
-      (phone == null ? 0 : phone!.hashCode) +
-      (city == null ? 0 : city!.hashCode) +
-      (role == null ? 0 : role!.hashCode) +
-      (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
-      (isVerified == null ? 0 : isVerified!.hashCode) +
-      (createdAt == null ? 0 : createdAt!.hashCode) +
-      (address == null ? 0 : address!.hashCode) +
-      (country == null ? 0 : country!.hashCode) +
-      (bio == null ? 0 : bio!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
+    (firstName == null ? 0 : firstName!.hashCode) +
+    (lastName == null ? 0 : lastName!.hashCode) +
+    (email == null ? 0 : email!.hashCode) +
+    (phone == null ? 0 : phone!.hashCode) +
+    (city == null ? 0 : city!.hashCode) +
+    (role == null ? 0 : role!.hashCode) +
+    (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
+    (isVerified == null ? 0 : isVerified!.hashCode) +
+    (createdAt == null ? 0 : createdAt!.hashCode) +
+    (permissions == null ? 0 : permissions!.hashCode) +
+    (idVerificationStatus == null ? 0 : idVerificationStatus!.hashCode) +
+    (idVerified == null ? 0 : idVerified!.hashCode);
 
   @override
-  String toString() =>
-      'AuthMeData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt, address=$address, country=$country, bio=$bio]';
+  String toString() => 'AuthMeData[id=$id, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, city=$city, role=$role, profileImageUrl=$profileImageUrl, isVerified=$isVerified, createdAt=$createdAt, permissions=$permissions, idVerificationStatus=$idVerificationStatus, idVerified=$idVerified]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -169,20 +172,20 @@ class AuthMeData {
     } else {
       json[r'createdAt'] = null;
     }
-    if (this.address != null) {
-      json[r'address'] = this.address;
+    if (this.permissions != null) {
+      json[r'permissions'] = this.permissions;
     } else {
-      json[r'address'] = null;
+      json[r'permissions'] = null;
     }
-    if (this.country != null) {
-      json[r'country'] = this.country;
+    if (this.idVerificationStatus != null) {
+      json[r'idVerificationStatus'] = this.idVerificationStatus;
     } else {
-      json[r'country'] = null;
+      json[r'idVerificationStatus'] = null;
     }
-    if (this.bio != null) {
-      json[r'bio'] = this.bio;
+    if (this.idVerified != null) {
+      json[r'idVerified'] = this.idVerified;
     } else {
-      json[r'bio'] = null;
+      json[r'idVerified'] = null;
     }
     return json;
   }
@@ -199,10 +202,8 @@ class AuthMeData {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "AuthMeData[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "AuthMeData[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "AuthMeData[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "AuthMeData[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -215,22 +216,20 @@ class AuthMeData {
         phone: mapValueOfType<String>(json, r'phone'),
         city: mapValueOfType<String>(json, r'city'),
         role: mapValueOfType<String>(json, r'role'),
-        profileImageUrl:
-            _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
+        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
         isVerified: mapValueOfType<bool>(json, r'isVerified'),
         createdAt: mapDateTime(json, r'createdAt', r''),
-        address: mapValueOfType<String>(json, r'address'),
-        country: mapValueOfType<String>(json, r'country'),
-        bio: mapValueOfType<String>(json, r'bio'),
+        permissions: json[r'permissions'] is Iterable
+            ? (json[r'permissions'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
+        idVerificationStatus: mapValueOfType<String>(json, r'idVerificationStatus'),
+        idVerified: mapValueOfType<bool>(json, r'idVerified'),
       );
     }
     return null;
   }
 
-  static List<AuthMeData> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<AuthMeData> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <AuthMeData>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -258,24 +257,20 @@ class AuthMeData {
   }
 
   // maps a json object with a list of AuthMeData-objects as value to a dart map
-  static Map<String, List<AuthMeData>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<AuthMeData>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<AuthMeData>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = AuthMeData.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = AuthMeData.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{};
+  static const requiredKeys = <String>{
+  };
 }
+

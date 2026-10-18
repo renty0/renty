@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class HomeTrust extends StatelessWidget {
   const HomeTrust({super.key});

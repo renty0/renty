@@ -1,18 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
 import 'package:renty/core/services/support_signalr_service.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/main.dart';
 
 /// Full ticket detail page with chat-style message thread + real-time SignalR.
 /// Matches web's ticket-details component exactly.
 class TicketDetailPage extends StatefulWidget {
-  const TicketDetailPage({super.key});
+  final String? ticketId;
+  const TicketDetailPage({super.key, this.ticketId});
 
   @override
   State<TicketDetailPage> createState() => _TicketDetailPageState();
@@ -34,13 +37,18 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
   String? _typingUser;
   int? _currentUserId;
 
+  bool _initialized = false;
+
   @override
-  void initState() {
-    super.initState();
-    _ticketId = Get.arguments as String?;
-    _currentUserId = int.tryParse(sharedPref.getString('user_id') ?? '');
-    _loadTicketDetails();
-    _initSignalR();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      _ticketId = widget.ticketId ?? (ModalRoute.of(context)?.settings.arguments as String?);
+      _currentUserId = int.tryParse(cachedUserId ?? '');
+      _loadTicketDetails();
+      _initSignalR();
+    }
   }
 
   @override
@@ -74,6 +82,11 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
             });
           });
           _scrollToBottom();
+
+          // Play default notification sound if message is from the support agent or other user
+          if (msg.senderId != _currentUserId) {
+            FlutterRingtonePlayer().playNotification();
+          }
         }
       }
     });
@@ -137,8 +150,31 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
     setState(() => _isSending = true);
 
     try {
-      final command = PostSupportMessageCommand(message: msg);
-      final resp = await ApiService.support.postSupportMessage(_ticketId!, command);
+      final response = await ApiService.client.invokeAPI(
+        '/api/v1/support/tickets/$_ticketId/messages',
+        'POST',
+        <QueryParam>[],
+        {
+          'ticketId': _ticketId,
+          'message': msg,
+          'mediaUrl': null,
+          'messageType': 0,
+          'isSupportAgent': false,
+        },
+        <String, String>{},
+        <String, String>{},
+        'application/json',
+      );
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw Exception('Failed to send message');
+      }
+
+      String? messageId;
+      if (response.body.isNotEmpty) {
+        final body = jsonDecode(response.body);
+        messageId = body['data']?['messageId'] as String?;
+      }
 
       if (!mounted) return;
       _msgController.clear();
@@ -147,7 +183,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
       setState(() {
         _isSending = false;
         _messages.add({
-          'id': resp?.data?.messageId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+          'id': messageId ?? DateTime.now().millisecondsSinceEpoch.toString(),
           'senderId': _currentUserId,
           'senderName': 'You',
           'senderRole': 'User',
@@ -159,8 +195,12 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSending = false);
-      Get.snackbar('Error'.tr, 'Failed to send message'.tr,
-          backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar(
+        'Error'.tr,
+        'Failed to send message'.tr,
+        backgroundColor: const Color(0xFFDC2626).withOpacity(0.9),
+        textColor: Colors.white,
+      );
     }
   }
 
@@ -450,7 +490,9 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
               onSubmitted: (_) => _sendReply(),
               onChanged: (_) {
                 if (_ticketId != null) {
-                  final name = sharedPref.getString('user_name') ?? 'User';
+                  // SECURITY: use cachedUserId as typing indicator name
+                  // (synchronous, no async needed for SignalR typing events)
+                  final name = cachedUserId ?? 'User';
                   _supportSignalr.sendTyping(_ticketId!, name);
                 }
               },

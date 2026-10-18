@@ -18,6 +18,7 @@ class OrderListDto {
     this.status,
     this.createdAt,
     this.itemCount,
+    this.primaryImageUrl,
   });
 
   ///
@@ -54,13 +55,16 @@ class OrderListDto {
   ///
   int? itemCount;
 
+  String? primaryImageUrl;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is OrderListDto &&
     other.id == id &&
     other.totalAmount == totalAmount &&
     other.status == status &&
     other.createdAt == createdAt &&
-    other.itemCount == itemCount;
+    other.itemCount == itemCount &&
+    other.primaryImageUrl == primaryImageUrl;
 
   @override
   int get hashCode =>
@@ -69,10 +73,11 @@ class OrderListDto {
     (totalAmount == null ? 0 : totalAmount!.hashCode) +
     (status == null ? 0 : status!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
-    (itemCount == null ? 0 : itemCount!.hashCode);
+    (itemCount == null ? 0 : itemCount!.hashCode) +
+    (primaryImageUrl == null ? 0 : primaryImageUrl!.hashCode);
 
   @override
-  String toString() => 'OrderListDto[id=$id, totalAmount=$totalAmount, status=$status, createdAt=$createdAt, itemCount=$itemCount]';
+  String toString() => 'OrderListDto[id=$id, totalAmount=$totalAmount, status=$status, createdAt=$createdAt, itemCount=$itemCount, primaryImageUrl=$primaryImageUrl]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -100,6 +105,11 @@ class OrderListDto {
       json[r'itemCount'] = this.itemCount;
     } else {
       json[r'itemCount'] = null;
+    }
+    if (this.primaryImageUrl != null) {
+      json[r'primaryImageUrl'] = this.primaryImageUrl;
+    } else {
+      json[r'primaryImageUrl'] = null;
     }
     return json;
   }
@@ -130,6 +140,7 @@ class OrderListDto {
         status: mapValueOfType<String>(json, r'status'),
         createdAt: mapDateTime(json, r'createdAt', r''),
         itemCount: mapValueOfType<int>(json, r'itemCount'),
+        primaryImageUrl: mapValueOfType<String>(json, r'primaryImageUrl'),
       );
     }
     return null;

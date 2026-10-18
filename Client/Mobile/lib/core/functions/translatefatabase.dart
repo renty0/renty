@@ -1,10 +1,7 @@
-import 'package:renty/core/services/services.dart';
-import 'package:get/get.dart';
+import 'package:renty/utils/language_manager.dart';
 
-translateDatabase(columnar, columnen) {
-  MyServices myServices = Get.find();
-
-  if (myServices.sharedPreferences.getString("lang") == "ar") {
+dynamic translateDatabase(dynamic columnar, dynamic columnen) {
+  if (LanguageManager.isArabic()) {
     return columnar;
   } else {
     return columnen;

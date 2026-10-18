@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -53,16 +53,12 @@ class _MyItemsPageState extends State<MyItemsPage> {
       if (!mounted) return;
 
       if (response != null && response.data != null) {
-        // Filter out soft-deleted items (status == 'Removed')
-        final activeItems = response.data!
-            .where((item) => item.status?.toLowerCase() != 'removed')
-            .toList();
+        // All items returned by the API are active
+        final activeItems = response.data!;
         setState(() {
           if (reset || _page == 1) _items.clear();
           _items.addAll(activeItems);
           _totalCount = response.total ?? _items.length;
-          // Adjust totalCount to exclude removed items
-          _totalCount -= (response.data!.length - activeItems.length);
           _isLoading = false;
           _isLoadingMore = false;
         });
@@ -117,14 +113,14 @@ class _MyItemsPageState extends State<MyItemsPage> {
         _items.remove(item);
         _totalCount = (_totalCount - 1).clamp(0, _totalCount);
       });
-      Get.snackbar('Deleted'.tr, 'Item has been deleted.'.tr,
-          backgroundColor: Colors.green.withValues(alpha: 0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Deleted'.tr, 'Item has been deleted.'.tr,
+          backgroundColor: Colors.green.withValues(alpha: 0.9), textColor: Colors.white);
     } on ApiException catch (e) {
-      Get.snackbar('Error'.tr, '${'Failed to delete'.tr}: ${e.message ?? e.code}',
-          backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error'.tr, '${'Failed to delete'.tr}: ${e.message ?? e.code}',
+          backgroundColor: Colors.red.withValues(alpha: 0.9), textColor: Colors.white, isError: true);
     } catch (e) {
-      Get.snackbar('Error'.tr, 'Failed to delete item.'.tr,
-          backgroundColor: Colors.red.withValues(alpha: 0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error'.tr, 'Failed to delete item.'.tr,
+          backgroundColor: Colors.red.withValues(alpha: 0.9), textColor: Colors.white, isError: true);
     }
   }
 
@@ -208,7 +204,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
       floatingActionButton: (!_isLoading && _error.isEmpty && _items.isNotEmpty)
           ? FloatingActionButton(
               onPressed: () async {
-                final created = await Get.toNamed('/create-item');
+                final created = await AppNavigator.pushNamed('/create-item');
                 if (created == true) _loadItems(reset: true);
               },
               backgroundColor: AppColor.fourthColor,
@@ -309,7 +305,7 @@ class _MyItemsPageState extends State<MyItemsPage> {
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: () async {
-                  final created = await Get.toNamed('/create-item');
+                  final created = await AppNavigator.pushNamed('/create-item');
                   if (created == true) _loadItems(reset: true);
                 },
                 icon: const Icon(Icons.add_rounded, size: 20),
@@ -407,7 +403,7 @@ class _MyItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed('/item-detail', arguments: {'itemId': item.id}),
+      onTap: () => AppNavigator.pushNamed('/item-detail', arguments: {'itemId': item.id}),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -585,7 +581,7 @@ class _MyItemCard extends StatelessWidget {
                           label: 'View'.tr,
                           fg: AppColor.fourthColor,
                           bg: AppColor.fourthColor.withValues(alpha: 0.1),
-                          onTap: () => Get.toNamed('/item-detail',
+                          onTap: () => AppNavigator.pushNamed('/item-detail',
                               arguments: {'itemId': item.id}),
                         ),
                         const SizedBox(width: 6),

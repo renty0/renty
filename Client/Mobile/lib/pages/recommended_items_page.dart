@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
@@ -13,11 +13,8 @@ class RecommendedItemsPage extends StatefulWidget {
 }
 
 class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
-  final _items = <ItemListDto>[];
+  final _entries = <RecommendationEntryDto>[];
   bool _isLoading = true;
-  int _page = 1;
-  int _totalPages = 1;
-  bool _loadingMore = false;
 
   @override
   void initState() {
@@ -25,42 +22,20 @@ class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
     _loadItems();
   }
 
-  Future<void> _loadItems({bool reset = true}) async {
-    if (reset) {
-      _page = 1;
-      setState(() => _isLoading = true);
-    } else {
-      if (_loadingMore || _page >= _totalPages) return;
-      setState(() => _loadingMore = true);
-    }
-
+  Future<void> _loadItems() async {
+    setState(() => _isLoading = true);
     try {
-      final response = await ApiService.items.getItems(_page, 20,
-          sort: 'popular', sortOrder: 'desc');
-      if (response != null) {
-        final newItems = response.data ?? [];
+      final response = await ApiService.recommendations.getRecommendationsV1();
+      if (response != null && response.data != null) {
         setState(() {
-          if (reset) {
-            _items.clear();
-          }
-          _items.addAll(newItems);
-          _totalPages = response.pages ?? 1;
+          _entries.clear();
+          _entries.addAll(response.data!.recommendations);
         });
       }
     } catch (e) {
       debugPrint('RecommendedItemsPage error: $e');
     } finally {
-      setState(() {
-        _isLoading = false;
-        _loadingMore = false;
-      });
-    }
-  }
-
-  void _loadMore() {
-    if (!_loadingMore && _page < _totalPages) {
-      _page++;
-      _loadItems(reset: false);
+      setState(() => _isLoading = false);
     }
   }
 
@@ -85,7 +60,7 @@ class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppColor.fourthColor))
-          : _items.isEmpty
+          : _entries.isEmpty
               ? Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -97,38 +72,43 @@ class _RecommendedItemsPageState extends State<RecommendedItemsPage> {
                     ],
                   ),
                 )
-              : NotificationListener<ScrollNotification>(
-                  onNotification: (scroll) {
-                    if (scroll.metrics.pixels > scroll.metrics.maxScrollExtent - 200) {
-                      _loadMore();
-                    }
-                    return false;
-                  },
-                  child: RefreshIndicator(
-                    color: AppColor.fourthColor,
-                    onRefresh: () => _loadItems(reset: true),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.72,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
-                        itemCount: _items.length + (_loadingMore ? 2 : 0),
-                        itemBuilder: (_, i) {
-                          if (i >= _items.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(strokeWidth: 2, color: AppColor.fourthColor),
-                              ),
-                            );
-                          }
-                          return HomeItemCard(item: _items[i]);
-                        },
+              : RefreshIndicator(
+                  color: AppColor.fourthColor,
+                  onRefresh: _loadItems,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.72,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
                       ),
+                      itemCount: _entries.length,
+                      itemBuilder: (_, i) {
+                        final entry = _entries[i];
+                        final mappedItem = ItemListDto(
+                          id: entry.item?.id,
+                          titleEn: entry.item?.title,
+                          titleAr: entry.item?.title,
+                          dailyPrice: entry.item?.price,
+                          primaryImage: entry.item?.image,
+                          city: entry.item?.city,
+                        );
+                        return HomeItemCard(
+                          item: mappedItem,
+                          onTap: () async {
+                            if (entry.id != null) {
+                              try {
+                                await ApiService.recommendations.recordRecommendationClick(entry.id!);
+                              } catch (e) {
+                                debugPrint('Error recording click: $e');
+                              }
+                            }
+                            AppNavigator.pushNamed('/item-detail', arguments: {'itemId': mappedItem.id});
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),

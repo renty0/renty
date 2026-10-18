@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/functions/checkinternet.dart';
 import 'package:renty/core/middleware/internet_middleware.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
 import 'package:renty/main.dart';
 import '../component/button.dart';
 import '../component/logo.dart';
@@ -76,7 +77,7 @@ class _loginState extends State<login> {
       setState(() => errorMessage = 'Please fill in all fields'.tr);
       return;
     }
-    if (!GetUtils.isEmail(email)) {
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       setState(() => errorMessage = 'Please enter a valid email address'.tr);
       return;
     }
@@ -103,39 +104,47 @@ class _loginState extends State<login> {
       if (response != null && response.data != null) {
         final data = response.data!;
         if (data.accessToken != null && data.accessToken!.isNotEmpty) {
-          // Save tokens
-          await sharedPref.setString("token", data.accessToken!);
+          // SECURITY: Store tokens and user info in Android Keystore / iOS Keychain concurrently
+          final List<Future<void>> secureStorageTasks = [
+            SecureStorageService.setToken(data.accessToken!),
+          ];
+          cachedToken = data.accessToken!;
           if (data.refreshToken != null) {
-            await sharedPref.setString("refresh_token", data.refreshToken!);
+            secureStorageTasks.add(SecureStorageService.setRefreshToken(data.refreshToken!));
+            cachedRefreshToken = data.refreshToken!;
           }
-          // Save user info
+          // Save user info to secure storage
           if (data.user != null) {
             if (data.user!.id != null) {
-              await sharedPref.setString("user_id", data.user!.id!.toString());
+              final uid = data.user!.id!.toString();
+              secureStorageTasks.add(SecureStorageService.setUserId(uid));
+              cachedUserId = uid;
             }
             if (data.user!.email != null) {
-              await sharedPref.setString("user_email", data.user!.email!);
+              secureStorageTasks.add(SecureStorageService.setUserEmail(data.user!.email!));
             }
             if (data.user!.firstName != null) {
-              await sharedPref.setString("user_name", data.user!.firstName!);
+              secureStorageTasks.add(SecureStorageService.setUserName(data.user!.firstName!));
             }
-            
+
             // Set user ID for isolated preferences
             final userId = data.user!.id!.toString();
             LanguageManager.setCurrentUser(userId);
             ThemeManager.setCurrentUser(userId);
             FavoritesManager.setCurrentUser(userId);
-            
+
             // Apply theme for the new user immediately
             final userTheme = ThemeManager.getThemeMode();
             MyApp.of(context)?.changeTheme(userTheme);
           }
 
+          // Await all keyring writes simultaneously (much faster than serial writes)
+          await Future.wait(secureStorageTasks);
+
           ApiService.refreshClient();
 
-          try {
-            await FavoritesManager.syncFavoritesFromServer();
-          } catch (_) {}
+          // Sync favorites in the background; do not block login navigation
+          FavoritesManager.syncFavoritesFromServer().catchError((_) {});
 
           if (!mounted) return;
           Navigator.of(context).pushNamedAndRemoveUntil("/main", (route) => false);
@@ -148,12 +157,11 @@ class _loginState extends State<login> {
           // EmailNotConfirmed: redirect to OTP verification (matches web behaviour)
           if (messages.isNotEmpty && messages.first == 'EmailNotConfirmed') {
             setState(() => isLoading = false);
-            Get.snackbar(
+            AppNavigator.showSnackBar(
               'Verify Your Email'.tr,
               'Please verify your email to continue.'.tr,
               backgroundColor: Colors.orange.withValues(alpha: 0.9),
-              colorText: Colors.white,
-              snackPosition: SnackPosition.TOP,
+              textColor: Colors.white,
             );
             Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => OTPVerificationPage(email: email),
@@ -183,12 +191,11 @@ class _loginState extends State<login> {
       final parsed = _parseApiError(e);
       if (parsed == 'EmailNotConfirmed' || e.message?.contains('EmailNotConfirmed') == true) {
         setState(() => isLoading = false);
-        Get.snackbar(
+        AppNavigator.showSnackBar(
           'Verify Your Email'.tr,
           'Please verify your email to continue.'.tr,
           backgroundColor: Colors.orange.withValues(alpha: 0.9),
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
+          textColor: Colors.white,
         );
         Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => OTPVerificationPage(email: email),

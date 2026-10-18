@@ -16,6 +16,54 @@ class ItemsApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'POST /api/v1/items/{id}/remind' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> addItemReminderWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/items/{id}/remind'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfReminderResponse?> addItemReminder(String id,) async {
+    final response = await addItemReminderWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfReminderResponse',) as ApiResponseOfReminderResponse;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/items' operation and returns the [Response].
   /// Parameters:
   ///
@@ -111,6 +159,54 @@ class ItemsApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/v1/items/{id}/availability' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getItemAvailabilityWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/items/{id}/availability'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfListOfBookedRangeDto?> getItemAvailability(String id,) async {
+    final response = await getItemAvailabilityWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfListOfBookedRangeDto',) as ApiResponseOfListOfBookedRangeDto;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/items/{id}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -159,25 +255,87 @@ class ItemsApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/v1/items/{id}/remind' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getItemReminderStatusWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/items/{id}/remind'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfReminderStatusResponse?> getItemReminderStatus(String id,) async {
+    final response = await getItemReminderStatusWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfReminderStatusResponse',) as ApiResponseOfReminderStatusResponse;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/items' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [int] page (required):
+  ///
   /// * [int] limit (required):
+  ///
   /// * [int] categoryId:
+  ///
   /// * [int] subcategoryId:
+  ///
   /// * [String] city:
+  ///
   /// * [num] minPrice:
+  ///
   /// * [num] maxPrice:
+  ///
   /// * [DateTime] startDate:
+  ///
   /// * [DateTime] endDate:
-  /// * [num] minRating:
+  ///
+  /// * [int] minRating:
+  ///
   /// * [String] type:
+  ///
   /// * [String] condition:
+  ///
   /// * [String] sort:
+  ///
   /// * [String] sortOrder:
+  ///
   /// * [String] owner:
-  Future<Response> getItemsWithHttpInfo(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, num? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
+  Future<Response> getItemsWithHttpInfo(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, int? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/items';
 
@@ -206,10 +364,10 @@ class ItemsApi {
       queryParams.addAll(_queryParams('', 'maxPrice', maxPrice));
     }
     if (startDate != null) {
-      queryParams.addAll(_queryParams('', 'startDate', startDate.toIso8601String()));
+      queryParams.addAll(_queryParams('', 'startDate', startDate));
     }
     if (endDate != null) {
-      queryParams.addAll(_queryParams('', 'endDate', endDate.toIso8601String()));
+      queryParams.addAll(_queryParams('', 'endDate', endDate));
     }
     if (minRating != null) {
       queryParams.addAll(_queryParams('', 'minRating', minRating));
@@ -245,23 +403,38 @@ class ItemsApi {
   }
 
   /// Parameters:
+  ///
   /// * [int] page (required):
+  ///
   /// * [int] limit (required):
+  ///
   /// * [int] categoryId:
+  ///
   /// * [int] subcategoryId:
+  ///
   /// * [String] city:
+  ///
   /// * [num] minPrice:
+  ///
   /// * [num] maxPrice:
+  ///
   /// * [DateTime] startDate:
+  ///
   /// * [DateTime] endDate:
-  /// * [num] minRating:
+  ///
+  /// * [int] minRating:
+  ///
   /// * [String] type:
+  ///
   /// * [String] condition:
+  ///
   /// * [String] sort:
+  ///
   /// * [String] sortOrder:
+  ///
   /// * [String] owner:
-  Future<ApiResponseOfListOfItemListDto?> getItems(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, num? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
-    final response = await getItemsWithHttpInfo(page, limit, categoryId: categoryId, subcategoryId: subcategoryId, city: city, minPrice: minPrice, maxPrice: maxPrice, startDate: startDate, endDate: endDate, minRating: minRating, type: type, condition: condition, sort: sort, sortOrder: sortOrder, owner: owner, );
+  Future<ApiResponseOfListOfItemListDto?> getItems(int page, int limit, { int? categoryId, int? subcategoryId, String? city, num? minPrice, num? maxPrice, DateTime? startDate, DateTime? endDate, int? minRating, String? type, String? condition, String? sort, String? sortOrder, String? owner, }) async {
+    final response = await getItemsWithHttpInfo(page, limit,  categoryId: categoryId, subcategoryId: subcategoryId, city: city, minPrice: minPrice, maxPrice: maxPrice, startDate: startDate, endDate: endDate, minRating: minRating, type: type, condition: condition, sort: sort, sortOrder: sortOrder, owner: owner, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -270,6 +443,102 @@ class ItemsApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfListOfItemListDto',) as ApiResponseOfListOfItemListDto;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/items/{id}/reactivate' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> reactivateItemWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/items/{id}/reactivate'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfObject?> reactivateItem(String id,) async {
+    final response = await reactivateItemWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfObject',) as ApiResponseOfObject;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'DELETE /api/v1/items/{id}/remind' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> removeItemReminderWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/items/{id}/remind'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'DELETE',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<ApiResponseOfReminderResponse?> removeItemReminder(String id,) async {
+    final response = await removeItemReminderWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseOfReminderResponse',) as ApiResponseOfReminderResponse;
     
     }
     return null;

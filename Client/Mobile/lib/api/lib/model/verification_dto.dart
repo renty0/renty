@@ -19,6 +19,7 @@ class VerificationDto {
     this.notes,
     this.expertFirstName,
     this.createdAt,
+    this.verificationCode,
   });
 
   ///
@@ -57,6 +58,8 @@ class VerificationDto {
   ///
   DateTime? createdAt;
 
+  String? verificationCode;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is VerificationDto &&
     other.id == id &&
@@ -64,7 +67,8 @@ class VerificationDto {
     other.status == status &&
     other.notes == notes &&
     other.expertFirstName == expertFirstName &&
-    other.createdAt == createdAt;
+    other.createdAt == createdAt &&
+    other.verificationCode == verificationCode;
 
   @override
   int get hashCode =>
@@ -74,10 +78,11 @@ class VerificationDto {
     (status == null ? 0 : status!.hashCode) +
     (notes == null ? 0 : notes!.hashCode) +
     (expertFirstName == null ? 0 : expertFirstName!.hashCode) +
-    (createdAt == null ? 0 : createdAt!.hashCode);
+    (createdAt == null ? 0 : createdAt!.hashCode) +
+    (verificationCode == null ? 0 : verificationCode!.hashCode);
 
   @override
-  String toString() => 'VerificationDto[id=$id, checkType=$checkType, status=$status, notes=$notes, expertFirstName=$expertFirstName, createdAt=$createdAt]';
+  String toString() => 'VerificationDto[id=$id, checkType=$checkType, status=$status, notes=$notes, expertFirstName=$expertFirstName, createdAt=$createdAt, verificationCode=$verificationCode]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -111,6 +116,11 @@ class VerificationDto {
     } else {
       json[r'createdAt'] = null;
     }
+    if (this.verificationCode != null) {
+      json[r'verificationCode'] = this.verificationCode;
+    } else {
+      json[r'verificationCode'] = null;
+    }
     return json;
   }
 
@@ -139,6 +149,7 @@ class VerificationDto {
         notes: mapValueOfType<String>(json, r'notes'),
         expertFirstName: mapValueOfType<String>(json, r'expertFirstName'),
         createdAt: mapDateTime(json, r'createdAt', r''),
+        verificationCode: mapValueOfType<String>(json, r'verificationCode'),
       );
     }
     return null;

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:renty/auth/login.dart';
 import 'package:renty/auth/register.dart';
 import 'package:renty/pages/change_password_screen.dart';
@@ -19,158 +21,215 @@ import 'package:renty/pages/support_tickets_page.dart';
 import 'package:renty/pages/create_ticket_page.dart';
 import 'package:renty/pages/ticket_detail_page.dart';
 import 'package:renty/onboarding/onboarding.dart';
-import 'package:get/get.dart';
 import 'auth/email_verification_notification.dart';
 import 'auth/forget_password_email.dart';
 import 'auth/forget_password_otp.dart';
 import 'auth/otp_verification_page.dart';
 import 'auth/reset_password.dart';
 
-List<GetPage<dynamic>>? routes = [
-  // Onboarding route
-  GetPage(name: "/onboarding", page: () => const OnBoarding()),
+/// Centralized Flutter route generation — replaces GetPage table
+class AppRoutes {
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      // Onboarding
+      case "/onboarding":
+        return MaterialPageRoute(
+          builder: (_) => const OnBoarding(),
+          settings: settings,
+        );
 
-  // Auth routes
-  GetPage(name: "/login", page: () => const login()),
-  GetPage(name: "/register", page: () => const register()),
+      // Auth
+      case "/login":
+        return MaterialPageRoute(
+          builder: (_) => const login(),
+          settings: settings,
+        );
+      case "/register":
+        return MaterialPageRoute(
+          builder: (_) => const register(),
+          settings: settings,
+        );
 
-  // Main container with bottom navigation (Chat = 0, Marketplace = 1, Home = 2, Search = 3, Profile = 4)
-  GetPage(name: "/main", page: () => const MainContainer(initialIndex: 2)),
-  GetPage(
-    name: "/home",
-    page: () => const MainContainer(initialIndex: 2),
-  ),
-  GetPage(
-    name: "/marketplace",
-    page: () => const MainContainer(initialIndex: 1),
-  ),
-  GetPage(
-    name: "/search",
-    page: () => const MainContainer(initialIndex: 3),
-  ),
-  GetPage(
-    name: "/profile",
-    page: () => const MainContainer(initialIndex: 4),
-  ),
+      // Main container with bottom navigation
+      case "/main":
+        return MaterialPageRoute(
+          builder: (_) => const MainContainer(initialIndex: 2),
+          settings: settings,
+        );
+      case "/home":
+        return MaterialPageRoute(
+          builder: (_) => const MainContainer(initialIndex: 2),
+          settings: settings,
+        );
+      case "/marketplace":
+        return MaterialPageRoute(
+          builder: (_) => const MainContainer(initialIndex: 1),
+          settings: settings,
+        );
+      case "/search":
+        return MaterialPageRoute(
+          builder: (_) => const MainContainer(initialIndex: 3),
+          settings: settings,
+        );
+      case "/profile":
+        return MaterialPageRoute(
+          builder: (_) => const MainContainer(initialIndex: 4),
+          settings: settings,
+        );
 
-  // Item detail
-  GetPage(
-    name: "/item-detail",
-    page: () => const ItemDetailPage(),
-    transition: Transition.cupertino,
-  ),
+      // Item detail
+      case "/item-detail":
+        return CupertinoPageRoute(
+          builder: (_) => const ItemDetailPage(),
+          settings: settings,
+        );
 
-  // Recommended items
-  GetPage(
-    name: "/recommended-items",
-    page: () => const RecommendedItemsPage(),
-    transition: Transition.cupertino,
-  ),
+      // Recommended items
+      case "/recommended-items":
+        return CupertinoPageRoute(
+          builder: (_) => const RecommendedItemsPage(),
+          settings: settings,
+        );
 
-  // Email verification
-  GetPage(
-    name: "/email-verification",
-    page: () => EmailVerificationNotification(email: ''),
-  ),
-  GetPage(
-    name: "/otp-verification",
-    page: () => OTPVerificationPage(email: ''),
-  ),
+      // Email verification
+      case "/email-verification":
+        final email =
+            settings.arguments is String ? settings.arguments as String : '';
+        return MaterialPageRoute(
+          builder: (_) => EmailVerificationNotification(email: email),
+          settings: settings,
+        );
+      case "/otp-verification":
+        final email =
+            settings.arguments is String ? settings.arguments as String : '';
+        return MaterialPageRoute(
+          builder: (_) => OTPVerificationPage(email: email),
+          settings: settings,
+        );
 
-  // Forgot password flow
-  GetPage(
-    name: "/forget-password-email",
-    page: () => ForgetPasswordEmailPage(),
-  ),
-  GetPage(
-    name: "/forget-password-otp",
-    page: () => ForgetPasswordOTPPage(email: ''),
-  ),
-  GetPage(
-    name: "/reset-password",
-    page: () => ResetPasswordPage(email: '', verificationCode: ''),
-  ),
+      // Forgot password flow
+      case "/forget-password-email":
+        return MaterialPageRoute(
+          builder: (_) => ForgetPasswordEmailPage(),
+          settings: settings,
+        );
+      case "/forget-password-otp":
+        final email =
+            settings.arguments is String ? settings.arguments as String : '';
+        return MaterialPageRoute(
+          builder: (_) => ForgetPasswordOTPPage(email: email),
+          settings: settings,
+        );
+      case "/reset-password":
+        String email = '';
+        String code = '';
+        if (settings.arguments is Map) {
+          final map = settings.arguments as Map;
+          email = map['email']?.toString() ?? '';
+          code = map['verificationCode']?.toString() ?? '';
+        }
+        return MaterialPageRoute(
+          builder: (_) =>
+              ResetPasswordPage(email: email, verificationCode: code),
+          settings: settings,
+        );
 
-  // Change password
-  GetPage(name: "/change-password", page: () => ChangePasswordScreen()),
+      // Change password
+      case "/change-password":
+        return MaterialPageRoute(
+          builder: (_) => ChangePasswordScreen(),
+          settings: settings,
+        );
 
-  // Edit profile
-  GetPage(
-    name: "/edit-profile",
-    page: () => const EditProfilePage(),
-    transition: Transition.cupertino,
-  ),
+      // Edit profile
+      case "/edit-profile":
+        return CupertinoPageRoute(
+          builder: (_) => const EditProfilePage(),
+          settings: settings,
+        );
 
-  // Phase 2: Rentals & Orders
-  GetPage(
-    name: "/my-rentals",
-    page: () => const MyRentalsPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/my-orders",
-    page: () => const MyOrdersPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/my-items",
-    page: () => const MyItemsPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/create-item",
-    page: () => const CreateItemPage(),
-    transition: Transition.cupertino,
-  ),
+      // Rentals & Orders
+      case "/my-rentals":
+        return CupertinoPageRoute(
+          builder: (_) => const MyRentalsPage(),
+          settings: settings,
+        );
+      case "/my-orders":
+        return CupertinoPageRoute(
+          builder: (_) => const MyOrdersPage(),
+          settings: settings,
+        );
+      case "/my-items":
+        return CupertinoPageRoute(
+          builder: (_) => const MyItemsPage(),
+          settings: settings,
+        );
+      case "/create-item":
+        return CupertinoPageRoute(
+          builder: (_) => const CreateItemPage(),
+          settings: settings,
+        );
 
-  // Phase 3: Communication & Engagement
-  GetPage(
-    name: "/notifications",
-    page: () => const NotificationsPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/favorites",
-    page: () => const FavoritesPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/chat-list",
-    page: () => const ChatListPage(),
-    transition: Transition.cupertino,
-  ),
+      // Communication & Engagement
+      case "/notifications":
+        return CupertinoPageRoute(
+          builder: (_) => const NotificationsPage(),
+          settings: settings,
+        );
+      case "/favorites":
+        return CupertinoPageRoute(
+          builder: (_) => const FavoritesPage(),
+          settings: settings,
+        );
+      case "/chat-list":
+        return CupertinoPageRoute(
+          builder: (_) => const ChatListPage(),
+          settings: settings,
+        );
 
-  // Phase 5: Expert / Verification & Wallet
-  GetPage(
-    name: "/expert-assigned",
-    page: () => const ExpertAssignedPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/verification-history",
-    page: () => const VerificationHistoryPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/wallet",
-    page: () => const WalletPage(),
-    transition: Transition.cupertino,
-  ),
+      // Expert / Verification & Wallet
+      case "/expert-assigned":
+        return CupertinoPageRoute(
+          builder: (_) => const ExpertAssignedPage(),
+          settings: settings,
+        );
+      case "/verification-history":
+        return CupertinoPageRoute(
+          builder: (_) => const VerificationHistoryPage(),
+          settings: settings,
+        );
+      case "/wallet":
+        return CupertinoPageRoute(
+          builder: (_) => const WalletPage(),
+          settings: settings,
+        );
 
-  // Support
-  GetPage(
-    name: "/support",
-    page: () => const SupportTicketsPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/support/new",
-    page: () => const CreateTicketPage(),
-    transition: Transition.cupertino,
-  ),
-  GetPage(
-    name: "/support/detail",
-    page: () => const TicketDetailPage(),
-    transition: Transition.cupertino,
-  ),
-];
+      // Support
+      case "/support":
+        return CupertinoPageRoute(
+          builder: (_) => const SupportTicketsPage(),
+          settings: settings,
+        );
+      case "/support/new":
+        return CupertinoPageRoute(
+          builder: (_) => const CreateTicketPage(),
+          settings: settings,
+        );
+      case "/support/detail":
+        return CupertinoPageRoute(
+          builder: (_) => const TicketDetailPage(),
+          settings: settings,
+        );
+
+      default:
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text('No route defined for ${settings.name}'),
+            ),
+          ),
+          settings: settings,
+        );
+    }
+  }
+}

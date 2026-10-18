@@ -15,6 +15,9 @@ class PostSupportMessageCommand {
   PostSupportMessageCommand({
     this.ticketId,
     this.message,
+    this.mediaUrl,
+    this.messageType,
+    this.isSupportAgent,
   });
 
   ///
@@ -25,27 +28,45 @@ class PostSupportMessageCommand {
   ///
   String? ticketId;
 
+  String? message;
+
+  String? mediaUrl;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? message;
+  MessageType? messageType;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isSupportAgent;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PostSupportMessageCommand &&
     other.ticketId == ticketId &&
-    other.message == message;
+    other.message == message &&
+    other.mediaUrl == mediaUrl &&
+    other.messageType == messageType &&
+    other.isSupportAgent == isSupportAgent;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (ticketId == null ? 0 : ticketId!.hashCode) +
-    (message == null ? 0 : message!.hashCode);
+    (message == null ? 0 : message!.hashCode) +
+    (mediaUrl == null ? 0 : mediaUrl!.hashCode) +
+    (messageType == null ? 0 : messageType!.hashCode) +
+    (isSupportAgent == null ? 0 : isSupportAgent!.hashCode);
 
   @override
-  String toString() => 'PostSupportMessageCommand[ticketId=$ticketId, message=$message]';
+  String toString() => 'PostSupportMessageCommand[ticketId=$ticketId, message=$message, mediaUrl=$mediaUrl, messageType=$messageType, isSupportAgent=$isSupportAgent]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -58,6 +79,21 @@ class PostSupportMessageCommand {
       json[r'message'] = this.message;
     } else {
       json[r'message'] = null;
+    }
+    if (this.mediaUrl != null) {
+      json[r'mediaUrl'] = this.mediaUrl;
+    } else {
+      json[r'mediaUrl'] = null;
+    }
+    if (this.messageType != null) {
+      json[r'messageType'] = this.messageType;
+    } else {
+      json[r'messageType'] = null;
+    }
+    if (this.isSupportAgent != null) {
+      json[r'isSupportAgent'] = this.isSupportAgent;
+    } else {
+      json[r'isSupportAgent'] = null;
     }
     return json;
   }
@@ -83,6 +119,9 @@ class PostSupportMessageCommand {
       return PostSupportMessageCommand(
         ticketId: mapValueOfType<String>(json, r'ticketId'),
         message: mapValueOfType<String>(json, r'message'),
+        mediaUrl: mapValueOfType<String>(json, r'mediaUrl'),
+        messageType: MessageType.fromJson(json[r'messageType']),
+        isSupportAgent: mapValueOfType<bool>(json, r'isSupportAgent'),
       );
     }
     return null;

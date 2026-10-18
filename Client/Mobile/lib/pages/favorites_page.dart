@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
-import 'package:renty/core/controllers/main_navigation_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/utils/favorites_manager.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -186,7 +186,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       child: GestureDetector(
         onTap: () {
           if (favorite.id != null) {
-            Get.toNamed('/item-detail', arguments: {'itemId': favorite.id});
+            AppNavigator.pushNamed('/item-detail', arguments: {'itemId': favorite.id});
           }
         },
         child: Container(
@@ -335,10 +335,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
-              try {
-                final nav = Get.find<MainNavigationController>();
-                nav.currentIndex.value = 1; // Marketplace tab
-              } catch (_) {}
+              NavigationCubit.instance.switchToTab(1); // Marketplace tab
             },
             icon: const Icon(Icons.storefront_rounded, size: 20),
             label: Text('Browse Items'.tr),

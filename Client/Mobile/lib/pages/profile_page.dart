@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/services/ProfileService.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/main.dart';
 import 'package:renty/pages/edit_profile_page.dart';
+import 'package:renty/pages/chat_room_page.dart';
 import 'package:renty/utils/language_manager.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -57,7 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: bgColor,
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColor.fourthColor))
+              child: CircularProgressIndicator(color: AppColor.fourthColor),
+            )
           : RefreshIndicator(
               color: AppColor.fourthColor,
               onRefresh: _loadProfile,
@@ -116,7 +120,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () async {
                                 final result = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                                  MaterialPageRoute(
+                                    builder: (_) => const EditProfilePage(),
+                                  ),
                                 );
                                 if (result == true) _loadProfile();
                               },
@@ -124,10 +130,21 @@ class _ProfilePageState extends State<ProfilePage> {
                               label: Text('Edit Profile'.tr),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColor.fourthColor,
-                                side: BorderSide(color: AppColor.fourthColor.withValues(alpha: 0.5)),
-                                textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                side: BorderSide(
+                                  color: AppColor.fourthColor.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
                               ),
                             ),
                           ),
@@ -145,21 +162,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 label: 'My Rentals'.tr,
                                 subtitle: 'View rental history'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/my-rentals'),
+                                onTap: () => AppNavigator.pushNamed('/my-rentals'),
                               ),
                               _ActionTile(
                                 icon: Icons.shopping_bag_outlined,
                                 label: 'My Orders'.tr,
                                 subtitle: 'Track your orders'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/my-orders'),
+                                onTap: () => AppNavigator.pushNamed('/my-orders'),
                               ),
                               _ActionTile(
                                 icon: Icons.inventory_2_outlined,
                                 label: 'My Items'.tr,
                                 subtitle: 'Manage your listings'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/my-items'),
+                                onTap: () => AppNavigator.pushNamed('/my-items'),
                               ),
                               _ActionTile(
                                 icon: Icons.account_balance_wallet_outlined,
@@ -167,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: 'Balance & transactions'.tr,
                                 isDark: isDark,
                                 iconColor: const Color(0xFF059669),
-                                onTap: () => Get.toNamed('/wallet'),
+                                onTap: () => AppNavigator.pushNamed('/wallet'),
                               ),
                               _ActionTile(
                                 icon: Icons.favorite_outline,
@@ -175,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 subtitle: 'Saved items'.tr,
                                 isDark: isDark,
                                 iconColor: Colors.red,
-                                onTap: () => Get.toNamed('/favorites'),
+                                onTap: () => AppNavigator.pushNamed('/favorites'),
                               ),
                             ],
                           ),
@@ -193,21 +210,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                 label: 'Messages'.tr,
                                 subtitle: 'Chat with others'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/chat-list'),
+                                onTap: () => AppNavigator.pushNamed('/chat-list'),
                               ),
                               _ActionTile(
                                 icon: Icons.notifications_outlined,
                                 label: 'Notifications'.tr,
                                 subtitle: 'Stay updated'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/notifications'),
+                                onTap: () => AppNavigator.pushNamed('/notifications'),
                               ),
                               _ActionTile(
                                 icon: Icons.support_agent_outlined,
                                 label: 'Support'.tr,
                                 subtitle: 'Get help'.tr,
                                 isDark: isDark,
-                                onTap: () => Get.toNamed('/support'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ChatRoomPage(
+                                        chatId: 'support',
+                                        otherUserName: 'Support Team',
+                                        isSupport: true,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 showDivider: false,
                               ),
                             ],
@@ -256,7 +284,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 isDark: isDark,
                                 iconColor: const Color(0xFF0ea5e9),
                                 onTap: () => _launchRentyUrl(
-                                  'https://appforyou.store/Renty/about.html'),
+                                  'https://appforyou.store/Renty/about.html',
+                                ),
                               ),
                               _ActionTile(
                                 icon: Icons.gavel_outlined,
@@ -265,7 +294,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 isDark: isDark,
                                 iconColor: const Color(0xFF0c295e),
                                 onTap: () => _launchRentyUrl(
-                                  'https://appforyou.store/Renty/terms.html'),
+                                  'https://appforyou.store/Renty/terms.html',
+                                ),
                               ),
                               _ActionTile(
                                 icon: Icons.shield_outlined,
@@ -274,7 +304,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 isDark: isDark,
                                 iconColor: const Color(0xFF059669),
                                 onTap: () => _launchRentyUrl(
-                                  'https://appforyou.store/Renty/privacy.html'),
+                                  'https://appforyou.store/Renty/privacy.html',
+                                ),
                               ),
                               _ActionTile(
                                 icon: Icons.help_outline_rounded,
@@ -284,7 +315,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 iconColor: const Color(0xFFd97706),
                                 showDivider: false,
                                 onTap: () => _launchRentyUrl(
-                                  'https://appforyou.store/Renty/faq.html'),
+                                  'https://appforyou.store/Renty/faq.html',
+                                ),
                               ),
                             ],
                           ),
@@ -307,11 +339,15 @@ class _ProfilePageState extends State<ProfilePage> {
     final firstName = _profile?['firstName'] ?? '';
     final lastName = _profile?['lastName'] ?? '';
     final name = '$firstName $lastName'.trim();
-    final displayName = name.isNotEmpty ? name : (_profile?['name'] ?? 'User'.tr);
-    final email = _profile?['email'] ??
-        sharedPref.getString('user_email') ??
-        '';
-    final initials = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U';
+    final displayName = name.isNotEmpty
+        ? name
+        : (_profile?['name'] ?? 'User'.tr);
+    // SECURITY: email is read from API profile response (_profile['email']);
+    // no longer stored/read from local storage.
+    final email = (_profile?['email'] as String?) ?? '';
+    final initials = displayName.isNotEmpty
+        ? displayName[0].toUpperCase()
+        : 'U';
     final profileImageUrl = _profile?['profilePictureUrl'] as String?;
 
     return Column(
@@ -342,13 +378,17 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Padding(
                 padding: const EdgeInsets.all(3),
                 child: ClipOval(
-                  child: profileImageUrl != null
-                      ? Image.network(
-                          profileImageUrl,
+                  child: (profileImageUrl != null && profileImageUrl.isNotEmpty)
+                      ? CachedNetworkImage(
+                          imageUrl: profileImageUrl.startsWith('http')
+                              ? profileImageUrl
+                              : 'https://starfish-app-vavqt.ondigitalocean.app${profileImageUrl.startsWith('/') ? '' : '/'}$profileImageUrl',
                           fit: BoxFit.cover,
                           width: 84,
                           height: 84,
-                          errorBuilder: (_, __, ___) => _buildInitialsAvatar(initials),
+                          placeholder: (_, __) => _buildInitialsAvatar(initials),
+                          errorWidget: (_, __, ___) =>
+                              _buildInitialsAvatar(initials),
                         )
                       : _buildInitialsAvatar(initials),
                 ),
@@ -357,13 +397,26 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         const SizedBox(height: 14),
-        Text(
-          displayName,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: textColor,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              displayName,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: textColor,
+              ),
+            ),
+            if (_profile?['isVerified'] == true) ...[
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.verified_rounded,
+                color: AppColor.successColor,
+                size: 20,
+              ),
+            ],
+          ],
         ),
         const SizedBox(height: 3),
         Text(
@@ -404,7 +457,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final ownerRating = _profile?['ownerRating'];
     final renterRating = _profile?['renterRating'];
     // Only show if at least one rating exists
-    if (ownerRating == null && renterRating == null) return const SizedBox.shrink();
+    if (ownerRating == null && renterRating == null)
+      return const SizedBox.shrink();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -419,40 +473,64 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      child: Row(children: [
-        Expanded(
-          child: _ratingItem(
-            'Owner Rating'.tr,
-            ownerRating ?? 0.0,
-            const Color(0xFF059669),
-            isDark,
+      child: Row(
+        children: [
+          Expanded(
+            child: _ratingItem(
+              'Owner Rating'.tr,
+              ownerRating ?? 0.0,
+              const Color(0xFF059669),
+              isDark,
+            ),
           ),
-        ),
-        Container(width: 1, height: 40, color: isDark ? Colors.white12 : Colors.grey[200]),
-        Expanded(
-          child: _ratingItem(
-            'Renter Rating'.tr,
-            renterRating ?? 0.0,
-            AppColor.fourthColor,
-            isDark,
+          Container(
+            width: 1,
+            height: 40,
+            color: isDark ? Colors.white12 : Colors.grey[200],
           ),
-        ),
-      ]),
+          Expanded(
+            child: _ratingItem(
+              'Renter Rating'.tr,
+              renterRating ?? 0.0,
+              AppColor.fourthColor,
+              isDark,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _ratingItem(String label, dynamic rating, Color color, bool isDark) {
     final val = (rating is num) ? rating.toDouble() : 0.0;
-    return Column(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(val.toStringAsFixed(1),
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: isDark ? Colors.white : AppColor.darkText)),
-        const SizedBox(width: 4),
-        Icon(Icons.star_rounded, size: 20, color: color),
-      ]),
-      const SizedBox(height: 4),
-      Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: isDark ? Colors.white54 : AppColor.lightText)),
-    ]);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              val.toStringAsFixed(1),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: isDark ? Colors.white : AppColor.darkText,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.star_rounded, size: 20, color: color),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: isDark ? Colors.white54 : AppColor.lightText,
+          ),
+        ),
+      ],
+    );
   }
 
   void _showDeleteAccountDialog() {
@@ -462,20 +540,38 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (ctx) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(children: [
-          const Icon(Icons.warning_amber_rounded, color: Color(0xFFDC2626), size: 28),
-          const SizedBox(width: 10),
-          Text('Delete Account'.tr,
-              style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColor.darkText)),
-        ]),
+        title: Row(
+          children: [
+            const Icon(
+              Icons.warning_amber_rounded,
+              color: Color(0xFFDC2626),
+              size: 28,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Delete Account'.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : AppColor.darkText,
+              ),
+            ),
+          ],
+        ),
         content: Text(
-          'This action is permanent and cannot be undone. All your data, listings, and history will be permanently deleted.'.tr,
-          style: TextStyle(color: isDark ? Colors.white70 : AppColor.mediumText, height: 1.4),
+          'This action is permanent and cannot be undone. All your data, listings, and history will be permanently deleted.'
+              .tr,
+          style: TextStyle(
+            color: isDark ? Colors.white70 : AppColor.mediumText,
+            height: 1.4,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel'.tr, style: TextStyle(color: AppColor.mediumText)),
+            child: Text(
+              'Cancel'.tr,
+              style: TextStyle(color: AppColor.mediumText),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -485,7 +581,9 @@ class _ProfilePageState extends State<ProfilePage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFDC2626),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: Text('Delete Account'.tr),
           ),
@@ -497,14 +595,31 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _deleteAccount() async {
     try {
       // Call DELETE /api/v1/auth/me directly (not in generated client)
-      await ApiService.client.invokeAPI('/api/v1/auth/me', 'DELETE', [], null, {}, {}, null);
+      await ApiService.client.invokeAPI(
+        '/api/v1/auth/me',
+        'DELETE',
+        [],
+        null,
+        {},
+        {},
+        null,
+      );
       await ApiService.clearTokens();
-      Get.offAllNamed('/login');
-      Get.snackbar('Account Deleted'.tr, 'Your account has been permanently deleted.'.tr,
-          backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.pushNamedAndRemoveUntil('/login');
+      AppNavigator.showSnackBar(
+        'Account Deleted'.tr,
+        'Your account has been permanently deleted.'.tr,
+        backgroundColor: const Color(0xFFDC2626).withOpacity(0.9),
+        textColor: Colors.white,
+      );
     } catch (e) {
-      Get.snackbar('Error'.tr, 'Failed to delete account. Please try again.'.tr,
-          backgroundColor: const Color(0xFFDC2626).withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar(
+        'Error'.tr,
+        'Failed to delete account. Please try again.'.tr,
+        backgroundColor: const Color(0xFFDC2626).withOpacity(0.9),
+        textColor: Colors.white,
+        isError: true,
+      );
     }
   }
 
@@ -578,13 +693,16 @@ class _ProfilePageState extends State<ProfilePage> {
       child: OutlinedButton.icon(
         onPressed: _showLogoutDialog,
         icon: const Icon(Icons.logout, size: 20),
-        label: Text('Logout'.tr,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        label: Text(
+          'Logout'.tr,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFFDC2626),
           side: BorderSide(color: const Color(0xFFDC2626).withOpacity(0.3)),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
     );
@@ -598,30 +716,39 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Logout'.tr,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColor.darkText)),
-        content: Text('Are you sure you want to logout?'.tr,
-            style: TextStyle(
-                color: isDark ? Colors.white70 : AppColor.mediumText)),
+        title: Text(
+          'Logout'.tr,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : AppColor.darkText,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to logout?'.tr,
+          style: TextStyle(
+            color: isDark ? Colors.white70 : AppColor.mediumText,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child:
-                Text('Cancel'.tr, style: TextStyle(color: AppColor.mediumText)),
+            child: Text(
+              'Cancel'.tr,
+              style: TextStyle(color: AppColor.mediumText),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               await ApiService.clearTokens();
-              Get.offAllNamed('/login');
+              AppNavigator.pushNamedAndRemoveUntil('/login');
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFDC2626),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: Text('Logout'.tr),
           ),
@@ -636,10 +763,7 @@ class _ThemeToggleTile extends StatelessWidget {
   final bool isDark;
   final bool showDivider;
 
-  const _ThemeToggleTile({
-    required this.isDark,
-    this.showDivider = true,
-  });
+  const _ThemeToggleTile({required this.isDark, this.showDivider = true});
 
   @override
   Widget build(BuildContext context) {
@@ -655,7 +779,11 @@ class _ThemeToggleTile extends StatelessWidget {
                   color: AppColor.fourthColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.dark_mode_outlined, size: 20, color: AppColor.fourthColor),
+                child: const Icon(
+                  Icons.dark_mode_outlined,
+                  size: 20,
+                  color: AppColor.fourthColor,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -697,8 +825,9 @@ class _ThemeToggleTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
-                height: 1,
-                color: isDark ? Colors.white10 : Colors.grey[200]),
+              height: 1,
+              color: isDark ? Colors.white10 : Colors.grey[200],
+            ),
           ),
       ],
     );
@@ -710,10 +839,7 @@ class _LanguageSelectionTile extends StatelessWidget {
   final bool isDark;
   final bool showDivider;
 
-  const _LanguageSelectionTile({
-    required this.isDark,
-    this.showDivider = true,
-  });
+  const _LanguageSelectionTile({required this.isDark, this.showDivider = true});
 
   @override
   Widget build(BuildContext context) {
@@ -731,7 +857,11 @@ class _LanguageSelectionTile extends StatelessWidget {
                   color: AppColor.fourthColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.language_outlined, size: 20, color: AppColor.fourthColor),
+                child: const Icon(
+                  Icons.language_outlined,
+                  size: 20,
+                  color: AppColor.fourthColor,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -760,8 +890,13 @@ class _LanguageSelectionTile extends StatelessWidget {
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: currentLanguageCode,
-                  icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDark ? Colors.white54 : AppColor.lightText),
-                  dropdownColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: isDark ? Colors.white54 : AppColor.lightText,
+                  ),
+                  dropdownColor: isDark
+                      ? const Color(0xFF1E1E1E)
+                      : Colors.white,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -774,14 +909,8 @@ class _LanguageSelectionTile extends StatelessWidget {
                     }
                   },
                   items: [
-                    DropdownMenuItem(
-                      value: 'en',
-                      child: Text('English'.tr),
-                    ),
-                    DropdownMenuItem(
-                      value: 'ar',
-                      child: Text('Arabic'.tr),
-                    ),
+                    DropdownMenuItem(value: 'en', child: Text('English'.tr)),
+                    DropdownMenuItem(value: 'ar', child: Text('Arabic'.tr)),
                   ],
                 ),
               ),
@@ -792,8 +921,9 @@ class _LanguageSelectionTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
-                height: 1,
-                color: isDark ? Colors.white10 : Colors.grey[200]),
+              height: 1,
+              color: isDark ? Colors.white10 : Colors.grey[200],
+            ),
           ),
       ],
     );
@@ -863,7 +993,7 @@ class _ActionTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                 Icon(
+                Icon(
                   LanguageManager.isArabic()
                       ? Icons.chevron_left_rounded
                       : Icons.chevron_right_rounded,
@@ -878,8 +1008,9 @@ class _ActionTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
-                height: 1,
-                color: isDark ? Colors.white10 : Colors.grey[200]),
+              height: 1,
+              color: isDark ? Colors.white10 : Colors.grey[200],
+            ),
           ),
       ],
     );

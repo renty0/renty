@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/pages/payment_page.dart';
+
 
 /// Checkout page — displays order summary and creates the order via API.
 /// Mirrors the Web's checkout-summary → payment → confirmation flow.
@@ -57,13 +59,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
       } else {
         final msg = (resp?.messages?.isNotEmpty == true)
             ? resp!.messages!.first
-            : 'Failed to create order';
+            : 'Failed to create order'.tr;
         _showError(msg);
       }
     } on ApiException catch (e) {
       _showError('Order failed: ${e.message}');
     } catch (e) {
-      _showError('Something went wrong. Please try again.');
+      _showError('Something went wrong. Please try again.'.tr);
     } finally {
       if (mounted) setState(() => _isCreating = false);
     }
@@ -92,7 +94,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Checkout', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Checkout'.tr, style: const TextStyle(fontWeight: FontWeight.w700)),
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         foregroundColor: textColor,
         elevation: 0,
@@ -110,14 +112,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Order Items ──
-                  _sectionTitle('Order Items', Icons.shopping_bag_outlined, textColor),
+                  _sectionTitle('Order Items'.tr, Icons.shopping_bag_outlined, textColor),
                   const SizedBox(height: 12),
                   ...widget.items.map((item) => _buildItemCard(
                       item, isDark, cardColor, textColor, subtextColor)),
                   const SizedBox(height: 20),
 
                   // ── Price Summary ──
-                  _sectionTitle('Price Summary', Icons.receipt_long_outlined, textColor),
+                  _sectionTitle('Price Summary'.tr, Icons.receipt_long_outlined, textColor),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -134,10 +136,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     child: Column(
                       children: [
-                        _costRow('Subtotal', '${_subtotal.toStringAsFixed(2)} EGP',
+                        _costRow('Subtotal'.tr, '${_subtotal.toStringAsFixed(2)} EGP',
                             textColor, subtextColor),
                         const SizedBox(height: 10),
-                        _costRow('Delivery Fee', '${_deliveryFee.toStringAsFixed(2)} EGP',
+                        _costRow('Delivery Fee'.tr, '${_deliveryFee.toStringAsFixed(2)} EGP',
                             textColor, subtextColor),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -147,7 +149,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Total',
+                            Text('Total'.tr,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
@@ -178,13 +180,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _trustItem(Icons.verified_user_outlined, 'SSL Secured', subtextColor),
+                        _trustItem(Icons.verified_user_outlined, 'SSL Secured'.tr, subtextColor),
                         Container(height: 20, width: 1,
                             color: AppColor.fourthColor.withValues(alpha: 0.2)),
-                        _trustItem(Icons.lock_outline, 'Encrypted', subtextColor),
+                        _trustItem(Icons.lock_outline, 'Encrypted'.tr, subtextColor),
                         Container(height: 20, width: 1,
                             color: AppColor.fourthColor.withValues(alpha: 0.2)),
-                        _trustItem(Icons.shield_outlined, 'Protected', subtextColor),
+                        _trustItem(Icons.shield_outlined, 'Protected'.tr, subtextColor),
                       ],
                     ),
                   ),
@@ -255,11 +257,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
       color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       child: Row(
         children: [
-          _stepCircle(0, currentStep, 'Summary'),
+          _stepCircle(0, currentStep, 'Summary'.tr),
           _stepLine(currentStep >= 1),
-          _stepCircle(1, currentStep, 'Payment'),
+          _stepCircle(1, currentStep, 'Payment'.tr),
           _stepLine(currentStep >= 2),
-          _stepCircle(2, currentStep, 'Done'),
+          _stepCircle(2, currentStep, 'Done'.tr),
         ],
       ),
     );

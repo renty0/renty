@@ -19,6 +19,10 @@ class AuthLoginUser {
     this.email,
     this.role,
     this.profileImageUrl,
+    this.permissions = const [],
+    this.idVerificationStatus,
+    this.idVerified,
+    this.isVerified,
   });
 
   ///
@@ -45,6 +49,26 @@ class AuthLoginUser {
 
   String? profileImageUrl;
 
+  List<String>? permissions;
+
+  String? idVerificationStatus;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? idVerified;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? isVerified;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is AuthLoginUser &&
     other.id == id &&
@@ -52,7 +76,11 @@ class AuthLoginUser {
     other.lastName == lastName &&
     other.email == email &&
     other.role == role &&
-    other.profileImageUrl == profileImageUrl;
+    other.profileImageUrl == profileImageUrl &&
+    _deepEquality.equals(other.permissions, permissions) &&
+    other.idVerificationStatus == idVerificationStatus &&
+    other.idVerified == idVerified &&
+    other.isVerified == isVerified;
 
   @override
   int get hashCode =>
@@ -62,10 +90,14 @@ class AuthLoginUser {
     (lastName == null ? 0 : lastName!.hashCode) +
     (email == null ? 0 : email!.hashCode) +
     (role == null ? 0 : role!.hashCode) +
-    (profileImageUrl == null ? 0 : profileImageUrl!.hashCode);
+    (profileImageUrl == null ? 0 : profileImageUrl!.hashCode) +
+    (permissions == null ? 0 : permissions!.hashCode) +
+    (idVerificationStatus == null ? 0 : idVerificationStatus!.hashCode) +
+    (idVerified == null ? 0 : idVerified!.hashCode) +
+    (isVerified == null ? 0 : isVerified!.hashCode);
 
   @override
-  String toString() => 'AuthLoginUser[id=$id, firstName=$firstName, lastName=$lastName, email=$email, role=$role, profileImageUrl=$profileImageUrl]';
+  String toString() => 'AuthLoginUser[id=$id, firstName=$firstName, lastName=$lastName, email=$email, role=$role, profileImageUrl=$profileImageUrl, permissions=$permissions, idVerificationStatus=$idVerificationStatus, idVerified=$idVerified, isVerified=$isVerified]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -99,6 +131,26 @@ class AuthLoginUser {
     } else {
       json[r'profileImageUrl'] = null;
     }
+    if (this.permissions != null) {
+      json[r'permissions'] = this.permissions;
+    } else {
+      json[r'permissions'] = null;
+    }
+    if (this.idVerificationStatus != null) {
+      json[r'idVerificationStatus'] = this.idVerificationStatus;
+    } else {
+      json[r'idVerificationStatus'] = null;
+    }
+    if (this.idVerified != null) {
+      json[r'idVerified'] = this.idVerified;
+    } else {
+      json[r'idVerified'] = null;
+    }
+    if (this.isVerified != null) {
+      json[r'isVerified'] = this.isVerified;
+    } else {
+      json[r'isVerified'] = null;
+    }
     return json;
   }
 
@@ -126,7 +178,13 @@ class AuthLoginUser {
         lastName: mapValueOfType<String>(json, r'lastName'),
         email: mapValueOfType<String>(json, r'email'),
         role: mapValueOfType<String>(json, r'role'),
-        profileImageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'profileImageUrl')),
+        profileImageUrl: mapValueOfType<String>(json, r'profileImageUrl'),
+        permissions: json[r'permissions'] is Iterable
+            ? (json[r'permissions'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
+        idVerificationStatus: mapValueOfType<String>(json, r'idVerificationStatus'),
+        idVerified: mapValueOfType<bool>(json, r'idVerified'),
+        isVerified: mapValueOfType<bool>(json, r'isVerified'),
       );
     }
     return null;

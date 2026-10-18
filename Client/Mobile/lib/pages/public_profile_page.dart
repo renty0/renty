@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/core/constant/app_colors.dart';
@@ -251,7 +251,7 @@ class _PublicProfilePageState extends State<PublicProfilePage>
           width: double.infinity, height: 46,
           child: ElevatedButton.icon(
             onPressed: () {
-              Get.toNamed('/chat-room', arguments: {
+              AppNavigator.pushNamed('/chat-room', arguments: {
                 'otherUserId': widget.userId,
                 'otherUserName': _fullName,
                 'otherUserImage': _imageUrl,
@@ -317,7 +317,7 @@ class _PublicProfilePageState extends State<PublicProfilePage>
     final price = item['dailyPrice'];
 
     return GestureDetector(
-      onTap: () => Get.toNamed('/item-detail', arguments: {'itemId': item['id']?.toString()}),
+      onTap: () => AppNavigator.pushNamed('/item-detail', arguments: {'itemId': item['id']?.toString()}),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E1E) : Colors.white,

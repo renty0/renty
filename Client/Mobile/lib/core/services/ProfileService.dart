@@ -1,40 +1,48 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/services/api_service.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
 import 'package:renty/main.dart';
 
 /// Professional service class to handle all profile-related API calls
 /// Migrated from old Crud/AppLink to generated OpenAPI client
 class ProfileService {
-  /// Get user profile data
+  /// Get user profile data — reads raw JSON to capture all fields including
+  /// address, country, bio, and idVerificationStatus which are absent from
+  /// the generated AuthMeData typed model.
   Future<Map<String, dynamic>?> getUserProfile() async {
     try {
-      final response = await ApiService.auth.authMe();
-      if (response != null && response.data != null) {
-        final data = response.data!;
-        return {
-          'id': data.id,
-          'firstName': data.firstName,
-          'lastName': data.lastName,
-          'email': data.email,
-          'phone': data.phone,
-          'phoneNumber': data.phone,
-          'profileImageUrl': data.profileImageUrl,
-          'profilePictureUrl': data.profileImageUrl,
-          'city': data.city,
-          'address': data.address,
-          'country': data.country,
-          'bio': data.bio,
-          'isVerified': data.isVerified,
-          'role': data.role,
-        };
-      } else {
-        throw Exception("Failed to load profile");
+      final raw = await ApiService.auth.authMeWithHttpInfo();
+      if (raw.statusCode == 200 && raw.body.isNotEmpty) {
+        final body = jsonDecode(raw.body) as Map<String, dynamic>?;
+        final data = body?['data'] as Map<String, dynamic>?;
+        if (data != null) {
+          return {
+            'id':                    data['id'],
+            'firstName':             data['firstName'],
+            'lastName':              data['lastName'],
+            'email':                 data['email'],
+            'phone':                 data['phone'],
+            'phoneNumber':           data['phone'],
+            'profileImageUrl':       data['profileImageUrl'],
+            'profilePictureUrl':     data['profileImageUrl'],
+            'city':                  data['city'],
+            'country':               data['country'],
+            'address':               data['address'],
+            'bio':                   data['bio'],
+            'isVerified':            data['isVerified'],
+            'role':                  data['role'],
+            'idVerificationStatus':  data['idVerificationStatus'],
+            'idRejectionNotes':      data['idRejectionNotes'],
+          };
+        }
       }
+      throw Exception('Failed to load profile');
     } catch (e) {
-      print("Error fetching profile: $e");
+      print('Error fetching profile: $e');
       rethrow;
     }
   }
@@ -56,10 +64,11 @@ class ProfileService {
         // Update local cache
         if (profile != null) {
           if (profile['firstName'] != null) {
-            sharedPref.setString("user_name", profile['firstName']);
+            // SECURITY: user PII stored in Keystore/Keychain
+            await SecureStorageService.setUserName(profile['firstName']);
           }
           if (profile['phone'] != null) {
-            sharedPref.setString("user_phone", profile['phone']);
+            await SecureStorageService.setUserPhone(profile['phone']);
           }
         }
         return profile;

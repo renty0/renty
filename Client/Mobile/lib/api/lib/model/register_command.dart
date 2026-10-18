@@ -15,11 +15,9 @@ class RegisterCommand {
   RegisterCommand({
     this.email,
     this.password,
-    this.confirmPassword,
     this.firstName,
     this.lastName,
     this.phoneNumber,
-    this.userType,
     this.address,
     this.city,
     this.country,
@@ -48,14 +46,6 @@ class RegisterCommand {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? confirmPassword;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   String? firstName;
 
   ///
@@ -67,14 +57,6 @@ class RegisterCommand {
   String? lastName;
 
   String? phoneNumber;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  UserType? userType;
 
   String? address;
 
@@ -88,11 +70,9 @@ class RegisterCommand {
   bool operator ==(Object other) => identical(this, other) || other is RegisterCommand &&
     other.email == email &&
     other.password == password &&
-    other.confirmPassword == confirmPassword &&
     other.firstName == firstName &&
     other.lastName == lastName &&
     other.phoneNumber == phoneNumber &&
-    other.userType == userType &&
     other.address == address &&
     other.city == city &&
     other.country == country &&
@@ -103,18 +83,16 @@ class RegisterCommand {
     // ignore: unnecessary_parenthesis
     (email == null ? 0 : email!.hashCode) +
     (password == null ? 0 : password!.hashCode) +
-    (confirmPassword == null ? 0 : confirmPassword!.hashCode) +
     (firstName == null ? 0 : firstName!.hashCode) +
     (lastName == null ? 0 : lastName!.hashCode) +
     (phoneNumber == null ? 0 : phoneNumber!.hashCode) +
-    (userType == null ? 0 : userType!.hashCode) +
     (address == null ? 0 : address!.hashCode) +
     (city == null ? 0 : city!.hashCode) +
     (country == null ? 0 : country!.hashCode) +
     (bio == null ? 0 : bio!.hashCode);
 
   @override
-  String toString() => 'RegisterCommand[email=$email, password=$password, confirmPassword=$confirmPassword, firstName=$firstName, lastName=$lastName, phoneNumber=$phoneNumber, userType=$userType, address=$address, city=$city, country=$country, bio=$bio]';
+  String toString() => 'RegisterCommand[email=$email, password=$password, firstName=$firstName, lastName=$lastName, phoneNumber=$phoneNumber, address=$address, city=$city, country=$country, bio=$bio]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -127,11 +105,6 @@ class RegisterCommand {
       json[r'password'] = this.password;
     } else {
       json[r'password'] = null;
-    }
-    if (this.confirmPassword != null) {
-      json[r'confirmPassword'] = this.confirmPassword;
-    } else {
-      json[r'confirmPassword'] = null;
     }
     if (this.firstName != null) {
       json[r'firstName'] = this.firstName;
@@ -147,11 +120,6 @@ class RegisterCommand {
       json[r'phoneNumber'] = this.phoneNumber;
     } else {
       json[r'phoneNumber'] = null;
-    }
-    if (this.userType != null) {
-      json[r'userType'] = this.userType;
-    } else {
-      json[r'userType'] = null;
     }
     if (this.address != null) {
       json[r'address'] = this.address;
@@ -197,11 +165,9 @@ class RegisterCommand {
       return RegisterCommand(
         email: mapValueOfType<String>(json, r'email'),
         password: mapValueOfType<String>(json, r'password'),
-        confirmPassword: mapValueOfType<String>(json, r'confirmPassword'),
         firstName: mapValueOfType<String>(json, r'firstName'),
         lastName: mapValueOfType<String>(json, r'lastName'),
         phoneNumber: mapValueOfType<String>(json, r'phoneNumber'),
-        userType: UserType.fromJson(json[r'userType']),
         address: mapValueOfType<String>(json, r'address'),
         city: mapValueOfType<String>(json, r'city'),
         country: mapValueOfType<String>(json, r'country'),

@@ -15,6 +15,9 @@ class PostChatMessageCommand {
   PostChatMessageCommand({
     this.chatId,
     this.message,
+    this.mediaUrl,
+    this.messageType,
+    this.contextItemId,
   });
 
   ///
@@ -25,27 +28,39 @@ class PostChatMessageCommand {
   ///
   String? chatId;
 
+  String? message;
+
+  String? mediaUrl;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? message;
+  MessageType? messageType;
+
+  String? contextItemId;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PostChatMessageCommand &&
     other.chatId == chatId &&
-    other.message == message;
+    other.message == message &&
+    other.mediaUrl == mediaUrl &&
+    other.messageType == messageType &&
+    other.contextItemId == contextItemId;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (chatId == null ? 0 : chatId!.hashCode) +
-    (message == null ? 0 : message!.hashCode);
+    (message == null ? 0 : message!.hashCode) +
+    (mediaUrl == null ? 0 : mediaUrl!.hashCode) +
+    (messageType == null ? 0 : messageType!.hashCode) +
+    (contextItemId == null ? 0 : contextItemId!.hashCode);
 
   @override
-  String toString() => 'PostChatMessageCommand[chatId=$chatId, message=$message]';
+  String toString() => 'PostChatMessageCommand[chatId=$chatId, message=$message, mediaUrl=$mediaUrl, messageType=$messageType, contextItemId=$contextItemId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -58,6 +73,21 @@ class PostChatMessageCommand {
       json[r'message'] = this.message;
     } else {
       json[r'message'] = null;
+    }
+    if (this.mediaUrl != null) {
+      json[r'mediaUrl'] = this.mediaUrl;
+    } else {
+      json[r'mediaUrl'] = null;
+    }
+    if (this.messageType != null) {
+      json[r'messageType'] = this.messageType;
+    } else {
+      json[r'messageType'] = null;
+    }
+    if (this.contextItemId != null) {
+      json[r'contextItemId'] = this.contextItemId;
+    } else {
+      json[r'contextItemId'] = null;
     }
     return json;
   }
@@ -83,6 +113,9 @@ class PostChatMessageCommand {
       return PostChatMessageCommand(
         chatId: mapValueOfType<String>(json, r'chatId'),
         message: mapValueOfType<String>(json, r'message'),
+        mediaUrl: mapValueOfType<String>(json, r'mediaUrl'),
+        messageType: MessageType.fromJson(json[r'messageType']),
+        contextItemId: mapValueOfType<String>(json, r'contextItemId'),
       );
     }
     return null;

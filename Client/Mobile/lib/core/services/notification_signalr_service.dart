@@ -42,18 +42,25 @@ class SignalrNotification {
 /// SignalR-based real-time notification service.
 /// Connects to /hubs/notifications and listens for ReceiveNotification.
 class NotificationSignalrService {
+  static final NotificationSignalrService _instance = NotificationSignalrService._internal();
+  factory NotificationSignalrService() => _instance;
+  NotificationSignalrService._internal();
+
   static const String _hubPath = '/hubs/notifications';
-  // 🔧 LOCAL DEV: change back to 'https://renty.runasp.net' before pushing
-  static const String _baseUrl = 'https://renty.runasp.net';
+  // 🔧 LOCAL DEV: change back to 'https://starfish-app-vavqt.ondigitalocean.app' before pushing
+  static const String _baseUrl =
+      'https://starfish-app-vavqt.ondigitalocean.app';
 
   HubConnection? _hubConnection;
   bool _isConnected = false;
 
-  final _notificationController = StreamController<SignalrNotification>.broadcast();
+  final _notificationController =
+      StreamController<SignalrNotification>.broadcast();
   final _connectionController = StreamController<bool>.broadcast();
 
   /// Stream of incoming real-time notifications.
-  Stream<SignalrNotification> get onNotification => _notificationController.stream;
+  Stream<SignalrNotification> get onNotification =>
+      _notificationController.stream;
 
   /// Stream of connection state changes.
   Stream<bool> get onConnectionChanged => _connectionController.stream;
@@ -64,7 +71,7 @@ class NotificationSignalrService {
   Future<void> startConnection() async {
     if (_isConnected) return;
 
-    final token = sharedPref.getString('token');
+    final token = cachedToken; // SECURITY: in-memory cache from Keystore/Keychain
     if (token == null || token.isEmpty) return;
 
     try {

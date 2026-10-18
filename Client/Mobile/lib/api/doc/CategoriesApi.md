@@ -5,7 +5,7 @@
 import 'package:renty_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:5106*
+All URIs are relative to *https://starfish-app-vavqt.ondigitalocean.app*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

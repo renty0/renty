@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/core/controllers/main_navigation_controller.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class HomeHero extends StatefulWidget {
   final List<ItemListDto> suggestedItems;
@@ -128,7 +128,7 @@ class _HomeHeroState extends State<HomeHero> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    try { Get.find<MainNavigationController>().currentIndex.value = 3; } catch (_) {}
+                    try { NavigationCubit.instance.switchToTab(3); } catch (_) {}
                   },
                   child: Container(
                     width: double.infinity,
@@ -159,7 +159,7 @@ class _HomeHeroState extends State<HomeHero> {
   Widget _buildRecommendedPromo(bool isDark) {
     final count = widget.suggestedItems.length;
     return GestureDetector(
-      onTap: () => Get.toNamed('/recommended-items'),
+      onTap: () => AppNavigator.pushNamed('/recommended-items'),
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

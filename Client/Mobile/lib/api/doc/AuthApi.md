@@ -5,10 +5,11 @@
 import 'package:renty_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:5106*
+All URIs are relative to *https://starfish-app-vavqt.ondigitalocean.app*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**authDeleteMe**](AuthApi.md#authdeleteme) | **DELETE** /api/v1/auth/me | 
 [**authForgotPassword**](AuthApi.md#authforgotpassword) | **POST** /api/v1/auth/forgot-password | 
 [**authLogin**](AuthApi.md#authlogin) | **POST** /api/v1/auth/login | 
 [**authMe**](AuthApi.md#authme) | **GET** /api/v1/auth/me | 
@@ -20,6 +21,49 @@ Method | HTTP request | Description
 [**authVerifyEmail**](AuthApi.md#authverifyemail) | **POST** /api/v1/auth/verify-email | 
 [**authVerifyResetCode**](AuthApi.md#authverifyresetcode) | **POST** /api/v1/auth/verify-reset-code | 
 
+
+# **authDeleteMe**
+> ApiResponseOfDeleteUserResponse authDeleteMe()
+
+
+
+### Example
+```dart
+import 'package:renty_api/api.dart';
+// TODO Configure HTTP Bearer authorization: JWT
+// Case 1. Use String Token
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
+// Case 2. Use Function which generate token.
+// String yourTokenGeneratorFunction() { ... }
+//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
+
+final api_instance = AuthApi();
+
+try {
+    final result = api_instance.authDeleteMe();
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthApi->authDeleteMe: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ApiResponseOfDeleteUserResponse**](ApiResponseOfDeleteUserResponse.md)
+
+### Authorization
+
+[JWT](../README.md#JWT)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authForgotPassword**
 > ApiResponseOfObject authForgotPassword(forgotPasswordCommand)

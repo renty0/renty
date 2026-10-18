@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/core/constant/app_colors.dart';
-import 'package:renty/utils/language_manager.dart';
 
 class HomeHowItWorks extends StatelessWidget {
   const HomeHowItWorks({super.key});
@@ -9,6 +8,7 @@ class HomeHowItWorks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final steps = [
       {'icon': Icons.search_rounded,        'title': 'Find'.tr,   'desc': 'Browse thousands of items near you'.tr},
@@ -16,24 +16,29 @@ class HomeHowItWorks extends StatelessWidget {
       {'icon': Icons.celebration_rounded,   'title': 'Enjoy'.tr,  'desc': 'Receive your item & have fun'.tr},
     ];
 
+    // In RTL: reverse the display order so step 1 is on the right
+    final displaySteps = isRtl ? steps.reversed.toList() : steps;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        children: List.generate(steps.length * 2 - 1, (i) {
+        children: List.generate(displaySteps.length * 2 - 1, (i) {
           if (i.isOdd) {
-            // Connector arrow — fixed-width so it sits between Expanded children
+            // Connector arrow — auto-flips with text direction
             return SizedBox(
               width: 24,
               child: Icon(
-                LanguageManager.isArabic()
-                    ? Icons.arrow_back_rounded
-                    : Icons.arrow_forward_rounded,
+                isRtl ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
                 size: 18,
                 color: AppColor.primaryColor.withValues(alpha: 0.4),
               ),
             );
           }
-          final step = steps[i ~/ 2];
+          final stepIndex = i ~/ 2;
+          final step = displaySteps[stepIndex];
+          // Step number: always 1,2,3 regardless of display direction
+          final stepNumber = isRtl ? (displaySteps.length - stepIndex) : (stepIndex + 1);
+
           return Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,7 +74,7 @@ class HomeHowItWorks extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '${i ~/ 2 + 1}',
+                            '$stepNumber',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -110,3 +115,5 @@ class HomeHowItWorks extends StatelessWidget {
     );
   }
 }
+
+

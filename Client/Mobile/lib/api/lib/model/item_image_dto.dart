@@ -98,7 +98,7 @@ class ItemImageDto {
 
       return ItemImageDto(
         id: mapValueOfType<String>(json, r'id'),
-        imageUrl: _sanitizeImageUrl(mapValueOfType<String>(json, r'imageUrl')),
+        imageUrl: mapValueOfType<String>(json, r'imageUrl'),
         isPrimary: mapValueOfType<bool>(json, r'isPrimary'),
       );
     }

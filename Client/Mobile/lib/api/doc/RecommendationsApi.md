@@ -5,7 +5,7 @@
 import 'package:renty_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:5106*
+All URIs are relative to *https://starfish-app-vavqt.ondigitalocean.app*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -21,12 +21,6 @@ Method | HTTP request | Description
 ### Example
 ```dart
 import 'package:renty_api/api.dart';
-// TODO Configure HTTP Bearer authorization: JWT
-// Case 1. Use String Token
-//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken('YOUR_ACCESS_TOKEN');
-// Case 2. Use Function which generate token.
-// String yourTokenGeneratorFunction() { ... }
-//defaultApiClient.getAuthentication<HttpBearerAuth>('JWT').setAccessToken(yourTokenGeneratorFunction);
 
 final api_instance = RecommendationsApi();
 
@@ -47,7 +41,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[JWT](../README.md#JWT)
+No authorization required
 
 ### HTTP request headers
 

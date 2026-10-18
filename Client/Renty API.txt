@@ -9,7 +9,7 @@ Renty - Rental Marketplace API
 
 Servers
 
-https://renty.runasp.net
+https://starfish-app-vavqt.ondigitalocean.app
 
 Authorize
 Auth

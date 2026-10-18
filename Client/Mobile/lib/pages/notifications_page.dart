@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/core/services/api_service.dart';
 import 'package:renty/core/services/notification_signalr_service.dart';
 
@@ -28,10 +29,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
     _loadNotifications();
     _initSignalR();
+    // Clear the home page badge counter immediately when this page opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try { NotificationBadgeCubit.instance.markAllSeen(); } catch (_) {}
+    });
   }
 
-  Future<void> _initSignalR() async {
-    await _signalr.startConnection();
+  void _initSignalR() {
+    // Connection is already managed globally by MainContainer.
+    // Just subscribe to the shared singleton stream.
     _notifSub = _signalr.onNotification.listen((notif) {
       if (!mounted) return;
       setState(() {
@@ -47,23 +53,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
         );
         _unreadCount++;
       });
-      // Show in-app snackbar for real-time notification
-      Get.snackbar(
-        notif.title ?? 'Notification'.tr,
-        notif.message ?? '',
-        backgroundColor: AppColor.primaryColor.withOpacity(0.9),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 4),
-        icon: const Icon(Icons.notifications_active, color: Colors.white),
-        snackPosition: SnackPosition.TOP,
-      );
     });
   }
 
   @override
   void dispose() {
     _notifSub?.cancel();
-    _signalr.dispose();
     super.dispose();
   }
 
@@ -116,11 +111,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
         }
         _unreadCount = 0;
       });
-      Get.snackbar('Done'.tr, 'All notifications marked as read'.tr,
-          backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
-          colorText: Colors.white);
+      AppNavigator.showSnackBar(
+        'Done'.tr,
+        'All notifications marked as read'.tr,
+        backgroundColor: AppColor.successColor.withValues(alpha: 0.9),
+      );
     } catch (e) {
-      Get.snackbar('Error'.tr, 'Failed to mark all as read'.tr);
+      AppNavigator.showSnackBar('Error'.tr, 'Failed to mark all as read'.tr);
     }
   }
 

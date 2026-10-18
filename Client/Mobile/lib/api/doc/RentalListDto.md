@@ -10,7 +10,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
 **itemTitle** | **String** |  | [optional] 
-**itemImage** | **String** |  | [optional] 
+**itemImageUrl** | **String** |  | [optional] 
+**ownerId** | **int** |  | [optional] 
+**ownerFirstName** | **String** |  | [optional] 
 **startDate** | [**DateTime**](DateTime.md) |  | [optional] 
 **endDate** | [**DateTime**](DateTime.md) |  | [optional] 
 **rentalPrice** | **num** |  | [optional] 

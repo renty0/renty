@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://localhost:5106', this.authentication,});
+  ApiClient({this.basePath = 'https://starfish-app-vavqt.ondigitalocean.app', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -182,6 +182,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AdminUserDto':
+          return AdminUserDto.fromJson(value);
         case 'ApiResponseOfAuthLoginData':
           return ApiResponseOfAuthLoginData.fromJson(value);
         case 'ApiResponseOfAuthLoginDataData':
@@ -206,14 +208,22 @@ class ApiClient {
           return ApiResponseOfBrandDto.fromJson(value);
         case 'ApiResponseOfBrandDtoData':
           return ApiResponseOfBrandDtoData.fromJson(value);
-        case 'ApiResponseOfChatCreateData':
-          return ApiResponseOfChatCreateData.fromJson(value);
-        case 'ApiResponseOfChatCreateDataData':
-          return ApiResponseOfChatCreateDataData.fromJson(value);
-        case 'ApiResponseOfChatMessageData':
-          return ApiResponseOfChatMessageData.fromJson(value);
-        case 'ApiResponseOfChatMessageDataData':
-          return ApiResponseOfChatMessageDataData.fromJson(value);
+        case 'ApiResponseOfCreateAdminUserResponse':
+          return ApiResponseOfCreateAdminUserResponse.fromJson(value);
+        case 'ApiResponseOfCreateAdminUserResponseData':
+          return ApiResponseOfCreateAdminUserResponseData.fromJson(value);
+        case 'ApiResponseOfCreateChatResponse':
+          return ApiResponseOfCreateChatResponse.fromJson(value);
+        case 'ApiResponseOfCreateChatResponseData':
+          return ApiResponseOfCreateChatResponseData.fromJson(value);
+        case 'ApiResponseOfDeleteUserResponse':
+          return ApiResponseOfDeleteUserResponse.fromJson(value);
+        case 'ApiResponseOfDeleteUserResponseData':
+          return ApiResponseOfDeleteUserResponseData.fromJson(value);
+        case 'ApiResponseOfGetAdminUsersResponse':
+          return ApiResponseOfGetAdminUsersResponse.fromJson(value);
+        case 'ApiResponseOfGetAdminUsersResponseData':
+          return ApiResponseOfGetAdminUsersResponseData.fromJson(value);
         case 'ApiResponseOfGetChatMessagesResponse':
           return ApiResponseOfGetChatMessagesResponse.fromJson(value);
         case 'ApiResponseOfGetChatMessagesResponseData':
@@ -226,10 +236,26 @@ class ApiClient {
           return ApiResponseOfGetExpertAssignedResponse.fromJson(value);
         case 'ApiResponseOfGetExpertAssignedResponseData':
           return ApiResponseOfGetExpertAssignedResponseData.fromJson(value);
+        case 'ApiResponseOfGetFraudLogsResponse':
+          return ApiResponseOfGetFraudLogsResponse.fromJson(value);
+        case 'ApiResponseOfGetFraudLogsResponseData':
+          return ApiResponseOfGetFraudLogsResponseData.fromJson(value);
+        case 'ApiResponseOfGetGapAnalysisResponse':
+          return ApiResponseOfGetGapAnalysisResponse.fromJson(value);
+        case 'ApiResponseOfGetGapAnalysisResponseData':
+          return ApiResponseOfGetGapAnalysisResponseData.fromJson(value);
+        case 'ApiResponseOfGetIdVerificationRequestsResponse':
+          return ApiResponseOfGetIdVerificationRequestsResponse.fromJson(value);
+        case 'ApiResponseOfGetIdVerificationRequestsResponseData':
+          return ApiResponseOfGetIdVerificationRequestsResponseData.fromJson(value);
         case 'ApiResponseOfGetItemReviewsResponse':
           return ApiResponseOfGetItemReviewsResponse.fromJson(value);
         case 'ApiResponseOfGetItemReviewsResponseData':
           return ApiResponseOfGetItemReviewsResponseData.fromJson(value);
+        case 'ApiResponseOfGetKpisResponse':
+          return ApiResponseOfGetKpisResponse.fromJson(value);
+        case 'ApiResponseOfGetKpisResponseData':
+          return ApiResponseOfGetKpisResponseData.fromJson(value);
         case 'ApiResponseOfGetMyFavoritesResponse':
           return ApiResponseOfGetMyFavoritesResponse.fromJson(value);
         case 'ApiResponseOfGetMyFavoritesResponseData':
@@ -250,6 +276,10 @@ class ApiClient {
           return ApiResponseOfGetRentalsResponse.fromJson(value);
         case 'ApiResponseOfGetRentalsResponseData':
           return ApiResponseOfGetRentalsResponseData.fromJson(value);
+        case 'ApiResponseOfGetTicketResponse':
+          return ApiResponseOfGetTicketResponse.fromJson(value);
+        case 'ApiResponseOfGetTicketResponseData':
+          return ApiResponseOfGetTicketResponseData.fromJson(value);
         case 'ApiResponseOfGetTicketsResponse':
           return ApiResponseOfGetTicketsResponse.fromJson(value);
         case 'ApiResponseOfGetTicketsResponseData':
@@ -266,14 +296,26 @@ class ApiClient {
           return ApiResponseOfItemDetailDto.fromJson(value);
         case 'ApiResponseOfItemDetailDtoData':
           return ApiResponseOfItemDetailDtoData.fromJson(value);
+        case 'ApiResponseOfKpiSnapshotDto':
+          return ApiResponseOfKpiSnapshotDto.fromJson(value);
+        case 'ApiResponseOfKpiSnapshotDtoData':
+          return ApiResponseOfKpiSnapshotDtoData.fromJson(value);
+        case 'ApiResponseOfListOfApprovalHistoryDto':
+          return ApiResponseOfListOfApprovalHistoryDto.fromJson(value);
+        case 'ApiResponseOfListOfBookedRangeDto':
+          return ApiResponseOfListOfBookedRangeDto.fromJson(value);
         case 'ApiResponseOfListOfBrandDto':
           return ApiResponseOfListOfBrandDto.fromJson(value);
         case 'ApiResponseOfListOfItemListDto':
           return ApiResponseOfListOfItemListDto.fromJson(value);
+        case 'ApiResponseOfListOfPermissionMetadataDto':
+          return ApiResponseOfListOfPermissionMetadataDto.fromJson(value);
         case 'ApiResponseOfListOfProductCategoryDto':
           return ApiResponseOfListOfProductCategoryDto.fromJson(value);
         case 'ApiResponseOfListOfProductSubcategoryDto':
           return ApiResponseOfListOfProductSubcategoryDto.fromJson(value);
+        case 'ApiResponseOfListOfRoleDto':
+          return ApiResponseOfListOfRoleDto.fromJson(value);
         case 'ApiResponseOfListOfTrackingEntryDto':
           return ApiResponseOfListOfTrackingEntryDto.fromJson(value);
         case 'ApiResponseOfMediaUploadData':
@@ -302,6 +344,10 @@ class ApiClient {
           return ApiResponseOfPaymentDto.fromJson(value);
         case 'ApiResponseOfPaymentDtoData':
           return ApiResponseOfPaymentDtoData.fromJson(value);
+        case 'ApiResponseOfPostChatMessageResponse':
+          return ApiResponseOfPostChatMessageResponse.fromJson(value);
+        case 'ApiResponseOfPostChatMessageResponseData':
+          return ApiResponseOfPostChatMessageResponseData.fromJson(value);
         case 'ApiResponseOfProductCategoryDto':
           return ApiResponseOfProductCategoryDto.fromJson(value);
         case 'ApiResponseOfProductCategoryDtoData':
@@ -310,6 +356,18 @@ class ApiClient {
           return ApiResponseOfProductSubcategoryDto.fromJson(value);
         case 'ApiResponseOfProductSubcategoryDtoData':
           return ApiResponseOfProductSubcategoryDtoData.fromJson(value);
+        case 'ApiResponseOfPublicProfileDto':
+          return ApiResponseOfPublicProfileDto.fromJson(value);
+        case 'ApiResponseOfPublicProfileDtoData':
+          return ApiResponseOfPublicProfileDtoData.fromJson(value);
+        case 'ApiResponseOfReminderResponse':
+          return ApiResponseOfReminderResponse.fromJson(value);
+        case 'ApiResponseOfReminderResponseData':
+          return ApiResponseOfReminderResponseData.fromJson(value);
+        case 'ApiResponseOfReminderStatusResponse':
+          return ApiResponseOfReminderStatusResponse.fromJson(value);
+        case 'ApiResponseOfReminderStatusResponseData':
+          return ApiResponseOfReminderStatusResponseData.fromJson(value);
         case 'ApiResponseOfRentalCompleteData':
           return ApiResponseOfRentalCompleteData.fromJson(value);
         case 'ApiResponseOfRentalCompleteDataData':
@@ -322,18 +380,32 @@ class ApiClient {
           return ApiResponseOfRentalDetailDto.fromJson(value);
         case 'ApiResponseOfRentalDetailDtoData':
           return ApiResponseOfRentalDetailDtoData.fromJson(value);
+        case 'ApiResponseOfRentalFinancialBreakdownDto':
+          return ApiResponseOfRentalFinancialBreakdownDto.fromJson(value);
+        case 'ApiResponseOfRentalFinancialBreakdownDtoData':
+          return ApiResponseOfRentalFinancialBreakdownDtoData.fromJson(value);
         case 'ApiResponseOfRentalStatusData':
           return ApiResponseOfRentalStatusData.fromJson(value);
         case 'ApiResponseOfRentalStatusDataData':
           return ApiResponseOfRentalStatusDataData.fromJson(value);
+        case 'ApiResponseOfResult':
+          return ApiResponseOfResult.fromJson(value);
+        case 'ApiResponseOfResultData':
+          return ApiResponseOfResultData.fromJson(value);
         case 'ApiResponseOfReviewCreateData':
           return ApiResponseOfReviewCreateData.fromJson(value);
         case 'ApiResponseOfReviewCreateDataData':
           return ApiResponseOfReviewCreateDataData.fromJson(value);
+        case 'ApiResponseOfRoleDetailsResponse':
+          return ApiResponseOfRoleDetailsResponse.fromJson(value);
+        case 'ApiResponseOfRoleDetailsResponseData':
+          return ApiResponseOfRoleDetailsResponseData.fromJson(value);
         case 'ApiResponseOfSearchItemsResponse':
           return ApiResponseOfSearchItemsResponse.fromJson(value);
         case 'ApiResponseOfSearchItemsResponseData':
           return ApiResponseOfSearchItemsResponseData.fromJson(value);
+        case 'ApiResponseOfString':
+          return ApiResponseOfString.fromJson(value);
         case 'ApiResponseOfSupportCreateTicketData':
           return ApiResponseOfSupportCreateTicketData.fromJson(value);
         case 'ApiResponseOfSupportCreateTicketDataData':
@@ -346,10 +418,18 @@ class ApiClient {
           return ApiResponseOfSupportTicketStatusData.fromJson(value);
         case 'ApiResponseOfSupportTicketStatusDataData':
           return ApiResponseOfSupportTicketStatusDataData.fromJson(value);
+        case 'ApiResponseOfUpdateUserStatusResponse':
+          return ApiResponseOfUpdateUserStatusResponse.fromJson(value);
+        case 'ApiResponseOfUpdateUserStatusResponseData':
+          return ApiResponseOfUpdateUserStatusResponseData.fromJson(value);
         case 'ApiResponseOfVerificationCreateData':
           return ApiResponseOfVerificationCreateData.fromJson(value);
         case 'ApiResponseOfVerificationCreateDataData':
           return ApiResponseOfVerificationCreateDataData.fromJson(value);
+        case 'ApprovalHistoryDto':
+          return ApprovalHistoryDto.fromJson(value);
+        case 'AssignUserRolesCommand':
+          return AssignUserRolesCommand.fromJson(value);
         case 'AssignedVerificationDto':
           return AssignedVerificationDto.fromJson(value);
         case 'AuthLoginData':
@@ -366,24 +446,30 @@ class ApiClient {
           return AuthRegisterData.fromJson(value);
         case 'AuthVerifyEmailData':
           return AuthVerifyEmailData.fromJson(value);
+        case 'BookedRangeDto':
+          return BookedRangeDto.fromJson(value);
         case 'BrandDto':
           return BrandDto.fromJson(value);
-        case 'ChatCreateData':
-          return ChatCreateData.fromJson(value);
         case 'ChatListDto':
           return ChatListDto.fromJson(value);
-        case 'ChatMessageData':
-          return ChatMessageData.fromJson(value);
         case 'ChatMessageDto':
           return ChatMessageDto.fromJson(value);
         case 'ConfirmEmailCommand':
           return ConfirmEmailCommand.fromJson(value);
+        case 'ConfirmPhoneVerificationCommand':
+          return ConfirmPhoneVerificationCommand.fromJson(value);
+        case 'CreateAdminUserCommand':
+          return CreateAdminUserCommand.fromJson(value);
+        case 'CreateAdminUserResponse':
+          return CreateAdminUserResponse.fromJson(value);
         case 'CreateBrandCommand':
           return CreateBrandCommand.fromJson(value);
         case 'CreateCategoryCommand':
           return CreateCategoryCommand.fromJson(value);
         case 'CreateChatCommand':
           return CreateChatCommand.fromJson(value);
+        case 'CreateChatResponse':
+          return CreateChatResponse.fromJson(value);
         case 'CreateItemCommand':
           return CreateItemCommand.fromJson(value);
         case 'CreateItemImageCommand':
@@ -394,28 +480,52 @@ class ApiClient {
           return CreateOrderCommand.fromJson(value);
         case 'CreatePaymentCommand':
           return CreatePaymentCommand.fromJson(value);
-        case 'CreateRentalCommand':
-          return CreateRentalCommand.fromJson(value);
+        case 'CreateRentalRequest':
+          return CreateRentalRequest.fromJson(value);
         case 'CreateReviewCommand':
           return CreateReviewCommand.fromJson(value);
+        case 'CreateRoleCommand':
+          return CreateRoleCommand.fromJson(value);
         case 'CreateSubcategoryCommand':
           return CreateSubcategoryCommand.fromJson(value);
         case 'CreateTicketCommand':
           return CreateTicketCommand.fromJson(value);
         case 'CreateVerificationCommand':
           return CreateVerificationCommand.fromJson(value);
+        case 'DeleteUserResponse':
+          return DeleteUserResponse.fromJson(value);
+        case 'ExtendRentalBody':
+          return ExtendRentalBody.fromJson(value);
         case 'FavoriteItemDto':
           return FavoriteItemDto.fromJson(value);
         case 'ForgotPasswordCommand':
           return ForgotPasswordCommand.fromJson(value);
+        case 'FraudLogDto':
+          return FraudLogDto.fromJson(value);
+        case 'FraudUserDto':
+          return FraudUserDto.fromJson(value);
+        case 'GapDto':
+          return GapDto.fromJson(value);
+        case 'GetAdminUsersResponse':
+          return GetAdminUsersResponse.fromJson(value);
         case 'GetChatMessagesResponse':
           return GetChatMessagesResponse.fromJson(value);
+        case 'GetChatMessagesResponseChatMetadata':
+          return GetChatMessagesResponseChatMetadata.fromJson(value);
         case 'GetChatsResponse':
           return GetChatsResponse.fromJson(value);
         case 'GetExpertAssignedResponse':
           return GetExpertAssignedResponse.fromJson(value);
+        case 'GetFraudLogsResponse':
+          return GetFraudLogsResponse.fromJson(value);
+        case 'GetGapAnalysisResponse':
+          return GetGapAnalysisResponse.fromJson(value);
+        case 'GetIdVerificationRequestsResponse':
+          return GetIdVerificationRequestsResponse.fromJson(value);
         case 'GetItemReviewsResponse':
           return GetItemReviewsResponse.fromJson(value);
+        case 'GetKpisResponse':
+          return GetKpisResponse.fromJson(value);
         case 'GetMyFavoritesResponse':
           return GetMyFavoritesResponse.fromJson(value);
         case 'GetNotificationsResponse':
@@ -426,10 +536,18 @@ class ApiClient {
           return GetRecommendationsResponse.fromJson(value);
         case 'GetRentalsResponse':
           return GetRentalsResponse.fromJson(value);
+        case 'GetTicketResponse':
+          return GetTicketResponse.fromJson(value);
+        case 'GetTicketResponseTicket':
+          return GetTicketResponseTicket.fromJson(value);
         case 'GetTicketsResponse':
           return GetTicketsResponse.fromJson(value);
         case 'GetVerificationsResponse':
           return GetVerificationsResponse.fromJson(value);
+        case 'GetVerificationsResponseItemDetails':
+          return GetVerificationsResponseItemDetails.fromJson(value);
+        case 'IdVerificationRequestDto':
+          return IdVerificationRequestDto.fromJson(value);
         case 'ItemBrandRef':
           return ItemBrandRef.fromJson(value);
         case 'ItemCategoryRef':
@@ -452,14 +570,24 @@ class ApiClient {
           return ItemPricingDto.fromJson(value);
         case 'ItemSubcategoryRef':
           return ItemSubcategoryRef.fromJson(value);
+        case 'ItemVerificationDetailsDto':
+          return ItemVerificationDetailsDto.fromJson(value);
+        case 'ItemVerificationDetailsDtoActiveRental':
+          return ItemVerificationDetailsDtoActiveRental.fromJson(value);
+        case 'KpiSnapshotDto':
+          return KpiSnapshotDto.fromJson(value);
         case 'LoginCommand':
           return LoginCommand.fromJson(value);
         case 'MediaUploadData':
           return MediaUploadData.fromJson(value);
+        case 'MessageType':
+          return MessageTypeTypeTransformer().decode(value);
         case 'NotificationDto':
           return NotificationDto.fromJson(value);
         case 'NotificationMarkAllData':
           return NotificationMarkAllData.fromJson(value);
+        case 'OpenDisputeBody':
+          return OpenDisputeBody.fromJson(value);
         case 'OrderCreateData':
           return OrderCreateData.fromJson(value);
         case 'OrderDetailDto':
@@ -476,14 +604,24 @@ class ApiClient {
           return PaymentCreateData.fromJson(value);
         case 'PaymentDto':
           return PaymentDto.fromJson(value);
+        case 'PermissionItemDto':
+          return PermissionItemDto.fromJson(value);
+        case 'PermissionMetadataDto':
+          return PermissionMetadataDto.fromJson(value);
+        case 'PersonInfoDto':
+          return PersonInfoDto.fromJson(value);
         case 'PostChatMessageCommand':
           return PostChatMessageCommand.fromJson(value);
+        case 'PostChatMessageResponse':
+          return PostChatMessageResponse.fromJson(value);
         case 'PostSupportMessageCommand':
           return PostSupportMessageCommand.fromJson(value);
         case 'ProductCategoryDto':
           return ProductCategoryDto.fromJson(value);
         case 'ProductSubcategoryDto':
           return ProductSubcategoryDto.fromJson(value);
+        case 'PublicProfileDto':
+          return PublicProfileDto.fromJson(value);
         case 'RecommendationEntryDto':
           return RecommendationEntryDto.fromJson(value);
         case 'RecommendationItemDto':
@@ -492,36 +630,80 @@ class ApiClient {
           return RefreshTokenCommand.fromJson(value);
         case 'RegisterCommand':
           return RegisterCommand.fromJson(value);
+        case 'ReminderResponse':
+          return ReminderResponse.fromJson(value);
+        case 'ReminderStatusResponse':
+          return ReminderStatusResponse.fromJson(value);
         case 'RentalCompleteData':
           return RentalCompleteData.fromJson(value);
         case 'RentalCreateData':
           return RentalCreateData.fromJson(value);
         case 'RentalDetailDto':
           return RentalDetailDto.fromJson(value);
+        case 'RentalFinancialBreakdownDto':
+          return RentalFinancialBreakdownDto.fromJson(value);
+        case 'RentalImageDto':
+          return RentalImageDto.fromJson(value);
+        case 'RentalImageType':
+          return RentalImageTypeTypeTransformer().decode(value);
+        case 'RentalInfoDto':
+          return RentalInfoDto.fromJson(value);
         case 'RentalListDto':
           return RentalListDto.fromJson(value);
         case 'RentalStatusData':
           return RentalStatusData.fromJson(value);
+        case 'RentalTransferDto':
+          return RentalTransferDto.fromJson(value);
+        case 'RequestPhoneVerificationCommand':
+          return RequestPhoneVerificationCommand.fromJson(value);
+        case 'RequestWithdrawalCommand':
+          return RequestWithdrawalCommand.fromJson(value);
         case 'ResetPasswordCommand':
           return ResetPasswordCommand.fromJson(value);
+        case 'ResolveDisputeCommand':
+          return ResolveDisputeCommand.fromJson(value);
+        case 'RespondExtensionBody':
+          return RespondExtensionBody.fromJson(value);
+        case 'Result':
+          return Result.fromJson(value);
         case 'ReviewCreateData':
           return ReviewCreateData.fromJson(value);
         case 'ReviewDto':
           return ReviewDto.fromJson(value);
+        case 'ReviewDto2':
+          return ReviewDto2.fromJson(value);
+        case 'ReviewIdVerificationCommand':
+          return ReviewIdVerificationCommand.fromJson(value);
+        case 'ReviewItemCommand':
+          return ReviewItemCommand.fromJson(value);
         case 'ReviewerDto':
           return ReviewerDto.fromJson(value);
+        case 'RoleDetailsResponse':
+          return RoleDetailsResponse.fromJson(value);
+        case 'RoleDto':
+          return RoleDto.fromJson(value);
         case 'SearchItemsResponse':
           return SearchItemsResponse.fromJson(value);
         case 'SendEmailConfirmationCommand':
           return SendEmailConfirmationCommand.fromJson(value);
+        case 'SetHandoffMethodBody':
+          return SetHandoffMethodBody.fromJson(value);
         case 'SupportCreateTicketData':
           return SupportCreateTicketData.fromJson(value);
         case 'SupportMessageData':
           return SupportMessageData.fromJson(value);
+        case 'SupportMessageDto':
+          return SupportMessageDto.fromJson(value);
+        case 'SupportTicketEventDto':
+          return SupportTicketEventDto.fromJson(value);
         case 'SupportTicketStatusData':
           return SupportTicketStatusData.fromJson(value);
+        case 'TicketDetailsDto':
+          return TicketDetailsDto.fromJson(value);
         case 'TicketListDto':
           return TicketListDto.fromJson(value);
+        case 'TopUpWalletCommand':
+          return TopUpWalletCommand.fromJson(value);
         case 'TrackingEntryDto':
           return TrackingEntryDto.fromJson(value);
         case 'UpdateBrandCommand':
@@ -532,6 +714,10 @@ class ApiClient {
           return UpdateDeliveryCommand.fromJson(value);
         case 'UpdateItemCommand':
           return UpdateItemCommand.fromJson(value);
+        case 'UpdateRoleCommand':
+          return UpdateRoleCommand.fromJson(value);
+        case 'UpdateSettingCommand':
+          return UpdateSettingCommand.fromJson(value);
         case 'UpdateSubcategoryCommand':
           return UpdateSubcategoryCommand.fromJson(value);
         case 'UpdateTicketStatusCommand':
@@ -540,14 +726,20 @@ class ApiClient {
           return UpdateUserCommand.fromJson(value);
         case 'UpdateUserStatusCommand':
           return UpdateUserStatusCommand.fromJson(value);
-        case 'UserType':
-          return UserTypeTypeTransformer().decode(value);
+        case 'UpdateUserStatusResponse':
+          return UpdateUserStatusResponse.fromJson(value);
+        case 'UploadIdVerificationCommand':
+          return UploadIdVerificationCommand.fromJson(value);
+        case 'UploadRentalPhotosBody':
+          return UploadRentalPhotosBody.fromJson(value);
         case 'VerificationCreateData':
           return VerificationCreateData.fromJson(value);
         case 'VerificationDto':
           return VerificationDto.fromJson(value);
         case 'VerifyResetTokenCommand':
           return VerifyResetTokenCommand.fromJson(value);
+        case 'WalletTransactionDto':
+          return WalletTransactionDto.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

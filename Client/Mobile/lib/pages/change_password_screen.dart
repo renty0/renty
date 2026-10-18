@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/component/custom_button.dart';
 import 'package:renty/component/custom_text_field.dart';
 import 'package:renty/utils/validators.dart';
+import 'package:renty/core/services/secure_storage_service.dart';
+import 'package:renty/core/blocs/blocs.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:renty/main.dart';
-
-import '../core/ChangePasswordController.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -17,7 +18,7 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ChangePasswordController _controller = Get.put(ChangePasswordController());
+  late final ChangePasswordCubit _cubit;
 
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
@@ -27,9 +28,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool showNewPassword = false;
   bool showConfirmPassword = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _cubit = ChangePasswordCubit();
+  }
+
   Future<void> _changePassword() async {
     if (_formKey.currentState!.validate()) {
-      final success = await _controller.changePassword(
+      final success = await _cubit.changePassword(
         currentPassword: currentPasswordController.text,
         newPassword: newPasswordController.text,
         confirmPassword: confirmPasswordController.text,
@@ -38,7 +45,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       if (success) {
         _showSuccessDialog();
       } else {
-        _showErrorSnackbar(_controller.errorMessage.value);
+        _showErrorSnackbar(_cubit.state.errorMessage);
       }
     }
   }
@@ -82,17 +89,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  void _logoutAndNavigate() {
-    // Clear user data and token
-    sharedPref.remove("user_id");
-    sharedPref.remove("user_email");
-    sharedPref.remove("user_name");
-    sharedPref.remove("user_phone");
-    sharedPref.remove("token");
-    sharedPref.setString("step", "1"); // Reset to login step
+  Future<void> _logoutAndNavigate() async {
+    // SECURITY: Wipe all sensitive data from Keystore/Keychain
+    await SecureStorageService.clearAll();
+    // Clear in-memory caches
+    cachedToken        = null;
+    cachedRefreshToken = null;
+    cachedUserId       = null;
+    // 'step' is non-sensitive — stays in SharedPreferences
+    await sharedPref.setString('step', '1');
 
     // Navigate to login screen
-    Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
   void _showErrorSnackbar(String message) {
@@ -284,12 +292,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 32),
 
               // Update Button
-              Obx(() => CustomButton(
-                text: 'Update Password & Logout'.tr,
-                onPressed: _controller.isLoading.value ? null : _changePassword,
-                isLoading: _controller.isLoading.value,
-                backgroundColor: AppColor.primaryColor,
-              )),
+              BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
+                bloc: _cubit,
+                builder: (context, state) => CustomButton(
+                  text: 'Update Password & Logout'.tr,
+                  onPressed: state.isLoading ? null : _changePassword,
+                  isLoading: state.isLoading,
+                  backgroundColor: AppColor.primaryColor,
+                ),
+              ),
             ],
           ),
         ),
@@ -302,6 +313,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     currentPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
+    _cubit.close();
     super.dispose();
   }
 }

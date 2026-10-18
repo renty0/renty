@@ -1,8 +1,7 @@
-import 'package:get/get.dart';
+import 'package:renty/utils/language_manager.dart';
 
-class AppTranslations extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
+class AppTranslations {
+  static final Map<String, Map<String, String>> keys = {
         'en': {
           // Onboarding
           'Welcome to Renty': 'Welcome to Renty',
@@ -449,24 +448,6 @@ class AppTranslations extends Translations {
           'results for': 'results for',
           '@count results for "@query"': '@count results for "@query"',
 
-          // Wallet Page
-          'Wallet': 'Wallet',
-          'Available Balance': 'Available Balance',
-          'Withdraw': 'Withdraw',
-          'Total Earnings': 'Total Earnings',
-          'Transaction History': 'Transaction History',
-          'No transactions yet': 'No transactions yet',
-          'Transaction': 'Transaction',
-          'Request Withdrawal': 'Request Withdrawal',
-          'Available: EGP @balance': 'Available: EGP @balance',
-          'Amount': 'Amount',
-          'Enter amount': 'Enter amount',
-          'Mobile Wallet Number': 'Mobile Wallet Number',
-          'Enter mobile wallet number': 'Enter mobile wallet number',
-          'Withdrawal requested successfully!': 'Withdrawal requested successfully!',
-          'Withdrawal failed': 'Withdrawal failed',
-          'Withdrawal request failed': 'Withdrawal request failed',
-          'Failed to load wallet data': 'Failed to load wallet data',
 
           // Create Ticket Page (additional)
           'Ticket Type': 'Ticket Type',
@@ -528,6 +509,92 @@ class AppTranslations extends Translations {
           'Didn\'t receive the code? Resend': 'Didn\'t receive the code? Resend',
           'Please enter the complete 6-digit code': 'Please enter the complete 6-digit code',
           'Email verified successfully!': 'Email verified successfully!',
+
+          // Checkout Page
+          'Checkout': 'Checkout',
+          'Order Items': 'Order Items',
+          'Price Summary': 'Price Summary',
+          'Subtotal': 'Subtotal',
+          'Delivery Fee': 'Delivery Fee',
+          'Total': 'Total',
+          'SSL Secured': 'SSL Secured',
+          'Encrypted': 'Encrypted',
+          'Protected': 'Protected',
+          'Summary': 'Summary',
+          'Payment': 'Payment',
+          'Failed to create order': 'Failed to create order',
+          'Something went wrong. Please try again.': 'Something went wrong. Please try again.',
+          'Place Order': 'Place Order',
+
+          // Create Rental Page
+          'Book Item': 'Book Item',
+          'Rental Period': 'Rental Period',
+          'Start Date': 'Start Date',
+          'End Date': 'End Date',
+          'Rental Duration': 'Rental Duration',
+          '@days day': '@days day',
+          '@days days': '@days days',
+          'Rental Cost': 'Rental Cost',
+          'Price per day': 'Price per day',
+          'Total Cost': 'Total Cost',
+          'Deposit': 'Deposit',
+          'Important Notes': 'Important Notes',
+          'Item must be returned in the same condition.': 'Item must be returned in the same condition.',
+          'Late returns may incur additional fees.': 'Late returns may incur additional fees.',
+          'Deposit will be refunded upon safe return.': 'Deposit will be refunded upon safe return.',
+          'Confirm Rental': 'Confirm Rental',
+          'Booking...': 'Booking...',
+          'Select a start date': 'Select a start date',
+          'Select an end date': 'Select an end date',
+          'End date must be after start date': 'End date must be after start date',
+          'Rental Confirmed!': 'Rental Confirmed!',
+          'Your rental has been confirmed successfully': 'Your rental has been confirmed successfully',
+          'View My Rentals': 'View My Rentals',
+          'Back to Home': 'Back to Home',
+          'Failed to create rental': 'Failed to create rental',
+
+          // Item Detail Page
+          'Item not found': 'Item not found',
+          'Go Back': 'Go Back',
+          'Pricing': 'Pricing',
+          'Availability': 'Availability',
+          'Available': 'Available',
+          'Booked': 'Booked',
+          'Description': 'Description',
+          'Details': 'Details',
+          'Type': 'Type',
+          'Condition': 'Condition',
+          'Subcategory': 'Subcategory',
+          'Brand': 'Brand',
+          'Similar Items': 'Similar Items',
+          'Buy Now': 'Buy Now',
+          'Rent Now': 'Rent Now',
+          'Leave a Review': 'Leave a Review',
+          'Submit Review': 'Submit Review',
+          'Opening...': 'Opening...',
+          'Info': 'Info',
+          'Please select a start date first': 'Please select a start date first',
+          'Please select both start and end dates': 'Please select both start and end dates',
+          'Daily': 'Daily',
+          'Weekly': 'Weekly',
+          'Monthly': 'Monthly',
+          'Notes (Optional)': 'Notes (Optional)',
+          'Select date': 'Select date',
+          'Delivery date will be negotiated with the owner after the rental is confirmed.': 'Delivery date will be negotiated with the owner after the rental is confirmed.',
+          'Expert Review Fee': 'Expert Review Fee',
+          'Rental Duration': 'Rental Duration',
+          'Request Expert Review': 'Request Expert Review',
+          'An expert will inspect the item before and after the rental (+EGP 100)': 'An expert will inspect the item before and after the rental (+EGP 100)',
+          'Cancellation Policy': 'Cancellation Policy',
+          'Our flexible cancellation policy gives you peace of mind.': 'Our flexible cancellation policy gives you peace of mind.',
+          'Free Cancellation': 'Free Cancellation',
+          'Cancel up to 24 hours before the rental start date for a full refund.': 'Cancel up to 24 hours before the rental start date for a full refund.',
+          'Partial Refund': 'Partial Refund',
+          'Cancel within 24 hours of the start date to receive a 50% refund.': 'Cancel within 24 hours of the start date to receive a 50% refund.',
+          'No Refund': 'No Refund',
+          'Cancellations after the rental has started are non-refundable.': 'Cancellations after the rental has started are non-refundable.',
+          'The security deposit is refunded within 3–5 business days after the rental ends without damage.': 'The security deposit is refunded within 3–5 business days after the rental ends without damage.',
+          'Any special requests or notes for the owner...': 'Any special requests or notes for the owner...',
         },
         'ar': {
           // Onboarding
@@ -1058,6 +1125,116 @@ class AppTranslations extends Translations {
           'Didn\'t receive the code? Resend': 'لم تستلم الرمز؟ إعادة إرسال',
           'Please enter the complete 6-digit code': 'يرجى إدخال رمز التحقق المكون من 6 أرقام بالكامل',
           'Email verified successfully!': 'تم تأكيد البريد الإلكتروني بنجاح!',
+
+          // Checkout Page
+          'Checkout': 'الدفع',
+          'Order Items': 'عناصر الطلب',
+          'Price Summary': 'ملخص السعر',
+          'Subtotal': 'المجموع الجزئي',
+          'Delivery Fee': 'رسوم التوصيل',
+          'Total': 'الإجمالي',
+          'SSL Secured': 'مؤمّن بـ SSL',
+          'Encrypted': 'مشفّر',
+          'Protected': 'محمي',
+          'Summary': 'ملخص',
+          'Payment': 'الدفع',
+          'Failed to create order': 'فشل إنشاء الطلب',
+          'Something went wrong. Please try again.': 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
+          'Place Order': 'تأكيد الطلب',
+
+          // Create Rental Page
+          'Book Item': 'استئجار العنصر',
+          'Rental Period': 'فترة الإيجار',
+          'Start Date': 'تاريخ البداية',
+          'End Date': 'تاريخ الانتهاء',
+          'Rental Duration': 'مدة الإيجار',
+          '@days day': '@days يوم',
+          '@days days': '@days أيام',
+          'Rental Cost': 'تكلفة الإيجار',
+          'Price per day': 'السعر في اليوم',
+          'Total Cost': 'التكلفة الإجمالية',
+          'Deposit': 'التأمين',
+          'Important Notes': 'ملاحظات مهمة',
+          'Item must be returned in the same condition.': 'يجب إعادة العنصر بنفس الحالة.',
+          'Late returns may incur additional fees.': 'قد يترتب على التأخر في الإعادة رسوم إضافية.',
+          'Deposit will be refunded upon safe return.': 'سيتم استرداد التأمين عند الإعادة الآمنة.',
+          'Confirm Rental': 'تأكيد الإيجار',
+          'Booking...': 'جارٍ الحجز...',
+          'Select a start date': 'اختر تاريخ البداية',
+          'Select an end date': 'اختر تاريخ الانتهاء',
+          'End date must be after start date': 'يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية',
+          'Rental Confirmed!': 'تم تأكيد الإيجار!',
+          'Your rental has been confirmed successfully': 'تم تأكيد إيجارك بنجاح',
+          'View My Rentals': 'عرض إيجاراتي',
+          'Back to Home': 'العودة للرئيسية',
+          'Failed to create rental': 'فشل إنشاء الإيجار',
+
+          // Item Detail Page
+          'Item not found': 'العنصر غير موجود',
+          'Go Back': 'العودة',
+          'Pricing': 'الأسعار',
+          'Availability': 'التوفر',
+          'Available': 'متاح',
+          'Booked': 'محجوز',
+          'Description': 'الوصف',
+          'Details': 'التفاصيل',
+          'Type': 'النوع',
+          'Condition': 'الحالة',
+          'Subcategory': 'الفئة الفرعية',
+          'Brand': 'الماركة',
+          'Similar Items': 'عناصر مشابهة',
+          'Buy Now': 'اشتر الآن',
+          'Rent Now': 'استأجر الآن',
+          'Leave a Review': 'اترك تقييماً',
+          'Submit Review': 'إرسال التقييم',
+          'Opening...': 'جارٍ الفتح...',
+          'Info': 'معلومة',
+          'Please select a start date first': 'يرجى اختيار تاريخ البداية أولاً',
+          'Please select both start and end dates': 'يرجى اختيار تاريخي البداية والانتهاء',
+          'Daily': 'يومي',
+          'Weekly': 'أسبوعي',
+          'Monthly': 'شهري',
+          'Notes (Optional)': 'ملاحظات (اختياري)',
+          'Select date': 'اختر التاريخ',
+          'Delivery date will be negotiated with the owner after the rental is confirmed.': 'سيتم التفاوض على موعد التسليم مع المالك بعد تأكيد الإيجار.',
+          'Expert Review Fee': 'رسوم مراجعة الخبير',
+          'Rental Duration': 'مدة الإيجار',
+          'Request Expert Review': 'طلب مراجعة الخبير',
+          'An expert will inspect the item before and after the rental (+EGP 100)': 'سيفحص خبير العنصر قبل وبعد الإيجار (+100 جنيه)',
+          'Cancellation Policy': 'سياسة الإلغاء',
+          'Our flexible cancellation policy gives you peace of mind.': 'سياسة الإلغاء المرنة لدينا تمنحك راحة البال.',
+          'Free Cancellation': 'إلغاء مجاني',
+          'Cancel up to 24 hours before the rental start date for a full refund.': 'يمكن الإلغاء حتى 24 ساعة قبل بدء الإيجار لاسترداد كامل المبلغ.',
+          'Partial Refund': 'استرداد جزئي',
+          'Cancel within 24 hours of the start date to receive a 50% refund.': 'الإلغاء خلال 24 ساعة من تاريخ البدء يستحق استرداد 50%.',
+          'No Refund': 'لا استرداد',
+          'Cancellations after the rental has started are non-refundable.': 'الإلغاء بعد بدء الإيجار غير قابل للاسترداد.',
+          'The security deposit is refunded within 3–5 business days after the rental ends without damage.': 'يُردّ التأمين خلال 3-5 أيام عمل بعد انتهاء الإيجار دون أضرار.',
+          'Any special requests or notes for the owner...': 'أي طلبات خاصة أو ملاحظات للمالك...',
         }
       };
+
+  static String tr(String key) {
+    final lang = LanguageManager.getCurrentLanguageCode();
+    return keys[lang]?[key] ?? keys['en']?[key] ?? key;
+  }
+
+  static String trParams(String key, [Map<String, String> params = const {}]) {
+    var trans = tr(key);
+    params.forEach((paramKey, paramVal) {
+      trans = trans.replaceAll('@$paramKey', paramVal);
+    });
+    return trans;
+  }
+}
+
+extension AppTranslationExtension on String {
+  String get tr => AppTranslations.tr(this);
+  String trParams([Map<String, String> params = const {}]) =>
+      AppTranslations.trParams(this, params);
+
+  String get capitalize {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
+  }
 }

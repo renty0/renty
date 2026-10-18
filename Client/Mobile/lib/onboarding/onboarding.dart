@@ -1,14 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:renty/core/constant/app_colors.dart';
 import 'package:renty/core/constant/imgaeasset.dart';
 import 'package:renty/main.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
-class OnBoarding extends StatelessWidget {
+class OnBoarding extends StatefulWidget {
   const OnBoarding({Key? key}) : super(key: key);
 
   @override
+  State<OnBoarding> createState() => _OnBoardingState();
+}
+
+class _OnBoardingState extends State<OnBoarding> {
+  bool _isTransitioning = false;
+
+  @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (_isTransitioning) {
+      return Scaffold(
+        backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/animations/onboarding.json',
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Preparing your experience...".tr,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isDark ? Colors.white70 : Colors.black54,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColor.backgroundcolor,
       body: SafeArea(
@@ -45,8 +83,9 @@ class OnBoarding extends StatelessWidget {
               // App Description
               Text(
                 "Your go-to platform for renting anything you need — "
-                "from electronics and clothing to tools and vehicles. "
-                "Save money, earn passive income, and access more with less.".tr,
+                        "from electronics and clothing to tools and vehicles. "
+                        "Save money, earn passive income, and access more with less."
+                    .tr,
                 style: TextStyle(
                   fontSize: 16,
                   color: AppColor.grey,
@@ -65,7 +104,19 @@ class OnBoarding extends StatelessWidget {
                   onPressed: () async {
                     // Mark onboarding as completed
                     await sharedPref.setString("step", "1");
-                    Navigator.of(context).pushReplacementNamed("/login");
+
+                    if (mounted) {
+                      setState(() {
+                        _isTransitioning = true;
+                      });
+                    }
+
+                    // Play transition animation for 1.5 seconds
+                    await Future.delayed(const Duration(milliseconds: 1000));
+
+                    if (mounted) {
+                      Navigator.of(context).pushReplacementNamed("/login");
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.primaryColor,
@@ -77,7 +128,10 @@ class OnBoarding extends StatelessWidget {
                   ),
                   child: Text(
                     "Continue".tr,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -168,14 +168,14 @@ class _CreateItemPageState extends State<CreateItemPage> {
         if (res?.data?.id != null) {
           commands.add(CreateItemImageCommand(imageId: res!.data!.id, isPrimary: img.isPrimary));
         } else {
-          Get.snackbar('Upload Failed', 'Could not upload image ${i + 1}',
-              backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+          AppNavigator.showSnackBar('Upload Failed', 'Could not upload image ${i + 1}',
+              backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
           return null;
         }
       } catch (e) {
         debugPrint('Image upload failed: $e');
-        Get.snackbar('Upload Failed', 'Image ${i + 1}: ${e.toString().length > 100 ? e.toString().substring(0, 100) : e.toString()}',
-            backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+        AppNavigator.showSnackBar('Upload Failed', 'Image ${i + 1}: ${e.toString().length > 100 ? e.toString().substring(0, 100) : e.toString()}',
+            backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
         return null;
       }
     }
@@ -186,8 +186,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
     if (!_formKey.currentState!.validate()) return;
 
     if (_pickedImages.isEmpty) {
-      Get.snackbar('Missing Photos', 'Please add at least one image for your item.',
-          backgroundColor: Colors.orange.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Missing Photos', 'Please add at least one image for your item.',
+          backgroundColor: Colors.orange.withOpacity(0.9), textColor: Colors.white);
       return;
     }
 
@@ -236,24 +236,24 @@ class _CreateItemPageState extends State<CreateItemPage> {
       if (!mounted) return;
 
       if (res != null && res.error != true) {
-        Get.snackbar('Success', 'Item created successfully!',
-            backgroundColor: Colors.green.withOpacity(0.9), colorText: Colors.white);
+        AppNavigator.showSnackBar('Success', 'Item created successfully!',
+            backgroundColor: Colors.green.withOpacity(0.9), textColor: Colors.white);
         Navigator.pop(context, true);
       } else {
         final msg = (res?.messages != null && res!.messages!.isNotEmpty)
             ? res.messages!.join(', ')
             : 'Failed to create item';
-        Get.snackbar('Error', msg,
-            backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+        AppNavigator.showSnackBar('Error', msg,
+            backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
       }
     } on ApiException catch (e) {
       if (!mounted) return;
-      Get.snackbar('Error', 'Server error (${e.code}): ${e.message ?? "Unknown"}',
-          backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error', 'Server error (${e.code}): ${e.message ?? "Unknown"}',
+          backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
     } catch (e) {
       if (!mounted) return;
-      Get.snackbar('Error', e.toString(),
-          backgroundColor: Colors.red.withOpacity(0.9), colorText: Colors.white);
+      AppNavigator.showSnackBar('Error', e.toString(),
+          backgroundColor: Colors.red.withOpacity(0.9), textColor: Colors.white, isError: true);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

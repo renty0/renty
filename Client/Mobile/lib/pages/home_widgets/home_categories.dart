@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:renty/api/lib/api.dart';
 import 'package:renty/core/constant/app_colors.dart';
+import 'package:renty/core/utils/app_navigator.dart';
 
 class HomeCategories extends StatelessWidget {
   final List<ProductCategoryDto> categories;
@@ -26,7 +26,7 @@ class HomeCategories extends StatelessWidget {
         itemBuilder: (context, index) {
           final cat = categories[index];
           return GestureDetector(
-            onTap: () => Get.toNamed('/marketplace', arguments: {'categoryId': cat.id}),
+            onTap: () => AppNavigator.pushNamed('/marketplace', arguments: {'categoryId': cat.id}),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
