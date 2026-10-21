@@ -1,452 +1,242 @@
-# Renty E-commerce Recommendation System
+#  Renty — Decentralized Peer-to-Peer Sports Equipment Rental & Sharing Platform
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
-[![LightFM](https://img.shields.io/badge/LightFM-1.17-green.svg)](https://github.com/lyst/lightfm)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Machine Learning](https://img.shields.io/badge/AI%2FML-LightFM%20%7C%20Scikit--Learn-FF6F00)](https://github.com/lyst/lightfm)
+[![WebSockets](https://img.shields.io/badge/Real--Time-SignalR%20WebSockets-512BD4)](https://dotnet.microsoft.com/apps/aspnet/signalr)
+[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-brightgreen)]()
+[![Academic](https://img.shields.io/badge/Graduation%20Project-FCDS%20Alexandria%20University-blue)]()
 
-A comprehensive hybrid recommendation system built with LightFM for the Renty e-commerce platform. This system leverages both collaborative filtering and content-based approaches to deliver personalized product recommendations based on user demographics, purchase behavior, and product features.
+> **Graduation Capstone Project**  
+> **Faculty of Computer and Data Science (FCDS), Alexandria University**  
+> An enterprise-grade, peer-to-peer (P2P) circular-economy ecosystem designed to bridge sports gear accessibility through secure rentals, AI-powered hyper-personalized discovery, native mobile client hardening, and enterprise business intelligence.
+
+---
 
 ##  Table of Contents
+1. [Executive Summary](#-executive-summary)
+2. [High-Level System Architecture](#-high-level-system-architecture)
+3. [Key Modules & Technical Deep-Dive](#-key-modules--technical-deep-dive)
+   - [A. Cross-Platform Mobile Application](#a-cross-platform-mobile-application-flutter)
+   - [B. Web Application & Core Backend](#b-web-application--core-backend)
+   - [C. Recommendation Engine (AI/ML)](#c-recommendation-engine-aiml)
+   - [D. Data Science, BI & Gap Analysis](#d-data-science-bi--gap-analysis)
+4. [Technology Stack](#-technology-stack)
+5. [Engineering Team & Contributions](#-engineering-team--contributions)
+6. [Security & Application Hardening](#-security--application-hardening)
+7. [Repository Structure](#-repository-structure)
+8. [Installation & Setup](#-installation--setup)
 
-- [Overview](#overview)
-- [Features](#features)
-- [Dataset](#dataset)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Model Performance](#model-performance)
-- [Project Structure](#project-structure)
-- [Technical Details](#technical-details)
-- [Future Improvements](#future-improvements)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+---
 
-## Overview
+##  Executive Summary
 
-The Renty E-commerce Recommendation System is designed to enhance user experience and increase sales by providing intelligent, personalized product recommendations. The system analyzes historical transaction data, user demographics, and product characteristics to predict items that customers are most likely to purchase.
+High-performance sporting equipment represents a significant financial barrier to entry, while existing gear frequently sits idle. **Renty** solves this supply-demand mismatch by creating a trusted, local, and community-driven sharing economy platform.
 
-### Key Highlights
+### Core Value Propositions:
+- **For Renters:** Access professional equipment on-demand at a fraction of retail prices with localized pickup and verified condition tracking.
+- **For Item Owners:** Monetize idle gear with risk-mitigated escrow workflows, deposit protection, and identity verification.
+- **For the Platform:** Drive platform stickiness using an advanced **Hybrid Recommendation Engine** and continuous market **Gap Analysis** to balance localized supply and demand.
 
-- **Hybrid Approach**: Combines collaborative filtering with content-based filtering
-- **Advanced Feature Engineering**: RFM-based customer segmentation, temporal features, and TF-IDF text features
-- **Robust Performance**: Test AUC of 0.84+ with low overfitting (gap < 0.05)
-- **Production Ready**: Includes model persistence and inference pipeline
+---
 
-##  Features
+##  High-Level System Architecture
 
-### Model Features
+```mermaid
+graph TD
+    subgraph Client Tier
+        MA[Flutter Mobile App<br/>Android & iOS]
+        WA[Web Dashboard & Portal<br/>Customer & Vendor]
+    end
 
-- **User Features**
-  - Demographics: Gender, Marital Status, Education Level, Occupation, Home Ownership
-  - Income Segmentation: 6-level income brackets (VeryLow to Premium)
-  - Family Structure: Children categories (NoChildren, OneChild, TwoChildren, ManyChildren)
-  - Behavioral Metrics: Total orders, unique products purchased, average order quantity
-  - Customer Segments: Bronze, Silver, Gold, Platinum (RFM-inspired)
-  - Temporal Features: Season, day of week, weekend indicator
+    subgraph API & Gateway Tier
+        GW[RESTful API Gateway & Middleware]
+        SR[SignalR WebSockets Hub<br/>Real-Time Chat & Audio]
+    end
 
-- **Item Features**
-  - Product Categories: Extracted from model names
-  - Popularity Metrics: 5-level percentile ranking (Niche to Viral)
-  - Text Features: TF-IDF extracted from product descriptions (50 features)
-  - Customer Reach: Unique customer count per product
+    subgraph Core Services Tier
+        AS[Authentication & RBAC Service]
+        RS_SVC[Rental & Transaction Manager]
+        ES[Escrow & Deposit Engine]
+    end
 
-### System Capabilities
+    subgraph Data & AI Tier
+        DB[(Relational DB / Primary Store)]
+        CACHE[(In-Memory Caching)]
+        ML[Hybrid Recommendation Engine<br/>LightFM / Collaborative & Content]
+        BI[Data Science & Insights Pipeline]
+    end
 
-- ✅ Personalized top-N recommendations
-- ✅ Filtering of already-purchased items
-- ✅ Real-time prediction for new users (cold-start handling)
-- ✅ Comprehensive evaluation metrics (Precision@K, Recall@K, AUC)
-- ✅ Hyperparameter optimization with regularization
-- ✅ Model serialization for deployment
+    MA <-->|HTTPS / Dio REST| GW
+    MA <-->|WSS WebSockets| SR
+    WA <-->|HTTPS REST| GW
 
-##  Dataset
+    GW --> AS
+    GW --> RS_SVC
+    GW --> ES
 
-### Data Overview
+    RS_SVC --> DB
+    RS_SVC --> CACHE
 
-- **Total Transactions**: 55,666 orders
-- **Unique Users**: 17,293 customers
-- **Unique Products**: 130 items
-- **Date Range**: January 2020 - June 2022
-- **Sparsity**: 97.52%
-
-### Data Schema
-
-| Column | Type | Description |
-|--------|------|-------------|
-| OrderDate | datetime64 | Date of purchase |
-| StockDate | datetime64 | Date item was stocked |
-| OrderNumber | object | Unique order identifier |
-| ProductKey | int64 | Product identifier |
-| CustomerKey | int64 | Customer identifier |
-| TerritoryKey | int64 | Geographic territory |
-| OrderLineItem | int64 | Line item number |
-| OrderQuantity | int64 | Quantity ordered |
-| ModelName | object | Product model name |
-| ProductDescription | object | Product description text |
-| MaritalStatus | object | Customer marital status |
-| Gender | object | Customer gender |
-| AnnualIncome | int64 | Annual income ($) |
-| TotalChildren | int64 | Number of children |
-| EducationLevel | object | Education level |
-| Occupation | object | Customer occupation |
-| HomeOwner | object | Home ownership status |
-
-##  Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Data Preprocessing                        │
-│  • Load Excel data                                           │
-│  • Convert datetime columns                                  │
-│  • Remove duplicates                                         │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Advanced Feature Engineering                    │
-│  • Temporal features (year, month, quarter, season)         │
-│  • Income brackets & children categories                    │
-│  • User engagement metrics (RFM-inspired)                   │
-│  • Customer segmentation (Bronze/Silver/Gold/Platinum)      │
-│  • Item popularity percentiles                               │
-│  • MinMax scaling for numerical features                    │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Text Feature Extraction (TF-IDF)               │
-│  • Extract 50 features from product descriptions           │
-│  • Use unigrams and bigrams                                 │
-│  • Filter by min document frequency                         │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│                LightFM Data Preparation                      │
-│  • Build user-item interaction matrices                     │
-│  • Create user feature matrix (17,293 × 17,330)            │
-│  • Create item feature matrix (130 × 206)                   │
-│  • Temporal train/test split (80/20)                        │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│         Hyperparameter Tuning & Model Training              │
-│  • Grid search with regularization                          │
-│  • WARP loss function (implicit feedback)                   │
-│  • L2 regularization (item_alpha, user_alpha)              │
-│  • Best params: 50 components, 0.05 learning rate          │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Model Evaluation & Deployment                   │
-│  • Precision@K, Recall@K, AUC metrics                       │
-│  • Model persistence (pickle)                                │
-│  • Recommendation generation API                             │
-└─────────────────────────────────────────────────────────────┘
+    DB --> BI
+    DB --> ML
+    ML -.->|Personalized Ranked Feeds| GW
 ```
 
-##  Installation
+---
 
-### Prerequisites
+##  Key Modules & Technical Deep-Dive
 
-- Python 3.8 or higher
-- pip package manager
-- (Optional) Google Colab account for notebook execution
+### A. Cross-Platform Mobile Application (Flutter)
+*Engineered by **Yasser Ashraf** (Lead)*
 
-### Setup Instructions
+Built with **Flutter** using **Clean Architecture** principles and **BLoC/Cubit** state management across **30+ production screens**:
 
-1. **Clone the repository**
+- **Predictable State Architecture:** Strict decoupling between Presentation, Domain (UseCases, Entities), and Data Layers (Repositories, Remote/Local Data Sources).
+- **Real-Time Communication:** Instant peer-to-peer text and voice messaging powered by **SignalR WebSockets** with native background notification listeners and audio recording/playback controllers.
+- **Bilingual & Typography Engine:** Comprehensive bi-directional localization (**English/Arabic LTR & RTL**) using custom Cairo typography, responsive design tokens, and dynamic Dark/Light theming.
+- **Geo-Spatial Discovery:** Google Maps integration, distance radii calculations, geofenced item discovery, and interactive search filters.
+- **Resilient Offline Architecture:** Token lifecycle management using Dio interceptors, auto-recovery on network drops, and cached feed hydration.
 
+### B. Web Application & Core Backend
+*Engineered by **Hamza Omran**, **Ahmed Khalifa**, and **Moaz Moustafa***
+
+- **Full-Stack Web Portal:** Responsive customer catalog and administrative vendor dashboard for inventory, verification reviews, and order arbitration.
+- **Secure RESTful Architecture:** High-throughput backend routing, token-based authorization (Bearer JWT), and multi-tenant Role-Based Access Control (RBAC).
+- **Escrow & Order Lifecycle Engine:** Finite State Machine (FSM) managing rental requests: `Requested` $\rightarrow$ `Approved` $\rightarrow$ `Escrow Funded` $\rightarrow$ `Item Handed Over` $\rightarrow$ `Returned & Inspected` $\rightarrow$ `Deposit Released`.
+- **Engineering Gap Analysis:** Rigorous architectural gap analysis comparing user behavior against system capabilities to minimize friction in the conversion funnel.
+
+### C. Recommendation Engine (AI/ML)
+*Architected by **Yasser Ashraf** with Data Science Collaboration*
+
+A production-ready **Hybrid Recommendation Engine** combining matrix factorization and explicit metadata constraints:
+
+- **Algorithmic Foundation:** Powered by **LightFM**, uniting:
+  1. **Collaborative Filtering:** Learns latent user/item affinity representations from rental histories, wishlists, and item clicks.
+  2. **Content-Based Filtering:** Incorporates item metadata (sport category, condition tier, brand, price band) to resolve cold-start issues for newly listed gear.
+- **Geographic Distance Penalty:** Recommendation scores are real-time weighted by geospatial proximity, prioritizing gear available within the user's travel radius.
+- **Adaptive Re-Ranking:** Real-time re-ranking triggered by in-session navigation patterns.
+
+### D. Data Science, BI & Gap Analysis
+*Engineered by **Abdelrahman Hesham** & **Moamen Ahmed***
+
+- **Exploratory Data Analysis (EDA):** Deep analysis of rental velocity, seasonality patterns (e.g., winter vs. water sports), and regional supply deficits.
+- **Market Gap Analysis:** Identifying high-demand / low-supply geographic pockets to incentivize owner inventory listings.
+- **Pricing Optimization Models:** Dynamic suggested rental pricing based on gear original retail price, age, wear-and-tear degradation, and seasonal demand curves.
+- **Executive BI Dashboards:** Visualizations and cohort analyses evaluating churn, repeat rental frequency, dispute ratios, and average transaction values.
+
+---
+
+##  Technology Stack
+
+| Domain | Technologies & Libraries |
+|---|---|
+| **Mobile Client** | Flutter, Dart, BLoC/Cubit, Riverpod, Dio, GetIt, Cairo Font, Google Maps SDK |
+| **Mobile Security** | `flutter_secure_storage`, Android Keystore, iOS Keychain, Kotlin `FLAG_SECURE` |
+| **Real-Time** | SignalR WebSockets, Native Audio Recording & Streaming |
+| **Web Platform** | HTML5, CSS3, JavaScript, Responsive Component Frameworks |
+| **Backend & APIs** | RESTful APIs, JWT Authentication, Regional Routing, Escrow State Engine |
+| **AI / Machine Learning** | Python, LightFM, Scikit-Learn, NumPy, Pandas |
+| **Data Science & BI** | EDA Pipelines, Data Visualization (Matplotlib, Seaborn), FL Chart, Gap Analysis |
+| **DevOps & Testing** | Git, GitHub Actions, Postman, Android Studio, VS Code, Google Play Console |
+
+---
+
+##  Engineering Team & Contributions
+
+| Member | Academic Role | Key Engineering Deliverables |
+|---|---|---|
+| **Yasser Ashraf** | **Team Leader**<br/>Mobile App Lead & RS Engineer | • Architected the Flutter mobile app (Clean Architecture, BLoC/Cubit, 30+ screens).<br/>• Engineered native client security (Root detection, `FLAG_SECURE`, Keystore/Keychain).<br/>• Integrated SignalR WebSockets P2P chat and bilingual RTL/LTR Cairo UI.<br/>• Designed & deployed the LightFM Hybrid Recommendation Engine. |
+| **Hamza Omran** | Full-Stack Software Engineer | • Engineered web frontend interfaces and administrative management modules.<br/>• Developed core backend endpoints and database business logic.<br/>• Conducted architectural and market gap analysis. |
+| **Ahmed Khalifa** | Full-Stack Software Engineer | • Co-developed web client architecture, responsive styling, and vendor workflows.<br/>• Implemented secure authentication, session handling, and data validation layers.<br/>• Contributed to backend order processing and system gap analysis. |
+| **Moaz Moustafa** | Full-Stack Software Engineer | • Designed API integration pipelines and backend transactional state handling.<br/>• Built interactive customer web views and account settings modules.<br/>• Participated in system testing, schema optimizations, and gap analysis. |
+| **Abdelrahman Hesham** | Data Scientist & BI Analyst | • Conducted end-to-end data processing, feature extraction, and exploratory analysis.<br/>• Formulated market gap insights, supply/demand clustering, and business KPIs.<br/>• Built interactive visualization reporting pipelines for platform analytics. |
+| **Moamen Ahmed** | Data Scientist & ML Specialist | • Prepared model datasets, data wrangling, missing-value imputations, and normalization.<br/>• Supported recommendation engine feature engineering and model evaluation.<br/>• Performed statistical validation on pricing models and user behavior patterns. |
+
+---
+
+##  Security & Application Hardening
+
+Because Renty facilitates financial deposits and high-value physical asset handoffs, security was implemented at the core:
+
+1. **Native Client Hardening:**
+   - **Root / Jailbreak Detection:** Startup blocking gates terminate sessions on compromised devices.
+   - **Memory & UI Protection:** Android `FLAG_SECURE` prevents background snapshots, screenshots, and OS screen recording of sensitive rental details.
+   - **Hardware-Backed Encryption:** Tokens and user credentials are encrypted using AES-256 via the **Android Keystore** and **iOS Keychain**.
+2. **Network & Communications Security:**
+   - Strict Bearer token validation with centralized automated refresh interceptors.
+   - Encrypted WebSockets connections with handshake-level user authentication.
+3. **Escrow Data Integrity:**
+   - Idempotent transaction handling to prevent duplicate booking operations.
+
+---
+
+##  Repository Structure
+
+```text
+renty-platform/
+├── Client/
+│   ├── Mobile/                      # Flutter Cross-Platform Application
+│   │   ├── lib/
+│   │   │   ├── core/                # BLoC, Cubits, Interceptors, Theme, Routing
+│   │   │   ├── auth/                # Authentication & Verification Flows
+│   │   │   ├── pages/               # 30+ Screens (Marketplace, Rentals, Chat, etc.)
+│   │   │   └── component/           # Reusable Design System Widgets
+│   │   └── android/                 # Kotlin Platform Channels (FLAG_SECURE, Keystore)
+│   └── Web/                         # Full-Stack Web Portal (Customer & Admin)
+│       ├── frontend/                # Web UI & Assets
+│       └── backend/                 # RESTful API Services, Controllers, Models
+├── DataScience/
+│   ├── recommendation_system/       # LightFM Hybrid Recommender Training & Inference
+│   ├── gap_analysis/                # Market & Regional Supply-Demand Analysis
+│   └── notebooks/                   # EDA, Analytics, & Dynamic Pricing Models
+└── docs/                            # Architecture Diagrams, ERDs, and Specifications
+```
+
+---
+
+##  Installation & Setup
+
+### 1. Prerequisites
+- **Flutter SDK:** `^3.19.0`
+- **Dart:** `^3.3.0`
+- **Python:** `3.10+`
+- **Android Studio / Xcode**
+- **Git**
+
+### 2. Mobile App Setup
 ```bash
-git clone https://github.com/yourusername/renty-recommendation-system.git
-cd renty-recommendation-system
+# Clone the repository
+git clone https://github.com/renty0/renty.git
+cd renty-platform/Client/Mobile
+
+# Install Flutter dependencies
+flutter pub get
+
+# Run on connected device or emulator
+flutter run
 ```
 
-2. **Create virtual environment** (recommended)
-
+### 3. Recommendation Engine Service
 ```bash
+cd renty-platform/DataScience/recommendation_system
+
+# Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
 
-3. **Install dependencies**
-
-```bash
+# Install requirements
 pip install -r requirements.txt
+
+# Start recommendation server
+python app.py
 ```
 
-### Required Packages
+---
 
-```
-pandas>=1.3.0
-numpy>=1.21.0
-matplotlib>=3.4.0
-seaborn>=0.11.0
-scikit-learn>=1.0.0
-scipy>=1.7.0
-lightfm>=1.17
-```
+## 🎓 Academic Affiliation
+This project was developed as the Senior Graduation Capstone Project for the **Faculty of Computer and Data Science (FCDS), Alexandria University (Class of 2026)**.
 
-**Note**: The project uses a specific LightFM fork. Install with:
-
-```bash
-pip install git+https://github.com/daviddavo/lightfm
-```
-
-##  Usage
-
-### Quick Start
-
-#### 1. Train the Model
-
-```python
-# Load and train the complete pipeline
-from main import main
-
-filepath = "path/to/GradProject_final_1.xlsx"
-model, dataset, user_features, item_features, df, results = main(filepath)
-```
-
-#### 2. Generate Recommendations
-
-```python
-from recommendation_utils import get_recommendations
-
-# Get recommendations for a specific user
-user_id = 14574
-recommendations = get_recommendations(
-    model=model,
-    user_id=user_id,
-    dataset=dataset,
-    user_features=user_features,
-    item_features=item_features,
-    df=df,
-    n_recommendations=10,
-    filter_already_purchased=True
-)
-
-print(recommendations)
-```
-
-#### 3. Load Pre-trained Model
-
-```python
-import pickle
-
-def load_model_artifacts(filepath='renty_lightfm_model_artifacts.pkl'):
-    with open(filepath, 'rb') as f:
-        artifacts = pickle.load(f)
-    return (artifacts['model'], 
-            artifacts['dataset'], 
-            artifacts['user_features'], 
-            artifacts['item_features'])
-
-# Load saved model
-model, dataset, user_features, item_features = load_model_artifacts()
-```
-
-### Interactive Recommendation Interface
-
-```python
-# Get user input and generate recommendations
-sample_user_id = int(input("Please enter a User ID: "))
-
-get_recommendations_for_input_user(
-    user_id_input=sample_user_id,
-    model=loaded_model,
-    dataset=loaded_dataset,
-    user_features=loaded_user_features,
-    item_features=loaded_item_features,
-    df=df,
-    n_recommendations=10
-)
-```
-
-### Running the Jupyter Notebook
-
-1. Open the notebook in Google Colab or Jupyter:
-
-```bash
-jupyter notebook Ecommerce-Recommendation-System_Renty_Ecommerce_v1.ipynb
-```
-
-2. Mount Google Drive (if using Colab):
-
-```python
-from google.colab import drive
-drive.mount('/content/drive')
-```
-
-3. Update the filepath to your dataset location
-4. Run all cells sequentially
-
-##  Model Performance
-
-### Final Model Metrics
-
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| **Test AUC** | 0.8409 | Good ranking ability |
-| **Precision@5** | 0.1505 | 15% of top-5 recommendations are relevant |
-| **Precision@10** | 0.1205 | 12% of top-10 recommendations are relevant |
-| **Precision@20** | 0.0868 | 9% of top-20 recommendations are relevant |
-| **Recall@5** | 0.2698 | Captures 27% of relevant items in top-5 |
-| **Recall@10** | 0.4393 | Captures 44% of relevant items in top-10 |
-| **Recall@20** | 0.6402 | Captures 64% of relevant items in top-20 |
-| **Overfitting Gap** | 0.0493 | Low overfitting, good generalization |
-
-### Optimal Hyperparameters
-
-```python
-{
-    'no_components': 50,
-    'learning_rate': 0.05,
-    'loss': 'warp',
-    'item_alpha': 1e-05,  # L2 regularization for items
-    'user_alpha': 1e-05,  # L2 regularization for users
-    'epochs': 60
-}
-```
-
-### Performance Comparison
-
-The improved model significantly outperforms the baseline:
-
-- **AUC improvement**: +12% (0.75 → 0.84)
-- **Overfitting reduction**: -71% (0.17 → 0.05)
-- **Precision@10**: Maintained competitive performance with better generalization
-
-
-##  Technical Details
-
-### Feature Engineering Pipeline
-
-#### 1. Temporal Features
-- **OrderYear, OrderMonth, OrderQuarter**: Capture temporal trends
-- **DayOfWeek, IsWeekend**: Identify purchasing patterns
-- **Season**: Spring, Summer, Fall, Winter categorization
-
-#### 2. User Segmentation
-```python
-# RFM-inspired Customer Value Score
-CustomerValueScore = (
-    TotalOrders * 0.3 +
-    UniqueProducts * 0.3 +
-    (TotalQuantity / TotalQuantity.max()) * 100 * 0.4
-)
-
-# Segment into tiers
-CustomerSegment = pd.qcut(CustomerValueScore, q=4, 
-                          labels=['Bronze', 'Silver', 'Gold', 'Platinum'])
-```
-
-#### 3. Text Feature Extraction
-```python
-# TF-IDF Vectorization
-tfidf = TfidfVectorizer(
-    max_features=50,
-    stop_words='english',
-    ngram_range=(1, 2),
-    min_df=2
-)
-```
-
-### LightFM Model Configuration
-
-#### Loss Function: WARP (Weighted Approximate-Rank Pairwise)
-- Optimized for implicit feedback scenarios
-- Focuses on ranking relevant items higher than irrelevant ones
-- Particularly effective for top-N recommendations
-
-#### Regularization Strategy
-- **L2 Regularization**: Prevents overfitting on sparse data
-- **Item Alpha (1e-05)**: Regularizes item feature embeddings
-- **User Alpha (1e-05)**: Regularizes user feature embeddings
-
-### Train/Test Split Strategy
-
-**Temporal Split (80/20)**
-- Training: First 80% of data chronologically (44,532 samples)
-- Testing: Most recent 20% of data (11,134 samples)
-- Simulates real-world scenario where model predicts future purchases
-
-### Evaluation Methodology
-
-```python
-# Precision@K: Fraction of recommended items that are relevant
-Precision@K = (Relevant items in top-K) / K
-
-# Recall@K: Fraction of relevant items that are recommended
-Recall@K = (Relevant items in top-K) / (Total relevant items)
-
-# AUC: Area Under ROC Curve
-# Measures the model's ability to rank relevant items higher
-```
-
-##  Future Improvements
-
-### Short-term Enhancements
-- [ ] Implement real-time recommendation API with Flask/FastAPI
-- [ ] Add A/B testing framework for model evaluation
-- [ ] Create recommendation diversity metrics
-- [ ] Develop cold-start strategy for new users/items
-- [ ] Add explainability features (why this recommendation?)
-
-### Medium-term Goals
-- [ ] Integrate deep learning approaches (Neural Collaborative Filtering)
-- [ ] Implement session-based recommendations (RNN/Transformer)
-- [ ] Add multi-objective optimization (relevance + diversity + serendipity)
-- [ ] Create recommendation confidence scores
-- [ ] Develop automated retraining pipeline
-
-### Long-term Vision
-- [ ] Build real-time streaming recommendation system
-- [ ] Implement contextual bandits for online learning
-- [ ] Add multi-modal features (images, reviews, ratings)
-- [ ] Create recommendation explanation dashboard
-- [ ] Develop cross-domain recommendation capabilities
-
-##  Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-### Contribution Guidelines
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Code Style
-- Follow PEP 8 style guide for Python code
-- Add docstrings to all functions and classes
-- Include type hints where appropriate
-- Write unit tests for new features
-
-##  License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-##  Acknowledgments
-
-- **LightFM Library**: For providing an excellent hybrid recommendation framework
-- **Renty E-commerce**: For the dataset and use case
-- **Team Members**: 
-  - Abdulrahman (Data Analysis & EDA)
-  - Yasser Ashraf (Model Development)
-  - Moamen Ahmed (Model Evaluation)
-
-##  Contact
-
-For questions or feedback, please reach out:
-
-- **Email**: yasserashraf3142@gmail.com
-- **LinkedIn**: [Yasser Ashraf](https://www.linkedin.com/in/yasserashraf/)
-
-** If you find this project helpful, please consider giving it a star!**
-
-Last Updated: November 2025
+---
+*Developed with dedication by the Renty Engineering Team.*
