@@ -22,7 +22,7 @@ A comprehensive hybrid recommendation system built with LightFM for the Renty e-
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## 🎯 Overview
+## Overview
 
 The Renty E-commerce Recommendation System is designed to enhance user experience and increase sales by providing intelligent, personalized product recommendations. The system analyzes historical transaction data, user demographics, and product characteristics to predict items that customers are most likely to purchase.
 
@@ -33,7 +33,7 @@ The Renty E-commerce Recommendation System is designed to enhance user experienc
 - **Robust Performance**: Test AUC of 0.84+ with low overfitting (gap < 0.05)
 - **Production Ready**: Includes model persistence and inference pipeline
 
-## ✨ Features
+##  Features
 
 ### Model Features
 
@@ -60,7 +60,7 @@ The Renty E-commerce Recommendation System is designed to enhance user experienc
 - ✅ Hyperparameter optimization with regularization
 - ✅ Model serialization for deployment
 
-## 📊 Dataset
+##  Dataset
 
 ### Data Overview
 
@@ -92,7 +92,7 @@ The Renty E-commerce Recommendation System is designed to enhance user experienc
 | Occupation | object | Customer occupation |
 | HomeOwner | object | Home ownership status |
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -148,7 +148,7 @@ The Renty E-commerce Recommendation System is designed to enhance user experienc
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 🚀 Installation
+##  Installation
 
 ### Prerequisites
 
@@ -320,7 +320,7 @@ The improved model significantly outperforms the baseline:
 - **Precision@10**: Maintained competitive performance with better generalization
 
 
-## 🔧 Technical Details
+##  Technical Details
 
 ### Feature Engineering Pipeline
 
@@ -386,7 +386,7 @@ Recall@K = (Relevant items in top-K) / (Total relevant items)
 # Measures the model's ability to rank relevant items higher
 ```
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 ### Short-term Enhancements
 - [ ] Implement real-time recommendation API with Flask/FastAPI
@@ -409,7 +409,7 @@ Recall@K = (Relevant items in top-K) / (Total relevant items)
 - [ ] Create recommendation explanation dashboard
 - [ ] Develop cross-domain recommendation capabilities
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
@@ -427,11 +427,11 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Include type hints where appropriate
 - Write unit tests for new features
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **LightFM Library**: For providing an excellent hybrid recommendation framework
 - **Renty E-commerce**: For the dataset and use case
@@ -440,7 +440,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - Yasser Ashraf (Model Development)
   - Moamen Ahmed (Model Evaluation)
 
-## 📞 Contact
+##  Contact
 
 For questions or feedback, please reach out:
 
