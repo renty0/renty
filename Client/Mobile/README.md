@@ -2,7 +2,7 @@
 
   <img src="assets/app_icon/Logo1.png" alt="Renty Logo" width="120" style="border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);" />
 
-  # Renty Mobile Application
+  #  Renty Mobile Application
   ### *Intelligent Peer-to-Peer Rental & Sharing Economy Platform*
 
   [![Flutter Version](https://img.shields.io/badge/Flutter-3.9%2B-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
@@ -96,7 +96,7 @@ lib/
 ├── auth/                  #  Authentication Pages (Login, Register, OTP, Password Reset)
 ├── component/             #  Reusable UI Components, Form Inputs, Buttons, Loaders
 ├── core/
-│   ├── blocs/             # BLoC & Cubit State Management Layer
+│   ├── blocs/             #  BLoC & Cubit State Management Layer
 │   │   ├── home/          # Home state & cubits
 │   │   ├── marketplace/   # Product search, category filters & catalog
 │   │   ├── rentals/       # Rental list & state transitions
@@ -108,7 +108,7 @@ lib/
 │   ├── class/             # Base wrappers & Request status handlers (StatusRequest)
 │   ├── constant/          # App colors, design tokens, typography, asset paths
 │   ├── middleware/        # Route authentication guards
-│   ├── services/          # Singleton Infrastructure Services
+│   ├── services/          #  Singleton Infrastructure Services
 │   │   ├── api_service.dart               # OpenAPI orchestrator & client provider
 │   │   ├── auth_interceptor.dart          # Mutex-locked 401 JWT refresh interceptor
 │   │   ├── secure_storage_service.dart    # Android Keystore & iOS Keychain vault
@@ -297,6 +297,25 @@ This project was developed as part of a **Graduation Project** for the Faculty o
 
 Licensed under the [MIT License](LICENSE).
 
+---
+
 <div align="center">
+
+  ###  Mobile App by **Yasser Ashraf**
+
+  <p align="center">
+    <a href="https://www.linkedin.com/in/yasserashraf/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+    &nbsp;
+    <a href="https://github.com/Yasserashraf1"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
+    &nbsp;
+    <a href="https://yasserashraf1.github.io"><img src="https://img.shields.io/badge/Website-2563EB?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website" /></a>
+  </p>
+
+  <p align="center">
+    <sub>Connect with me: <a href="https://www.linkedin.com/in/yasserashraf/">LinkedIn</a> • <a href="https://github.com/Yasserashraf1">GitHub</a> • <a href="https://yasser-ashraf-production-ready-mobile-apps.vercel.app/">Personal Website</a></sub>
+  </p>
+
   <sub>Built with ❤️ using Flutter, Dart & ASP.NET Core SignalR</sub>
+
 </div>
+
