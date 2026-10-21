@@ -6,7 +6,7 @@
 
 A comprehensive hybrid recommendation system built with LightFM for the Renty e-commerce platform. This system leverages both collaborative filtering and content-based approaches to deliver personalized product recommendations based on user demographics, purchase behavior, and product features.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -196,7 +196,7 @@ lightfm>=1.17
 pip install git+https://github.com/daviddavo/lightfm
 ```
 
-## 💻 Usage
+##  Usage
 
 ### Quick Start
 
@@ -283,7 +283,7 @@ drive.mount('/content/drive')
 3. Update the filepath to your dataset location
 4. Run all cells sequentially
 
-## 📈 Model Performance
+##  Model Performance
 
 ### Final Model Metrics
 
@@ -447,6 +447,6 @@ For questions or feedback, please reach out:
 - **Email**: yasserashraf3142@gmail.com
 - **LinkedIn**: [Yasser Ashraf](https://www.linkedin.com/in/yasserashraf/)
 
-**⭐ If you find this project helpful, please consider giving it a star!**
+** If you find this project helpful, please consider giving it a star!**
 
 Last Updated: November 2025
